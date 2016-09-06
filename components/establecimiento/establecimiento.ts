@@ -1,5 +1,6 @@
-/*Es la clase Establecimiento pero lo llamo efector para con confundir con el componente*/
-export class Efector {
+import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
+
+export class Establecimiento implements IEstablecimiento {
     id: Number;
     codigoSisa: Number;
     nombre: String;
@@ -15,4 +16,7 @@ export class Efector {
         id: Number;
         nombre: String
     }
+
+
+    
 }
