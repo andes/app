@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Rx';
+import { EstablecimientoService } from './../../services/establecimiento.service';
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
@@ -17,7 +19,7 @@ export class EstablecimientoAltaComponent implements OnInit {
          {nombre:'Posta Sanitaria',descripcion:'Posta Sanitaria',clasificacion:'C3'}];
     createForm: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) {}
+    constructor(private formBuilder: FormBuilder,private establecimientoService: EstablecimientoService) {}
 
     ngOnInit() {
          
@@ -42,16 +44,21 @@ export class EstablecimientoAltaComponent implements OnInit {
             tipoEstablecimiento:['']
         });
 
-        this.createForm.valueChanges.subscribe(value => {
-            console.log(value.tipoEstablecimiento.nombre);        
-
-        });
+        
     }
     
     onSave(model: IEstablecimiento, isvalid: boolean){
-        console.log(JSON.stringify(model));
-        alert(model.tipoEstablecimiento.nombre);
-        alert(isvalid);
+        if(isvalid){
+            console.log(JSON.stringify(model));
+             let estOperation:Observable<IEstablecimiento>;
+            model.habilitado = true;
+            estOperation = this.establecimientoService.postEstablecimiento(model);
+            estOperation.subscribe(resultado =>  alert(resultado.nombre));
+            
+
+        }else{
+            alert("Complete datos obligatorios");
+        }
     }
 
     onCancel(){
