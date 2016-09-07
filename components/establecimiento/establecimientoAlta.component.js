@@ -14,26 +14,39 @@ var EstablecimientoAltaComponent = (function () {
     function EstablecimientoAltaComponent(formBuilder) {
         this.formBuilder = formBuilder;
         /*Datos externos que deberían venir de algún servicio*/
-        this.tipos = [{ nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion: 'C1' }, { nombre: 'Centro de Salud', descripcion: 'Centro de Salud', clasificacion: 'C2' }, { nombre: 'Posta Sanitaria', descripcion: 'Posta Sanitaria', clasificacion: 'C3' }];
         this.zonas = ['Zona I', 'Zona II', 'Zona III'];
+        /*****************************************************/
+        this.tipos = [{ nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion: 'C1' }, { nombre: 'Centro de Salud', descripcion: 'Centro de Salud', clasificacion: 'C2' },
+            { nombre: 'Posta Sanitaria', descripcion: 'Posta Sanitaria', clasificacion: 'C3' }];
     }
     EstablecimientoAltaComponent.prototype.ngOnInit = function () {
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             nivelComplejidad: [''],
-            descripcion: [''],
+            descripcion: ['', forms_1.Validators.required],
             codigo: this.formBuilder.group({
                 sisa: ['', forms_1.Validators.required],
                 cuie: [''],
                 remediar: [''],
-            })
+            }),
+            domicilio: this.formBuilder.group({
+                calle: ['', forms_1.Validators.required],
+                numero: [''],
+                localidad: this.formBuilder.group({
+                    nombre: ['', forms_1.Validators.required],
+                    codigoPostal: [''],
+                    provincia: ['']
+                })
+            }),
+            tipoEstablecimiento: ['']
         });
         this.createForm.valueChanges.subscribe(function (value) {
-            console.log(value.nombre);
+            console.log(value.tipoEstablecimiento);
         });
     };
-    EstablecimientoAltaComponent.prototype.onSave = function () {
-        alert('Hizo clic en guardar');
+    EstablecimientoAltaComponent.prototype.onSave = function (model, isvalid) {
+        alert(model.tipoEstablecimiento);
+        alert(isvalid);
     };
     EstablecimientoAltaComponent.prototype.onCancel = function () {
         alert('Hizo Clic en cancelar');

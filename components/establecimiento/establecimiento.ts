@@ -1,5 +1,5 @@
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
-
+/*
 export class Establecimiento implements IEstablecimiento {
     _id: string;
     nombre: String;
@@ -29,4 +29,4 @@ export class Establecimiento implements IEstablecimiento {
    habilitado: Boolean;
    fechaAlta: Date;
    fechaBaja: Date;
-}
+}*/

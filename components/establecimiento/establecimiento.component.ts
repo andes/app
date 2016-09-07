@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Establecimiento } from './establecimiento';
+//import { Establecimiento } from './establecimiento';
 
 @Component({
     selector: 'establecimientos',

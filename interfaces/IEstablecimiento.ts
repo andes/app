@@ -2,7 +2,7 @@ import { IDomicilio } from './IDomicilio';
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
 
 export interface IEstablecimiento {
-    //_id: string;
+    _id: string;
     nombre: String;
     descripcion: String;
     nivelComplejidad: Number;
@@ -11,9 +11,9 @@ export interface IEstablecimiento {
        cuie: String,
        remediar: String
     };
-   /*  domicilio: IDomicilio;
-    tipoEstablecimiento: ITipoEstablecimiento;
+   domicilio: IDomicilio;
+   tipoEstablecimiento: ITipoEstablecimiento;
    habilitado: Boolean;
    fechaAlta: Date;
-   fechaBaja: Date;*/
+   fechaBaja: Date;
 }
