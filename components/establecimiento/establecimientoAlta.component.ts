@@ -39,17 +39,22 @@ export class EstablecimientoAltaComponent implements OnInit {
                     provincia:['']
                 })
             }),
-            tipoEstablecimiento:['']
+            tipoEstablecimiento:this.formBuilder.group({
+                    nombre: [''],
+                    descripcion:[''],
+                    clasificacion:['']
+                })
         });
 
         this.createForm.valueChanges.subscribe(value => {
-            console.log(value.tipoEstablecimiento);        
+            console.log(value.tipoEstablecimiento.nombre);        
 
         });
     }
     
     onSave(model: IEstablecimiento, isvalid: boolean){
-        alert(model.tipoEstablecimiento );
+        console.log(JSON.stringify(model));
+        alert(model.tipoEstablecimiento);
         alert(isvalid);
     }
 

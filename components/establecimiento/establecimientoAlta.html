@@ -66,23 +66,23 @@
                         </div>
                         <div class="col-sm-4">
                             <label> Provincia: </label>
-                            <input type="text" class="form-control" formControlName="provicia">
+                            <input type="text" class="form-control" formControlName="provincia">
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" formGroupName="tipoEstablecimiento">
                         <label> Tipo Establecimiento: </label>
-                        <select class="form-control" formControlName="tipoEstablecimiento">
+                        <select class="form-control" formControlName="nombre">
                             
-                                <option *ngFor="let tipo of tipos" [value]="tipo.nombre">{{tipo.nombre}}</option>
+                                <option *ngFor="let tipo of tipos" >{{tipo.nombre}}</option>
                                 
 
                         </select>
                     </div>
                 </div>
 
-
+                <div class="row">&nbsp;</div>
                 <div class="row">
 
                     <button class="btn btn-primary" type="submit" (click)="onSave(createForm.value, createForm.valid)">Guardar</button>
@@ -91,3 +91,10 @@
         </div>
     </div>
 </div>
+
+<pre>
+{{
+tipos | json
+}}
+
+</pre>

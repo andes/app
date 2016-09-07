@@ -38,14 +38,19 @@ var EstablecimientoAltaComponent = (function () {
                     provincia: ['']
                 })
             }),
-            tipoEstablecimiento: ['']
+            tipoEstablecimiento: this.formBuilder.group({
+                nombre: [''],
+                descripcion: [''],
+                clasificacion: ['']
+            })
         });
         this.createForm.valueChanges.subscribe(function (value) {
-            console.log(value.tipoEstablecimiento);
+            console.log(value.tipoEstablecimiento.nombre);
         });
     };
     EstablecimientoAltaComponent.prototype.onSave = function (model, isvalid) {
-        alert(model.tipoEstablecimiento);
+        console.log(JSON.stringify(model));
+        alert(model.tipoEstablecimiento.nombre);
         alert(isvalid);
     };
     EstablecimientoAltaComponent.prototype.onCancel = function () {
