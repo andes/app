@@ -38,11 +38,7 @@ var EstablecimientoAltaComponent = (function () {
                     provincia: ['']
                 })
             }),
-            tipoEstablecimiento: this.formBuilder.group({
-                nombre: [''],
-                descripcion: [''],
-                clasificacion: ['']
-            })
+            tipoEstablecimiento: ['']
         });
         this.createForm.valueChanges.subscribe(function (value) {
             console.log(value.tipoEstablecimiento.nombre);

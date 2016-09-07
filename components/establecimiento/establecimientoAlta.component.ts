@@ -39,11 +39,7 @@ export class EstablecimientoAltaComponent implements OnInit {
                     provincia:['']
                 })
             }),
-            tipoEstablecimiento:this.formBuilder.group({
-                    nombre: [''],
-                    descripcion:[''],
-                    clasificacion:['']
-                })
+            tipoEstablecimiento:['']
         });
 
         this.createForm.valueChanges.subscribe(value => {
@@ -54,7 +50,7 @@ export class EstablecimientoAltaComponent implements OnInit {
     
     onSave(model: IEstablecimiento, isvalid: boolean){
         console.log(JSON.stringify(model));
-        alert(model.tipoEstablecimiento);
+        alert(model.tipoEstablecimiento.nombre);
         alert(isvalid);
     }
 

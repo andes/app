@@ -71,13 +71,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4" formGroupName="tipoEstablecimiento">
+                    <div class="col-sm-4">
                         <label> Tipo Establecimiento: </label>
-                        <select class="form-control" formControlName="nombre">
-                            
-                                <option *ngFor="let tipo of tipos" >{{tipo.nombre}}</option>
-                                
-
+                        <select class="form-control" formControlName="tipoEstablecimiento">
+                                <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{tipo.nombre}}</option>
                         </select>
                     </div>
                 </div>
@@ -91,10 +88,3 @@
         </div>
     </div>
 </div>
-
-<pre>
-{{
-tipos | json
-}}
-
-</pre>
