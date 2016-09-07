@@ -1,22 +1,32 @@
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
 
 export class Establecimiento implements IEstablecimiento {
-    id: Number;
-    codigoSisa: Number;
+    _id: string;
     nombre: String;
     descripcion: String;
-    complejidad: Number;
-    cuie: String;
-    domicilio: String;
+    nivelComplejidad: Number;
+    domicilio: {
+        calle: String,
+        numero: Number,
+        localidad: {
+            nombre: String,
+            codigoPostal: String,
+            provincia:{
+                nombre: String
+            }
+       }
+    };
     tipoEstablecimiento: {
-        id: Number;
         nombre: String;
-    }
-    zona: {
-        id: Number;
-        nombre: String
-    }
-
-
-    
+        descripcion: String;
+        clasificacion: String;
+    };
+    codigo:{
+       sisa: Number,
+       cuie: String,
+       remediar: String
+   };
+   habilitado: Boolean;
+   fechaAlta: Date;
+   fechaBaja: Date;
 }

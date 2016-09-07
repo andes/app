@@ -1,18 +1,19 @@
+import { IDomicilio } from './IDomicilio';
+import { ITipoEstablecimiento } from './ITipoEstablecimiento';
+
 export interface IEstablecimiento {
-    id: Number;
-    codigoSisa: Number;
+    //_id: string;
     nombre: String;
     descripcion: String;
-    complejidad: Number;
-    cuie: String;
-    domicilio: String;
-    tipoEstablecimiento: {
-        id: Number;
-        nombre: String;
-    }
-    zona: {
-        id: Number;
-        nombre: String
-    }
-
+    nivelComplejidad: Number;
+    codigo:{
+       sisa: Number,
+       cuie: String,
+       remediar: String
+    };
+   /*  domicilio: IDomicilio;
+    tipoEstablecimiento: ITipoEstablecimiento;
+   habilitado: Boolean;
+   fechaAlta: Date;
+   fechaBaja: Date;*/
 }

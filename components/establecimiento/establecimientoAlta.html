@@ -2,70 +2,54 @@
     <div class="panel panel-default">
         <div class="panel-heading">Alta de Establecimientos</div>
         <div class="panel-body">
-            <form [formGroup]="registerForm" class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label"> Cod. SISA: </label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control" formControlName="codigoSisa" placeholder="Ingresar código...">
+            <form [formGroup]="createForm">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+                            <label class="control-label text-danger" *ngIf="registerForm.controls.nombre.errors">Este campo es obligatorio!</label>
+                        </div>
                     </div>
-                    <label class="col-sm-2 control-label text-danger" *ngIf="registerForm.controls.codigoSisa.errors">Este campo es obligatorio!</label>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Nombre:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                    </div>
-                    <label class="col-sm-2 control-label text-danger" *ngIf="registerForm.controls.nombre.errors">Este campo es obligatorio!</label>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Descripción:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="descripcion" placeholder="Ingrese descripción...">
-                    </div>
-                    <label class="col-sm-2 control-label text-danger" *ngIf="registerForm.controls.descripcion.errors">Este campo es obligatorio!</label>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Complejidad:</label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control" formControlName="complejidad" placeholder="Ingrese nivel de complejidad...">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Complejidad:</label>
+                            <input type="number" class="form-control" formControlName="nivelComplejidad" placeholder="Ingrese nivel de complejidad...">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Cuie:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="cuie" placeholder="Ingrese código cuie...">
-                    </div>
-                    <label class="col-sm-2 control-label text-danger" *ngIf="registerForm.controls.cuie.errors">Este campo es obligatorio!</label>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Domicilio:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="domicilio" placeholder="Ingrese el domicilio...">
-                    </div>
-                    <label class="col-sm-2 control-label text-danger" *ngIf="registerForm.controls.domicilio.errors">Este campo es obligatorio!</label>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Tipo:</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" formControlName="tipoEstablecimiento">
-                     <option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</option>
-                </select>
-                    </div>
-                    <div class="col-sm-9">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Descripción:</label>
+                            <input type="text" class="form-control" formControlName="descripcion" placeholder="Ingrese descripción...">
+                            <label class="control-label text-danger" *ngIf="registerForm.controls.descripcion.errors">Este campo es obligatorio!</label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Zona:</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" formControlName="zona">
-                        <option *ngFor="let z of zonas" [value]="z">{{z}}</option>
-                </select>
+                <div class="row" formGroupName="codigo">
+                    <div class="col-sm-4">
+                        <label> Cod. SISA: </label>
+                        <input type="number" class="form-control" formControlName="sisa" placeholder="Ingresar código...">
+                        <label class="control-label text-danger" *ngIf="registerForm.controls.sisa.errors">Este campo es obligatorio!</label>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-4">
+                        <label> Cod. CUIE: </label>
+                        <input type="number" class="form-control" formControlName="cuie" placeholder="Ingresar código...">
+                    </div>
+                    <div class="col-sm-4">
+                        <label> Cod. Remediar: </label>
+                        <input type="number" class="form-control" formControlName="remediar" placeholder="Ingresar código...">
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit" [disabled]="!registerForm.valid" (click)="onSave()">Guardar</button>
-                <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button>
+
+
+
+
+                <div class="row">
+
+                    <button class="btn btn-primary" type="submit" (click)="onSave()">Guardar</button>
+                    <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
             </form>
         </div>
     </div>
