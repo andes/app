@@ -11,17 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var establecimiento_service_1 = require('./../../services/establecimiento.service');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
-var EstablecimientoAltaComponent = (function () {
-    function EstablecimientoAltaComponent(formBuilder, establecimientoService) {
+var EstablecimientoCreateComponent = (function () {
+    function EstablecimientoCreateComponent(formBuilder, establecimientoService) {
         this.formBuilder = formBuilder;
         this.establecimientoService = establecimientoService;
+        this.data = new core_1.EventEmitter();
         /*Datos externos que deberían venir de algún servicio*/
-        this.zonas = ['Zona I', 'Zona II', 'Zona III'];
-        /*****************************************************/
         this.tipos = [{ nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion: 'C1' }, { nombre: 'Centro de Salud', descripcion: 'Centro de Salud', clasificacion: 'C2' },
             { nombre: 'Posta Sanitaria', descripcion: 'Posta Sanitaria', clasificacion: 'C3' }];
     }
-    EstablecimientoAltaComponent.prototype.ngOnInit = function () {
+    EstablecimientoCreateComponent.prototype.ngOnInit = function () {
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             nivelComplejidad: [''],
@@ -43,30 +42,34 @@ var EstablecimientoAltaComponent = (function () {
             tipoEstablecimiento: ['']
         });
     };
-    EstablecimientoAltaComponent.prototype.onSave = function (model, isvalid) {
+    EstablecimientoCreateComponent.prototype.onSave = function (model, isvalid) {
+        var _this = this;
         if (isvalid) {
-            console.log(JSON.stringify(model));
             var estOperation = void 0;
             model.habilitado = true;
-            estOperation = this.establecimientoService.postEstablecimiento(model);
-            estOperation.subscribe(function (resultado) { return alert(resultado.nombre); });
+            estOperation = this.establecimientoService.post(model);
+            estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
         else {
             alert("Complete datos obligatorios");
         }
     };
-    EstablecimientoAltaComponent.prototype.onCancel = function () {
+    EstablecimientoCreateComponent.prototype.onCancel = function () {
         alert('Hizo Clic en cancelar');
     };
-    EstablecimientoAltaComponent = __decorate([
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], EstablecimientoCreateComponent.prototype, "data", void 0);
+    EstablecimientoCreateComponent = __decorate([
         core_1.Component({
-            selector: 'establecimiento-alta',
+            selector: 'establecimiento-create',
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
-            templateUrl: 'components/establecimiento/establecimientoAlta.html'
+            templateUrl: 'components/establecimiento/establecimientoCreate.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService])
-    ], EstablecimientoAltaComponent);
-    return EstablecimientoAltaComponent;
+    ], EstablecimientoCreateComponent);
+    return EstablecimientoCreateComponent;
 }());
-exports.EstablecimientoAltaComponent = EstablecimientoAltaComponent;
-//# sourceMappingURL=establecimientoAlta.component.js.map
+exports.EstablecimientoCreateComponent = EstablecimientoCreateComponent;
+//# sourceMappingURL=establecimientoCreate.component.js.map

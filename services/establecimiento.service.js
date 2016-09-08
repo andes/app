@@ -20,23 +20,22 @@ var EstablecimientoService = (function () {
         this.http = http;
         this.establecimientoUrl = 'http://localhost:3002/api/establecimiento'; // URL to web api
     }
-    EstablecimientoService.prototype.getEstablecimiento = function () {
+    EstablecimientoService.prototype.get = function () {
         return this.http.get(this.establecimientoUrl)
-            .toPromise()
-            .then(function (response) { return response.json(); })
-            .catch(this.handleError);
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError); //...errors if any*/
     };
-    EstablecimientoService.prototype.postEstablecimiento = function (establecimiento) {
+    EstablecimientoService.prototype.post = function (establecimiento) {
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
-        debugger;
         return this.http.post(this.establecimientoUrl, bodyString, options) // ...using post request
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
-            .catch(function (error) { return Rx_1.Observable.throw(error.json().error || 'Server error'); }); //...errors if any
+            .catch(this.handleError); //...errors if any
     };
     EstablecimientoService.prototype.handleError = function (error) {
-        return Promise.reject(error.message || error);
+        console.log(error.json());
+        return Rx_1.Observable.throw(error.json().error || 'Server error');
     };
     EstablecimientoService = __decorate([
         core_1.Injectable(), 

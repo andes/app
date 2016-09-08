@@ -13,29 +13,27 @@ export class EstablecimientoService {
 
    private establecimientoUrl = 'http://localhost:3002/api/establecimiento';  // URL to web api
 
-   constructor(private http: Http) { }
+   constructor(private http: Http) {}
 
-   getEstablecimiento(): Promise<IEstablecimiento[]> {
+   get(): Observable<IEstablecimiento[]> {
        return this.http.get(this.establecimientoUrl)
-           .toPromise()
-           .then(response => response.json())
-           .catch(this.handleError);
+           .map((res:Response) => res.json())
+           .catch(this.handleError); //...errors if any*/
    }
 
-
-
-   postEstablecimiento (establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
+   post(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
-        debugger;
         return this.http.post(this.establecimientoUrl, bodyString, options) // ...using post request
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
-                         .catch((error:any) => Observable.throw(error.json().error || 'Server error')); //...errors if any
+                         .catch(this.handleError); //...errors if any
     } 
 
-    private handleError(error: any) {
-       return Promise.reject(error.message || error);
-   }
+     handleError(error: any){
+        console.log(error.json());
+        return Observable.throw(error.json().error || 'Server error');
+    }
 
+   
 }

@@ -1,4 +1,4 @@
-<div class="col-sm-12">
+<div class="col-sm-12" *ngIf="!showcreate">
     <div class="panel panel-default">
         <div class="panel-heading">Listado de Establecimientos</div>
         <div class="panel-body">
@@ -18,6 +18,13 @@
             </form>
 
             <div class="clear"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Establecimiento">
+                </div>
+            </div>
+
+            <div class="clear"></div>
             <table class="table">
                 <thead>
                     <tr>
@@ -32,10 +39,14 @@
                     </tr>
                 </tbody>
             </table>
-
-            <div class="clear"></div>
-            <establecimiento-alta></establecimiento-alta>
-
         </div>
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <establecimiento-create (data)='onReturn($event)'></establecimiento-create>
+
     </div>
 </div>

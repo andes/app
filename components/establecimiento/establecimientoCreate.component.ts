@@ -1,25 +1,25 @@
 import { Observable } from 'rxjs/Rx';
 import { EstablecimientoService } from './../../services/establecimiento.service';
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 
 @Component({
-    selector: 'establecimiento-alta',
+    selector: 'establecimiento-create',
     directives: [REACTIVE_FORM_DIRECTIVES],
-    templateUrl: 'components/establecimiento/establecimientoAlta.html'
+    templateUrl: 'components/establecimiento/establecimientoCreate.html'
 })
-export class EstablecimientoAltaComponent implements OnInit {
+export class EstablecimientoCreateComponent implements OnInit {
+@Output() data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
+
 
     /*Datos externos que deberían venir de algún servicio*/
-   
-    zonas = ['Zona I', 'Zona II', 'Zona III'];
-    /*****************************************************/
     tipos = [{nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion:'C1'}, {nombre:'Centro de Salud', descripcion:'Centro de Salud',clasificacion:'C2'}, 
          {nombre:'Posta Sanitaria',descripcion:'Posta Sanitaria',clasificacion:'C3'}];
     createForm: FormGroup;
+    
 
-    constructor(private formBuilder: FormBuilder,private establecimientoService: EstablecimientoService) {}
+    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService) {}
 
     ngOnInit() {
          
@@ -49,12 +49,10 @@ export class EstablecimientoAltaComponent implements OnInit {
     
     onSave(model: IEstablecimiento, isvalid: boolean){
         if(isvalid){
-            console.log(JSON.stringify(model));
-             let estOperation:Observable<IEstablecimiento>;
+            let estOperation:Observable<IEstablecimiento>;
             model.habilitado = true;
-            estOperation = this.establecimientoService.postEstablecimiento(model);
-            estOperation.subscribe(resultado =>  alert(resultado.nombre));
-            
+            estOperation = this.establecimientoService.post(model);
+            estOperation.subscribe(resultado => this.data.emit(resultado) );
 
         }else{
             alert("Complete datos obligatorios");

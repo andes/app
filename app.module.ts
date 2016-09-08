@@ -1,6 +1,6 @@
 import { HttpModule } from '@angular/http';
 import { EstablecimientoService } from './services/establecimiento.service';
-import { EstablecimientoAltaComponent } from './components/establecimiento/establecimientoAlta.component';
+import { EstablecimientoCreateComponent } from './components/establecimiento/establecimientoCreate.component';
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,7 +11,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
-  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoAltaComponent ],
+  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent ],
   bootstrap: [ AppComponent ],
   providers: [EstablecimientoService]
 })
