@@ -16,7 +16,12 @@ export class EstablecimientoCreateComponent implements OnInit {
     /*Datos externos que deberían venir de algún servicio*/
     tipos = [{nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion:'C1'}, {nombre:'Centro de Salud', descripcion:'Centro de Salud',clasificacion:'C2'}, 
          {nombre:'Posta Sanitaria',descripcion:'Posta Sanitaria',clasificacion:'C3'}];
+          provincias = [{nombre: 'Neuquen', localidades: [{nombre:'Confluencia', codigoPostal:8300}, {nombre:'Plottier', codigoPostal:8389}]},
+          {nombre: 'Rio Negro', localidades: [{nombre:'Cipolletti', codigoPostal:830890}, {nombre:'Cinco Saltos', codigoPostal:8303}]}];
     createForm: FormGroup;
+    localidades: any[]=[];
+    selectedProvincia: any={nombre: 'Neuquen', localidades: [{nombre:'Confluencia', codigoPostal:8300}, {nombre:'Plottier', codigoPostal:8389}]};
+    
     
 
     constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService) {}
@@ -34,14 +39,16 @@ export class EstablecimientoCreateComponent implements OnInit {
             }),
             domicilio: this.formBuilder.group({
                 calle: ['', Validators.required],
-                numero:[''],
-                localidad: this.formBuilder.group({
+                numero:['']
+               /*, localidad: this.formBuilder.group({
                     nombre: ['', Validators.required],
                     codigoPostal:[''],
                     provincia:['']
-                })
+                })*/
             }),
-            tipoEstablecimiento:['']
+            tipoEstablecimiento:[''],
+            provincia:[''],
+            localidad:['']
         });
 
         
@@ -58,6 +65,13 @@ export class EstablecimientoCreateComponent implements OnInit {
             alert("Complete datos obligatorios");
         }
     }
+
+getLocalidades(provincia) {
+    
+debugger;
+this.localidades=this.provincias[provincia.value].localidades;
+    //this.localidades = provincia.localidades.value;
+}
 
     onCancel(){
         alert('Hizo Clic en cancelar')

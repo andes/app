@@ -1,9 +1,13 @@
 export interface IDomicilio{
     calle: String;
     numero: Number;
-    localidad: {
+    provincia: {
+        nombre: String,
+        localidad: {
         nombre: String,
         codigoPostal: String,
-        provincia: String
     };
+    }
+
+
 }

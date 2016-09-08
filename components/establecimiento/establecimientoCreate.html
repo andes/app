@@ -54,21 +54,25 @@
                             <input type="number" class="form-control" formControlName="numero" placeholder="Ingresar código...">
                         </div>
                     </div>
-                    <div class="row" formGroupName="localidad">
-                        <div class="col-sm-4">
-                            <label> Localidad: </label>
-                            <input type="text" class="form-control" formControlName="nombre">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.domicilio.controls.localidad.controls.nombre.errors">Este campo es obligatorio!</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label> Codigo Postal: </label>
-                            <input type="text" class="form-control" formControlName="codigoPostal">
-                        </div>
-                        <div class="col-sm-4">
-                            <label> Provincia: </label>
-                            <input type="text" class="form-control" formControlName="provincia">
-                        </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label> Provincia: </label>
+                        <select class="form-control" formControlName="provincia"  (change)="getLocalidades(createForm.value.provincia)"> 
+                                <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
+                            </select>
                     </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label> Localidad: </label>
+                        <select class="form-control" formControlName="localidad">
+                                <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
+                            </select>
+                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
