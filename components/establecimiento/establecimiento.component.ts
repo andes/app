@@ -62,5 +62,16 @@ export class EstablecimientoComponent implements OnInit {
         this.establecimientos.push(objEstablecimiento);
     }
 
+    onDisable(objEstablecimiento:IEstablecimiento){
+        this.establecimientoService.disable(objEstablecimiento)
+            .subscribe(dato => this.loadEstablecimientos(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+    
+    }
 
 }

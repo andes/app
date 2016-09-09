@@ -38,6 +38,17 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
+    EstablecimientoService.prototype.disable = function (establecimiento) {
+        establecimiento.habilitado = false;
+        establecimiento.fechaBaja = new Date();
+        console.log(establecimiento.fechaBaja);
+        var bodyString = JSON.stringify(establecimiento); // Stringify payload
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.establecimientoUrl + "/" + establecimiento._id, bodyString, options) // ...using post request
+            .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
+            .catch(this.handleError); //...errors if any
+    };
     EstablecimientoService.prototype.handleError = function (error) {
         console.log(error.json());
         return Rx_1.Observable.throw(error.json().error || 'Server error');

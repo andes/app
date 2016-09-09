@@ -56,6 +56,17 @@ var EstablecimientoComponent = (function () {
         this.showcreate = false;
         this.establecimientos.push(objEstablecimiento);
     };
+    EstablecimientoComponent.prototype.onDisable = function (objEstablecimiento) {
+        var _this = this;
+        this.establecimientoService.disable(objEstablecimiento)
+            .subscribe(function (dato) { return _this.loadEstablecimientos(); }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    };
     EstablecimientoComponent = __decorate([
         core_1.Component({
             selector: 'establecimientos',
