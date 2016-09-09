@@ -30,10 +30,10 @@ export class EstablecimientoComponent implements OnInit {
     }
 
     loadEstablecimientos() {
-        
+        debugger;
         this.establecimientoService.get()
                                .subscribe(
-                               establecimientos => this.establecimientos = establecimientos, //Bind to view
+                               establecimientos => {debugger; this.establecimientos = establecimientos }, //Bind to view
                                 err => {
                                     if(err){
                                         console.log(err);

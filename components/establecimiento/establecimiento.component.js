@@ -29,8 +29,9 @@ var EstablecimientoComponent = (function () {
     };
     EstablecimientoComponent.prototype.loadEstablecimientos = function () {
         var _this = this;
+        debugger;
         this.establecimientoService.get()
-            .subscribe(function (establecimientos) { return _this.establecimientos = establecimientos; }, //Bind to view
+            .subscribe(function (establecimientos) { debugger; _this.establecimientos = establecimientos; }, //Bind to view
         function (//Bind to view
             err) {
             if (err) {

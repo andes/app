@@ -22,7 +22,6 @@ var EstablecimientoCreateComponent = (function () {
         this.provincias = [{ nombre: 'Neuquen', localidades: [{ nombre: 'Confluencia', codigoPostal: 8300 }, { nombre: 'Plottier', codigoPostal: 8389 }] },
             { nombre: 'Rio Negro', localidades: [{ nombre: 'Cipolletti', codigoPostal: 830890 }, { nombre: 'Cinco Saltos', codigoPostal: 8303 }] }];
         this.localidades = [];
-        this.selectedProvincia = { nombre: 'Neuquen', localidades: [{ nombre: 'Confluencia', codigoPostal: 8300 }, { nombre: 'Plottier', codigoPostal: 8389 }] };
     }
     EstablecimientoCreateComponent.prototype.ngOnInit = function () {
         this.createForm = this.formBuilder.group({
@@ -55,13 +54,11 @@ var EstablecimientoCreateComponent = (function () {
             alert("Complete datos obligatorios");
         }
     };
-    EstablecimientoCreateComponent.prototype.getLocalidades = function (provincia) {
-        debugger;
-        this.localidades = this.provincias[provincia.value].localidades;
-        //this.localidades = provincia.localidades.value;
+    EstablecimientoCreateComponent.prototype.getLocalidades = function (index) {
+        this.localidades = this.provincias[index].localidades;
     };
     EstablecimientoCreateComponent.prototype.onCancel = function () {
-        alert('Hizo Clic en cancelar');
+        this.data.emit(null);
     };
     __decorate([
         core_1.Output(), 

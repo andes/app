@@ -59,9 +59,9 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label> Provincia: </label>
-                        <select class="form-control" formControlName="provincia"  (change)="getLocalidades(createForm.value.provincia)"> 
-                                <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
-                            </select>
+                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                            <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
+                        </select>
                     </div>
 
                 </div>

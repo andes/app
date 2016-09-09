@@ -30,12 +30,19 @@
                     <tr>
                         <th>Codigo Sisa</th>
                         <th>Nombre</th>
+                        <th>Complejidad</th>
+                        <th>Calle</th>
+                        <th>Numero</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let establecimiento of establecimientos">
-                        <td>{{establecimiento.codigoSisa}}</td>
+                        <td>{{establecimiento.codigo.sisa}}</td>
                         <td>{{establecimiento.nombre}}</td>
+                        <td>{{establecimiento.nivelComplejidad}}</td>
+                        <td>{{establecimiento.domicilio.calle}}</td>
+                        <td>{{establecimiento.domicilio.numero}}</td>
+                        <td><a>Ver Detalle</a></td>
                     </tr>
                 </tbody>
             </table>
