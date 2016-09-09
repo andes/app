@@ -24,6 +24,7 @@ export class EstablecimientoComponent implements OnInit {
     
         this.searchForm.valueChanges.subscribe((value) => {
             console.log(value.codigoSisa + " --- " + value.nombre);
+            this.establecimientos = this.establecimientos.filter(e => e.codigo.sisa.toString().indexOf(value.codigoSisa) > -1);
         })
 
         this.loadEstablecimientos();

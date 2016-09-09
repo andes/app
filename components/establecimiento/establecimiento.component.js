@@ -18,12 +18,14 @@ var EstablecimientoComponent = (function () {
         this.showcreate = false;
     }
     EstablecimientoComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.searchForm = this.formBuilder.group({
             codigoSisa: [''],
             nombre: ['']
         });
         this.searchForm.valueChanges.subscribe(function (value) {
             console.log(value.codigoSisa + " --- " + value.nombre);
+            _this.establecimientos = _this.establecimientos.filter(function (e) { return e.codigo.sisa.toString().indexOf(value.codigoSisa) > -1; });
         });
         this.loadEstablecimientos();
     };

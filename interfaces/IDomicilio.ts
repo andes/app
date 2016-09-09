@@ -9,5 +9,4 @@ export interface IDomicilio{
         }
     };
 
-
 }
