@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var establecimiento_update_component_1 = require('./establecimiento-update.component');
 var establecimiento_service_1 = require('./../../services/establecimiento.service');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
@@ -17,6 +18,7 @@ var EstablecimientoComponent = (function () {
         this.formBuilder = formBuilder;
         this.establecimientoService = establecimientoService;
         this.showcreate = false;
+        this.showupdate = false;
     }
     EstablecimientoComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -54,7 +56,8 @@ var EstablecimientoComponent = (function () {
     };
     EstablecimientoComponent.prototype.onReturn = function (objEstablecimiento) {
         this.showcreate = false;
-        this.establecimientos.push(objEstablecimiento);
+        this.showupdate = false;
+        this.loadEstablecimientos();
     };
     EstablecimientoComponent.prototype.onDisable = function (objEstablecimiento) {
         var _this = this;
@@ -67,10 +70,15 @@ var EstablecimientoComponent = (function () {
             }
         });
     };
+    EstablecimientoComponent.prototype.onEdit = function (objEstablecimiento) {
+        this.showcreate = false;
+        this.showupdate = true;
+        this.selectedEst = objEstablecimiento;
+    };
     EstablecimientoComponent = __decorate([
         core_1.Component({
             selector: 'establecimientos',
-            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES],
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES, establecimiento_update_component_1.EstablecimientoUpdateComponent],
             templateUrl: 'components/establecimiento/establecimiento.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService])

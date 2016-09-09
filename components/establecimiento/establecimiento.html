@@ -1,4 +1,4 @@
-<div class="col-sm-12" *ngIf="!showcreate">
+<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
     <div class="panel panel-default">
         <div class="panel-heading">Listado de Establecimientos</div>
         <div class="panel-body">
@@ -40,7 +40,7 @@
                         <td>{{establecimiento.nivelComplejidad}}</td>
                         <td>{{establecimiento.domicilio.calle}}</td>
                         <td>{{establecimiento.domicilio.numero}}</td>
-                        <td><a>Ver Detalle</a></td>
+                        <td><a href="#" (click)="onEdit(establecimiento)">Ver Detalle</a></td>
                         <td><a href="#" (click)="onDisable(establecimiento)">Borrar</a></td>
                     </tr>
                 </tbody>
@@ -50,6 +50,14 @@
 </div>
 
 <div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <establecimiento-create (data)='onReturn($event)'></establecimiento-create>
+
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
         <establecimiento-create (data)='onReturn($event)'></establecimiento-create>

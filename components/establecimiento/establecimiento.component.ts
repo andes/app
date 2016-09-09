@@ -1,3 +1,4 @@
+import { EstablecimientoUpdateComponent } from './establecimiento-update.component';
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
 import { EstablecimientoService } from './../../services/establecimiento.service';
 import { Observable } from 'rxjs/Rx';
@@ -7,17 +8,17 @@ import {Control, FORM_DIRECTIVES} from '@angular/common';
 
 @Component({
     selector: 'establecimientos',
-    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES],
+    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES, EstablecimientoUpdateComponent],
     templateUrl: 'components/establecimiento/establecimiento.html'
 })
 export class EstablecimientoComponent implements OnInit {
     showcreate: boolean = false;
+    showupdate: boolean = false;
     establecimientos: IEstablecimiento[];
     searchForm: FormGroup;
+    selectedEst: IEstablecimiento;
 
-    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService) {
-       
-    }
+    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService) {}
 
 
     ngOnInit() {
@@ -59,7 +60,8 @@ export class EstablecimientoComponent implements OnInit {
 
     onReturn(objEstablecimiento: IEstablecimiento): void {
         this.showcreate = false;
-        this.establecimientos.push(objEstablecimiento);
+        this.showupdate = false;
+        this.loadEstablecimientos();
     }
 
     onDisable(objEstablecimiento:IEstablecimiento){
@@ -74,4 +76,10 @@ export class EstablecimientoComponent implements OnInit {
     
     }
 
+    onEdit(objEstablecimiento:IEstablecimiento){
+        this.showcreate = false;
+        this.showupdate = true;
+        this.selectedEst = objEstablecimiento;
+
+    }
 }
