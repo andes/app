@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var establecimiento_service_1 = require('./../../services/establecimiento.service');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
+var common_1 = require('@angular/common');
 var EstablecimientoComponent = (function () {
     function EstablecimientoComponent(formBuilder, establecimientoService) {
         this.formBuilder = formBuilder;
@@ -23,17 +24,27 @@ var EstablecimientoComponent = (function () {
             codigoSisa: [''],
             nombre: ['']
         });
-        this.searchForm.valueChanges.subscribe(function (value) {
-            console.log(value.codigoSisa + " --- " + value.nombre);
-            _this.establecimientos = _this.establecimientos.filter(function (e) { return e.codigo.sisa.toString().indexOf(value.codigoSisa) > -1; });
+        this.searchForm.valueChanges.debounceTime(200).subscribe(function (value) {
+            var codSisa = value.codigoSisa ? value.codigoSisa : "";
+            _this.loadEstablecimientosFiltrados(codSisa, value.nombre);
         });
         this.loadEstablecimientos();
     };
     EstablecimientoComponent.prototype.loadEstablecimientos = function () {
         var _this = this;
-        debugger;
         this.establecimientoService.get()
-            .subscribe(function (establecimientos) { debugger; _this.establecimientos = establecimientos; }, //Bind to view
+            .subscribe(function (establecimientos) { return _this.establecimientos = establecimientos; }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    };
+    EstablecimientoComponent.prototype.loadEstablecimientosFiltrados = function (codigoSisa, nombre) {
+        var _this = this;
+        this.establecimientoService.getByTerm(codigoSisa, nombre)
+            .subscribe(function (establecimientos) { return _this.establecimientos = establecimientos; }, //Bind to view
         function (//Bind to view
             err) {
             if (err) {
@@ -48,7 +59,7 @@ var EstablecimientoComponent = (function () {
     EstablecimientoComponent = __decorate([
         core_1.Component({
             selector: 'establecimientos',
-            directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES],
             templateUrl: 'components/establecimiento/establecimiento.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService])

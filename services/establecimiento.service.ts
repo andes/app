@@ -21,6 +21,12 @@ export class EstablecimientoService {
            .catch(this.handleError); //...errors if any*/
    }
 
+   getByTerm(codigoSisa:string, nombre: String): Observable<IEstablecimiento[]> {
+       return this.http.get(this.establecimientoUrl+"?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
+           .map((res:Response) => res.json())
+           .catch(this.handleError); //...errors if any*/
+   }
+
    post(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON

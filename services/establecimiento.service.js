@@ -25,6 +25,11 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
+    EstablecimientoService.prototype.getByTerm = function (codigoSisa, nombre) {
+        return this.http.get(this.establecimientoUrl + "?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError); //...errors if any*/
+    };
     EstablecimientoService.prototype.post = function (establecimiento) {
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
