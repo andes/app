@@ -73,9 +73,9 @@ var EstablecimientoUpdateComponent = (function () {
     ], EstablecimientoUpdateComponent.prototype, "data", void 0);
     EstablecimientoUpdateComponent = __decorate([
         core_1.Component({
-            selector: 'establecimiento-create',
+            selector: 'establecimiento-update',
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
-            templateUrl: 'components/establecimiento/establecimientoCreate.html'
+            templateUrl: 'components/establecimiento/establecimiento-update.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService])
     ], EstablecimientoUpdateComponent);

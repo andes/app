@@ -5,9 +5,9 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 
 @Component({
-    selector: 'establecimiento-create',
+    selector: 'establecimiento-update',
     directives: [REACTIVE_FORM_DIRECTIVES],
-    templateUrl: 'components/establecimiento/establecimientoCreate.html'
+    templateUrl: 'components/establecimiento/establecimiento-update.html'
 })
 export class EstablecimientoUpdateComponent implements OnInit {
 
@@ -16,7 +16,6 @@ selectedEst:IEstablecimiento;
 
 @Output() 
 data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
-
 
     /*Datos externos que deberían venir de algún servicio*/
     tipos = [{nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion:'C1'}, {nombre:'Centro de Salud', descripcion:'Centro de Salud',clasificacion:'C2'}, 
