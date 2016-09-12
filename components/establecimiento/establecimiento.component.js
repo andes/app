@@ -73,6 +73,7 @@ var EstablecimientoComponent = (function () {
     EstablecimientoComponent.prototype.onEdit = function (objEstablecimiento) {
         this.showcreate = false;
         this.showupdate = true;
+        debugger;
         this.selectedEst = objEstablecimiento;
     };
     EstablecimientoComponent = __decorate([

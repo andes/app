@@ -56,7 +56,7 @@ export class EstablecimientoCreateComponent implements OnInit {
             let estOperation:Observable<IEstablecimiento>;
             model.habilitado = true;
             estOperation = this.establecimientoService.post(model);
-            estOperation.subscribe(resultado => this.data.emit(resultado) );
+            estOperation.subscribe(resultado => this.data.emit(resultado));
 
         }else{
             alert("Complete datos obligatorios");

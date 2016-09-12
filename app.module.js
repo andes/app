@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var tipoEstablecimiento_service_1 = require('./services/tipoEstablecimiento.service');
+var provincia_service_1 = require('./services/provincia.service');
 var http_1 = require('@angular/http');
 var establecimiento_service_1 = require('./services/establecimiento.service');
 var establecimientoCreate_component_1 = require('./components/establecimiento/establecimientoCreate.component');
@@ -24,7 +26,7 @@ var AppModule = (function () {
             imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule],
             declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimientoCreate_component_1.EstablecimientoCreateComponent],
             bootstrap: [app_component_1.AppComponent],
-            providers: [establecimiento_service_1.EstablecimientoService]
+            providers: [establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);

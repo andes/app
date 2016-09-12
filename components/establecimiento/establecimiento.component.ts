@@ -79,6 +79,7 @@ export class EstablecimientoComponent implements OnInit {
     onEdit(objEstablecimiento:IEstablecimiento){
         this.showcreate = false;
         this.showupdate = true;
+        debugger;
         this.selectedEst = objEstablecimiento;
 
     }

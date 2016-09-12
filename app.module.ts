@@ -1,3 +1,5 @@
+import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
+import { ProvinciaService } from './services/provincia.service';
 import { HttpModule } from '@angular/http';
 import { EstablecimientoService } from './services/establecimiento.service';
 import { EstablecimientoCreateComponent } from './components/establecimiento/establecimientoCreate.component';
@@ -13,6 +15,6 @@ import {ReactiveFormsModule} from "@angular/forms";
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
   declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent ],
   bootstrap: [ AppComponent ],
-  providers: [EstablecimientoService]
+  providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService]
 })
 export class AppModule { }

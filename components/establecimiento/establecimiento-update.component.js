@@ -8,38 +8,44 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var establecimiento_service_1 = require('./../../services/establecimiento.service');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
+var establecimiento_service_1 = require('./../../services/establecimiento.service');
+var provincia_service_1 = require('./../../services/provincia.service');
+var tipoEstablecimiento_service_1 = require('./../../services/tipoEstablecimiento.service');
 var EstablecimientoUpdateComponent = (function () {
-    function EstablecimientoUpdateComponent(formBuilder, establecimientoService) {
+    function EstablecimientoUpdateComponent(formBuilder, establecimientoService, provinciaService, tipoEstablecimientoService) {
         this.formBuilder = formBuilder;
         this.establecimientoService = establecimientoService;
+        this.provinciaService = provinciaService;
+        this.tipoEstablecimientoService = tipoEstablecimientoService;
         this.data = new core_1.EventEmitter();
-        /*Datos externos que deberían venir de algún servicio*/
-        this.tipos = [{ nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion: 'C1' }, { nombre: 'Centro de Salud', descripcion: 'Centro de Salud', clasificacion: 'C2' },
-            { nombre: 'Posta Sanitaria', descripcion: 'Posta Sanitaria', clasificacion: 'C3' }];
-        this.provincias = [{ nombre: 'Neuquen', localidades: [{ nombre: 'Confluencia', codigoPostal: 8300 }, { nombre: 'Plottier', codigoPostal: 8389 }] },
-            { nombre: 'Rio Negro', localidades: [{ nombre: 'Cipolletti', codigoPostal: 830890 }, { nombre: 'Cinco Saltos', codigoPostal: 8303 }] }];
         this.localidades = [];
     }
     EstablecimientoUpdateComponent.prototype.ngOnInit = function () {
-        debugger;
-        this.myTipoEst = this.selectedEst.tipoEstablecimiento;
+        var _this = this;
+        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
+        this.myProvincia = this.establecimientoHijo.domicilio.provincia;
+        this.mylocalidad = this.establecimientoHijo.domicilio.localidad;
+        //CArga de combos
+        this.provinciaService.get()
+            .subscribe(function (resultado) { return _this.provincias = resultado; });
+        this.tipoEstablecimientoService.get()
+            .subscribe(function (resultado) { return _this.tipos = resultado; });
         this.createForm = this.formBuilder.group({
-            nombre: [this.selectedEst.nombre, forms_1.Validators.required],
-            nivelComplejidad: [this.selectedEst.nivelComplejidad],
-            descripcion: [this.selectedEst.descripcion, forms_1.Validators.required],
+            nombre: [this.establecimientoHijo.nombre, forms_1.Validators.required],
+            nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
+            descripcion: [this.establecimientoHijo.descripcion, forms_1.Validators.required],
             codigo: this.formBuilder.group({
-                sisa: [this.selectedEst.codigo.sisa, forms_1.Validators.required],
-                cuie: [this.selectedEst.codigo.cuie],
-                remediar: [this.selectedEst.codigo.remediar],
+                sisa: [this.establecimientoHijo.codigo.sisa, forms_1.Validators.required],
+                cuie: [this.establecimientoHijo.codigo.cuie],
+                remediar: [this.establecimientoHijo.codigo.remediar],
             }),
             domicilio: this.formBuilder.group({
-                calle: [this.selectedEst.domicilio.calle, forms_1.Validators.required],
-                numero: [this.selectedEst.domicilio.numero]
+                calle: [this.establecimientoHijo.domicilio.calle, forms_1.Validators.required],
+                numero: [this.establecimientoHijo.domicilio.numero]
             }),
-            tipoEstablecimiento: [],
+            tipoEstablecimiento: [''],
             provincia: [''],
             localidad: ['']
         });
@@ -64,9 +70,9 @@ var EstablecimientoUpdateComponent = (function () {
         this.data.emit(null);
     };
     __decorate([
-        core_1.Input(), 
+        core_1.Input('selectedEst'), 
         __metadata('design:type', Object)
-    ], EstablecimientoUpdateComponent.prototype, "selectedEst", void 0);
+    ], EstablecimientoUpdateComponent.prototype, "establecimientoHijo", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
@@ -77,7 +83,7 @@ var EstablecimientoUpdateComponent = (function () {
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/establecimiento/establecimiento-update.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
     ], EstablecimientoUpdateComponent);
     return EstablecimientoUpdateComponent;
 }());

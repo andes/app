@@ -60,7 +60,7 @@
                     <div class="col-sm-4">
                         <label> Provincia: </label>
                         <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                            <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
+                            <option *ngFor="let provincia of provincias" [selected]="provincia.nombre==myprovincia">{{provincia.nombre}}</option>
                         </select>
                     </div>
 
@@ -69,7 +69,7 @@
                     <div class="col-sm-4">
                         <label> Localidad: </label>
                         <select class="form-control" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
+                                <option *ngFor="let localidad of localidades" [selected]="localidad.nombre==mylocalidad.nombre">{{localidad.nombre}}</option>
                             </select>
                     </div>
 
@@ -79,7 +79,7 @@
                         <label> Tipo Establecimiento: </label>
                         <select class="form-control" formControlName="tipoEstablecimiento">
 
-                                <option *ngFor="let tipo of tipos" [selected]="tipo.nombre === myTipoEst.nombre" [ngValue]="tipo">{{tipo.nombre}}</option>
+                                <option *ngFor="let tipo of tipos" [selected]="tipo.nombre==myTipoEst.nombre" >{{tipo.nombre}}</option>
                         </select>
                     </div>
                 </div>
