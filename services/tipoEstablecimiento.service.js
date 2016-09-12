@@ -18,10 +18,10 @@ require('rxjs/add/operator/catch');
 var TipoEstablecimientoService = (function () {
     function TipoEstablecimientoService(http) {
         this.http = http;
-        this.provinciaUrl = 'http://localhost:3002/api/tipoEstablecimiento'; // URL to web api
+        this.tipoEstablecimientoUrl = 'http://localhost:3002/api/tipoEstablecimiento'; // URL to web api
     }
     TipoEstablecimientoService.prototype.get = function () {
-        return this.http.get(this.provinciaUrl)
+        return this.http.get(this.tipoEstablecimientoUrl)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };

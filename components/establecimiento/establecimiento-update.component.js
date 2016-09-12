@@ -24,15 +24,12 @@ var EstablecimientoUpdateComponent = (function () {
     }
     EstablecimientoUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
-        this.myProvincia = this.establecimientoHijo.domicilio.provincia;
-        this.mylocalidad = this.establecimientoHijo.domicilio.localidad;
         //CArga de combos
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.tipoEstablecimientoService.get()
-            .subscribe(function (resultado) { return _this.tipos = resultado; });
-        this.createForm = this.formBuilder.group({
+        this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
+            .subscribe(function (resultado) { return _this.localidades = resultado.localidades; });
+        this.updateForm = this.formBuilder.group({
             nombre: [this.establecimientoHijo.nombre, forms_1.Validators.required],
             nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
             descripcion: [this.establecimientoHijo.descripcion, forms_1.Validators.required],
@@ -43,20 +40,23 @@ var EstablecimientoUpdateComponent = (function () {
             }),
             domicilio: this.formBuilder.group({
                 calle: [this.establecimientoHijo.domicilio.calle, forms_1.Validators.required],
-                numero: [this.establecimientoHijo.domicilio.numero]
+                numero: [this.establecimientoHijo.domicilio.numero],
+                provincia: [this.establecimientoHijo.domicilio.provincia],
+                localidad: [this.establecimientoHijo.domicilio.localidad]
             }),
-            tipoEstablecimiento: [''],
-            provincia: [''],
-            localidad: ['']
+            tipoEstablecimiento: [this.establecimientoHijo.tipoEstablecimiento]
         });
-        //this.createForm.value = this.selectedEst;
+        this.myProvincia = this.establecimientoHijo.domicilio.provincia;
+        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
+        this.tipoEstablecimientoService.get()
+            .subscribe(function (resultado) { _this.tipos = resultado; debugger; _this.updateForm.controls['tipoEstablecimiento'].setValue(_this.establecimientoHijo.tipoEstablecimiento); });
     };
     EstablecimientoUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
+        debugger;
         if (isvalid) {
             var estOperation = void 0;
-            model.habilitado = true;
-            estOperation = this.establecimientoService.post(model);
+            estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
         else {
@@ -64,10 +64,14 @@ var EstablecimientoUpdateComponent = (function () {
         }
     };
     EstablecimientoUpdateComponent.prototype.getLocalidades = function (index) {
+        debugger;
         this.localidades = this.provincias[index].localidades;
     };
     EstablecimientoUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
+    };
+    EstablecimientoUpdateComponent.prototype.getTipo = function (tipo) {
+        debugger;
     };
     __decorate([
         core_1.Input('selectedEst'), 

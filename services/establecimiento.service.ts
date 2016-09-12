@@ -36,6 +36,15 @@ export class EstablecimientoService {
                          .catch(this.handleError); //...errors if any
     } 
 
+    put(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
+        let bodyString = JSON.stringify(establecimiento); // Stringify payload
+        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options       = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.establecimientoUrl + "/" + establecimiento._id, bodyString, options) // ...using post request
+                         .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+                         .catch(this.handleError); //...errors if any
+    } 
+
      disable(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
          establecimiento.habilitado = false;
          establecimiento.fechaBaja = new Date();

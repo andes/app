@@ -25,6 +25,11 @@ var ProvinciaService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
+    ProvinciaService.prototype.getLocalidades = function (provincia) {
+        return this.http.get(this.provinciaUrl + "?nombre=" + provincia)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError); //...errors if any*/
+    };
     ProvinciaService.prototype.handleError = function (error) {
         console.log(error.json());
         return Rx_1.Observable.throw(error.json().error || 'Server error');

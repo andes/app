@@ -2,13 +2,13 @@
     <div class="panel panel-default">
         <div class="panel-heading">Actualización de Establecimientos</div>
         <div class="panel-body">
-            <form [formGroup]="createForm">
+            <form [formGroup]="updateForm">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Nombre:</label>
                             <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.nombre.errors">Este campo es obligatorio!</label>
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.nombre.errors">Este campo es obligatorio!</label>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label>Descripción:</label>
                             <input type="text" class="form-control" formControlName="descripcion" placeholder="Ingrese descripción...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.descripcion.errors">Este campo es obligatorio!</label>
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.descripcion.errors">Este campo es obligatorio!</label>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <div class="col-sm-4">
                         <label> Cod. SISA: </label>
                         <input type="number" class="form-control" formControlName="sisa" placeholder="Ingresar código...">
-                        <label class="control-label text-danger" *ngIf="createForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
+                        <label class="control-label text-danger" *ngIf="updateForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
                     </div>
                     <div class="col-sm-4">
                         <label> Cod. CUIE: </label>
@@ -47,49 +47,49 @@
                         <div class="col-sm-6">
                             <label> Calle: </label>
                             <input type="text" class="form-control" formControlName="calle" placeholder="Ingresar código...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.domicilio.controls.calle.errors">Este campo es obligatorio!</label>
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.domicilio.controls.calle.errors">Este campo es obligatorio!</label>
                         </div>
                         <div class="col-sm-6">
                             <label> Número: </label>
                             <input type="number" class="form-control" formControlName="numero" placeholder="Ingresar código...">
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label> Provincia: </label>
-                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                            <option *ngFor="let provincia of provincias" [selected]="provincia.nombre==myprovincia">{{provincia.nombre}}</option>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label> Provincia: </label>
+                            <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                            <option *ngFor="let provincia of provincias" [ngValue]="provincia" [selected]="provincia.nombre==myprovincia">{{provincia.nombre}}</option>
                         </select>
-                    </div>
+                        </div>
 
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label> Localidad: </label>
-                        <select class="form-control" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [selected]="localidad.nombre==mylocalidad.nombre">{{localidad.nombre}}</option>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label> Localidad: </label>
+                            <select class="form-control" formControlName="localidad">
+                                <option *ngFor="let localidad of localidades" [ngValue]="localidad" [selected]="localidad.nombre==mylocalidad.nombre">{{localidad.nombre}}</option>
                             </select>
-                    </div>
+                        </div>
 
+                    </div>
                 </div>
+
                 <div class="row">
                     <div class="col-sm-4">
                         <label> Tipo Establecimiento: </label>
-                        <select class="form-control" formControlName="tipoEstablecimiento">
-
-                                <option *ngFor="let tipo of tipos" [selected]="tipo.nombre==myTipoEst.nombre" >{{tipo.nombre}}</option>
+                        <select class="form-control" [(ngModel)]="myTipoEst" formControlName="tipoEstablecimiento">
+                            <option *ngFor="let tipo of tipos" [ngValue]="tipo" [selected]="tipo.nombre == myTipoEst.nombre">{{tipo.nombre}}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="row">&nbsp;</div>
                 <div class="row">
-
-                    <button class="btn btn-primary" type="submit" (click)="onSave(createForm.value, createForm.valid)">Guardar</button>
+                    <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)">Guardar</button>
                     <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
             </form>
+
+            <pre>{{updateForm.value.tipoEstablecimiento | json }}</pre>
         </div>
     </div>
 </div>

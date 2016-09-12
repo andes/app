@@ -11,12 +11,12 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class TipoEstablecimientoService {
 
-   private provinciaUrl = 'http://localhost:3002/api/tipoEstablecimiento';  // URL to web api
+   private tipoEstablecimientoUrl = 'http://localhost:3002/api/tipoEstablecimiento';  // URL to web api
 
    constructor(private http: Http) {}
 
    get(): Observable<ITipoEstablecimiento[]> {
-       return this.http.get(this.provinciaUrl)
+       return this.http.get(this.tipoEstablecimientoUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }

@@ -1,3 +1,4 @@
+import { Control } from '@angular/common';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
@@ -25,11 +26,11 @@ export class EstablecimientoUpdateComponent implements OnInit {
     data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
 
     /*Datos externos que deberían venir de algún servicio*/
-    tipos: ITipoEstablecimiento[];
+    tipos: any[];
     provincias: IProvincia[];
-    createForm: FormGroup;
+    updateForm: FormGroup;
     localidades: any[] = [];
-    myTipoEst: any;
+    myTipoEst: ITipoEstablecimiento;
     mylocalidad: any;
     myProvincia: any;
 
@@ -41,10 +42,10 @@ export class EstablecimientoUpdateComponent implements OnInit {
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
 
-        this.tipoEstablecimientoService.get()
-            .subscribe(resultado => this.tipos = resultado);
-
-        this.createForm = this.formBuilder.group({
+        this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
+            .subscribe(resultado => this.localidades = resultado.localidades);    
+        
+        this.updateForm = this.formBuilder.group({
             nombre: [this.establecimientoHijo.nombre, Validators.required],
             nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
             descripcion: [this.establecimientoHijo.descripcion, Validators.required],
@@ -55,28 +56,26 @@ export class EstablecimientoUpdateComponent implements OnInit {
             }),
             domicilio: this.formBuilder.group({
                 calle: [this.establecimientoHijo.domicilio.calle, Validators.required],
-                numero: [this.establecimientoHijo.domicilio.numero]
-                //    provincia: this.formBuilder.group({
-                //         nombre: ['', Validators.required],
-                //         codigoPostal:[''],
-                //         provincia:['']
-                //     })
+                numero: [this.establecimientoHijo.domicilio.numero],
+                provincia: [this.establecimientoHijo.domicilio.provincia],
+                localidad: [this.establecimientoHijo.domicilio.localidad]
             }),
 
-            tipoEstablecimiento: [''],
-            provincia: [''],
-            localidad: ['']
+            tipoEstablecimiento: [this.establecimientoHijo.tipoEstablecimiento]
         });
+       this.myProvincia=  this.establecimientoHijo.domicilio.provincia;
+       this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
 
-        //this.createForm.value = this.selectedEst;
+       this.tipoEstablecimientoService.get()
+            .subscribe(resultado => {this.tipos = resultado; debugger;  this.updateForm.controls['tipoEstablecimiento'].setValue(this.establecimientoHijo.tipoEstablecimiento);} );
 
     }
 
-    onSave(model: IEstablecimiento, isvalid: boolean) {
+    onSave(model: any, isvalid: boolean) {
+        debugger;
         if (isvalid) {
             let estOperation: Observable<IEstablecimiento>;
-            model.habilitado = true;
-            estOperation = this.establecimientoService.post(model);
+            estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
 
         } else {
@@ -85,11 +84,18 @@ export class EstablecimientoUpdateComponent implements OnInit {
     }
 
     getLocalidades(index) {
+         debugger;
         this.localidades = this.provincias[index].localidades;
     }
 
     onCancel() {
         this.data.emit(null)
     }
+    
+    getTipo(tipo){
+        debugger;
+        
+    }
+
 
 }
