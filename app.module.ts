@@ -4,6 +4,10 @@ import { HttpModule } from '@angular/http';
 import { EstablecimientoService } from './services/establecimiento.service';
 import { EstablecimientoCreateComponent } from './components/establecimiento/establecimientoCreate.component';
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
+import { ProfesionalComponent } from './components/profesional/profesional.component';
+import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
+import { ProfesionalService } from './services/profesional.service';
+
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,8 +17,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
-  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent ],
+  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent,ProfesionalComponent,ProfesionalCreateComponent ],
   bootstrap: [ AppComponent ],
-  providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService]
+  providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, ProfesionalService]
 })
 export class AppModule { }
