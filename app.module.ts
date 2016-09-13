@@ -7,7 +7,6 @@ import { EstablecimientoCreateComponent } from './components/establecimiento/est
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
 
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
-import {EspecialidadCreateComponent} from './components/especialidad/especialidadCreate.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
 import { ProfesionalService } from './services/profesional.service';
@@ -21,7 +20,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule, routing],
-  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent, EspecialidadCreateComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
+  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
   bootstrap: [ AppComponent ],
   providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService]
 
