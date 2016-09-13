@@ -5,7 +5,7 @@ import { EstablecimientoService } from './services/establecimiento.service';
 import { EspecialidadService } from './services/especialidad.service';
 import { EstablecimientoCreateComponent } from './components/establecimiento/establecimientoCreate.component';
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
-
+import { EspecialidadCreateComponent} from './components/especialidad/especialidadCreate.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
