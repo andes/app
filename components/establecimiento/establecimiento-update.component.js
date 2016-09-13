@@ -29,6 +29,8 @@ var EstablecimientoUpdateComponent = (function () {
             .subscribe(function (resultado) { return _this.provincias = resultado; });
         this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
             .subscribe(function (resultado) { return _this.localidades = resultado.localidades; });
+        this.tipoEstablecimientoService.get()
+            .subscribe(function (resultado) { _this.tipos = resultado; });
         this.updateForm = this.formBuilder.group({
             nombre: [this.establecimientoHijo.nombre, forms_1.Validators.required],
             nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
@@ -44,18 +46,18 @@ var EstablecimientoUpdateComponent = (function () {
                 provincia: [this.establecimientoHijo.domicilio.provincia],
                 localidad: [this.establecimientoHijo.domicilio.localidad]
             }),
-            tipoEstablecimiento: [this.establecimientoHijo.tipoEstablecimiento]
+            tipoEstablecimiento: ['']
         });
         this.myProvincia = this.establecimientoHijo.domicilio.provincia;
         this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
-        this.tipoEstablecimientoService.get()
-            .subscribe(function (resultado) { _this.tipos = resultado; debugger; _this.updateForm.controls['tipoEstablecimiento'].setValue(_this.establecimientoHijo.tipoEstablecimiento); });
     };
     EstablecimientoUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
         debugger;
         if (isvalid) {
             var estOperation = void 0;
+            model.tipoEstablecimiento = this.myTipoEst;
+            model.habilitado = this.establecimientoHijo.habilitado;
             estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
@@ -69,9 +71,6 @@ var EstablecimientoUpdateComponent = (function () {
     };
     EstablecimientoUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
-    };
-    EstablecimientoUpdateComponent.prototype.getTipo = function (tipo) {
-        debugger;
     };
     __decorate([
         core_1.Input('selectedEst'), 

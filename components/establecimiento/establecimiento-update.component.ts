@@ -26,7 +26,7 @@ export class EstablecimientoUpdateComponent implements OnInit {
     data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
 
     /*Datos externos que deberían venir de algún servicio*/
-    tipos: any[];
+    tipos: ITipoEstablecimiento[];
     provincias: IProvincia[];
     updateForm: FormGroup;
     localidades: any[] = [];
@@ -43,8 +43,11 @@ export class EstablecimientoUpdateComponent implements OnInit {
             .subscribe(resultado => this.provincias = resultado);
 
         this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
-            .subscribe(resultado => this.localidades = resultado.localidades);    
-        
+            .subscribe(resultado => this.localidades = resultado.localidades);
+
+        this.tipoEstablecimientoService.get()
+                 .subscribe(resultado => {this.tipos = resultado;});
+
         this.updateForm = this.formBuilder.group({
             nombre: [this.establecimientoHijo.nombre, Validators.required],
             nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
@@ -61,13 +64,13 @@ export class EstablecimientoUpdateComponent implements OnInit {
                 localidad: [this.establecimientoHijo.domicilio.localidad]
             }),
 
-            tipoEstablecimiento: [this.establecimientoHijo.tipoEstablecimiento]
+            tipoEstablecimiento: ['']
         });
+
        this.myProvincia=  this.establecimientoHijo.domicilio.provincia;
        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
 
-       this.tipoEstablecimientoService.get()
-            .subscribe(resultado => {this.tipos = resultado; debugger;  this.updateForm.controls['tipoEstablecimiento'].setValue(this.establecimientoHijo.tipoEstablecimiento);} );
+
 
     }
 
@@ -75,6 +78,8 @@ export class EstablecimientoUpdateComponent implements OnInit {
         debugger;
         if (isvalid) {
             let estOperation: Observable<IEstablecimiento>;
+            model.tipoEstablecimiento = this.myTipoEst;
+            model.habilitado = this.establecimientoHijo.habilitado;
             estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
 
@@ -91,11 +96,8 @@ export class EstablecimientoUpdateComponent implements OnInit {
     onCancel() {
         this.data.emit(null)
     }
-    
-    getTipo(tipo){
-        debugger;
-        
-    }
+
+
 
 
 }
