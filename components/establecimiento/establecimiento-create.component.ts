@@ -3,27 +3,40 @@ import { EstablecimientoService } from './../../services/establecimiento.service
 import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
 import { Component, OnInit, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
+import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
+import { IProvincia } from './../../interfaces/IProvincia';
+import { ProvinciaService } from './../../services/provincia.service';
+import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+
 
 @Component({
     selector: 'establecimiento-create',
     directives: [REACTIVE_FORM_DIRECTIVES],
-    templateUrl: 'components/establecimiento/establecimientoCreate.html'
+    templateUrl: 'components/establecimiento/establecimiento-create.html'
 })
 export class EstablecimientoCreateComponent implements OnInit {
 @Output() data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
 
 
-    /*Datos externos que deberían venir de algún servicio*/
-    tipos = [{nombre: 'Hospital', descripcion: 'Hospital desc', clasificacion:'C1'}, {nombre:'Centro de Salud', descripcion:'Centro de Salud',clasificacion:'C2'}, 
-         {nombre:'Posta Sanitaria',descripcion:'Posta Sanitaria',clasificacion:'C3'}];
-    provincias = [{nombre: 'Neuquen', localidades: [{nombre:'Confluencia', codigoPostal:8300}, {nombre:'Plottier', codigoPostal:8389}]},
-          {nombre: 'Rio Negro', localidades: [{nombre:'Cipolletti', codigoPostal:830890}, {nombre:'Cinco Saltos', codigoPostal:8303}]}];
+    tipos: ITipoEstablecimiento[];
+    provincias: IProvincia[];
     createForm: FormGroup;
     localidades: any[]=[];
+   
 
-    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService) {}
+    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService,
+    private provinciaService: ProvinciaService, private tipoEstablecimientoService: TipoEstablecimientoService) {}
 
     ngOnInit() {
+
+        this.provinciaService.get()
+            .subscribe(resultado => {this.provincias = resultado;
+                this.localidades = this.provincias[0].localidades;});
+
+        
+        
+        this.tipoEstablecimientoService.get()
+            .subscribe(resultado => {this.tipos = resultado;});
          
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -36,16 +49,13 @@ export class EstablecimientoCreateComponent implements OnInit {
             }),
             domicilio: this.formBuilder.group({
                 calle: ['', Validators.required],
-                numero:['']
-            //    provincia: this.formBuilder.group({
-            //         nombre: ['', Validators.required],
-            //         codigoPostal:[''],
-            //         provincia:['']
-            //     })
+                numero:[''],
+                provincia: [''],
+                localidad: ['']
             }),
+            
             tipoEstablecimiento:[''],
-            provincia:[''],
-            localidad:['']
+        
         });
 
         
@@ -54,6 +64,7 @@ export class EstablecimientoCreateComponent implements OnInit {
     onSave(model: IEstablecimiento, isvalid: boolean){
         if(isvalid){
             let estOperation:Observable<IEstablecimiento>;
+            debugger;
             model.habilitado = true;
             estOperation = this.establecimientoService.post(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
@@ -66,6 +77,7 @@ export class EstablecimientoCreateComponent implements OnInit {
     getLocalidades(index) {
         this.localidades= this.provincias[index].localidades;
     }
+
 
     onCancel(){
         this.data.emit(null)

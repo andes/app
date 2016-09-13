@@ -57,8 +57,8 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label> Provincia: </label>
-                            <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)">
-                            <option *ngFor="let provincia of provincias" [ngValue]="provincia" >{{provincia.nombre}}</option>
+                            <select class="form-control" [(ngModel)]="myProvincia" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)">
+                            <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre" >{{provincia.nombre}}</option>
                         </select>
                         </div>
 
@@ -66,8 +66,8 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label> Localidad: </label>
-                            <select class="form-control" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [ngValue]="localidad" [selected]="localidad.nombre==mylocalidad.nombre">{{localidad.nombre}}</option>
+                            <select class="form-control" [(ngModel)]="myLocalidad.nombre" formControlName="localidad">
+                                <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre" >{{localidad.nombre}}</option>
                             </select>
                         </div>
 
@@ -83,15 +83,12 @@
                     </div>
                 </div>
 
-
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)">Guardar</button>
                     <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
             </form>
 
-            <pre>{{updateForm.value.tipoEstablecimiento | json }}</pre>
-            <pre>{{updateForm.value.myTipoEst | json }}</pre>
         </div>
     </div>
 </div>
