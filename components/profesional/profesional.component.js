@@ -55,7 +55,20 @@ var ProfesionalComponent = (function () {
     ProfesionalComponent.prototype.onReturn = function (objProfesional) {
         this.showcreate = false;
         this.showupdate = false;
-        this.loadProfesionales();
+        if (objProfesional) {
+            this.loadProfesionales();
+        }
+    };
+    ProfesionalComponent.prototype.onDisable = function (objProfesional) {
+        var _this = this;
+        this.profesionalService.disable(objProfesional)
+            .subscribe(function (dato) { return _this.loadProfesionales(); }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
     };
     ProfesionalComponent = __decorate([
         core_1.Component({

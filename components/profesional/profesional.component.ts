@@ -60,13 +60,16 @@ export class ProfesionalComponent implements OnInit {
     onReturn(objProfesional: IProfesional): void {
         this.showcreate = false;
         this.showupdate = false;
-        this.loadProfesionales();
+        if(objProfesional){
+            this.loadProfesionales();
+        }
+        
     }
 
-/*
-    onDisable(objEstablecimiento:IEstablecimiento){
-        this.establecimientoService.disable(objEstablecimiento)
-            .subscribe(dato => this.loadEstablecimientos(), //Bind to view
+
+    onDisable(objProfesional:IProfesional){
+        this.profesionalService.disable(objProfesional)
+            .subscribe(dato => this.loadProfesionales(), //Bind to view
             err => {
                 if (err) {
                     console.log(err);
@@ -76,6 +79,7 @@ export class ProfesionalComponent implements OnInit {
     
     }
 
+/*
     onEdit(objEstablecimiento:IEstablecimiento){
         this.showcreate = false;
         this.showupdate = true;

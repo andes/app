@@ -2,8 +2,8 @@
  import { IMatricula} from "./IMatricula";
  
  export interface IProfesional {
- 
- nombre: String;
+    _id: string;
+    nombre: String;
     apellido: String;
     tipoDni: String;
     numeroDni: Number;

@@ -13,13 +13,12 @@ import { ProfesionalService } from './services/profesional.service';
 
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { routing }        from './app.routing';
 import { AppComponent }  from './app.component';
 
 import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
-  imports: [ BrowserModule, ReactiveFormsModule, HttpModule, routing],
+  imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
   declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
   bootstrap: [ AppComponent ],
   providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]

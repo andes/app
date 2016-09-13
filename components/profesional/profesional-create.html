@@ -8,7 +8,7 @@
                         <div class="form-group">
                             <label>Nombre:</label>
                             <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.nombre.errors">Este campo es obligatorio!</label>
+                            <label class="control-label text-danger" *ngIf="!createForm.controls.nombre.valid">Este campo es obligatorio!</label>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -72,43 +72,54 @@
                         <input type="text" class="form-control" formControlName="email" placeholder="Ingresar e-Mail...">
                     </div>
                 </div>
-
-                <div class="col-sm-12">
-                    <div formArrayName="matriculas">
-                        <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
-                            <div class="panel-heading">
-                                <span>matricula {{i + 1}}</span>
-                                <span class="glyphicon glyphicon-remove pull-right" *ngIf="createForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)"></span>
-                            </div>
-                            <div class="panel-body" [formGroupName]="i">
-                                <div class="form-group col-xs-6">
-                                    <label>Número de Matrícula</label>
-                                    <input type="number" class="form-control" formControlName="numero">
-                                    <small [hidden]="createForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div formArrayName="matriculas">
+                            <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span>matricula {{i + 1}}</span>
+                                    <span class="glyphicon glyphicon-remove pull-right" *ngIf="createForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)"></span>
+                                </div>
+                                <div class="panel-body" [formGroupName]="i">
+                                    <div class="row">
+                                        <div class="form-group col-xs-6">
+                                            <label>Número de Matrícula</label>
+                                            <input type="number" class="form-control" formControlName="numero">
+                                            <small [hidden]="createForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">
                     Número de Matrícula es Requerido
                 </small>
-                                    <label>Descripción</label>
-                                    <input type="string" class="form-control" formControlName="descripcion">
+                                        </div>
+                                        <div class="form-group col-xs-6">
+                                            <label>Descripción</label>
+                                            <input type="string" class="form-control" formControlName="descripcion">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xs-6">
+                                            <label>Fecha de Inicio</label>
+                                            <input type="date" class="form-control" formControlName="fechaInicio">
+                                        </div>
+                                        <div class="form-group col-xs-6">
+                                            <label>Fecha de Vencimiento</label>
+                                            <input type="date" class="form-control" formControlName="fechaVencimiento">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xs-6">
+                                            <label>Vigente</label>
+                                            <input type="checkbox" class="form-control" formControlName="vigente">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-xs-6">
-                                    <label>Fecha de Inicio</label>
-                                    <input type="date" class="form-control" formControlName="fechaInicio">
-                                    <label>Fecha de Vencimiento</label>
-                                    <input type="date" class="form-control" formControlName="fechaVencimiento">
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <label>Vigente</label>
-                                    <input type="checkbox" class="form-control" formControlName="vigente">
-                                </div>
+                            </div>
+
+                            <div class="margin-20">
+                                <a (click)="addMatricula()" style="cursor: default">Agregar Matrícula +</a>
                             </div>
                         </div>
                     </div>
-
-                    <div class="margin-20">
-                        <a (click)="addMatricula()" style="cursor: default">Agregar Matrícula +</a>
-                    </div>
                 </div>
-
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-sm-4">

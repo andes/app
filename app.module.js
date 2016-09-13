@@ -21,7 +21,6 @@ var profesional_create_component_1 = require('./components/profesional/profesion
 var profesional_service_1 = require('./services/profesional.service');
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
-var app_routing_1 = require('./app.routing');
 var app_component_1 = require('./app.component');
 var forms_1 = require("@angular/forms");
 var AppModule = (function () {
@@ -29,7 +28,7 @@ var AppModule = (function () {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule, app_routing_1.routing],
+            imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule],
             declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimientoCreate_component_1.EstablecimientoCreateComponent, especialidad_component_1.EspecialidadComponent, profesional_component_1.ProfesionalComponent, profesional_create_component_1.ProfesionalCreateComponent],
             bootstrap: [app_component_1.AppComponent],
             providers: [establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService]
