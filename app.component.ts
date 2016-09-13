@@ -5,6 +5,7 @@ import {
 @Component({
     selector: 'my-app',
     template: `<h1>ANDES :: INICIO</h1> 
-               <establecimientos><\establecimientos>`
+               <especialidades><\especialidades>
+               `
 })
 export class AppComponent {}
