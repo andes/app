@@ -22,7 +22,7 @@ import {ReactiveFormsModule} from "@angular/forms";
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule, routing],
   declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
   bootstrap: [ AppComponent ],
-  providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService]
+  providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]
 
 })
 export class AppModule { }
