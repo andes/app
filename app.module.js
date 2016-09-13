@@ -12,7 +12,7 @@ var tipoEstablecimiento_service_1 = require('./services/tipoEstablecimiento.serv
 var provincia_service_1 = require('./services/provincia.service');
 var http_1 = require('@angular/http');
 var establecimiento_service_1 = require('./services/establecimiento.service');
-var establecimientoCreate_component_1 = require('./components/establecimiento/establecimientoCreate.component');
+var establecimiento_create_component_1 = require('./components/establecimiento/establecimiento-create.component');
 var establecimiento_component_1 = require('./components/establecimiento/establecimiento.component');
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
@@ -24,7 +24,7 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule],
-            declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimientoCreate_component_1.EstablecimientoCreateComponent],
+            declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimiento_create_component_1.EstablecimientoCreateComponent],
             bootstrap: [app_component_1.AppComponent],
             providers: [establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService]
         }), 
