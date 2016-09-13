@@ -49,7 +49,6 @@ var EspecialidadService = (function () {
     EspecialidadService.prototype.disable = function (especialidad) {
         especialidad.habilitado = false;
         especialidad.fechaBaja = new Date();
-        console.log(especialidad.fechaBaja);
         var bodyString = JSON.stringify(especialidad); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option

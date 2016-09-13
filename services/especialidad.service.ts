@@ -46,9 +46,8 @@ export class EspecialidadService {
     } 
 
      disable(especialidad: IEspecialidad): Observable<IEspecialidad> {
-         especialidad.habilitado = false;
-         especialidad.fechaBaja = new Date();
-         console.log(especialidad.fechaBaja);
+        especialidad.habilitado = false;
+        especialidad.fechaBaja = new Date();
         let bodyString = JSON.stringify(especialidad); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
