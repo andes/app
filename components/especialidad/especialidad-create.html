@@ -1,0 +1,51 @@
+<div class="col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">Alta de Especialidad</div>
+        <div class="panel-body">
+            <form [formGroup]="createForm">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.nombre.errors">Este campo es obligatorio!</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Descripción:</label>
+                            <input type="text" class="form-control" formControlName="descripcion" placeholder="Ingrese descripción...">
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.descripcion.errors">Este campo es obligatorio!</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Disciplina:</label>
+                            <input type="text" class="form-control" formControlName="disciplina" placeholder="Ingrese la disciplina...">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Complejidad:</label>
+                            <input type="number" class="form-control" formControlName="complejidad" placeholder="Ingrese nivel de complejidad...">
+                        </div>
+                    </div>
+                     <div class="row" formGroupName="codigo">
+                        <div class="col-sm-4">
+                            <label> Cod. SISA: </label>
+                            <input type="number" class="form-control" formControlName="sisa" placeholder="Ingresar código...">
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
+                        </div>
+                     </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)">Guardar</button>
+                    <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
