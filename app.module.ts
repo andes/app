@@ -3,7 +3,7 @@ import { ProvinciaService } from './services/provincia.service';
 import { HttpModule } from '@angular/http';
 import { EstablecimientoService } from './services/establecimiento.service';
 import { EspecialidadService } from './services/especialidad.service';
-import { EstablecimientoCreateComponent } from './components/establecimiento/establecimientoCreate.component';
+import { EstablecimientoCreateComponent } from './components/establecimiento/establecimiento-create.component';
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
 import { EspecialidadCreateComponent} from './components/especialidad/especialidadCreate.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
