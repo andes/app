@@ -31,6 +31,7 @@
                         <th>Codigo Sisa</th>
                         <th>Nombre</th>
                         <th>disciplina</th>
+                        <th>Habilitado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,7 @@
                         <td>{{especialidad.codigo.sisa}}</td>
                         <td>{{especialidad.nombre}}</td>
                         <td>{{especialidad.disciplina}}</td>
+                        <th>{{especialidad.habilitado ?'Sí':'No' }}</th>
                         <td><a href="#" (click)="onEdit(especialidad)">Actualizar</a></td>
                         <td><a href="#" (click)="onDisable(especialidad)">Borrar</a></td>
                     </tr>

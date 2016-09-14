@@ -25,11 +25,13 @@ export class EspecialidadUpdateComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
+        debugger
         this.updateForm = this.formBuilder.group({
             nombre: [this.especialidadHija.nombre, Validators.required],
             descripcion: [this.especialidadHija.descripcion, Validators.required],
             disciplina: [this.especialidadHija.disciplina],
             complejidad: [this.especialidadHija.complejidad],
+            habilitado: [this.especialidadHija.habilitado],
             codigo: this.formBuilder.group({
                 sisa: [this.especialidadHija.codigo.sisa, Validators.required],    
             }),
@@ -40,11 +42,10 @@ export class EspecialidadUpdateComponent implements OnInit {
     onSave(model: any, isvalid: boolean) {
         if (isvalid) {
             let espOperation: Observable<IEspecialidad>;
-            model.habilitado = this.especialidadHija.habilitado;
             model.fechaAlta = this.especialidadHija.fechaAlta;
             model.fechaBaja = this.especialidadHija.fechaBaja;
             model._id = this.especialidadHija._id;
-            debugger;
+            
             espOperation = this.especialidadService.put(model);
             espOperation.subscribe(resultado => this.data.emit(resultado));
             
