@@ -4,7 +4,7 @@ export interface IEspecialidad {
     nombre: String;
     descripcion: String;
     disciplina: String;
-    nivelComplejidad: Number;
+    complejidad: Number;
     codigo:{
        sisa: Number,
     };

@@ -24,7 +24,7 @@ var EspecialidadCreateComponent = (function () {
             disciplina: [''],
             complejidad: [''],
             codigo: this.formBuilder.group({
-                sisa: ['', forms_1.Validators.required],
+                sisa: ['', forms_1.Validators.required]
             }),
         });
     };
@@ -45,10 +45,6 @@ var EspecialidadCreateComponent = (function () {
         this.data.emit(null);
     };
     __decorate([
-        core_1.Input('selectedEsp'), 
-        __metadata('design:type', Object)
-    ], EspecialidadCreateComponent.prototype, "especialidadHija", void 0);
-    __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], EspecialidadCreateComponent.prototype, "data", void 0);
@@ -63,4 +59,4 @@ var EspecialidadCreateComponent = (function () {
     return EspecialidadCreateComponent;
 }());
 exports.EspecialidadCreateComponent = EspecialidadCreateComponent;
-//# sourceMappingURL=especialidadCreate.component.js.map
+//# sourceMappingURL=especialidad-create.component.js.map

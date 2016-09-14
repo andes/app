@@ -22,7 +22,7 @@ var EspecialidadUpdateComponent = (function () {
             nombre: [this.especialidadHija.nombre, forms_1.Validators.required],
             descripcion: [this.especialidadHija.descripcion, forms_1.Validators.required],
             disciplina: [this.especialidadHija.disciplina],
-            complejidad: [this.especialidadHija.nivelComplejidad],
+            complejidad: [this.especialidadHija.complejidad],
             codigo: this.formBuilder.group({
                 sisa: [this.especialidadHija.codigo.sisa, forms_1.Validators.required],
             }),
@@ -36,9 +36,9 @@ var EspecialidadUpdateComponent = (function () {
             model.fechaAlta = this.especialidadHija.fechaAlta;
             model.fechaBaja = this.especialidadHija.fechaBaja;
             model._id = this.especialidadHija._id;
+            debugger;
             espOperation = this.especialidadService.put(model);
             espOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
-            debugger;
         }
         else {
             alert("Complete datos obligatorios");
