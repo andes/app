@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var profesional_update_component_1 = require('./profesional-update.component');
+var profesional_create_component_1 = require('./profesional-create.component');
 var profesional_service_1 = require('./../../services/profesional.service');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
@@ -71,14 +73,13 @@ var ProfesionalComponent = (function () {
         });
     };
     ProfesionalComponent.prototype.onEdit = function (objProfesional) {
-        this.showcreate = false;
         this.showupdate = true;
         this.selectedProfesional = objProfesional;
     };
     ProfesionalComponent = __decorate([
         core_1.Component({
             selector: 'profesionales',
-            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES],
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES, profesional_update_component_1.ProfesionalUpdateComponent, profesional_create_component_1.ProfesionalCreateComponent],
             templateUrl: 'components/profesional/profesional.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, profesional_service_1.ProfesionalService])

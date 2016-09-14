@@ -46,6 +46,16 @@ export class ProfesionalService {
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch(this.handleError); //...errors if any
     } 
+
+    put(profesional: IProfesional): Observable<IProfesional> {
+        debugger;
+        let bodyString = JSON.stringify(profesional); // Stringify payload
+        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options       = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.profesionalUrl + "/" + profesional._id, bodyString, options) // ...using post request
+                         .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+                         .catch(this.handleError); //...errors if any
+    } 
    
      handleError(error: any){
         console.log(error.json());

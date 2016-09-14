@@ -58,3 +58,10 @@
 
     </div>
 </div>
+
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <profesional-update [selectedProfesional]="selectedProfesional" (data)='onReturn($event)'></profesional-update>
+    </div>
+</div>

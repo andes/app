@@ -19,7 +19,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
-  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
+  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent ],
   bootstrap: [ AppComponent ],
   providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]
 

@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label> Fecha de Nacimiento: </label>
-                        <input type="date" class="form-control" formControlName="fechaNacimiento" placeholder="Ingresar Fecha de Nacimiento...">
+                        <input type="text" class="form-control" formControlName="fechaNacimiento" placeholder="Ingresar Fecha de Nacimiento...">
                     </div>
                 </div>
                 <div formGroupName="domicilio">
@@ -50,14 +50,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label> Provincia: </label>
-                            <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                            <select class="form-control" formControlName="provincia" [(ngModel)]="myProvincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
                             <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
                         </select>
                         </div>
                         <div class="col-sm-6">
                             <label> Localidad: </label>
-                            <select class="form-control" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
+                            <select class="form-control" [(ngModel)]="myLocalidad.nombre" formControlName="localidad">
+                                <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
                             </select>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <label> Teléfono: </label>
-                        <input type="text" class="form-control" formControlName="telefono" placeholder="Ingresar e-Mail...">
+                        <input type="text" class="form-control" formControlName="telefono" placeholder="Ingresar telefono...">
                     </div>
                     <div class="col-sm-6">
                         <label> e-Mail: </label>
@@ -124,7 +124,7 @@
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <button class="btn btn-primary" type="submit" (click)="onSave(createForm.value, createForm.valid)">Guardar</button>
+                        <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)">Guardar</button>
                         <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
                 </div>
             </form>

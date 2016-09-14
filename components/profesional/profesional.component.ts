@@ -1,4 +1,5 @@
-//import { EstablecimientoUpdateComponent } from './establecimiento-update.component';
+import { ProfesionalUpdateComponent } from './profesional-update.component';
+import { ProfesionalCreateComponent } from './profesional-create.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Observable } from 'rxjs/Rx';
@@ -8,7 +9,7 @@ import {Control, FORM_DIRECTIVES} from '@angular/common';
 
 @Component({
     selector: 'profesionales',
-    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES],
+    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES, ProfesionalUpdateComponent, ProfesionalCreateComponent],
     templateUrl: 'components/profesional/profesional.html'
 })
 export class ProfesionalComponent implements OnInit {
@@ -77,7 +78,6 @@ export class ProfesionalComponent implements OnInit {
     }
 
     onEdit(objProfesional:IProfesional){
-        this.showcreate = false;
         this.showupdate = true;
         this.selectedProfesional = objProfesional;
 

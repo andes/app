@@ -48,6 +48,15 @@ var ProfesionalService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
+    ProfesionalService.prototype.put = function (profesional) {
+        debugger;
+        var bodyString = JSON.stringify(profesional); // Stringify payload
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.profesionalUrl + "/" + profesional._id, bodyString, options) // ...using post request
+            .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
+            .catch(this.handleError); //...errors if any
+    };
     ProfesionalService.prototype.handleError = function (error) {
         console.log(error.json());
         return Rx_1.Observable.throw(error.json().error || 'Server error');
