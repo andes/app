@@ -32,7 +32,7 @@ var ProfesionalCreateComponent = (function () {
             apellido: [''],
             tipoDni: [''],
             numeroDni: ['', forms_1.Validators.required],
-            fechaNacimiento: ['', forms_1.Validators.pattern('(\d{1,2})/(\d{1,2})/(\d{4})')],
+            fechaNacimiento: [''],
             domicilio: this.formBuilder.group({
                 calle: ['', forms_1.Validators.required],
                 numero: [''],

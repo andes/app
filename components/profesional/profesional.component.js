@@ -70,6 +70,11 @@ var ProfesionalComponent = (function () {
             }
         });
     };
+    ProfesionalComponent.prototype.onEdit = function (objProfesional) {
+        this.showcreate = false;
+        this.showupdate = true;
+        this.selectedProfesional = objProfesional;
+    };
     ProfesionalComponent = __decorate([
         core_1.Component({
             selector: 'profesionales',

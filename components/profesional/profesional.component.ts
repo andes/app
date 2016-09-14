@@ -62,8 +62,7 @@ export class ProfesionalComponent implements OnInit {
         this.showupdate = false;
         if(objProfesional){
             this.loadProfesionales();
-        }
-        
+        } 
     }
 
 
@@ -75,16 +74,12 @@ export class ProfesionalComponent implements OnInit {
                     console.log(err);
                 }
             });
-
-    
     }
 
-/*
-    onEdit(objEstablecimiento:IEstablecimiento){
+    onEdit(objProfesional:IProfesional){
         this.showcreate = false;
         this.showupdate = true;
-        debugger;
-        this.selectedEst = objEstablecimiento;
+        this.selectedProfesional = objProfesional;
 
-    }*/
+    }
 }

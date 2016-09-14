@@ -37,7 +37,7 @@ export class ProfesionalCreateComponent implements OnInit {
             apellido: [''],
             tipoDni: [''],
             numeroDni: ['', Validators.required],
-            fechaNacimiento: ['', Validators.pattern('(\d{1,2})/(\d{1,2})/(\d{4})')],
+            fechaNacimiento: [''],
             domicilio: this.formBuilder.group({
                 calle: ['', Validators.required],
                 numero: [''],
