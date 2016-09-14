@@ -5,7 +5,7 @@ import { EstablecimientoService } from './services/establecimiento.service';
 import { EspecialidadService } from './services/especialidad.service';
 import { EstablecimientoCreateComponent } from './components/establecimiento/establecimiento-create.component';
 import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
-import { EspecialidadCreateComponent} from './components/especialidad/especialidadCreate.component';
+import { EspecialidadCreateComponent} from './components/especialidad/especialidad-create.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
@@ -19,7 +19,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [ BrowserModule, ReactiveFormsModule, HttpModule],
-  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
+  declarations: [ AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent, EspecialidadCreateComponent ,ProfesionalComponent,ProfesionalCreateComponent ],
   bootstrap: [ AppComponent ],
   providers: [EstablecimientoService,ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]
 
