@@ -25,7 +25,9 @@ export class ProfesionalUpdateComponent implements OnInit {
     localidades: any[] = [];
     myLocalidad: any;
     myProvincia: any;    
-
+    fechaNac: Date;
+    fechaIni: Date;
+    fechaFin: Date;
     constructor(private formBuilder: FormBuilder, private provinciaService: ProvinciaService,
         private profesionalService: ProfesionalService) { }
 
@@ -38,14 +40,15 @@ export class ProfesionalUpdateComponent implements OnInit {
             .subscribe(resultado => {  this.localidades = resultado[0].localidades; });
 
         debugger;
-       // var fecha= new Date(this.ProfesionalHijo.fechaNacimiento.toDateString();
+        
+        this.fechaNac = this.ProfesionalHijo.fechaNacimiento;
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, Validators.required],
-            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento.toLocaleDateString()],
+            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -68,15 +71,17 @@ export class ProfesionalUpdateComponent implements OnInit {
 
     iniMatricula(objMatricula?: IMatricula) {
         // Inicializa matrículas
+        debugger;
         if (objMatricula) {
             return this.formBuilder.group({
                 numero: [objMatricula.numero, Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [new Date(objMatricula.fechaInicio.toString())],
-                fechaVencimiento: [new Date(objMatricula.fechaVencimiento.toString())],
+                fechaInicio: [objMatricula.fechaInicio],
+                fechaVencimiento: [objMatricula.fechaVencimiento],
                 vigente: [objMatricula.vigente]
             });
         } else {
+           
             return this.formBuilder.group({
                 numero: ['', Validators.required],
                 descripcion: [''],
@@ -103,7 +108,6 @@ export class ProfesionalUpdateComponent implements OnInit {
         debugger;
         if (isvalid) {
             let profOperation: Observable<IProfesional>;
-            
             model.habilitado = true;
             model.domicilio.localidad = this.myLocalidad;
             profOperation = this.profesionalService.put(model);

@@ -15,6 +15,7 @@ var establecimiento_service_1 = require('./services/establecimiento.service');
 var especialidad_service_1 = require('./services/especialidad.service');
 var establecimiento_create_component_1 = require('./components/establecimiento/establecimiento-create.component');
 var establecimiento_component_1 = require('./components/establecimiento/establecimiento.component');
+var especialidad_create_component_1 = require('./components/especialidad/especialidad-create.component');
 var especialidad_component_1 = require('./components/especialidad/especialidad.component');
 var profesional_component_1 = require('./components/profesional/profesional.component');
 var profesional_service_1 = require('./services/profesional.service');
@@ -28,7 +29,7 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule],
-            declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimiento_create_component_1.EstablecimientoCreateComponent, especialidad_component_1.EspecialidadComponent, profesional_component_1.ProfesionalComponent],
+            declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimiento_create_component_1.EstablecimientoCreateComponent, especialidad_component_1.EspecialidadComponent, especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent],
             bootstrap: [app_component_1.AppComponent],
             providers: [establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService]
         }), 

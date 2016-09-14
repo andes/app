@@ -30,14 +30,14 @@ var ProfesionalUpdateComponent = (function () {
         this.provinciaService.getLocalidades(this.ProfesionalHijo.domicilio.provincia)
             .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
         debugger;
-        // var fecha= new Date(this.ProfesionalHijo.fechaNacimiento.toDateString();
+        this.fechaNac = this.ProfesionalHijo.fechaNacimiento;
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, forms_1.Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, forms_1.Validators.required],
-            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento.toLocaleDateString()],
+            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, forms_1.Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -57,12 +57,13 @@ var ProfesionalUpdateComponent = (function () {
     };
     ProfesionalUpdateComponent.prototype.iniMatricula = function (objMatricula) {
         // Inicializa matrículas
+        debugger;
         if (objMatricula) {
             return this.formBuilder.group({
                 numero: [objMatricula.numero, forms_1.Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [new Date(objMatricula.fechaInicio.toString())],
-                fechaVencimiento: [new Date(objMatricula.fechaVencimiento.toString())],
+                fechaInicio: [objMatricula.fechaInicio],
+                fechaVencimiento: [objMatricula.fechaVencimiento],
                 vigente: [objMatricula.vigente]
             });
         }
