@@ -31,20 +31,20 @@ export class EstablecimientoUpdateComponent implements OnInit {
     updateForm: FormGroup;
     localidades: any[] = [];
     myTipoEst: ITipoEstablecimiento;
-    mylocalidad: any;
+    myLocalidad: any;
     myProvincia: any;
 
     constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService,
         private provinciaService: ProvinciaService, private tipoEstablecimientoService: TipoEstablecimientoService) { }
 
     ngOnInit() {
-        //CArga de combos
+        //Carga de combos
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
-
+        
         this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
-            .subscribe(resultado => this.localidades = resultado.localidades);
-
+            .subscribe(resultado => { this.localidades = resultado[0].localidades});
+        
         this.tipoEstablecimientoService.get()
                  .subscribe(resultado => {this.tipos = resultado;});
 
@@ -61,7 +61,7 @@ export class EstablecimientoUpdateComponent implements OnInit {
                 calle: [this.establecimientoHijo.domicilio.calle, Validators.required],
                 numero: [this.establecimientoHijo.domicilio.numero],
                 provincia: [this.establecimientoHijo.domicilio.provincia],
-                localidad: [this.establecimientoHijo.domicilio.localidad]
+                localidad: []
             }),
 
             tipoEstablecimiento: ['']
@@ -69,9 +69,7 @@ export class EstablecimientoUpdateComponent implements OnInit {
 
        this.myProvincia=  this.establecimientoHijo.domicilio.provincia;
        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
-
-
-
+       this.myLocalidad = this.establecimientoHijo.domicilio.localidad;
     }
 
     onSave(model: any, isvalid: boolean) {
@@ -80,6 +78,8 @@ export class EstablecimientoUpdateComponent implements OnInit {
             let estOperation: Observable<IEstablecimiento>;
             model.tipoEstablecimiento = this.myTipoEst;
             model.habilitado = this.establecimientoHijo.habilitado;
+            model._id = this.establecimientoHijo._id;
+            model.domicilio.localidad = this.myLocalidad;
             estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
 
@@ -89,15 +89,10 @@ export class EstablecimientoUpdateComponent implements OnInit {
     }
 
     getLocalidades(index) {
-         debugger;
         this.localidades = this.provincias[index].localidades;
     }
 
     onCancel() {
         this.data.emit(null)
     }
-
-
-
-
 }

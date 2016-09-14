@@ -22,6 +22,7 @@ export class ProvinciaService {
    }
 
     getLocalidades(provincia: String): Observable<IProvincia> {
+    console.log(this.provinciaUrl +"?nombre=" + provincia);
        return this.http.get(this.provinciaUrl +"?nombre=" + provincia)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/

@@ -24,11 +24,11 @@ var EstablecimientoUpdateComponent = (function () {
     }
     EstablecimientoUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //CArga de combos
+        //Carga de combos
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
         this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
-            .subscribe(function (resultado) { return _this.localidades = resultado.localidades; });
+            .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
         this.tipoEstablecimientoService.get()
             .subscribe(function (resultado) { _this.tipos = resultado; });
         this.updateForm = this.formBuilder.group({
@@ -44,12 +44,13 @@ var EstablecimientoUpdateComponent = (function () {
                 calle: [this.establecimientoHijo.domicilio.calle, forms_1.Validators.required],
                 numero: [this.establecimientoHijo.domicilio.numero],
                 provincia: [this.establecimientoHijo.domicilio.provincia],
-                localidad: [this.establecimientoHijo.domicilio.localidad]
+                localidad: []
             }),
             tipoEstablecimiento: ['']
         });
         this.myProvincia = this.establecimientoHijo.domicilio.provincia;
         this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
+        this.myLocalidad = this.establecimientoHijo.domicilio.localidad;
     };
     EstablecimientoUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
@@ -58,6 +59,8 @@ var EstablecimientoUpdateComponent = (function () {
             var estOperation = void 0;
             model.tipoEstablecimiento = this.myTipoEst;
             model.habilitado = this.establecimientoHijo.habilitado;
+            model._id = this.establecimientoHijo._id;
+            model.domicilio.localidad = this.myLocalidad;
             estOperation = this.establecimientoService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
@@ -66,7 +69,6 @@ var EstablecimientoUpdateComponent = (function () {
         }
     };
     EstablecimientoUpdateComponent.prototype.getLocalidades = function (index) {
-        debugger;
         this.localidades = this.provincias[index].localidades;
     };
     EstablecimientoUpdateComponent.prototype.onCancel = function () {

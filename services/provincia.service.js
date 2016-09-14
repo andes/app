@@ -26,6 +26,7 @@ var ProvinciaService = (function () {
             .catch(this.handleError); //...errors if any*/
     };
     ProvinciaService.prototype.getLocalidades = function (provincia) {
+        console.log(this.provinciaUrl + "?nombre=" + provincia);
         return this.http.get(this.provinciaUrl + "?nombre=" + provincia)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
