@@ -1,11 +1,9 @@
-import { Control } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
-
 
 @Component({
     selector: 'especialidad-create',
@@ -13,9 +11,7 @@ import { IEspecialidad } from './../../interfaces/IEspecialidad';
     templateUrl: 'components/especialidad/especialidad-create.html'
 })
 export class EspecialidadCreateComponent implements OnInit {
-
-    @Input('selectedEsp') especialidadHija: IEspecialidad;
-
+    
     @Output()
     data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
     createForm: FormGroup;
@@ -29,7 +25,7 @@ export class EspecialidadCreateComponent implements OnInit {
             disciplina: [''],
             complejidad: [''],
             codigo: this.formBuilder.group({
-                sisa: ['', Validators.required],    
+                sisa: ['', Validators.required]  
             }),
             
         });

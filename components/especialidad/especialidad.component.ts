@@ -83,4 +83,5 @@ export class EspecialidadComponent implements OnInit {
         this.selectedEsp = objEspecialidad;
 
     }
+
 }
