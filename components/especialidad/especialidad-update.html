@@ -33,10 +33,16 @@
                         </div>
                     </div>
                      <div class="row" formGroupName="codigo">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <label> Cod. SISA: </label>
                             <input type="number" class="form-control" formControlName="sisa" placeholder="Ingresar código...">
                             <label class="control-label text-danger" *ngIf="updateForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" formControlName="habilitado" >
+                            <label> Habilitado: </label> 
                         </div>
                      </div>
                 </div>

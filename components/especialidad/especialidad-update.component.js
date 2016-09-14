@@ -18,11 +18,13 @@ var EspecialidadUpdateComponent = (function () {
         this.data = new core_1.EventEmitter();
     }
     EspecialidadUpdateComponent.prototype.ngOnInit = function () {
+        debugger;
         this.updateForm = this.formBuilder.group({
             nombre: [this.especialidadHija.nombre, forms_1.Validators.required],
             descripcion: [this.especialidadHija.descripcion, forms_1.Validators.required],
             disciplina: [this.especialidadHija.disciplina],
             complejidad: [this.especialidadHija.complejidad],
+            habilitado: [this.especialidadHija.habilitado],
             codigo: this.formBuilder.group({
                 sisa: [this.especialidadHija.codigo.sisa, forms_1.Validators.required],
             }),
@@ -32,11 +34,9 @@ var EspecialidadUpdateComponent = (function () {
         var _this = this;
         if (isvalid) {
             var espOperation = void 0;
-            model.habilitado = this.especialidadHija.habilitado;
             model.fechaAlta = this.especialidadHija.fechaAlta;
             model.fechaBaja = this.especialidadHija.fechaBaja;
             model._id = this.especialidadHija._id;
-            debugger;
             espOperation = this.especialidadService.put(model);
             espOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
