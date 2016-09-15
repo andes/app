@@ -46,7 +46,7 @@ export class ProfesionalUpdateComponent implements OnInit {
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, Validators.required],
-            fechaNacimiento: [this.fechaNac],
+            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -86,8 +86,8 @@ export class ProfesionalUpdateComponent implements OnInit {
             return this.formBuilder.group({
                 numero: [objMatricula.numero, Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [fechaIni],
-                fechaVencimiento: [fechaFin],
+                fechaInicio: [objMatricula.fechaInicio],
+                fechaVencimiento: [objMatricula.fechaVencimiento],
                 vigente: [objMatricula.vigente]
             });
         } else {

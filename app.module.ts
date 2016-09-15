@@ -16,9 +16,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent }  from './app.component';
 
 import {ReactiveFormsModule} from "@angular/forms";
+import { routing } from './app.routing';
 
 @NgModule({
-  imports: [BrowserModule, ReactiveFormsModule, HttpModule],
+  imports: [BrowserModule, ReactiveFormsModule, HttpModule, routing],
 
   declarations: [AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent, EspecialidadCreateComponent, ProfesionalComponent],
 

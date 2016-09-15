@@ -33,6 +33,8 @@
                         <th>Complejidad</th>
                         <th>Calle</th>
                         <th>Numero</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,8 +44,8 @@
                         <td>{{establecimiento.nivelComplejidad}}</td>
                         <td>{{establecimiento.domicilio.calle}}</td>
                         <td>{{establecimiento.domicilio.numero}}</td>
-                        <td><a href="#" (click)="onEdit(establecimiento)">Ver Detalle</a></td>
-                        <td><a href="#" (click)="onDisable(establecimiento)">Borrar</a></td>
+                        <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(establecimiento)"><i class="glyphicon glyphicon-pencil"></i>Actualizar</button></td>
+                        <td style="width:20px;"><button class="btn btn-danger" (click)="onDisable(establecimiento)"><i class="glyphicon glyphicon-trash"></i>Borrar</button></td>
                     </tr>
                 </tbody>
             </table>

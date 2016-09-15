@@ -4,8 +4,20 @@ import {
 
 @Component({
     selector: 'my-app',
-    template: `<h1>ANDES :: INICIO</h1> 
-                <profesionales></profesionales>
-               `
+    styleUrls:  ['css.app.component.css'],
+    template: `<div class="masthead">
+                <h1><img src="andes.png" width="60px" height="60px"> ANDES</h1>
+                    <nav>
+                        <ul class="nav nav-justified">
+                            <li><a routerLink="/profesional" routerLinkActive="active">Profesional</a></li>
+                            <li><a routerLink="/establecimiento" routerLinkActive="active">Establecimiento</a></li>
+                            <li><a routerLink="/especialidad" routerLinkActive="active">Especialidad</a></li>
+                        </ul>
+                    </nav>
+                    <div class="row">&nbsp;</div>
+                    <router-outlet></router-outlet>
+                </div>
+                
+                `
 })
 export class AppComponent {}

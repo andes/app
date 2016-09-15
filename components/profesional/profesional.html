@@ -42,8 +42,9 @@
                         <td>{{profesional.tipoDni}} {{profesional.numeroDni}}</td>
                         <td>{{profesional.email}}</td>
                         <td>{{profesional.telefono}}</td>
-                        <td><a href="#" (click)="onEdit(profesional)">Actualizar</a></td>
-                        <td><a href="#" (click)="onDisable(profesional)">Borrar</a></td>
+                        <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(profesional)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
+                        <td style="width:20px;"><button class="btn btn-danger" (click)="onDisable(profesional)"><i class="glyphicon glyphicon-trash"></i> Borrar</button></td>
+                        
                     </tr>
                 </tbody>
             </table>
