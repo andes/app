@@ -72,8 +72,16 @@ export class EstablecimientoComponent implements OnInit {
                     console.log(err);
                 }
             });
+    }
 
-    
+    onEnable(objEstablecimiento:IEstablecimiento){
+        this.establecimientoService.enable(objEstablecimiento)
+            .subscribe(dato => this.loadEstablecimientos(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     onEdit(objEstablecimiento:IEstablecimiento){

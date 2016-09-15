@@ -56,6 +56,16 @@ export class EspecialidadService {
                          .catch(this.handleError); //...errors if any
     } 
 
+    enable(especialidad: IEspecialidad): Observable<IEspecialidad> {
+        especialidad.habilitado = true;
+        let bodyString = JSON.stringify(especialidad); // Stringify payload
+        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options       = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.especialidadUrl + "/" + especialidad._id, bodyString, options) // ...using post request
+                         .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
+                         .catch(this.handleError); //...errors if any
+    } 
+
      handleError(error: any){
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');

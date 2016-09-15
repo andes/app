@@ -72,6 +72,17 @@ var ProfesionalComponent = (function () {
             }
         });
     };
+    ProfesionalComponent.prototype.onEnable = function (objProfesional) {
+        var _this = this;
+        this.profesionalService.enable(objProfesional)
+            .subscribe(function (dato) { return _this.loadProfesionales(); }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    };
     ProfesionalComponent.prototype.onEdit = function (objProfesional) {
         this.showupdate = true;
         this.selectedProfesional = objProfesional;

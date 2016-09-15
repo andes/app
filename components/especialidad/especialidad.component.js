@@ -70,6 +70,17 @@ var EspecialidadComponent = (function () {
             }
         });
     };
+    EspecialidadComponent.prototype.onEnable = function (objEspecialidad) {
+        var _this = this;
+        this.especialidadService.enable(objEspecialidad)
+            .subscribe(function (dato) { return _this.loadEspecialidades(); }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    };
     EspecialidadComponent.prototype.onEdit = function (objEspecialidad) {
         this.showcreate = false;
         this.showupdate = true;

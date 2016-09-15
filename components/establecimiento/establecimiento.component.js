@@ -70,6 +70,17 @@ var EstablecimientoComponent = (function () {
             }
         });
     };
+    EstablecimientoComponent.prototype.onEnable = function (objEstablecimiento) {
+        var _this = this;
+        this.establecimientoService.enable(objEstablecimiento)
+            .subscribe(function (dato) { return _this.loadEstablecimientos(); }, //Bind to view
+        function (//Bind to view
+            err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    };
     EstablecimientoComponent.prototype.onEdit = function (objEstablecimiento) {
         this.showcreate = false;
         this.showupdate = true;

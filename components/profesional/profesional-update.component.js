@@ -30,14 +30,14 @@ var ProfesionalUpdateComponent = (function () {
         this.provinciaService.getLocalidades(this.ProfesionalHijo.domicilio.provincia)
             .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
         debugger;
-        this.fechaNac = this.cammbiarFecha(this.ProfesionalHijo.fechaNacimiento);
+        this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, forms_1.Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, forms_1.Validators.required],
-            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
+            fechaNacimiento: [this.fechaNac],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, forms_1.Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -55,24 +55,33 @@ var ProfesionalUpdateComponent = (function () {
         this.myLocalidad = this.ProfesionalHijo.domicilio.localidad;
         this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
     };
-    ProfesionalUpdateComponent.prototype.cammbiarFecha = function (myDate) {
-        var fecha1 = myDate.toString();
-        var fecha2 = new Date(Date.parse(fecha1));
-        var mes = fecha2.getMonth() + 1;
-        var fechaSal = fecha2.getDate().toString() + "/" + mes.toString() + "/" + fecha2.getFullYear().toString();
-        return fechaSal;
+    ProfesionalUpdateComponent.prototype.dateToText = function (myDate) {
+        if (myDate) {
+            var fecha1 = myDate.toString();
+            var fecha2 = new Date(Date.parse(fecha1));
+            var mes = fecha2.getMonth() + 1;
+            var fechaSal = fecha2.getDate().toString() + "/" + mes.toString() + "/" + fecha2.getFullYear().toString();
+            return fechaSal;
+        }
+        else
+            return "";
+    };
+    ProfesionalUpdateComponent.prototype.textToDate = function (myDate) {
+        debugger;
+        var fecha2 = new Date(Date.parse(myDate));
+        return fecha2;
     };
     ProfesionalUpdateComponent.prototype.iniMatricula = function (objMatricula) {
         // Inicializa matrículas
         debugger;
         if (objMatricula) {
-            var fechaIni = this.cammbiarFecha(objMatricula.fechaInicio);
-            var fechaFin = this.cammbiarFecha(objMatricula.fechaVencimiento);
+            var fechaIni = this.dateToText(objMatricula.fechaInicio);
+            var fechaFin = this.dateToText(objMatricula.fechaVencimiento);
             return this.formBuilder.group({
                 numero: [objMatricula.numero, forms_1.Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [objMatricula.fechaInicio],
-                fechaVencimiento: [objMatricula.fechaVencimiento],
+                fechaInicio: [fechaIni],
+                fechaVencimiento: [fechaFin],
                 vigente: [objMatricula.vigente]
             });
         }
@@ -103,6 +112,12 @@ var ProfesionalUpdateComponent = (function () {
             var profOperation = void 0;
             model.habilitado = true;
             model.domicilio.localidad = this.myLocalidad;
+            var ff = model.fechaNacimiento;
+            model.fechaNacimiento = this.textToDate(ff);
+            model.matriculas.forEach(function (e) {
+                e.fechaInicio = _this.textToDate(e.fechaInicio);
+                e.fechaVencimiento = _this.textToDate(e.fechaVencimiento);
+            });
             profOperation = this.profesionalService.put(model);
             profOperation.subscribe(function (resultado) { _this.data.emit(resultado); });
         }

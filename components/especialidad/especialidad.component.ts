@@ -73,8 +73,16 @@ export class EspecialidadComponent implements OnInit {
                     console.log(err);
                 }
             });
+    }
 
-
+    onEnable(objEspecialidad: IEspecialidad) {
+        this.especialidadService.enable(objEspecialidad)
+            .subscribe(dato => this.loadEspecialidades(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     onEdit(objEspecialidad: IEspecialidad) {

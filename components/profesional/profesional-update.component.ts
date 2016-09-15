@@ -39,14 +39,14 @@ export class ProfesionalUpdateComponent implements OnInit {
 
         debugger;
         
-        this.fechaNac = this.cammbiarFecha(this.ProfesionalHijo.fechaNacimiento);
+        this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, Validators.required],
-            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
+            fechaNacimiento: [this.fechaNac],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -68,26 +68,35 @@ export class ProfesionalUpdateComponent implements OnInit {
     }
 
 
-    private cammbiarFecha(myDate:Date): string {
-        var fecha1:string = myDate.toString();
-        var fecha2 = new Date(Date.parse(fecha1));
-        var mes = fecha2.getMonth() + 1;
-        var fechaSal = fecha2.getDate().toString() + "/" + mes.toString() + "/" + fecha2.getFullYear().toString();
-        return fechaSal;
+    private dateToText(myDate:Date): string {
+        if(myDate){
+            var fecha1:string = myDate.toString();
+            var fecha2 = new Date(Date.parse(fecha1));
+            var mes = fecha2.getMonth() + 1;
+            var fechaSal = fecha2.getDate().toString() + "/" + mes.toString() + "/" + fecha2.getFullYear().toString();
+            return fechaSal;
+        }
+        else return "";
+    }
+
+    private textToDate(myDate): Date {
+        debugger;
+        var fecha2 = new Date(Date.parse(myDate));
+        return fecha2;
     }
 
     iniMatricula(objMatricula?: IMatricula) {
         // Inicializa matrículas
         debugger;
         if (objMatricula) {
-           var fechaIni = this.cammbiarFecha(objMatricula.fechaInicio);
-           var fechaFin = this.cammbiarFecha(objMatricula.fechaVencimiento);
+           var fechaIni = this.dateToText(objMatricula.fechaInicio);
+           var fechaFin = this.dateToText(objMatricula.fechaVencimiento);
 
             return this.formBuilder.group({
                 numero: [objMatricula.numero, Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [objMatricula.fechaInicio],
-                fechaVencimiento: [objMatricula.fechaVencimiento],
+                fechaInicio: [fechaIni],
+                fechaVencimiento: [fechaFin],
                 vigente: [objMatricula.vigente]
             });
         } else {
@@ -120,6 +129,13 @@ export class ProfesionalUpdateComponent implements OnInit {
             let profOperation: Observable<IProfesional>;
             model.habilitado = true;
             model.domicilio.localidad = this.myLocalidad;
+            var ff = model.fechaNacimiento;
+            model.fechaNacimiento = this.textToDate(ff);
+            model.matriculas.forEach(e => { e.fechaInicio = this.textToDate(e.fechaInicio);
+                                            e.fechaVencimiento = this.textToDate(e.fechaVencimiento);
+                                         });
+
+
             profOperation = this.profesionalService.put(model);
             profOperation.subscribe(resultado => { this.data.emit(resultado); });
 

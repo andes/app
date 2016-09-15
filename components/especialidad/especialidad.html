@@ -25,26 +25,31 @@
             </div>
 
             <div class="clear"></div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Codigo Sisa</th>
-                        <th>Nombre</th>
-                        <th>disciplina</th>
-                        <th>Habilitado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let especialidad of especialidades">
-                        <td>{{especialidad.codigo.sisa}}</td>
-                        <td>{{especialidad.nombre}}</td>
-                        <td>{{especialidad.disciplina}}</td>
-                        <th>{{especialidad.habilitado ?'Sí':'No' }}</th>
-                        <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(especialidad)"><i class="glyphicon glyphicon-pencil"></i>Actualizar</button></td>
-                        <td style="width:20px;"><button class="btn btn-danger" (click)="onDisable(especialidad)"><i class="glyphicon glyphicon-trash"></i>Borrar</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Codigo Sisa</th>
+                            <th>Nombre</th>
+                            <th>disciplina</th>
+                            <th>Habilitado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let especialidad of especialidades">
+                            <td>{{especialidad.codigo.sisa}}</td>
+                            <td>{{especialidad.nombre}}</td>
+                            <td>{{especialidad.disciplina}}</td>
+                            <th>{{especialidad.habilitado ?'Sí':'No' }}</th>
+                            <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(especialidad)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
+                            <td style="width:20px;">
+                                <button class="btn btn-danger" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                <button class="btn btn-success" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

@@ -77,6 +77,16 @@ export class ProfesionalComponent implements OnInit {
             });
     }
 
+     onEnable(objProfesional:IProfesional){
+        this.profesionalService.enable(objProfesional)
+            .subscribe(dato => this.loadProfesionales(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
     onEdit(objProfesional:IProfesional){
         this.showupdate = true;
         this.selectedProfesional = objProfesional;
