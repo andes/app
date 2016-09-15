@@ -25,9 +25,7 @@ export class ProfesionalUpdateComponent implements OnInit {
     localidades: any[] = [];
     myLocalidad: any;
     myProvincia: any;    
-    fechaNac: Date;
-    fechaIni: Date;
-    fechaFin: Date;
+    fechaNac: string;
     constructor(private formBuilder: FormBuilder, private provinciaService: ProvinciaService,
         private profesionalService: ProfesionalService) { }
 
@@ -41,14 +39,14 @@ export class ProfesionalUpdateComponent implements OnInit {
 
         debugger;
         
-        this.fechaNac = this.ProfesionalHijo.fechaNacimiento;
+        this.fechaNac = this.cammbiarFecha(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             tipoDni: [this.ProfesionalHijo.tipoDni],
             numeroDni: [this.ProfesionalHijo.numeroDni, Validators.required],
-            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
+            fechaNacimiento: [this.fechaNac],
             domicilio: this.formBuilder.group({
                 calle: [this.ProfesionalHijo.domicilio.calle, Validators.required],
                 numero: [this.ProfesionalHijo.domicilio.numero],
@@ -69,15 +67,27 @@ export class ProfesionalUpdateComponent implements OnInit {
         this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
     }
 
+
+    private cammbiarFecha(myDate:Date): string {
+        var fecha1:string = myDate.toString();
+        var fecha2 = new Date(Date.parse(fecha1));
+        var mes = fecha2.getMonth() + 1;
+        var fechaSal = fecha2.getDate().toString() + "/" + mes.toString() + "/" + fecha2.getFullYear().toString();
+        return fechaSal;
+    }
+
     iniMatricula(objMatricula?: IMatricula) {
         // Inicializa matrículas
         debugger;
         if (objMatricula) {
+           var fechaIni = this.cammbiarFecha(objMatricula.fechaInicio);
+           var fechaFin = this.cammbiarFecha(objMatricula.fechaVencimiento);
+
             return this.formBuilder.group({
                 numero: [objMatricula.numero, Validators.required],
                 descripcion: [objMatricula.descripcion],
-                fechaInicio: [objMatricula.fechaInicio],
-                fechaVencimiento: [objMatricula.fechaVencimiento],
+                fechaInicio: [fechaIni],
+                fechaVencimiento: [fechaFin],
                 vigente: [objMatricula.vigente]
             });
         } else {
