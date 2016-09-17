@@ -3,16 +3,35 @@
         <div class="panel-heading">Listado de Establecimientos</div>
         <div class="panel-body">
             <form [formGroup]="searchForm" class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label"> Cod. SISA: </label>
-                    <div class="col-sm-9">
-                        <input type="number" class="form-control" formControlName="codigoSisa" placeholder="Ingresar código...">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Nombre:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+
+                <div class="form_group">
+                    <div class="form-group">
+                        <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+                            <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscar">
+                        </div>
+                        <p-dataTable [value]="establecimientos" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true" resizableColumns="true">
+                            <header>List of Cars</header>
+                            <p-column field="codigo.sisa" header="Código SISA"></p-column>
+                            <p-column field="nombre" header="Nombre"></p-column>
+                            <p-column field="nivelComplejidad" header="Complejidad"></p-column>
+                            <p-column field="domicilio.calle" header="Calle"></p-column>
+                            <p-column field="domicilio.numero" header="Número"></p-column>
+                            <p-column field="habilitado" header="Habilitado">
+                                <template let-establecimiento="rowData" pTemplate type="body">
+                                    <span>{{establecimiento.habilitado ? "SI" : "NO"}}</span>
+                                </template>
+                            </p-column>
+                            <p-column header="Acciones" styleClass="col-button">
+                                <template let-establecimiento="rowData" pTemplate type="body">
+                                    <button type="button" class="btn btn-info" pButton (click)="onEdit(establecimiento)" icon="fa-search">Actualizar</button>
+                                    <button type="button" class="btn btn-danger" *ngIf="establecimiento.habilitado" pButton (click)="onDisable(establecimiento)"
+                                        icon="fa fa-check">Habilitar</button>
+                                    <button type="button" class="btn btn-success" *ngIf="!establecimiento.habilitado" pButton (click)="onEnable(establecimiento)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>Deshabilitar</button>
+                                </template>
+                            </p-column>
+                        </p-dataTable>
                     </div>
                 </div>
             </form>
@@ -25,54 +44,22 @@
             </div>
 
             <div class="clear"></div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Codigo Sisa</th>
-                            <th>Nombre</th>
-                            <th>Complejidad</th>
-                            <th>Calle</th>
-                            <th>Numero</th>
-                            <th>Habilitado</th>
-                            <th>&nbsp;</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let establecimiento of establecimientos">
-                            <td>{{establecimiento.codigo.sisa}}</td>
-                            <td>{{establecimiento.nombre}}</td>
-                            <td>{{establecimiento.nivelComplejidad}}</td>
-                            <td>{{establecimiento.domicilio.calle}}</td>
-                            <td>{{establecimiento.domicilio.numero}}</td>
-                            <td>{{establecimiento.habilitado ?'Sí':'No' }}</td>
-                            <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(establecimiento)"><i class="glyphicon glyphicon-pencil"></i>Actualizar</button></td>
-                            <td style="width:20px;">
-                                <button class="btn btn-danger" *ngIf="establecimiento.habilitado" (click)="onDisable(establecimiento)"><i class="glyphicon glyphicon-trash"></i>Borrar</button>
-                                <button class="btn btn-success" *ngIf="!establecimiento.habilitado" (click)="onEnable(establecimiento)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
-                            </td>
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <establecimiento-create (data)='onReturn($event)'></establecimiento-create>
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <establecimiento-create (data)='onReturn($event)'></establecimiento-create>
 
-        </div>
     </div>
+</div>
 
-    <div class="col-sm-12" *ngIf="showupdate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <establecimiento-update [selectedEst]="selectedEst" (data)='onReturn($event)'></establecimiento-update>
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <establecimiento-update [selectedEst]="selectedEst" (data)='onReturn($event)'></establecimiento-update>
 
-        </div>
     </div>
+</div>

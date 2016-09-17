@@ -18,8 +18,10 @@ import { AppComponent }  from './app.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { routing } from './app.routing';
 
+import {DataTableModule,SharedModule} from 'primeng/primeng';
+
 @NgModule({
-  imports: [BrowserModule, ReactiveFormsModule, HttpModule, routing],
+  imports: [BrowserModule, ReactiveFormsModule, HttpModule, routing, DataTableModule,SharedModule],
 
   declarations: [AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent, EspecialidadCreateComponent, ProfesionalComponent],
 
