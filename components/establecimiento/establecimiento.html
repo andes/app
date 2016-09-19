@@ -10,14 +10,13 @@
                             <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
                             <input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscar">
                         </div>
-                        <p-dataTable [value]="establecimientos" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true" >
-                            <header>List of Cars</header>
+                        <p-dataTable [value]="establecimientos" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true" >                            
                             <p-column [style]="{'width':'10%'}" field="codigo.sisa" header="Código SISA"></p-column>
                             <p-column [style]="{'width':'20%'}" field="nombre" header="Nombre"></p-column>
                             <p-column [style]="{'width':'10%'}" field="nivelComplejidad" header="Complejidad"></p-column>
                             <p-column [style]="{'width':'20%'}" field="domicilio.calle" header="Calle"></p-column>
-                            <p-column [style]="{'width':'10%'}" field="domicilio.numero" header="Número"></p-column>
-                            <p-column [style]="{'width':'5%'}"field="habilitado" header="Habilitado">
+                            <p-column [style]="{'width':'5%'}" field="domicilio.numero" header="Número"></p-column>
+                            <p-column [style]="{'width':'10%'}"field="habilitado" header="Habilitado">
                                 <template let-establecimiento="rowData" pTemplate type="body">
                                     <span>{{establecimiento.habilitado ? "SI" : "NO"}}</span>
                                 </template>
@@ -25,9 +24,9 @@
                             <p-column header="Acciones" [style]="{'width':'25%'}">
                                 <template let-establecimiento="rowData" pTemplate type="body">
                                     <button type="button" class="btn btn-info" pButton (click)="onEdit(establecimiento)" icon="fa-search">Actualizar</button>
-                                    <button type="button" class="btn btn-danger" *ngIf="!establecimiento.habilitado" pButton (click)="onEnable(establecimiento)"
+                                    <button type="button" class="btn btn-success" *ngIf="!establecimiento.habilitado" pButton (click)="onEnable(establecimiento)"
                                         icon="fa fa-check">Habilitar</button>
-                                    <button type="button" class="btn btn-success" *ngIf="establecimiento.habilitado" pButton (click)="onDisable(establecimiento)">
+                                    <button type="button" class="btn btn-danger" *ngIf="establecimiento.habilitado" pButton (click)="onDisable(establecimiento)">
                                         <i class="fa fa-search" aria-hidden="true"></i>Deshabilitar</button>
                                 </template>
                             </p-column>
@@ -35,6 +34,7 @@
                     </div>
                 </div>
             </form>
+
 
             <div class="clear"></div>
             <div class="row">
