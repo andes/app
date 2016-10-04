@@ -1,6 +1,6 @@
 <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
     <div class="panel panel-default">
-        <div class="panel-heading">Listado de Establecimientos</div>
+        <div class="panel-heading">Listado de Organizaciones</div>
         <div class="panel-body">
             <form [formGroup]="searchForm" class="form-horizontal">
 
@@ -10,24 +10,24 @@
                             <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
                             <input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscar">
                         </div>
-                        <p-dataTable [value]="establecimientos" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true" >                            
+                        <p-dataTable [value]="organizaciones" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true" >                            
                             <p-column [style]="{'width':'10%'}" field="codigo.sisa" header="Código SISA"></p-column>
                             <p-column [style]="{'width':'20%'}" field="nombre" header="Nombre"></p-column>
                             <p-column [style]="{'width':'10%'}" field="nivelComplejidad" header="Complejidad"></p-column>
-                            <p-column [style]="{'width':'20%'}" field="domicilio.calle" header="Calle"></p-column>
-                            <p-column [style]="{'width':'5%'}" field="domicilio.numero" header="Número"></p-column>
-                            <p-column [style]="{'width':'10%'}"field="habilitado" header="Habilitado">
-                                <template let-establecimiento="rowData" pTemplate type="body">
-                                    <span>{{establecimiento.habilitado ? "SI" : "NO"}}</span>
+                            <!--<p-column [style]="{'width':'20%'}" field="domicilio.calle" header="Calle"></p-column>
+                            <p-column [style]="{'width':'5%'}" field="domicilio.numero" header="Número"></p-column>-->
+                            <p-column [style]="{'width':'10%'}"field="activo" header="Activo">
+                                <template let-organizacion="rowData" pTemplate type="body">
+                                    <span>{{organizacion.activo ? "SI" : "NO"}}</span>
                                 </template>
                             </p-column>
                             <p-column header="Acciones" [style]="{'width':'25%'}">
-                                <template let-establecimiento="rowData" pTemplate type="body">
-                                    <button type="button" class="btn btn-info" pButton (click)="onEdit(establecimiento)" icon="fa-search">Actualizar</button>
-                                    <button type="button" class="btn btn-success" *ngIf="!establecimiento.habilitado" pButton (click)="onEnable(establecimiento)"
+                                <template let-organizacion="rowData" pTemplate type="body">
+                                    <button type="button" class="btn btn-info" pButton (click)="onEdit(organizacion)" icon="fa-search">Actualizar</button>
+                                    <button type="button" class="btn btn-success" *ngIf="!organizacion.activo" pButton (click)="onEnable(organizacion)"
                                         icon="fa fa-check">Habilitar</button>
-                                    <button type="button" class="btn btn-danger" *ngIf="establecimiento.habilitado" pButton (click)="onDisable(establecimiento)">
-                                        <i class="fa fa-search" aria-hidden="true"></i>Deshabilitar</button>
+                                    <button type="button" class="btn btn-danger" *ngIf="organizacion.activo" pButton (click)="onDisable(organizacion)"
+                                        icon="fa fa-check">Deshabilitar</button>
                                 </template>
                             </p-column>
                         </p-dataTable>
@@ -39,7 +39,7 @@
             <div class="clear"></div>
             <div class="row">
                 <div class="col-sm-12">
-                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Establecimiento">
+                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nueva Organizacion">
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <establecimiento-create (data)='onReturn($event)'></establecimiento-create>
+        <organizacion-create (data)='onReturn($event)'></organizacion-create>
 
     </div>
 </div>
@@ -59,7 +59,7 @@
 <div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <establecimiento-update [selectedEst]="selectedEst" (data)='onReturn($event)'></establecimiento-update>
+        <organizacion-update [selectedOrg]="selectedOrg" (data)='onReturn($event)'></organizacion-update>
 
     </div>
 </div>

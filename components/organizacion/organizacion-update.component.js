@@ -10,87 +10,86 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
-var establecimiento_service_1 = require('./../../services/establecimiento.service');
+var organizacion_service_1 = require('./../../services/organizacion.service');
 var provincia_service_1 = require('./../../services/provincia.service');
 var tipoEstablecimiento_service_1 = require('./../../services/tipoEstablecimiento.service');
-var EstablecimientoUpdateComponent = (function () {
-    function EstablecimientoUpdateComponent(formBuilder, establecimientoService, provinciaService, tipoEstablecimientoService) {
+var OrganizacionUpdateComponent = (function () {
+    function OrganizacionUpdateComponent(formBuilder, organizacionService, provinciaService, tipoEstablecimientoService) {
         this.formBuilder = formBuilder;
-        this.establecimientoService = establecimientoService;
+        this.organizacionService = organizacionService;
         this.provinciaService = provinciaService;
         this.tipoEstablecimientoService = tipoEstablecimientoService;
         this.data = new core_1.EventEmitter();
         this.localidades = [];
     }
-    EstablecimientoUpdateComponent.prototype.ngOnInit = function () {
+    OrganizacionUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //Carga de combos
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.provinciaService.getLocalidades(this.establecimientoHijo.domicilio.provincia)
+        this.provinciaService.getLocalidades(this.organizacionHijo.domicilio.provincia)
             .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
         this.tipoEstablecimientoService.get()
             .subscribe(function (resultado) { _this.tipos = resultado; });
         this.updateForm = this.formBuilder.group({
-            nombre: [this.establecimientoHijo.nombre, forms_1.Validators.required],
-            nivelComplejidad: [this.establecimientoHijo.nivelComplejidad],
-            descripcion: [this.establecimientoHijo.descripcion, forms_1.Validators.required],
+            nombre: [this.organizacionHijo.nombre, forms_1.Validators.required],
+            nivelComplejidad: [this.organizacionHijo.nivelComplejidad],
             codigo: this.formBuilder.group({
-                sisa: [this.establecimientoHijo.codigo.sisa, forms_1.Validators.required],
-                cuie: [this.establecimientoHijo.codigo.cuie],
-                remediar: [this.establecimientoHijo.codigo.remediar],
+                sisa: [this.organizacionHijo.codigo.sisa, forms_1.Validators.required],
+                cuie: [this.organizacionHijo.codigo.cuie],
+                remediar: [this.organizacionHijo.codigo.remediar],
             }),
             domicilio: this.formBuilder.group({
-                calle: [this.establecimientoHijo.domicilio.calle, forms_1.Validators.required],
-                numero: [this.establecimientoHijo.domicilio.numero],
-                provincia: [this.establecimientoHijo.domicilio.provincia],
+                calle: [this.organizacionHijo.domicilio.calle, forms_1.Validators.required],
+                numero: [this.organizacionHijo.domicilio.numero],
+                provincia: [this.organizacionHijo.domicilio.provincia],
                 localidad: []
             }),
             tipoEstablecimiento: ['']
         });
-        this.myProvincia = this.establecimientoHijo.domicilio.provincia;
-        this.myTipoEst = this.establecimientoHijo.tipoEstablecimiento;
-        this.myLocalidad = this.establecimientoHijo.domicilio.localidad;
+        this.myProvincia = this.organizacionHijo.domicilio.provincia;
+        this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
+        this.myLocalidad = this.organizacionHijo.domicilio.localidad;
     };
-    EstablecimientoUpdateComponent.prototype.onSave = function (model, isvalid) {
+    OrganizacionUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
         debugger;
         if (isvalid) {
             var estOperation = void 0;
             model.tipoEstablecimiento = this.myTipoEst;
-            model.habilitado = this.establecimientoHijo.habilitado;
-            model._id = this.establecimientoHijo._id;
+            model.habilitado = this.organizacionHijo.activo;
+            model._id = this.organizacionHijo._id;
             model.domicilio.localidad = this.myLocalidad;
-            estOperation = this.establecimientoService.put(model);
+            estOperation = this.organizacionService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
         else {
             alert("Complete datos obligatorios");
         }
     };
-    EstablecimientoUpdateComponent.prototype.getLocalidades = function (index) {
+    OrganizacionUpdateComponent.prototype.getLocalidades = function (index) {
         this.localidades = this.provincias[index].localidades;
     };
-    EstablecimientoUpdateComponent.prototype.onCancel = function () {
+    OrganizacionUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
     };
     __decorate([
-        core_1.Input('selectedEst'), 
+        core_1.Input('selectedOrg'), 
         __metadata('design:type', Object)
-    ], EstablecimientoUpdateComponent.prototype, "establecimientoHijo", void 0);
+    ], OrganizacionUpdateComponent.prototype, "organizacionHijo", void 0);
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
-    ], EstablecimientoUpdateComponent.prototype, "data", void 0);
-    EstablecimientoUpdateComponent = __decorate([
+    ], OrganizacionUpdateComponent.prototype, "data", void 0);
+    OrganizacionUpdateComponent = __decorate([
         core_1.Component({
-            selector: 'establecimiento-update',
+            selector: 'organizacion-update',
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
-            templateUrl: 'components/establecimiento/establecimiento-update.html'
+            templateUrl: 'components/organizacion/organizacion-update.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
-    ], EstablecimientoUpdateComponent);
-    return EstablecimientoUpdateComponent;
+        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
+    ], OrganizacionUpdateComponent);
+    return OrganizacionUpdateComponent;
 }());
-exports.EstablecimientoUpdateComponent = EstablecimientoUpdateComponent;
-//# sourceMappingURL=establecimiento-update.component.js.map
+exports.OrganizacionUpdateComponent = OrganizacionUpdateComponent;
+//# sourceMappingURL=organizacion-update.component.js.map

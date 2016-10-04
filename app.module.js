@@ -11,10 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var tipoEstablecimiento_service_1 = require('./services/tipoEstablecimiento.service');
 var provincia_service_1 = require('./services/provincia.service');
 var http_1 = require('@angular/http');
-var establecimiento_service_1 = require('./services/establecimiento.service');
+var organizacion_service_1 = require('./services/organizacion.service');
 var especialidad_service_1 = require('./services/especialidad.service');
-var establecimiento_create_component_1 = require('./components/establecimiento/establecimiento-create.component');
-var establecimiento_component_1 = require('./components/establecimiento/establecimiento.component');
+var organizacion_create_component_1 = require('./components/organizacion/organizacion-create.component');
+var organizacion_component_1 = require('./components/organizacion/organizacion.component');
 var especialidad_create_component_1 = require('./components/especialidad/especialidad-create.component');
 var especialidad_component_1 = require('./components/especialidad/especialidad.component');
 var profesional_component_1 = require('./components/profesional/profesional.component');
@@ -32,9 +32,9 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule, app_routing_1.routing, primeng_1.DataTableModule, primeng_1.SharedModule, primeng_2.ToggleButtonModule],
-            declarations: [app_component_1.AppComponent, establecimiento_component_1.EstablecimientoComponent, establecimiento_create_component_1.EstablecimientoCreateComponent, especialidad_component_1.EspecialidadComponent, especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent],
+            declarations: [app_component_1.AppComponent, organizacion_component_1.OrganizacionComponent, organizacion_create_component_1.OrganizacionCreateComponent, especialidad_component_1.EspecialidadComponent, especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent],
             bootstrap: [app_component_1.AppComponent],
-            providers: [establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService]
+            providers: [organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);

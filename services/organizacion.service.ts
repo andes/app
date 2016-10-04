@@ -1,4 +1,4 @@
-import { IEstablecimiento } from './../interfaces/IEstablecimiento';
+import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
@@ -9,25 +9,25 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class EstablecimientoService {
+export class OrganizacionService {
 
-   private establecimientoUrl = 'http://localhost:3002/api/establecimiento';  // URL to web api
+   private establecimientoUrl = 'http://localhost:3002/api/organizacion';  // URL to web api
 
    constructor(private http: Http) {}
 
-   get(): Observable<IEstablecimiento[]> {
+   get(): Observable<IOrganizacion[]> {
        return this.http.get(this.establecimientoUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }
 
-   getByTerm(codigoSisa:string, nombre: String): Observable<IEstablecimiento[]> {
+   getByTerm(codigoSisa:string, nombre: String): Observable<IOrganizacion[]> {
        return this.http.get(this.establecimientoUrl+"?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }
 
-   post(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
+   post(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -36,7 +36,7 @@ export class EstablecimientoService {
                          .catch(this.handleError); //...errors if any
     } 
 
-    put(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
+    put(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -45,8 +45,8 @@ export class EstablecimientoService {
                          .catch(this.handleError); //...errors if any
     } 
 
-     disable(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
-         establecimiento.habilitado = false;
+     disable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
+         establecimiento.activo = false;
          establecimiento.fechaBaja = new Date();
          console.log(establecimiento.fechaBaja);
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
@@ -57,8 +57,8 @@ export class EstablecimientoService {
                          .catch(this.handleError); //...errors if any
     } 
 
-    enable(establecimiento: IEstablecimiento): Observable<IEstablecimiento> {
-         establecimiento.habilitado = true;
+    enable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
+         establecimiento.activo = true;
         let bodyString = JSON.stringify(establecimiento); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -71,6 +71,5 @@ export class EstablecimientoService {
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');
     }
-
    
 }

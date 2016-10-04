@@ -1,12 +1,12 @@
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
-import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
+import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { Routes, RouterModule } from '@angular/router';
 
 const appRoutes: Routes = [
   {
-    path: 'establecimiento',
-    component: EstablecimientoComponent
+    path: 'organizacion',
+    component: OrganizacionComponent
   },
   {
     path: 'profesional',

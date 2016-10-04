@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
-import { EstablecimientoService } from './../../services/establecimiento.service';
-import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
+import { OrganizacionService } from './../../services/organizacion.service';
+import { IOrganizacion, tipoCom } from './../../interfaces/IOrganizacion';
 import { Component, OnInit, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
@@ -10,34 +10,37 @@ import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento
 
 
 @Component({
-    selector: 'establecimiento-create',
+    selector: 'organizacion-create',
     directives: [REACTIVE_FORM_DIRECTIVES],
-    templateUrl: 'components/establecimiento/establecimiento-create.html'
+    templateUrl: 'components/organizacion/organizacion-create.html'
 })
-export class EstablecimientoCreateComponent implements OnInit {
-@Output() data: EventEmitter<IEstablecimiento> = new EventEmitter<IEstablecimiento>();
+export class OrganizacionCreateComponent implements OnInit {
+@Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
 
     tipos: ITipoEstablecimiento[];
     provincias: IProvincia[];
     createForm: FormGroup;
     localidades: any[]=[];
-   
+    tiposcom = tipoCom;
+    keys: any[];
+    
 
-    constructor(private formBuilder: FormBuilder, private establecimientoService: EstablecimientoService,
+    constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService,
     private provinciaService: ProvinciaService, private tipoEstablecimientoService: TipoEstablecimientoService) {}
-
+        
     ngOnInit() {
-
+        //this.tiposcom = tipoCom;
+        this.keys = Object.keys(this.tiposcom);
+        this.keys = this.keys.slice(this.keys.length / 2);
         this.provinciaService.get()
             .subscribe(resultado => {this.provincias = resultado;
                 this.localidades = this.provincias[0].localidades;});
 
-        
-        
         this.tipoEstablecimientoService.get()
             .subscribe(resultado => {this.tipos = resultado;});
-         
+
+        
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
             nivelComplejidad:[''],
@@ -53,20 +56,24 @@ export class EstablecimientoCreateComponent implements OnInit {
                 provincia: [''],
                 localidad: ['']
             }),
-            
-            tipoEstablecimiento:[''],
-        
-        });
 
-        
+
+            telecom: this.formBuilder.group({
+               tipo: [''],
+               valor:[''],
+               ranking:[''],
+               activo:[''] 
+            }),
+
+            tipoEstablecimiento:[''],
+        });
     }
     
-    onSave(model: IEstablecimiento, isvalid: boolean){
+    onSave(model: IOrganizacion, isvalid: boolean){
         if(isvalid){
-            let estOperation:Observable<IEstablecimiento>;
-            debugger;
-            model.habilitado = true;
-            estOperation = this.establecimientoService.post(model);
+            let estOperation:Observable<IOrganizacion>;
+            model.activo = true;
+            estOperation = this.organizacionService.post(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
 
         }else{

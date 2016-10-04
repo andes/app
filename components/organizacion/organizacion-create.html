@@ -1,8 +1,24 @@
 <div class="col-sm-12">
     <div class="panel panel-default">
-        <div class="panel-heading">Alta de Establecimientos</div>
+        <div class="panel-heading">Alta de Organizaciones</div>
         <div class="panel-body">
             <form [formGroup]="createForm">
+                <div class="row" formGroupName="codigo">
+                    <div class="col-sm-4">
+                        <label> Cod. SISA: </label>
+                        <input type="text" class="form-control" formControlName="sisa" placeholder="Ingrese código SISA">
+                        <label class="control-label text-danger" *ngIf="createForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <label> Cod. CUIE: </label>
+                        <input type="text" class="form-control" formControlName="cuie" placeholder="Ingrese código CUIE">
+                    </div>
+                    <div class="col-sm-4">
+                        <label> Cod. Remediar: </label>
+                        <input type="text" class="form-control" formControlName="remediar" placeholder="Ingrese código Remediar">
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -18,28 +34,36 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label>Descripción:</label>
-                            <input type="text" class="form-control" formControlName="descripcion" placeholder="Ingrese descripción...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.descripcion.errors">Este campo es obligatorio!</label>
+                <div class="panel-group" formGroupName="telecom">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Telecom</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label> Tipo: </label>
+                                    <select class="form-control" id="tipo" formControlName="tipo">
+                                        <option *ngFor="let name of keys" [value]="name">{{name}}</option>
+                                    </select>
+                                    <!--<input type="text" class="form-control" formControlName="tipo" placeholder="Ingresar tipo...">-->
+                                </div>
+                                <div class="col-sm-4">
+                                    <label> Valor: </label>
+                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ingresar valor...">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label> Ranking: </label>
+                                    <input type="number" class="form-control" formControlName="ranking" placeholder="Ingrese ranking">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>&nbsp; </label>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" >Activo</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row" formGroupName="codigo">
-                    <div class="col-sm-4">
-                        <label> Cod. SISA: </label>
-                        <input type="number" class="form-control" formControlName="sisa" placeholder="Ingresar código...">
-                        <label class="control-label text-danger" *ngIf="createForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Cod. CUIE: </label>
-                        <input type="text" class="form-control" formControlName="cuie" placeholder="Ingresar código...">
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Cod. Remediar: </label>
-                        <input type="text" class="form-control" formControlName="remediar" placeholder="Ingresar código...">
                     </div>
                 </div>
                 <div formGroupName="domicilio">

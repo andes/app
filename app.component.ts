@@ -10,7 +10,7 @@ import {
                     <nav>
                         <ul class="nav nav-justified">
                             <li><a routerLink="/profesional" routerLinkActive="active">Profesional</a></li>
-                            <li><a routerLink="/establecimiento" routerLinkActive="active">Establecimiento</a></li>
+                            <li><a routerLink="/organizacion" routerLinkActive="active">Organizacion</a></li>
                             <li><a routerLink="/especialidad" routerLinkActive="active">Especialidad</a></li>
                         </ul>
                     </nav>

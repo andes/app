@@ -15,22 +15,22 @@ var Rx_1 = require('rxjs/Rx');
 // Import RxJs required methods
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
-var EstablecimientoService = (function () {
-    function EstablecimientoService(http) {
+var OrganizacionService = (function () {
+    function OrganizacionService(http) {
         this.http = http;
-        this.establecimientoUrl = 'http://localhost:3002/api/establecimiento'; // URL to web api
+        this.establecimientoUrl = 'http://localhost:3002/api/organizacion'; // URL to web api
     }
-    EstablecimientoService.prototype.get = function () {
+    OrganizacionService.prototype.get = function () {
         return this.http.get(this.establecimientoUrl)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    EstablecimientoService.prototype.getByTerm = function (codigoSisa, nombre) {
+    OrganizacionService.prototype.getByTerm = function (codigoSisa, nombre) {
         return this.http.get(this.establecimientoUrl + "?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    EstablecimientoService.prototype.post = function (establecimiento) {
+    OrganizacionService.prototype.post = function (establecimiento) {
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
@@ -38,7 +38,7 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    EstablecimientoService.prototype.put = function (establecimiento) {
+    OrganizacionService.prototype.put = function (establecimiento) {
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
@@ -46,8 +46,8 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    EstablecimientoService.prototype.disable = function (establecimiento) {
-        establecimiento.habilitado = false;
+    OrganizacionService.prototype.disable = function (establecimiento) {
+        establecimiento.activo = false;
         establecimiento.fechaBaja = new Date();
         console.log(establecimiento.fechaBaja);
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
@@ -57,8 +57,8 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    EstablecimientoService.prototype.enable = function (establecimiento) {
-        establecimiento.habilitado = true;
+    OrganizacionService.prototype.enable = function (establecimiento) {
+        establecimiento.activo = true;
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
@@ -66,15 +66,15 @@ var EstablecimientoService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    EstablecimientoService.prototype.handleError = function (error) {
+    OrganizacionService.prototype.handleError = function (error) {
         console.log(error.json());
         return Rx_1.Observable.throw(error.json().error || 'Server error');
     };
-    EstablecimientoService = __decorate([
+    OrganizacionService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], EstablecimientoService);
-    return EstablecimientoService;
+    ], OrganizacionService);
+    return OrganizacionService;
 }());
-exports.EstablecimientoService = EstablecimientoService;
-//# sourceMappingURL=establecimiento.service.js.map
+exports.OrganizacionService = OrganizacionService;
+//# sourceMappingURL=organizacion.service.js.map

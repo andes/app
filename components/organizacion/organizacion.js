@@ -1,6 +1,6 @@
-import { IEstablecimiento } from './../../interfaces/IEstablecimiento';
+"use strict";
 /*
-export class Establecimiento implements IEstablecimiento {
+export class Organizacion implements IOrganizacion {
     _id: string;
     nombre: String;
     descripcion: String;
@@ -29,4 +29,5 @@ export class Establecimiento implements IEstablecimiento {
    habilitado: Boolean;
    fechaAlta: Date;
    fechaBaja: Date;
-}*/
+}*/ 
+//# sourceMappingURL=organizacion.js.map

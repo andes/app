@@ -1,10 +1,10 @@
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { HttpModule } from '@angular/http';
-import { EstablecimientoService } from './services/establecimiento.service';
+import { OrganizacionService } from './services/organizacion.service';
 import { EspecialidadService } from './services/especialidad.service';
-import { EstablecimientoCreateComponent } from './components/establecimiento/establecimiento-create.component';
-import { EstablecimientoComponent } from './components/establecimiento/establecimiento.component';
+import { OrganizacionCreateComponent } from './components/organizacion/organizacion-create.component';
+import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { EspecialidadCreateComponent} from './components/especialidad/especialidad-create.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -25,10 +25,10 @@ import {ToggleButtonModule} from 'primeng/primeng';
 @NgModule({
   imports: [BrowserModule, ReactiveFormsModule, HttpModule, routing, DataTableModule,SharedModule, ToggleButtonModule],
 
-  declarations: [AppComponent, EstablecimientoComponent, EstablecimientoCreateComponent, EspecialidadComponent, EspecialidadCreateComponent, ProfesionalComponent],
+  declarations: [AppComponent, OrganizacionComponent, OrganizacionCreateComponent, EspecialidadComponent, EspecialidadCreateComponent, ProfesionalComponent],
 
   bootstrap: [AppComponent],
-  providers: [EstablecimientoService, ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]
+  providers: [OrganizacionService, ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]
 
 })
 export class AppModule { }

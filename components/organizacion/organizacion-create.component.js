@@ -8,22 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var establecimiento_service_1 = require('./../../services/establecimiento.service');
+var organizacion_service_1 = require('./../../services/organizacion.service');
+var IOrganizacion_1 = require('./../../interfaces/IOrganizacion');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
 var provincia_service_1 = require('./../../services/provincia.service');
 var tipoEstablecimiento_service_1 = require('./../../services/tipoEstablecimiento.service');
-var EstablecimientoCreateComponent = (function () {
-    function EstablecimientoCreateComponent(formBuilder, establecimientoService, provinciaService, tipoEstablecimientoService) {
+var OrganizacionCreateComponent = (function () {
+    function OrganizacionCreateComponent(formBuilder, organizacionService, provinciaService, tipoEstablecimientoService) {
         this.formBuilder = formBuilder;
-        this.establecimientoService = establecimientoService;
+        this.organizacionService = organizacionService;
         this.provinciaService = provinciaService;
         this.tipoEstablecimientoService = tipoEstablecimientoService;
         this.data = new core_1.EventEmitter();
         this.localidades = [];
+        this.tiposcom = IOrganizacion_1.tipoCom;
     }
-    EstablecimientoCreateComponent.prototype.ngOnInit = function () {
+    OrganizacionCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
+        //this.tiposcom = tipoCom;
+        this.keys = Object.keys(this.tiposcom);
+        this.keys = this.keys.slice(this.keys.length / 2);
         this.provinciaService.get()
             .subscribe(function (resultado) {
             _this.provincias = resultado;
@@ -46,41 +51,46 @@ var EstablecimientoCreateComponent = (function () {
                 provincia: [''],
                 localidad: ['']
             }),
+            telecom: this.formBuilder.group({
+                tipo: [''],
+                valor: [''],
+                ranking: [''],
+                activo: ['']
+            }),
             tipoEstablecimiento: [''],
         });
     };
-    EstablecimientoCreateComponent.prototype.onSave = function (model, isvalid) {
+    OrganizacionCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
         if (isvalid) {
             var estOperation = void 0;
-            debugger;
-            model.habilitado = true;
-            estOperation = this.establecimientoService.post(model);
+            model.activo = true;
+            estOperation = this.organizacionService.post(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
         else {
             alert("Complete datos obligatorios");
         }
     };
-    EstablecimientoCreateComponent.prototype.getLocalidades = function (index) {
+    OrganizacionCreateComponent.prototype.getLocalidades = function (index) {
         this.localidades = this.provincias[index].localidades;
     };
-    EstablecimientoCreateComponent.prototype.onCancel = function () {
+    OrganizacionCreateComponent.prototype.onCancel = function () {
         this.data.emit(null);
     };
     __decorate([
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
-    ], EstablecimientoCreateComponent.prototype, "data", void 0);
-    EstablecimientoCreateComponent = __decorate([
+    ], OrganizacionCreateComponent.prototype, "data", void 0);
+    OrganizacionCreateComponent = __decorate([
         core_1.Component({
-            selector: 'establecimiento-create',
+            selector: 'organizacion-create',
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
-            templateUrl: 'components/establecimiento/establecimiento-create.html'
+            templateUrl: 'components/organizacion/organizacion-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, establecimiento_service_1.EstablecimientoService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
-    ], EstablecimientoCreateComponent);
-    return EstablecimientoCreateComponent;
+        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
+    ], OrganizacionCreateComponent);
+    return OrganizacionCreateComponent;
 }());
-exports.EstablecimientoCreateComponent = EstablecimientoCreateComponent;
-//# sourceMappingURL=establecimiento-create.component.js.map
+exports.OrganizacionCreateComponent = OrganizacionCreateComponent;
+//# sourceMappingURL=organizacion-create.component.js.map
