@@ -2,6 +2,7 @@
  import { IMatricula} from "./IMatricula";
  
  export interface IProfesional {
+    _id: string;
     documento: String,
     activo: Boolean,
     nombre: String,
