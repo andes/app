@@ -1,4 +1,4 @@
-import { IProvincia } from './../interfaces/IProvincia';
+import { ILocalidad } from './../interfaces/ILocalidad';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
@@ -9,27 +9,21 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class ProvinciaService {
+export class LocalidadService {
 
-   private provinciaUrl = 'http://localhost:3002/api/provincia';  // URL to web api
+   private localidadUrl = 'http://localhost:3002/api/localidad';  // URL to web api
 
    constructor(private http: Http) {}
 
-   get(): Observable<IProvincia[]> {
-       return this.http.get(this.provinciaUrl)
+   get(): Observable<ILocalidad[]> {
+       return this.http.get(this.localidadUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }
 
-   getXPais(pais: String): Observable<IProvincia[]> {
-       return this.http.get(this.provinciaUrl +"?pais=" + pais)
-           .map((res:Response) => res.json())
-           .catch(this.handleError); //...errors if any*/
-   }
-
-    getLocalidades(provincia: String): Observable<IProvincia> {
-    console.log(this.provinciaUrl +"?nombre=" + provincia);
-       return this.http.get(this.provinciaUrl +"?nombre=" + provincia)
+    getXProvincia(provincia: String): Observable<ILocalidad[]> {
+    console.log(this.localidadUrl +"?pronvicia=" + provincia);
+       return this.http.get(this.localidadUrl +"?pronvicia=" + provincia)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }

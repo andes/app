@@ -1,7 +1,7 @@
-export interface IProvincia{
+export interface IBarrio{
     id: String,
     nombre: String,
-    pais: {
+    localidad: {
             id: String,
             nombre: String
         }
