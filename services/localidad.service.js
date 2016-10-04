@@ -15,36 +15,31 @@ var Rx_1 = require('rxjs/Rx');
 // Import RxJs required methods
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
-var ProvinciaService = (function () {
-    function ProvinciaService(http) {
+var LocalidadService = (function () {
+    function LocalidadService(http) {
         this.http = http;
-        this.provinciaUrl = 'http://localhost:3002/api/provincia'; // URL to web api
+        this.localidadUrl = 'http://localhost:3002/api/localidad'; // URL to web api
     }
-    ProvinciaService.prototype.get = function () {
-        return this.http.get(this.provinciaUrl)
+    LocalidadService.prototype.get = function () {
+        return this.http.get(this.localidadUrl)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    ProvinciaService.prototype.getXPais = function (pais) {
-        return this.http.get(this.provinciaUrl + "?pais=" + pais)
+    LocalidadService.prototype.getXProvincia = function (provincia) {
+        console.log(this.localidadUrl + "?pronvicia=" + provincia);
+        return this.http.get(this.localidadUrl + "?pronvicia=" + provincia)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    ProvinciaService.prototype.getLocalidades = function (provincia) {
-        console.log(this.provinciaUrl + "?nombre=" + provincia);
-        return this.http.get(this.provinciaUrl + "?nombre=" + provincia)
-            .map(function (res) { return res.json(); })
-            .catch(this.handleError); //...errors if any*/
-    };
-    ProvinciaService.prototype.handleError = function (error) {
+    LocalidadService.prototype.handleError = function (error) {
         console.log(error.json());
         return Rx_1.Observable.throw(error.json().error || 'Server error');
     };
-    ProvinciaService = __decorate([
+    LocalidadService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], ProvinciaService);
-    return ProvinciaService;
+    ], LocalidadService);
+    return LocalidadService;
 }());
-exports.ProvinciaService = ProvinciaService;
-//# sourceMappingURL=provincia.service.js.map
+exports.LocalidadService = LocalidadService;
+//# sourceMappingURL=localidad.service.js.map

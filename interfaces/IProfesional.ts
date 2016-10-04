@@ -1,4 +1,4 @@
- import { IDomicilio} from "./IDomicilio";
+import { IDomicilio } from './IDomicilio';
  import { IMatricula} from "./IMatricula";
  
  export interface IProfesional {
