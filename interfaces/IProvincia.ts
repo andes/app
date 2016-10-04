@@ -1,5 +1,5 @@
 export interface IProvincia{
-    id: String,
+    _id: String,
     nombre: String,
     pais: {
             id: String,

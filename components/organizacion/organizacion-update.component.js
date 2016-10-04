@@ -27,8 +27,8 @@ var OrganizacionUpdateComponent = (function () {
         //Carga de combos
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.provinciaService.getLocalidades(this.organizacionHijo.domicilio.provincia)
-            .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
+        // this.provinciaService.getLocalidades(this.organizacionHijo.domicilio.provincia)
+        //     .subscribe(resultado => { this.localidades = resultado[0].localidades});
         this.tipoEstablecimientoService.get()
             .subscribe(function (resultado) { _this.tipos = resultado; });
         this.updateForm = this.formBuilder.group({
@@ -39,17 +39,17 @@ var OrganizacionUpdateComponent = (function () {
                 cuie: [this.organizacionHijo.codigo.cuie],
                 remediar: [this.organizacionHijo.codigo.remediar],
             }),
-            domicilio: this.formBuilder.group({
-                calle: [this.organizacionHijo.domicilio.calle, forms_1.Validators.required],
-                numero: [this.organizacionHijo.domicilio.numero],
-                provincia: [this.organizacionHijo.domicilio.provincia],
-                localidad: []
-            }),
+            // domicilio: this.formBuilder.group({
+            //     calle: [this.organizacionHijo.domicilio.calle, Validators.required],
+            //     numero: [this.organizacionHijo.domicilio.numero],
+            //     provincia: [this.organizacionHijo.domicilio.provincia],
+            //     localidad: []
+            // }),
             tipoEstablecimiento: ['']
         });
-        this.myProvincia = this.organizacionHijo.domicilio.provincia;
+        //    this.myProvincia=  this.organizacionHijo.domicilio.provincia;
         this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
-        this.myLocalidad = this.organizacionHijo.domicilio.localidad;
+        //    this.myLocalidad = this.organizacionHijo.domicilio.localidad;
     };
     OrganizacionUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
@@ -68,7 +68,7 @@ var OrganizacionUpdateComponent = (function () {
         }
     };
     OrganizacionUpdateComponent.prototype.getLocalidades = function (index) {
-        this.localidades = this.provincias[index].localidades;
+        //this.localidades = this.provincias[index].localidades;
     };
     OrganizacionUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);

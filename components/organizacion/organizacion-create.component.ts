@@ -35,7 +35,8 @@ export class OrganizacionCreateComponent implements OnInit {
         this.keys = this.keys.slice(this.keys.length / 2);
         this.provinciaService.get()
             .subscribe(resultado => {this.provincias = resultado;
-                this.localidades = this.provincias[0].localidades;});
+                //this.localidades = this.provincias[0].localidades;
+            });
 
         this.tipoEstablecimientoService.get()
             .subscribe(resultado => {this.tipos = resultado;});
@@ -82,7 +83,7 @@ export class OrganizacionCreateComponent implements OnInit {
     }
 
     getLocalidades(index) {
-        this.localidades= this.provincias[index].localidades;
+       // this.localidades= this.provincias[index].localidades;
     }
 
 

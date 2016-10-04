@@ -32,7 +32,7 @@ var OrganizacionCreateComponent = (function () {
         this.provinciaService.get()
             .subscribe(function (resultado) {
             _this.provincias = resultado;
-            _this.localidades = _this.provincias[0].localidades;
+            //this.localidades = this.provincias[0].localidades;
         });
         this.tipoEstablecimientoService.get()
             .subscribe(function (resultado) { _this.tipos = resultado; });
@@ -73,7 +73,7 @@ var OrganizacionCreateComponent = (function () {
         }
     };
     OrganizacionCreateComponent.prototype.getLocalidades = function (index) {
-        this.localidades = this.provincias[index].localidades;
+        // this.localidades= this.provincias[index].localidades;
     };
     OrganizacionCreateComponent.prototype.onCancel = function () {
         this.data.emit(null);

@@ -1,5 +1,6 @@
 export interface ILocalidad{
-    nombre: String;
+    _id: String,
+    nombre: String,
     provincia: {
             id: String,
             nombre: String

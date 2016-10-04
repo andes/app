@@ -91,7 +91,7 @@ export class ProfesionalCreateComponent implements OnInit {
     }
 
     getLocalidades(index) {
-        this.localidades = this.provincias[index].localidades;
+      //  this.localidades = this.provincias[index].localidades;
     }
 
     onCancel() {

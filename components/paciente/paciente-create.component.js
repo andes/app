@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -26,10 +24,9 @@ var PacienteCreateComponent = (function () {
         this.barrios = [];
     }
     PacienteCreateComponent.prototype.ngOnInit = function () {
-        var _this = this;
         //CArga de combos
-        this.provinciaService.get()
-            .subscribe(function (resultado) { return _this.provincias = resultado; });
+        //  this.provinciaService.get()
+        //    .subscribe(resultado => this.provincias = resultado);
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -89,5 +86,4 @@ var PacienteCreateComponent = (function () {
     return PacienteCreateComponent;
 }());
 exports.PacienteCreateComponent = PacienteCreateComponent;
->>>>>>> altaPaciente
 //# sourceMappingURL=paciente-create.component.js.map

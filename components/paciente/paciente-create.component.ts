@@ -49,8 +49,8 @@ export class PacienteCreateComponent implements OnInit {
     ngOnInit() {
 
         //CArga de combos
-        this.provinciaService.get()
-            .subscribe(resultado => this.provincias = resultado);
+      //  this.provinciaService.get()
+        //    .subscribe(resultado => this.provincias = resultado);
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],

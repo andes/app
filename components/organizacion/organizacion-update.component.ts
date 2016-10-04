@@ -41,8 +41,8 @@ export class OrganizacionUpdateComponent implements OnInit {
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
         
-        this.provinciaService.getLocalidades(this.organizacionHijo.domicilio.provincia)
-            .subscribe(resultado => { this.localidades = resultado[0].localidades});
+        // this.provinciaService.getLocalidades(this.organizacionHijo.domicilio.provincia)
+        //     .subscribe(resultado => { this.localidades = resultado[0].localidades});
         
         this.tipoEstablecimientoService.get()
                  .subscribe(resultado => {this.tipos = resultado;});
@@ -55,19 +55,19 @@ export class OrganizacionUpdateComponent implements OnInit {
                 cuie: [this.organizacionHijo.codigo.cuie],
                 remediar: [this.organizacionHijo.codigo.remediar],
             }),
-            domicilio: this.formBuilder.group({
-                calle: [this.organizacionHijo.domicilio.calle, Validators.required],
-                numero: [this.organizacionHijo.domicilio.numero],
-                provincia: [this.organizacionHijo.domicilio.provincia],
-                localidad: []
-            }),
+            // domicilio: this.formBuilder.group({
+            //     calle: [this.organizacionHijo.domicilio.calle, Validators.required],
+            //     numero: [this.organizacionHijo.domicilio.numero],
+            //     provincia: [this.organizacionHijo.domicilio.provincia],
+            //     localidad: []
+            // }),
 
             tipoEstablecimiento: ['']
         });
 
-       this.myProvincia=  this.organizacionHijo.domicilio.provincia;
-       this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
-       this.myLocalidad = this.organizacionHijo.domicilio.localidad;
+    //    this.myProvincia=  this.organizacionHijo.domicilio.provincia;
+          this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
+    //    this.myLocalidad = this.organizacionHijo.domicilio.localidad;
     }
 
     onSave(model: any, isvalid: boolean) {
@@ -87,7 +87,7 @@ export class OrganizacionUpdateComponent implements OnInit {
     }
 
     getLocalidades(index) {
-        this.localidades = this.provincias[index].localidades;
+        //this.localidades = this.provincias[index].localidades;
     }
 
     onCancel() {

@@ -80,7 +80,7 @@ var ProfesionalCreateComponent = (function () {
         }
     };
     ProfesionalCreateComponent.prototype.getLocalidades = function (index) {
-        this.localidades = this.provincias[index].localidades;
+        //  this.localidades = this.provincias[index].localidades;
     };
     ProfesionalCreateComponent.prototype.onCancel = function () {
         this.data.emit(null);

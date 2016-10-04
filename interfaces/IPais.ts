@@ -1,4 +1,4 @@
 export interface IPais{
-    id: String,
+    _id: String,
     nombre: String
 }

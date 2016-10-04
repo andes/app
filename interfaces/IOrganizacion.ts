@@ -1,4 +1,3 @@
-import { IDomicilio } from './IDomicilio';
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
 
 export enum tipoCom {"telefonoFijo", "telefonoCelular", "email"};
@@ -23,7 +22,6 @@ export interface IOrganizacion {
         ultimaActualizacion: Date,
         activo: Boolean
     }];
-    domicilio: IDomicilio;
     //contacto
     contacto: [{
         proposito: String,

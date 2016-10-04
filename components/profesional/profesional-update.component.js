@@ -128,7 +128,7 @@ var ProfesionalUpdateComponent = (function () {
         */
     };
     ProfesionalUpdateComponent.prototype.getLocalidades = function (index) {
-        this.localidades = this.provincias[index].localidades;
+        // this.localidades = this.provincias[index].localidades;
     };
     ProfesionalUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);

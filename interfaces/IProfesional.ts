@@ -1,9 +1,9 @@
 
- import { IUbicacion} from "./IUbicacion";
- import { IMatricula} from "./IMatricula";
- 
+ import { IUbicacion} from './IUbicacion';
+ import { IMatricula} from './IMatricula';
+
  export interface IProfesional {
-    _id: string;
+    _id: String,
     documento: String,
     activo: Boolean,
     nombre: String,
@@ -59,5 +59,5 @@
             fin: Date
         },
 
-    }],
+    }]
  }
