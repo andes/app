@@ -80,7 +80,7 @@ export class ProfesionalCreateComponent implements OnInit {
         debugger;
         if (isvalid) {
             let profOperation: Observable<IProfesional>;
-            model.habilitado = true;
+            model.activo = true;
             profOperation = this.profesionalService.post(model);
 
             profOperation.subscribe(resultado => { debugger; this.data.emit(resultado); });

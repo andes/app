@@ -36,7 +36,6 @@ export class ProfesionalComponent implements OnInit {
     }
 
     loadProfesionales() {
-
         this.profesionalService.get()
             .subscribe(
             profesionales => this.profesionales = profesionales, //Bind to view

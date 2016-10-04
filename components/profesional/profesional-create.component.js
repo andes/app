@@ -71,7 +71,7 @@ var ProfesionalCreateComponent = (function () {
         debugger;
         if (isvalid) {
             var profOperation = void 0;
-            model.habilitado = true;
+            model.activo = true;
             profOperation = this.profesionalService.post(model);
             profOperation.subscribe(function (resultado) { debugger; _this.data.emit(resultado); });
         }

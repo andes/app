@@ -39,8 +39,7 @@ var ProfesionalService = (function () {
             .catch(this.handleError); //...errors if any*/
     };
     ProfesionalService.prototype.disable = function (profesional) {
-        profesional.habilitado = false;
-        profesional.fechaBaja = new Date();
+        profesional.activo = false;
         var bodyString = JSON.stringify(profesional); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
@@ -49,7 +48,7 @@ var ProfesionalService = (function () {
             .catch(this.handleError); //...errors if any
     };
     ProfesionalService.prototype.enable = function (profesional) {
-        profesional.habilitado = true;
+        profesional.activo = true;
         var bodyString = JSON.stringify(profesional); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
@@ -58,7 +57,6 @@ var ProfesionalService = (function () {
             .catch(this.handleError); //...errors if any
     };
     ProfesionalService.prototype.put = function (profesional) {
-        debugger;
         var bodyString = JSON.stringify(profesional); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option

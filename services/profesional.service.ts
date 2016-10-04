@@ -37,8 +37,8 @@ export class ProfesionalService {
    }
 
    disable(profesional: IProfesional): Observable<IProfesional> {
-         profesional.habilitado = false;
-         profesional.fechaBaja = new Date();
+         profesional.activo = false;
+         
         let bodyString = JSON.stringify(profesional); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -48,7 +48,7 @@ export class ProfesionalService {
     } 
 
     enable(profesional: IProfesional): Observable<IProfesional> {
-         profesional.habilitado = true;
+         profesional.activo = true;
         let bodyString = JSON.stringify(profesional); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -58,7 +58,6 @@ export class ProfesionalService {
     } 
 
     put(profesional: IProfesional): Observable<IProfesional> {
-        debugger;
         let bodyString = JSON.stringify(profesional); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option

@@ -32,8 +32,6 @@
                             <th>Apellido</th>
                             <th>Nombre</th>
                             <th>Documento</th>
-                            <th>e-mail</th>
-                            <th>Teléfono</th>
                             <th>Habilitado</th>
                             <th>&nbsp;</th>
                             <th>&nbsp;</th>
@@ -43,14 +41,13 @@
                         <tr *ngFor="let profesional of profesionales">
                             <td>{{profesional.apellido}}</td>
                             <td>{{profesional.nombre}}</td>
-                            <td>{{profesional.tipoDni}} {{profesional.numeroDni}}</td>
-                            <td>{{profesional.email}}</td>
-                            <td>{{profesional.telefono}}</td>
-                            <th>{{profesional.habilitado ?'Sí':'No' }}</th>
+                            <td>{{profesional.documento}}</td>
+                            
+                            <th>{{profesional.activo ?'Sí':'No' }}</th>
                             <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(profesional)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
                             <td style="width:20px;">
-                                <button class="btn btn-danger" *ngIf="profesional.habilitado" (click)="onDisable(profesional)"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
-                                <button class="btn btn-success" *ngIf="!profesional.habilitado" (click)="onEnable(profesional)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
+                                <button class="btn btn-danger" *ngIf="profesional.activo" (click)="onDisable(profesional)"><i class="glyphicon glyphicon-trash"></i> Desactivar</button>
+                                <button class="btn btn-success" *ngIf="!profesional.activo" (click)="onEnable(profesional)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
                             </td>
 
                         </tr>

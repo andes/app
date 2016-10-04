@@ -24,36 +24,36 @@ var ProfesionalUpdateComponent = (function () {
     }
     ProfesionalUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //CArga de combos
+        //Carga de combos
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.provinciaService.getLocalidades(this.ProfesionalHijo.domicilio.provincia)
+        var ultimaDireccion = this.ProfesionalHijo.direccion.length - 1;
+        this.provinciaService.getLocalidades(this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.localidad.nombre)
             .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
-        debugger;
         this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, forms_1.Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
-            tipoDni: [this.ProfesionalHijo.tipoDni],
-            numeroDni: [this.ProfesionalHijo.numeroDni, forms_1.Validators.required],
+            numeroDni: [this.ProfesionalHijo.documento, forms_1.Validators.required],
             fechaNacimiento: [this.fechaNac],
-            domicilio: this.formBuilder.group({
-                calle: [this.ProfesionalHijo.domicilio.calle, forms_1.Validators.required],
-                numero: [this.ProfesionalHijo.domicilio.numero],
-                provincia: [this.ProfesionalHijo.domicilio.provincia],
-                localidad: []
-            }),
-            telefono: [this.ProfesionalHijo.telefono],
-            email: [this.ProfesionalHijo.email],
+            domicilios: [this.ProfesionalHijo.direccion],
+            // domicilio: this.formBuilder.group({
+            //     valor: [this.ProfesionalHijo.direccion[ultimaDireccion].valor, Validators.required],
+            //     codigoPostal: [this.ProfesionalHijo.direccion[ultimaDireccion].codigoPostal],
+            //     provincia: [this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.provincia.nombre],
+            //     localidad: [this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.localidad.nombre],
+            // }),
+            contactos: this.ProfesionalHijo.contacto,
             matriculas: this.formBuilder.array([])
         });
-        debugger;
-        this.ProfesionalHijo.matriculas.forEach(function (element) {
-            _this.addMatricula(element);
+        /*
+        this.ProfesionalHijo.matriculas.forEach(element => {
+            this.addMatricula(element);
         });
-        this.myLocalidad = this.ProfesionalHijo.domicilio.localidad;
-        this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
+        */
+        //this.myLocalidad = this.ProfesionalHijo.domicilio.localidad;
+        //this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
     };
     ProfesionalUpdateComponent.prototype.dateToText = function (myDate) {
         if (myDate) {
@@ -106,24 +106,26 @@ var ProfesionalUpdateComponent = (function () {
         control.removeAt(i);
     };
     ProfesionalUpdateComponent.prototype.onSave = function (model, isvalid) {
-        var _this = this;
-        debugger;
+        /*
         if (isvalid) {
-            var profOperation = void 0;
-            model.habilitado = true;
+            let profOperation: Observable<IProfesional>;
+            model.activo = true;
+            
             model.domicilio.localidad = this.myLocalidad;
             var ff = model.fechaNacimiento;
             model.fechaNacimiento = this.textToDate(ff);
-            model.matriculas.forEach(function (e) {
-                e.fechaInicio = _this.textToDate(e.fechaInicio);
-                e.fechaVencimiento = _this.textToDate(e.fechaVencimiento);
-            });
+            model.matriculas.forEach(e => { e.fechaInicio = this.textToDate(e.fechaInicio);
+                                            e.fechaVencimiento = this.textToDate(e.fechaVencimiento);
+                                         });
+
+            
             profOperation = this.profesionalService.put(model);
-            profOperation.subscribe(function (resultado) { _this.data.emit(resultado); });
-        }
-        else {
+            profOperation.subscribe(resultado => { this.data.emit(resultado); });
+
+        } else {
             alert("Complete datos obligatorios");
         }
+        */
     };
     ProfesionalUpdateComponent.prototype.getLocalidades = function (index) {
         this.localidades = this.provincias[index].localidades;

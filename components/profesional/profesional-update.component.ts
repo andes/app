@@ -9,6 +9,7 @@ import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
 import { IProvincia } from './../../interfaces/IProvincia';
 
+
 @Component({
     selector: 'profesional-update',
     directives: [REACTIVE_FORM_DIRECTIVES],
@@ -30,41 +31,41 @@ export class ProfesionalUpdateComponent implements OnInit {
         private profesionalService: ProfesionalService) { }
 
     ngOnInit() {
-        //CArga de combos
+        //Carga de combos
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
 
-        this.provinciaService.getLocalidades(this.ProfesionalHijo.domicilio.provincia)
+        var ultimaDireccion = this.ProfesionalHijo.direccion.length - 1;
+
+        this.provinciaService.getLocalidades(this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.localidad.nombre)
             .subscribe(resultado => {  this.localidades = resultado[0].localidades; });
 
-        debugger;
-        
         this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
             _id: [this.ProfesionalHijo._id],
             nombre: [this.ProfesionalHijo.nombre, Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
-            tipoDni: [this.ProfesionalHijo.tipoDni],
-            numeroDni: [this.ProfesionalHijo.numeroDni, Validators.required],
+            numeroDni: [this.ProfesionalHijo.documento, Validators.required],
             fechaNacimiento: [this.fechaNac],
-            domicilio: this.formBuilder.group({
-                calle: [this.ProfesionalHijo.domicilio.calle, Validators.required],
-                numero: [this.ProfesionalHijo.domicilio.numero],
-                provincia: [this.ProfesionalHijo.domicilio.provincia],
-                localidad: []
-            }),
-            telefono: [this.ProfesionalHijo.telefono],
-            email: [this.ProfesionalHijo.email],
+            domicilios: [this.ProfesionalHijo.direccion],
+            // domicilio: this.formBuilder.group({
+            //     valor: [this.ProfesionalHijo.direccion[ultimaDireccion].valor, Validators.required],
+            //     codigoPostal: [this.ProfesionalHijo.direccion[ultimaDireccion].codigoPostal],
+            //     provincia: [this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.provincia.nombre],
+            //     localidad: [this.ProfesionalHijo.direccion[ultimaDireccion].ubicacion.localidad.nombre],
+            // }),
+            contactos: this.ProfesionalHijo.contacto, //Es un array de datos de contacto
             matriculas: this.formBuilder.array([])
         });
 
-        debugger;
+        /*
         this.ProfesionalHijo.matriculas.forEach(element => {
             this.addMatricula(element);
         });
+        */
 
-        this.myLocalidad = this.ProfesionalHijo.domicilio.localidad;
-        this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
+        //this.myLocalidad = this.ProfesionalHijo.domicilio.localidad;
+        //this.myProvincia = this.ProfesionalHijo.domicilio.provincia;
     }
 
 
@@ -124,10 +125,11 @@ export class ProfesionalUpdateComponent implements OnInit {
     }
 
     onSave(model: IProfesional, isvalid: boolean) {
-        debugger;
+        /*
         if (isvalid) {
             let profOperation: Observable<IProfesional>;
-            model.habilitado = true;
+            model.activo = true;
+            
             model.domicilio.localidad = this.myLocalidad;
             var ff = model.fechaNacimiento;
             model.fechaNacimiento = this.textToDate(ff);
@@ -135,13 +137,14 @@ export class ProfesionalUpdateComponent implements OnInit {
                                             e.fechaVencimiento = this.textToDate(e.fechaVencimiento);
                                          });
 
-
+            
             profOperation = this.profesionalService.put(model);
             profOperation.subscribe(resultado => { this.data.emit(resultado); });
 
         } else {
             alert("Complete datos obligatorios");
         }
+        */
     }
 
     getLocalidades(index) {
