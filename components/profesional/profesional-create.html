@@ -38,112 +38,60 @@
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div formArrayName="direccion">
-                            <div *ngFor="let domicilio of createForm.controls.direccion.controls; let i=index" class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span>Domicilio</span>
-                                    <span class="glyphicon glyphicon-remove pull-right" *ngIf="createForm.controls.direccion.controls.length > 1" (click)="removeDomicilio(i)"></span>
+
+                <div class="panel panel-default" formArrayName="direccion">
+                    <div class="panel-heading"> Dirección </div>
+                    <div class="panel-body" *ngFor="let dir of createForm.controls.direccion.controls; let i=index">
+                        <div [formGroupName]="i">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <label> Detalle de Domicilio: </label>
+                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
                                 </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="form-group col-xs-9">
-                                            <label>Dirección</label>
-                                            <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Avenida las Flores 1200  ">
-                                        </div>
-                                        <div class="form-group col-xs-3">
-                                            <label>Código Postal</label>
-                                            <input type="string" class="form-control" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
-                                        </div>
-                                    </div>
-                                    <div formGroupName="ubicacion">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label> País: </label>
-                                                <select class="form-control" formControlName="pais" #pais (change)="getProvincias(pais.selectedIndex)">
-                                                    <option [ngValue]="">Seleccione...</option>
-                                                    <option *ngFor="let pais of paises" [ngValue]="pais.nombre">{{pais.nombre}}</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label> Provincia: </label>
-                                                <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                                                    <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label> Localidad: </label>
-                                                <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
-                                                    <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label> Barrio: </label>
-                                                <select class="form-control" formControlName="barrio"> 
-                                                    <option *ngFor="let barrio of barrios" [ngValue]="barrio">{{barrio.nombre}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
+                                <div class="col-sm-4">
+                                    <label> Codigo Postal: </label>
+                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
+                                </div>
+                            </div>
+                            <div class="row">&nbsp;</div>
+                            <div formGroupName="ubicacion">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label> País: </label>
+                                        <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
+                                        <!--<option [ngValue]="">Seleccione...</option>-->
+                                        <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
+                                    </select>
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-6">
-                                            <label>Fecha de Última actualización</label>
-                                            <input type="date" class="form-control" formControlName="fechaUltimaActualizacion">
-                                        </div>
-                                        <div class="form-group col-xs-6">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox" formControlName="activo">activo</label>
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-3">
+                                        <label> Provincia: </label>
+                                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                                        <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
+                                    </select>
                                     </div>
+                                    <div class="col-sm-3">
+                                        <label> Localidad: </label>
+                                        <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
+                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <pre>{{this.paises[0].nombre}}</pre>
+                                <pre>{{this.provincias}}</pre>
+                            </div>
 
+                            <div class="row">
+                                <div class="form-group col-sm-2">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!--<div formGroupName="domicilio">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label> Calle: </label>
-                            <input type="text" class="form-control" formControlName="calle" placeholder="Ingresar código...">
-                            <label class="control-label text-danger" *ngIf="createForm.controls.domicilio.controls.calle.errors">Este campo es obligatorio!</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <label> Número: </label>
-                            <input type="number" class="form-control" formControlName="numero" placeholder="Ingresar código...">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label> Provincia: </label>
-                            <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                            <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
-                        </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <label> Localidad: </label>
-                            <select class="form-control" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label> Teléfono: </label>
-                        <input type="text" class="form-control" formControlName="telefono" placeholder="Ingresar e-Mail...">
-                    </div>
-                    <div class="col-sm-6">
-                        <label> e-Mail: </label>
-                        <input type="text" class="form-control" formControlName="email" placeholder="Ingresar e-Mail...">
-                    </div>
-                </div>-->
+
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-sm-12">

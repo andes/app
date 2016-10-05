@@ -31,7 +31,7 @@ export class ProfesionalCreateComponent implements OnInit {
     paises:IPais[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
-    barrios: IBarrio[] = [];
+    //barrios: IBarrio[] = [];
 
     constructor(private formBuilder: FormBuilder,
                 private profesionalService: ProfesionalService,
@@ -44,7 +44,7 @@ export class ProfesionalCreateComponent implements OnInit {
         //Carga de combos
         this.sexos = enumerados.getSexo();
         
-        this.paisService.get().subscribe(resultado => {debugger; this.paises = resultado});
+        this.paisService.get().subscribe(resultado => {this.paises = resultado});
         this.provinciaService.get().subscribe(resultado => this.provincias = resultado);
         this.localidadService.get().subscribe(resultado => this.localidades = resultado); 
 
@@ -105,25 +105,14 @@ export class ProfesionalCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    /*Sección  Domicilio*/
-    /*
-    iniDomicilio() {
-        // Inicializa los domicilios
-        return this.formBuilder.group({
-            valor: [''],
-            codigoPostal: [''],
-            fechaUltimaActualizacion: [''],
-            longitud: [''],
-            latitud: [''],
-            ranking: ['1'],
 
-            activo: [true]
-        });
-    }*/
+    filtrarProvincias(idPais: String){
+        this.provincias = this.provincias.filter(function (p) { return p.pais.id == idPais; });
 
-
+    }
+    
     onSave(model: IProfesional, isvalid: boolean) {
-        debugger;
+        
         if (isvalid) {
             let profOperation: Observable<IProfesional>;
             model.activo = true;
@@ -134,10 +123,6 @@ export class ProfesionalCreateComponent implements OnInit {
         } else {
             alert("Complete datos obligatorios");
         }
-    }
-
-    getLocalidades(index) {
-      //  this.localidades = this.provincias[index].localidades;
     }
 
     onCancel() {

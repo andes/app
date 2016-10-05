@@ -17,6 +17,7 @@ var provincia_service_1 = require('./../../services/provincia.service');
 var localidad_service_1 = require('./../../services/localidad.service');
 var enumerados = require('./../../utils/enumerados');
 var ProfesionalCreateComponent = (function () {
+    //barrios: IBarrio[] = [];
     function ProfesionalCreateComponent(formBuilder, profesionalService, paisService, provinciaService, localidadService) {
         this.formBuilder = formBuilder;
         this.profesionalService = profesionalService;
@@ -27,13 +28,12 @@ var ProfesionalCreateComponent = (function () {
         this.paises = [];
         this.provincias = [];
         this.localidades = [];
-        this.barrios = [];
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //Carga de combos
         this.sexos = enumerados.getSexo();
-        this.paisService.get().subscribe(function (resultado) { debugger; _this.paises = resultado; });
+        this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.provinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
         this.localidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
         this.provinciaService.get()
@@ -87,24 +87,11 @@ var ProfesionalCreateComponent = (function () {
         var control = this.createForm.controls['matriculas'];
         control.removeAt(i);
     };
-    /*Sección  Domicilio*/
-    /*
-    iniDomicilio() {
-        // Inicializa los domicilios
-        return this.formBuilder.group({
-            valor: [''],
-            codigoPostal: [''],
-            fechaUltimaActualizacion: [''],
-            longitud: [''],
-            latitud: [''],
-            ranking: ['1'],
-
-            activo: [true]
-        });
-    }*/
+    ProfesionalCreateComponent.prototype.filtrarProvincias = function (idPais) {
+        this.provincias = this.provincias.filter(function (p) { return p.pais.id == idPais; });
+    };
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
-        debugger;
         if (isvalid) {
             var profOperation = void 0;
             model.activo = true;
@@ -114,9 +101,6 @@ var ProfesionalCreateComponent = (function () {
         else {
             alert("Complete datos obligatorios");
         }
-    };
-    ProfesionalCreateComponent.prototype.getLocalidades = function (index) {
-        //  this.localidades = this.provincias[index].localidades;
     };
     ProfesionalCreateComponent.prototype.onCancel = function () {
         this.data.emit(null);
