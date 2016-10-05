@@ -8,6 +8,7 @@ import { ProvinciaService } from './../../services/provincia.service';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
 import { IProvincia } from './../../interfaces/IProvincia';
+import * as enumerados from './../../utils/enumerados';
 
 @Component({
     selector: 'profesional-create',
@@ -18,32 +19,30 @@ export class ProfesionalCreateComponent implements OnInit {
 
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
-    tipos = ["DNI", "LC", "LE", "PASS"];
     provincias: IProvincia[];
     createForm: FormGroup;
     localidades: any[] = [];
+    arrSexos: any [];
 
     constructor(private formBuilder: FormBuilder, private provinciaService: ProvinciaService,
         private profesionalService: ProfesionalService) { }
 
     ngOnInit() {
 
-        //CArga de combos
+        //Carga de combos
+        this.arrSexos = enumerados.getSexo();
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
-            apellido: [''],
-            tipoDni: [''],
-            numeroDni: ['', Validators.required],
+            apellido: ['', Validators.required],
+            documento: ['', Validators.required],
             fechaNacimiento: [''],
-            domicilio: this.formBuilder.group({
-                calle: ['', Validators.required],
-                numero: [''],
-                provincia: [''],
-                localidad: ['']
-            }),
+            sexo: [],
+            domicilios: this.formBuilder.array([
+                this.iniDomicilio()
+            ]),
             telefono: [''],
             email: [''],
             matriculas: this.formBuilder.array([
@@ -75,6 +74,25 @@ export class ProfesionalCreateComponent implements OnInit {
         const control = <FormArray>this.createForm.controls['matriculas'];
         control.removeAt(i);
     }
+
+    /*Sección  Domicilio*/
+    iniDomicilio() {
+        // Inicializa los domicilios
+        return this.formBuilder.group({
+            valor: [''],
+            codigoPostal: [''],
+            fechaUltimaActualizacion: [''],
+            longitud: [''],
+            latitud: [''],
+            activo: [true]
+        });
+    }
+
+
+    addDomicilio(){
+
+    }
+
 
     onSave(model: IProfesional, isvalid: boolean) {
         debugger;

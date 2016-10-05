@@ -1,6 +1,6 @@
-
  import { IUbicacion} from './IUbicacion';
  import { IMatricula} from './IMatricula';
+ import { Sexo, Genero, EstadoCivil, tipoComunicacion } from './../utils/enumerados';
 
  export interface IProfesional {
     _id: String,
@@ -9,23 +9,14 @@
     nombre: String,
     apellido: String,
     contacto: [{
-        tipo: {
-            type: String,
-            enum: ["telefonoFijo", "telefonoCelular", "email"]
-        },
+        tipo: tipoComunicacion,
         valor: String,
         ranking: Number, // Specify preferred order of use (1 = highest) // Podemos usar el rank para guardar un historico de puntos de contacto (le restamos valor si no es actual???)
         ultimaActualizacion: Date,
         activo: Boolean
     }],
-    sexo: {
-        type: String,
-        enum: ["femenino", "masculino", "otro"]
-    },
-    genero: {
-        type: String,
-        enum: ["femenino", "masculino", "otro"]
-    }, // identidad autopercibida
+    sexo: Sexo,
+    genero: Genero, // identidad autopercibida
     fechaNacimiento: Date, // Fecha Nacimiento
     fechaFallecimiento: Date,
     direccion: [{
@@ -40,10 +31,7 @@
         ultimaActualizacion: Date,
         activo: Boolean
     }],
-    estadoCivil: {
-        type: String,
-        enum: ["casado", "separado", "divorciado", "viudo", "soltero", "otro"]
-    },
+    estadoCivil: EstadoCivil,
     foto: String,
     rol: String, //Ejemplo Jefe de Terapia intensiva
     especialidad: [{ //El listado de sus especialidades

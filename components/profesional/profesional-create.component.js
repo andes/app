@@ -13,32 +13,30 @@ var forms_1 = require('@angular/forms');
 // import { FORM_DIRECTIVES } from '@angular/common';
 var profesional_service_1 = require('./../../services/profesional.service');
 var provincia_service_1 = require('./../../services/provincia.service');
+var enumerados = require('./../../utils/enumerados');
 var ProfesionalCreateComponent = (function () {
     function ProfesionalCreateComponent(formBuilder, provinciaService, profesionalService) {
         this.formBuilder = formBuilder;
         this.provinciaService = provinciaService;
         this.profesionalService = profesionalService;
         this.data = new core_1.EventEmitter();
-        this.tipos = ["DNI", "LC", "LE", "PASS"];
         this.localidades = [];
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //CArga de combos
+        //Carga de combos
+        this.arrSexos = enumerados.getSexo();
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
-            apellido: [''],
-            tipoDni: [''],
-            numeroDni: ['', forms_1.Validators.required],
+            apellido: ['', forms_1.Validators.required],
+            documento: ['', forms_1.Validators.required],
             fechaNacimiento: [''],
-            domicilio: this.formBuilder.group({
-                calle: ['', forms_1.Validators.required],
-                numero: [''],
-                provincia: [''],
-                localidad: ['']
-            }),
+            sexo: [],
+            domicilios: this.formBuilder.array([
+                this.iniDomicilio()
+            ]),
             telefono: [''],
             email: [''],
             matriculas: this.formBuilder.array([
@@ -65,6 +63,20 @@ var ProfesionalCreateComponent = (function () {
         // elimina formMatricula
         var control = this.createForm.controls['matriculas'];
         control.removeAt(i);
+    };
+    /*Sección  Domicilio*/
+    ProfesionalCreateComponent.prototype.iniDomicilio = function () {
+        // Inicializa los domicilios
+        return this.formBuilder.group({
+            valor: [''],
+            codigoPostal: [''],
+            fechaUltimaActualizacion: [''],
+            longitud: [''],
+            latitud: [''],
+            activo: [true]
+        });
+    };
+    ProfesionalCreateComponent.prototype.addDomicilio = function () {
     };
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
