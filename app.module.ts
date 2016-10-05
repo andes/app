@@ -1,3 +1,4 @@
+import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { HttpModule } from '@angular/http';
@@ -25,7 +26,8 @@ import {ToggleButtonModule} from 'primeng/primeng';
 @NgModule({
   imports: [BrowserModule, ReactiveFormsModule, HttpModule, routing, DataTableModule,SharedModule, ToggleButtonModule],
 
-  declarations: [AppComponent, OrganizacionComponent, OrganizacionCreateComponent, EspecialidadComponent, EspecialidadCreateComponent, ProfesionalComponent],
+  declarations: [AppComponent, OrganizacionComponent, OrganizacionCreateComponent, EspecialidadComponent, 
+  EspecialidadCreateComponent, ProfesionalComponent, PacienteCreateComponent],
 
   bootstrap: [AppComponent],
   providers: [OrganizacionService, ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService]

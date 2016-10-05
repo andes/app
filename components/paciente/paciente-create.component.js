@@ -10,9 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
+var barrio_service_1 = require('./../../services/barrio.service');
+var localidad_service_1 = require('./../../services/localidad.service');
+var provincia_service_1 = require('./../../services/provincia.service');
+var pais_service_1 = require('./../../services/pais.service');
 var PacienteCreateComponent = (function () {
-    function PacienteCreateComponent(formBuilder) {
+    function PacienteCreateComponent(formBuilder, PaisService, ProvinciaService, LocalidadService, BarrioService) {
         this.formBuilder = formBuilder;
+        this.PaisService = PaisService;
+        this.ProvinciaService = ProvinciaService;
+        this.LocalidadService = LocalidadService;
+        this.BarrioService = BarrioService;
         this.estados = ["temporal", "identificado", "validado", "recienNacido", "extranjero"];
         this.sexos = ["femenino", "masculino", "otro"];
         this.generos = ["femenino", "masculino", "otro"];
@@ -24,9 +32,11 @@ var PacienteCreateComponent = (function () {
         this.barrios = [];
     }
     PacienteCreateComponent.prototype.ngOnInit = function () {
+        var _this = this;
         //CArga de combos
-        //  this.provinciaService.get()
-        //    .subscribe(resultado => this.provincias = resultado);
+        this.PaisService.get().subscribe(function (resultado) { return _this.paises = resultado; });
+        this.ProvinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
+        this.LocalidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -75,13 +85,16 @@ var PacienteCreateComponent = (function () {
     PacienteCreateComponent.prototype.onCancel = function () {
         //this.data.emit(null)
     };
+    PacienteCreateComponent.prototype.filtrarProvincias = function (idPais) {
+        this.provincias = this.provincias.filter(function (p) { return p.pais._id == idPais; });
+    };
     PacienteCreateComponent = __decorate([
         core_1.Component({
             selector: 'paciente-create',
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/paciente/paciente-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, pais_service_1.PaisService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService])
     ], PacienteCreateComponent);
     return PacienteCreateComponent;
 }());

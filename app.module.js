@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var paciente_create_component_1 = require('./components/paciente/paciente-create.component');
 var tipoEstablecimiento_service_1 = require('./services/tipoEstablecimiento.service');
 var provincia_service_1 = require('./services/provincia.service');
 var http_1 = require('@angular/http');
@@ -32,7 +33,8 @@ var AppModule = (function () {
     AppModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.ReactiveFormsModule, http_1.HttpModule, app_routing_1.routing, primeng_1.DataTableModule, primeng_1.SharedModule, primeng_2.ToggleButtonModule],
-            declarations: [app_component_1.AppComponent, organizacion_component_1.OrganizacionComponent, organizacion_create_component_1.OrganizacionCreateComponent, especialidad_component_1.EspecialidadComponent, especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent],
+            declarations: [app_component_1.AppComponent, organizacion_component_1.OrganizacionComponent, organizacion_create_component_1.OrganizacionCreateComponent, especialidad_component_1.EspecialidadComponent,
+                especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent, paciente_create_component_1.PacienteCreateComponent],
             bootstrap: [app_component_1.AppComponent],
             providers: [organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService]
         }), 

@@ -1,31 +1,17 @@
-import {
-    Observable
-} from 'rxjs/Rx';
-import {
-    Component,
-    OnInit,
-    Output,
-    Input,
-    EventEmitter
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormArray,
-    Validators,
-    REACTIVE_FORM_DIRECTIVES
-} from '@angular/forms';
+import { IBarrio } from './../../interfaces/IBarrio';
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IPais } from './../../interfaces/IPais';
+import {Observable} from 'rxjs/Rx';
+import { Component, OnInit, Output, Input, EventEmitter} from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
 
+import { BarrioService } from './../../services/barrio.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { PaisService } from './../../services/pais.service';
 
-import {
-    IPaciente, Sexo
-} from './../../interfaces/IPaciente';
-import {
-    IMatricula
-} from './../../interfaces/IMatricula';
-import {
-    IProvincia
-} from './../../interfaces/IProvincia';
+import {IPaciente, Sexo } from './../../interfaces/IPaciente';
+import { IProvincia } from './../../interfaces/IProvincia';
 
 @Component({
     selector: 'paciente-create',
@@ -39,18 +25,21 @@ export class PacienteCreateComponent implements OnInit {
     generos = ["femenino", "masculino", "otro"];
     estadosCiviles = ["casado", "separado", "divorciado", "viudo", "soltero", "otro"];
     tiposContactos = ["telefonoFijo", "telefonoCelular", "email"];
-    paises = [];
-    provincias = [];
-    localidades = [];
-    barrios = [];
+    paises: IPais[] = [];
+    provincias: IProvincia[] = [];
+    localidades: ILocalidad[]= [];
+    barrios: IBarrio[] = [];
 
-    constructor(private formBuilder: FormBuilder) {}
+    constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
+    private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
+    private BarrioService: BarrioService) {}
 
     ngOnInit() {
 
         //CArga de combos
-      //  this.provinciaService.get()
-        //    .subscribe(resultado => this.provincias = resultado);
+        this.PaisService.get().subscribe(resultado => this.paises = resultado);
+        this.ProvinciaService.get().subscribe(resultado => this.provincias = resultado);
+        this.LocalidadService.get().subscribe(resultado => this.localidades = resultado);
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -114,6 +103,8 @@ export class PacienteCreateComponent implements OnInit {
         //this.data.emit(null)
     }
 
-
+    filtrarProvincias(idPais: String){
+       this.provincias = this.provincias.filter((p) => p.pais._id == idPais);
+    }
 
 }

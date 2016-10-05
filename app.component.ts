@@ -12,6 +12,7 @@ import {
                             <li><a routerLink="/profesional" routerLinkActive="active">Profesional</a></li>
                             <li><a routerLink="/organizacion" routerLinkActive="active">Organizacion</a></li>
                             <li><a routerLink="/especialidad" routerLinkActive="active">Especialidad</a></li>
+                            <li><a routerLink="/paciente" routerLinkActive="active">Paciente</a></li>
                         </ul>
                     </nav>
                     <div class="row">&nbsp;</div>

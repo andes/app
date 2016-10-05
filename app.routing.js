@@ -1,4 +1,5 @@
 "use strict";
+var paciente_create_component_1 = require('./components/paciente/paciente-create.component');
 var especialidad_component_1 = require('./components/especialidad/especialidad.component');
 var profesional_component_1 = require('./components/profesional/profesional.component');
 var organizacion_component_1 = require('./components/organizacion/organizacion.component');
@@ -15,6 +16,10 @@ var appRoutes = [
     {
         path: 'especialidad',
         component: especialidad_component_1.EspecialidadComponent
+    },
+    {
+        path: 'paciente',
+        component: paciente_create_component_1.PacienteCreateComponent
     }
 ];
 exports.routing = router_1.RouterModule.forRoot(appRoutes);
