@@ -39,8 +39,8 @@ export class PacienteCreateComponent implements OnInit {
 
         //CArga de combos
         this.PaisService.get().subscribe(resultado => {debugger; this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => this.provincias = resultado);
-        this.LocalidadService.get().subscribe(resultado => this.localidades = resultado);
+        this.ProvinciaService.get().subscribe(resultado => {debugger; this.provincias = resultado});
+        this.LocalidadService.get().subscribe(resultado => {debugger; this.localidades = resultado});
 
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
@@ -127,6 +127,7 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     filtrarProvincias(idPais: String){
+        debugger;
        this.provincias = this.provincias.filter((p) => p.pais._id == idPais);
     }
 

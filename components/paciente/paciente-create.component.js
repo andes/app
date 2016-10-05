@@ -36,8 +36,8 @@ var PacienteCreateComponent = (function () {
         var _this = this;
         //CArga de combos
         this.PaisService.get().subscribe(function (resultado) { debugger; _this.paises = resultado; });
-        this.ProvinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.LocalidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
+        this.ProvinciaService.get().subscribe(function (resultado) { debugger; _this.provincias = resultado; });
+        this.LocalidadService.get().subscribe(function (resultado) { debugger; _this.localidades = resultado; });
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
         this.estadosCiviles = enumerados.getEstadoCivil();
@@ -108,6 +108,7 @@ var PacienteCreateComponent = (function () {
         //this.data.emit(null)
     };
     PacienteCreateComponent.prototype.filtrarProvincias = function (idPais) {
+        debugger;
         this.provincias = this.provincias.filter(function (p) { return p.pais._id == idPais; });
     };
     PacienteCreateComponent.prototype.filtrarLocalidades = function (idProvincia) {

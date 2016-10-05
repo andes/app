@@ -3,6 +3,7 @@ import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
 
 
 export interface IPaciente{
+    id: String,
     documento: String,
     activo: Boolean,
     estado: String,
