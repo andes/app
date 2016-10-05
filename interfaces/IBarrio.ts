@@ -1,5 +1,5 @@
 export interface IBarrio{
-    _id: String,
+    id: String,
     nombre: String,
     localidad: {
             _id: String,

@@ -3,7 +3,7 @@
  import { Sexo, Genero, EstadoCivil, tipoComunicacion } from './../utils/enumerados';
 
  export interface IProfesional {
-    _id: String,
+    id: String,
     documento: String,
     activo: Boolean,
     nombre: String,

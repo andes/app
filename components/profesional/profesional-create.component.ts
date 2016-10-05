@@ -4,10 +4,16 @@ import { FormBuilder, FormGroup, FormArray, Validators, REACTIVE_FORM_DIRECTIVES
 // import { FORM_DIRECTIVES } from '@angular/common';
 
 import { ProfesionalService } from './../../services/profesional.service';
+import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
+import { LocalidadService } from './../../services/localidad.service';
+
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
+import {IPais} from './../../interfaces/IPais';
 import { IProvincia } from './../../interfaces/IProvincia';
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IBarrio } from './../../interfaces/IBarrio';
 import * as enumerados from './../../utils/enumerados';
 
 @Component({
@@ -19,18 +25,29 @@ export class ProfesionalCreateComponent implements OnInit {
 
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
-    provincias: IProvincia[];
     createForm: FormGroup;
-    localidades: any[] = [];
-    arrSexos: any [];
+    //Definición de arreglos
+    sexos: any [];
+    paises:IPais[] = [];
+    provincias: IProvincia[] = [];
+    localidades: ILocalidad[]= [];
+    barrios: IBarrio[] = [];
 
-    constructor(private formBuilder: FormBuilder, private provinciaService: ProvinciaService,
-        private profesionalService: ProfesionalService) { }
+    constructor(private formBuilder: FormBuilder,
+                private profesionalService: ProfesionalService,
+                private paisService: PaisService,
+                private provinciaService: ProvinciaService,
+                private localidadService: LocalidadService) {}
 
     ngOnInit() {
 
         //Carga de combos
-        this.arrSexos = enumerados.getSexo();
+        this.sexos = enumerados.getSexo();
+        
+        this.paisService.get().subscribe(resultado => {debugger; this.paises = resultado});
+        this.provinciaService.get().subscribe(resultado => this.provincias = resultado);
+        this.localidadService.get().subscribe(resultado => this.localidades = resultado); 
+
         this.provinciaService.get()
             .subscribe(resultado => this.provincias = resultado);
 
@@ -38,10 +55,23 @@ export class ProfesionalCreateComponent implements OnInit {
             nombre: ['', Validators.required],
             apellido: ['', Validators.required],
             documento: ['', Validators.required],
-            fechaNacimiento: [''],
+            fechaNacimiento: ['', Validators.required],
             sexo: [],
-            domicilios: this.formBuilder.array([
-                this.iniDomicilio()
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: [''],
+                        provincia: [''],
+                        localidad: [''],
+                        barrio: ['']
+                    }),
+                    ranking: [''],
+                    codigoPostal: [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                })
             ]),
             telefono: [''],
             email: [''],
@@ -76,6 +106,7 @@ export class ProfesionalCreateComponent implements OnInit {
     }
 
     /*Sección  Domicilio*/
+    /*
     iniDomicilio() {
         // Inicializa los domicilios
         return this.formBuilder.group({
@@ -84,14 +115,11 @@ export class ProfesionalCreateComponent implements OnInit {
             fechaUltimaActualizacion: [''],
             longitud: [''],
             latitud: [''],
+            ranking: ['1'],
+
             activo: [true]
         });
-    }
-
-
-    addDomicilio(){
-
-    }
+    }*/
 
 
     onSave(model: IProfesional, isvalid: boolean) {

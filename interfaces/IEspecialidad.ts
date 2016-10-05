@@ -1,6 +1,6 @@
 
 export interface IEspecialidad {
-    _id: string;
+    id: string;
     nombre: String;
     descripcion: String;
     disciplina: String;

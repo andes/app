@@ -12,30 +12,53 @@ var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
 // import { FORM_DIRECTIVES } from '@angular/common';
 var profesional_service_1 = require('./../../services/profesional.service');
+var pais_service_1 = require('./../../services/pais.service');
 var provincia_service_1 = require('./../../services/provincia.service');
+var localidad_service_1 = require('./../../services/localidad.service');
 var enumerados = require('./../../utils/enumerados');
 var ProfesionalCreateComponent = (function () {
-    function ProfesionalCreateComponent(formBuilder, provinciaService, profesionalService) {
+    function ProfesionalCreateComponent(formBuilder, profesionalService, paisService, provinciaService, localidadService) {
         this.formBuilder = formBuilder;
-        this.provinciaService = provinciaService;
         this.profesionalService = profesionalService;
+        this.paisService = paisService;
+        this.provinciaService = provinciaService;
+        this.localidadService = localidadService;
         this.data = new core_1.EventEmitter();
+        this.paises = [];
+        this.provincias = [];
         this.localidades = [];
+        this.barrios = [];
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //Carga de combos
-        this.arrSexos = enumerados.getSexo();
+        this.sexos = enumerados.getSexo();
+        this.paisService.get().subscribe(function (resultado) { debugger; _this.paises = resultado; });
+        this.provinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
+        this.localidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
         this.provinciaService.get()
             .subscribe(function (resultado) { return _this.provincias = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
             documento: ['', forms_1.Validators.required],
-            fechaNacimiento: [''],
+            fechaNacimiento: ['', forms_1.Validators.required],
             sexo: [],
-            domicilios: this.formBuilder.array([
-                this.iniDomicilio()
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: [''],
+                        provincia: [''],
+                        localidad: [''],
+                        barrio: ['']
+                    }),
+                    ranking: [''],
+                    codigoPostal: [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                })
             ]),
             telefono: [''],
             email: [''],
@@ -65,7 +88,8 @@ var ProfesionalCreateComponent = (function () {
         control.removeAt(i);
     };
     /*Sección  Domicilio*/
-    ProfesionalCreateComponent.prototype.iniDomicilio = function () {
+    /*
+    iniDomicilio() {
         // Inicializa los domicilios
         return this.formBuilder.group({
             valor: [''],
@@ -73,11 +97,11 @@ var ProfesionalCreateComponent = (function () {
             fechaUltimaActualizacion: [''],
             longitud: [''],
             latitud: [''],
+            ranking: ['1'],
+
             activo: [true]
         });
-    };
-    ProfesionalCreateComponent.prototype.addDomicilio = function () {
-    };
+    }*/
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
         debugger;
@@ -107,7 +131,7 @@ var ProfesionalCreateComponent = (function () {
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/profesional/profesional-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, provincia_service_1.ProvinciaService, profesional_service_1.ProfesionalService])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, profesional_service_1.ProfesionalService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService])
     ], ProfesionalCreateComponent);
     return ProfesionalCreateComponent;
 }());
