@@ -109,33 +109,49 @@
                                     <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label> País: </label>
-                                    <select class="form-control" formControlName="pais" #pais (change)="getProvincias(pais.selectedIndex)">
+                            <div formGroupName="ubicacion">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label> País: </label>
+                                        <select class="form-control" formControlName="pais" #pais (change)="getProvincias(pais.selectedIndex)">
                                         <option [ngValue]="">Seleccione...</option>
                                         <option *ngFor="let pais of paises" [ngValue]="pais.nombre">{{pais.nombre}}</option>
                                     </select>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label> Provincia: </label>
-                                    <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label> Provincia: </label>
+                                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
                                         <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
                                     </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label> Localidad: </label>
+                                        <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
+                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
+                                    </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label> Barrio: </label>
+                                        <select class="form-control" formControlName="barrio"> 
+                                        <option *ngFor="let barrio of barrios" [ngValue]="barrio">{{barrio.nombre}}</option>
+                                    </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label> Localidad: </label>
-                                    <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
-                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
-                                    </select>
+                                <div class="col-sm-4">
+                                    <label> Codigo Postal: </label>
+                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
                                 </div>
-                                <div class="col-sm-6">
-                                    <label> Barrio: </label>
-                                    <select class="form-control" formControlName="barrio"> 
-                                        <option *ngFor="let barrio of barrios" [ngValue]="barrio">{{barrio.nombre}}</option>
-                                    </select>
+                                <div class="col-sm-4">
+                                    <label> Latitud: </label>
+                                    <input type="number" class="form-control" formControlName="Latitud" placeholder="Ej: -38.945259">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label> Longitud: </label>
+                                    <input type="number" class="form-control" formControlName="Longitud" placeholder="Ej: -68.078805">
                                 </div>
                             </div>
                             <div class="row">

@@ -53,6 +53,20 @@ export class PacienteCreateComponent implements OnInit {
             estadoCivil: [''],
             contacto: this.formBuilder.array([
                 this.iniContacto(1)
+            ]),
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: [''],
+                        provincia: [''],
+                        localidad: [''],
+                        barrio: ['']
+                    }),
+                    ranking: [''],
+                    codigoPostal: [''],
+                    activo: [true]
+                })
             ])
         });
     }
@@ -105,6 +119,10 @@ export class PacienteCreateComponent implements OnInit {
 
     filtrarProvincias(idPais: String){
        this.provincias = this.provincias.filter((p) => p.pais._id == idPais);
+    }
+
+    filtrarLocalidades(idProvincia: String){
+       this.localidades = this.localidades.filter((loc) => loc.provincia._id == idProvincia);
     }
 
 }
