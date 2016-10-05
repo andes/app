@@ -1,16 +1,6 @@
 import { IDireccion } from './IDireccion';
+import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
 
-export declare enum Sexo {
-   "femenino", "masculino", "otro"
-}
-
-declare enum Genero {
-   "femenino", "masculino", "otro"
-}
-
-declare enum EstadoCivil {
-   "casado", "separado", "divorciado", "viudo", "soltero", "otro"
-}
 
 export interface IPaciente{
     documento: String,

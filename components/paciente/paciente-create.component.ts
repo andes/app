@@ -9,8 +9,9 @@ import { BarrioService } from './../../services/barrio.service';
 import { LocalidadService } from './../../services/localidad.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { PaisService } from './../../services/pais.service';
+import * as enumerados from './../../utils/enumerados';
 
-import {IPaciente, Sexo } from './../../interfaces/IPaciente';
+import {IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
 
 @Component({
@@ -21,7 +22,7 @@ import { IProvincia } from './../../interfaces/IProvincia';
 export class PacienteCreateComponent implements OnInit {
     createForm: FormGroup;
     estados = ["temporal", "identificado", "validado", "recienNacido", "extranjero"];
-    sexos = ["femenino", "masculino", "otro"];
+    sexos = enumerados.getSexo();
     generos = ["femenino", "masculino", "otro"];
     estadosCiviles = ["casado", "separado", "divorciado", "viudo", "soltero", "otro"];
     tiposContactos = ["telefonoFijo", "telefonoCelular", "email"];
