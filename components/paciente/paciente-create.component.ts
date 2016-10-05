@@ -128,11 +128,11 @@ export class PacienteCreateComponent implements OnInit {
 
     filtrarProvincias(idPais: String){
         debugger;
-       this.provincias = this.provincias.filter((p) => p.pais._id == idPais);
+       this.provincias = this.provincias.filter((p) => p.pais.id == idPais);
     }
 
     filtrarLocalidades(idProvincia: String){
-       this.localidades = this.localidades.filter((loc) => loc.provincia._id == idProvincia);
+       this.localidades = this.localidades.filter((loc) => loc.provincia.id == idProvincia);
     }
 
 }
