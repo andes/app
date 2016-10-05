@@ -109,10 +109,10 @@ var PacienteCreateComponent = (function () {
     };
     PacienteCreateComponent.prototype.filtrarProvincias = function (idPais) {
         debugger;
-        this.provincias = this.provincias.filter(function (p) { return p.pais._id == idPais; });
+        this.provincias = this.provincias.filter(function (p) { return p.pais.id == idPais; });
     };
     PacienteCreateComponent.prototype.filtrarLocalidades = function (idProvincia) {
-        this.localidades = this.localidades.filter(function (loc) { return loc.provincia._id == idProvincia; });
+        this.localidades = this.localidades.filter(function (loc) { return loc.provincia.id == idProvincia; });
     };
     PacienteCreateComponent = __decorate([
         core_1.Component({

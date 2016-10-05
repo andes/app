@@ -36,7 +36,7 @@ var EspecialidadUpdateComponent = (function () {
             var espOperation = void 0;
             model.fechaAlta = this.especialidadHija.fechaAlta;
             model.fechaBaja = this.especialidadHija.fechaBaja;
-            model._id = this.especialidadHija._id;
+            model._id = this.especialidadHija.id;
             espOperation = this.especialidadService.put(model);
             espOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }

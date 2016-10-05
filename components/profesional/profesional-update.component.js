@@ -32,7 +32,7 @@ var ProfesionalUpdateComponent = (function () {
             .subscribe(function (resultado) { _this.localidades = resultado[0].localidades; });
         this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
-            _id: [this.ProfesionalHijo._id],
+            _id: [this.ProfesionalHijo.id],
             nombre: [this.ProfesionalHijo.nombre, forms_1.Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             numeroDni: [this.ProfesionalHijo.documento, forms_1.Validators.required],

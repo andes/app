@@ -42,7 +42,7 @@ export class ProfesionalUpdateComponent implements OnInit {
 
         this.fechaNac = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.updateForm = this.formBuilder.group({
-            _id: [this.ProfesionalHijo._id],
+            _id: [this.ProfesionalHijo.id],
             nombre: [this.ProfesionalHijo.nombre, Validators.required],
             apellido: [this.ProfesionalHijo.apellido],
             numeroDni: [this.ProfesionalHijo.documento, Validators.required],

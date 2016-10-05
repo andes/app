@@ -44,7 +44,7 @@ export class EspecialidadUpdateComponent implements OnInit {
             let espOperation: Observable<IEspecialidad>;
             model.fechaAlta = this.especialidadHija.fechaAlta;
             model.fechaBaja = this.especialidadHija.fechaBaja;
-            model._id = this.especialidadHija._id;
+            model._id = this.especialidadHija.id;
             
             espOperation = this.especialidadService.put(model);
             espOperation.subscribe(resultado => this.data.emit(resultado));
