@@ -14,6 +14,10 @@ export enum tipoComunicacion {
    "Teléfono Fijo", "Teléfono Celular", "Email"
 }
 
+export enum estados {
+  "temporal", "identificado", "validado", "recienNacido", "extranjero"
+}
+
 export function getSexo(){
        let arrSexo = Object.keys(Sexo);
        arrSexo = arrSexo.slice(arrSexo.length / 2);
@@ -36,4 +40,10 @@ export function getEstadoCivil(){
        let arrEstadoC = Object.keys(EstadoCivil);
        arrEstadoC = arrEstadoC.slice(arrEstadoC.length / 2);
        return arrEstadoC;
+}
+
+export function getEstados(){
+       let arrEstados = Object.keys(estados);
+       arrEstados = arrEstados.slice(arrEstados.length / 2);
+       return arrEstados;
 }

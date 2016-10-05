@@ -21,11 +21,11 @@ import { IProvincia } from './../../interfaces/IProvincia';
 })
 export class PacienteCreateComponent implements OnInit {
     createForm: FormGroup;
-    estados = ["temporal", "identificado", "validado", "recienNacido", "extranjero"];
-    sexos = enumerados.getSexo();
-    generos = ["femenino", "masculino", "otro"];
-    estadosCiviles = ["casado", "separado", "divorciado", "viudo", "soltero", "otro"];
-    tiposContactos = ["telefonoFijo", "telefonoCelular", "email"];
+    estados = [];
+    sexos = [];
+    generos = [];
+    estadosCiviles = [];
+    tiposContactos = [];
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
@@ -38,9 +38,15 @@ export class PacienteCreateComponent implements OnInit {
     ngOnInit() {
 
         //CArga de combos
-        this.PaisService.get().subscribe(resultado => this.paises = resultado);
+        this.PaisService.get().subscribe(resultado => {debugger; this.paises = resultado});
         this.ProvinciaService.get().subscribe(resultado => this.provincias = resultado);
         this.LocalidadService.get().subscribe(resultado => this.localidades = resultado);
+
+        this.sexos = enumerados.getSexo();
+        this.generos = enumerados.getGenero();
+        this.estadosCiviles = enumerados.getEstadoCivil();
+        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.estados = enumerados.getEstados();
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -66,6 +72,8 @@ export class PacienteCreateComponent implements OnInit {
                     }),
                     ranking: [''],
                     codigoPostal: [''],
+                    latitud: [''],
+                    longitud: [''],
                     activo: [true]
                 })
             ])

@@ -18,7 +18,7 @@ const appRoutes: Routes = [
     component: EspecialidadComponent
   },
   {
-    path: 'paciente',
+    path: 'pacientes',
     component: PacienteCreateComponent
   } 
 ];

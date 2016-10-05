@@ -14,6 +14,7 @@ var barrio_service_1 = require('./../../services/barrio.service');
 var localidad_service_1 = require('./../../services/localidad.service');
 var provincia_service_1 = require('./../../services/provincia.service');
 var pais_service_1 = require('./../../services/pais.service');
+var enumerados = require('./../../utils/enumerados');
 var PacienteCreateComponent = (function () {
     function PacienteCreateComponent(formBuilder, PaisService, ProvinciaService, LocalidadService, BarrioService) {
         this.formBuilder = formBuilder;
@@ -21,11 +22,11 @@ var PacienteCreateComponent = (function () {
         this.ProvinciaService = ProvinciaService;
         this.LocalidadService = LocalidadService;
         this.BarrioService = BarrioService;
-        this.estados = ["temporal", "identificado", "validado", "recienNacido", "extranjero"];
-        this.sexos = ["femenino", "masculino", "otro"];
-        this.generos = ["femenino", "masculino", "otro"];
-        this.estadosCiviles = ["casado", "separado", "divorciado", "viudo", "soltero", "otro"];
-        this.tiposContactos = ["telefonoFijo", "telefonoCelular", "email"];
+        this.estados = [];
+        this.sexos = [];
+        this.generos = [];
+        this.estadosCiviles = [];
+        this.tiposContactos = [];
         this.paises = [];
         this.provincias = [];
         this.localidades = [];
@@ -34,9 +35,14 @@ var PacienteCreateComponent = (function () {
     PacienteCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //CArga de combos
-        this.PaisService.get().subscribe(function (resultado) { return _this.paises = resultado; });
+        this.PaisService.get().subscribe(function (resultado) { debugger; _this.paises = resultado; });
         this.ProvinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
         this.LocalidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
+        this.sexos = enumerados.getSexo();
+        this.generos = enumerados.getGenero();
+        this.estadosCiviles = enumerados.getEstadoCivil();
+        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.estados = enumerados.getEstados();
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -49,6 +55,22 @@ var PacienteCreateComponent = (function () {
             estadoCivil: [''],
             contacto: this.formBuilder.array([
                 this.iniContacto(1)
+            ]),
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: [''],
+                        provincia: [''],
+                        localidad: [''],
+                        barrio: ['']
+                    }),
+                    ranking: [''],
+                    codigoPostal: [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                })
             ])
         });
     };
@@ -87,6 +109,9 @@ var PacienteCreateComponent = (function () {
     };
     PacienteCreateComponent.prototype.filtrarProvincias = function (idPais) {
         this.provincias = this.provincias.filter(function (p) { return p.pais._id == idPais; });
+    };
+    PacienteCreateComponent.prototype.filtrarLocalidades = function (idProvincia) {
+        this.localidades = this.localidades.filter(function (loc) { return loc.provincia._id == idProvincia; });
     };
     PacienteCreateComponent = __decorate([
         core_1.Component({

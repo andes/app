@@ -18,7 +18,7 @@ var appRoutes = [
         component: especialidad_component_1.EspecialidadComponent
     },
     {
-        path: 'paciente',
+        path: 'pacientes',
         component: paciente_create_component_1.PacienteCreateComponent
     }
 ];
