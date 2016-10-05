@@ -113,9 +113,9 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label> País: </label>
-                                        <select class="form-control" formControlName="pais" #pais (change)="getProvincias(pais.selectedIndex)">
+                                        <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
                                         <option [ngValue]="">Seleccione...</option>
-                                        <option *ngFor="let pais of paises" [ngValue]="pais.nombre">{{pais.nombre}}</option>
+                                        <option *ngFor="let pais of paises" [ngValue]="pais._id">{{pais.nombre}}</option>
                                     </select>
                                     </div>
                                     <div class="col-sm-6">
