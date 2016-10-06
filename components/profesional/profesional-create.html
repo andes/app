@@ -48,7 +48,85 @@
                                 <option *ngFor="let genero of generos" [ngValue]="genero">{{genero}}</option>
                         </select>
                     </div>
+                    <div class="col-sm-4">
+                        <label> Estado Civil: </label>
+                        <select class="form-control" formControlName="estadoCivil">
+                                <option *ngFor="let estCivil of estadosCiviles" [ngValue]="estCivil">{{estCivil}}</option>
+                        </select>
+                    </div>
                 </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Rol a desempeñar:</label>
+                            <input type="text" class="form-control" formControlName="rol" placeholder="Ej: Médico, Enfermero, Jefe de servicio, etc...">
+                            <label class="control-label text-danger" *ngIf="createForm.controls.rol.errors">Este campo es obligatorio!</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" formArrayName="matriculas">
+                            <div class="panel-heading"> Matriculas </div>
+                            <div class="panel-body">
+                                <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <span>
+                                            <i class="glyphicon glyphicon-file"></i>
+                                        </span>
+                                        <div align="right" *ngIf="createForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" [formGroupName]="i">
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <label>Número de Matrícula</label>
+                                                <input type="number" class="form-control" formControlName="numero">
+                                                <small [hidden]="createForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">Número de Matrícula es Requerido</small>
+                                            </div>
+
+                                            <div class="form-group col-xs-6">
+                                                <label>Descripción</label>
+                                                <input type="string" class="form-control" formControlName="descripcion">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <label>Fecha de Inicio</label>
+                                                <input type="date" class="form-control" formControlName="fechaInicio">
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label>Fecha de Vencimiento</label>
+                                                <input type="date" class="form-control" formControlName="fechaVencimiento">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" formControlName="activo" >Vigente</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="row">
+                                        <div class="margin-20">
+                                            <button class="btn btn-default" (click)="addMatricula()"><i class="glyphicon glyphicon-plus"></i> Agregar Matricula</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">&nbsp;</div>
                 <div class="panel panel-default" formArrayName="contacto">
                     <div class="panel-heading"> Contactos </div>
@@ -134,66 +212,6 @@
                                         <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="panel panel-default" formArrayName="matriculas">
-                            <div class="panel-heading"> Matriculas </div>
-                            <div class="panel-body">
-                                <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <span>
-                                            <i class="glyphicon glyphicon-file"></i>
-                                        </span>
-                                        <div align="right" *ngIf="createForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)">
-                                            <i class="glyphicon glyphicon-remove-circle"></i>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body" [formGroupName]="i">
-                                        <div class="row">
-                                            <div class="form-group col-xs-6">
-                                                <label>Número de Matrícula</label>
-                                                <input type="number" class="form-control" formControlName="numero">
-                                                <small [hidden]="createForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">Número de Matrícula es Requerido</small>
-                                            </div>
-
-                                            <div class="form-group col-xs-6">
-                                                <label>Descripción</label>
-                                                <input type="string" class="form-control" formControlName="descripcion">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xs-6">
-                                                <label>Fecha de Inicio</label>
-                                                <input type="date" class="form-control" formControlName="fechaInicio">
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <label>Fecha de Vencimiento</label>
-                                                <input type="date" class="form-control" formControlName="fechaVencimiento">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xs-6">
-                                                <div class="checkbox">
-                                                    <label><input type="checkbox" formControlName="vigente" >Vigente</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <div class="row">
-                                        <div class="margin-20">
-                                            <button class="btn btn-default" (click)="addMatricula()"><i class="glyphicon glyphicon-plus"></i> Agregar Matricula</button>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>

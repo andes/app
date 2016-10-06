@@ -37,6 +37,7 @@ var ProfesionalCreateComponent = (function () {
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
         this.tipoComunicacion = enumerados.getTipoComunicacion();
+        this.estadosCiviles = enumerados.getEstadoCivil();
         this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.provinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
         this.localidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
@@ -66,8 +67,10 @@ var ProfesionalCreateComponent = (function () {
                     activo: [true]
                 })
             ]),
-            telefono: [''],
-            email: [''],
+            estadoCivil: [''],
+            foto: [''],
+            rol: ['', forms_1.Validators.required],
+            especialidad: [''],
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
             ])
@@ -81,7 +84,7 @@ var ProfesionalCreateComponent = (function () {
             descripcion: [''],
             fechaInicio: [''],
             fechaVencimiento: [''],
-            vigente: [true]
+            activo: [true]
         });
     };
     ProfesionalCreateComponent.prototype.addMatricula = function () {
@@ -128,6 +131,7 @@ var ProfesionalCreateComponent = (function () {
     /*Guardar los datos*/
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
+        debugger;
         if (isvalid) {
             var profOperation = void 0;
             model.activo = true;

@@ -30,6 +30,8 @@ export class ProfesionalCreateComponent implements OnInit {
     sexos: any [];
     generos:any [];
     tipoComunicacion: any[];
+    estadosCiviles: any[];
+
     paises:IPais[] = [];
     provincias: IProvincia[] = [];
     todasProvincias: IProvincia[] = [];
@@ -50,6 +52,7 @@ export class ProfesionalCreateComponent implements OnInit {
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
         this.tipoComunicacion = enumerados.getTipoComunicacion();
+        this.estadosCiviles = enumerados.getEstadoCivil();
 
         this.paisService.get().subscribe(resultado => {this.paises = resultado});
         this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
@@ -82,8 +85,10 @@ export class ProfesionalCreateComponent implements OnInit {
                     activo: [true]
                 })
             ]),
-            telefono: [''],
-            email: [''],
+            estadoCivil: [''],
+            foto: [''], //Queda pendiente para agregar un path o ver como se implementa
+            rol:['',Validators.required],
+            especialidad:[''],
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
 
@@ -99,7 +104,7 @@ export class ProfesionalCreateComponent implements OnInit {
             descripcion: [''],
             fechaInicio: [''],
             fechaVencimiento: [''],
-            vigente: [true]
+            activo: [true]
         });
     }
 
@@ -155,7 +160,7 @@ export class ProfesionalCreateComponent implements OnInit {
 
     /*Guardar los datos*/
     onSave(model: IProfesional, isvalid: boolean) {
-        
+        debugger;
         if (isvalid) {
             let profOperation: Observable<IProfesional>;
             model.activo = true;
