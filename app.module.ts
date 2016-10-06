@@ -1,6 +1,7 @@
 import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
+import { PacienteService } from './services/paciente.service';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
@@ -34,7 +35,7 @@ import {ToggleButtonModule} from 'primeng/primeng';
 
   bootstrap: [AppComponent],
   providers: [OrganizacionService, ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService, 
-             PaisService, LocalidadService, BarrioService]
+             PaisService, LocalidadService, BarrioService, PacienteService]
 
 })
 export class AppModule { }

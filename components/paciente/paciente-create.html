@@ -9,15 +9,14 @@
                             <label>Nombre:</label>
                             <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
                             <label class="control-label text-danger" *ngIf="!createForm.controls.nombre.valid">
-                                Este campo es obligatorio!</label>
+                                (*)</label>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Apellido:</label>
                             <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese apellido...">
-                            <label class="control-label text-danger" *ngIf="!createForm.controls.apellido.valid">
-                                Este campo es obligatorio!</label>
+
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -39,26 +38,32 @@
                     <div class="col-sm-4">
                         <label> Estado: </label>
                         <select class="form-control" formControlName="estado">
+                            <option value="">...</option>
                             <option *ngFor="let estado of estados" >{{estado}}</option>
                         </select>
+                        <label class="control-label text-danger" *ngIf="!createForm.controls.estado.valid">
+                                (*)</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
                         <label> Sexo: </label>
                         <select class="form-control" formControlName="sexo">
+                            <option value="">...</option>
                             <option *ngFor="let sexo of sexos" >{{sexo}}</option>
                         </select>
                     </div>
                     <div class="col-sm-4">
                         <label> Genero: </label>
                         <select class="form-control" formControlName="genero">
+                            <option value="">...</option>
                             <option *ngFor="let genero of generos" >{{genero}}</option>
                         </select>
                     </div>
                     <div class="col-sm-4">
                         <label> Estado Civil: </label>
                         <select class="form-control" formControlName="estadoCivil">
+                            <option value="">...</option>
                             <option *ngFor="let estCivil of estadosCiviles" >{{estCivil}}</option>
                         </select>
                     </div>
@@ -73,6 +78,7 @@
                                 <div class="col-sm-4">
                                     <label> Tipo: </label>
                                     <select class="form-control" formControlName="tipo">
+                                        <option value="">...</option>
                                         <option *ngFor="let tipo of tiposContactos" >{{tipo}}</option>
                                     </select>
                                 </div>
@@ -104,9 +110,13 @@
                     <div class="panel-body" *ngFor="let dir of createForm.controls.direccion.controls; let i=index">
                         <div [formGroupName]="i">
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-10">
                                     <label> Detalle de Domicilio: </label>
                                     <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label> CP: </label>
+                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
                                 </div>
                             </div>
                             <div formGroupName="ubicacion">
@@ -115,49 +125,24 @@
                                         <label> País: </label>
                                         <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
                                         <option [ngValue]="">Seleccione...</option>
-                                        <option *ngFor="let pais of paises" [ngValue]="pais._id">{{pais.nombre}}</option>
+                                        <option *ngFor="let pais of paises" [ngValue]="pais">{{pais.nombre}}</option>
                                     </select>
                                     </div>
                                     <div class="col-sm-6">
                                         <label> Provincia: </label>
-                                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                                        <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
-                                    </select>
+                                        <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
+                                            <option value="">...</option>
+                                            <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label> Localidad: </label>
-                                        <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
-                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
-                                    </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label> Barrio: </label>
-                                        <select class="form-control" formControlName="barrio"> 
-                                        <option *ngFor="let barrio of barrios" [ngValue]="barrio">{{barrio.nombre}}</option>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <label> Codigo Postal: </label>
-                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label> Latitud: </label>
-                                    <input type="number" class="form-control" formControlName="latitud" placeholder="Ej: -38.945259">
-                                </div>
-                                <div class="col-sm-4">
-                                    <label> Longitud: </label>
-                                    <input type="number" class="form-control" formControlName="longitud" placeholder="Ej: -68.078805">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-sm-2">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                        <select class="form-control" formControlName="localidad">
+                                            <option value="">...</option>
+                                            <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -165,6 +150,82 @@
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
+                <div class="panel panel-default" formArrayName="financiador">
+                    <div class="panel-heading"> Financiador </div>
+                    <div class="panel-body">
+                        <div class="list-group" *ngFor="let fi of createForm.controls.financiador.controls; let i=index">
+                            <div class="row list-group-item" [formGroupName]="i">
+                                <span class="badge" (click)="removeFinanciador(i)">x</span>
+                                <div class="col-sm-4">
+                                    <label> Obra Solcial: </label>
+                                    <select class="form-control" formControlName="entidad">
+                                        <option value="">...</option>
+                                        <option *ngFor="let obraSocial of obrasSociales" [ngValue]="obraSocial" >{{obraSocial.nombre}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label> Fecha Alta: </label>
+                                    <input type="date" class="form-control" formControlName="fechaAlta">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label> Orden: </label>
+                                    <input type="number" class="form-control" formControlName="ranking">
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <a (click)="addFinanciador()" style="cursor: default">Agregar Obra Social +</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="panel panel-default" formArrayName="tutor">
+                    <div class="panel-heading"> Tutor/es </div>
+                    <div class="panel-body">
+                        <div class="list-group" *ngFor="let fi of createForm.controls.tutor.controls; let i=index">
+                            <div class="list-group-item" [formGroupName]="i">
+                                <div class="row">
+                                    <span class="badge" (click)="removeTutor(i)">x</span>
+                                    <div class="col-sm-3">
+                                        <label> Relación: </label>
+                                        <select class="form-control" formControlName="relacion">
+                                        <option value="">...</option>
+                                        <option *ngFor="let rt of relacionTutores" [ngValue]="rt" >{{rt}}</option>
+                                    </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label> Apellido: </label>
+                                        <input type="text" class="form-control" formControlName="apellido">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label> Nombre: </label>
+                                        <input type="text" class="form-control" formControlName="nombre">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label> Documento: </label>
+                                        <input type="number" class="form-control" formControlName="documento">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <a (click)="addTutor()" style="cursor: default">Agregar Tutor +</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+
                 <div class="row">
                     <div class="col-sm-4">
                         <button class="btn btn-primary" type="submit" (click)="onSave(createForm.value, createForm.valid)">Guardar</button>

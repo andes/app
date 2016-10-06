@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var barrio_service_1 = require('./services/barrio.service');
 var localidad_service_1 = require('./services/localidad.service');
 var pais_service_1 = require('./services/pais.service');
+var paciente_service_1 = require('./services/paciente.service');
 var paciente_create_component_1 = require('./components/paciente/paciente-create.component');
 var tipoEstablecimiento_service_1 = require('./services/tipoEstablecimiento.service');
 var provincia_service_1 = require('./services/provincia.service');
@@ -40,7 +41,7 @@ var AppModule = (function () {
                 especialidad_create_component_1.EspecialidadCreateComponent, profesional_component_1.ProfesionalComponent, paciente_create_component_1.PacienteCreateComponent],
             bootstrap: [app_component_1.AppComponent],
             providers: [organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService, especialidad_service_1.EspecialidadService, profesional_service_1.ProfesionalService,
-                pais_service_1.PaisService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService]
+                pais_service_1.PaisService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService, paciente_service_1.PacienteService]
         }), 
         __metadata('design:paramtypes', [])
     ], AppModule);
