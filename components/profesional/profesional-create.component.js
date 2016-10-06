@@ -15,21 +15,23 @@ var profesional_service_1 = require('./../../services/profesional.service');
 var pais_service_1 = require('./../../services/pais.service');
 var provincia_service_1 = require('./../../services/provincia.service');
 var localidad_service_1 = require('./../../services/localidad.service');
+var especialidad_service_1 = require('./../../services/especialidad.service');
 var enumerados = require('./../../utils/enumerados');
 var ProfesionalCreateComponent = (function () {
-    //barrios: IBarrio[] = [];
-    function ProfesionalCreateComponent(formBuilder, profesionalService, paisService, provinciaService, localidadService) {
+    function ProfesionalCreateComponent(formBuilder, profesionalService, paisService, provinciaService, localidadService, especialidadService) {
         this.formBuilder = formBuilder;
         this.profesionalService = profesionalService;
         this.paisService = paisService;
         this.provinciaService = provinciaService;
         this.localidadService = localidadService;
+        this.especialidadService = especialidadService;
         this.data = new core_1.EventEmitter();
         this.paises = [];
         this.provincias = [];
         this.todasProvincias = [];
         this.localidades = [];
         this.todasLocalidades = [];
+        this.todasEspecialidades = [];
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -41,6 +43,7 @@ var ProfesionalCreateComponent = (function () {
         this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.provinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
         this.localidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
+        this.especialidadService.get().subscribe(function (resultado) { debugger; _this.todasEspecialidades = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -70,7 +73,9 @@ var ProfesionalCreateComponent = (function () {
             estadoCivil: [''],
             foto: [''],
             rol: ['', forms_1.Validators.required],
-            especialidad: [''],
+            especialidad: this.formBuilder.array([
+                this.iniEspecialidad()
+            ]),
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
             ])
@@ -95,6 +100,23 @@ var ProfesionalCreateComponent = (function () {
     ProfesionalCreateComponent.prototype.removeMatricula = function (i) {
         // elimina formMatricula
         var control = this.createForm.controls['matriculas'];
+        control.removeAt(i);
+    };
+    /*Código de especialidad*/
+    ProfesionalCreateComponent.prototype.iniEspecialidad = function () {
+        return this.formBuilder.group({
+            especialidadProfesional: {
+                id: [''],
+                nombre: ['']
+            }
+        });
+    };
+    ProfesionalCreateComponent.prototype.addEspecialidad = function () {
+        var control = this.createForm.controls['especialidad'];
+        control.push(this.iniEspecialidad());
+    };
+    ProfesionalCreateComponent.prototype.removeEspecialidad = function (i) {
+        var control = this.createForm.controls['especialidad'];
         control.removeAt(i);
     };
     /*Código de filtrado de combos*/
@@ -155,7 +177,7 @@ var ProfesionalCreateComponent = (function () {
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/profesional/profesional-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, profesional_service_1.ProfesionalService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, profesional_service_1.ProfesionalService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService, especialidad_service_1.EspecialidadService])
     ], ProfesionalCreateComponent);
     return ProfesionalCreateComponent;
 }());
