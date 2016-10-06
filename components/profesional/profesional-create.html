@@ -57,28 +57,26 @@
                             <div class="row">&nbsp;</div>
                             <div formGroupName="ubicacion">
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label> País: </label>
                                         <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
-                                        <!--<option [ngValue]="">Seleccione...</option>-->
                                         <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
                                     </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label> Provincia: </label>
-                                        <select class="form-control" formControlName="provincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
+                                        <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
                                         <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
                                     </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <label> Localidad: </label>
-                                        <select class="form-control" formControlName="localidad" #localidad (change)="getBarrios(localidad.selectedIndex)">
+                                        <select class="form-control" formControlName="localidad" #localidad>
                                         <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
                                     </select>
                                     </div>
                                 </div>
-                                <pre>{{this.paises[0].nombre}}</pre>
-                                <pre>{{this.provincias}}</pre>
+                                
                             </div>
 
                             <div class="row">

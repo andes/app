@@ -30,7 +30,10 @@ export class ProfesionalCreateComponent implements OnInit {
     sexos: any [];
     paises:IPais[] = [];
     provincias: IProvincia[] = [];
+    todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
+    todasLocalidades: ILocalidad[] = [];
+    
     //barrios: IBarrio[] = [];
 
     constructor(private formBuilder: FormBuilder,
@@ -45,11 +48,9 @@ export class ProfesionalCreateComponent implements OnInit {
         this.sexos = enumerados.getSexo();
         
         this.paisService.get().subscribe(resultado => {this.paises = resultado});
-        this.provinciaService.get().subscribe(resultado => this.provincias = resultado);
-        this.localidadService.get().subscribe(resultado => this.localidades = resultado); 
+        this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
+        this.localidadService.get().subscribe(resultado => this.todasLocalidades = resultado);
 
-        this.provinciaService.get()
-            .subscribe(resultado => this.provincias = resultado);
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -106,11 +107,18 @@ export class ProfesionalCreateComponent implements OnInit {
     }
 
 
-    filtrarProvincias(idPais: String){
-        this.provincias = this.provincias.filter(function (p) { return p.pais.id == idPais; });
-
+    filtrarProvincias(indiceSelected: number){
+        var idPais = this.paises[indiceSelected].id;
+        this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
+        this.localidades = [];
     }
     
+    filtrarLocalidades(indiceSelected: number){
+        var idProvincia = this.provincias[indiceSelected].id;
+        this.localidades = this.todasLocalidades.filter(function (p) {return p.provincia.id == idProvincia; });
+        
+    }
+
     onSave(model: IProfesional, isvalid: boolean) {
         
         if (isvalid) {

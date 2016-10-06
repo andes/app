@@ -27,17 +27,17 @@ var ProfesionalCreateComponent = (function () {
         this.data = new core_1.EventEmitter();
         this.paises = [];
         this.provincias = [];
+        this.todasProvincias = [];
         this.localidades = [];
+        this.todasLocalidades = [];
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //Carga de combos
         this.sexos = enumerados.getSexo();
         this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
-        this.provinciaService.get().subscribe(function (resultado) { return _this.provincias = resultado; });
-        this.localidadService.get().subscribe(function (resultado) { return _this.localidades = resultado; });
-        this.provinciaService.get()
-            .subscribe(function (resultado) { return _this.provincias = resultado; });
+        this.provinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
+        this.localidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -87,8 +87,14 @@ var ProfesionalCreateComponent = (function () {
         var control = this.createForm.controls['matriculas'];
         control.removeAt(i);
     };
-    ProfesionalCreateComponent.prototype.filtrarProvincias = function (idPais) {
-        this.provincias = this.provincias.filter(function (p) { return p.pais.id == idPais; });
+    ProfesionalCreateComponent.prototype.filtrarProvincias = function (indiceSelected) {
+        var idPais = this.paises[indiceSelected].id;
+        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
+        this.localidades = [];
+    };
+    ProfesionalCreateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
+        var idProvincia = this.provincias[indiceSelected].id;
+        this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
     };
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
