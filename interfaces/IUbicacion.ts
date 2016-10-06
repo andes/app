@@ -1,8 +1,4 @@
 export interface IUbicacion{
-    barrio: {
-        id: String,
-        nombre: String
-    },
     localidad: {
         id: String,
         nombre: String

@@ -34,11 +34,13 @@ export interface IPaciente{
     foto: String,
     tutor: [{
         relacion: String,
-        referencia: Number,
+        referencia: String,
     }],
     financiador: [{ //obrasocial, plan sumar 
-        id: String,
-        nombre: String,
+        entidad: {
+            id: String,
+            nombre: String
+        },
         activo: Boolean,
         fechaAlta: Date,
         fechaBaja: Date,
