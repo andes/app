@@ -28,6 +28,8 @@ export class ProfesionalCreateComponent implements OnInit {
     createForm: FormGroup;
     //Definición de arreglos
     sexos: any [];
+    generos:any [];
+    tipoComunicacion: any[];
     paises:IPais[] = [];
     provincias: IProvincia[] = [];
     todasProvincias: IProvincia[] = [];
@@ -44,9 +46,11 @@ export class ProfesionalCreateComponent implements OnInit {
 
     ngOnInit() {
 
-        //Carga de combos
+        //Carga arrays
         this.sexos = enumerados.getSexo();
-        
+        this.generos = enumerados.getGenero();
+        this.tipoComunicacion = enumerados.getTipoComunicacion();
+
         this.paisService.get().subscribe(resultado => {this.paises = resultado});
         this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
         this.localidadService.get().subscribe(resultado => this.todasLocalidades = resultado);
@@ -56,19 +60,23 @@ export class ProfesionalCreateComponent implements OnInit {
             nombre: ['', Validators.required],
             apellido: ['', Validators.required],
             documento: ['', Validators.required],
+            contacto: this.formBuilder.array([
+                this.initContacto(1)
+            ]),
             fechaNacimiento: ['', Validators.required],
+            fechaFallecimiento: [''],
             sexo: [],
+            genero:[''],
             direccion: this.formBuilder.array([
                 this.formBuilder.group({
                     valor: [''],
+                    codigoPostal: [''],
                     ubicacion: this.formBuilder.group({
                         pais: [''],
                         provincia: [''],
-                        localidad: [''],
-                        barrio: ['']
+                        localidad: ['']
                     }),
-                    ranking: [''],
-                    codigoPostal: [''],
+                    ranking: ['1'],
                     latitud: [''],
                     longitud: [''],
                     activo: [true]
@@ -83,6 +91,7 @@ export class ProfesionalCreateComponent implements OnInit {
         });
     }
 
+    /*Código de matriculas*/
     iniMatricula() {
         // Inicializa matrículas
         return this.formBuilder.group({
@@ -90,7 +99,7 @@ export class ProfesionalCreateComponent implements OnInit {
             descripcion: [''],
             fechaInicio: [''],
             fechaVencimiento: [''],
-            vigente: [false]
+            vigente: [true]
         });
     }
 
@@ -106,7 +115,7 @@ export class ProfesionalCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-
+/*Código de filtrado de combos*/
     filtrarProvincias(indiceSelected: number){
         var idPais = this.paises[indiceSelected].id;
         this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
@@ -119,6 +128,32 @@ export class ProfesionalCreateComponent implements OnInit {
         
     }
 
+    /*Código de contactos*/
+
+    initContacto(rank: Number) {
+        // Inicializa contacto
+        let cant = 0;
+        let fecha = new Date();
+        return this.formBuilder.group({
+            tipo: [''],
+            valor: [''],
+            ranking: [rank],
+            ultimaActualizacion: [fecha],
+            activo: [true]
+        });
+    }
+
+    addContacto() {
+        const control = <FormArray> this.createForm.controls['contacto'];
+        control.push(this.initContacto(control.length + 1));
+    }
+
+    removeContacto(indice: number){
+        const control = <FormArray> this.createForm.controls['contacto'];
+        control.removeAt(indice);
+    }
+
+    /*Guardar los datos*/
     onSave(model: IProfesional, isvalid: boolean) {
         
         if (isvalid) {

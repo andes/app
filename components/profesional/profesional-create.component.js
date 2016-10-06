@@ -33,8 +33,10 @@ var ProfesionalCreateComponent = (function () {
     }
     ProfesionalCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //Carga de combos
+        //Carga arrays
         this.sexos = enumerados.getSexo();
+        this.generos = enumerados.getGenero();
+        this.tipoComunicacion = enumerados.getTipoComunicacion();
         this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.provinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
         this.localidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
@@ -42,19 +44,23 @@ var ProfesionalCreateComponent = (function () {
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
             documento: ['', forms_1.Validators.required],
+            contacto: this.formBuilder.array([
+                this.initContacto(1)
+            ]),
             fechaNacimiento: ['', forms_1.Validators.required],
+            fechaFallecimiento: [''],
             sexo: [],
+            genero: [''],
             direccion: this.formBuilder.array([
                 this.formBuilder.group({
                     valor: [''],
+                    codigoPostal: [''],
                     ubicacion: this.formBuilder.group({
                         pais: [''],
                         provincia: [''],
-                        localidad: [''],
-                        barrio: ['']
+                        localidad: ['']
                     }),
-                    ranking: [''],
-                    codigoPostal: [''],
+                    ranking: ['1'],
                     latitud: [''],
                     longitud: [''],
                     activo: [true]
@@ -67,6 +73,7 @@ var ProfesionalCreateComponent = (function () {
             ])
         });
     };
+    /*Código de matriculas*/
     ProfesionalCreateComponent.prototype.iniMatricula = function () {
         // Inicializa matrículas
         return this.formBuilder.group({
@@ -74,7 +81,7 @@ var ProfesionalCreateComponent = (function () {
             descripcion: [''],
             fechaInicio: [''],
             fechaVencimiento: [''],
-            vigente: [false]
+            vigente: [true]
         });
     };
     ProfesionalCreateComponent.prototype.addMatricula = function () {
@@ -87,6 +94,7 @@ var ProfesionalCreateComponent = (function () {
         var control = this.createForm.controls['matriculas'];
         control.removeAt(i);
     };
+    /*Código de filtrado de combos*/
     ProfesionalCreateComponent.prototype.filtrarProvincias = function (indiceSelected) {
         var idPais = this.paises[indiceSelected].id;
         this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
@@ -96,6 +104,28 @@ var ProfesionalCreateComponent = (function () {
         var idProvincia = this.provincias[indiceSelected].id;
         this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
     };
+    /*Código de contactos*/
+    ProfesionalCreateComponent.prototype.initContacto = function (rank) {
+        // Inicializa contacto
+        var cant = 0;
+        var fecha = new Date();
+        return this.formBuilder.group({
+            tipo: [''],
+            valor: [''],
+            ranking: [rank],
+            ultimaActualizacion: [fecha],
+            activo: [true]
+        });
+    };
+    ProfesionalCreateComponent.prototype.addContacto = function () {
+        var control = this.createForm.controls['contacto'];
+        control.push(this.initContacto(control.length + 1));
+    };
+    ProfesionalCreateComponent.prototype.removeContacto = function (indice) {
+        var control = this.createForm.controls['contacto'];
+        control.removeAt(indice);
+    };
+    /*Guardar los datos*/
     ProfesionalCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
         if (isvalid) {
