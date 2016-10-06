@@ -8,57 +8,102 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var barrio_service_1 = require('./../../services/barrio.service');
+var localidad_service_1 = require('./../../services/localidad.service');
+var pais_service_1 = require('./../../services/pais.service');
 var organizacion_service_1 = require('./../../services/organizacion.service');
-var IOrganizacion_1 = require('./../../interfaces/IOrganizacion');
 var core_1 = require('@angular/core');
 var forms_1 = require('@angular/forms');
 var provincia_service_1 = require('./../../services/provincia.service');
 var tipoEstablecimiento_service_1 = require('./../../services/tipoEstablecimiento.service');
+var enumerados = require('./../../utils/enumerados');
 var OrganizacionCreateComponent = (function () {
-    function OrganizacionCreateComponent(formBuilder, organizacionService, provinciaService, tipoEstablecimientoService) {
+    function OrganizacionCreateComponent(formBuilder, organizacionService, PaisService, provinciaService, ProvinciaService, LocalidadService, BarrioService, tipoEstablecimientoService) {
         this.formBuilder = formBuilder;
         this.organizacionService = organizacionService;
+        this.PaisService = PaisService;
         this.provinciaService = provinciaService;
+        this.ProvinciaService = ProvinciaService;
+        this.LocalidadService = LocalidadService;
+        this.BarrioService = BarrioService;
         this.tipoEstablecimientoService = tipoEstablecimientoService;
         this.data = new core_1.EventEmitter();
-        this.localidades = [];
-        this.tiposcom = IOrganizacion_1.tipoCom;
     }
     OrganizacionCreateComponent.prototype.ngOnInit = function () {
         var _this = this;
-        //this.tiposcom = tipoCom;
-        this.keys = Object.keys(this.tiposcom);
-        this.keys = this.keys.slice(this.keys.length / 2);
-        this.provinciaService.get()
-            .subscribe(function (resultado) {
-            _this.provincias = resultado;
-            //this.localidades = this.provincias[0].localidades;
-        });
+        this.tiposcom = enumerados.getTipoComunicacion();
+        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.PaisService.get().subscribe(function (resultado) { _this.paises = resultado; });
+        this.ProvinciaService.get().subscribe(function (resultado) { _this.todasProvincias = resultado; });
+        this.LocalidadService.get().subscribe(function (resultado) { _this.todasLocalidades = resultado; });
         this.tipoEstablecimientoService.get()
             .subscribe(function (resultado) { _this.tipos = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             nivelComplejidad: [''],
-            descripcion: ['', forms_1.Validators.required],
             codigo: this.formBuilder.group({
                 sisa: ['', forms_1.Validators.required],
                 cuie: [''],
                 remediar: [''],
             }),
-            domicilio: this.formBuilder.group({
-                calle: ['', forms_1.Validators.required],
-                numero: [''],
-                provincia: [''],
-                localidad: ['']
-            }),
-            telecom: this.formBuilder.group({
-                tipo: [''],
-                valor: [''],
-                ranking: [''],
-                activo: ['']
-            }),
             tipoEstablecimiento: [''],
+            telecom: this.formBuilder.array([
+                this.formBuilder.group({
+                    tipo: [''],
+                    valor: [''],
+                    ranking: [''],
+                    activo: ['']
+                }),
+            ]),
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: [''],
+                        provincia: [''],
+                        localidad: ['']
+                    }),
+                    ranking: [''],
+                    codigoPostal: [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                })
+            ]),
+            contacto: this.formBuilder.array([])
         });
+    };
+    OrganizacionCreateComponent.prototype.iniContacto = function () {
+        // Inicializa contacto
+        var cant = 0;
+        var fecha = new Date();
+        return this.formBuilder.group({
+            proposito: [''],
+            nombre: [''],
+            apellido: [''],
+            tipo: [''],
+            valor: [''],
+            activo: [true]
+        });
+    };
+    OrganizacionCreateComponent.prototype.addContacto = function () {
+        // agrega formMatricula 
+        var control = this.createForm.controls['contacto'];
+        control.push(this.iniContacto());
+    };
+    OrganizacionCreateComponent.prototype.removeContacto = function (i) {
+        // elimina formMatricula
+        var control = this.createForm.controls['contacto'];
+        control.removeAt(i);
+    };
+    OrganizacionCreateComponent.prototype.filtrarProvincias = function (indiceSelected) {
+        var idPais = this.paises[indiceSelected].id;
+        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
+        this.localidades = [];
+    };
+    OrganizacionCreateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
+        var idProvincia = this.provincias[indiceSelected].id;
+        this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
     };
     OrganizacionCreateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
@@ -71,9 +116,6 @@ var OrganizacionCreateComponent = (function () {
         else {
             alert("Complete datos obligatorios");
         }
-    };
-    OrganizacionCreateComponent.prototype.getLocalidades = function (index) {
-        // this.localidades= this.provincias[index].localidades;
     };
     OrganizacionCreateComponent.prototype.onCancel = function () {
         this.data.emit(null);
@@ -88,7 +130,7 @@ var OrganizacionCreateComponent = (function () {
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/organizacion/organizacion-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, provincia_service_1.ProvinciaService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
     ], OrganizacionCreateComponent);
     return OrganizacionCreateComponent;
 }());
