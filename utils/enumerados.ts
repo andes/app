@@ -18,6 +18,10 @@ export enum estados {
   "temporal", "identificado", "validado", "recienNacido", "extranjero"
 }
 
+export enum relacionTutor {
+   "padre", "madre", "hijo", "tutor"
+}
+
 export function getSexo(){
        let arrSexo = Object.keys(Sexo);
        arrSexo = arrSexo.slice(arrSexo.length / 2);
@@ -46,4 +50,10 @@ export function getEstados(){
        let arrEstados = Object.keys(estados);
        arrEstados = arrEstados.slice(arrEstados.length / 2);
        return arrEstados;
+}
+
+export function getRelacionTutor(){
+       let arrRT = Object.keys(relacionTutor);
+       arrRT = arrRT.slice(arrRT.length / 2);
+       return arrRT;
 }

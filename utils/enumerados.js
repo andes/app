@@ -34,6 +34,13 @@ var tipoComunicacion = exports.tipoComunicacion;
     estados[estados["extranjero"] = 4] = "extranjero";
 })(exports.estados || (exports.estados = {}));
 var estados = exports.estados;
+(function (relacionTutor) {
+    relacionTutor[relacionTutor["padre"] = 0] = "padre";
+    relacionTutor[relacionTutor["madre"] = 1] = "madre";
+    relacionTutor[relacionTutor["hijo"] = 2] = "hijo";
+    relacionTutor[relacionTutor["tutor"] = 3] = "tutor";
+})(exports.relacionTutor || (exports.relacionTutor = {}));
+var relacionTutor = exports.relacionTutor;
 function getSexo() {
     var arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
@@ -64,4 +71,10 @@ function getEstados() {
     return arrEstados;
 }
 exports.getEstados = getEstados;
+function getRelacionTutor() {
+    var arrRT = Object.keys(relacionTutor);
+    arrRT = arrRT.slice(arrRT.length / 2);
+    return arrRT;
+}
+exports.getRelacionTutor = getRelacionTutor;
 //# sourceMappingURL=enumerados.js.map
