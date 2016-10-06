@@ -48,7 +48,7 @@ var OrganizacionUpdateComponent = (function () {
             tipoEstablecimiento: ['']
         });
         //    this.myProvincia=  this.organizacionHijo.domicilio.provincia;
-        this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
+        //     this.myTipoEst = this.organizacionHijo.tipoEstablecimiento;
         //    this.myLocalidad = this.organizacionHijo.domicilio.localidad;
     };
     OrganizacionUpdateComponent.prototype.onSave = function (model, isvalid) {
@@ -58,7 +58,7 @@ var OrganizacionUpdateComponent = (function () {
             var estOperation = void 0;
             model.tipoEstablecimiento = this.myTipoEst;
             model.habilitado = this.organizacionHijo.activo;
-            model._id = this.organizacionHijo._id;
+            model._id = this.organizacionHijo.id;
             model.domicilio.localidad = this.myLocalidad;
             estOperation = this.organizacionService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
