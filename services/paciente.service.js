@@ -34,11 +34,13 @@ var PacienteService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    //     getByTerm(apellido:string, nombre: String): Observable<IProfesional[]> {
-    //        return this.http.get(this.profesionalUrl+"?apellido=" + apellido + "&nombre=" + nombre)
-    //            .map((res:Response) => res.json())
-    //            .catch(this.handleError); //...errors if any*/
-    //    }
+    PacienteService.prototype.getBySerch = function (apellido, nombre, documento, estado, fechaNac, sexo) {
+        debugger;
+        return this.http.get(this.pacienteUrl + "?apellido=" + apellido + "&nombre=" + nombre + "&documento=" + documento +
+            "&estado=" + estado + "&fechaNac=" + fechaNac + "&sexo=" + sexo)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError); //...errors if any*/
+    };
     //    disable(profesional: IProfesional): Observable<IProfesional> {
     //          profesional.activo = false;
     //         let bodyString = JSON.stringify(profesional); // Stringify payload

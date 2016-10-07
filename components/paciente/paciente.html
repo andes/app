@@ -1,0 +1,104 @@
+<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
+    <div class="panel panel-default">
+        <div class="panel-heading">Búsqueda de Pacientes</div>
+        <div class="panel-body">
+            <form [formGroup]="searchForm">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+                            <label class="control-label text-danger" *ngIf="!createForm.controls.nombre.valid">
+                                (*)</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Apellido:</label>
+                            <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese apellido...">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label> Documento: </label>
+                        <input type="number" class="form-control" formControlName="documento" placeholder="Ingresar DNI...">
+                    </div>
+                    <div class="col-sm-3">
+                        <label> Fecha de Nacimiento: </label>
+                        <input type="date" class="form-control" formControlName="fechaNacimiento" placeholder="Ingresar Fecha de Nacimiento...">
+                    </div>
+                    <div class="col-sm-3">
+                        <label> Estado: </label>
+                        <select class="form-control" formControlName="estado">
+                            <option value="">...</option>
+                            <option *ngFor="let estado of estados" >{{estado}}</option>
+                        </select>
+                        <label class="control-label text-danger" *ngIf="!createForm.controls.estado.valid">
+                                (*)</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label> Sexo: </label>
+                        <select class="form-control" formControlName="sexo">
+                            <option value="">...</option>
+                            <option *ngFor="let sexo of sexos" >{{sexo}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input type="button" class="btn btn-info" value="Buscar" (click)="findPacientes()">
+                    </div>
+                </div>
+            </form>
+
+            <div class="clear"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Paciente">
+                </div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Documento</th>
+                            <th>Fecha Nac.</th>
+                            <th>Sexo</th>
+                            <th>Estado</th>
+                            <th>Activo</th>
+                            <th colspan="2">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let paciente of pacientes">
+                            <td>{{paciente.nombreCompleto}}</td>
+                            <td>{{paciente.documento}}</td>
+                            <td>{{paciente.fechaNacimiento}}</td>
+                            <td>{{paciente.sexo}}</td>
+                            <td>{{paciente.estado}}</td>
+                            <th>{{paciente.activo ?'Sí':'No' }}</th>
+                            <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(paciente)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
+                            <td style="width:20px;">
+                                <button class="btn btn-danger" *ngIf="paciente.activo" (click)="onDisable(paciente)"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                                <button class="btn btn-success" *ngIf="!paciente.activo" (click)="onEnable(paciente)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <paciente-create (data)='onReturn($event)'></paciente-create>
+
+    </div>
+</div>

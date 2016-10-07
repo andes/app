@@ -1,10 +1,3 @@
-import { BarrioService } from './services/barrio.service';
-import { LocalidadService } from './services/localidad.service';
-import { PaisService } from './services/pais.service';
-import { PacienteService } from './services/paciente.service';
-import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
-import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
-import { ProvinciaService } from './services/provincia.service';
 import { HttpModule } from '@angular/http';
 import { OrganizacionService } from './services/organizacion.service';
 import { EspecialidadService } from './services/especialidad.service';
@@ -15,6 +8,15 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
 import { ProfesionalService } from './services/profesional.service';
+
+import { BarrioService } from './services/barrio.service';
+import { LocalidadService } from './services/localidad.service';
+import { PaisService } from './services/pais.service';
+import { PacienteService } from './services/paciente.service';
+import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
+import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
+import { ProvinciaService } from './services/provincia.service';
+import { FinanciadorService } from './services/financiador.service';
 
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,10 +34,9 @@ import {ToggleButtonModule} from 'primeng/primeng';
 
   declarations: [AppComponent, OrganizacionComponent, OrganizacionCreateComponent, EspecialidadComponent, 
   EspecialidadCreateComponent, ProfesionalComponent, PacienteCreateComponent],
-
   bootstrap: [AppComponent],
   providers: [OrganizacionService, ProvinciaService, TipoEstablecimientoService, EspecialidadService, ProfesionalService, 
-             PaisService, LocalidadService, BarrioService, PacienteService]
+             PaisService, LocalidadService, BarrioService, PacienteService, FinanciadorService]
 
 })
 export class AppModule { }

@@ -32,9 +32,12 @@ export interface IPaciente{
     }],
     estadoCivil: EstadoCivil,
     foto: String,
-    tutor: [{
+    relaciones: [{
         relacion: String,
         referencia: String,
+        nombre: String,
+        apellido: String,
+        documento: String
     }],
     financiador: [{ //obrasocial, plan sumar 
         entidad: {

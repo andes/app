@@ -31,11 +31,13 @@ export class PacienteService {
                          .catch(this.handleError); //...errors if any
     } 
 
-//     getByTerm(apellido:string, nombre: String): Observable<IProfesional[]> {
-//        return this.http.get(this.profesionalUrl+"?apellido=" + apellido + "&nombre=" + nombre)
-//            .map((res:Response) => res.json())
-//            .catch(this.handleError); //...errors if any*/
-//    }
+    getBySerch(apellido:string, nombre: string, documento: string, estado: string, fechaNac: Date, sexo: string): Observable<IPaciente[]> {
+       debugger;
+       return this.http.get(this.pacienteUrl+"?apellido=" + apellido + "&nombre=" + nombre+ "&documento=" + documento+
+                           "&estado=" + estado + "&fechaNac=" + fechaNac + "&sexo=" + sexo)
+           .map((res:Response) => res.json())
+           .catch(this.handleError); //...errors if any*/
+   }
 
 //    disable(profesional: IProfesional): Observable<IProfesional> {
 //          profesional.activo = false;

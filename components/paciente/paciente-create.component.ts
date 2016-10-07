@@ -1,6 +1,8 @@
+import { FinanciadorService } from './../../services/financiador.service';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IPais } from './../../interfaces/IPais';
+import { IFinanciador } from './../../interfaces/IFinanciador';
 import {Observable} from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
@@ -30,21 +32,29 @@ export class PacienteCreateComponent implements OnInit {
     tiposContactos = [];
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
+    todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
+    todasLocalidades: ILocalidad[] = [];
+    showCargar: boolean;
+
     barrios: IBarrio[] = [];
-    obrasSociales = [{id:"42343241131",nombre:"ISSN"},{id:"4354353452",nombre:"SOSUNC"},{id:"32131313123123",nombre:"OSPEPRI"}]
+    obrasSociales: IFinanciador[] = [];
+    pacRelacionados = [];
 
     constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
     private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
-    private BarrioService: BarrioService,private pacienteService: PacienteService) {}
+    private BarrioService: BarrioService,private pacienteService: PacienteService, 
+                private financiadorService: FinanciadorService) {}
 
     ngOnInit() {
 
         //CArga de combos
         this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => {this.provincias = resultado});
-        this.LocalidadService.get().subscribe(resultado => {this.localidades = resultado});
-
+        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
+        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
+        this.financiadorService.get().subscribe(resultado => {this.obrasSociales = resultado});
+        
+        this.showCargar = false;
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
         this.estadosCiviles = enumerados.getEstadoCivil();
@@ -82,7 +92,7 @@ export class PacienteCreateComponent implements OnInit {
             ]),
             financiador: this.formBuilder.array([
             ]),
-            tutor: this.formBuilder.array([
+            relaciones: this.formBuilder.array([
             ]),
             activo:[true]
         });
@@ -114,9 +124,10 @@ export class PacienteCreateComponent implements OnInit {
         });
     }
 
-    iniTutor(){
+    iniRelacion(){
         return this.formBuilder.group({
             relacion: [''],
+            referencia: [''],
             apellido: [''],
             nombre: [''],
             documento: ['']
@@ -162,17 +173,12 @@ export class PacienteCreateComponent implements OnInit {
 
     filtrarProvincias(indexPais: number){
         var pais = this.paises[(indexPais-1)];
-        this.provincias = this.provincias.filter((p) => p.pais.id == pais.id);
+        this.provincias = this.todasProvincias.filter((p) => p.pais.id == pais.id);
     }
 
     filtrarLocalidades(indexProvincia: number){
         var provincia = this.provincias[(indexProvincia-1)];
-        this.localidades = this.localidades.filter((loc) => loc.provincia.id == provincia.id);
-    }
-
-    verObraSocial(indexOS: any, indexFin: number){
-        var OS = this.obrasSociales[(indexOS-1)];
-        this.createForm.value.financiador[indexFin].id = OS.id;
+        this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == provincia.id);
     }
 
     addFinanciador(){
@@ -187,16 +193,73 @@ export class PacienteCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    addTutor(){
+    addRelacion(){
    // agrega form Financiador u obra Social
-        const control = <FormArray> this.createForm.controls['tutor'];
-        control.push(this.iniTutor());
+        const control = <FormArray> this.createForm.controls['relaciones'];
+        control.push(this.iniRelacion());
     }
 
-    removeTutor(i: number) {
+    removeRelacion(i: number) {
         // elimina form Financiador u obra Social
-        const control = <FormArray>this.createForm.controls['tutor'];
+        const control = <FormArray>this.createForm.controls['relaciones'];
         control.removeAt(i);
+    }
+
+    buscarPacRelacionado(){
+        debugger;
+        //var formsRel = this.createForm.value.relaciones[i];
+        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+        this.pacienteService.getBySerch(apellido, nombre, documento, "", null, "")
+                                .subscribe(resultado => {
+                                        if(resultado) this.pacRelacionados = resultado
+                                        else {
+                                            this.pacRelacionados = []
+                                            this.showCargar = true;
+                                        }
+                                    });
+    }
+
+    setRelacion(relacion:String,nombre:String, apellido: String, documento: String, referencia: String){
+        return this.formBuilder.group({
+            relacion: [relacion],
+            referencia: [referencia],
+            apellido: [apellido],
+            nombre: [nombre],
+            documento: [documento]
+        });
+    }
+
+    validar(paciente: IPaciente){
+        debugger;
+        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+        const control = <FormArray>this.createForm.controls['relaciones'];
+        control.push(this.setRelacion(relacion,paciente.nombre,paciente.apellido,paciente.documento,paciente.id));
+
+        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+
+        this.pacRelacionados = []
+    }
+
+    cargarDatos(){
+        debugger;
+        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+
+        const control = <FormArray>this.createForm.controls['relaciones'];
+        control.push(this.setRelacion(relacion,nombre,apellido,documento, ""));
+
+        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+
     }
 
 }
