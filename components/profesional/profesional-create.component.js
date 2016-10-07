@@ -43,7 +43,7 @@ var ProfesionalCreateComponent = (function () {
         this.paisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.provinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
         this.localidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
-        this.especialidadService.get().subscribe(function (resultado) { debugger; _this.todasEspecialidades = resultado; });
+        this.especialidadService.get().subscribe(function (resultado) { _this.todasEspecialidades = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             apellido: ['', forms_1.Validators.required],
@@ -73,9 +73,7 @@ var ProfesionalCreateComponent = (function () {
             estadoCivil: [''],
             foto: [''],
             rol: ['', forms_1.Validators.required],
-            especialidad: this.formBuilder.array([
-                this.iniEspecialidad()
-            ]),
+            especialidad: this.formBuilder.array([]),
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
             ])
@@ -103,17 +101,20 @@ var ProfesionalCreateComponent = (function () {
         control.removeAt(i);
     };
     /*Código de especialidad*/
-    ProfesionalCreateComponent.prototype.iniEspecialidad = function () {
+    ProfesionalCreateComponent.prototype.setEspecialidad = function (id, nbe) {
         return this.formBuilder.group({
-            especialidadProfesional: {
-                id: [''],
-                nombre: ['']
-            }
+            id: [id],
+            nombre: [nbe],
         });
     };
     ProfesionalCreateComponent.prototype.addEspecialidad = function () {
+        debugger;
+        var e = (document.getElementById("ddlEspecialidades"));
+        var indice = e.selectedIndex;
+        var id = this.todasEspecialidades[indice].id;
+        var nombre = this.todasEspecialidades[indice].nombre;
         var control = this.createForm.controls['especialidad'];
-        control.push(this.iniEspecialidad());
+        control.push(this.setEspecialidad(id, nombre));
     };
     ProfesionalCreateComponent.prototype.removeEspecialidad = function (i) {
         var control = this.createForm.controls['especialidad'];

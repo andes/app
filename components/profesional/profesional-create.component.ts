@@ -59,7 +59,7 @@ export class ProfesionalCreateComponent implements OnInit {
         this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
         this.localidadService.get().subscribe(resultado => this.todasLocalidades = resultado);
 
-        this.especialidadService.get().subscribe(resultado => {debugger; this.todasEspecialidades = resultado})
+        this.especialidadService.get().subscribe(resultado => {this.todasEspecialidades = resultado})
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -91,7 +91,7 @@ export class ProfesionalCreateComponent implements OnInit {
             foto: [''], //Queda pendiente para agregar un path o ver como se implementa
             rol:['',Validators.required],
             especialidad:this.formBuilder.array([
-                this.iniEspecialidad()
+                //this.iniEspecialidad()
             ]),
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
@@ -126,18 +126,22 @@ export class ProfesionalCreateComponent implements OnInit {
 
     /*Código de especialidad*/
     
-    iniEspecialidad(){
+    setEspecialidad(id:string,nbe:String){
         return this.formBuilder.group({
-            especialidadProfesional:{
-                id: [''],
-                nombre: ['']
-            }
+            id:[id],
+            nombre:[nbe],
         })
     }
 
     addEspecialidad(){
+        debugger;
+        var e = (document.getElementById("ddlEspecialidades")) as HTMLSelectElement;
+        var indice = e.selectedIndex;
+        var id = this.todasEspecialidades[indice].id;
+        var nombre = this.todasEspecialidades[indice].nombre;
+        
         const control = <FormArray>this.createForm.controls['especialidad'];
-        control.push(this.iniEspecialidad());
+        control.push(this.setEspecialidad(id,nombre));
     }
 
     removeEspecialidad(i: number){
