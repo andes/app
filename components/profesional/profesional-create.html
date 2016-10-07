@@ -68,6 +68,47 @@
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-sm-12">
+                        <div class="panel panel-default" formArrayName="especialidad">
+                            <div class="panel-heading"> Especialidades </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <select id="ddlEspecialidades" class="form-control">
+                                            <option *ngFor="let esp of todasEspecialidades">{{esp.nombre}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <div class="margin-20">
+                                            <button class="form-control btn btn-default" (click)="addEspecialidad()"><i class="glyphicon glyphicon-plus"></i> Agregar Especialidad</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <div *ngFor="let esp of createForm.controls.especialidad.controls; let i=index" class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <span>
+                                                <i class="glyphicon glyphicon-list"> Especialidad</i>
+                                            </span>
+                                                <div align="right" (click)="removeEspecialidad(i)">
+                                                    <i class="glyphicon glyphicon-remove-circle"></i>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" [formGroupName]="i">
+                                                <div class="row">
+                                                    <input type="text" class="form-control" formControlName="nombre" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-sm-12">
                         <div class="panel panel-default" formArrayName="matriculas">
                             <div class="panel-heading"> Matriculas </div>
                             <div class="panel-body">
@@ -140,6 +181,7 @@
                                 <div class="col-sm-4">
                                     <label> Tipo: </label>
                                     <select class="form-control" formControlName="tipo">
+                                        <option value=""> </option>
                                         <option *ngFor="let tipo of tipoComunicacion" >{{tipo}}</option>
                                     </select>
                                 </div>
@@ -187,8 +229,8 @@
                                     <div class="col-sm-4">
                                         <label> País: </label>
                                         <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
-                                        <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
-                                    </select>
+                                            <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
+                                        </select>
                                     </div>
                                     <div class="col-sm-4">
                                         <label> Provincia: </label>
@@ -203,9 +245,7 @@
                                     </select>
                                     </div>
                                 </div>
-
                             </div>
-
                             <div class="row">
                                 <div class="form-group col-sm-2">
                                     <div class="checkbox">

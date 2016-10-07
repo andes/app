@@ -33,8 +33,8 @@ var ProfesionalService = (function () {
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    ProfesionalService.prototype.getByTerm = function (apellido, nombre) {
-        return this.http.get(this.profesionalUrl + "?apellido=" + apellido + "&nombre=" + nombre)
+    ProfesionalService.prototype.getByTerm = function (apellido, nombre, documento) {
+        return this.http.get(this.profesionalUrl + "?apellido=" + apellido + "&nombre=" + nombre + "&documento=" + documento)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };

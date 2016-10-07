@@ -18,42 +18,42 @@ require('rxjs/add/operator/catch');
 var OrganizacionService = (function () {
     function OrganizacionService(http) {
         this.http = http;
-        this.establecimientoUrl = 'http://localhost:3002/api/organizacion'; // URL to web api
+        this.organizacionUrl = 'http://localhost:3002/api/organizacion'; // URL to web api
     }
     OrganizacionService.prototype.get = function () {
-        return this.http.get(this.establecimientoUrl)
+        return this.http.get(this.organizacionUrl)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
     OrganizacionService.prototype.getByTerm = function (codigoSisa, nombre) {
-        return this.http.get(this.establecimientoUrl + "?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
+        return this.http.get(this.organizacionUrl + "?codigoSisa=" + codigoSisa + "&nombre=" + nombre)
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    OrganizacionService.prototype.post = function (establecimiento) {
-        var bodyString = JSON.stringify(establecimiento); // Stringify payload
+    OrganizacionService.prototype.post = function (organizacion) {
+        var bodyString = JSON.stringify(organizacion); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
-        return this.http.post(this.establecimientoUrl, bodyString, options) // ...using post request
+        return this.http.post(this.organizacionUrl, bodyString, options) // ...using post request
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    OrganizacionService.prototype.put = function (establecimiento) {
-        var bodyString = JSON.stringify(establecimiento); // Stringify payload
+    OrganizacionService.prototype.put = function (organizacion) {
+        var bodyString = JSON.stringify(organizacion); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
-        return this.http.put(this.establecimientoUrl + "/" + establecimiento._id, bodyString, options) // ...using post request
+        return this.http.put(this.organizacionUrl + "/" + organizacion.id, bodyString, options) // ...using post request
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
-    OrganizacionService.prototype.disable = function (establecimiento) {
-        establecimiento.activo = false;
-        establecimiento.fechaBaja = new Date();
-        console.log(establecimiento.fechaBaja);
-        var bodyString = JSON.stringify(establecimiento); // Stringify payload
+    OrganizacionService.prototype.disable = function (organizacion) {
+        organizacion.activo = false;
+        organizacion.fechaBaja = new Date();
+        console.log(organizacion.fechaBaja);
+        var bodyString = JSON.stringify(organizacion); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
-        return this.http.put(this.establecimientoUrl + "/" + establecimiento._id, bodyString, options) // ...using post request
+        return this.http.put(this.organizacionUrl + "/" + organizacion.id, bodyString, options) // ...using post request
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };
@@ -62,7 +62,7 @@ var OrganizacionService = (function () {
         var bodyString = JSON.stringify(establecimiento); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
-        return this.http.put(this.establecimientoUrl + "/" + establecimiento._id, bodyString, options) // ...using post request
+        return this.http.put(this.organizacionUrl + "/" + establecimiento.id, bodyString, options) // ...using post request
             .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any
     };

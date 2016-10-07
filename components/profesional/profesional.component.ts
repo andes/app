@@ -21,15 +21,15 @@ export class ProfesionalComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) {}
 
-
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
             apellido: [''],
-            nombre: ['']
+            nombre: [''],
+            documento: ['']
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            this.loadProfesionalesFiltrados(value.apellido,value.nombre);
+            this.loadProfesionalesFiltrados(value.apellido,value.nombre,value.documento);
         })
 
         this.loadProfesionales();
@@ -46,15 +46,22 @@ export class ProfesionalComponent implements OnInit {
             });
     }
 
-    loadProfesionalesFiltrados(apellido: string,nombre: String){
-         this.profesionalService.getByTerm(apellido,nombre)
+    loadProfesionalesFiltrados(apellido: string,nombre: String,documento: String){
+         if (apellido || nombre || documento)
+         {
+             this.profesionalService.getByTerm(apellido,nombre,documento)
             .subscribe(
-            profesionales => this.profesionales = profesionales, //Bind to view
+            profesionales =>this.profesionales = profesionales, //Bind to view
             err => {
                 if (err) {
                     console.log(err);
                 }
             });
+         }else
+         {
+             this.loadProfesionales();
+         }
+         
     }
 
     onReturn(objProfesional: IProfesional): void {

@@ -7,13 +7,14 @@ import { ProfesionalService } from './../../services/profesional.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
+import { EspecialidadService} from './../../services/especialidad.service';
 
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
 import {IPais} from './../../interfaces/IPais';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IBarrio } from './../../interfaces/IBarrio';
+import {IEspecialidad} from './../../interfaces/IEspecialidad';
 import * as enumerados from './../../utils/enumerados';
 
 @Component({
@@ -37,14 +38,14 @@ export class ProfesionalCreateComponent implements OnInit {
     todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
     todasLocalidades: ILocalidad[] = [];
+    todasEspecialidades: IEspecialidad[] = [];
     
-    //barrios: IBarrio[] = [];
-
     constructor(private formBuilder: FormBuilder,
                 private profesionalService: ProfesionalService,
                 private paisService: PaisService,
                 private provinciaService: ProvinciaService,
-                private localidadService: LocalidadService) {}
+                private localidadService: LocalidadService,
+                private especialidadService: EspecialidadService) {}
 
     ngOnInit() {
 
@@ -58,6 +59,7 @@ export class ProfesionalCreateComponent implements OnInit {
         this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
         this.localidadService.get().subscribe(resultado => this.todasLocalidades = resultado);
 
+        this.especialidadService.get().subscribe(resultado => {this.todasEspecialidades = resultado})
 
         this.createForm = this.formBuilder.group({
             nombre: ['', Validators.required],
@@ -88,7 +90,9 @@ export class ProfesionalCreateComponent implements OnInit {
             estadoCivil: [''],
             foto: [''], //Queda pendiente para agregar un path o ver como se implementa
             rol:['',Validators.required],
-            especialidad:[''],
+            especialidad:this.formBuilder.array([
+                //this.iniEspecialidad()
+            ]),
             matriculas: this.formBuilder.array([
                 this.iniMatricula()
 
@@ -119,6 +123,32 @@ export class ProfesionalCreateComponent implements OnInit {
         const control = <FormArray>this.createForm.controls['matriculas'];
         control.removeAt(i);
     }
+
+    /*Código de especialidad*/
+    
+    setEspecialidad(id:string,nbe:String){
+        return this.formBuilder.group({
+            id:[id],
+            nombre:[nbe],
+        })
+    }
+
+    addEspecialidad(){
+        debugger;
+        var e = (document.getElementById("ddlEspecialidades")) as HTMLSelectElement;
+        var indice = e.selectedIndex;
+        var id = this.todasEspecialidades[indice].id;
+        var nombre = this.todasEspecialidades[indice].nombre;
+        
+        const control = <FormArray>this.createForm.controls['especialidad'];
+        control.push(this.setEspecialidad(id,nombre));
+    }
+
+    removeEspecialidad(i: number){
+        const control = <FormArray>this.createForm.controls['especialidad'];
+        control.removeAt(i);
+    }
+
 
 /*Código de filtrado de combos*/
     filtrarProvincias(indiceSelected: number){
