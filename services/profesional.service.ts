@@ -30,8 +30,8 @@ export class ProfesionalService {
                          .catch(this.handleError); //...errors if any
     } 
 
-    getByTerm(apellido:string, nombre: String): Observable<IProfesional[]> {
-       return this.http.get(this.profesionalUrl+"?apellido=" + apellido + "&nombre=" + nombre)
+    getByTerm(apellido:string, nombre: String, documento:String): Observable<IProfesional[]> {
+       return this.http.get(this.profesionalUrl+"?apellido=" + apellido + "&nombre=" + nombre + "&documento=" + documento)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }

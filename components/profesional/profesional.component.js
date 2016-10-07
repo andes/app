@@ -25,10 +25,11 @@ var ProfesionalComponent = (function () {
         var _this = this;
         this.searchForm = this.formBuilder.group({
             apellido: [''],
-            nombre: ['']
+            nombre: [''],
+            documento: ['']
         });
         this.searchForm.valueChanges.debounceTime(200).subscribe(function (value) {
-            _this.loadProfesionalesFiltrados(value.apellido, value.nombre);
+            _this.loadProfesionalesFiltrados(value.apellido, value.nombre, value.documento);
         });
         this.loadProfesionales();
     };
@@ -43,16 +44,21 @@ var ProfesionalComponent = (function () {
             }
         });
     };
-    ProfesionalComponent.prototype.loadProfesionalesFiltrados = function (apellido, nombre) {
+    ProfesionalComponent.prototype.loadProfesionalesFiltrados = function (apellido, nombre, documento) {
         var _this = this;
-        this.profesionalService.getByTerm(apellido, nombre)
-            .subscribe(function (profesionales) { return _this.profesionales = profesionales; }, //Bind to view
-        function (//Bind to view
-            err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        if (apellido || nombre || documento) {
+            this.profesionalService.getByTerm(apellido, nombre, documento)
+                .subscribe(function (profesionales) { return _this.profesionales = profesionales; }, //Bind to view
+            function (//Bind to view
+                err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+        else {
+            this.loadProfesionales();
+        }
     };
     ProfesionalComponent.prototype.onReturn = function (objProfesional) {
         this.showcreate = false;
