@@ -1,5 +1,5 @@
 "use strict";
-var paciente_create_component_1 = require('./components/paciente/paciente-create.component');
+var paciente_component_1 = require('./components/paciente/paciente.component');
 var especialidad_component_1 = require('./components/especialidad/especialidad.component');
 var profesional_component_1 = require('./components/profesional/profesional.component');
 var organizacion_component_1 = require('./components/organizacion/organizacion.component');
@@ -19,7 +19,7 @@ var appRoutes = [
     },
     {
         path: 'pacientes',
-        component: paciente_create_component_1.PacienteCreateComponent
+        component: paciente_component_1.PacienteComponent
     }
 ];
 exports.routing = router_1.RouterModule.forRoot(appRoutes);

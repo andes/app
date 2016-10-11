@@ -23,6 +23,9 @@ import { IProvincia } from './../../interfaces/IProvincia';
     templateUrl: 'components/paciente/paciente-create.html'
 })
 export class PacienteCreateComponent implements OnInit {
+
+    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+
     createForm: FormGroup;
     estados = [];
     sexos = [];
@@ -163,7 +166,7 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     onCancel() {
-        //this.data.emit(null)
+        this.data.emit(null)
     }
 
     findObject(objeto, dato) { 

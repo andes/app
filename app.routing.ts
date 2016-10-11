@@ -1,4 +1,4 @@
-import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
+import { PacienteComponent } from './components/paciente/paciente.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
@@ -19,7 +19,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'pacientes',
-    component: PacienteCreateComponent
+    component: PacienteComponent
   } 
 ];
 

@@ -221,7 +221,7 @@
                             <div class="col-sm-10">
                                 <ul class="list-group">
                                     <li *ngFor="let paciente of pacRelacionados" class="list-group-item">
-                                        ({{paciente.documento}}) - {{paciente.nombreCompleto}} / {{paciente.fechaNacimiento | date}}
+                                        ({{paciente.documento}}) - {{paciente.nombreCompleto}} / {{paciente.fechaNacimiento | date:"dd/MM/yyyy"}}
                                         <span class="badge success" (click)="validar(paciente)"> 
                                                <i class="glyphicon glyphicon-ok"></i> </span>
                                     </li>
@@ -229,23 +229,22 @@
                             </div>
                         </div>
                         <div class="row">&nbsp;</div>
+                        <div class="row"></div>
                         <div class="row center">
                             <div class="col-sm-10" formArrayName="relaciones">
                                 <ul class="list-group" *ngFor="let rel of createForm.controls.relaciones.controls; let i=index">
                                     <li [formGroupName]="i" class="list-group-item">
-                                        <div class="col-sm-2"><input type="text" formControlName="relacion"></div>&nbsp; (
-                                        <div class="col-sm-2"><input type="text" formControlName="documento"></div>)&nbsp;
-                                        <div class="col-sm-2"> <input type="text" formControlName="nombre"></div>&nbsp;&nbsp;
-                                        <span class="badge" (click)="removeRelacion(i)"> x </span>
+                                        <div class="row">
+                                            <div class="col-sm-3"><input type="text" class="form-control" formControlName="relacion"></div>
+                                            <div class="col-sm-4"><input type="text" class="form-control" formControlName="documento"></div>
+                                            <div class="col-sm-4"> <input type="text" class="form-control" formControlName="nombre"></div>
+                                            <div class="col-sm-1 rigth"><span class="badge" (click)="removeRelacion(i)"> x </span></div>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <a (click)="addRelacion()" style="cursor: default">Agregar Relación +</a>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>

@@ -41,24 +41,24 @@ var PacienteService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleError); //...errors if any*/
     };
-    //    disable(profesional: IProfesional): Observable<IProfesional> {
-    //          profesional.activo = false;
-    //         let bodyString = JSON.stringify(profesional); // Stringify payload
-    //         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-    //         let options       = new RequestOptions({ headers: headers }); // Create a request option
-    //         return this.http.put(this.profesionalUrl + "/" + profesional.id, bodyString, options) // ...using post request
-    //                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
-    //                          .catch(this.handleError); //...errors if any
-    //     } 
-    //     enable(profesional: IProfesional): Observable<IProfesional> {
-    //          profesional.activo = true;
-    //         let bodyString = JSON.stringify(profesional); // Stringify payload
-    //         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-    //         let options       = new RequestOptions({ headers: headers }); // Create a request option
-    //         return this.http.put(this.profesionalUrl + "/" + profesional.id, bodyString, options) // ...using post request
-    //                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
-    //                          .catch(this.handleError); //...errors if any
-    //     } 
+    PacienteService.prototype.disable = function (paciente) {
+        paciente.activo = false;
+        var bodyString = JSON.stringify(paciente); // Stringify payload
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.pacienteUrl + "/" + paciente.id, bodyString, options) // ...using post request
+            .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
+            .catch(this.handleError); //...errors if any
+    };
+    PacienteService.prototype.enable = function (paciente) {
+        paciente.activo = true;
+        var bodyString = JSON.stringify(paciente); // Stringify payload
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new http_1.RequestOptions({ headers: headers }); // Create a request option
+        return this.http.put(this.pacienteUrl + "/" + paciente.id, bodyString, options) // ...using post request
+            .map(function (res) { return res.json(); }) // ...and calling .json() on the response to return data
+            .catch(this.handleError); //...errors if any
+    };
     //     put(profesional: IProfesional): Observable<IProfesional> {
     //         let bodyString = JSON.stringify(profesional); // Stringify payload
     //         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON

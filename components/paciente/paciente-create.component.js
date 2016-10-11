@@ -26,6 +26,7 @@ var PacienteCreateComponent = (function () {
         this.BarrioService = BarrioService;
         this.pacienteService = pacienteService;
         this.financiadorService = financiadorService;
+        this.data = new core_1.EventEmitter();
         this.estados = [];
         this.sexos = [];
         this.generos = [];
@@ -145,7 +146,7 @@ var PacienteCreateComponent = (function () {
         }
     };
     PacienteCreateComponent.prototype.onCancel = function () {
-        //this.data.emit(null)
+        this.data.emit(null);
     };
     PacienteCreateComponent.prototype.findObject = function (objeto, dato) {
         return objeto.id === dato;
@@ -228,6 +229,10 @@ var PacienteCreateComponent = (function () {
         document.getElementById("relApellido").value = "";
         document.getElementById("relDocumento").value = "";
     };
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], PacienteCreateComponent.prototype, "data", void 0);
     PacienteCreateComponent = __decorate([
         core_1.Component({
             selector: 'paciente-create',
