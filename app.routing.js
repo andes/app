@@ -20,6 +20,10 @@ var appRoutes = [
     {
         path: 'pacientes',
         component: paciente_component_1.PacienteComponent
+    },
+    {
+        path: '**',
+        redirectTo: "organizacion"
     }
 ];
 exports.routing = router_1.RouterModule.forRoot(appRoutes);
