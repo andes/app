@@ -1,4 +1,5 @@
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
+import { IUbicacion} from './IUbicacion';
 import { tipoComunicacion } from './../utils/enumerados';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
@@ -23,6 +24,19 @@ export interface IOrganizacion {
         ultimaActualizacion: Date,
         activo: Boolean
     }];
+    //direccion
+     direccion: [{
+        valor: String,
+        codigoPostal: String,
+        ubicacion: IUbicacion,
+        ranking: Number,
+        geoReferencia: {
+            type: [Number], // [<longitude>, <latitude>]
+            index: '2d' // create the geospatial index
+        },
+        ultimaActualizacion: Date,
+        activo: Boolean
+    }],
     //contacto
     contacto: [{
         proposito: String,

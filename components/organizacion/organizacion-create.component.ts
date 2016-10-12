@@ -36,7 +36,7 @@ export class OrganizacionCreateComponent implements OnInit {
     
 
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService, private PaisService: PaisService,
-    private provinciaService: ProvinciaService, private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
+    private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
     private BarrioService: BarrioService, private tipoEstablecimientoService: TipoEstablecimientoService) {}
         
     ngOnInit() {
@@ -45,9 +45,7 @@ export class OrganizacionCreateComponent implements OnInit {
         this.PaisService.get().subscribe(resultado => {this.paises = resultado});
         this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
         this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
-
-        this.tipoEstablecimientoService.get()
-            .subscribe(resultado => {this.tipos = resultado;});
+        this.tipoEstablecimientoService.get().subscribe(resultado => {this.tipos = resultado;});
 
         
         this.createForm = this.formBuilder.group({

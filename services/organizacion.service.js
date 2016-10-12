@@ -39,6 +39,7 @@ var OrganizacionService = (function () {
             .catch(this.handleError); //...errors if any
     };
     OrganizacionService.prototype.put = function (organizacion) {
+        console.log("aca");
         var bodyString = JSON.stringify(organizacion); // Stringify payload
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         var options = new http_1.RequestOptions({ headers: headers }); // Create a request option

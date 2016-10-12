@@ -18,11 +18,10 @@ var provincia_service_1 = require('./../../services/provincia.service');
 var tipoEstablecimiento_service_1 = require('./../../services/tipoEstablecimiento.service');
 var enumerados = require('./../../utils/enumerados');
 var OrganizacionCreateComponent = (function () {
-    function OrganizacionCreateComponent(formBuilder, organizacionService, PaisService, provinciaService, ProvinciaService, LocalidadService, BarrioService, tipoEstablecimientoService) {
+    function OrganizacionCreateComponent(formBuilder, organizacionService, PaisService, ProvinciaService, LocalidadService, BarrioService, tipoEstablecimientoService) {
         this.formBuilder = formBuilder;
         this.organizacionService = organizacionService;
         this.PaisService = PaisService;
-        this.provinciaService = provinciaService;
         this.ProvinciaService = ProvinciaService;
         this.LocalidadService = LocalidadService;
         this.BarrioService = BarrioService;
@@ -36,8 +35,7 @@ var OrganizacionCreateComponent = (function () {
         this.PaisService.get().subscribe(function (resultado) { _this.paises = resultado; });
         this.ProvinciaService.get().subscribe(function (resultado) { _this.todasProvincias = resultado; });
         this.LocalidadService.get().subscribe(function (resultado) { _this.todasLocalidades = resultado; });
-        this.tipoEstablecimientoService.get()
-            .subscribe(function (resultado) { _this.tipos = resultado; });
+        this.tipoEstablecimientoService.get().subscribe(function (resultado) { _this.tipos = resultado; });
         this.createForm = this.formBuilder.group({
             nombre: ['', forms_1.Validators.required],
             nivelComplejidad: [''],
@@ -130,7 +128,7 @@ var OrganizacionCreateComponent = (function () {
             directives: [forms_1.REACTIVE_FORM_DIRECTIVES],
             templateUrl: 'components/organizacion/organizacion-create.html'
         }), 
-        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
+        __metadata('design:paramtypes', [forms_1.FormBuilder, organizacion_service_1.OrganizacionService, pais_service_1.PaisService, provincia_service_1.ProvinciaService, localidad_service_1.LocalidadService, barrio_service_1.BarrioService, tipoEstablecimiento_service_1.TipoEstablecimientoService])
     ], OrganizacionCreateComponent);
     return OrganizacionCreateComponent;
 }());

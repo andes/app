@@ -37,6 +37,7 @@ export class OrganizacionService {
     } 
 
     put(organizacion: IOrganizacion): Observable<IOrganizacion> {
+        console.log("aca");
         let bodyString = JSON.stringify(organizacion); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
