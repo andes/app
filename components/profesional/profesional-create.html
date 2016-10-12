@@ -229,19 +229,19 @@
                                     <div class="col-sm-4">
                                         <label> País: </label>
                                         <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
-                                            <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
+                                            <option *ngFor="let pais of paises" [ngValue]="pais">{{pais.nombre}}</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-4">
                                         <label> Provincia: </label>
                                         <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
-                                        <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
+                                        <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
                                     </select>
                                     </div>
                                     <div class="col-sm-4">
                                         <label> Localidad: </label>
                                         <select class="form-control" formControlName="localidad" #localidad>
-                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
+                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
                                     </select>
                                     </div>
                                 </div>
