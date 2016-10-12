@@ -28,8 +28,8 @@ var ProfesionalCreateComponent = (function () {
         this.data = new core_1.EventEmitter();
         this.paises = [];
         this.provincias = [];
-        this.todasProvincias = [];
         this.localidades = [];
+        this.todasProvincias = [];
         this.todasLocalidades = [];
         this.todasEspecialidades = [];
     }
@@ -108,7 +108,6 @@ var ProfesionalCreateComponent = (function () {
         });
     };
     ProfesionalCreateComponent.prototype.addEspecialidad = function () {
-        debugger;
         var e = (document.getElementById("ddlEspecialidades"));
         var indice = e.selectedIndex;
         var id = this.todasEspecialidades[indice].id;
@@ -123,12 +122,16 @@ var ProfesionalCreateComponent = (function () {
     /*Código de filtrado de combos*/
     ProfesionalCreateComponent.prototype.filtrarProvincias = function (indiceSelected) {
         var idPais = this.paises[indiceSelected].id;
-        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
+        this.provincias = this.todasProvincias.filter(function (p) {
+            return (p.pais.id == idPais) ? p : null;
+        });
         this.localidades = [];
     };
     ProfesionalCreateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
         var idProvincia = this.provincias[indiceSelected].id;
-        this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
+        this.localidades = this.todasLocalidades.filter(function (p) {
+            return p.provincia.id == idProvincia ? p : null;
+        });
     };
     /*Código de contactos*/
     ProfesionalCreateComponent.prototype.initContacto = function (rank) {
@@ -159,7 +162,7 @@ var ProfesionalCreateComponent = (function () {
             var profOperation = void 0;
             model.activo = true;
             profOperation = this.profesionalService.post(model);
-            profOperation.subscribe(function (resultado) { debugger; _this.data.emit(resultado); });
+            profOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
         else {
             alert("Complete datos obligatorios");

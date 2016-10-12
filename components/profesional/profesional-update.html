@@ -1,8 +1,8 @@
 <div class="col-sm-12">
     <div class="panel panel-default">
-        <div class="panel-heading">Actualización de Profesionales</div>
+        <div class="panel-heading">Editar Profesional</div>
         <div class="panel-body">
-            <form [formGroup]="updateForm" autocomplete="false">
+            <form [formGroup]="updateForm">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -15,117 +15,254 @@
                         <div class="form-group">
                             <label>Apellido:</label>
                             <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese apellido...">
+                            <label class="control-label text-danger" *ngIf="!updateForm.controls.apellido.valid">Este campo es obligatorio!</label>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <label> Tipo Documento: </label>
-                        <select class="form-control" formControlName="tipoDni">
-                                <option *ngFor="let tipo of tipos" [ngValue]="tipo">{{tipo}}</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Nro Documento: </label>
-                        <input type="number" class="form-control" formControlName="numeroDni" placeholder="Ingresar DNI...">
-                        <label class="control-label text-danger" *ngIf="updateForm.controls.numeroDni.errors">Este campo es obligatorio!</label>
+                        <label> Documento: </label>
+                        <input type="number" class="form-control" formControlName="documento" placeholder="Ingresar Documento...">
+                        <label class="control-label text-danger" *ngIf="updateForm.controls.documento.errors">Este campo es obligatorio!</label>
                     </div>
                     <div class="col-sm-4">
                         <label> Fecha de Nacimiento: </label>
-                        <input type="text" class="form-control" formControlName="fechaNacimiento" placeholder="Ingresar Fecha de Nacimiento...">
+                        <input type="date" class="form-control" formControlName="fechaNacimiento">
+                        <label class="control-label text-danger" *ngIf="updateForm.controls.fechaNacimiento.errors">Este campo es obligatorio!</label>
                     </div>
-                </div>
-                <div formGroupName="domicilio">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label> Calle: </label>
-                            <input type="text" class="form-control" formControlName="calle" placeholder="Ingresar código...">
-                            <label class="control-label text-danger" *ngIf="updateForm.controls.domicilio.controls.calle.errors">Este campo es obligatorio!</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <label> Número: </label>
-                            <input type="number" class="form-control" formControlName="numero" placeholder="Ingresar código...">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label> Provincia: </label>
-                            <select class="form-control" formControlName="provincia" [(ngModel)]="myProvincia" #provincia (change)="getLocalidades(provincia.selectedIndex)"> 
-                            <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
-                        </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <label> Localidad: </label>
-                            <select class="form-control" [(ngModel)]="myLocalidad.nombre" formControlName="localidad">
-                                <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-4">
+                        <label> Fecha de Fallecimiento: </label>
+                        <input type="date" class="form-control" formControlName="fechaFallecimiento">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        <label> Teléfono: </label>
-                        <input type="text" class="form-control" formControlName="telefono" placeholder="Ingresar telefono...">
+                    <div class="col-sm-4">
+                        <label> Sexo: </label>
+                        <select class="form-control" formControlName="sexo">
+                                <option *ngFor="let sex of sexos" [ngValue]="sex">{{sex}}</option>
+                        </select>
                     </div>
-                    <div class="col-sm-6">
-                        <label> e-Mail: </label>
-                        <input type="text" class="form-control" formControlName="email" placeholder="Ingresar e-Mail...">
+                    <div class="col-sm-4">
+                        <label> Genero: </label>
+                        <select class="form-control" formControlName="genero">
+                                <option *ngFor="let genero of generos" [ngValue]="genero">{{genero}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label> Estado Civil: </label>
+                        <select class="form-control" formControlName="estadoCivil">
+                                <option *ngFor="let estCivil of estadosCiviles" [ngValue]="estCivil">{{estCivil}}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <div formArrayName="matriculas">
-                            <div *ngFor="let matricula of updateForm.controls.matriculas.controls; let i=index" class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span>matricula {{i + 1}}</span>
-                                    <span class="glyphicon glyphicon-remove pull-right" *ngIf="updateForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)"></span>
+                        <div class="form-group">
+                            <label>Rol a desempeñar:</label>
+                            <input type="text" class="form-control" formControlName="rol" placeholder="Ej: Médico, Enfermero, Jefe de servicio, etc...">
+                            <label class="control-label text-danger" *ngIf="updateForm.controls.rol.errors">Este campo es obligatorio!</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" formArrayName="especialidad">
+                            <div class="panel-heading"> Especialidades </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <select id="ddlEspecialidades" class="form-control">
+                                            <option *ngFor="let esp of todasEspecialidades">{{esp.nombre}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <div class="margin-20">
+                                            <button class="form-control btn btn-default" (click)="addEspecialidad()"><i class="glyphicon glyphicon-plus"></i> Agregar Especialidad</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="panel-body" [formGroupName]="i">
-                                    <div class="row">
-                                        <div class="form-group col-xs-6">
-                                            <label>Número de Matrícula</label>
-                                            <input type="number" class="form-control" formControlName="numero">
-                                            <small [hidden]="updateForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">
-                    Número de Matrícula es Requerido
-                </small>
-                                        </div>
-                                        <div class="form-group col-xs-6">
-                                            <label>Descripción</label>
-                                            <input type="text" class="form-control" formControlName="descripcion">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-6">
-                                            <label>Fecha de Inicio</label>
-                                            <input type="text" class="form-control" formControlName="fechaInicio">
-                                        </div>
-                                        <div class="form-group col-xs-6">
-                                            <label>Fecha de Vencimiento</label>
-                                            <input type="text" class="form-control" formControlName="fechaVencimiento">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-6">
-                                            <div class="checkbox">
-                                                <label><input type="checkbox" formControlName="vigente" >Vigente</label>
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <div *ngFor="let esp of updateForm.controls.especialidad.controls; let i=index" class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <span>
+                                                <i class="glyphicon glyphicon-list"> Especialidad</i>
+                                            </span>
+                                                <div align="right" (click)="removeEspecialidad(i)">
+                                                    <i class="glyphicon glyphicon-remove-circle"></i>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" [formGroupName]="i">
+                                                <div class="row">
+                                                    <input type="text" class="form-control" formControlName="nombre" disabled>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="margin-20">
-                                <a (click)="addMatricula()" style="cursor: default">Agregar Matrícula +</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
                 <div class="row">
-                    <div class="col-sm-4">
-                        <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)">Guardar</button>
-                        <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" formArrayName="matriculas">
+                            <div class="panel-heading"> Matriculas </div>
+                            <div class="panel-body">
+                                <div *ngFor="let matricula of updateForm.controls.matriculas.controls; let i=index" class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <span>
+                                            <i class="glyphicon glyphicon-file"></i>
+                                        </span>
+                                        <div align="right" *ngIf="updateForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" [formGroupName]="i">
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <label>Número de Matrícula</label>
+                                                <input type="number" class="form-control" formControlName="numero">
+                                                <small [hidden]="updateForm.controls.matriculas.controls[i].controls.numero.valid" class="text-danger">Número de Matrícula es Requerido</small>
+                                            </div>
+
+                                            <div class="form-group col-xs-6">
+                                                <label>Descripción</label>
+                                                <input type="string" class="form-control" formControlName="descripcion">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <label>Fecha de Inicio</label>
+                                                <input type="date" class="form-control" formControlName="fechaInicio">
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <label>Fecha de Vencimiento</label>
+                                                <input type="date" class="form-control" formControlName="fechaVencimiento">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-6">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" formControlName="activo" >Vigente</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="row">
+                                        <div class="margin-20">
+                                            <button class="btn btn-default" (click)="addMatricula()"><i class="glyphicon glyphicon-plus"></i> Agregar Matricula</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">&nbsp;</div>
+                <div class="panel panel-default" formArrayName="contacto">
+                    <div class="panel-heading"> Contactos </div>
+                    <div class="panel-body">
+                        <div class="list-group" *ngFor="let co of updateForm.controls.contacto.controls; let i=index">
+                            <div class="row list-group-item" [formGroupName]="i">
+                                <div align="right" (click)="removeContacto(i)">
+                                    <i class="glyphicon glyphicon-remove-circle"></i>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label> Tipo: </label>
+                                    <select class="form-control" formControlName="tipo">
+                                        <option value=""> </option>
+                                        <option *ngFor="let tipo of tipoComunicacion" >{{tipo}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label> Dato: </label>
+                                    <input type="text" class="form-control" formControlName="valor">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label> Orden: </label>
+                                    <input type="number" class="form-control" formControlName="ranking">
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <button class="btn btn-default" (click)="addContacto()"><i class="glyphicon glyphicon-plus"></i> Agregar Contacto</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div class="panel panel-default" formArrayName="direccion">
+                    <div class="panel-heading"> Dirección </div>
+                    <div class="panel-body" *ngFor="let dir of updateForm.controls.direccion.controls; let i=index">
+                        <div [formGroupName]="i">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <label> Detalle de Domicilio: </label>
+                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label> Codigo Postal: </label>
+                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
+                                </div>
+                            </div>
+                            <div class="row">&nbsp;</div>
+                            <div formGroupName="ubicacion">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label> País: </label>
+                                        <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
+                                            <option *ngFor="let pais of paises" [ngValue]="pais.id">{{pais.nombre}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label> Provincia: </label>
+                                        <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
+                                        <option *ngFor="let provincia of provincias" [ngValue]="provincia.nombre">{{provincia.nombre}}</option>
+                                    </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label> Localidad: </label>
+                                        <select class="form-control" formControlName="localidad" #localidad>
+                                        <option *ngFor="let localidad of localidades" [ngValue]="localidad.nombre">{{localidad.nombre}}</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-2">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+                <div align="right" class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary" type="submit" (click)="onSave(updateForm.value, updateForm.valid)"><i class="glyphicon glyphicon-floppy-disk"></i> Guardar</button>
+                        <button class="btn btn-default" type="submit" (click)="onCancel()"><i class="glyphicon glyphicon-minus-sign"></i> Cancelar</button>
+
+                    </div>
                 </div>
             </form>
         </div>

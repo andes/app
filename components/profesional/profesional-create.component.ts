@@ -35,8 +35,8 @@ export class ProfesionalCreateComponent implements OnInit {
 
     paises:IPais[] = [];
     provincias: IProvincia[] = [];
-    todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[]= [];
+    todasProvincias: IProvincia[] = [];
     todasLocalidades: ILocalidad[] = [];
     todasEspecialidades: IEspecialidad[] = [];
     
@@ -134,7 +134,6 @@ export class ProfesionalCreateComponent implements OnInit {
     }
 
     addEspecialidad(){
-        debugger;
         var e = (document.getElementById("ddlEspecialidades")) as HTMLSelectElement;
         var indice = e.selectedIndex;
         var id = this.todasEspecialidades[indice].id;
@@ -153,13 +152,17 @@ export class ProfesionalCreateComponent implements OnInit {
 /*Código de filtrado de combos*/
     filtrarProvincias(indiceSelected: number){
         var idPais = this.paises[indiceSelected].id;
-        this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
+        this.provincias = this.todasProvincias.filter(function (p) {
+            return (p.pais.id == idPais) ? p : null; 
+        });
         this.localidades = [];
     }
     
     filtrarLocalidades(indiceSelected: number){
         var idProvincia = this.provincias[indiceSelected].id;
-        this.localidades = this.todasLocalidades.filter(function (p) {return p.provincia.id == idProvincia; });
+        this.localidades = this.todasLocalidades.filter(function (p) {
+            return p.provincia.id == idProvincia ? p : null;
+        });
         
     }
 
@@ -196,7 +199,7 @@ export class ProfesionalCreateComponent implements OnInit {
             model.activo = true;
             profOperation = this.profesionalService.post(model);
 
-            profOperation.subscribe(resultado => { debugger; this.data.emit(resultado); });
+            profOperation.subscribe(resultado => this.data.emit(resultado));
 
         } else {
             alert("Complete datos obligatorios");
