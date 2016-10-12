@@ -106,7 +106,6 @@ var PacienteComponent = (function () {
     PacienteComponent.prototype.onEdit = function (objPaciente) {
         this.showcreate = false;
         this.showupdate = true;
-        debugger;
         this.selectedPaciente = objPaciente;
     };
     PacienteComponent = __decorate([

@@ -138,7 +138,6 @@ export class PacienteComponent implements OnInit {
     onEdit(objPaciente: IPaciente) {
         this.showcreate = false;
         this.showupdate = true;
-        debugger;
         this.selectedPaciente = objPaciente;
     }
 

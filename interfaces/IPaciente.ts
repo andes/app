@@ -1,3 +1,4 @@
+import { IUbicacion } from './IUbicacion';
 import { IDireccion } from './IDireccion';
 import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
 
@@ -24,7 +25,7 @@ export interface IPaciente{
     direccion: [{
         valor: String,
         codigoPostal: String,
-        ubicacion: IDireccion,
+        ubicacion: IUbicacion,
         ranking: Number,
         geoReferencia: [Number],
         ultimaActualizacion: Date,

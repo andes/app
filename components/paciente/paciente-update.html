@@ -109,42 +109,62 @@
                     <div class="panel-heading"> Dirección </div>
                     <div class="panel-body" *ngFor="let dir of updateForm.controls.direccion.controls; let i=index">
                         <div [formGroupName]="i">
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <label> Detalle de Domicilio: </label>
-                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label> CP: </label>
-                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
-                                </div>
-                            </div>
                             <div formGroupName="ubicacion">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <label> País: </label>
-                                        <select class="form-control" formControlName="pais" [(ngModel)]="myPais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
-                                            <option [ngValue]="">Seleccione...</option>
+                                        <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex,i)">
+                                            
                                             <option *ngFor="let pais of paises" [ngValue]="pais">{{pais.nombre}}</option>
                                         </select>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <label> Provincia: </label>
                                         <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
-                                            <option value="">...</option>
+                                      
                                             <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <label> Localidad: </label>
                                         <select class="form-control" formControlName="localidad">
-                                            <option value="">...</option>
+                                
                                             <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
                                         </select>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label> Detalle de Domicilio: </label>
+                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
+                                </div>
+                                <div class="col-md-2">
+                                    <label> CP: </label>
+                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label> Ultima Actualización: </label>
+                                    <input type="date" class="form-control" formControlName="ultimaActualizacion" disable="disable">
+                                </div>
+                                <div class="col-md-2">
+                                    <label> Orden: </label>
+                                    <input type="text" class="form-control" formControlName="ranking">
+                                </div>
+                                <div class="form-group col-md-2"><br>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <a (click)="addDireccion()" style="cursor: default">Agregar Dirección +</a>
                             </div>
                         </div>
                     </div>
@@ -168,7 +188,7 @@
                                     <input type="date" class="form-control" formControlName="fechaAlta">
                                 </div>
                                 <div class="col-sm-2">
-                                    <label> Orden: </label>
+                                    <label> Orden de prioridad: </label>
                                     <input type="number" class="form-control" formControlName="ranking">
                                 </div>
                                 <div class="form-group col-sm-2">

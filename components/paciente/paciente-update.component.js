@@ -46,10 +46,10 @@ var PacienteUpdateComponent = (function () {
     PacienteUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //CArga de combos
-        this.PaisService.get().subscribe(function (resultado) { _this.paises = resultado; });
-        this.ProvinciaService.get().subscribe(function (resultado) { _this.todasProvincias = resultado; });
-        this.LocalidadService.get().subscribe(function (resultado) { _this.todasLocalidades = resultado; });
-        this.financiadorService.get().subscribe(function (resultado) { _this.obrasSociales = resultado; });
+        this.PaisService.get().subscribe(function (resultado) { return _this.paises = resultado; });
+        this.ProvinciaService.get().subscribe(function (resultado) { return _this.todasProvincias = resultado; });
+        this.LocalidadService.get().subscribe(function (resultado) { return _this.todasLocalidades = resultado; });
+        this.financiadorService.get().subscribe(function (resultado) { return _this.obrasSociales = resultado; });
         this.showCargar = false;
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
@@ -57,13 +57,13 @@ var PacienteUpdateComponent = (function () {
         this.tiposContactos = enumerados.getTipoComunicacion();
         this.estados = enumerados.getEstados();
         this.relacionTutores = enumerados.getRelacionTutor();
-        debugger;
         this.updateForm = this.formBuilder.group({
+            id: [this.pacienteHijo.id],
             nombre: [this.pacienteHijo.nombre],
             apellido: [this.pacienteHijo.apellido],
             alias: [this.pacienteHijo.alias],
             documento: [this.pacienteHijo.documento],
-            fechaNacimiento: [''],
+            fechaNacimiento: [this.pacienteHijo.fechaNacimiento],
             estado: [this.pacienteHijo.estado],
             sexo: [this.pacienteHijo.sexo],
             genero: [this.pacienteHijo.genero],
@@ -83,20 +83,25 @@ var PacienteUpdateComponent = (function () {
         this.pacienteHijo.direccion.forEach(function (element) {
             _this.addDireccion(element);
         });
+        this.pacienteHijo.relaciones.forEach(function (element) {
+            _this.addRelacion(element);
+        });
     };
     PacienteUpdateComponent.prototype.iniDireccion = function (unaDireccion) {
         var _this = this;
         // Inicializa contacto
         debugger;
         if (unaDireccion) {
-            if (unaDireccion.ubicacion.pais) {
-                this.myPais = unaDireccion.ubicacion.pais;
-                if (unaDireccion.ubicacion.provincia) {
-                    this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == _this.myPais.id; });
-                    this.myProvincia = unaDireccion.ubicacion.provincia;
-                    if (unaDireccion.ubicacion.localidad) {
-                        this.localidades = this.todasLocalidades.filter(function (loc) { return loc.provincia.id == _this.myProvincia.id; });
-                        this.myLocalidad = unaDireccion.ubicacion.localidad;
+            if (unaDireccion.ubicacion) {
+                if (unaDireccion.ubicacion.pais) {
+                    this.myPais = unaDireccion.ubicacion.pais;
+                    if (unaDireccion.ubicacion.provincia) {
+                        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == _this.myPais.id; });
+                        this.myProvincia = unaDireccion.ubicacion.provincia;
+                        if (unaDireccion.ubicacion.localidad) {
+                            this.localidades = this.todasLocalidades.filter(function (loc) { return loc.provincia.id == _this.myProvincia.id; });
+                            this.myLocalidad = unaDireccion.ubicacion.localidad;
+                        }
                     }
                 }
             }
@@ -104,13 +109,13 @@ var PacienteUpdateComponent = (function () {
                 valor: [unaDireccion.valor],
                 ubicacion: this.formBuilder.group({
                     pais: [this.myPais],
-                    provincia: [],
-                    localidad: []
+                    provincia: [this.myProvincia],
+                    localidad: [this.myLocalidad]
                 }),
                 ranking: [unaDireccion.ranking],
                 codigoPostal: [unaDireccion.codigoPostal],
-                latitud: [''],
-                longitud: [''],
+                geoReferencia: [],
+                ultimaActualizacion: [unaDireccion.ultimaActualizacion],
                 activo: [unaDireccion.activo]
             });
         }
@@ -120,13 +125,12 @@ var PacienteUpdateComponent = (function () {
                 ubicacion: this.formBuilder.group({
                     pais: [''],
                     provincia: [''],
-                    localidad: [''],
-                    barrio: ['']
+                    localidad: ['']
                 }),
                 ranking: [],
                 codigoPostal: [''],
-                latitud: [''],
-                longitud: [''],
+                geoReferencia: [''],
+                ultimaActualizacion: [''],
                 activo: [true]
             });
         }
@@ -167,14 +171,26 @@ var PacienteUpdateComponent = (function () {
             activo: [unFinanciador.activo]
         });
     };
-    PacienteUpdateComponent.prototype.iniRelacion = function () {
-        return this.formBuilder.group({
-            relacion: [''],
-            referencia: [''],
-            apellido: [''],
-            nombre: [''],
-            documento: ['']
-        });
+    PacienteUpdateComponent.prototype.iniRelacion = function (unaRelacion) {
+        debugger;
+        if (unaRelacion) {
+            return this.formBuilder.group({
+                relacion: [unaRelacion.relacion],
+                referencia: [unaRelacion.referencia],
+                apellido: [unaRelacion.apellido],
+                nombre: [unaRelacion.nombre],
+                documento: [unaRelacion.documento]
+            });
+        }
+        else {
+            return this.formBuilder.group({
+                relacion: [''],
+                referencia: [''],
+                apellido: [''],
+                nombre: [''],
+                documento: ['']
+            });
+        }
     };
     PacienteUpdateComponent.prototype.addContacto = function (unContacto) {
         // agrega formMatricula 
@@ -196,7 +212,7 @@ var PacienteUpdateComponent = (function () {
         debugger;
         if (isvalid) {
             var operacionPac = void 0;
-            operacionPac = this.pacienteService.post(model);
+            operacionPac = this.pacienteService.put(model);
             operacionPac.subscribe(function (resultado) {
                 debugger;
                 console.log(resultado);
@@ -212,12 +228,15 @@ var PacienteUpdateComponent = (function () {
     PacienteUpdateComponent.prototype.findObject = function (objeto, dato) {
         return objeto.id === dato;
     };
-    PacienteUpdateComponent.prototype.filtrarProvincias = function (indexPais) {
-        var pais = this.paises[(indexPais - 1)];
+    PacienteUpdateComponent.prototype.filtrarProvincias = function (indexPais, i) {
+        debugger;
+        // const control = <FormGroup> this.updateForm.value.direccion[i].ubicacion;
+        // control.setValue({provincia:null});
+        var pais = this.paises[(indexPais)];
         this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == pais.id; });
     };
     PacienteUpdateComponent.prototype.filtrarLocalidades = function (indexProvincia) {
-        var provincia = this.provincias[(indexProvincia - 1)];
+        var provincia = this.provincias[(indexProvincia)];
         this.localidades = this.todasLocalidades.filter(function (loc) { return loc.provincia.id == provincia.id; });
     };
     PacienteUpdateComponent.prototype.addFinanciador = function (unFinanciador) {
@@ -230,10 +249,10 @@ var PacienteUpdateComponent = (function () {
         var control = this.updateForm.controls['financiador'];
         control.removeAt(i);
     };
-    PacienteUpdateComponent.prototype.addRelacion = function () {
+    PacienteUpdateComponent.prototype.addRelacion = function (unaRelacion) {
         // agrega form Financiador u obra Social
         var control = this.updateForm.controls['relaciones'];
-        control.push(this.iniRelacion());
+        control.push(this.iniRelacion(unaRelacion));
     };
     PacienteUpdateComponent.prototype.removeRelacion = function (i) {
         // elimina form Financiador u obra Social
