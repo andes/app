@@ -25,14 +25,16 @@ var OrganizacionUpdateComponent = (function () {
         this.LocalidadService = LocalidadService;
         this.tipoEstablecimientoService = tipoEstablecimientoService;
         this.data = new core_1.EventEmitter();
+        this.todasProvincias = [];
+        this.todasLocalidades = [];
     }
     OrganizacionUpdateComponent.prototype.ngOnInit = function () {
         var _this = this;
         //Carga de combos
         this.tiposcom = enumerados.getTipoComunicacion();
         this.PaisService.get().subscribe(function (resultado) { _this.paises = resultado; });
-        this.ProvinciaService.get().subscribe(function (resultado) { _this.todasProvincias = resultado; _this.provincias = resultado; });
-        this.LocalidadService.get().subscribe(function (resultado) { _this.todasLocalidades = resultado; _this.localidades = resultado; });
+        this.ProvinciaService.get().subscribe(function (resultado) { _this.todasProvincias = resultado; });
+        this.LocalidadService.get().subscribe(function (resultado) { _this.todasLocalidades = resultado; });
         this.tipoEstablecimientoService.get().subscribe(function (resultado) { _this.tipos = resultado; });
         this.updateForm = this.formBuilder.group({
             nombre: [this.organizacionHijo.nombre, forms_1.Validators.required],
@@ -54,25 +56,27 @@ var OrganizacionUpdateComponent = (function () {
                 ranking: [element.ranking],
                 activo: [element.activo]
             }));
+            debugger;
         });
-        this.organizacionHijo.direccion.forEach(function (element) {
-            var control = _this.updateForm.controls['direccion'];
-            control.push(_this.formBuilder.group({
-                valor: [element.valor],
-                codigoPostal: [element.codigoPostal],
-                ubicacion: _this.formBuilder.group({
-                    pais: [(element.ubicacion.pais === undefined) ? { id: "", nombre: "" } : element.ubicacion.pais],
-                    provincia: [(element.ubicacion.provincia === undefined) ? { id: "", nombre: "" } : element.ubicacion.provincia],
-                    localidad: [(element.ubicacion.localidad === undefined) ? { id: "", nombre: "" } : element.ubicacion.localidad]
-                }),
-                activo: [element.activo]
-            }));
-            _this.myPais = (element.ubicacion.pais === undefined) ? { id: "", nombre: "" } : element.ubicacion.pais;
-            _this.myProvincia = (element.ubicacion.provincia === undefined) ? { id: "", nombre: "" } : element.ubicacion.provincia;
-            _this.myLocalidad = (element.ubicacion.localidad === undefined) ? { id: "", nombre: "" } : element.ubicacion.localidad;
-        });
+        // this.organizacionHijo.direccion.forEach(element => {
+        //     const control = <FormArray> this.updateForm.controls['direccion'];
+        //     control.push(this.formBuilder.group({
+        //         valor:[element.valor],
+        //         codigoPostal:[element.codigoPostal],
+        //         ubicacion: this.formBuilder.group({
+        //             pais: [(element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais],
+        //             provincia: [(element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia],
+        //             localidad: [(element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad]
+        //         }),
+        //         activo: [element.activo]
+        //     }));
+        //     this.myPais = (element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais;
+        //     this.myProvincia = (element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia;
+        //     this.myLocalidad = (element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad;
+        // });
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined) ? { id: "", nombre: "" } :
             this.organizacionHijo.tipoEstablecimiento;
+        this.loadDirecciones();
     };
     OrganizacionUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
@@ -80,9 +84,6 @@ var OrganizacionUpdateComponent = (function () {
             var estOperation = void 0;
             model.id = this.organizacionHijo.id;
             model.tipoEstablecimiento = this.myTipoEst;
-            model.direccion[0].ubicacion.pais = this.myPais;
-            model.direccion[0].ubicacion.provincia = this.myProvincia;
-            model.direccion[0].ubicacion.localidad = this.myLocalidad;
             estOperation = this.organizacionService.put(model);
             estOperation.subscribe(function (resultado) { return _this.data.emit(resultado); });
         }
@@ -91,25 +92,59 @@ var OrganizacionUpdateComponent = (function () {
         }
     };
     OrganizacionUpdateComponent.prototype.filtrarProvincias = function (indiceSelected) {
-        this.myPais = this.paises[indiceSelected];
         var idPais = this.paises[indiceSelected].id;
         this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
-    };
-    OrganizacionUpdateComponent.prototype.cambiarTipoEst = function (indiceSelected) {
-        this.myTipoEst = this.tipos[indiceSelected];
+        debugger;
+        this.localidades = [];
     };
     OrganizacionUpdateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
-        this.myProvincia = this.provincias[indiceSelected];
         var idProvincia = this.provincias[indiceSelected].id;
         this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
     };
-    OrganizacionUpdateComponent.prototype.cambiarLocalidad = function (indiceSelected) {
-        this.myLocalidad = this.localidades[indiceSelected];
+    OrganizacionUpdateComponent.prototype.setDireccion = function (objDireccion) {
+        var _this = this;
+        //OJO revisar en el create el tema de los paises, localidades, etc no los guarda como obj solo el id
+        debugger;
+        if (objDireccion) {
+            if (objDireccion.ubicacion) {
+                if (objDireccion.ubicacion.pais) {
+                    this.myPais = objDireccion.ubicacion.pais;
+                    if (objDireccion.ubicacion.provincia) {
+                        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == _this.myPais.id; });
+                        this.myProvincia = objDireccion.ubicacion.provincia;
+                        if (objDireccion.ubicacion.localidad) {
+                            this.localidades = this.todasLocalidades.filter(function (loc) { return loc.provincia.id == _this.myProvincia.id; });
+                            this.myLocalidad = objDireccion.ubicacion.localidad;
+                        }
+                    }
+                }
+            }
+        }
+        return this.formBuilder.group({
+            valor: [objDireccion.valor],
+            codigoPostal: [objDireccion.codigoPostal],
+            ubicacion: this.formBuilder.group({
+                pais: [this.myPais],
+                provincia: [this.myProvincia],
+                localidad: [this.myLocalidad]
+            }),
+            ranking: [objDireccion.ranking],
+            activo: [objDireccion.activo]
+        });
     };
-    OrganizacionUpdateComponent.prototype.onChangeObj = function (newObj) {
-        console.log(newObj);
-        this.myPais = newObj;
-        // ... do other stuff here ...
+    OrganizacionUpdateComponent.prototype.loadDirecciones = function () {
+        var cantDirecciones = this.organizacionHijo.direccion.length;
+        var control = this.updateForm.controls['direccion'];
+        debugger;
+        if (cantDirecciones > 0) {
+            for (var i = 0; i < cantDirecciones; i++) {
+                var objDireccion = this.organizacionHijo.direccion[i];
+                control.push(this.setDireccion(objDireccion));
+            }
+        }
+    };
+    OrganizacionUpdateComponent.prototype.cambiarTipoEst = function (indiceSelected) {
+        this.myTipoEst = this.tipos[indiceSelected];
     };
     OrganizacionUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
