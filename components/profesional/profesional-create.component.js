@@ -122,16 +122,12 @@ var ProfesionalCreateComponent = (function () {
     /*Código de filtrado de combos*/
     ProfesionalCreateComponent.prototype.filtrarProvincias = function (indiceSelected) {
         var idPais = this.paises[indiceSelected].id;
-        this.provincias = this.todasProvincias.filter(function (p) {
-            return (p.pais.id == idPais) ? p : null;
-        });
+        this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
         this.localidades = [];
     };
     ProfesionalCreateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
         var idProvincia = this.provincias[indiceSelected].id;
-        this.localidades = this.todasLocalidades.filter(function (p) {
-            return p.provincia.id == idProvincia ? p : null;
-        });
+        this.localidades = this.todasLocalidades.filter(function (p) { return p.provincia.id == idProvincia; });
     };
     /*Código de contactos*/
     ProfesionalCreateComponent.prototype.initContacto = function (rank) {
