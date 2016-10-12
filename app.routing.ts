@@ -20,6 +20,10 @@ const appRoutes: Routes = [
   {
     path: 'pacientes',
     component: PacienteComponent
+  },
+  {
+    path: '**',
+    redirectTo: "organizacion"
   } 
 ];
 

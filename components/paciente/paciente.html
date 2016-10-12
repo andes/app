@@ -106,3 +106,11 @@
 
     </div>
 </div>
+
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <paciente-update [selectedPaciente]="selectedPaciente" (data)='onReturn($event)'></paciente-update>
+
+    </div>
+</div>
