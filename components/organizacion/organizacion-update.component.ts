@@ -1,3 +1,4 @@
+import { IDireccion } from './../../interfaces/IDireccion';
 import { LocalidadService } from './../../services/localidad.service';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IPais } from './../../interfaces/IPais';
@@ -33,15 +34,14 @@ export class OrganizacionUpdateComponent implements OnInit {
     tiposcom: String[];
     paises: IPais[];
     provincias: IProvincia[];
-    todasProvincias: IProvincia[];
+    todasProvincias: IProvincia[]=[];
     localidades: ILocalidad[];
-    todasLocalidades: ILocalidad[];
+    todasLocalidades: ILocalidad[]=[];
     updateForm: FormGroup;
     myTipoEst: any;
     myPais: any;
-    myLocalidad: any;
     myProvincia: any;
-    myUbicacion:  any[];
+    myLocalidad: any;
     
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService, private PaisService: PaisService,
     private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, private tipoEstablecimientoService: TipoEstablecimientoService) { }
@@ -49,9 +49,11 @@ export class OrganizacionUpdateComponent implements OnInit {
     ngOnInit() {
         //Carga de combos
         this.tiposcom = enumerados.getTipoComunicacion();
+
         this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado;this.provincias = resultado});
-        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado;this.localidades = resultado});
+        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
+        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
+        
         this.tipoEstablecimientoService.get().subscribe(resultado => {this.tipos = resultado;});
         this.updateForm = this.formBuilder.group({
             nombre: [this.organizacionHijo.nombre, Validators.required],
@@ -75,27 +77,29 @@ export class OrganizacionUpdateComponent implements OnInit {
                 ranking:[element.ranking],
                 activo:[element.activo] 
             }));
+            debugger
         });
                
-        this.organizacionHijo.direccion.forEach(element => {
-            const control = <FormArray> this.updateForm.controls['direccion'];
-            control.push(this.formBuilder.group({
-                valor:[element.valor],
-                codigoPostal:[element.codigoPostal],
-                ubicacion: this.formBuilder.group({
-                    pais: [(element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais],
-                    provincia: [(element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia],
-                    localidad: [(element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad]
-                }),
-                activo: [element.activo]
-            }));
-            this.myPais = (element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais;
-            this.myProvincia = (element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia;
-            this.myLocalidad = (element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad;
-        });
+        // this.organizacionHijo.direccion.forEach(element => {
+        //     const control = <FormArray> this.updateForm.controls['direccion'];
+        //     control.push(this.formBuilder.group({
+        //         valor:[element.valor],
+        //         codigoPostal:[element.codigoPostal],
+        //         ubicacion: this.formBuilder.group({
+        //             pais: [(element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais],
+        //             provincia: [(element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia],
+        //             localidad: [(element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad]
+        //         }),
+        //         activo: [element.activo]
+        //     }));
+        //     this.myPais = (element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais;
+        //     this.myProvincia = (element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia;
+        //     this.myLocalidad = (element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad;
+        // });
         
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined)?{id:"",nombre:""}:
         this.organizacionHijo.tipoEstablecimiento;
+        this.loadDirecciones()
     }
 
     onSave(model: any, isvalid: boolean) {
@@ -103,9 +107,6 @@ export class OrganizacionUpdateComponent implements OnInit {
             let estOperation: Observable<IOrganizacion>;
             model.id = this.organizacionHijo.id;
             model.tipoEstablecimiento = this.myTipoEst;
-            model.direccion[0].ubicacion.pais = this.myPais;
-            model.direccion[0].ubicacion.provincia = this.myProvincia;
-            model.direccion[0].ubicacion.localidad = this.myLocalidad;
             estOperation = this.organizacionService.put(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));
 
@@ -115,35 +116,68 @@ export class OrganizacionUpdateComponent implements OnInit {
     }
 
     filtrarProvincias(indiceSelected: number){
-        this.myPais =  this.paises[indiceSelected];
         var idPais = this.paises[indiceSelected].id;
         this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
-        
+        debugger
+        this.localidades = [];
+    }
+      
+    filtrarLocalidades(indiceSelected: number){
+        var idProvincia = this.provincias[indiceSelected].id;
+        this.localidades = this.todasLocalidades.filter(function (p) {return p.provincia.id == idProvincia; });
+    }
+
+    setDireccion(objDireccion: IDireccion) {
+        //OJO revisar en el create el tema de los paises, localidades, etc no los guarda como obj solo el id
+        debugger;
+        if (objDireccion) {
+           if (objDireccion.ubicacion) {
+               if (objDireccion.ubicacion.pais) {
+                   this.myPais = objDireccion.ubicacion.pais;
+                   if (objDireccion.ubicacion.provincia) {
+                       this.provincias = this.todasProvincias.filter((p) => p.pais.id == this.myPais.id);
+                       this.myProvincia = objDireccion.ubicacion.provincia;
+                       if (objDireccion.ubicacion.localidad) {
+                           this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == this.myProvincia.id);
+                           this.myLocalidad = objDireccion.ubicacion.localidad;
+                       }
+                   }
+               }
+           }
+        }
+        return this.formBuilder.group({
+            valor: [objDireccion.valor],
+            codigoPostal: [objDireccion.codigoPostal],
+            ubicacion: this.formBuilder.group({
+                pais: [this.myPais],
+                provincia: [this.myProvincia],
+                localidad: [this.myLocalidad]
+            }),
+            ranking: [objDireccion.ranking],
+            activo: [objDireccion.activo]
+        })
+    }
+
+    loadDirecciones() {
+        var cantDirecciones = this.organizacionHijo.direccion.length;
+        const control = < FormArray > this.updateForm.controls['direccion'];
+        debugger;
+        if (cantDirecciones > 0) {
+            for (var i = 0; i < cantDirecciones; i++) {
+                var objDireccion: any = this.organizacionHijo.direccion[i];
+                control.push(this.setDireccion(objDireccion)) 
+            }
+        }
     }
 
     cambiarTipoEst(indiceSelected: number){
         this.myTipoEst = this.tipos[indiceSelected];
     }
 
-    filtrarLocalidades(indiceSelected: number){
-        this.myProvincia =  this.provincias[indiceSelected];
-        var idProvincia = this.provincias[indiceSelected].id;
-        this.localidades = this.todasLocalidades.filter(function (p) {return p.provincia.id == idProvincia; });
-    }
-
-    cambiarLocalidad(indiceSelected: number){
-        this.myLocalidad =  this.localidades[indiceSelected];
-    }
-
-    onChangeObj(newObj) {
-        console.log(newObj);
-        this.myPais = newObj;
-    // ... do other stuff here ...
-  }
-   
     onCancel() {
         this.data.emit(null)
     }
+    
     iniContacto(objContacto?: any) {
         // Inicializa contacto
         let cant = 0;
