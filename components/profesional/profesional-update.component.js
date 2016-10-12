@@ -50,18 +50,29 @@ var ProfesionalUpdateComponent = (function () {
         //Cargo los valores actuales [Ojo que no esta funcionando el tema de fechas]
         this.fechaNacimientoActual = this.dateToText(this.ProfesionalHijo.fechaNacimiento);
         this.fechaFallecidoActual = this.dateToText(this.ProfesionalHijo.fechaFallecimiento);
-        debugger;
         this.updateForm = this.formBuilder.group({
             id: [this.ProfesionalHijo.id],
             nombre: [this.ProfesionalHijo.nombre, forms_1.Validators.required],
             apellido: [this.ProfesionalHijo.apellido, forms_1.Validators.required],
             documento: [this.ProfesionalHijo.documento, forms_1.Validators.required],
             contacto: this.formBuilder.array([]),
-            fechaNacimiento: [''],
-            fechaFallecimiento: [''],
+            fechaNacimiento: [this.ProfesionalHijo.fechaNacimiento],
+            fechaFallecimiento: [this.ProfesionalHijo.fechaFallecimiento],
             sexo: [this.ProfesionalHijo.sexo],
             genero: [this.ProfesionalHijo.genero],
-            direccion: this.formBuilder.array([]),
+            direccion: this.formBuilder.array([
+                this.formBuilder.group({
+                    valor: [this.ProfesionalHijo.direccion[0].valor],
+                    codigoPostal: [this.ProfesionalHijo.direccion[0].codigoPostal],
+                    ubicacion: this.formBuilder.group({
+                        pais: [this.ProfesionalHijo.direccion[0].ubicacion.pais],
+                        provincia: [this.ProfesionalHijo.direccion[0].ubicacion.provincia],
+                        localidad: [this.ProfesionalHijo.direccion[0].ubicacion.localidad]
+                    }),
+                    ranking: [this.ProfesionalHijo.direccion[0].ranking],
+                    activo: [this.ProfesionalHijo.direccion[0].activo]
+                })
+            ]),
             estadoCivil: [this.ProfesionalHijo.estadoCivil],
             foto: [''],
             rol: [this.ProfesionalHijo.rol, forms_1.Validators.required],
@@ -71,7 +82,21 @@ var ProfesionalUpdateComponent = (function () {
         //Cargo arrays selecciondaos
         this.loadEspecialidades();
         this.loadMatriculas();
-        this.loadDirecciones();
+        this.loadContactos();
+        //---- lo dejamos para despues this.loadDirecciones()
+    };
+    ProfesionalUpdateComponent.prototype.filtrarProvincias = function (indiceSelected) {
+        var idPais = this.paises[indiceSelected].id;
+        this.provincias = this.todasProvincias.filter(function (p) {
+            return p.pais.id == idPais;
+        });
+        this.localidades = [];
+    };
+    ProfesionalUpdateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
+        var idProvincia = this.provincias[indiceSelected].id;
+        this.localidades = this.todasLocalidades.filter(function (p) {
+            return p.provincia.id == idProvincia;
+        });
     };
     ProfesionalUpdateComponent.prototype.dateToText = function (myDate) {
         if (myDate) {
@@ -88,37 +113,97 @@ var ProfesionalUpdateComponent = (function () {
         var fecha2 = new Date(Date.parse(myDate));
         return fecha2;
     };
-    ProfesionalUpdateComponent.prototype.setDireccion = function (objDireccion) {
-        //OJO revisar en el create el tema de los paises, localidades, etc no los guarda como obj solo el id
-        debugger;
+    /*************************PARA REVISAR ********************************************************************/
+    // setDireccion(objDireccion: any) {
+    //     //OJO revisar en el create el tema de los paises, localidades, etc no los guarda como obj solo el id
+    //     debugger;
+    //     return this.formBuilder.group({
+    //         valor: [objDireccion.valor],
+    //         codigoPostal: [objDireccion.codigoPostal],
+    //         ubicacion: this.formBuilder.group({
+    //             pais: [objDireccion.ubicacion.pais],
+    //             provincia: [objDireccion.ubicacion.provincia],
+    //             localidad: [objDireccion.ubicacion.localidad]
+    //         }),
+    //         ranking: [objDireccion.ranking],
+    //         activo: [objDireccion.activo]
+    //     })
+    // }
+    // loadDirecciones() {
+    //     var cantDirecciones = this.ProfesionalHijo.direccion.length;
+    //     const control = < FormArray > this.updateForm.controls['direccion'];
+    //     debugger;
+    //     if (cantDirecciones > 0) {
+    //         for (var i = 0; i < cantDirecciones; i++) {
+    //             var objDireccion: any = this.ProfesionalHijo.direccion[i];
+    //             control.push(this.setDireccion(objDireccion)) 
+    //         }
+    //     }
+    // }
+    /*****************************************************PARA REVISAR ********************************************************************/
+    /*Código de contactos*/
+    ProfesionalUpdateComponent.prototype.initContacto = function (rank) {
+        // Inicializa contacto
+        var cant = 0;
+        var fecha = new Date();
         return this.formBuilder.group({
-            valor: [objDireccion.valor],
-            codigoPostal: [objDireccion.codigoPostal],
-            ubicacion: this.formBuilder.group({
-                pais: [objDireccion.ubicacion.pais],
-                provincia: [objDireccion.ubicacion.provincia],
-                localidad: [objDireccion.ubicacion.localidad]
-            }),
-            ranking: [objDireccion.ranking],
-            activo: [objDireccion.activo]
+            tipo: [''],
+            valor: [''],
+            ranking: [rank],
+            ultimaActualizacion: [fecha],
+            activo: [true]
         });
     };
-    ProfesionalUpdateComponent.prototype.loadDirecciones = function () {
-        var cantDirecciones = this.ProfesionalHijo.direccion.length;
-        var control = this.updateForm.controls['direccion'];
+    ProfesionalUpdateComponent.prototype.addContacto = function () {
+        var control = this.updateForm.controls['contacto'];
+        control.push(this.initContacto(control.length + 1));
+    };
+    ProfesionalUpdateComponent.prototype.removeContacto = function (indice) {
+        var control = this.updateForm.controls['contacto'];
+        control.removeAt(indice);
+    };
+    ProfesionalUpdateComponent.prototype.setContacto = function (cont) {
         debugger;
-        if (cantDirecciones > 0) {
-            for (var i = 0; i < cantDirecciones; i++) {
-                var objDireccion = this.ProfesionalHijo.direccion[i];
-                control.push(this.setDireccion(objDireccion));
+        return this.formBuilder.group({
+            tipo: [cont.tipo],
+            valor: [cont.valor],
+            ranking: [cont.ranking],
+            ultimaActualizacion: [cont.ultimaActualizacion],
+            activo: [cont.activo]
+        });
+    };
+    ProfesionalUpdateComponent.prototype.loadContactos = function () {
+        var cantidadContactosActuales = this.ProfesionalHijo.contacto.length;
+        var control = this.updateForm.controls['contacto'];
+        if (cantidadContactosActuales > 0) {
+            for (var i = 0; i < cantidadContactosActuales; i++) {
+                var contacto = this.ProfesionalHijo.contacto[i];
+                control.push(this.setContacto(contacto));
             }
         }
+    };
+    ProfesionalUpdateComponent.prototype.iniEspecialidad = function () {
+        return this.formBuilder.group({
+            nombre: []
+        });
     };
     ProfesionalUpdateComponent.prototype.setEspecialidad = function (myId, myName) {
         return this.formBuilder.group({
             id: [myId],
             nombre: [myName],
         });
+    };
+    ProfesionalUpdateComponent.prototype.addEspecialidad = function () {
+        var e = (document.getElementById("ddlEspecialidades"));
+        var indice = e.selectedIndex;
+        var id = this.todasEspecialidades[indice].id;
+        var nombre = this.todasEspecialidades[indice].nombre;
+        var control = this.updateForm.controls['especialidad'];
+        control.push(this.setEspecialidad(id, nombre));
+    };
+    ProfesionalUpdateComponent.prototype.removeEspecialidad = function (i) {
+        var control = this.updateForm.controls['especialidad'];
+        control.removeAt(i);
     };
     ProfesionalUpdateComponent.prototype.loadEspecialidades = function () {
         var cantidadEspecialidadesActuales = this.ProfesionalHijo.especialidad.length;
@@ -174,26 +259,19 @@ var ProfesionalUpdateComponent = (function () {
         control.removeAt(i);
     };
     ProfesionalUpdateComponent.prototype.onSave = function (model, isvalid) {
-        /*
+        var _this = this;
+        debugger;
+        /*Vamos a tener que revisar que pasa con las fechas */
         if (isvalid) {
-            let profOperation: Observable<IProfesional>;
-            model.activo = true;
-            
-            model.domicilio.localidad = this.myLocalidad;
-            var ff = model.fechaNacimiento;
-            model.fechaNacimiento = this.textToDate(ff);
-            model.matriculas.forEach(e => { e.fechaInicio = this.textToDate(e.fechaInicio);
-                                            e.fechaVencimiento = this.textToDate(e.fechaVencimiento);
-                                         });
-
-            
+            var profOperation = void 0;
             profOperation = this.profesionalService.put(model);
-            profOperation.subscribe(resultado => { this.data.emit(resultado); });
-
-        } else {
+            profOperation.subscribe(function (resultado) {
+                _this.data.emit(resultado);
+            });
+        }
+        else {
             alert("Complete datos obligatorios");
         }
-        */
     };
     ProfesionalUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
