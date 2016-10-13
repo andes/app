@@ -83,9 +83,9 @@
                             <template let-paciente="rowData" pTemplate type="body">
                                 <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
                                 <button type="button" class="btn btn-sm btn-success" *ngIf="paciente.activo" (click)="onDisable(paciente)" pButton
-                                    icon="fa fa-check">Habilitar</button>
-                                <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onDisable(paciente)"
                                     icon="fa fa-check">Deshabilitar</button>
+                                <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onEnable(paciente)"
+                                    icon="fa fa-check">Habilitar</button>
                             </template>
                         </p-column>
                     </p-dataTable>

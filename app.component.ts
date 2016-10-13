@@ -18,7 +18,6 @@ import {
                     <div class="row">&nbsp;</div>
                     <router-outlet></router-outlet>
                 </div>
-                
                 `
 })
 export class AppComponent {}
