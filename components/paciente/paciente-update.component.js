@@ -38,6 +38,9 @@ var PacienteUpdateComponent = (function () {
         this.todasProvincias = [];
         this.localidades = [];
         this.todasLocalidades = [];
+        this.showCargar = false;
+        this.error = false;
+        this.mensaje = "";
         this.barrios = [];
         this.obrasSociales = [];
         this.pacRelacionados = [];
@@ -209,13 +212,13 @@ var PacienteUpdateComponent = (function () {
         control.push(this.iniDireccion(unaDireccion));
     };
     PacienteUpdateComponent.prototype.onSave = function (model, isvalid) {
+        var _this = this;
         debugger;
         if (isvalid) {
             var operacionPac = void 0;
             operacionPac = this.pacienteService.put(model);
             operacionPac.subscribe(function (resultado) {
-                debugger;
-                console.log(resultado);
+                _this.data.emit(resultado);
             });
         }
         else {
@@ -224,9 +227,6 @@ var PacienteUpdateComponent = (function () {
     };
     PacienteUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
-    };
-    PacienteUpdateComponent.prototype.findObject = function (objeto, dato) {
-        return objeto.id === dato;
     };
     PacienteUpdateComponent.prototype.filtrarProvincias = function (indexPais, i) {
         debugger;
@@ -261,18 +261,30 @@ var PacienteUpdateComponent = (function () {
     };
     PacienteUpdateComponent.prototype.buscarPacRelacionado = function () {
         var _this = this;
-        debugger;
+        this.error = false;
         //var formsRel = this.createForm.value.relaciones[i];
         var nombre = document.getElementById("relNombre").value;
         var apellido = document.getElementById("relApellido").value;
         var documento = document.getElementById("relDocumento").value;
+        if ((nombre == "") && (apellido == "") && (documento == "")) {
+            this.error = true;
+            this.mensaje = "Debe completar al menos un campo de búsqueda";
+            return;
+        }
         this.pacienteService.getBySerch(apellido, nombre, documento, "", null, "")
             .subscribe(function (resultado) {
-            if (resultado)
+            debugger;
+            if (resultado.length > 0) {
                 _this.pacRelacionados = resultado;
+                _this.showCargar = false;
+                _this.error = false;
+                _this.mensaje = "";
+            }
             else {
                 _this.pacRelacionados = [];
                 _this.showCargar = true;
+                _this.error = true;
+                _this.mensaje = "No se encontraron datos precargados";
             }
         });
     };
@@ -294,14 +306,24 @@ var PacienteUpdateComponent = (function () {
         document.getElementById("relNombre").value = "";
         document.getElementById("relApellido").value = "";
         document.getElementById("relDocumento").value = "";
+        this.showCargar = false;
+        this.error = false;
+        this.mensaje = "";
         this.pacRelacionados = [];
     };
     PacienteUpdateComponent.prototype.cargarDatos = function () {
         debugger;
+        this.error = false;
+        this.mensaje = "";
         var relacion = document.getElementById("relRelacion").value;
         var nombre = document.getElementById("relNombre").value;
         var apellido = document.getElementById("relApellido").value;
         var documento = document.getElementById("relDocumento").value;
+        if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
+            this.error = true;
+            this.mensaje = "Debe completar los datos solicitados";
+            return;
+        }
         var control = this.updateForm.controls['relaciones'];
         control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
         document.getElementById("relRelacion").value = "";

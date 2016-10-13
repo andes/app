@@ -63,9 +63,43 @@
                     <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Paciente">
                 </div>
             </div>
+            <div class="clear"></div>
+            <div class="form_group">
+                <div class="form-group">
+                    <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+                        <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+                        <input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscar">
+                    </div>
+                    <p-dataTable [value]="pacientes" [rows]="20" [paginator]="true" [globalFilter]="gb" [responsive]="true">
+                        <p-column [style]="{'width':'30%'}" field="nombreCompleto" header="Nombre"></p-column>
+                        <p-column [style]="{'width':'8%'}" field="documento" header="DNI"></p-column>
+                        <p-column [style]="{'width':'8%'}" field="fechaNacimiento" header="F. Nac">
+                            <template let-paciente="rowData" pTemplate type="body">
+                                <span>{{paciente.fechaNacimiento | date:"dd/MM/yy"}}</span>
+                            </template>
+                        </p-column>
+                        <p-column [style]="{'width':'10%'}" field="sexo" header="Sexo"></p-column>
+                        <p-column [style]="{'width':'10%'}" field="estado" header="Estado"></p-column>
+                        <p-column [style]="{'width':'8%'}" field="activo" header="Activo">
+                            <template let-paciente="rowData" pTemplate type="body">
+                                    <span>{{paciente.activo ? "SI" : "NO"}}</span>
+                                </template>
+                        </p-column>
+                        <p-column header="Acciones" [style]="{'width':'25%'}">
+                            <template let-paciente="rowData" pTemplate type="body">
+                                <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
+                                <button type="button" class="btn btn-sm btn-success" *ngIf="paciente.activo" (click)="onDisable(paciente)" pButton
+                                    icon="fa fa-check">Habilitar</button>
+                                <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onDisable(paciente)"
+                                    icon="fa fa-check">Deshabilitar</button>
+                            </template>
+                        </p-column>
+                    </p-dataTable>
+                </div>
+            </div>
 
             <div class="clear"></div>
-            <div class="table-responsive">
+            <!--<div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -86,7 +120,7 @@
                             <td>{{paciente.sexo}}</td>
                             <td>{{paciente.estado}}</td>
                             <th>{{paciente.activo ?'Sí':'No' }}</th>
-                            <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(paciente)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
+                            <td style="width:20px;"><button class="btn btn-primary" *ngIf="paciente.activo" (click)="onEdit(paciente)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
                             <td style="width:20px;">
                                 <button class="btn btn-danger" *ngIf="paciente.activo" (click)="onDisable(paciente)"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
                                 <button class="btn btn-success" *ngIf="!paciente.activo" (click)="onEnable(paciente)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
@@ -94,7 +128,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

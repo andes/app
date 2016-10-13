@@ -89,7 +89,6 @@ export class PacienteComponent implements OnInit {
     }
 
     findPacientes() {
-        debugger;
         this.error = false;
         var formulario = this.searchForm.value;
         if ((formulario.apellido == "") && (formulario.nombre == "") && (formulario.documento == "") &&

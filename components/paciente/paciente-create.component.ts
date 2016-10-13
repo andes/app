@@ -39,7 +39,8 @@ export class PacienteCreateComponent implements OnInit {
     localidades: ILocalidad[]= [];
     todasLocalidades: ILocalidad[] = [];
     showCargar: boolean;
-
+    error: boolean = false;
+    mensaje: string = "";
     barrios: IBarrio[] = [];
     obrasSociales: IFinanciador[] = [];
     pacRelacionados = [];
@@ -154,10 +155,8 @@ export class PacienteCreateComponent implements OnInit {
         if (isvalid) {
             let operacionPac: Observable < IPaciente > ;
              operacionPac = this.pacienteService.post(model);
-
              operacionPac.subscribe(resultado => {
-                 debugger;
-                 console.log(resultado);
+                  this.data.emit(resultado)
              });
 
         } else {
@@ -168,11 +167,6 @@ export class PacienteCreateComponent implements OnInit {
     onCancel() {
         this.data.emit(null)
     }
-
-    findObject(objeto, dato) { 
-    return objeto.id === dato;
-}
-
 
     filtrarProvincias(indexPais: number){
         var pais = this.paises[(indexPais-1)];
@@ -209,17 +203,29 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     buscarPacRelacionado(){
-        debugger;
         //var formsRel = this.createForm.value.relaciones[i];
         var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
         var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
         var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+
+        if ((nombre == "") && (apellido == "") && (documento == "")) {
+            this.error = true;
+            this.mensaje = "Debe completar al menos un campo de búsqueda";
+            return;
+        }
+
         this.pacienteService.getBySerch(apellido, nombre, documento, "", null, "")
                                 .subscribe(resultado => {
-                                        if(resultado) this.pacRelacionados = resultado
-                                        else {
+                                        if(resultado.length>0) {
+                                            this.pacRelacionados = resultado;
+                                            this.showCargar = false;
+                                            this.error = false;
+                                            this.mensaje = "";
+                                        } else {
                                             this.pacRelacionados = []
                                             this.showCargar = true;
+                                            this.error = true;
+                                            this.mensaje = "No se encontraron datos registrados";
                                         }
                                     });
     }
@@ -235,7 +241,6 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     validar(paciente: IPaciente){
-        debugger;
         var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
         const control = <FormArray>this.createForm.controls['relaciones'];
         control.push(this.setRelacion(relacion,paciente.nombre,paciente.apellido,paciente.documento,paciente.id));
@@ -249,11 +254,18 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     cargarDatos(){
-        debugger;
+        this.error = false;
+        this.mensaje = "";
         var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
         var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
         var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
         var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+
+        if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
+            this.error = true;
+            this.mensaje = "Debe completar los datos solicitados";
+            return;
+        }
 
         const control = <FormArray>this.createForm.controls['relaciones'];
         control.push(this.setRelacion(relacion,nombre,apellido,documento, ""));

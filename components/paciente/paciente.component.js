@@ -58,7 +58,6 @@ var PacienteComponent = (function () {
         });
     };
     PacienteComponent.prototype.findPacientes = function () {
-        debugger;
         this.error = false;
         var formulario = this.searchForm.value;
         if ((formulario.apellido == "") && (formulario.nombre == "") && (formulario.documento == "") &&
