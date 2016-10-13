@@ -70,16 +70,6 @@ export class OrganizacionUpdateComponent implements OnInit {
             contacto: this.formBuilder.array([])
         });
        
-        // this.organizacionHijo.telecom.forEach(element => {
-        //     const control = <FormArray> this.updateForm.controls['telecom'];
-        //     control.push(this.formBuilder.group({
-        //         tipo: [(element.tipo === undefined)?"":element.tipo],
-        //         valor:[element.valor],
-        //         ranking:[element.ranking],
-        //         activo:[element.activo] 
-        //     }));
-        // });
-               
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined)?{id:"",nombre:""}:
         this.organizacionHijo.tipoEstablecimiento;
         this.loadDirecciones(),
@@ -198,6 +188,12 @@ export class OrganizacionUpdateComponent implements OnInit {
     addTelecom() {
         const control = <FormArray> this.updateForm.controls['telecom'];
         control.push(this.iniTelecom());
+    }
+
+    removeTelecom(i: number) {
+        // elimina formTelecom
+        const control = <FormArray>this.updateForm.controls['telecom'];
+        control.removeAt(i);
     }
 
     iniTelecom() {

@@ -49,15 +49,6 @@ var OrganizacionUpdateComponent = (function () {
             direccion: this.formBuilder.array([]),
             contacto: this.formBuilder.array([])
         });
-        // this.organizacionHijo.telecom.forEach(element => {
-        //     const control = <FormArray> this.updateForm.controls['telecom'];
-        //     control.push(this.formBuilder.group({
-        //         tipo: [(element.tipo === undefined)?"":element.tipo],
-        //         valor:[element.valor],
-        //         ranking:[element.ranking],
-        //         activo:[element.activo] 
-        //     }));
-        // });
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined) ? { id: "", nombre: "" } :
             this.organizacionHijo.tipoEstablecimiento;
         this.loadDirecciones(),
@@ -166,6 +157,11 @@ var OrganizacionUpdateComponent = (function () {
     OrganizacionUpdateComponent.prototype.addTelecom = function () {
         var control = this.updateForm.controls['telecom'];
         control.push(this.iniTelecom());
+    };
+    OrganizacionUpdateComponent.prototype.removeTelecom = function (i) {
+        // elimina formTelecom
+        var control = this.updateForm.controls['telecom'];
+        control.removeAt(i);
     };
     OrganizacionUpdateComponent.prototype.iniTelecom = function () {
         // Inicializa telecom
