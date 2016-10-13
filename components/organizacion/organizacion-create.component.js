@@ -45,14 +45,7 @@ var OrganizacionCreateComponent = (function () {
                 remediar: [''],
             }),
             tipoEstablecimiento: [''],
-            telecom: this.formBuilder.array([
-                this.formBuilder.group({
-                    tipo: [''],
-                    valor: [''],
-                    ranking: [''],
-                    activo: ['']
-                }),
-            ]),
+            telecom: this.formBuilder.array([]),
             direccion: this.formBuilder.array([
                 this.formBuilder.group({
                     valor: [''],
@@ -71,6 +64,26 @@ var OrganizacionCreateComponent = (function () {
             contacto: this.formBuilder.array([])
         });
     };
+    OrganizacionCreateComponent.prototype.addTelecom = function () {
+        var control = this.createForm.controls['telecom'];
+        control.push(this.iniTelecom());
+    };
+    OrganizacionCreateComponent.prototype.iniTelecom = function () {
+        // Inicializa telecom
+        var cant = 0;
+        var fecha = new Date();
+        return this.formBuilder.group({
+            tipo: [''],
+            valor: [''],
+            ranking: [''],
+            activo: ['']
+        });
+    };
+    OrganizacionCreateComponent.prototype.removeTelecom = function (i) {
+        // elimina formTelecom
+        var control = this.createForm.controls['telecom'];
+        control.removeAt(i);
+    };
     OrganizacionCreateComponent.prototype.iniContacto = function () {
         // Inicializa contacto
         var cant = 0;
@@ -85,12 +98,12 @@ var OrganizacionCreateComponent = (function () {
         });
     };
     OrganizacionCreateComponent.prototype.addContacto = function () {
-        // agrega formMatricula 
+        // agrega formContacto 
         var control = this.createForm.controls['contacto'];
         control.push(this.iniContacto());
     };
     OrganizacionCreateComponent.prototype.removeContacto = function (i) {
-        // elimina formMatricula
+        // elimina formContacto
         var control = this.createForm.controls['contacto'];
         control.removeAt(i);
     };

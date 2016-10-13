@@ -85,7 +85,6 @@ var OrganizacionComponent = (function () {
     OrganizacionComponent.prototype.onEdit = function (objOrganizacion) {
         this.showcreate = false;
         this.showupdate = true;
-        debugger;
         this.selectedOrg = objOrganizacion;
     };
     OrganizacionComponent = __decorate([

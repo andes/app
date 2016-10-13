@@ -46,7 +46,8 @@ var OrganizacionUpdateComponent = (function () {
             }),
             tipoEstablecimiento: [this.organizacionHijo.tipoEstablecimiento],
             telecom: this.formBuilder.array([]),
-            direccion: this.formBuilder.array([])
+            direccion: this.formBuilder.array([]),
+            contacto: this.formBuilder.array([])
         });
         this.organizacionHijo.telecom.forEach(function (element) {
             var control = _this.updateForm.controls['telecom'];
@@ -56,27 +57,12 @@ var OrganizacionUpdateComponent = (function () {
                 ranking: [element.ranking],
                 activo: [element.activo]
             }));
-            debugger;
         });
-        // this.organizacionHijo.direccion.forEach(element => {
-        //     const control = <FormArray> this.updateForm.controls['direccion'];
-        //     control.push(this.formBuilder.group({
-        //         valor:[element.valor],
-        //         codigoPostal:[element.codigoPostal],
-        //         ubicacion: this.formBuilder.group({
-        //             pais: [(element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais],
-        //             provincia: [(element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia],
-        //             localidad: [(element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad]
-        //         }),
-        //         activo: [element.activo]
-        //     }));
-        //     this.myPais = (element.ubicacion.pais === undefined)?{id:"",nombre:""}:element.ubicacion.pais;
-        //     this.myProvincia = (element.ubicacion.provincia === undefined)?{id:"",nombre:""}:element.ubicacion.provincia;
-        //     this.myLocalidad = (element.ubicacion.localidad === undefined)?{id:"",nombre:""}:element.ubicacion.localidad;
-        // });
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined) ? { id: "", nombre: "" } :
             this.organizacionHijo.tipoEstablecimiento;
-        this.loadDirecciones();
+        this.loadDirecciones(),
+            this.loadContactos(),
+            this.loadTelecom();
     };
     OrganizacionUpdateComponent.prototype.onSave = function (model, isvalid) {
         var _this = this;
@@ -94,7 +80,6 @@ var OrganizacionUpdateComponent = (function () {
     OrganizacionUpdateComponent.prototype.filtrarProvincias = function (indiceSelected) {
         var idPais = this.paises[indiceSelected].id;
         this.provincias = this.todasProvincias.filter(function (p) { return p.pais.id == idPais; });
-        debugger;
         this.localidades = [];
     };
     OrganizacionUpdateComponent.prototype.filtrarLocalidades = function (indiceSelected) {
@@ -103,8 +88,6 @@ var OrganizacionUpdateComponent = (function () {
     };
     OrganizacionUpdateComponent.prototype.setDireccion = function (objDireccion) {
         var _this = this;
-        //OJO revisar en el create el tema de los paises, localidades, etc no los guarda como obj solo el id
-        debugger;
         if (objDireccion) {
             if (objDireccion.ubicacion) {
                 if (objDireccion.ubicacion.pais) {
@@ -135,7 +118,6 @@ var OrganizacionUpdateComponent = (function () {
     OrganizacionUpdateComponent.prototype.loadDirecciones = function () {
         var cantDirecciones = this.organizacionHijo.direccion.length;
         var control = this.updateForm.controls['direccion'];
-        debugger;
         if (cantDirecciones > 0) {
             for (var i = 0; i < cantDirecciones; i++) {
                 var objDireccion = this.organizacionHijo.direccion[i];
@@ -143,36 +125,87 @@ var OrganizacionUpdateComponent = (function () {
             }
         }
     };
+    OrganizacionUpdateComponent.prototype.setContacto = function (cont) {
+        return this.formBuilder.group({
+            proposito: [cont.proposito],
+            nombre: [cont.proposito],
+            apellido: [cont.apellido],
+            tipo: [cont.tipo],
+            valor: [cont.valor],
+            activo: [cont.activo]
+        });
+    };
+    OrganizacionUpdateComponent.prototype.loadContactos = function () {
+        var cantidadContactosActuales = this.organizacionHijo.contacto.length;
+        var control = this.updateForm.controls['contacto'];
+        if (cantidadContactosActuales > 0) {
+            for (var i = 0; i < cantidadContactosActuales; i++) {
+                var contacto = this.organizacionHijo.contacto[i];
+                control.push(this.setContacto(contacto));
+            }
+        }
+    };
+    OrganizacionUpdateComponent.prototype.setTelecom = function (cont) {
+        return this.formBuilder.group({
+            proposito: [cont.proposito],
+            nombre: [cont.proposito],
+            apellido: [cont.apellido],
+            tipo: [cont.tipo],
+            valor: [cont.valor],
+            activo: [cont.activo]
+        });
+    };
+    OrganizacionUpdateComponent.prototype.loadTelecom = function () {
+        var cantidadTelecomActuales = this.organizacionHijo.telecom.length;
+        var control = this.updateForm.controls['telecom'];
+        if (cantidadTelecomActuales > 0) {
+            for (var i = 0; i < cantidadTelecomActuales; i++) {
+                var telecom = this.organizacionHijo.telecom[i];
+                control.push(this.setTelecom(telecom));
+            }
+        }
+    };
+    OrganizacionUpdateComponent.prototype.addTelecom = function () {
+        var control = this.updateForm.controls['telecom'];
+        control.push(this.iniTelecom());
+    };
+    OrganizacionUpdateComponent.prototype.iniTelecom = function () {
+        // Inicializa telecom
+        var cant = 0;
+        var fecha = new Date();
+        return this.formBuilder.group({
+            tipo: [''],
+            valor: [''],
+            ranking: [''],
+            activo: ['']
+        });
+    };
     OrganizacionUpdateComponent.prototype.cambiarTipoEst = function (indiceSelected) {
         this.myTipoEst = this.tipos[indiceSelected];
     };
     OrganizacionUpdateComponent.prototype.onCancel = function () {
         this.data.emit(null);
     };
-    OrganizacionUpdateComponent.prototype.iniContacto = function (objContacto) {
+    OrganizacionUpdateComponent.prototype.initContacto = function () {
         // Inicializa contacto
         var cant = 0;
         var fecha = new Date();
-        debugger;
         return this.formBuilder.group({
-            proposito: [objContacto.proposito],
+            proposito: [''],
             nombre: [''],
             apellido: [''],
             tipo: [''],
             valor: [''],
-            activo: [true]
+            activo: ['']
         });
     };
-    OrganizacionUpdateComponent.prototype.addContacto = function (objContacto) {
-        // agrega formMatricula 
+    OrganizacionUpdateComponent.prototype.addContacto = function () {
         var control = this.updateForm.controls['contacto'];
-        debugger;
-        control.push(this.iniContacto(objContacto));
+        control.push(this.initContacto());
     };
-    OrganizacionUpdateComponent.prototype.removeContacto = function (i) {
-        // elimina formMatricula
+    OrganizacionUpdateComponent.prototype.removeContacto = function (indice) {
         var control = this.updateForm.controls['contacto'];
-        control.removeAt(i);
+        control.removeAt(indice);
     };
     __decorate([
         core_1.Input('selectedOrg'), 
