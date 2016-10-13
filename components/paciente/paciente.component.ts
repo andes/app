@@ -1,3 +1,4 @@
+import { PacienteUpdateComponent } from './paciente-update.component';
 import {
     PacienteCreateComponent
 } from './paciente-create.component';
@@ -33,7 +34,7 @@ import {
 
 @Component({
     selector: 'pacientes',
-    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES, PacienteCreateComponent],
+    directives: [REACTIVE_FORM_DIRECTIVES, FORM_DIRECTIVES, PacienteCreateComponent, PacienteUpdateComponent],
     templateUrl: 'components/paciente/paciente.html'
 })
 export class PacienteComponent implements OnInit {
@@ -45,6 +46,7 @@ export class PacienteComponent implements OnInit {
     estados: string[] = [];
     sexos: string[] = [];
     searchForm: FormGroup;
+    selectedPaciente: IPaciente;
 
     constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
 
@@ -134,10 +136,9 @@ export class PacienteComponent implements OnInit {
     }
 
     onEdit(objPaciente: IPaciente) {
-        /*this.showcreate = false;
+        this.showcreate = false;
         this.showupdate = true;
-        debugger;
-        this.selectedOrg = objOrganizacion;*/
+        this.selectedPaciente = objPaciente;
     }
 
 }

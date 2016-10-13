@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var paciente_update_component_1 = require('./paciente-update.component');
 var paciente_create_component_1 = require('./paciente-create.component');
 var paciente_service_1 = require('./../../services/paciente.service');
 var enumerados = require('./../../utils/enumerados');
@@ -103,15 +104,14 @@ var PacienteComponent = (function () {
         });
     };
     PacienteComponent.prototype.onEdit = function (objPaciente) {
-        /*this.showcreate = false;
+        this.showcreate = false;
         this.showupdate = true;
-        debugger;
-        this.selectedOrg = objOrganizacion;*/
+        this.selectedPaciente = objPaciente;
     };
     PacienteComponent = __decorate([
         core_1.Component({
             selector: 'pacientes',
-            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES, paciente_create_component_1.PacienteCreateComponent],
+            directives: [forms_1.REACTIVE_FORM_DIRECTIVES, common_1.FORM_DIRECTIVES, paciente_create_component_1.PacienteCreateComponent, paciente_update_component_1.PacienteUpdateComponent],
             templateUrl: 'components/paciente/paciente.html'
         }), 
         __metadata('design:paramtypes', [forms_1.FormBuilder, paciente_service_1.PacienteService])
