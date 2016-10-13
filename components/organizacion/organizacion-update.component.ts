@@ -70,15 +70,15 @@ export class OrganizacionUpdateComponent implements OnInit {
             contacto: this.formBuilder.array([])
         });
        
-        this.organizacionHijo.telecom.forEach(element => {
-            const control = <FormArray> this.updateForm.controls['telecom'];
-            control.push(this.formBuilder.group({
-                tipo: [(element.tipo === undefined)?"":element.tipo],
-                valor:[element.valor],
-                ranking:[element.ranking],
-                activo:[element.activo] 
-            }));
-        });
+        // this.organizacionHijo.telecom.forEach(element => {
+        //     const control = <FormArray> this.updateForm.controls['telecom'];
+        //     control.push(this.formBuilder.group({
+        //         tipo: [(element.tipo === undefined)?"":element.tipo],
+        //         valor:[element.valor],
+        //         ranking:[element.ranking],
+        //         activo:[element.activo] 
+        //     }));
+        // });
                
         this.myTipoEst = (this.organizacionHijo.tipoEstablecimiento === undefined)?{id:"",nombre:""}:
         this.organizacionHijo.tipoEstablecimiento;
@@ -176,11 +176,9 @@ export class OrganizacionUpdateComponent implements OnInit {
 
     setTelecom(cont: any) {
         return this.formBuilder.group({
-            proposito: [cont.proposito],
-            nombre: [cont.proposito],
-            apellido: [cont.apellido],
             tipo: [cont.tipo],
             valor: [cont.valor],
+            ranking: [cont.ranking],
             activo: [cont.activo]
         })
     }
