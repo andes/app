@@ -89,7 +89,6 @@ export class OrganizacionComponent implements OnInit {
     onEdit(objOrganizacion: IOrganizacion) {
         this.showcreate = false;
         this.showupdate = true;
-        debugger;
         this.selectedOrg = objOrganizacion;
     }
 

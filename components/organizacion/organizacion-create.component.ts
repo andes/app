@@ -57,16 +57,7 @@ export class OrganizacionCreateComponent implements OnInit {
                 remediar:[''],
             }),
             tipoEstablecimiento:[''],
-
-            telecom: this.formBuilder.array([
-               this.formBuilder.group({
-                    tipo: [''],
-                    valor:[''],
-                    ranking:[''],
-                    activo:[''] 
-                }),
-             ]),
-
+            telecom: this.formBuilder.array([]),
             direccion: this.formBuilder.array([
                this.formBuilder.group({
                    valor: [''],
@@ -82,11 +73,31 @@ export class OrganizacionCreateComponent implements OnInit {
                    activo: [true]
                })
            ]),
-           
-           contacto: this.formBuilder.array([
-           ])
-
+           contacto: this.formBuilder.array([])
         });
+    }
+
+    addTelecom() {
+        const control = <FormArray> this.createForm.controls['telecom'];
+        control.push(this.iniTelecom());
+    }
+
+    iniTelecom() {
+        // Inicializa telecom
+        let cant = 0;
+        let fecha = new Date();
+        return this.formBuilder.group({
+           tipo: [''],
+           valor:[''],
+           ranking:[''],
+           activo:[''] 
+        });
+    }
+
+    removeTelecom(i: number) {
+        // elimina formTelecom
+        const control = <FormArray>this.createForm.controls['telecom'];
+        control.removeAt(i);
     }
 
     iniContacto() {
@@ -104,13 +115,13 @@ export class OrganizacionCreateComponent implements OnInit {
     }
 
     addContacto() {
-        // agrega formMatricula 
+        // agrega formContacto 
         const control = <FormArray> this.createForm.controls['contacto'];
         control.push(this.iniContacto());
     }
 
     removeContacto(i: number) {
-        // elimina formMatricula
+        // elimina formContacto
         const control = <FormArray>this.createForm.controls['contacto'];
         control.removeAt(i);
     }

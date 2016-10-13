@@ -98,4 +98,5 @@ export class ProfesionalComponent implements OnInit {
         this.selectedProfesional = objProfesional;
 
     }
+
 }

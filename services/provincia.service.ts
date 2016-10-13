@@ -34,7 +34,7 @@ export class ProvinciaService {
            .catch(this.handleError); //...errors if any*/
    }
 
-  handleError(error: any){
+   handleError(error: any){
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');
     }
