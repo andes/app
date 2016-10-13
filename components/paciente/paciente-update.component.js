@@ -289,9 +289,10 @@ var PacienteUpdateComponent = (function () {
         });
     };
     PacienteUpdateComponent.prototype.setRelacion = function (relacion, nombre, apellido, documento, referencia) {
+        var reOID = referencia ? referencia : null;
         return this.formBuilder.group({
             relacion: [relacion],
-            referencia: [referencia],
+            referencia: [reOID],
             apellido: [apellido],
             nombre: [nombre],
             documento: [documento]

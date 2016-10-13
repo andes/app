@@ -362,10 +362,11 @@ export class PacienteUpdateComponent implements OnInit {
             });
     }
 
-    setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
+    setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia?: String) {
+        var reOID = referencia? referencia:null;
         return this.formBuilder.group({
             relacion: [relacion],
-            referencia: [referencia],
+            referencia: [reOID],
             apellido: [apellido],
             nombre: [nombre],
             documento: [documento]
