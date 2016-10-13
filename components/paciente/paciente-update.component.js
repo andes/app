@@ -117,7 +117,6 @@ var PacienteUpdateComponent = (function () {
                 }),
                 ranking: [unaDireccion.ranking],
                 codigoPostal: [unaDireccion.codigoPostal],
-                geoReferencia: [],
                 ultimaActualizacion: [unaDireccion.ultimaActualizacion],
                 activo: [unaDireccion.activo]
             });
@@ -132,7 +131,6 @@ var PacienteUpdateComponent = (function () {
                 }),
                 ranking: [],
                 codigoPostal: [''],
-                geoReferencia: [''],
                 ultimaActualizacion: [''],
                 activo: [true]
             });
@@ -166,13 +164,24 @@ var PacienteUpdateComponent = (function () {
         // form Financiador u obra Social
         var cant = 0;
         var fecha = new Date();
-        return this.formBuilder.group({
-            entidad: [unFinanciador.entidad],
-            ranking: [unFinanciador.ranking],
-            fechaAlta: [unFinanciador.fechaAlta],
-            fechaBaja: [unFinanciador.fechaBaja],
-            activo: [unFinanciador.activo]
-        });
+        if (unFinanciador) {
+            return this.formBuilder.group({
+                entidad: [unFinanciador.entidad],
+                ranking: [unFinanciador.ranking],
+                fechaAlta: [unFinanciador.fechaAlta],
+                fechaBaja: [unFinanciador.fechaBaja],
+                activo: [unFinanciador.activo]
+            });
+        }
+        else {
+            return this.formBuilder.group({
+                entidad: [''],
+                ranking: [''],
+                fechaAlta: [''],
+                fechaBaja: [''],
+                activo: ['']
+            });
+        }
     };
     PacienteUpdateComponent.prototype.iniRelacion = function (unaRelacion) {
         debugger;

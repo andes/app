@@ -176,7 +176,6 @@ export class PacienteUpdateComponent implements OnInit {
                 }),
                 ranking: [unaDireccion.ranking],
                 codigoPostal: [unaDireccion.codigoPostal],
-                geoReferencia: [],
                 ultimaActualizacion: [unaDireccion.ultimaActualizacion],
                 activo: [unaDireccion.activo]
             })
@@ -190,7 +189,6 @@ export class PacienteUpdateComponent implements OnInit {
                 }),
                 ranking: [],
                 codigoPostal: [''],
-                geoReferencia: [''],
                 ultimaActualizacion: [''],
                 activo: [true]
             })
@@ -226,13 +224,23 @@ export class PacienteUpdateComponent implements OnInit {
         // form Financiador u obra Social
         let cant = 0;
         let fecha = new Date();
-        return this.formBuilder.group({
-            entidad: [unFinanciador.entidad],
-            ranking: [unFinanciador.ranking],
-            fechaAlta: [unFinanciador.fechaAlta],
-            fechaBaja: [unFinanciador.fechaBaja],
-            activo: [unFinanciador.activo]
-        });
+        if(unFinanciador){
+            return this.formBuilder.group({
+                entidad: [unFinanciador.entidad],
+                ranking: [unFinanciador.ranking],
+                fechaAlta: [unFinanciador.fechaAlta],
+                fechaBaja: [unFinanciador.fechaBaja],
+                activo: [unFinanciador.activo]
+            });
+        }else{
+            return this.formBuilder.group({
+            entidad: [''],
+            ranking: [''],
+            fechaAlta: [''],
+            fechaBaja: [''],
+            activo: ['']
+        });  
+        }
     }
 
     iniRelacion(unaRelacion ? ) {
