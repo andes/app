@@ -178,7 +178,7 @@
                             <div class="row list-group-item" [formGroupName]="i">
                                 <span class="badge" (click)="removeFinanciador(i)">x</span>
                                 <div class="col-sm-4">
-                                    <label> Obra Solcial: </label>
+                                    <label> Obra Social: </label>
                                     <select class="form-control" formControlName="entidad">
                                         <option value="">...</option>
                                         <option *ngFor="let obraSocial of obrasSociales" [ngValue]="obraSocial" >{{obraSocial.nombre}}</option>
