@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
 @Component({
     selector: 'organizaciones',
     templateUrl: 'organizacion.html'
