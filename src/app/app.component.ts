@@ -1,22 +1,28 @@
-import {
-    Component
-} from '@angular/core';
+import { Component } from '@angular/core';
+import { PlexService } from 'andes-plex/src/lib/core/service';
+import { SidebarItem } from 'andes-plex/src/lib/app/sidebar-item.class';
 
 @Component({
     selector: 'my-app',
-    template: `<div class="masthead">
-                <h1><img src="andes.png" width="60px" height="60px"> ANDES</h1>
-                    <nav>
-                        <ul class="nav nav-pills">
-                            <li><a routerLink="/profesional">Profesional</a></li>
-                            <li><a routerLink="/organizacion" routerLinkActive="active">Organizacion</a></li>
-                            <li><a routerLink="/especialidad">Especialidad</a></li>
-                            <li><a routerLink="/pacientes">Paciente</a></li>
-                        </ul>
-                    </nav>
-                    <div class="row">&nbsp;</div>
-                    <router-outlet></router-outlet>
-                </div>
-                `
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
-export class AppComponent {}
+export class AppComponent {
+    constructor(public plex: PlexService) { }
+    ngOnInit() {
+        //Cargo el listado de componentes
+        this.loadSideBar();
+    }
+
+    loadSideBar() {
+        let items = [
+        new SidebarItem('Inicio', 'creation', '/inicio'),
+        new SidebarItem('Organizacion', 'hospital-building', '/organizacion'),
+        new SidebarItem('Profesional', 'human-male', '/profesional'),
+        new SidebarItem('Especialidad', 'certificate', '/especialidad'),
+        new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),
+        new SidebarItem('Turnos', 'calendar-clock', '/turnos')
+        ];
+        this.plex.initStaticItems(items);
+    }
+}

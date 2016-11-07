@@ -13,18 +13,15 @@
         "tsconfig": "tsconfig.json",
         "prefix": "app",
         "mobile": false,
-        "scripts": [
-            "../node_modules/jquery/dist/jquery.js",
-            "../node_modules/tether/dist/js/tether.js",
-            "../node_modules/bootstrap/dist/js/bootstrap.js"
-        ],
+        "scripts": [],
         "styles": [
             "css.app.component.css",
-            "styles.css",
             "../node_modules/bootstrap/dist/css/bootstrap.css",
             "../node_modules/primeng/resources/themes/omega/theme.css",
             "../node_modules/primeng/resources/primeng.min.css",
-            "fonts/css/font-awesome.min.css"
+            "fonts/css/font-awesome.min.css",
+            "styles.less",
+            "styles.sass"
         ],
         "environments": {
             "source": "environments/environment.ts",
