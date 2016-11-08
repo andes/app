@@ -1,4 +1,4 @@
-import { ConfigPrestacionComponent } from './components/turnos/configPrestacion.component';
+import { PlantillaComponent } from './components/turnos/plantilla.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -13,7 +13,7 @@ const appRoutes: Routes = [
   { path: 'profesional', component: ProfesionalComponent },
   { path: 'especialidad', component: EspecialidadComponent },
   { path: 'paciente', component: PacienteComponent},
-  { path: 'turnos', component: ConfigPrestacionComponent},
+  { path: 'turnos', component: PlantillaComponent},
   { path: '**', redirectTo: "inicio" } 
 ];
 

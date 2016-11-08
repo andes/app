@@ -1,4 +1,4 @@
-import { IConfigPrestacion } from './../interfaces/IConfigPrestacion';
+import { IConfigPrestacion } from './../../interfaces/turnos/IConfigPrestacion';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';

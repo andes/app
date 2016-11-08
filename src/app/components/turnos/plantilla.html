@@ -1,0 +1,55 @@
+<form [formGroup]="form1">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Tipos de Prestación</label>
+            <plex-select formControlName="prestaciones" (get-data)="loadPrestaciones($event)" placeholder="Seleccione las prestaciones" [multiple]="true">
+            </plex-select>
+        </div>
+        <div class="col-md-6">
+            <label>Profesionales</label>
+            <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label>Consultorio</label>
+            <plex-select formControlName="consultorio" (get-data)="loadConsultorios($event)" placeholder="Seleccione un consultorio">
+            </plex-select>
+        </div>
+        <div class="col-md-6">
+            <label>Descripcion</label>
+            <plex-text formControlName="descripcion" placeholder="ingrese una descripcion">
+            </plex-text>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <plex-button label="Agregar" icon="content-save" (click)="addBloque(form1.value, form1.valid)" ></plex-button>
+        </div>
+    </div>
+    {{bloqueActivo}}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group">
+                <a *ngFor="let unBloque of ejemplo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
+                    {{unBloque.descripcion}}
+                </a>
+            </div>   
+        </div>
+        <div class="col-md-8">
+            <plex-box type="success" title="Este es el título">
+                <div formArrayName="bloques">
+                    
+                    <div [formGroupName]="bloqueActivo">
+                        {{bloqueActivo}}
+                        <input type="text" class="form-control" [formControlName]="'descripcion'" placeholder="Ingresar valor...">
+                    </div>
+                </div>
+                
+            </plex-box>
+
+        </div>
+    </div>
+
+</form>

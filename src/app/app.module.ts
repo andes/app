@@ -1,5 +1,9 @@
+import { ConsultorioService } from './services/turnos/consultorio.service';
+import { PrestacionService } from './services/turnos/prestacion.service';
+import { PlantillaService } from './services/turnos/plantilla.service';
+import { PlantillaComponent } from './components/turnos/plantilla.component';
 import { ConfigPrestacionComponent } from './components/turnos/configPrestacion.component';
-import { ConfigPrestacionService } from './services/configPrestacion.service';
+import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { HttpModule } from '@angular/http';
 import { InicioComponent } from './components/inicio/inicio.component';
 
@@ -62,7 +66,7 @@ import { PlexService } from 'andes-plex/src/lib/core/service';
               ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
               PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
-              ConfigPrestacionComponent
+              ConfigPrestacionComponent, PlantillaComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -77,8 +81,12 @@ import { PlexService } from 'andes-plex/src/lib/core/service';
               PacienteService, 
               FinanciadorService,  
               PlexService,
+              PrestacionService,
               appRoutingProviders,
-              ConfigPrestacionService
+              ConfigPrestacionService,
+              PlantillaComponent,
+              PlantillaService,
+              ConsultorioService
   ]
 
 })

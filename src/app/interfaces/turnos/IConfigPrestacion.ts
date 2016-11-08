@@ -1,5 +1,5 @@
 import { IPrestacion } from './IPrestacion';
-import { IUbicacion } from './IUbicacion';
+import { IUbicacion } from './../IUbicacion';
 
 export interface IConfigPrestacion{
     prestacion: IPrestacion,
