@@ -1,55 +1,191 @@
-<form [formGroup]="form1">
-    <div class="row">
-        <div class="col-md-6">
-            <label>Tipos de Prestación</label>
-            <plex-select formControlName="prestaciones" (get-data)="loadPrestaciones($event)" placeholder="Seleccione las prestaciones" [multiple]="true">
-            </plex-select>
-        </div>
-        <div class="col-md-6">
-            <label>Profesionales</label>
-            <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true">
-            </plex-select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <label>Consultorio</label>
-            <plex-select formControlName="consultorio" (get-data)="loadConsultorios($event)" placeholder="Seleccione un consultorio">
-            </plex-select>
-        </div>
-        <div class="col-md-6">
-            <label>Descripcion</label>
-            <plex-text formControlName="descripcion" placeholder="ingrese una descripcion">
-            </plex-text>
-        </div>
-    </div>
+<form>
     <div class="row">
         <div class="col-md-4">
-            <plex-button label="Agregar" icon="content-save" (click)="addBloque(form1.value, form1.valid)" ></plex-button>
-        </div>
-    </div>
-    {{bloqueActivo}}
-    <div class="row">
-        <div class="col-md-4">
-            <div class="list-group">
-                <a *ngFor="let unBloque of ejemplo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
-                    {{unBloque.descripcion}}
-                </a>
-            </div>   
+             <div class="row">
+                 <div class="col-md-12">
+                    <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
+                    </plex-text>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-12">
+                    <plex-select [(ngModel)]="prestaciones" name="prestaciones" label="Tipos de Prestación" (get-data)="loadPrestaciones($event)" placeholder="Seleccione las prestaciones" [multiple]="true">       
+                    </plex-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-select  label="Consultorio" [(ngModel)]="modelo.consultorio" name="consultorio" (get-data)="loadConsultorios($event)" placeholder="Seleccione un consultorio">
+                    </plex-select> 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-select [(ngModel)]="profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true">
+                    </plex-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <plex-text [(ngModel)]="horaInicio" name="horaInicio" label="Hora Inicio">
+                    </plex-text>
+                </div>
+                <div class="col-md-6">
+                    <plex-text [(ngModel)]="horaFin" name="horaFin" label="Hora Fin">
+                    </plex-text>
+                </div>
+            </div>
+             <div class="row">
+                 <div class="col-md-12">
+                    <div class="list-group">
+                        <a *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
+                            {{unBloque.descripcion}}
+                        </a>
+                    </div>  
+                 </div>
+             </div>
         </div>
         <div class="col-md-8">
-            <plex-box type="success" title="Este es el título">
-                <div formArrayName="bloques">
-                    
-                    <div [formGroupName]="bloqueActivo">
-                        {{bloqueActivo}}
-                        <input type="text" class="form-control" [formControlName]="'descripcion'" placeholder="Ingresar valor...">
+            <div *ngIf="elementoActivo">
+                <plex-box type="success" title="{{elementoActivo.descripcion}}" >
+                    <div class="row">
+                        <div class="col-md-6">
+                            <plex-text [(ngModel)]="elementoActivo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
+                            </plex-text>
+                        </div>
                     </div>
-                </div>
-                
-            </plex-box>
-
+                    <div class="row">
+                        <div class="col-md-6">
+                            <plex-text [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" label="Hora Inicio">
+                            </plex-text>
+                        </div>
+                        <div class="col-md-6">
+                            <plex-text [(ngModel)]="elementoActivo.horaFin" name="horaFin" label="Hora Fin">
+                            </plex-text>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <plex-text [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" label="Cantidad de Turnos" placeholder="Cantidad">
+                            </plex-text>
+                        </div>
+                        <div class="col-md-6">
+                            <plex-text [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" label="Duración del Turno" placeholder="ingrese una descripcion">
+                            </plex-text>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <plex-box type="warning" title="Acceso Directo" >
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Del día</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirecto" name="deldiaAccesoDirecto" (keyup)="verificarCantidad($event)" placeholder="Cant">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirecto" name="deldiaAccesoDirecto" placeholder="%">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> % </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Programados</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="Cant">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="%">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> % </label>
+                                    </div>
+                                </div>
+                            </plex-box>
+                        </div>
+                        <div class="col-md-6">
+                            <plex-box type="warning" title="Reservados" >
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Del día</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaReservado" name="deldiaReservado" placeholder="Cant">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosReservado" name="programadosReservado" placeholder="%">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> % </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Programados</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="Cant">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="%">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> % </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Autocitados</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAutocitado" name="programadosAutocitado" placeholder="Cant">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <plex-text [(ngModel)]="elementoActivo.programadosAutocitado" name="programadosAutocitado" placeholder="%">
+                                        </plex-text>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label> % </label>
+                                    </div>
+                                </div>
+                            </plex-box>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="activo"></plex-bool>
+                        </div>
+                        <div class="col-md-8" *ngIf="elementoActivo.pacienteSimultaneos">
+                            <label class="col-md-4 control-label">Cant Simultaneos</label>
+                            <div class="col-md-8">
+                                <plex-text [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="">
+                                </plex-text>
+                            </div>
+                        </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="activo"></plex-bool>
+                        </div>
+                    </div>
+                </plex-box>
+            </div>
         </div>
     </div>
-
 </form>

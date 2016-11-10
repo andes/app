@@ -14,56 +14,41 @@ import { Observable } from 'rxjs/Rx';
 })
 export class PlantillaComponent {
     @Output() data: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
-    private form1: FormGroup;
-    public modelo : any;
-    public ejemplo : any;
+    //private form1: FormGroup;
+    public modelo : any = {};
+    public prueba : any = {};
+    public prestaciones : any = [];
+    public consultorios : any = [];
     public bloqueActivo : Number = 0;
-    public elementoActivo : any;
+    public elementoActivo : any = { descripcion: null };
     constructor(private formBuilder: FormBuilder, public plex: PlexService, 
     public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
     public servicioConsultorio: ConsultorioService) { }
     
     ngOnInit() {
-        // this.form1 = this.formBuilder.group({
-        //     deldiaAccesoDirecto: false,
-        //     deldiaReservado: false,
-        //     deldiaAutocitado: false,
-        //     programadosAccesoDirecto:false,
-        //     programadosReservado: false,
-        //     programadosAutocitado: false,
-        //     prestacion: null
-        // });
-
-        this.form1 = this.formBuilder.group({
-           prestaciones: [],
-           profesionales: [],
-           consultorio: {id: null, nombre: null },
-           descripcion: [''],
-           bloques: this.formBuilder.array(
-               [
-               this.formBuilder.group({
-                   descripcion: [''],
-               })
-            ]
-           )
-        });
-
-        this.ejemplo = {
+        //this.loadConsultorios();
+        //console.log(this.consultorios);
+        //this.consultorios = [ {_id: "581785cfb1ce346ffc859382", descripcion:"Descripción Consultorio 1",id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},{id:"581785cfb1ce346ffc859383",nombre:"Consultorio21"}]
+        this.modelo = {
             prestaciones: [{"id":"581792ad3d52685d1ecdaa05", "nombre" : "Cardiología adultos"}],
             profesionales: [{id:"1", nombre:"Juan Perez"}, {id:"2", nombre:"Sonia Martinez"}],
-            consultorio: {id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},
+            consultorio: {_id: "581785cfb1ce346ffc859382", descripcion:"Descripción Consultorio 1",id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},
             descripcion: "una descripcion",
+            horaInicio: Date.now(),
+            horaFin: Date.now(),
             bloques: [{
                     horaInicio: Date.now(),
                     horaFin: Date.now(),
                     cantidadTurnos: 10,
-                    descripcion: "lalala",
+                    descripcion: "Bloque 1",
                     prestacion: {id:"2", nombre:"Nefrología"},
                     
                     deldiaAccesoDirecto: 2,
-                    deldiaReservado: 4,
                     programadosAccesoDirecto: 4,
-                    programadosReservado: 0,
+                    
+                    deldiaReservado: 4,
+                    programadosReservado: 20,
+                    
                     programadosAutocitado: 0,
 
                     pacienteSimultaneos: false,
@@ -74,13 +59,15 @@ export class PlantillaComponent {
                     horaInicio: Date.now(),
                     horaFin: Date.now(),
                     cantidadTurnos: 20,
-                    descripcion: "prueba 2",
+                    descripcion: "Bloque 2",
                     prestacion: {id:"2", nombre:"Nefrología"},
                     
-                    deldiaAccesoDirecto: 2,
-                    deldiaReservado: 4,
-                    programadosAccesoDirecto: 4,
-                    programadosReservado: 0,
+                    deldiaAccesoDirecto: 6,
+                    programadosAccesoDirecto: 7,
+                    
+                    deldiaReservado: 15,
+                    programadosReservado: 5,
+                    
                     programadosAutocitado: 0,
 
                     pacienteSimultaneos: false,
@@ -89,20 +76,18 @@ export class PlantillaComponent {
                 }
             ]
         }
+        this.elementoActivo = this.modelo.bloques[0];
+        // for (let i = 0; i < this.modelo.bloques.length; i++){
+        //     (<FormArray>this.form1.controls['bloques']).push(this.initBloque());
+        // }
 
-        this.form1.patchValue(this.ejemplo, false);
-        this.form1.valueChanges.subscribe((value) => {
-            this.modelo = value;
-            //alert(this.modelo.prestaciones[0].nombre);            
-            // this.servicioConfig.get(this.modelo2.id)
-            // .subscribe(
-            // configuraciones => this.configuraciones = configuraciones, //Bind to view
-            // err => {
-            //     if (err) {
-            //         console.log(err);
-            //     }
-            // });
-        });
+        //this.form1.patchValue(this.modelo);
+        
+        // this.form1.valueChanges.subscribe((value) => {
+        //     this.modelo = value;
+            
+        // });
+        
     }
 
     loadPrestaciones(event) {
@@ -122,6 +107,10 @@ export class PlantillaComponent {
     
     activarBloque(indice: number){
         this.bloqueActivo = indice; 
-        this.elementoActivo = this.ejemplo.bloques[indice];
+        this.elementoActivo = this.modelo.bloques[indice];
+    }
+
+    verificarCantidad(event:any){
+        alert(this.elementoActivo.descripcion);
     }
 }
