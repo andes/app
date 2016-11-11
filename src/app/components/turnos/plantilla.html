@@ -1,37 +1,44 @@
 <form>
     <div class="row">
         <div class="col-md-4">
+            <div class="row">
+                {{plantillas | json}}
+                 <div class="col-md-12">
+                    <plex-select [(ngModel)]="plantillas" name="plantillas.descripcion" (get-data)="loadPlantillas($event)" label="Plantillas" placeholder="Seleccione una plantilla">
+                    </plex-select>
+                </div>
+             </div>
              <div class="row">
                  <div class="col-md-12">
-                    <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
+                    <plex-text [(ngModel)]="modelo.descripcion" name="modelo.descripcion" label="Descripción" placeholder="ingrese una descripcion">
                     </plex-text>
                 </div>
              </div>
              <div class="row">
                 <div class="col-md-12">
-                    <plex-select [(ngModel)]="prestaciones" name="prestaciones" label="Tipos de Prestación" (get-data)="loadPrestaciones($event)" placeholder="Seleccione las prestaciones" [multiple]="true">       
+                    <plex-select [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Tipos de Prestación" (get-data)="loadPrestaciones($event)" placeholder="Seleccione las prestaciones" [multiple]="true">       
                     </plex-select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <plex-select  label="Consultorio" [(ngModel)]="modelo.consultorio" name="consultorio" (get-data)="loadConsultorios($event)" placeholder="Seleccione un consultorio">
+                    <plex-select [(ngModel)]="modelo.consultorio" name="consultorio" (get-data)="loadConsultorios($event)" label="Consultorio" placeholder="Seleccione un consultorio">
                     </plex-select> 
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <plex-select [(ngModel)]="profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true">
+                    <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true">
                     </plex-select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <plex-text [(ngModel)]="horaInicio" name="horaInicio" label="Hora Inicio">
+                    <plex-text [(ngModel)]="modelo.horaInicio" name="modelo.horaInicio" label="Hora Inicio">
                     </plex-text>
                 </div>
                 <div class="col-md-6">
-                    <plex-text [(ngModel)]="horaFin" name="horaFin" label="Hora Fin">
+                    <plex-text [(ngModel)]="modelo.horaFin" name="modelo.horaFin" label="Hora Fin">
                     </plex-text>
                 </div>
             </div>
@@ -45,13 +52,17 @@
                  </div>
              </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" *ngIf="bloqueActivo >= 0">
             <div *ngIf="elementoActivo">
                 <plex-box type="success" title="{{elementoActivo.descripcion}}" >
                     <div class="row">
                         <div class="col-md-6">
                             <plex-text [(ngModel)]="elementoActivo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
                             </plex-text>
+                        </div>
+                        <div class="col-md-6">
+                            <plex-select [(ngModel)]="elementoActivo.prestacion" name="prestacion" (get-data)="loadPrestaciones($event)" label="Prestacion" placeholder="">
+                            </plex-select>
                         </div>
                     </div>
                     <div class="row">
@@ -84,11 +95,11 @@
                                         <label>Del día</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirecto" name="deldiaAccesoDirecto" (keyup)="verificarCantidad($event)" placeholder="Cant">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirecto" (keyup)="cambiadeldiaAccesoDirecto($event)" name="deldiaAccesoDirecto" placeholder="Cant">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirecto" name="deldiaAccesoDirecto" placeholder="%">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaAccesoDirectoPorc" (keyup)="cambiadeldiaAccesoDirectoPorc($event)" name="deldiaAccesoDirectoPorc" placeholder="%">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-2">
@@ -100,11 +111,11 @@
                                         <label>Programados</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="Cant">
+                                        <plex-text [(ngModel)]="elementoActivo.progAccesoDirecto" (keyup)="cambiaprogAccesoDirecto($event)" name="programadosAccesoDirecto" placeholder="Cant">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="%">
+                                        <plex-text [(ngModel)]="elementoActivo.progAccesoDirectoPorc" (keyup)="cambiaprogAccesoDirectoPorc($event)" name="progAccesoDirectoPorc" placeholder="%">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-2">
@@ -120,11 +131,11 @@
                                         <label>Del día</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.deldiaReservado" name="deldiaReservado" placeholder="Cant">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaReservado" (keyup)="cambiadeldiaReservado($event)" name="deldiaReservado" placeholder="Cant">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosReservado" name="programadosReservado" placeholder="%">
+                                        <plex-text [(ngModel)]="elementoActivo.deldiaReservadoPorc" (keyup)="cambiadeldiaReservadoPorc($event)" name="deldiaReservadooPorc" placeholder="%">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-2">
@@ -136,11 +147,11 @@
                                         <label>Programados</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="Cant">
+                                        <plex-text [(ngModel)]="elementoActivo.progReservado" (keyup)="cambiaprogReservado($event)" name="progReservado" placeholder="Cant">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAccesoDirecto" name="programadosAccesoDirecto" placeholder="%">
+                                        <plex-text [(ngModel)]="elementoActivo.progReservadoPorc" (keyup)="cambiaprogReservadoPorc($event)" name="progReservadoPorc" placeholder="%">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-2">
@@ -152,11 +163,11 @@
                                         <label>Autocitados</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAutocitado" name="programadosAutocitado" placeholder="Cant">
+                                        <plex-text [(ngModel)]="elementoActivo.progAutocitado" (keyup)="cambiaprogAutocitado($event)" name="progAutocitado" placeholder="Cant">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-3">
-                                        <plex-text [(ngModel)]="elementoActivo.programadosAutocitado" name="programadosAutocitado" placeholder="%">
+                                        <plex-text [(ngModel)]="elementoActivo.progAutocitadoPorc" (keyup)="cambiaprogAutocitadoPorc($event)" name="progAutocitadoPorc" placeholder="%">
                                         </plex-text>
                                     </div>
                                     <div class="col-md-2">
@@ -172,8 +183,8 @@
                             <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="activo"></plex-bool>
                         </div>
                         <div class="col-md-8" *ngIf="elementoActivo.pacienteSimultaneos">
-                            <label class="col-md-4 control-label">Cant Simultaneos</label>
-                            <div class="col-md-8">
+                            <label class="col-md-5 control-label">Cant Simultaneos</label>
+                            <div class="col-md-7">
                                 <plex-text [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="">
                                 </plex-text>
                             </div>

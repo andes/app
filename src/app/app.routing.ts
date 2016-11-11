@@ -13,7 +13,7 @@ const appRoutes: Routes = [
   { path: 'profesional', component: ProfesionalComponent },
   { path: 'especialidad', component: EspecialidadComponent },
   { path: 'paciente', component: PacienteComponent},
-  { path: 'turnos', component: PlantillaComponent},
+  { path: 'plantillas', component: PlantillaComponent},
   { path: '**', redirectTo: "inicio" } 
 ];
 

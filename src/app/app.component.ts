@@ -21,7 +21,7 @@ export class AppComponent {
         new SidebarItem('Profesional', 'human-male', '/profesional'),
         new SidebarItem('Especialidad', 'certificate', '/especialidad'),
         new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),
-        new SidebarItem('Turnos', 'calendar-clock', '/turnos')
+        new SidebarItem('Plantillas', 'calendar-clock', '/plantillas')
         ];
         this.plex.initStaticItems(items);
     }

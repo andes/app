@@ -1,3 +1,4 @@
+import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { ConsultorioService } from './../../services/turnos/consultorio.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { PlexService } from 'andes-plex/src/lib/core/service';
@@ -14,46 +15,44 @@ import { Observable } from 'rxjs/Rx';
 })
 export class PlantillaComponent {
     @Output() data: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
-    //private form1: FormGroup;
+    public plantillas: any = [];
     public modelo : any = {};
-    public prueba : any = {};
     public prestaciones : any = [];
     public consultorios : any = [];
+    public bloques : any = [];
     public bloqueActivo : Number = 0;
     public elementoActivo : any = { descripcion: null };
     constructor(private formBuilder: FormBuilder, public plex: PlexService, 
     public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
-    public servicioConsultorio: ConsultorioService) { }
+    public servicioConsultorio: ConsultorioService, public ServicioPlantilla: PlantillaService) { }
     
     ngOnInit() {
-        //this.loadConsultorios();
-        //console.log(this.consultorios);
-        //this.consultorios = [ {_id: "581785cfb1ce346ffc859382", descripcion:"Descripción Consultorio 1",id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},{id:"581785cfb1ce346ffc859383",nombre:"Consultorio21"}]
         this.modelo = {
             prestaciones: [{"id":"581792ad3d52685d1ecdaa05", "nombre" : "Cardiología adultos"}],
             profesionales: [{id:"1", nombre:"Juan Perez"}, {id:"2", nombre:"Sonia Martinez"}],
             consultorio: {_id: "581785cfb1ce346ffc859382", descripcion:"Descripción Consultorio 1",id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},
-            descripcion: "una descripcion",
+            descripcion: "Plantilla 1",
             horaInicio: Date.now(),
             horaFin: Date.now(),
             bloques: [{
                     horaInicio: Date.now(),
                     horaFin: Date.now(),
-                    cantidadTurnos: 10,
+                    cantidadTurnos: 20,
                     descripcion: "Bloque 1",
                     prestacion: {id:"2", nombre:"Nefrología"},
                     
-                    deldiaAccesoDirecto: 2,
-                    programadosAccesoDirecto: 4,
+                    deldiaAccesoDirecto: 3,
+                    progAccesoDirecto: 3,
                     
-                    deldiaReservado: 4,
-                    programadosReservado: 20,
+                    deldiaReservado: 3,
+                    progReservado: 3,
                     
-                    programadosAutocitado: 0,
+                    progAutocitado: 8,
 
                     pacienteSimultaneos: false,
                     cantidadSimultaneos: 0,
-                    citarPorBloque: false
+                    citarPorBloque: false,
+
                 },
                 {
                     horaInicio: Date.now(),
@@ -63,12 +62,12 @@ export class PlantillaComponent {
                     prestacion: {id:"2", nombre:"Nefrología"},
                     
                     deldiaAccesoDirecto: 6,
-                    programadosAccesoDirecto: 7,
+                    progAccesoDirecto: 7,
                     
                     deldiaReservado: 15,
-                    programadosReservado: 5,
+                    progReservado: 5,
                     
-                    programadosAutocitado: 0,
+                    progAutocitado: 0,
 
                     pacienteSimultaneos: false,
                     cantidadSimultaneos: 0,
@@ -76,18 +75,13 @@ export class PlantillaComponent {
                 }
             ]
         }
-        this.elementoActivo = this.modelo.bloques[0];
-        // for (let i = 0; i < this.modelo.bloques.length; i++){
-        //     (<FormArray>this.form1.controls['bloques']).push(this.initBloque());
-        // }
+        //this.elementoActivo = this.modelo.bloques[0];
+        this.calculosInicio();
+        this.bloqueActivo = -1;
+    }
 
-        //this.form1.patchValue(this.modelo);
-        
-        // this.form1.valueChanges.subscribe((value) => {
-        //     this.modelo = value;
-            
-        // });
-        
+    loadPlantillas(event) {
+        this.ServicioPlantilla.get().subscribe(event.callback);       
     }
 
     loadPrestaciones(event) {
@@ -110,7 +104,60 @@ export class PlantillaComponent {
         this.elementoActivo = this.modelo.bloques[indice];
     }
 
-    verificarCantidad(event:any){
-        alert(this.elementoActivo.descripcion);
+    cambiadeldiaAccesoDirecto(event:any){
+        console.log(event);
+        this.elementoActivo.deldiaAccesoDirectoPorc = (this.elementoActivo.deldiaAccesoDirecto * 100) / this.elementoActivo.cantidadTurnos;
+    }
+
+    cambiadeldiaAccesoDirectoPorc(event:any){
+        this.elementoActivo.deldiaAccesoDirecto = (this.elementoActivo.deldiaAccesoDirectoPorc * this.elementoActivo.cantidadTurnos) / 100;
+    }
+
+    cambiaprogAccesoDirecto(event:any){
+        this.elementoActivo.progAccesoDirectoPorc = (this.elementoActivo.progAccesoDirecto * 100) / this.elementoActivo.cantidadTurnos;
+    }
+
+    cambiaprogAccesoDirectoPorc(event:any){
+        this.elementoActivo.progAccesoDirecto = (this.elementoActivo.progAccesoDirectoPorc * this.elementoActivo.cantidadTurnos) / 100;
+    }
+    
+    cambiadeldiaReservado(event:any){
+        this.elementoActivo.deldiaReservadoPorc = (this.elementoActivo.deldiaReservado * 100) / this.elementoActivo.cantidadTurnos;
+    }
+
+    cambiadeldiaReservadoPorc(event:any){
+        this.elementoActivo.deldiaReservado = (this.elementoActivo.deldiaReservadoPorc * this.elementoActivo.cantidadTurnos) / 100;
+    }
+
+    cambiaprogReservado(event:any){
+        this.elementoActivo.progReservadoPorc = (this.elementoActivo.progReservado * 100) / this.elementoActivo.cantidadTurnos;
+    }
+
+    cambiaprogReservadoPorc(event:any){
+        this.elementoActivo.progReservado = (this.elementoActivo.progReservadoPorc * this.elementoActivo.cantidadTurnos) / 100;
+    }
+
+    cambiaprogAutocitado(event:any){
+        this.elementoActivo.progAutocitadoPorc = (this.elementoActivo.progAutocitado * 100) / this.elementoActivo.cantidadTurnos;
+    }
+
+    cambiaprogAutocitadoPorc(event:any){
+        this.elementoActivo.progAutocitado = (this.elementoActivo.progAutocitadoPorc * this.elementoActivo.cantidadTurnos) / 100;
+    }
+
+    metodo(event){
+        alert('click');
+    }
+
+    calculosInicio(){
+        let bloques = this.modelo.bloques;
+        bloques.forEach((bloque, index) => {
+            bloque.deldiaAccesoDirectoPorc = (bloque.deldiaAccesoDirecto * 100) / bloque.cantidadTurnos;
+            bloque.progAccesoDirectoPorc = (bloque.progAccesoDirecto * 100) / bloque.cantidadTurnos;
+            bloque.deldiaReservadoPorc = (bloque.deldiaReservado * 100) / bloque.cantidadTurnos;
+            bloque.progReservadoPorc = (bloque.progReservado * 100) / bloque.cantidadTurnos;
+            bloque.progAutocitadoPorc = (bloque.progAutocitado * 100) / bloque.cantidadTurnos;
+            //console.log(bloque);
+        });
     }
 }

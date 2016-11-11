@@ -3,12 +3,14 @@ import { IPrestacion } from './IPrestacion';
 import { IBloque } from './IBloque';
 
 export interface IPlantilla{
-    prestacion: IPrestacion[],
+    id: String,
+    descripcion: String,
+    prestaciones: IPrestacion[],
     profesionales: IProfesional[],
     espacioFisico:  {
         id: String,
         nombre: String
     },
-    descripcion: String,
+    
     bloques: IBloque[]
 }
