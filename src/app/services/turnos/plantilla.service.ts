@@ -8,6 +8,7 @@ export class PlantillaService {
     constructor(private http: Http) { }
     
     get(): Observable<IPlantilla[]> {
+        console.log("entro");
        return this.http.get(this.plantillaUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/

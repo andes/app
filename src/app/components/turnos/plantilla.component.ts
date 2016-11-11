@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Rx';
 })
 export class PlantillaComponent {
     @Output() data: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
-    public plantillas: any = [];
+    public plantilla: any = {};
     public modelo : any = {};
     public prestaciones : any = [];
     public consultorios : any = [];

@@ -2,9 +2,8 @@
     <div class="row">
         <div class="col-md-4">
             <div class="row">
-                {{plantillas | json}}
                  <div class="col-md-12">
-                    <plex-select [(ngModel)]="plantillas" name="plantillas.descripcion" (get-data)="loadPlantillas($event)" label="Plantillas" placeholder="Seleccione una plantilla">
+                    <plex-select [(ngModel)]="plantilla" name="plantilla" id-field="_id" label-field="descripcion" (get-data)="loadPlantillas($event)" label="Plantillas" placeholder="Seleccione una plantilla">
                     </plex-select>
                 </div>
              </div>
@@ -34,12 +33,12 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <plex-text [(ngModel)]="modelo.horaInicio" name="modelo.horaInicio" label="Hora Inicio">
-                    </plex-text>
+                    <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" name="modelo.horaInicio" label="Hora Inicio">
+                    </plex-datetime>
                 </div>
                 <div class="col-md-6">
-                    <plex-text [(ngModel)]="modelo.horaFin" name="modelo.horaFin" label="Hora Fin">
-                    </plex-text>
+                    <plex-datetime type="time" [(ngModel)]="modelo.horaFin" name="modelo.horaFin" label="Hora Fin">
+                    </plex-datetime>
                 </div>
             </div>
              <div class="row">
@@ -67,12 +66,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <plex-text [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" label="Hora Inicio">
-                            </plex-text>
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" label="Hora Inicio">
+                            </plex-datetime>
                         </div>
                         <div class="col-md-6">
-                            <plex-text [(ngModel)]="elementoActivo.horaFin" name="horaFin" label="Hora Fin">
-                            </plex-text>
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" label="Hora Fin">
+                            </plex-datetime>
                         </div>
                     </div>
                     
