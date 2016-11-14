@@ -14,6 +14,13 @@ export class PlantillaService {
            .catch(this.handleError); //...errors if any*/
     }
 
+    getById(id:String): Observable<IPlantilla[]> {
+        console.log("entro");
+       return this.http.get(this.plantillaUrl+"/"+id)
+           .map((res:Response) => res.json())
+           .catch(this.handleError); //...errors if any*/
+    }
+
     handleError(error: any){
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');

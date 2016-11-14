@@ -27,57 +27,14 @@ export class PlantillaComponent {
     public servicioConsultorio: ConsultorioService, public ServicioPlantilla: PlantillaService) { }
     
     ngOnInit() {
-        this.modelo = {
-            prestaciones: [{"id":"581792ad3d52685d1ecdaa05", "nombre" : "Cardiología adultos"}],
-            profesionales: [{id:"1", nombre:"Juan Perez"}, {id:"2", nombre:"Sonia Martinez"}],
-            consultorio: {_id: "581785cfb1ce346ffc859382", descripcion:"Descripción Consultorio 1",id:"581785cfb1ce346ffc859382",nombre:"Consultorio 1"},
-            descripcion: "Plantilla 1",
-            horaInicio: Date.now(),
-            horaFin: Date.now(),
-            bloques: [{
-                    horaInicio: Date.now(),
-                    horaFin: Date.now(),
-                    cantidadTurnos: 20,
-                    descripcion: "Bloque 1",
-                    prestacion: {id:"2", nombre:"Nefrología"},
-                    
-                    deldiaAccesoDirecto: 3,
-                    progAccesoDirecto: 3,
-                    
-                    deldiaReservado: 3,
-                    progReservado: 3,
-                    
-                    progAutocitado: 8,
-
-                    pacienteSimultaneos: false,
-                    cantidadSimultaneos: 0,
-                    citarPorBloque: false,
-
-                },
-                {
-                    horaInicio: Date.now(),
-                    horaFin: Date.now(),
-                    cantidadTurnos: 20,
-                    descripcion: "Bloque 2",
-                    prestacion: {id:"2", nombre:"Nefrología"},
-                    
-                    deldiaAccesoDirecto: 6,
-                    progAccesoDirecto: 7,
-                    
-                    deldiaReservado: 15,
-                    progReservado: 5,
-                    
-                    progAutocitado: 0,
-
-                    pacienteSimultaneos: false,
-                    cantidadSimultaneos: 0,
-                    citarPorBloque: false
-                }
-            ]
-        }
-        //this.elementoActivo = this.modelo.bloques[0];
-        this.calculosInicio();
+        this.modelo = {nombre:""};
         this.bloqueActivo = -1;
+        // let moment = window["moment"] = require('moment/moment.js');
+        // let hoy = moment();
+        // console.log("hoy "+hoy);
+        // var fechaExamen = moment("2016 10 30", "YYYY MM DD");
+        // let diferencia = fechaExamen.diff(hoy,"days");
+        // console.log("diferencia "+diferencia);
     }
 
     loadPlantillas(event) {
@@ -97,7 +54,7 @@ export class PlantillaComponent {
     }
 
     addBloque() {
-    }
+    } 
     
     activarBloque(indice: number){
         this.bloqueActivo = indice; 
@@ -157,7 +114,14 @@ export class PlantillaComponent {
             bloque.deldiaReservadoPorc = (bloque.deldiaReservado * 100) / bloque.cantidadTurnos;
             bloque.progReservadoPorc = (bloque.progReservado * 100) / bloque.cantidadTurnos;
             bloque.progAutocitadoPorc = (bloque.progAutocitado * 100) / bloque.cantidadTurnos;
-            //console.log(bloque);
         });
+    }
+
+    cargarPlantilla(id: String){
+        this.ServicioPlantilla.getById(id).subscribe(resultado => {this.modelo = resultado;debugger;this.calculosInicio()});
+    }
+
+    seleccionaPlantilla(plantilla: any){
+        this.cargarPlantilla(plantilla.id);
     }
 }
