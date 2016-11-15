@@ -17,7 +17,7 @@ export class ConfigPrestacionService {
     }
 
     get(query: string): Observable<any[]> {
-        console.log("Buscar países que contengan: ", query);
+        console.log("Buscar prestaciones que contengan: ", query);
         return this.http.get(this.prestacionUrl)
             .map((res: Response) => res.json())
             .catch(this.handleError); //...errors if any*/

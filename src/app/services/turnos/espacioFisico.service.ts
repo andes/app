@@ -8,12 +8,12 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class ConsultorioService {
-    private consultorioUrl = 'http://localhost:3002/api/turnos/consultorio';  // URL to web api
+export class EspacioFisicoService {
+    private espacioFisicoUrl = 'http://localhost:3002/api/turnos/espacioFisico';  // URL to web api
     constructor(private http: Http) { }
     
     get(): Observable<IPrestacion[]> {
-       return this.http.get(this.consultorioUrl)
+       return this.http.get(this.espacioFisicoUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
    }
