@@ -1,5 +1,5 @@
 import { PlantillaService } from './../../services/turnos/plantilla.service';
-import { ConsultorioService } from './../../services/turnos/consultorio.service';
+import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { PlexService } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
@@ -24,7 +24,7 @@ export class PlantillaComponent {
     public elementoActivo : any = { descripcion: null };
     constructor(private formBuilder: FormBuilder, public plex: PlexService, 
     public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
-    public servicioConsultorio: ConsultorioService, public ServicioPlantilla: PlantillaService) { }
+    public servicioEspacioFisico: EspacioFisicoService, public ServicioPlantilla: PlantillaService) { }
     
     ngOnInit() {
         this.modelo = {nombre:""};
@@ -50,7 +50,7 @@ export class PlantillaComponent {
     }
 
     loadConsultorios(event) {
-        this.servicioConsultorio.get().subscribe(event.callback);       
+        this.servicioEspacioFisico.get().subscribe(event.callback);       
     }
 
     addBloque() {

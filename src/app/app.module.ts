@@ -1,4 +1,4 @@
-import { ConsultorioService } from './services/turnos/consultorio.service';
+import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
 import { PlantillaService } from './services/turnos/plantilla.service';
 import { PlantillaComponent } from './components/turnos/plantilla.component';
@@ -88,7 +88,7 @@ import { PlexService } from 'andes-plex/src/lib/core/service';
               PlantillaComponent,
               EspacioFisicoComponent,
               PlantillaService,
-              ConsultorioService
+              EspacioFisicoService
   ]
 
 })
