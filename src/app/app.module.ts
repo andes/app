@@ -1,4 +1,4 @@
-import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
+import { EspacioFisicoService } from './services/turnos/espacioFisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
 import { PlantillaService } from './services/turnos/plantilla.service';
 import { PlantillaComponent } from './components/turnos/plantilla.component';
