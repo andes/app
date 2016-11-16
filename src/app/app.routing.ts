@@ -1,5 +1,6 @@
 import { PlantillaComponent } from './components/turnos/plantilla.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico.component';
+import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   { path: 'paciente', component: PacienteComponent},
   { path: 'plantillas', component: PlantillaComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
+  { path: 'prestacion', component: PrestacionComponent},
   { path: '**', redirectTo: "inicio" } 
 ];
 
