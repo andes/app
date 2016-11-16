@@ -1,0 +1,59 @@
+<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
+    <div class="panel panel-default">
+        <div class="panel-heading">Listado de Espacios Físicos</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+
+                <div class="form_group">
+                    <div class="form-group">
+                        <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+                            <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+                            <input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscar">
+                        </div>
+                        <p-dataTable [value]="espaciosFisicos" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true">
+
+                            <p-column [style]="{'width':'15%'}" field="nombre" header="Nombre"></p-column>
+                            <p-column [style]="{'width':'30%'}" field="descripcion" header="descripcion"></p-column>
+                            <p-column [style]="{'width':'10%'}" field="activo" header="Activo">
+                                <template let-espacioFisico="rowData" pTemplate type="body">
+                                    <span>{{espacioFisico.activo ? "SI" : "NO"}}</span>
+                                </template>
+                            </p-column>
+                            <p-column header="Acciones" [style]="{'width':'25%'}">
+                                <template let-espacioFisico="rowData" pTemplate type="body">
+                                    <button type="button" class="btn btn-info" pButton (click)="onEdit(espacioFisico)" icon="fa-search">Actualizar</button>
+                                    <button type="button" class="btn btn-success" *ngIf="!espacioFisico.activo" pButton (click)="onEnable(espacioFisico)" icon="fa fa-check">Habilitar</button>
+                                    <button type="button" class="btn btn-danger" *ngIf="espacioFisico.activo" pButton (click)="onDisable(espacioFisico)" icon="fa fa-check">Deshabilitar</button>
+                                </template>
+                            </p-column>
+                        </p-dataTable>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="clear"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Espacio Físico">
+                </div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <espacio-fisico-create (data)='onReturn($event)'></espacio-fisico-create>
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <espacio-fisico-update [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></espacio-fisico-update>
+    </div>
+</div>
