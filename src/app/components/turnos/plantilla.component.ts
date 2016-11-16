@@ -1,5 +1,5 @@
 import { PlantillaService } from './../../services/turnos/plantilla.service';
-import { EspacioFisicoService } from './../../services/turnos/espacioFisico.service';
+import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { PlexService } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
