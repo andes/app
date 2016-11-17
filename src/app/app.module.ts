@@ -6,6 +6,8 @@ import { EspacioFisicoComponent } from './components/turnos/configuracion/espaci
 import { EspacioFisicoCreateComponent } from './components/turnos/configuracion/espacio-fisico-create.component';
 import { EspacioFisicoUpdateComponent } from './components/turnos/configuracion/espacio-fisico-update.component';
 
+import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component'
+
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
@@ -75,7 +77,8 @@ import { PlexService } from 'andes-plex/src/lib/core/service';
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
               PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
               ConfigPrestacionComponent, PlantillaComponent, EspacioFisicoComponent, EspacioFisicoCreateComponent,
-              EspacioFisicoUpdateComponent, PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent
+              EspacioFisicoUpdateComponent, PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
+              BuscarAgendasComponent
   ],
   bootstrap: [AppComponent],
   providers: [
