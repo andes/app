@@ -53,7 +53,7 @@ export class ConfigPrestacionComponent {
     onClick(model: IConfigPrestacion, isvalid: boolean){
         if(isvalid){
             let estOperation:Observable<IConfigPrestacion>;
-            model.prestacion = {"id":this.modelo2.id, "nombre":this.modelo2.nombre};
+            model.prestacion = {"id":this.modelo2.id, "nombre":this.modelo2.nombre, descripcion: this.modelo2.descripcion,"activo": this.modelo2.activo};
             
             estOperation = this.servicioConfig.post(model);
             estOperation.subscribe(resultado => this.data.emit(resultado));

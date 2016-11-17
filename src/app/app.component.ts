@@ -22,7 +22,7 @@ export class AppComponent {
         new SidebarItem('Especialidad', 'certificate', '/especialidad'),
         new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),        
         new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
-        new SidebarItem('Prestacion', 'view-agenda', '/prestacion'),
+        new SidebarItem('Prestacion', 'blur', '/prestacion'),
         new SidebarItem('Agenda', 'calendar-clock', '/plantillas')
         ];
         this.plex.initStaticItems(items);
