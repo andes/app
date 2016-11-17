@@ -29,18 +29,44 @@ export class PrestacionComponent implements OnInit {
     loadPrestacion() {
         this.prestacionService.get()
             .subscribe(
-            prestacion => this.prestacion = prestacion,                   
+            prestacion => this.prestacion = prestacion,
             err => {
                 if (err) {
                     console.log(err);
                 }
             });
-        
+
     }
 
-     onReturn(prestacion: IPrestacion): void {
+    onReturn(prestacion: IPrestacion): void {
         this.showcreate = false;
         this.showupdate = false;
         this.loadPrestacion();
+    }
+
+    onDisable(prestacion: IPrestacion) {
+        this.prestacionService.disable(prestacion)
+            .subscribe(dato => this.loadPrestacion(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    onEnable(prestacion: IPrestacion) {
+        this.prestacionService.enable(prestacion)
+            .subscribe(dato => this.loadPrestacion(), //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    onEdit(prestacion: IPrestacion) {
+        this.showcreate = false;
+        this.showupdate = true;
+        this.selectedPrestacion = prestacion;
     }
 }

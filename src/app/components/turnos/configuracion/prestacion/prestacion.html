@@ -13,7 +13,7 @@
                         <p-dataTable [value]="prestacion" [rows]="10" [paginator]="true" [globalFilter]="gb" [responsive]="true">
 
                             <p-column [style]="{'width':'15%'}" field="nombre" header="Nombre"></p-column>
-                            <!--<p-column [style]="{'width':'30%'}" field="descripcion" header="descripcion"></p-column>-->
+                            <p-column [style]="{'width':'30%'}" field="descripcion" header="Descripcion"></p-column>
                             <p-column [style]="{'width':'10%'}" field="activo" header="Activo">
                                 <template let-prestacion="rowData" pTemplate type="body">
                                     <span>{{prestacion.activo ? "SI" : "NO"}}</span>
@@ -51,9 +51,9 @@
     </div>
 </div>
 
-<!--<div class="col-sm-12" *ngIf="showupdate">
+<div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <espacio-fisico-update [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></espacio-fisico-update>
+        <prestacion-update [selectedPrestacion]="selectedPrestacion" (data)='onReturn($event)'></prestacion-update>
     </div>
-</div>-->
+</div>
