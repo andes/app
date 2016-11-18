@@ -1,36 +1,91 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <form>
-                <plex-box type="info" title="Buscar Agenda">
-                    <div class="form-group">
-                        <plex-datetime type="date" [(ngModel)]="modelo.fechaDesde" class="col-md-4" name="fechaDesde" label="Desde">
+<div class="row">
+    <div class="col-md-12">
+        <form>
+            <plex-box type="info" title="Buscar Agenda">
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-datetime type="date" [(ngModel)]="modelo.fechaDesde" name="fechaDesde" label="Desde">
                         </plex-datetime>
-                        <plex-datetime type="date" [(ngModel)]="modelo.fechaHasta" class="col-md-4" name="fechaHasta" label="Hasta">
+                    </div>
+                    <div class="col-md-4">
+                        <plex-datetime type="date" [(ngModel)]="modelo.fechaHasta" name="fechaHasta" label="Hasta">
                         </plex-datetime>
-                        <plex-select [(ngModel)]="modelo.prestacion" name="prestacion" class="col-md-4" (get-data)="loadPrestaciones($event)" label="Prestacion"
-                            placeholder="Seleccione Prestación">
+                    </div>
+                    <div class="col-md-4">
+                        <plex-select [(ngModel)]="modelo.prestacion" name="prestacion" (get-data)="loadPrestaciones($event)" label="Prestacion" placeholder="Seleccione Prestación">
                         </plex-select>
                     </div>
-                    <div class="form-group">
-                        <plex-select [(ngModel)]="modelo.profesionales" class="col-md-6" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)"
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)"
                             placeholder="Seleccione los profesionales">
                         </plex-select>
-                        <plex-select [(ngModel)]="modelo.espacioFisico" class="col-md-6" label="Espacio Físico" name="espacioFisico" (get-data)="loadEspaciosFisicos($event)"
+                    </div>
+                    <div class="col-md-6">
+                        <plex-select [(ngModel)]="modelo.espacioFisico" label="Espacio Físico" name="espacioFisico" (get-data)="loadEspaciosFisicos($event)"
                             placeholder="Seleccione Espacio Físico">
                         </plex-select>
                     </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-info" pButton (click)="buscar()" icon="fa-search">Buscar</button>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <!--<button type="button" class="btn btn-info" pButton (click)="buscar()" icon="fa-search">Buscar</button>-->
+                        <plex-button label="Buscar" icon="magnify" (click)="onClick(this.modelo)">
+                        </plex-button>
                     </div>
-                </plex-box>
-            </form>
-        </div>
+                </div>
+            </plex-box>
+        </form>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-        </div>
-        <div class="col-md-6">
-        </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <plex-box type="info" title="Listado de Agendas">
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let agenda of agendas; let i = index">
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span>{{agenda.profesionales[0].nombre}} {{i}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <plex-button icon="tooltip-edit" (click)="editarAgenda()">
+                                        </plex-button>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <plex-button icon="eye" (click)="verAgenda()">
+                                        </plex-button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </plex-box>
+        </form>
+    </div>
+
+    <div class="col-md-8">
+        <form>
+            <plex-box type="info" title="Visualización de Agenda">
+            </plex-box>
+        </form>
     </div>
 </div>
