@@ -40,7 +40,7 @@ export class BuscarAgendasComponent implements OnInit {
     loadAgendas() {
         this.servicePlantilla.get()
             .subscribe(
-            agendas => this.agendas = agendas, //Bind to view
+            agendas => this.agendas = agendas,
             err => {
                 if (err) {
                     console.log(err);
@@ -51,5 +51,25 @@ export class BuscarAgendasComponent implements OnInit {
     editarAgenda() {
         this.router.navigate(['/plantillas']);
         return false;
+    }
+
+    verAgenda(agenda) {
+        var pepe = new Date(agenda.horaInicio);
+
+        var capo = (pepe.getFullYear().toString() + '-'
+            + ("0" + (pepe.getMonth() + 1)).slice(-2) + '-'
+            + ("0" + (pepe.getDate()
+            )).slice(-2));
+
+        alert(capo);
+
+        this.modelo = {
+            fecha: capo,
+            horaInicio: agenda.horaInicio,
+            horaFin: agenda.horaFin,
+            profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
+            prestaciones: agenda.prestaciones[0].nombre,
+            espacioFisico: agenda.espacioFisico.nombre
+        };
     }
 }

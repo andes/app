@@ -31,7 +31,6 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <!--<button type="button" class="btn btn-info" pButton (click)="buscar()" icon="fa-search">Buscar</button>-->
                         <plex-button label="Buscar" icon="magnify" (click)="onClick(this.modelo)">
                         </plex-button>
                     </div>
@@ -57,7 +56,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span>{{agenda.profesionales[0].nombre}} {{i}}</span>
+                                        <span>{{agenda.profesionales[0].nombre}}  {{agenda.profesionales[0].apellido}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +68,7 @@
                                         </plex-button>
                                     </div>
                                     <div class="col-md-5">
-                                        <plex-button icon="eye" (click)="verAgenda()">
+                                        <plex-button icon="eye" (click)="verAgenda(agenda)">
                                         </plex-button>
 
                                     </div>
@@ -85,6 +84,36 @@
     <div class="col-md-8">
         <form>
             <plex-box type="info" title="Visualización de Agenda">
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.fecha" name="fecha" label="Fecha">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.horaInicio" name="horaInicio" label="Hora Inicio">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.horaFin" type="date" name="horaFin" label="Hora Fin">
+                        </plex-text>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.profesional" name="profesional" label="Profesional">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Prestaciones">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text [(ngModel)]="modelo.espacioFisico" name="espacioFisico" label="Espacio Físico">
+                        </plex-text>
+                    </div>
+                </div>
+
             </plex-box>
         </form>
     </div>
