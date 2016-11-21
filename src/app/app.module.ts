@@ -7,8 +7,8 @@ import { EspacioFisicoCreateComponent } from './components/turnos/configuracion/
 import { EspacioFisicoUpdateComponent } from './components/turnos/configuracion/espacio-fisico-update.component';
 
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
-// import { PrestacionCreateComponent } from './components/turnos/configuracion/espacio-fisico-update.component';
-// import { PrestacionUpdateComponent } from './components/turnos/configuracion/espacio-fisico-update.component';
+import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
+import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
 
 import { ConfigPrestacionComponent } from './components/turnos/configPrestacion.component';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
@@ -76,7 +76,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
               PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
               ConfigPrestacionComponent, PlantillaComponent, EspacioFisicoComponent, EspacioFisicoCreateComponent,
-              EspacioFisicoUpdateComponent, PrestacionComponent
+              EspacioFisicoUpdateComponent, PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent
   ],
   bootstrap: [AppComponent],
   providers: [

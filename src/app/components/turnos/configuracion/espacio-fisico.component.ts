@@ -35,7 +35,7 @@ export class EspacioFisicoComponent implements OnInit {
             });
     }
 
-    onReturn(objOrganizacion: IEspacioFisico): void {
+    onReturn(espacioFisico: IEspacioFisico): void {
         this.showcreate = false;
         this.showupdate = false;
         this.loadEspaciosFisicos();
