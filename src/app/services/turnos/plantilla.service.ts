@@ -1,28 +1,28 @@
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
+import { ServerService } from 'andes-shared/src/lib/server.service';
+
 @Injectable()
 export class PlantillaService {
     private plantillaUrl = 'http://localhost:3002/api/turnos/plantilla';  // URL to web api
-    constructor(private http: Http) { }
-    
+
+    constructor(private server: ServerService) { }
+
     get(): Observable<IPlantilla[]> {
-        console.log("entro");
-       return this.http.get(this.plantillaUrl)
-           .map((res:Response) => res.json())
-           .catch(this.handleError); //...errors if any*/
+        return this.server.get(this.plantillaUrl, null);
     }
 
-    getById(id:String): Observable<IPlantilla[]> {
-        console.log("entro");
-       return this.http.get(this.plantillaUrl+"/"+id)
-           .map((res:Response) => res.json())
-           .catch(this.handleError); //...errors if any*/
+    getById(id: String): Observable<IPlantilla[]> {
+        return this.server.get(this.plantillaUrl + "/" + id, null);
     }
 
-    handleError(error: any){
-        console.log(error.json());
-        return Observable.throw(error.json().error || 'Server error');
+    post(plantilla: IPlantilla): Observable<IPlantilla> {
+       return this.server.post(this.plantillaUrl, plantilla);
+    }
+
+    put(plantilla: IPlantilla): Observable<IPlantilla> {
+        return this.server.put(this.plantillaUrl+ "/" + plantilla.id, plantilla);
     }
 }
