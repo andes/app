@@ -4,20 +4,14 @@
             <plex-box type="info" title="Buscar Agenda">
                 <div class="row">
                     <div class="col-md-4">
-                        <plex-datetime type="date" formControlName="fechaDesde"  label="Desde">
+                        <plex-datetime type="date" formControlName="fechaDesde" label="Desde">
                         </plex-datetime>
-                        <!--<label>Desde: </label>
-                        <input type="date" class="form-control" formControlName="fechaDesde">-->
                     </div>
                     <div class="col-md-4">
                         <plex-datetime type="date" formControlName="fechaHasta" label="Hasta">
                         </plex-datetime>
-                        <!--<label>Hasta: </label>
-                        <input type="date" class="form-control" formControlName="fechaHasta">-->
                     </div>
                     <div class="col-md-4">
-                        <!--<plex-select [(ngModel)]="modelo.prestacion" name="prestacion" (get-data)="loadPrestaciones($event)" label="Prestacion" placeholder="Seleccione Prestación">
-                        </plex-select>-->
                         <plex-select formControlName="prestaciones" (get-data)="loadPrestaciones($event)" label="Seleccione una prestación">
                         </plex-select>
                     </div>
@@ -25,18 +19,10 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <!--<plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)"
-                            placeholder="Seleccione los profesionales">
-                        </plex-select>-->
                         <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional">
                         </plex-select>
-                        <!--<label class="control-label">Nombre:</label>
-                        <input type="text" class="form-control" formControlName="profesionales" placeholder="Ingrese profesional...">-->
                     </div>
                     <div class="col-md-6">
-                        <!--<plex-select [(ngModel)]="modelo.espacioFisico" label="Espacio Físico" name="espacioFisico" (get-data)="loadEspaciosFisicos($event)"
-                            placeholder="Seleccione Espacio Físico">
-                        </plex-select>-->
                         <plex-select formControlName="espacioFisico" (get-data)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico">
                         </plex-select>
                     </div>
