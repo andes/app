@@ -2,16 +2,23 @@ import { Http, Response } from '@angular/http';
 import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
+import { ServerService } from 'andes-shared/src/lib/server.service';
+
 @Injectable()
 export class PlantillaService {
     private plantillaUrl = 'http://localhost:3002/api/turnos/plantilla';  // URL to web api
-    constructor(private http: Http) { }
+    constructor(private server: ServerService, private http: Http) { }
+
+    // get(params: any): Observable<IPlantilla[]> {
+    //    console.log("entro");
+    //     return this.server.get(this.plantillaUrl, params)
+    //         .map((res: Response) => res.json())
+    //         .catch(this.handleError); //...errors if any*/
+    // }
 
     get(params: any): Observable<IPlantilla[]> {
-       console.log("entro");
-        return this.server.get(this.plantillaUrl, params)
-            .map((res: Response) => res.json())
-            .catch(this.handleError); //...errors if any*/
+        debugger;
+        return this.server.get(this.plantillaUrl, params);
     }
 
     getById(id: String): Observable<IPlantilla[]> {

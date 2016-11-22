@@ -19,7 +19,6 @@ export class BuscarAgendasComponent implements OnInit {
     public modelo: any = {};
     public prestaciones: any = [];
     public agendas: any = [];
-    public profesionales: any = [];
 
     searchForm: FormGroup;
 
@@ -27,8 +26,8 @@ export class BuscarAgendasComponent implements OnInit {
         // this.modelo = { nombre: "", descripcion: "" };
 
         this.searchForm = this.formBuilder.group({
-            fechaDesde: [''],
-            fechaHasta: [''],
+            fechaDesde: [new Date()],
+            fechaHasta: [new Date()],
             prestaciones: [''],
             profesionales: [''],
             espacioFisico: ['']
@@ -37,31 +36,28 @@ export class BuscarAgendasComponent implements OnInit {
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
             debugger;
             this.servicePlantilla.get({
-                desde: value.desde,
-                idProfesional: value.profesional && value.profesional.id,
-            }
-            )
+                "fechaDesde": value.fechaDesde,
+                "fechaHasta": value.fechaHasta,
+                "idPrestacion": value.prestaciones.id,
+                "idProfesional": value.profesionales.id,
+                "idEspacioFisico": value.espacioFisico.id
+            }).subscribe(
+                agendas => { debugger; this.agendas = agendas },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
         })
 
-        this.loadAgendas();
-        
-    }
-    loadAgendas() {
-        this.servicePlantilla.get()
-            .subscribe(
-            agendas => this.agendas = agendas,
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+        // this.loadAgendas();
+
     }
 
-    loadAgendasFiltradas(nombre: string) {
-        debugger;
-        this.servicePlantilla.getByTerm(nombre)
+    loadAgendas() {
+        this.servicePlantilla.get(null)
             .subscribe(
-            agendas => this.agendas = agendas, //Bind to view
+            agendas => this.agendas = agendas,
             err => {
                 if (err) {
                     console.log(err);
