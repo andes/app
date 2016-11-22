@@ -5,6 +5,7 @@ import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'buscar-agendas',
@@ -13,16 +14,59 @@ import { Router } from '@angular/router';
 
 export class BuscarAgendasComponent implements OnInit {
     constructor(public plex: PlexService, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, protected router: Router) { }
+        public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, protected router: Router, private formBuilder: FormBuilder) { }
 
     public modelo: any = {};
     public prestaciones: any = [];
     public agendas: any = [];
+    public profesionales: any = [];
+
+    searchForm: FormGroup;
 
     ngOnInit() {
-        this.modelo = { nombre: "", descripcion: "" };
+        // this.modelo = { nombre: "", descripcion: "" };
+
+        this.searchForm = this.formBuilder.group({
+            fechaDesde: [''],
+            fechaHasta: [''],
+            prestaciones: [''],
+            profesionales: [''],
+            espacioFisico: ['']
+        });
+
+        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+            debugger;
+            this.servicePlantilla.get({
+                desde: value.desde,
+                idProfesional: value.profesional && value.profesional.id,
+            }
+            )
+        })
 
         this.loadAgendas();
+        
+    }
+    loadAgendas() {
+        this.servicePlantilla.get()
+            .subscribe(
+            agendas => this.agendas = agendas,
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    loadAgendasFiltradas(nombre: string) {
+        debugger;
+        this.servicePlantilla.getByTerm(nombre)
+            .subscribe(
+            agendas => this.agendas = agendas, //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     loadPrestaciones(event) {
@@ -35,17 +79,6 @@ export class BuscarAgendasComponent implements OnInit {
 
     loadEspaciosFisicos(event) {
         this.serviceEspacioFisico.get().subscribe(event.callback);
-    }
-
-    loadAgendas() {
-        this.servicePlantilla.get()
-            .subscribe(
-            agendas => this.agendas = agendas,
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
     }
 
     editarAgenda() {
