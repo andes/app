@@ -18,7 +18,7 @@ export class PrestacionService {
             .catch(this.handleError);
 
     }
-
+    
     post(prestacion: IPrestacion): Observable<IPrestacion> {
 
         let bodyString = JSON.stringify(prestacion);
@@ -55,7 +55,7 @@ export class PrestacionService {
 
     enable(prestacion: IPrestacion): Observable<IPrestacion> {
         prestacion.activo = true;
-        
+
         let bodyString = JSON.stringify(prestacion); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers }); // Create a request option

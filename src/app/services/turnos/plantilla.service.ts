@@ -19,10 +19,10 @@ export class PlantillaService {
     }
 
     post(plantilla: IPlantilla): Observable<IPlantilla> {
-       return this.server.post(this.plantillaUrl, plantilla);
+        return this.server.post(this.plantillaUrl, plantilla);
     }
 
     put(plantilla: IPlantilla): Observable<IPlantilla> {
-        return this.server.put(this.plantillaUrl+ "/" + plantilla.id, plantilla);
+        return this.server.put(this.plantillaUrl + "/" + plantilla.id, plantilla);
     }
 }
