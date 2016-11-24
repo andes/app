@@ -23,7 +23,6 @@ export class PlantillaComponent {
     public bloques: any = [];
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
-    public agendaActiva: Boolean = false;
     public alertas: String[] = [];
     public fecha: Date;
 
@@ -59,13 +58,14 @@ export class PlantillaComponent {
     }
 
     cargarPlantilla(agenda: IPlantilla[]) {
-        debugger;        
-        this.ServicioPlantilla.getById(id).subscribe(resultado => {
-            { debugger; this.modelo = resultado };
-            this.calculosInicio();
-            this.agendaActiva = true;
-            this.modelo.bloques.sort(this.compararBloques);
-        });
+        this.modelo = agenda;
+        this.calculosInicio();
+        this.modelo.bloques.sort(this.compararBloques);
+        // this.ServicioPlantilla.getById(id).subscribe(resultado => {
+        //     { debugger; this.modelo = resultado };
+        //     this.calculosInicio();
+        //     this.modelo.bloques.sort(this.compararBloques);
+        // });
     }
 
     cargar() {
