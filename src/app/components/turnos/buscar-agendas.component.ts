@@ -7,6 +7,8 @@ import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
+
 @Component({
     selector: 'buscar-agendas',
     templateUrl: 'buscar-agendas.html'
@@ -25,7 +27,7 @@ export class BuscarAgendasComponent implements OnInit {
     selectedAgenda: string;
 
      @Output()
-    selected: EventEmitter<string> = new EventEmitter<string>();
+    selected: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
 
     searchForm: FormGroup;
 
@@ -70,12 +72,9 @@ export class BuscarAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get().subscribe(event.callback);
     }
 
-    editarAgenda(idAgenda) {
-        // this.showPlantilla = true;
-        // this.showBuscarAgendas = false;       
-        
+    editarAgenda(agenda: IPlantilla) {                       
 
-        this.selected.emit(idAgenda)        
+        this.selected.emit(agenda);        
     }
 
     verAgenda(agenda) {

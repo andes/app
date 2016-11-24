@@ -29,7 +29,7 @@ export class PlantillaComponent {
 
     showBuscarAgendas: boolean = false;
     showPlantilla: boolean = true;
-    selectedAgenda: string;
+    selectedAgenda: IPlantilla[];
     // @Input('selectedAgenda') selectedAgenda: string;
 
     constructor(private formBuilder: FormBuilder, public plex: PlexService,
@@ -58,8 +58,8 @@ export class PlantillaComponent {
             return 0;
     }
 
-    cargarPlantilla(id: String) {
-        debugger;
+    cargarPlantilla(agenda: IPlantilla[]) {
+        debugger;        
         this.ServicioPlantilla.getById(id).subscribe(resultado => {
             { debugger; this.modelo = resultado };
             this.calculosInicio();
@@ -380,7 +380,7 @@ export class PlantillaComponent {
         //return false;
     }
 
-    onReturn(idAgenda: string): void {        
+    onReturn(agenda: IPlantilla[]): void {        
         this.showPlantilla = true;
 
         // this.selectedAgenda = idAgenda;
@@ -388,6 +388,6 @@ export class PlantillaComponent {
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
 
         // debugger;
-        this.cargarPlantilla(idAgenda);
+        this.cargarPlantilla(agenda);
     }
 }
