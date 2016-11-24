@@ -11,7 +11,6 @@ export class PlantillaService {
     constructor(private server: ServerService, private http: Http) { }
 
     get(params: any): Observable<IPlantilla[]> {
-        debugger;
         return this.server.get(this.plantillaUrl, params);
     }
 
