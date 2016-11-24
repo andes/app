@@ -58,6 +58,8 @@ import { PlexModule } from 'andes-plex/src/lib/module';
 import { PlexService } from 'andes-plex/src/lib/core/service';
 import { ServerService } from 'andes-shared/src/lib/server.service';
 
+import { ServerService } from 'andes-shared/src/lib/server.service';
+
 @NgModule({
   imports: [
     BrowserModule, 

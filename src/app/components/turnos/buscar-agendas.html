@@ -4,47 +4,27 @@
             <plex-box type="info" title="Buscar Agenda">
                 <div class="row">
                     <div class="col-md-4">
-                        <!--<plex-datetime type="date" [(ngModel)]="modelo.fechaDesde" name="fechaDesde" label="Desde">
-                        </plex-datetime>-->
-                        <label>Desde: </label>
-                        <input type="date" class="form-control" formControlName="fechaDesde">
+                        <plex-datetime type="date" formControlName="fechaDesde" label="Desde">
+                        </plex-datetime>
                     </div>
                     <div class="col-md-4">
-                        <!--<plex-datetime type="date" [(ngModel)]="modelo.fechaHasta" name="fechaHasta" label="Hasta">
-                        </plex-datetime>-->
-                        <label>Hasta: </label>
-                        <input type="date" class="form-control" formControlName="fechaHasta">
+                        <plex-datetime type="date" formControlName="fechaHasta" label="Hasta">
+                        </plex-datetime>
                     </div>
                     <div class="col-md-4">
-                        <!--<plex-select [(ngModel)]="modelo.prestacion" name="prestacion" (get-data)="loadPrestaciones($event)" label="Prestacion" placeholder="Seleccione Prestación">
-                        </plex-select>-->
-                        <plex-select formControlName="prestaciones" [data]="opciones" label="Seleccione una prestación">
+                        <plex-select formControlName="prestaciones" (get-data)="loadPrestaciones($event)" label="Seleccione una prestación">
                         </plex-select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <!--<plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="profesionales" (get-data)="loadProfesionales($event)"
-                            placeholder="Seleccione los profesionales">
-                        </plex-select>-->
                         <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional">
                         </plex-select>
-                        <!--<label class="control-label">Nombre:</label>
-                        <input type="text" class="form-control" formControlName="profesionales" placeholder="Ingrese profesional...">-->
                     </div>
                     <div class="col-md-6">
-                        <!--<plex-select [(ngModel)]="modelo.espacioFisico" label="Espacio Físico" name="espacioFisico" (get-data)="loadEspaciosFisicos($event)"
-                            placeholder="Seleccione Espacio Físico">
-                        </plex-select>-->
-                        <plex-select formControlName="espacioFisico" [data]="opciones" label="Seleccione un espacio físico">
+                        <plex-select formControlName="espacioFisico" (get-data)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico">
                         </plex-select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <plex-button label="Buscar" icon="magnify" (click)="onClick(this.modelo)">
-                        </plex-button>
                     </div>
                 </div>
             </plex-box>
@@ -63,12 +43,15 @@
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} </span>
+                                        <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span>{{agenda.profesionales[0].nombre}}  {{agenda.profesionales[0].apellido}}</span>
+                                        <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                                        <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico.nombre}}</span>
+
                                     </div>
                                 </div>
                             </div>
