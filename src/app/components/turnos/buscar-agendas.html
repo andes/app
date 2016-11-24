@@ -27,12 +27,6 @@
                         </plex-select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <plex-button label="Buscar" icon="magnify" (click)="onClick(this.modelo)">
-                        </plex-button>
-                    </div>
-                </div>
             </plex-box>
         </form>
     </div>
@@ -49,12 +43,15 @@
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} </span>
+                                        <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span>{{agenda.profesionales[0].nombre}}  {{agenda.profesionales[0].apellido}}</span>
+                                        <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                                        <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico.nombre}}</span>
+
                                     </div>
                                 </div>
                             </div>

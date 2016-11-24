@@ -49,21 +49,18 @@ export class BuscarAgendasComponent implements OnInit {
                     }
                 });
         })
-
-        // this.loadAgendas();
-
     }
 
-    loadAgendas() {
-        this.servicePlantilla.get(null)
-            .subscribe(
-            agendas => this.agendas = agendas,
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
+    // loadAgendas() {
+    //     this.servicePlantilla.get(null)
+    //         .subscribe(
+    //         agendas => this.agendas = agendas,
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    // }
 
     loadPrestaciones(event) {
         this.servicioPrestacion.get().subscribe(event.callback);
