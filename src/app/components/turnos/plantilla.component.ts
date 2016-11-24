@@ -66,9 +66,9 @@ export class PlantillaComponent {
     }
 
 
-    loadPlantillas(event) {
-        this.ServicioPlantilla.get().subscribe(event.callback);       
-    }
+    // loadPlantillas(event) {
+    //     this.ServicioPlantilla.get().subscribe(event.callback);       
+    // }
 
     loadPrestaciones(event) {
         this.servicioPrestacion.get().subscribe(event.callback);       
