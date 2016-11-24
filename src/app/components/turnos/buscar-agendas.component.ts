@@ -20,6 +20,13 @@ export class BuscarAgendasComponent implements OnInit {
     public prestaciones: any = [];
     public agendas: any = [];
 
+    showBuscarAgendas: boolean = true;
+    showPlantilla: boolean = false;
+    selectedAgenda: string;
+
+     @Output()
+    selected: EventEmitter<string> = new EventEmitter<string>();
+
     searchForm: FormGroup;
 
     ngOnInit() {
@@ -34,7 +41,7 @@ export class BuscarAgendasComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            debugger;
+
             this.servicePlantilla.get({
                 "fechaDesde": value.fechaDesde,
                 "fechaHasta": value.fechaHasta,
@@ -42,7 +49,7 @@ export class BuscarAgendasComponent implements OnInit {
                 "idProfesional": value.profesionales.id,
                 "idEspacioFisico": value.espacioFisico.id
             }).subscribe(
-                agendas => { debugger; this.agendas = agendas },
+                agendas => { this.agendas = agendas },
                 err => {
                     if (err) {
                         console.log(err);
@@ -50,17 +57,6 @@ export class BuscarAgendasComponent implements OnInit {
                 });
         })
     }
-
-    // loadAgendas() {
-    //     this.servicePlantilla.get(null)
-    //         .subscribe(
-    //         agendas => this.agendas = agendas,
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
 
     loadPrestaciones(event) {
         this.servicioPrestacion.get().subscribe(event.callback);
@@ -74,9 +70,12 @@ export class BuscarAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get().subscribe(event.callback);
     }
 
-    editarAgenda() {
-        this.router.navigate(['/plantillas']);
-        return false;
+    editarAgenda(idAgenda) {
+        // this.showPlantilla = true;
+        // this.showBuscarAgendas = false;       
+        
+
+        this.selected.emit(idAgenda)        
     }
 
     verAgenda(agenda) {

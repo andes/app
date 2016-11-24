@@ -19,7 +19,7 @@ const appRoutes: Routes = [
   { path: 'plantillas', component: PlantillaComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
-  { path: 'buscar_agendas', component: BuscarAgendasComponent},
+  // { path: 'buscar_agendas', component: BuscarAgendasComponent},
   { path: '**', redirectTo: "inicio" } 
 ];
 
