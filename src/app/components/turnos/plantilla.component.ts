@@ -38,10 +38,7 @@ export class PlantillaComponent {
 
     ngOnInit() {
         // this.modelo = { nombre: "" };
-        // this.modelo.bloques = [];       
-
-        // if (this.selectedAgenda)
-        //     this.cargarPlantilla(this.selectedAgenda);
+         this.modelo.bloques = [];      
 
         this.bloqueActivo = -1;
     }
@@ -383,12 +380,10 @@ export class PlantillaComponent {
         //return false;
     }
 
-    onReturn(idAgenda: string): void {
-        // alert("dentrooo");
-        //this.showBuscarAgendas = false;
+    onReturn(idAgenda: string): void {        
         this.showPlantilla = true;
 
-        this.selectedAgenda = idAgenda;
+        // this.selectedAgenda = idAgenda;
 
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
 
