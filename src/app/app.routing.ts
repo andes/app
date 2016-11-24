@@ -5,6 +5,7 @@ import { PacienteComponent } from './components/paciente/paciente.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
+import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
   { path: 'plantillas', component: PlantillaComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
+  { path: 'buscar_agendas', component: BuscarAgendasComponent},
   { path: '**', redirectTo: "inicio" } 
 ];
 
