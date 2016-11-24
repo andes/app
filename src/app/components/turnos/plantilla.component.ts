@@ -25,15 +25,46 @@ export class PlantillaComponent {
     public elementoActivo : any = { descripcion: null };
     public agendaActiva : Boolean = false;
     public alertas: String[] = [];
+    public fecha : Date;
     constructor(private formBuilder: FormBuilder, public plex: PlexService, 
                 public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
                 public servicioEspacioFisico: EspacioFisicoService, public ServicioPlantilla: PlantillaService) { }
     
     ngOnInit() {
         this.modelo = {nombre:""};
-        this.cargarPlantilla("5820c78739ad24c49548edef");
+        this.modelo.bloques = [];
         this.bloqueActivo = -1;
     }
+    
+    compararBloques(fecha1, fecha2): number{
+        if (fecha1 && fecha2){
+            return fecha1.horaInicio.getTime()-fecha2.horaInicio.getTime();
+        }
+        else
+            return 0;
+    }
+
+    compararFechas(fecha1:Date, fecha2:Date): number{
+        if (fecha1 && fecha2)
+            return fecha1.getTime()-fecha2.getTime();
+        else
+            return 0;
+    }
+
+    cargarPlantilla(id: String){
+        this.ServicioPlantilla.getById(id).subscribe(resultado => 
+        {
+            this.modelo = resultado; 
+            this.calculosInicio(); 
+            this.agendaActiva=true;
+            this.modelo.bloques.sort( this.compararBloques );  
+        });
+    }
+
+    cargar(){
+        this.cargarPlantilla("5820c78739ad24c49548edef");
+    }
+
 
     loadPlantillas(event) {
         this.ServicioPlantilla.get().subscribe(event.callback);       
@@ -55,7 +86,8 @@ export class PlantillaComponent {
         this.modelo.fecha = new Date(this.modelo.horaInicio);
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
-            console.log(bloque);
+            bloque.horaInicio = new Date(bloque.horaInicio);
+            bloque.horaFin = new Date(bloque.horaFin);
             var inicio = bloque.horaInicio;
             var fin = bloque.horaFin;
             bloque.accesoDirectoDelDiaPorc = Math.floor((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos);
@@ -86,7 +118,7 @@ export class PlantillaComponent {
             "accesoDirectoProgramado" : 0, "accesoDirectoProgramadoPorc" : 0,
             "reservadoProgramado" : 0, "reservadoProgramadoPorc" : 0,
             "reservadoProfesional" : 0, "reservadoProfesionalPorc" : 0
-        })
+        });
         this.activarBloque(this.modelo.bloques.length-1);
     } 
 
@@ -94,97 +126,123 @@ export class PlantillaComponent {
         if (confirm('Confirme que desea eliminar el bloque')) {
             this.modelo.bloques.splice(indice,1);
             this.bloqueActivo = -1;
-            // Save it!
-        } else {
-            // Do nothing!
-        }
-        
+            this.validarBloques();
+        } 
     }
     
+    cambioFecha(){
+        this.fecha = new Date(this.modelo.fecha);
+        this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+    }
+
+    cmbHoraIniGral(){
+        this.fecha = new Date(this.modelo.fecha);
+        this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        this.validarBloques();
+    }
+
+    cmbHoraFinGral(){
+        this.fecha = new Date(this.modelo.fecha);
+        this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+    }
+
     cambioHoraInicio(){
-        var inicio = this.elementoActivo.horaInicio;
-        var fin = this.elementoActivo.horaFin;
-        if (inicio!=null && fin!=null){
+        this.fecha = new Date(this.modelo.fecha);
+        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+
+        if (inicio && fin){
             this.elementoActivo.titulo = inicio.getHours()+":"+(inicio.getMinutes()<10?'0':'') + inicio.getMinutes()+"-"+
             fin.getHours()+":"+(fin.getMinutes()<10?'0':'') + fin.getMinutes();
+            this.modelo.bloques.sort( this.compararBloques );
             let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (duracion!=null){
+            if (duracion){
                 this.elementoActivo.duracionTurno = Math.floor(duracion);
                 let cantidad = this.calcularCantidad(inicio, fin, duracion);
                 this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
             }
+            this.validarBloques();
         }
     }
 
     cambioHoraFin(){
-        var inicio = this.elementoActivo.horaInicio;
-        var fin = this.elementoActivo.horaFin;
+        this.fecha = new Date(this.modelo.fecha);
+        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        
         if (inicio && fin){
             this.elementoActivo.titulo = inicio.getHours()+":"+(inicio.getMinutes()<10?'0':'') + inicio.getMinutes()+"-"+
             fin.getHours()+":"+(fin.getMinutes()<10?'0':'') + fin.getMinutes();
+            this.modelo.bloques.sort( this.compararBloques );
             let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (duracion!=null){
+            if (duracion){
                 this.elementoActivo.duracionTurno = Math.floor(duracion);
                 let cantidad = this.calcularCantidad(inicio, fin, duracion);
                 this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
             }
+            this.validarBloques();
         }
     }
 
     cambiaCantidadTurnos(){
-        let EA = this.elementoActivo;
-        if (EA.horaInicio && EA.horaFin && EA.cantidadTurnos){
-            EA.duracionTurno = this.calcularDuracion(EA.horaInicio, EA.horaFin, EA.cantidadTurnos);
+        this.fecha = new Date(this.modelo.fecha);
+        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        if (inicio && fin && this.elementoActivo.cantidadTurnos){
+            this.elementoActivo.duracionTurno = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
             this.verificarCantidades();
         }
     }
 
     cambiaduracionTurnos(){
-        let EA = this.elementoActivo;
-        if (EA.horaInicio && EA.horaFin && EA.duracionTurno){
-            EA.cantidadTurnos = this.calcularCantidad(EA.horaInicio, EA.horaFin, EA.duracionTurno);
+        this.fecha = new Date(this.modelo.fecha);
+        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        if (inicio && fin && this.elementoActivo.duracionTurno){
+            this.elementoActivo.cantidadTurnos = this.calcularCantidad(inicio, fin, this.elementoActivo.duracionTurno);
             this.verificarCantidades();
         }
     }
     
     cambiaAccesoDirectoDelDia(){
         this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaAccesoDirectoDelDiaPorc(){
         this.elementoActivo.accesoDirectoDelDia = Math.floor((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaAccesoDirectoProgramado(){
         this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaAccesoDirectoProgramadoPorc(){
         this.elementoActivo.accesoDirectoProgramado = Math.floor((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
     
     cambiaReservadoProgramado(){
         this.elementoActivo.reservadoProgramadoPorc = Math.floor((this.elementoActivo.reservadoProgramado * 100) / this.elementoActivo.cantidadTurnos);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaReservadoProgramadoPorc(){
         this.elementoActivo.reservadoProgramado = Math.floor((this.elementoActivo.reservadoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaReservadoProfesional(){
         this.elementoActivo.reservadoProfesionalPorc = Math.floor((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     cambiaReservadoProfesionalPorc(){
         this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
-        this.validarPorcentajes();
+        this.validarPorcentajes(this.elementoActivo);
     }
 
     calcularDuracion(inicio, fin, cantidad){
@@ -192,7 +250,7 @@ export class PlantillaComponent {
             inicio = moment(inicio);
             fin = moment(fin);
             let total = fin.diff(inicio,"minutes");
-            console.log("total "+total+" cantidad "+cantidad+"resultado "+total/cantidad);
+            //console.log("total "+total+" cantidad "+cantidad+"resultado "+total/cantidad);
             return Math.floor(total/cantidad);
         }
         else{
@@ -210,8 +268,12 @@ export class PlantillaComponent {
             let total = fin.diff(inicio,"minutes");
             return Math.floor(total/duracion);
         }
-        else
-            this.elementoActivo.cantidadTurnos?this.elementoActivo.cantidadTurnos:null;
+        else{
+            if (this.elementoActivo.cantidadTurnos)
+                return this.elementoActivo.cantidadTurnos;
+            else
+                return null;
+        }
     }
 
     verificarCantidades(){
@@ -221,10 +283,9 @@ export class PlantillaComponent {
         this.cambiaReservadoProfesionalPorc();
     }
 
-    validarPorcentajes(){
+    validarPorcentajes(EA){
         var alerta: String = "La cantidad de turnos asignados es mayor a la cantidad disponible";
         var indice = this.alertas.indexOf(alerta);
-        let EA = this.elementoActivo;
         if ((EA.accesoDirectoDelDiaPorc+EA.accesoDirectoProgramadoPorc+EA.reservadoProgramadoPorc+EA.reservadoProfesionalPorc)<=100
         || (EA.accesoDirectoDelDia+EA.accesoDirectoProgramado+EA.reservadoProgramado+EA.reservadoProfesional)<=EA.cantidadTurnos){
             if (indice > -1)
@@ -237,44 +298,75 @@ export class PlantillaComponent {
             return false;
         }
     }
+    
+    validarBloques(){
+        var desde = this.modelo.horaInicio;
+        var hasta = this.modelo.horaFin;
+        var alerta : string;
+        var indice : number;
+        let bloques = this.modelo.bloques;
+        bloques.forEach((bloque, index) => {
+            if (this.compararFechas(desde, bloque.horaInicio)>0 || this.compararFechas(hasta, bloque.horaFin)<0){
+                alerta = "Hay bloques que quedan fuera de los límites de la agenda";
+                indice = this.alertas.indexOf(alerta);
+                if (indice == -1)
+                    this.alertas.push(alerta);
+            }
+            this.validarPorcentajes(bloque);
+        });
 
-    cargarPlantilla(id: String){
-        this.ServicioPlantilla.getById(id).subscribe(resultado => {this.modelo = resultado; this.calculosInicio(); this.agendaActiva=true});
+
+        // var alerta: String = "Hay bloques que se solapan";
+        // var indice = this.alertas.indexOf(alerta);
+        // let EA = this.elementoActivo;
+        // if (){
+        //     if (indice > -1)
+        //         this.alertas.splice(indice, 1);
+        //     return true;
+        // }
+        // else{
+        //     if (indice == -1)
+        //         this.alertas.push(alerta);
+        //     return false;
+        // }
     }
 
-    seleccionaPlantilla(plantilla: any){
-        this.cargarPlantilla(plantilla.id);
+
+    combinarFechas(fecha1, fecha2){
+        if (fecha1 && fecha2){
+            let horas : number;
+            let minutes : number;
+            horas = fecha2.getHours();
+            minutes = fecha2.getMinutes();
+            return  new Date(fecha1.setHours(horas,minutes));
+        }
+        else
+            return null;
     }
 
     onSave(isvalid: boolean){
         if (isvalid) {
             let espOperation: Observable<IPlantilla>;
-            let horas : number;
-            let minutes : number;
-            var fecha = new Date(this.modelo.fecha);
-            horas = this.modelo.horaInicio.getHours();
-            minutes = this.modelo.horaInicio.getMinutes();
-            this.modelo.horaInicio = new Date(fecha.setHours(horas,minutes));
-            horas = this.modelo.horaFin.getHours();
-            minutes = this.modelo.horaFin.getMinutes();
-            this.modelo.horaFin = new Date(fecha.setHours(horas,minutes));
-
+            
+            this.fecha = new Date(this.modelo.fecha);
+            this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            this.modelo.estado = "Planificada";
             let bloques = this.modelo.bloques;
             bloques.forEach((bloque, index) => {
-                horas = bloque.horaInicio.getHours();
-                minutes = bloque.horaInicio.getMinutes();
-                bloque.horaInicio = new Date(fecha.setHours(horas,minutes));
-                horas = bloque.horaFin.getHours();
-                minutes = bloque.horaFin.getMinutes();
-                bloque.horaFin = new Date(fecha.setHours(horas,minutes));
+                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
             });
 
-            espOperation = this.ServicioPlantilla.put(this.modelo);
+            espOperation = this.ServicioPlantilla.save(this.modelo);
             espOperation.subscribe(resultado => this.data.emit(resultado));
-        } else {
+        } 
+        else 
             alert("Complete datos obligatorios");
-        }
-        alert("hola");
     }
-   
+
+    onCancel() {
+        this.data.emit(null);
+        return false;
+    }
 }

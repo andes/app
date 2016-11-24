@@ -6,14 +6,12 @@ export interface IBloque{
     descripcion: String,
     prestacion: IPrestacion,
     
-    deldiaAccesoDirecto: Number,
-    deldiaReservado: Number,
-    programadosAccesoDirecto: Number,
-    programadosReservado: Number,
-    programadosAutocitado: Number,
+    accesoDirectoDelDia: Number,
+    accesoDirectoProgramado: Number,
+    reservadoProgramado: Number,
+    reservadoProfesional: Number,
 
     pacienteSimultaneos: Boolean,
     cantidadSimultaneos: Number,
     citarPorBloque: Boolean
-    
 }

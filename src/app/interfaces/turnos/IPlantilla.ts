@@ -4,13 +4,15 @@ import { IBloque } from './IBloque';
 
 export interface IPlantilla{
     id: String,
-    descripcion: String,
+    nombre: String,
     prestaciones: IPrestacion[],
     profesionales: IProfesional[],
     espacioFisico:  {
         id: String,
         nombre: String
     },
-    
-    bloques: IBloque[]
+    horaInicio: Date,
+    horaFin: Date,
+    bloques: IBloque[],
+    estado: String
 }

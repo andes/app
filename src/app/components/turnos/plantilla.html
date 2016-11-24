@@ -1,6 +1,5 @@
 <form>
     <div class="row">
-        
         <div class="col-md-4">
             <plex-box type="success" title="Agenda" >
              <div class="row">
@@ -23,15 +22,15 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <plex-datetime type="date" [(ngModel)]="modelo.fecha" name="modelo.fecha" label="Fecha">
+                    <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="cambioFecha()" name="modelo.fecha" label="Fecha">
                     </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                    <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" name="modelo.horaInicio" label="Inicio">
+                    <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="cmbHoraIniGral()" name="modelo.horaInicio" label="Inicio">
                     </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                    <plex-datetime type="time" [(ngModel)]="modelo.horaFin" name="modelo.horaFin" label="Fin">
+                    <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="cmbHoraFinGral()" name="modelo.horaFin" label="Fin">
                     </plex-datetime>
                 </div>
             </div>
@@ -42,9 +41,9 @@
                     <div class="list-group">
                         <a *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
                             <div class="row">
-                                <div class="col-md-5">{{unBloque.descripcion}}</div>
-                                <div class="col-md-5">{{unBloque.titulo}}</div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">{{unBloque.descripcion}}</div>
+                                <div class="col-md-4">{{unBloque.titulo}}</div>
+                                <div class="col-md-4" align="right">
                                     <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
                                     </plex-button>
                                 </div>
@@ -53,7 +52,7 @@
                     </div>  
                  </div>
              </div>
-             <div *ngIf="agendaActiva == true" class="row">
+             <div class="row">
                   <div class="col-md-12">
                      <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" type="primary" (click)="addBloque()">
                      </plex-button>
@@ -65,14 +64,16 @@
                 <div class="col-sm-12">
                     <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave(true)" title="Guardar">
                     </plex-button>
+                    <plex-button icon="cloud-upload" label="Cargar" type="submit" (click)="cargar()" title="Cancelar">
+                    </plex-button>
                     <plex-button icon="delete-forever" label="Cancelar" type="submit" (click)="onCancel()" title="Cancelar">
                     </plex-button>
                 </div>
             </div>
             </plex-box>
         </div>
-        <div class="col-md-8" *ngIf="bloqueActivo >= 0">
-            <div *ngIf="elementoActivo">
+        <div class="col-md-8">
+            <div *ngIf="elementoActivo && bloqueActivo >= 0">
                 <plex-box type="success" title="Bloque: {{elementoActivo.descripcion}}" >
                     <div class="row">
                         <div class="col-md-6">
@@ -141,7 +142,8 @@
                             <plex-box type="warning" title="Reservados" >
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>Programados</label>
+                                        <!--<label>Programados</label>-->
+                                        <label>Para gestión de pacientes</label>
                                     </div>
                                     <div class="col-md-4">
                                         <plex-int [(ngModel)]="elementoActivo.reservadoProgramado" (keyup)="cambiaReservadoProgramado()" name="reservadoProgramado" placeholder="Cant">
@@ -154,7 +156,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label>Administrados x el Profesional</label>
+                                        <!--<label>Administrados x el Profesional</label>-->
+                                        <label>Para el Profesional</label>
                                     </div>
                                     <div class="col-md-4">
                                         <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" (keyup)="cambiaReservadoProfesional()" name="reservadoProfesional" placeholder="Cant">
@@ -187,16 +190,17 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div *ngIf="alertas.length>0" class="alert alert-warning" role="alert" >
-                                <p *ngFor="let unAlerta of alertas; let i=index">
-                                    {{unAlerta}}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </plex-box>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div *ngIf="alertas.length>0" class="alert alert-warning" role="alert" >
+                        <li *ngFor="let unAlerta of alertas; let i=index">
+                            {{unAlerta}}
+                        </li>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
