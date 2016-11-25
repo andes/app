@@ -44,9 +44,9 @@
                         <div class="list-group">
                             <a *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
                                 <div class="row">
-                                    <div class="col-md-4">{{unBloque.descripcion}}</div>
-                                    <div class="col-md-4">{{unBloque.titulo}}</div>
-                                    <div class="col-md-4" align="right">
+                                    <div class="col-md-6">{{unBloque.descripcion}}</div>
+                                    <div class="col-md-3">{{unBloque.titulo}}</div>
+                                    <div class="col-md-3" align="right">
                                         <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
                                         </plex-button>
                                     </div>
@@ -91,11 +91,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraInicio()" label="Hora Inicio">
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques()" label="Hora Inicio">
                             </plex-datetime>
                         </div>
                         <div class="col-md-3">
-                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraFin()" label="Hora Fin">
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques()" label="Hora Fin">
                             </plex-datetime>
                         </div>
                     </div>

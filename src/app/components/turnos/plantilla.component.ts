@@ -84,7 +84,7 @@ export class PlantillaComponent {
     }
 
     calculosInicio() {
-        this.modelo.fecha = new Date(this.modelo.horaInicio);
+        this.modelo.fecha = this.modelo.horaInicio;
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             bloque.horaInicio = new Date(bloque.horaInicio);
@@ -150,8 +150,8 @@ export class PlantillaComponent {
         this.validarTodo();
     }
 
-    cambioHoraInicio() {
-        this.fecha = new Date(this.modelo.fecha);
+    cambioHoraBloques(){
+        this.fecha = this.modelo.fecha? new Date(this.modelo.fecha): new Date();
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
@@ -165,26 +165,6 @@ export class PlantillaComponent {
                 let cantidad = this.calcularCantidad(inicio, fin, duracion);
                 this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
             }
-            this.validarTodo();
-        }
-    }
-
-    cambioHoraFin() {
-        this.fecha = new Date(this.modelo.fecha);
-        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-
-        if (inicio && fin) {
-            this.elementoActivo.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
-                fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
-            this.modelo.bloques.sort(this.compararBloques);
-            let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (duracion) {
-                this.elementoActivo.duracionTurno = Math.floor(duracion);
-                let cantidad = this.calcularCantidad(inicio, fin, duracion);
-                this.elementoActivo.cantidadTurnos = Math.floor(cantidad);
-            }
-            //this.validarBloques();
             this.validarTodo();
         }
     }
