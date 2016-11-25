@@ -295,7 +295,7 @@ export class PlantillaComponent {
                 alerta = "Bloque " + (index + 1) + ": La cantidad de turnos asignados es mayor a la cantidad disponible";
                 this.alertas.push(alerta);
             }
-           
+
             if (this.compararFechas(inicio, fin) > 0) {
                 alerta = "Bloque " + (index + 1) + ": La hora de inicio es mayor a la hora de fin";
                 this.alertas.push(alerta);
@@ -347,11 +347,8 @@ export class PlantillaComponent {
     onReturn(agenda: IPlantilla[]): void {
         this.showPlantilla = true;
 
-        // this.selectedAgenda = idAgenda;
-
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
 
-        // debugger;
         this.cargarPlantilla(agenda);
     }
 }
