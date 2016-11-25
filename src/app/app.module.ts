@@ -55,7 +55,7 @@ import {DataTableModule,SharedModule} from 'primeng/primeng';
 import {ToggleButtonModule} from 'primeng/primeng';
 
 import { PlexModule } from 'andes-plex/src/lib/module';
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { ServerService } from 'andes-shared/src/lib/server.service';
 
 @NgModule({
@@ -93,7 +93,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
               BarrioService, 
               PacienteService, 
               FinanciadorService,  
-              PlexService,
+              Plex,
               PrestacionService,
               appRoutingProviders,
               ConfigPrestacionService,

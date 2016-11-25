@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
@@ -15,7 +15,7 @@ import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 })
 
 export class BuscarAgendasComponent implements OnInit {
-    constructor(public plex: PlexService, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
+    constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
         public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, protected router: Router, private formBuilder: FormBuilder) { }
 
     public modelo: any = {};
@@ -85,7 +85,7 @@ export class BuscarAgendasComponent implements OnInit {
             + ("0" + (pepe.getDate()
             )).slice(-2));
 
-        alert(capo);
+        // alert(capo);
 
         this.modelo = {
             fecha: capo,

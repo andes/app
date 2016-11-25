@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { SidebarItem } from 'andes-plex/src/lib/app/sidebar-item.class';
 
 @Component({
@@ -8,7 +8,7 @@ import { SidebarItem } from 'andes-plex/src/lib/app/sidebar-item.class';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    constructor(public plex: PlexService) { }
+    constructor(public plex: Plex) { }
     ngOnInit() {
         //Cargo el listado de componentes
         this.loadSideBar();

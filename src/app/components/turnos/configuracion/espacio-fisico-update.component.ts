@@ -1,4 +1,4 @@
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
@@ -18,7 +18,7 @@ export class EspacioFisicoUpdateComponent implements OnInit {
     data: EventEmitter<IEspacioFisico> = new EventEmitter<IEspacioFisico>();
     public modelo: any = {};
 
-    constructor(public plex: PlexService, public EspacioFisicoService: EspacioFisicoService) { }
+    constructor(public plex: Plex, public EspacioFisicoService: EspacioFisicoService) { }
 
     ngOnInit() {
         debugger;        

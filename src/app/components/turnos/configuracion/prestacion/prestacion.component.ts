@@ -1,4 +1,4 @@
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
@@ -20,7 +20,7 @@ export class PrestacionComponent implements OnInit {
     searchForm: FormGroup;
     selectedPrestacion: IPrestacion;
 
-    constructor(public plex: PlexService, public prestacionService: PrestacionService) { }
+    constructor(public plex: Plex, public prestacionService: PrestacionService) { }
 
     ngOnInit() {
         this.loadPrestacion();

@@ -1,7 +1,7 @@
 import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
@@ -30,7 +30,7 @@ export class PlantillaComponent {
     showPlantilla: boolean = true;
     selectedAgenda: IPlantilla[];
 
-    constructor(private formBuilder: FormBuilder, public plex: PlexService,
+    constructor(private formBuilder: FormBuilder, public plex: Plex,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public ServicioPlantilla: PlantillaService) { }
 
@@ -41,7 +41,7 @@ export class PlantillaComponent {
 
     compararBloques(fecha1, fecha2): number {
         if (fecha1 && fecha2) {
-            return fecha2.horaInicio.getTime() - fecha1.horaInicio.getTime();
+            return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
         }
         else
             return 0;
@@ -350,7 +350,10 @@ export class PlantillaComponent {
             });
 
             espOperation = this.ServicioPlantilla.save(this.modelo);
-            espOperation.subscribe(resultado => this.data.emit(resultado));
+            espOperation.subscribe(resultado => {
+                this.plex.alert("La agenda se guardo correctamente");
+
+            });
         }
         else
             alert("Complete datos obligatorios");

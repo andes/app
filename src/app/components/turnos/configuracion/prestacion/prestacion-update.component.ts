@@ -1,4 +1,4 @@
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
@@ -18,7 +18,7 @@ export class PrestacionUpdateComponent implements OnInit {
     data: EventEmitter<IPrestacion> = new EventEmitter<IPrestacion>();
     public modelo: any = {};
 
-    constructor(public plex: PlexService, public prestacionService: PrestacionService) { }
+    constructor(public plex: Plex, public prestacionService: PrestacionService) { }
 
     ngOnInit() {        
         this.modelo = { nombre: this.prestacionHijo.nombre, descripcion: this.prestacionHijo.descripcion, activo: this.prestacionHijo.activo };

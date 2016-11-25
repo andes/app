@@ -1,7 +1,7 @@
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { IConfigPrestacion } from './../../interfaces/turnos/IConfigPrestacion';
-import { PlexService } from 'andes-plex/src/lib/core/service';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import { Component, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
@@ -17,7 +17,7 @@ export class ConfigPrestacionComponent {
     public modelo2 : any;
     configuraciones: IConfigPrestacion;
     
-    constructor(private formBuilder: FormBuilder, public plex: PlexService, public servicioConfig: ConfigPrestacionService, 
+    constructor(private formBuilder: FormBuilder, public plex: Plex, public servicioConfig: ConfigPrestacionService, 
     public servicioPrestacion: PrestacionService) { }
 
     ngOnInit() {
