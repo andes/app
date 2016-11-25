@@ -381,13 +381,10 @@ export class PlantillaComponent {
     }
 
     onReturn(agenda: IPlantilla[]): void {        
-        this.showPlantilla = true;
-
-        // this.selectedAgenda = idAgenda;
+        this.showPlantilla = true;        
 
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
-
-        // debugger;
+        
         this.cargarPlantilla(agenda);
     }
 }

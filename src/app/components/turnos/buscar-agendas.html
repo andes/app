@@ -1,4 +1,4 @@
-<div class="container" *ngIf="showBuscarAgendas">
+<div *ngIf="showBuscarAgendas">
     <div class="row">
         <div class="col-md-12">
             <form [formGroup]="searchForm">
@@ -97,8 +97,9 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <plex-text [(ngModel)]="modelo.profesional" name="profesional" label="Profesional">
+                            <plex-text [(ngModel)]="modelo.profesional" name="profesional" label="Profesional" aria-readonly="true">
                             </plex-text>
+                            <!--<label for="name" ng-value="Profesional"> {{modelo.profesional}}</label>-->
                         </div>
                         <div class="col-md-4">
                             <plex-text [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Prestaciones">
@@ -106,9 +107,29 @@
                         </div>
                         <div class="col-md-4">
                             <plex-text [(ngModel)]="modelo.espacioFisico" name="espacioFisico" label="Espacio Físico">
-                            </plex-text>
+                            </plex-text>                         
+                          
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Bloques</label>
+                            <div class="list-group">
+                                <a *ngFor="let bloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
+                                    <div class="row">
+                                        <div class="col-md-4">{{bloque.descripcion}}</div>
+                                        <!--<div class="col-md-4">{{unBloque.titulo}}</div>
+                                        <div class="col-md-4" align="right">
+                                            <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
+                                            </plex-button>
+                                        </div>-->
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </plex-box>
             </form>

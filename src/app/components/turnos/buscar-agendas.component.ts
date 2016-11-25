@@ -26,7 +26,7 @@ export class BuscarAgendasComponent implements OnInit {
     showPlantilla: boolean = false;
     selectedAgenda: string;
 
-     @Output()
+    @Output()
     selected: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
 
     searchForm: FormGroup;
@@ -72,28 +72,32 @@ export class BuscarAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get().subscribe(event.callback);
     }
 
-    editarAgenda(agenda: IPlantilla) {                       
+    editarAgenda(agenda: IPlantilla) {
 
-        this.selected.emit(agenda);        
+        this.selected.emit(agenda);
     }
 
     verAgenda(agenda) {
-        var pepe = new Date(agenda.horaInicio);
+        var fecha = new Date(agenda.horaInicio);
+        var horaFin = new Date(agenda.horaFin);
 
-        var capo = (pepe.getFullYear().toString() + '-'
-            + ("0" + (pepe.getMonth() + 1)).slice(-2) + '-'
-            + ("0" + (pepe.getDate()
-            )).slice(-2));
+        // var fechaAgenda = (fecha.getFullYear().toString() + '-'
+        //     + ("0" + (fecha.getMonth() + 1)).slice(-2) + '-'
+        //     + ("0" + (fecha.getDate()
+        //     )).slice(-2));
 
-        alert(capo);
-
+        debugger;
         this.modelo = {
-            fecha: capo,
-            horaInicio: agenda.horaInicio,
-            horaFin: agenda.horaFin,
+            fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
+            horaInicio: fecha.getHours() + ':' + fecha.getMinutes(),
+            horaFin: horaFin.getHours() + ':' + horaFin.getMinutes(),
             profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
             prestaciones: agenda.prestaciones[0].nombre,
-            espacioFisico: agenda.espacioFisico.nombre
+            espacioFisico: agenda.espacioFisico.nombre,
+            bloques: [{
+                descripcion: agenda.bloques[0].descripcion
+            }
+            ]
         };
     }
 }
