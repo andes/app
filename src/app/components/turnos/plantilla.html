@@ -91,11 +91,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques()" label="Hora Inicio">
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')" label="Hora Inicio">
                             </plex-datetime>
                         </div>
                         <div class="col-md-3">
-                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques()" label="Hora Fin">
+                            <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques('fin')" label="Hora Fin">
                             </plex-datetime>
                         </div>
                     </div>
@@ -121,12 +121,12 @@
                                         <label>Del día</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" (keyup)="cambiaAccesoDirectoDelDia()" name="accesoDirectoDelDia"
+                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" (keyup)="cambiaCantTipo('accesoDirectoDelDia')" name="accesoDirectoDelDia"
                                             placeholder="Cant">
                                         </plex-int>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" (keyup)="cambiaAccesoDirectoDelDiaPorc()" name="accesoDirectoDelDiaPorc"
+                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" (keyup)="cambiaPorcentajeTipo()" name="accesoDirectoDelDiaPorc"
                                             suffix="%" placeholder="%">
                                         </plex-int>
                                     </div>
@@ -136,12 +136,12 @@
                                         <label>Programados</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" (keyup)="cambiaAccesoDirectoProgramado()" name="accesoDirectoProgramado"
+                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" (keyup)="cambiaCantTipo('accesoDirectoProgramado')" name="accesoDirectoProgramado"
                                             placeholder="Cant">
                                         </plex-int>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" (keyup)="cambiaAccesoDirectoProgramadoPorc()" name="accesoDirectoProgramadoPorc"
+                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" (keyup)="cambiaPorcentajeTipo('accesoDirectoProgramado')" name="accesoDirectoProgramadoPorc"
                                             suffix="%" placeholder="%">
                                         </plex-int>
                                     </div>
@@ -156,12 +156,12 @@
                                         <label>Para gestión de pacientes</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProgramado" (keyup)="cambiaReservadoProgramado()" name="reservadoProgramado"
+                                        <plex-int [(ngModel)]="elementoActivo.reservadoProgramado" (keyup)="cambiaCantTipo('reservadoProgramado')" name="reservadoProgramado"
                                             placeholder="Cant">
                                         </plex-int>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProgramadoPorc" (keyup)="cambiaReservadoProgramadoPorc()" name="reservadoProgramadoporc"
+                                        <plex-int [(ngModel)]="elementoActivo.reservadoProgramadoPorc" (keyup)="cambiaPorcentajeTipo('reservadoProgramado')" name="reservadoProgramadoporc"
                                             suffix="%" placeholder="%">
                                         </plex-int>
                                     </div>
@@ -172,12 +172,12 @@
                                         <label>Para el Profesional</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" (keyup)="cambiaReservadoProfesional()" name="reservadoProfesional"
+                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional"
                                             placeholder="Cant">
                                         </plex-int>
                                     </div>
                                     <div class="col-md-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" (keyup)="cambiaReservadoProfesionalPorc()" name="progReservadoPorc"
+                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" (keyup)="cambiaPorcentajeTipo('reservadoProfesional')" name="progReservadoPorc"
                                             suffix="%" placeholder="%">
                                         </plex-int>
                                     </div>
