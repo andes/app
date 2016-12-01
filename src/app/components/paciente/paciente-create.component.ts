@@ -53,8 +53,8 @@ export class PacienteCreateComponent implements OnInit {
 
         //CArga de combos
         this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
-        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
+        this.ProvinciaService.get("").subscribe(resultado => {this.todasProvincias = resultado});
+        this.LocalidadService.get("").subscribe(resultado => {this.todasLocalidades = resultado});
         this.financiadorService.get().subscribe(resultado => {this.obrasSociales = resultado});
         
         this.showCargar = false;

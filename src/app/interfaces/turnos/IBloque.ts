@@ -4,7 +4,7 @@ export interface IBloque{
     horaFin: Date,
     cantidadTurnos: Number,
     descripcion: String,
-    prestacion: IPrestacion,
+    prestaciones: IPrestacion[],
     
     accesoDirectoDelDia: Number,
     accesoDirectoProgramado: Number,
@@ -13,5 +13,5 @@ export interface IBloque{
 
     pacienteSimultaneos: Boolean,
     cantidadSimultaneos: Number,
-    citarPorBloque: Boolean
+    citarPorBloque: Boolean,
 }

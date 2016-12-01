@@ -10,6 +10,7 @@ import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
+import * as operaciones from './../../utils/operacionesJSON';
 
 @Component({
     templateUrl: 'plantilla.html',
@@ -39,13 +40,12 @@ export class PlantillaComponent {
         this.bloqueActivo = -1;
     }
 
-    cargarPlantilla(agenda: IPlantilla[]) {
+    cargarPlantilla(agenda: IPlantilla) {
         this.modelo = agenda;
         this.calculosInicio();
         this.modelo.bloques.sort(this.compararBloques);
     }
 
-    
     cargar() {
         this.showBuscarAgendas = true;
         this.showPlantilla = false;
@@ -61,6 +61,25 @@ export class PlantillaComponent {
 
     loadEspacios(event) {
         this.servicioEspacioFisico.get().subscribe(event.callback);
+    }
+
+    inicializarPrestacionesBloques(bloque){
+        this.modelo.prestaciones.forEach((prestacion, index) => {
+            let copiaPrestacion= operaciones.clonarObjeto(prestacion);
+            if (bloque.prestaciones){
+                let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                if (i>=0)
+                    bloque.prestaciones[i].activo = true;
+                else{
+                    bloque.prestaciones.push(copiaPrestacion);
+                    bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                }
+            }
+            else{
+                bloque.prestaciones.push(copiaPrestacion);
+                bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+            }
+        });
     }
 
     calculosInicio() {
@@ -88,6 +107,7 @@ export class PlantillaComponent {
                 bloque.duracionTurno = 0
             }
 
+            this.inicializarPrestacionesBloques(bloque);
             bloque.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
                 fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
         });
@@ -113,9 +133,12 @@ export class PlantillaComponent {
             "accesoDirectoDelDia": 0, "accesoDirectoDelDiaPorc": 0,
             "accesoDirectoProgramado": 0, "accesoDirectoProgramadoPorc": 0,
             "reservadoProgramado": 0, "reservadoProgramadoPorc": 0,
-            "reservadoProfesional": 0, "reservadoProfesionalPorc": 0
+            "reservadoProfesional": 0, "reservadoProfesionalPorc": 0,
+            "prestaciones" : []
         });
         this.activarBloque(longitud);
+        this.inicializarPrestacionesBloques(this.elementoActivo);
+        
     }
 
     deleteBloque(indice: number) {
@@ -129,8 +152,7 @@ export class PlantillaComponent {
     compararBloques(fecha1, fecha2): number {
         let indiceAux: Number;
         if (fecha1 && fecha2) {
-            console.log("fecha1.horaInicio  "+fecha1.horaInicio+"fecha2.horaInicio  "+fecha2.horaInicio+ " resu "+(fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime()));
-            if(fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0){
+            if(fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
                 indiceAux = fecha1.indice;
                 fecha1.indice = fecha2.indice;
                 fecha2.indice = indiceAux;
@@ -147,6 +169,29 @@ export class PlantillaComponent {
         else
             return 0;
     }
+    
+    cambioPrestaciones(){
+        let bloques = this.modelo.bloques;
+        bloques.forEach((bloque, index) => {
+            //Si se elimino una prestación, la saco de los bloques
+            let bloquePrestaciones = bloque.prestaciones; 
+            bloquePrestaciones.forEach((bloquePrestacion, index) => {
+                let i = this.modelo.prestaciones.map(function(e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
+                if (i<0)
+                    bloquePrestaciones.splice(index, 1);
+            });
+            
+            //Si se agrego una prestacion, la agrego a los bloques
+            this.modelo.prestaciones.forEach((prestacion, index) => {
+                let copiaPrestacion= operaciones.clonarObjeto(prestacion);
+                let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                if (i<0){
+                    bloque.prestaciones.push(copiaPrestacion);
+                    bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                }
+            });   
+        });
+    }
 
     cambioFecha() {
         this.fecha = new Date(this.modelo.fecha);
@@ -154,18 +199,15 @@ export class PlantillaComponent {
         this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
     }
 
-    cmbHoraIniGral() {
+    cambioHoras(cual: String){
         this.fecha = new Date(this.modelo.fecha);
-        this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        if (cual=="inicio")
+            this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        else
+            this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
         this.validarTodo();
     }
-
-    cmbHoraFinGral() {
-        this.fecha = new Date(this.modelo.fecha);
-        this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-        this.validarTodo();
-    }
-
+    
     cambioHoraBloques(texto:String) {
         this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
@@ -174,7 +216,6 @@ export class PlantillaComponent {
         if (inicio && fin) {
             this.elementoActivo.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
                 fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
-                
             
             let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
             if (duracion) {
@@ -189,25 +230,17 @@ export class PlantillaComponent {
         
         this.bloqueActivo = this.elementoActivo.indice;
         this.activarBloque(this.elementoActivo.indice);
-        
     }
 
-    cambiaCantidadTurnos() {
+    cambiaTurnos(cual:String){
         this.fecha = new Date(this.modelo.fecha);
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-        if (inicio && fin && this.elementoActivo.cantidadTurnos) {
-            this.elementoActivo.duracionTurno = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            this.verificarCantidades();
-        }
-    }
-
-    cambiaduracionTurnos() {
-        this.fecha = new Date(this.modelo.fecha);
-        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-        if (inicio && fin && this.elementoActivo.duracionTurno) {
-            this.elementoActivo.cantidadTurnos = this.calcularCantidad(inicio, fin, this.elementoActivo.duracionTurno);
+        if (inicio && fin) {
+            if (cual == "cantidad" && this.elementoActivo.cantidadTurnos)
+                this.elementoActivo.duracionTurno = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
+            if (cual == "duracion" && this.elementoActivo.duracionTurno)
+                this.elementoActivo.cantidadTurnos = this.calcularCantidad(inicio, fin, this.elementoActivo.duracionTurno);
             this.verificarCantidades();
         }
     }
@@ -293,7 +326,6 @@ export class PlantillaComponent {
         let bloques = this.modelo.bloques;
         this.alertas = [];
         bloques.forEach((bloque, index) => {
-            
             var inicio = this.combinarFechas(fechaaux, bloque.horaInicio);
             var fin = this.combinarFechas(fechaaux, bloque.horaFin);
             
@@ -312,8 +344,28 @@ export class PlantillaComponent {
                 alerta = "Bloque " + (bloque.indice+1) + ": La hora de inicio es mayor a la hora de fin";
                 this.alertas.push(alerta);
             }
-        });
 
+            //por cada bloque verificar que no se solape con ningún otro
+            let mapeo = bloques.map(function(obj){
+                if (obj.id != bloque.id){
+                    let robj = {};
+                    robj['horaInicio'] = obj.horaInicio;
+                    robj['horaFin'] = obj.horaFin;
+                    return robj;
+                }
+                else
+                    return null;
+            });
+            console.log("inicio "+inicio);
+            mapeo.forEach((bloqueMap, index) => {
+                if (bloqueMap){
+                    if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0){
+                        alerta = "El bloque " + (bloque.indice+1) + " se solapa con el "+(index+1);
+                        this.alertas.push(alerta);
+                    }
+                }
+            });
+        });
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -335,7 +387,7 @@ export class PlantillaComponent {
     onSave(isvalid: boolean) {
         if (isvalid) {
             let espOperation: Observable<IPlantilla>;
-
+            let prestacionesFormateadas : any[];
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
@@ -344,12 +396,26 @@ export class PlantillaComponent {
             bloques.forEach((bloque, index) => {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
+                bloque.prestaciones = bloque.prestaciones.filter(function (el) {
+                    return el.activo == true;
+                });
+                prestacionesFormateadas = [];
+                prestacionesFormateadas = bloque.prestaciones.map(function(obj){
+                    var rObj = {};
+                    if (obj.activo){
+                        rObj["_id"] = obj._id;
+                        rObj["id"] = obj.id;
+                        rObj["nombre"] = obj.nombre;
+                        return rObj;
+                    }
+                });
+                bloque.prestaciones = prestacionesFormateadas;
             });
-
             espOperation = this.ServicioPlantilla.save(this.modelo);
             espOperation.subscribe(resultado => {
+                this.bloqueActivo = -1;
+                this.cargarPlantilla(resultado);
                 this.plex.alert("La agenda se guardo correctamente");
-
             });
         }
         else
@@ -361,11 +427,9 @@ export class PlantillaComponent {
         //return false;
     }
 
-    onReturn(agenda: IPlantilla[]): void {
+    onReturn(agenda: IPlantilla): void {
         this.showPlantilla = true;
-
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
-
         this.cargarPlantilla(agenda);
     }
 }

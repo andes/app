@@ -55,8 +55,8 @@ export class ProfesionalCreateComponent implements OnInit {
         this.estadosCiviles = enumerados.getEstadoCivil();
 
         this.paisService.get().subscribe(resultado => {this.paises = resultado});
-        this.provinciaService.get().subscribe(resultado => this.todasProvincias = resultado);
-        this.localidadService.get().subscribe(resultado => this.todasLocalidades = resultado);
+        this.provinciaService.get("").subscribe(resultado => this.todasProvincias = resultado);
+        this.localidadService.get("").subscribe(resultado => this.todasLocalidades = resultado);
 
         this.especialidadService.get().subscribe(resultado => {this.todasEspecialidades = resultado})
 

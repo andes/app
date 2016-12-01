@@ -39,7 +39,7 @@ export class BuscarAgendasComponent implements OnInit {
             fechaHasta: [new Date()],
             prestaciones: [''],
             profesionales: [''],
-            espacioFisico: ['']
+            espacioFisico: [''],
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
@@ -80,8 +80,6 @@ export class BuscarAgendasComponent implements OnInit {
     verAgenda(agenda) {
         var fecha = new Date(agenda.horaInicio);
         var horaFin = new Date(agenda.horaFin);
-
-
         
         debugger;
         this.modelo = {
@@ -91,10 +89,7 @@ export class BuscarAgendasComponent implements OnInit {
             profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
             prestaciones: agenda.prestaciones[0].nombre,
             espacioFisico: agenda.espacioFisico.nombre,
-            bloques: [{
-                descripcion: agenda.bloques[0].descripcion
-            }
-            ]
+            bloques: agenda.bloques
         };
     }
 }

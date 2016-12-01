@@ -13,8 +13,9 @@ import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ProvinciaService } from './../../services/provincia.service';
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { Plex } from 'andes-plex/src/lib/core/service';
+import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import * as enumerados from './../../utils/enumerados';
-
 
 @Component({
     selector: 'organizacion-create',
@@ -33,7 +34,6 @@ export class OrganizacionCreateComponent implements OnInit {
     todasLocalidades: ILocalidad[];
     barrios: IBarrio[];
     
-
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService, private PaisService: PaisService,
     private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
     private BarrioService: BarrioService, private tipoEstablecimientoService: TipoEstablecimientoService) {}
@@ -41,9 +41,9 @@ export class OrganizacionCreateComponent implements OnInit {
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
         this.tiposContactos = enumerados.getTipoComunicacion();
-        this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
-        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
+        //this.PaisService.get().subscribe(resultado => {debugger;this.paises = resultado});
+        //this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
+        //this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
         this.tipoEstablecimientoService.get().subscribe(resultado => {this.tipos = resultado;});
 
         
@@ -57,21 +57,20 @@ export class OrganizacionCreateComponent implements OnInit {
             }),
             tipoEstablecimiento:[''],
             telecom: this.formBuilder.array([]),
-            direccion: this.formBuilder.array([
-               this.formBuilder.group({
-                   valor: [''],
-                   ubicacion: this.formBuilder.group({
-                       pais: [''],
-                       provincia: [''],
-                       localidad: ['']
-                   }),
-                   ranking: [''],
-                   codigoPostal: [''],
-                   latitud: [''],
-                   longitud: [''],
-                   activo: [true]
-               })
-           ]),
+            direccion: this.formBuilder.group({
+                valor: [''],
+                ubicacion: this.formBuilder.group({
+                    pais: [''],
+                    provincia: [''],
+                    localidad: ['']
+                }),
+                ranking: [''],
+                codigoPostal: [''],
+                latitud: [''],
+                longitud: [''],
+                activo: [true]
+            }),
+
            contacto: this.formBuilder.array([])
         });
     }
@@ -125,10 +124,30 @@ export class OrganizacionCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    filtrarProvincias(indiceSelected: number){
-        var idPais = this.paises[indiceSelected].id;
-        this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
-        this.localidades = [];
+    loadTipos(event) {
+        this.tipoEstablecimientoService.get().subscribe(event.callback);
+    }
+
+    loadPaises(event) {
+        this.PaisService.get().subscribe(event.callback);
+    }
+
+    // filtrarProvincias(indiceSelected: number){
+    //     var idPais = this.paises[indiceSelected].id;
+    //     this.provincias = this.todasProvincias.filter(function (p) {return p.pais.id == idPais; });
+    //     this.localidades = [];
+    // }
+
+    loadProvincias(event, pais){
+        console.log("pais "+pais.value.id);
+        //this.ProvinciaService.get({"pais":pais.value.id}).subscribe(resultado => {this.todasProvincias = resultado});
+        this.ProvinciaService.get({"pais":pais.value.id}).subscribe(event.callback);
+    }
+
+    loadLocalidades(event, provincia){
+        console.log("provincia "+provincia.value.id);
+        //this.ProvinciaService.get({"pais":pais.value.id}).subscribe(resultado => {this.todasProvincias = resultado});
+        this.LocalidadService.get({"provincia":provincia.value.id}).subscribe(event.callback);
     }
 
       

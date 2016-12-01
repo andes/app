@@ -49,8 +49,8 @@ export class OrganizacionUpdateComponent implements OnInit {
         this.tiposcom = enumerados.getTipoComunicacion();
 
         this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get().subscribe(resultado => {this.todasProvincias = resultado});
-        this.LocalidadService.get().subscribe(resultado => {this.todasLocalidades = resultado});
+        this.ProvinciaService.get("").subscribe(resultado => {this.todasProvincias = resultado});
+        this.LocalidadService.get("").subscribe(resultado => {this.todasLocalidades = resultado});
         
         this.tipoEstablecimientoService.get().subscribe(resultado => {this.tipos = resultado;});
         this.updateForm = this.formBuilder.group({

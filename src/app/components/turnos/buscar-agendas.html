@@ -16,13 +16,12 @@
                         </plex-select>
                     </div>
                 </div>
-
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional">
                         </plex-select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <plex-select formControlName="espacioFisico" (get-data)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico">
                         </plex-select>
                     </div>
@@ -111,34 +110,18 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <label>Bloques</label>
                         <div class="list-group">
-                            <a *ngFor="let bloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
+                            <a *ngFor="let bloque of modelo.bloques; let i=index" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-4">{{bloque.descripcion}}</div>
-                                    <!--<div class="col-md-4">{{unBloque.titulo}}</div>
-                                        <div class="col-md-4" align="right">
-                                            <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
-                                            </plex-button>
-                                        </div>-->
                                 </div>
                             </a>
                         </div>
                     </div>
                 </div>
-
-
-
-
             </plex-box>
         </form>
     </div>
 </div>
-
-<!--<div class="col-sm-12" *ngIf="showPlantilla">
-    <div class="panel panel-default">
-        <div class="clear"></div>
-        <plantilla (data)='onReturn($event)'></plantilla>
-    </div>
-</div>-->
