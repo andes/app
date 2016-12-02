@@ -1,4 +1,3 @@
-import { OrganizacionUpdateComponent } from './organizacion-update.component';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Observable } from 'rxjs/Rx';
@@ -11,11 +10,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class OrganizacionComponent implements OnInit {
     showcreate: boolean = false;
-    showupdate: boolean = false;
     organizaciones: IOrganizacion[];
     searchForm: FormGroup;
     selectedOrg: IOrganizacion;
-
+        
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 
     checked: boolean = true;
@@ -35,8 +33,7 @@ export class OrganizacionComponent implements OnInit {
     }
 
     loadOrganizaciones() {
-
-        this.organizacionService.get()
+        this.organizacionService.get({})
             .subscribe(
             organizaciones => this.organizaciones = organizaciones, //Bind to view
             err => {
@@ -47,7 +44,7 @@ export class OrganizacionComponent implements OnInit {
     }
 
     loadOrganizacionesFiltrados(codigoSisa: string, nombre: String) {
-        this.organizacionService.getByTerm(codigoSisa, nombre)
+        this.organizacionService.get({ "codigoSisa": codigoSisa, "nombre": nombre })
             .subscribe(
             organizaciones => this.organizaciones = organizaciones, //Bind to view
             err => {
@@ -59,7 +56,7 @@ export class OrganizacionComponent implements OnInit {
 
     onReturn(objOrganizacion: IOrganizacion): void {
         this.showcreate = false;
-        this.showupdate = false;
+        this.selectedOrg = null;
         this.loadOrganizaciones();
     }
 
@@ -82,10 +79,10 @@ export class OrganizacionComponent implements OnInit {
                 }
             });
     }
-
+    
     onEdit(objOrganizacion: IOrganizacion) {
-        this.showcreate = false;
-        this.showupdate = true;
+        this.showcreate = true;
+        // this.showupdate = false;
         this.selectedOrg = objOrganizacion;
     }
 

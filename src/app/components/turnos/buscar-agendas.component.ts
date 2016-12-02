@@ -6,7 +6,6 @@ import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.ser
 import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 
 @Component({
@@ -24,7 +23,7 @@ export class BuscarAgendasComponent implements OnInit {
 
     showBuscarAgendas: boolean = true;
     showPlantilla: boolean = false;
-    selectedAgenda: string;
+    //selectedAgenda: string;
 
     @Output()
     selected: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
@@ -73,7 +72,6 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     editarAgenda(agenda: IPlantilla) {
-
         this.selected.emit(agenda);
     }
 

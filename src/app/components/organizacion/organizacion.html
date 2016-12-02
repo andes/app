@@ -1,4 +1,4 @@
-<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
+<div class="col-sm-12" *ngIf="!showcreate">
     <div class="panel panel-default">
         <div class="panel-heading">Listado de Organizaciones</div>
         <div class="panel-body">
@@ -51,15 +51,15 @@
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <organizacion-create (data)='onReturn($event)'></organizacion-create>
+        <organizacion-create-update [selectedOrg]="selectedOrg" (data)='onReturn($event)'></organizacion-create-update>
 
     </div>
 </div>
 
-<div class="col-sm-12" *ngIf="showupdate">
+<!--<div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
         <organizacion-update [selectedOrg]="selectedOrg" (data)='onReturn($event)'></organizacion-update>
 
     </div>
-</div>
+</div>-->

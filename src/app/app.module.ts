@@ -26,8 +26,7 @@ import { EspecialidadCreateComponent} from './components/especialidad/especialid
 import { EspecialidadUpdateComponent } from './components/especialidad/especialidad-update.component';
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
-import { OrganizacionCreateComponent } from './components/organizacion/organizacion-create.component';
-import { OrganizacionUpdateComponent } from './components/organizacion/organizacion-update.component';
+import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
@@ -73,7 +72,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
   declarations: [
               AppComponent, InicioComponent, 
-              OrganizacionComponent, OrganizacionCreateComponent, OrganizacionUpdateComponent, 
+              OrganizacionComponent, OrganizacionCreateUpdateComponent, 
               ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
               PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
