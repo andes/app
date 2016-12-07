@@ -18,7 +18,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional">
+                        <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional" label-field="nombre+' '+apellido">
                         </plex-select>
                     </div>
                     <div class="col-md-4">

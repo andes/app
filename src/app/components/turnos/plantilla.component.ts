@@ -1,3 +1,4 @@
+import { RouterModule, Routes, Router } from '@angular/router';
 import { PlantillaService } from './../../services/turnos/plantilla.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
@@ -31,7 +32,7 @@ export class PlantillaComponent {
     showPlantilla: boolean = true;
     selectedAgenda: IPlantilla[];
 
-    constructor(private formBuilder: FormBuilder, public plex: Plex,
+    constructor(private formBuilder: FormBuilder, public plex: Plex, private router:Router,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public ServicioPlantilla: PlantillaService) { }
 
@@ -64,22 +65,24 @@ export class PlantillaComponent {
     }
 
     inicializarPrestacionesBloques(bloque){
-        this.modelo.prestaciones.forEach((prestacion, index) => {
-            let copiaPrestacion= operaciones.clonarObjeto(prestacion);
-            if (bloque.prestaciones){
-                let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
-                if (i>=0)
-                    bloque.prestaciones[i].activo = true;
+        if (this.modelo.prestaciones){
+            this.modelo.prestaciones.forEach((prestacion, index) => {
+                let copiaPrestacion= operaciones.clonarObjeto(prestacion);
+                if (bloque.prestaciones){
+                    let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                    if (i>=0)
+                        bloque.prestaciones[i].activo = true;
+                    else{
+                        bloque.prestaciones.push(copiaPrestacion);
+                        bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                    }
+                }
                 else{
                     bloque.prestaciones.push(copiaPrestacion);
                     bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
                 }
-            }
-            else{
-                bloque.prestaciones.push(copiaPrestacion);
-                bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
-            }
-        });
+            });
+        }
     }
 
     calculosInicio() {
@@ -423,8 +426,8 @@ export class PlantillaComponent {
     }
 
     onCancel() {
-        this.data.emit(null);
-        //return false;
+        this.router.navigate(['/inicio']);
+        return false;
     }
 
     onReturn(agenda: IPlantilla): void {

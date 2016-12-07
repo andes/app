@@ -43,17 +43,17 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
         this.tiposContactos = enumerados.getTipoComunicacion();
-        let nombre = this.organizacionHijo? this.organizacionHijo.nombre: '';
-        let nivelComplejidad = this.organizacionHijo? this.organizacionHijo.nivelComplejidad: '';
-        let sisa = this.organizacionHijo? this.organizacionHijo.codigo.sisa: '';
-        let cuie = this.organizacionHijo? this.organizacionHijo.codigo.cuie: '';
-        let remediar = this.organizacionHijo? this.organizacionHijo.codigo.remediar: '';
-        let tipoEstablecimiento = this.organizacionHijo? this.organizacionHijo.tipoEstablecimiento: '';
-        let valor = this.organizacionHijo? this.organizacionHijo.direccion[0].valor: '';
-        let pais = this.organizacionHijo? this.organizacionHijo.direccion[0].ubicacion.pais: '';
-        let provincia = this.organizacionHijo? this.organizacionHijo.direccion[0].ubicacion.provincia: '';
-        let localidad = this.organizacionHijo? this.organizacionHijo.direccion[0].ubicacion.localidad: '';
-        let codigoPostal = this.organizacionHijo? this.organizacionHijo.direccion[0].codigoPostal: '';
+        let nombre = this.organizacionHijo ? this.organizacionHijo.nombre : '';
+        let nivelComplejidad = this.organizacionHijo ? this.organizacionHijo.nivelComplejidad : '';
+        let sisa = this.organizacionHijo ? this.organizacionHijo.codigo.sisa : '';
+        let cuie = this.organizacionHijo ? this.organizacionHijo.codigo.cuie : '';
+        let remediar = this.organizacionHijo ? this.organizacionHijo.codigo.remediar : '';
+        let tipoEstablecimiento = this.organizacionHijo ? this.organizacionHijo.tipoEstablecimiento : '';
+        let valor = this.organizacionHijo ? this.organizacionHijo.direccion[0].valor : '';
+        let pais = this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.pais : '';
+        let provincia = this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.provincia : '';
+        let localidad = this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.localidad : '';
+        let codigoPostal = this.organizacionHijo ? this.organizacionHijo.direccion[0].codigoPostal : '';
         this.createForm = this.formBuilder.group({
             nombre: [nombre, Validators.required],
             nivelComplejidad: [nivelComplejidad],
@@ -63,7 +63,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 remediar: [remediar],
             }),
             tipoEstablecimiento: [tipoEstablecimiento],
-            telecom: this.formBuilder.array([]),
             direccion: this.formBuilder.group({
                 valor: [valor],
                 ubicacion: this.formBuilder.group({
@@ -77,15 +76,20 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 longitud: [''],
                 activo: [true]
             }),
-
+            telecom: this.formBuilder.array([]),
             contacto: this.formBuilder.array([]),
+            edificio: this.formBuilder.array([])
         });
-        if (this.organizacionHijo){
+
+        if (this.organizacionHijo) {
             this.organizacionHijo.telecom.forEach(element => {
                 this.addTelecom(element);
             });
             this.organizacionHijo.contacto.forEach(element => {
                 this.addContacto(element);
+            });
+            this.organizacionHijo.edificio.forEach(element => {
+                this.addEdificio(element,"previo");
             });
         }
     }
@@ -138,6 +142,76 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         const control = <FormArray>this.createForm.controls['contacto'];
         control.removeAt(i);
     }
+ 
+    addEdificio(unEdificio, tipo) {
+        // agrega formContacto 
+        const control = <FormArray>this.createForm.controls['edificio'];
+        control.push(this.iniEdificio(unEdificio,tipo));
+    }
+
+    iniEdificio(unEdificio, tipo) {
+        // Inicializa edificio
+        let cant = 0;
+        let fecha = new Date();
+        console.log(unEdificio);
+        if (tipo!="nuevo"){
+            return this.formBuilder.group({
+                id: unEdificio.id,
+                _id: unEdificio.id,
+                descripcion: unEdificio.descripcion,
+                direccion: this.formBuilder.group({
+                    valor: unEdificio.direccion ? unEdificio.direccion.valor : [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.pais : [''],
+                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.provincia : [''],
+                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.localidad : ['']
+                    }),
+                    ranking: unEdificio.direccion ? unEdificio.direccion.ranking : [''],
+                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.organizacionHijo ? this.organizacionHijo.direccion[0].codigoPostal : [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                }),
+                telefono: this.formBuilder.group({
+                    tipo: unEdificio.telefono ? unEdificio.telefono.tipo : [''],
+                    valor: unEdificio.telefono ? unEdificio.telefono.valor : [''],
+                    ranking: unEdificio.telefono ? unEdificio.telefono.ranking : [''],
+                    activo: unEdificio.telefono ? unEdificio.telefono.activo : [''],
+                }),
+            });
+        }
+        else{
+            return this.formBuilder.group({
+                descripcion: unEdificio.descripcion,
+                direccion: this.formBuilder.group({
+                    valor: unEdificio.direccion ? unEdificio.direccion.valor : [''],
+                    ubicacion: this.formBuilder.group({
+                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.pais : [''],
+                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.provincia : [''],
+                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.organizacionHijo ? this.organizacionHijo.direccion[0].ubicacion.localidad : ['']
+                    }),
+                    ranking: unEdificio.direccion ? unEdificio.direccion.ranking : [''],
+                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.organizacionHijo ? this.organizacionHijo.direccion[0].codigoPostal : [''],
+                    latitud: [''],
+                    longitud: [''],
+                    activo: [true]
+                }),
+                telefono: this.formBuilder.group({
+                    tipo: unEdificio.telefono ? unEdificio.telefono.tipo : [''],
+                    valor: unEdificio.telefono ? unEdificio.telefono.valor : [''],
+                    ranking: unEdificio.telefono ? unEdificio.telefono.ranking : [''],
+                    activo: unEdificio.telefono ? unEdificio.telefono.activo : [''],
+                }),
+            });
+        }
+
+    }
+
+    removeEdificio(i: number) {
+        // elimina formContacto
+        const control = <FormArray>this.createForm.controls['edificio'];
+        control.removeAt(i);
+    }
 
     loadTipos(event) {
         this.tipoEstablecimientoService.get().subscribe(event.callback);
@@ -148,28 +222,25 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
 
     loadProvincias(event, pais) {
-        console.log("pais " + pais.value.id);
         this.ProvinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
-        console.log("provincia " + provincia.value.id);
         this.LocalidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
     }
 
     onSave(model: IOrganizacion, isvalid: boolean) {
-        
         if (isvalid) {
             let estOperation: Observable<IOrganizacion>;
             model.activo = true;
-            if (this.organizacionHijo){
+            if (this.organizacionHijo) {
                 model.id = this.organizacionHijo.id;
                 estOperation = this.organizacionService.put(model);
             }
             else
                 estOperation = this.organizacionService.post(model);
-            
-            estOperation.subscribe(resultado => {this.data.emit(resultado);});
+
+            estOperation.subscribe(resultado => { this.data.emit(resultado); });
         } else {
             alert("Complete datos obligatorios");
         }

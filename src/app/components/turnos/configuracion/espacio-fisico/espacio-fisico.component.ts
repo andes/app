@@ -3,8 +3,8 @@ import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 
-import { IEspacioFisico } from './../../../interfaces/turnos/IEspacioFisico';
-import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 
 @Component({
     selector: 'espacio-fisico',
@@ -12,7 +12,7 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
 })
 
 export class EspacioFisicoComponent implements OnInit {
-    showcreate: boolean = false;
+    //showcreate: boolean = false;
     showupdate: boolean = false;
     espaciosFisicos: IEspacioFisico[];
     searchForm: FormGroup;
@@ -36,8 +36,9 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     onReturn(espacioFisico: IEspacioFisico): void {
-        this.showcreate = false;
+        //this.showcreate = false;
         this.showupdate = false;
+        this.selectedEspacioFisico = null;
         this.loadEspaciosFisicos();
     }
 
@@ -62,7 +63,7 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
      onEdit(espacioFisico: IEspacioFisico) {
-        this.showcreate = false;
+        //this.showcreate = false;
         this.showupdate = true;
         this.selectedEspacioFisico = espacioFisico;
     }

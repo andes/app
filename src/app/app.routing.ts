@@ -1,5 +1,5 @@
 import { PlantillaComponent } from './components/turnos/plantilla.component';
-import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico.component';
+import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';

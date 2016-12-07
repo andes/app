@@ -35,7 +35,7 @@
             <div class="clear"></div>
             <div class="row">
                 <div class="col-sm-12">
-                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Espacio Físico">
+                    <input class="btn btn-primary" type="button" (click)="showupdate = !showupdate" value="Nuevo Espacio Físico">
                 </div>
             </div>
 
@@ -44,16 +44,16 @@
     </div>
 </div>
 
-<div class="col-sm-12" *ngIf="showcreate">
+<!--<div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
         <espacio-fisico-create (data)='onReturn($event)'></espacio-fisico-create>
     </div>
-</div>
+</div>-->
 
 <div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <espacio-fisico-update [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></espacio-fisico-update>
+        <edit-espacio-fisico [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></edit-espacio-fisico>
     </div>
 </div>

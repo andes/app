@@ -19,6 +19,10 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl, params);
     }
 
+    getById(id: String): Observable<IOrganizacion> {
+        return this.server.get(this.organizacionUrl + "/" + id, null);
+    }
+
     post(organizacion: IOrganizacion): Observable<IOrganizacion> {
         let bodyString = JSON.stringify(organizacion); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
@@ -32,6 +36,7 @@ export class OrganizacionService {
         let bodyString = JSON.stringify(organizacion); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers }); // Create a request option
+        //console.log(bodyString);
         return this.http.put(this.organizacionUrl + "/" + organizacion.id, bodyString, options) // ...using post request
             .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
             .catch(this.handleError); //...errors if any

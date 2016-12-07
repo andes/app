@@ -4,7 +4,6 @@ import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { PlantillaService } from './../../services/turnos/plantilla.service';
-import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 
@@ -15,7 +14,7 @@ import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 
 export class BuscarAgendasComponent implements OnInit {
     constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, protected router: Router, private formBuilder: FormBuilder) { }
+        public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, private formBuilder: FormBuilder) { }
 
     public modelo: any = {};
     public prestaciones: any = [];
@@ -82,8 +81,9 @@ export class BuscarAgendasComponent implements OnInit {
         debugger;
         this.modelo = {
             fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
-            horaInicio: fecha.getHours() + ':' + fecha.getMinutes(),
-            horaFin: horaFin.getHours() + ':' + horaFin.getMinutes(),
+            //inicio.getMinutes() < 10 ? '0' : ''
+            horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '')+fecha.getMinutes(),
+            horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
             profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
             prestaciones: agenda.prestaciones[0].nombre,
             espacioFisico: agenda.espacioFisico.nombre,
