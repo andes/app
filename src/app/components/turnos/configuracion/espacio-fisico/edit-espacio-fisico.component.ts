@@ -33,7 +33,6 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     loadEdificios(event) {
         this.OrganizacionService.getById("57e9670e52df311059bc8964").subscribe(respuesta => {event.callback(respuesta.edificio)});
-        //this.OrganizacionService.getById("57e9670e52df311059bc8964").subscribe(respuesta => {event.callback(respuesta.edificio)});
     }
 
     onClick(modelo: IEspacioFisico) {
