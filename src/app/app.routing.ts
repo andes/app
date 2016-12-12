@@ -1,4 +1,4 @@
-import { PlantillaComponent } from './components/turnos/plantilla.component';
+import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -16,7 +16,7 @@ const appRoutes: Routes = [
   { path: 'profesional', component: ProfesionalComponent },
   { path: 'especialidad', component: EspecialidadComponent },
   { path: 'paciente', component: PacienteComponent},
-  { path: 'plantillas', component: PlantillaComponent},
+  { path: 'agendas', component: AgendaComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
   // { path: 'buscar_agendas', component: BuscarAgendasComponent},
