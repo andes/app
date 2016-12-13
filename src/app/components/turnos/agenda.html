@@ -1,6 +1,6 @@
-<div class="row" *ngIf="showPlantilla">
+<div class="row" *ngIf="showAgenda">
     
-    <div class="col-md-4">
+    <div class="col-md-5">
         <plex-box type="success" title="Agenda">
             <div class="row">
                 <div class="col-md-12">
@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (get-data)="loadProfesionales($event)"
-                        placeholder="Seleccione los profesionales" [multiple]="true" >
+                        placeholder="Seleccione los profesionales" [multiple]="true" label-field="nombre+' '+apellido">
                     </plex-select>
                 </div>
             </div> 
@@ -67,16 +67,16 @@
                 <div class="col-sm-12">
                     <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave(true)" title="Guardar">
                     </plex-button>
-                    <plex-button icon="cloud-upload" label="Buscar" (click)="cargar()" title="Buscar">
+                    <plex-button icon="magnify" label="Buscar" (click)="cargar()" title="Buscar">
                     </plex-button>
-                    <plex-button icon="delete-forever" label="Cancelar" (click)="onCancel()" title="Cancelar">
+                    <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel()" title="Cancelar">
                     </plex-button>
                 </div>
             </div>
         </plex-box>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-7">
         <div *ngIf="elementoActivo && bloqueActivo >= 0">
             <plex-box type="success" title="Bloque: {{elementoActivo.descripcion}}">
                 <div class="row">

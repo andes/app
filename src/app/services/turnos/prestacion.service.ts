@@ -16,7 +16,6 @@ export class PrestacionService {
         return this.http.get(this.prestacionUrl)
             .map((res: Response) => res.json())
             .catch(this.handleError);
-
     }
     
     post(prestacion: IPrestacion): Observable<IPrestacion> {

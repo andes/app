@@ -1,11 +1,12 @@
-import { PlantillaService } from './../../services/turnos/plantilla.service';
+import { RouterModule, Routes, Router } from '@angular/router';
+import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
+import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
@@ -13,11 +14,11 @@ import * as moment from 'moment';
 import * as operaciones from './../../utils/operacionesJSON';
 
 @Component({
-    templateUrl: 'plantilla.html',
+    templateUrl: 'agenda.html',
 })
-export class PlantillaComponent {
-    @Output() data: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
-    public plantilla: any = {};
+export class AgendaComponent {
+    @Output() data: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
+    public agenda: any = {};
     public modelo: any = {};
     public prestaciones: any = [];
     public espaciosFisicos: any = [];
@@ -28,19 +29,19 @@ export class PlantillaComponent {
     public fecha: Date;
 
     showBuscarAgendas: boolean = false;
-    showPlantilla: boolean = true;
-    selectedAgenda: IPlantilla[];
+    showAgenda: boolean = true;
+    selectedAgenda: IAgenda[];
 
-    constructor(private formBuilder: FormBuilder, public plex: Plex,
+    constructor(private formBuilder: FormBuilder, public plex: Plex, private router:Router,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public ServicioPlantilla: PlantillaService) { }
+        public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
 
     ngOnInit() {
         this.modelo.bloques = [];
         this.bloqueActivo = -1;
     }
 
-    cargarPlantilla(agenda: IPlantilla) {
+    cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
         this.calculosInicio();
         this.modelo.bloques.sort(this.compararBloques);
@@ -48,7 +49,7 @@ export class PlantillaComponent {
 
     cargar() {
         this.showBuscarAgendas = true;
-        this.showPlantilla = false;
+        this.showAgenda = false;
     }
 
     loadPrestaciones(event) {
@@ -64,22 +65,24 @@ export class PlantillaComponent {
     }
 
     inicializarPrestacionesBloques(bloque){
-        this.modelo.prestaciones.forEach((prestacion, index) => {
-            let copiaPrestacion= operaciones.clonarObjeto(prestacion);
-            if (bloque.prestaciones){
-                let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
-                if (i>=0)
-                    bloque.prestaciones[i].activo = true;
+        if (this.modelo.prestaciones){
+            this.modelo.prestaciones.forEach((prestacion, index) => {
+                let copiaPrestacion= operaciones.clonarObjeto(prestacion);
+                if (bloque.prestaciones){
+                    let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                    if (i>=0)
+                        bloque.prestaciones[i].activo = true;
+                    else{
+                        bloque.prestaciones.push(copiaPrestacion);
+                        bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                    }
+                }
                 else{
                     bloque.prestaciones.push(copiaPrestacion);
                     bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
                 }
-            }
-            else{
-                bloque.prestaciones.push(copiaPrestacion);
-                bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
-            }
-        });
+            });
+        }
     }
 
     calculosInicio() {
@@ -386,7 +389,7 @@ export class PlantillaComponent {
 
     onSave(isvalid: boolean) {
         if (isvalid) {
-            let espOperation: Observable<IPlantilla>;
+            let espOperation: Observable<IAgenda>;
             let prestacionesFormateadas : any[];
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -411,10 +414,10 @@ export class PlantillaComponent {
                 });
                 bloque.prestaciones = prestacionesFormateadas;
             });
-            espOperation = this.ServicioPlantilla.save(this.modelo);
+            espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.bloqueActivo = -1;
-                this.cargarPlantilla(resultado);
+                this.cargarAgenda(resultado);
                 this.plex.alert("La agenda se guardo correctamente");
             });
         }
@@ -423,13 +426,13 @@ export class PlantillaComponent {
     }
 
     onCancel() {
-        this.data.emit(null);
-        //return false;
+        this.router.navigate(['/inicio']);
+        return false;
     }
 
-    onReturn(agenda: IPlantilla): void {
-        this.showPlantilla = true;
+    onReturn(agenda: IAgenda): void {
+        this.showAgenda = true;
         window.setTimeout(() => this.showBuscarAgendas = false, 100);
-        this.cargarPlantilla(agenda);
+        this.cargarAgenda(agenda);
     }
 }

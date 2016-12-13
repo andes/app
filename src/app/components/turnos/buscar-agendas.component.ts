@@ -3,10 +3,9 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { PlantillaService } from './../../services/turnos/plantilla.service';
-import { Router } from '@angular/router';
+import { AgendaService } from './../../services/turnos/agenda.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
+import { IAgenda } from './../../interfaces/turnos/IAgenda';
 
 @Component({
     selector: 'buscar-agendas',
@@ -15,18 +14,18 @@ import { IPlantilla } from './../../interfaces/turnos/IPlantilla';
 
 export class BuscarAgendasComponent implements OnInit {
     constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public servicePlantilla: PlantillaService, protected router: Router, private formBuilder: FormBuilder) { }
+        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder) { }
 
     public modelo: any = {};
     public prestaciones: any = [];
     public agendas: any = [];
 
     showBuscarAgendas: boolean = true;
-    showPlantilla: boolean = false;
+    showAgenda: boolean = false;
     //selectedAgenda: string;
 
     @Output()
-    selected: EventEmitter<IPlantilla> = new EventEmitter<IPlantilla>();
+    selected: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
 
     searchForm: FormGroup;
 
@@ -43,7 +42,7 @@ export class BuscarAgendasComponent implements OnInit {
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
 
-            this.servicePlantilla.get({
+            this.serviceAgenda.get({
                 "fechaDesde": value.fechaDesde,
                 "fechaHasta": value.fechaHasta,
                 "idPrestacion": value.prestaciones.id,
@@ -71,7 +70,7 @@ export class BuscarAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get().subscribe(event.callback);
     }
 
-    editarAgenda(agenda: IPlantilla) {
+    editarAgenda(agenda: IAgenda) {
         this.selected.emit(agenda);
     }
 
@@ -79,11 +78,11 @@ export class BuscarAgendasComponent implements OnInit {
         var fecha = new Date(agenda.horaInicio);
         var horaFin = new Date(agenda.horaFin);
         
-        debugger;
         this.modelo = {
             fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
-            horaInicio: fecha.getHours() + ':' + fecha.getMinutes(),
-            horaFin: horaFin.getHours() + ':' + horaFin.getMinutes(),
+            //inicio.getMinutes() < 10 ? '0' : ''
+            horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '')+fecha.getMinutes(),
+            horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
             profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
             prestaciones: agenda.prestaciones[0].nombre,
             espacioFisico: agenda.espacioFisico.nombre,
