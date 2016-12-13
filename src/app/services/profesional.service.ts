@@ -2,6 +2,7 @@ import { AppSettings } from './../appSettings';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
+import { ServerService } from 'andes-shared/src/lib/server.service';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';
@@ -23,6 +24,7 @@ export class ProfesionalService {
     }
 
     post(profesional: IProfesional): Observable<IProfesional> {
+        debugger;
         let bodyString = JSON.stringify(profesional); // Stringify payload
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers }); // Create a request option

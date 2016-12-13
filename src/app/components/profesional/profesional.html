@@ -3,7 +3,7 @@
         <div class="panel-heading">Listado de Profesionales</div>
         <div class="panel-body">
             <form [formGroup]="searchForm" class="form-horizontal">
-                
+
                 <div class="form_group">
                     <div class="form-group">
                         <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
@@ -112,7 +112,7 @@
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <profesional-create (data)='onReturn($event)'></profesional-create>
+        <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
 
     </div>
 </div>
@@ -120,6 +120,6 @@
 <div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <profesional-update [selectedProfesional]="selectedProfesional" (data)='onReturn($event)'></profesional-update>
+        <profesional-create-update [selectedProfesional]="selectedProfesional" (data)='onReturn($event)'></profesional-create-update>
     </div>
 </div>
