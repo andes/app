@@ -82,6 +82,7 @@ export class PacienteUpdateComponent implements OnInit {
     error: boolean = false;
     mensaje: string = "";
 
+
     barrios: IBarrio[] = [];
     obrasSociales: IFinanciador[] = [];
     pacRelacionados = [];
