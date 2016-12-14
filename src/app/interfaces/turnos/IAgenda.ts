@@ -13,6 +13,7 @@ export interface IAgenda{
     },
     horaInicio: Date,
     horaFin: Date,
+    intercalar: Boolean,
     bloques: IBloque[],
-    estado: String
+    estado: String 
 }

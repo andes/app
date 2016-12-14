@@ -56,6 +56,12 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-6">
+                    <plex-bool [(ngModel)]="modelo.intercalar" label="Permitir intercalar bloques" name="modelo.intercalar" (click)="intercalar()"></plex-bool>
+                </div>
+            </div>
+            <br>
+            <div class="row">
                 <div class="col-md-12">
                     <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" type="primary" (click)="addBloque()">
                     </plex-button>
@@ -87,7 +93,7 @@
                                 </plex-text>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" *ngIf="!modelo.intercalar">
                             <div class="col-md-6">
                                 <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')" label="Hora Inicio">
                                 </plex-datetime>
@@ -159,23 +165,21 @@
                         <plex-box type="warning" title="Reservados">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <!--<label>Programados</label>-->
                                     <label>Para gestión de pacientes</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <plex-int [(ngModel)]="elementoActivo.reservadoProgramado" (keyup)="cambiaCantTipo('reservadoProgramado')" name="reservadoProgramado"
+                                    <plex-int [(ngModel)]="elementoActivo.reservadoGestion" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion"
                                         placeholder="Cant">
                                     </plex-int>
                                 </div>
                                 <div class="col-md-4">
-                                    <plex-int [(ngModel)]="elementoActivo.reservadoProgramadoPorc" (keyup)="cambiaPorcentajeTipo('reservadoProgramado')" name="reservadoProgramadoporc"
+                                    <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" (keyup)="cambiaPorcentajeTipo('reservadoGestion')" name="reservadoGestionporc"
                                         suffix="%" placeholder="%">
                                     </plex-int>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <!--<label>Administrados x el Profesional</label>-->
                                     <label>Para el Profesional</label>
                                 </div>
                                 <div class="col-md-4">

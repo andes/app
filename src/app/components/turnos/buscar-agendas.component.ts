@@ -30,8 +30,6 @@ export class BuscarAgendasComponent implements OnInit {
     searchForm: FormGroup;
 
     ngOnInit() {
-        // this.modelo = { nombre: "", descripcion: "" };
-
         this.searchForm = this.formBuilder.group({
             fechaDesde: [new Date()],
             fechaHasta: [new Date()],
@@ -56,6 +54,16 @@ export class BuscarAgendasComponent implements OnInit {
                     }
                 });
         })
+
+        this.modelo = {
+            fecha: [new Date()],
+            horaInicio: [''],
+            // horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
+            // profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
+            // prestaciones: agenda.prestaciones[0].nombre,
+            // espacioFisico: agenda.espacioFisico.nombre,
+            // bloques: agenda.bloques
+        };
     }
 
     loadPrestaciones(event) {
@@ -89,4 +97,9 @@ export class BuscarAgendasComponent implements OnInit {
             bloques: agenda.bloques
         };
     }
+
+    // onReturn(): void {
+    //     this.showBuscarAgendas = true;
+    //     window.setTimeout(() => this.showAgenda = false, 100);
+    // }
 }

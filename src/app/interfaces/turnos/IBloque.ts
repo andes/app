@@ -3,12 +3,13 @@ export interface IBloque{
     horaInicio: Date,
     horaFin: Date,
     cantidadTurnos: Number,
+    duracionTurno: Number,
     descripcion: String,
     prestaciones: IPrestacion[],
     
     accesoDirectoDelDia: Number,
     accesoDirectoProgramado: Number,
-    reservadoProgramado: Number,
+    reservadoGestion: Number,
     reservadoProfesional: Number,
 
     pacienteSimultaneos: Boolean,

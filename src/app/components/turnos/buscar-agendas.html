@@ -4,11 +4,11 @@
             <plex-box type="info" title="Buscar Agenda">
                 <div class="row">
                     <div class="col-md-4">
-                        <plex-datetime type="date" formControlName="fechaDesde" label="Desde">
+                        <plex-datetime type="date" formControlName="fechaDesde" label="Desde" title="Fecha Desde">
                         </plex-datetime>
                     </div>
                     <div class="col-md-4">
-                        <plex-datetime type="date" formControlName="fechaHasta" label="Hasta">
+                        <plex-datetime type="date" formControlName="fechaHasta" label="Hasta" title="Fecha Hasta">
                         </plex-datetime>
                     </div>
                     <div class="col-md-4">
@@ -58,11 +58,11 @@
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <plex-button icon="tooltip-edit" (click)="editarAgenda(agenda)">
+                                        <plex-button icon="lead-pencil" (click)="editarAgenda(agenda)" title="Editar Agenda">
                                         </plex-button>
                                     </div>
                                     <div class="col-md-5">
-                                        <plex-button icon="eye" (click)="verAgenda(agenda)">
+                                        <plex-button icon="eye" (click)="verAgenda(agenda)" title="Vista Previa">
                                         </plex-button>
 
                                     </div>
@@ -75,7 +75,7 @@
         </form>
     </div>
 
-    <div class="col-md-8">
+    <div *ngIf="agendas.length > 0" class="col-md-8">
         <form>
             <plex-box type="info" title="Visualización de Agenda">
                 <div class="row">

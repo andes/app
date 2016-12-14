@@ -30,9 +30,8 @@ export class AgendaComponent {
 
     showBuscarAgendas: boolean = false;
     showAgenda: boolean = true;
-    selectedAgenda: IAgenda[];
 
-    constructor(private formBuilder: FormBuilder, public plex: Plex, private router:Router,
+    constructor(private formBuilder: FormBuilder, public plex: Plex, private router: Router,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
 
@@ -44,7 +43,8 @@ export class AgendaComponent {
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
         this.calculosInicio();
-        this.modelo.bloques.sort(this.compararBloques);
+        if (!this.modelo.intercalar)
+            this.modelo.bloques.sort(this.compararBloques);
     }
 
     cargar() {
@@ -64,22 +64,22 @@ export class AgendaComponent {
         this.servicioEspacioFisico.get().subscribe(event.callback);
     }
 
-    inicializarPrestacionesBloques(bloque){
-        if (this.modelo.prestaciones){
+    inicializarPrestacionesBloques(bloque) {
+        if (this.modelo.prestaciones) {
             this.modelo.prestaciones.forEach((prestacion, index) => {
-                let copiaPrestacion= operaciones.clonarObjeto(prestacion);
-                if (bloque.prestaciones){
-                    let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
-                    if (i>=0)
+                let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                if (bloque.prestaciones) {
+                    let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                    if (i >= 0)
                         bloque.prestaciones[i].activo = true;
-                    else{
+                    else {
                         bloque.prestaciones.push(copiaPrestacion);
-                        bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                        bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
                     }
                 }
-                else{
+                else {
                     bloque.prestaciones.push(copiaPrestacion);
-                    bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                    bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
                 }
             });
         }
@@ -90,29 +90,34 @@ export class AgendaComponent {
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             bloque.indice = index;
-            bloque.horaInicio = new Date(bloque.horaInicio);
-            bloque.horaFin = new Date(bloque.horaFin);
-            var inicio = bloque.horaInicio;
-            var fin = bloque.horaFin;
-            if (bloque.cantidadTurnos){
-                bloque.accesoDirectoDelDia? bloque.accesoDirectoDelDiaPorc = Math.floor((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos):bloque.accesoDirectoDelDiaPorc=0;
-                bloque.accesoDirectoProgramado? bloque.accesoDirectoProgramadoPorc = Math.floor((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos):bloque.accesoDirectoProgramadoPorc = 0;
-                bloque.reservadoProgramado? bloque.reservadoProgramadoPorc = Math.floor((bloque.reservadoProgramado * 100) / bloque.cantidadTurnos):bloque.reservadoProgramadoPorc = 0;
-                bloque.reservadoProfesional? bloque.reservadoProfesionalPorc = Math.floor((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos):bloque.reservadoProfesionalPorc = 0;
-                let duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
-                bloque.duracionTurno = Math.floor(duracion);
+            if (!this.modelo.intercalar) {
+                bloque.horaInicio = new Date(bloque.horaInicio);
+                bloque.horaFin = new Date(bloque.horaFin);
+                var inicio = bloque.horaInicio;
+                var fin = bloque.horaFin;
+                bloque.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
+                    fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
             }
-            else{
+
+            if (bloque.cantidadTurnos) {
+                bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
+                bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
+                bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
+                bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
+                if (!this.modelo.intercalar) {
+                    let duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
+                    bloque.duracionTurno = Math.floor(duracion);
+                }
+            }
+            else {
                 bloque.accesoDirectoDelDiaPorc = 0;
                 bloque.accesoDirectoProgramadoPorc = 0;
-                bloque.reservadoProgramadoPorc = 0;
+                bloque.reservadoGestionPorc = 0;
                 bloque.reservadoProfesionalPorc = 0;
-                bloque.duracionTurno = 0
+                //bloque.duracionTurno = 0
             }
 
             this.inicializarPrestacionesBloques(bloque);
-            bloque.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
-                fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
         });
         this.validarTodo();
     }
@@ -135,13 +140,13 @@ export class AgendaComponent {
             "cantidadSimultaneos": null,
             "accesoDirectoDelDia": 0, "accesoDirectoDelDiaPorc": 0,
             "accesoDirectoProgramado": 0, "accesoDirectoProgramadoPorc": 0,
-            "reservadoProgramado": 0, "reservadoProgramadoPorc": 0,
+            "reservadoGestion": 0, "reservadoGestionPorc": 0,
             "reservadoProfesional": 0, "reservadoProfesionalPorc": 0,
-            "prestaciones" : []
+            "prestaciones": []
         });
         this.activarBloque(longitud);
         this.inicializarPrestacionesBloques(this.elementoActivo);
-        
+
     }
 
     deleteBloque(indice: number) {
@@ -155,7 +160,7 @@ export class AgendaComponent {
     compararBloques(fecha1, fecha2): number {
         let indiceAux: Number;
         if (fecha1 && fecha2) {
-            if(fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
+            if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
                 indiceAux = fecha1.indice;
                 fecha1.indice = fecha2.indice;
                 fecha2.indice = indiceAux;
@@ -172,27 +177,27 @@ export class AgendaComponent {
         else
             return 0;
     }
-    
-    cambioPrestaciones(){
+
+    cambioPrestaciones() {
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             //Si se elimino una prestación, la saco de los bloques
-            let bloquePrestaciones = bloque.prestaciones; 
+            let bloquePrestaciones = bloque.prestaciones;
             bloquePrestaciones.forEach((bloquePrestacion, index) => {
-                let i = this.modelo.prestaciones.map(function(e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
-                if (i<0)
+                let i = this.modelo.prestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
+                if (i < 0)
                     bloquePrestaciones.splice(index, 1);
             });
-            
+
             //Si se agrego una prestacion, la agrego a los bloques
             this.modelo.prestaciones.forEach((prestacion, index) => {
-                let copiaPrestacion= operaciones.clonarObjeto(prestacion);
-                let i = bloque.prestaciones.map(function(e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
-                if (i<0){
+                let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                if (i < 0) {
                     bloque.prestaciones.push(copiaPrestacion);
-                    bloque.prestaciones[bloque.prestaciones.length-1].activo = false;
+                    bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
                 }
-            });   
+            });
         });
     }
 
@@ -202,24 +207,24 @@ export class AgendaComponent {
         this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
     }
 
-    cambioHoras(cual: String){
+    cambioHoras(cual: String) {
         this.fecha = new Date(this.modelo.fecha);
-        if (cual=="inicio")
+        if (cual == "inicio")
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
         else
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
         this.validarTodo();
     }
-    
-    cambioHoraBloques(texto:String) {
+
+    cambioHoraBloques(texto: String) {
         this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-        this.elementoActivo.horaInicio =inicio;
+        this.elementoActivo.horaInicio = inicio;
         if (inicio && fin) {
             this.elementoActivo.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
                 fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
-            
+
             let duracion = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
             if (duracion) {
                 this.elementoActivo.duracionTurno = Math.floor(duracion);
@@ -228,14 +233,14 @@ export class AgendaComponent {
             }
             this.validarTodo();
         }
-        if (texto == "inicio")
+        if (texto == "inicio" && !this.modelo.intercalar)
             this.modelo.bloques.sort(this.compararBloques);
-        
+
         this.bloqueActivo = this.elementoActivo.indice;
         this.activarBloque(this.elementoActivo.indice);
     }
 
-    cambiaTurnos(cual:String){
+    cambiaTurnos(cual: String) {
         this.fecha = new Date(this.modelo.fecha);
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
@@ -246,18 +251,19 @@ export class AgendaComponent {
                 this.elementoActivo.cantidadTurnos = this.calcularCantidad(inicio, fin, this.elementoActivo.duracionTurno);
             this.verificarCantidades();
         }
+        this.validarTodo();
     }
 
-    cambiaCantTipo(cual:String){
-        switch(cual) {
+    cambiaCantTipo(cual: String) {
+        switch (cual) {
             case "accesoDirectoDelDia":
                 this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                 break;
             case "accesoDirectoProgramado":
                 this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                 break;
-            case "reservadoProgramado":
-                this.elementoActivo.reservadoProgramadoPorc = Math.floor((this.elementoActivo.reservadoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+            case "reservadoGestion":
+                this.elementoActivo.reservadoGestionPorc = Math.floor((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                 break;
             case "reservadoProfesional":
                 this.elementoActivo.reservadoProfesionalPorc = Math.floor((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
@@ -266,16 +272,16 @@ export class AgendaComponent {
         this.validarTodo();
     }
 
-    cambiaPorcentajeTipo(cual:String){
-        switch(cual) {
+    cambiaPorcentajeTipo(cual: String) {
+        switch (cual) {
             case "accesoDirectoDelDia":
                 this.elementoActivo.accesoDirectoDelDia = Math.floor((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
             case "accesoDirectoProgramado":
                 this.elementoActivo.accesoDirectoProgramado = Math.floor((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
-            case "reservadoProgramado":
-                this.elementoActivo.reservadoProgramado = Math.floor((this.elementoActivo.reservadoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+            case "reservadoGestion":
+                this.elementoActivo.reservadoGestion = Math.floor((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
             case "reservadoProfesional":
                 this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
@@ -284,12 +290,21 @@ export class AgendaComponent {
         this.validarTodo();
     }
 
+    intercalar() {
+        if (!this.modelo.intercalar) {
+            this.modelo.bloques.forEach((bloque, index) => {
+                bloque.horaInicio = null;
+                bloque.horaFin = null;
+                bloque.titulo = "";
+            });
+        }
+    }
+
     calcularDuracion(inicio, fin, cantidad) {
         if (cantidad && inicio && fin) {
             inicio = moment(inicio);
             fin = moment(fin);
             let total = fin.diff(inicio, "minutes");
-            //console.log("total "+total+" cantidad "+cantidad+"resultado "+total/cantidad);
             return Math.floor(total / cantidad);
         }
         else {
@@ -318,7 +333,7 @@ export class AgendaComponent {
     verificarCantidades() {
         this.cambiaPorcentajeTipo('accesoDirectoDelDia');
         this.cambiaPorcentajeTipo('accesoDirectoProgramado');
-        this.cambiaPorcentajeTipo('reservadoProgramado');
+        this.cambiaPorcentajeTipo('reservadoGestion');
         this.cambiaPorcentajeTipo('reservadoProfesional');
     }
 
@@ -328,29 +343,33 @@ export class AgendaComponent {
         var fechaaux = this.modelo.fecha;
         let bloques = this.modelo.bloques;
         this.alertas = [];
+        let totalBloques = 0;
         bloques.forEach((bloque, index) => {
             var inicio = this.combinarFechas(fechaaux, bloque.horaInicio);
             var fin = this.combinarFechas(fechaaux, bloque.horaFin);
-            
+
+            if (bloque.cantidadTurnos && bloque.duracionTurno)
+                totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
+
             if (this.compararFechas(this.modelo.horaInicio, inicio) > 0 || this.compararFechas(this.modelo.horaFin, fin) < 0) {
-                alerta = "Bloque " + (bloque.indice+1) + ": Está fuera de los límites de la agenda";
+                alerta = "Bloque " + (bloque.indice + 1) + ": Está fuera de los límites de la agenda";
                 indice = this.alertas.indexOf(alerta);
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoProgramado + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
-                alerta = "Bloque " + (bloque.indice+1) + ": La cantidad de turnos asignados es mayor a la cantidad disponible";
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
+                alerta = "Bloque " + (bloque.indice + 1) + ": La cantidad de turnos asignados es mayor a la cantidad disponible";
                 this.alertas.push(alerta);
             }
 
             if (this.compararFechas(inicio, fin) > 0) {
-                alerta = "Bloque " + (bloque.indice+1) + ": La hora de inicio es mayor a la hora de fin";
+                alerta = "Bloque " + (bloque.indice + 1) + ": La hora de inicio es mayor a la hora de fin";
                 this.alertas.push(alerta);
             }
 
             //por cada bloque verificar que no se solape con ningún otro
-            let mapeo = bloques.map(function(obj){
-                if (obj.id != bloque.id){
+            let mapeo = bloques.map(function (obj) {
+                if (obj.id != bloque.id) {
                     let robj = {};
                     robj['horaInicio'] = obj.horaInicio;
                     robj['horaFin'] = obj.horaFin;
@@ -359,16 +378,25 @@ export class AgendaComponent {
                 else
                     return null;
             });
-            console.log("inicio "+inicio);
+
             mapeo.forEach((bloqueMap, index) => {
-                if (bloqueMap){
-                    if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0){
-                        alerta = "El bloque " + (bloque.indice+1) + " se solapa con el "+(index+1);
+                if (bloqueMap) {
+                    if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0) {
+                        alerta = "El bloque " + (bloque.indice + 1) + " se solapa con el " + (index + 1);
                         this.alertas.push(alerta);
                     }
                 }
             });
         });
+        
+        totalBloques *= 60000;
+        if (this.modelo.horaInicio && this.modelo.horaFin){
+            let totalAgenda = this.modelo.horaFin.getTime() - this.modelo.horaInicio.getTime();
+            if (totalBloques > totalAgenda) {
+                alerta = " Los turnos de los bloques superan el tiempo disponible para la agenda";
+                this.alertas.push(alerta);
+            }
+        }
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -390,7 +418,7 @@ export class AgendaComponent {
     onSave(isvalid: boolean) {
         if (isvalid) {
             let espOperation: Observable<IAgenda>;
-            let prestacionesFormateadas : any[];
+            let prestacionesFormateadas: any[];
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
@@ -403,9 +431,9 @@ export class AgendaComponent {
                     return el.activo == true;
                 });
                 prestacionesFormateadas = [];
-                prestacionesFormateadas = bloque.prestaciones.map(function(obj){
+                prestacionesFormateadas = bloque.prestaciones.map(function (obj) {
                     var rObj = {};
-                    if (obj.activo){
+                    if (obj.activo) {
                         rObj["_id"] = obj._id;
                         rObj["id"] = obj.id;
                         rObj["nombre"] = obj.nombre;
@@ -414,6 +442,7 @@ export class AgendaComponent {
                 });
                 bloque.prestaciones = prestacionesFormateadas;
             });
+            debugger
             espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.bloqueActivo = -1;
@@ -426,6 +455,9 @@ export class AgendaComponent {
     }
 
     onCancel() {
+        // this.showBuscarAgendas = true;
+        // this.showAgenda = false;
+
         this.router.navigate(['/inicio']);
         return false;
     }
