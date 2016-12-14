@@ -1,3 +1,4 @@
+import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
@@ -73,6 +74,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
               AppComponent, InicioComponent, 
               OrganizacionComponent, OrganizacionCreateUpdateComponent, 
               ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
+              ProfesionalCreateUpdateComponent,
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
               PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
               ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, 

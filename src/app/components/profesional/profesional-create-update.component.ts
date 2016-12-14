@@ -307,6 +307,7 @@ iniDireccion(unaDireccion ? : IDireccion) {
     }
 
     onCancel() {
-        this.data.emit(null)
+        this.data.emit(null);
+        return false;
     }
 }
