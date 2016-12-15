@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <plex-box>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="actualizar()">
+                            </plex-select>
+                        </div>
+                        <div class="col-md-4">
+                            <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
+                                (change)="actualizar()">
+                            </plex-select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <label><!--SPACER--></label>
+                                <h4>DICIEMBRE 2016</h4>
+                            </div>
+                        </div>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <calendario [agendas]="agendas" [fecha]="opciones.fecha" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+            </div>
+        </div>
+    </div>
+    <div type="info" class="col-md-4">
+        <plex-tabs>
+            <plex-tab title="xxx" icon="account">
+                <plex-box>
+                    <pre>
+                    {{ agenda | json}}
+                    </pre>
+                </plex-box>
+            </plex-tab>
+            <plex-tab title="xxx" icon="history">
+                <plex-box>
+                    TODO: INFO DEL PACIENTE
+                </plex-box>
+            </plex-tab>
+            <plex-tab title="Editar" icon="edit">
+                <plex-box>
+                    TODO: EDITAR PACIENTE
+                </plex-box>
+            </plex-tab>
+        </plex-tabs>
+    </div>
+</div>

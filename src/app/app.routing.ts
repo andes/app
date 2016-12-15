@@ -1,4 +1,5 @@
 import { AgendaComponent } from './components/turnos/agenda.component';
+import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -19,10 +20,9 @@ const appRoutes: Routes = [
   { path: 'agendas', component: AgendaComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
-  // { path: 'buscar_agendas', component: BuscarAgendasComponent},
+  { path: 'turnos', component: DarTurnosComponent},  
   { path: '**', redirectTo: "inicio" } 
 ];
 
-// export const routing = RouterModule.forRoot(appRoutes);
 export const appRoutingProviders: any[] = [];
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

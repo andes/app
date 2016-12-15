@@ -1,0 +1,13 @@
+<table *ngIf="calendario" class="table table-striped">
+    <tr *ngFor="let week of calendario">
+        <td *ngFor="let day of week" class="text-center" [ngClass]="{'success': day.estado == 'seleccionado', 'info': day.estado == 'disponible', 'danger': day.estado == 'no-disponible'}" (click)="seleccionar(day)">
+            <div>{{ day.fecha | date:"d" }}</div>
+            <div>{{ day.fecha | date:"EEE" }}</div>
+            <div>
+                <i *ngIf="day.estado == 'disponible'" class="mdi mdi-plus-box text-info"></i>
+                <i *ngIf="day.estado == 'no-disponible'" class="mdi mdi-close-box text-danger"></i>
+                <i *ngIf="day.estado == 'seleccionado'" class="mdi mdi-check-circle text-success"></i>            
+            </div>
+        </td>
+    </tr>
+</table>
