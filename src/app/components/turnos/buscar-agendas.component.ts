@@ -22,7 +22,7 @@ export class BuscarAgendasComponent implements OnInit {
 
     showBuscarAgendas: boolean = true;
     showAgenda: boolean = false;
-    //selectedAgenda: string;
+    seleccionada: boolean = false;
 
     @Output()
     selected: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
@@ -56,13 +56,10 @@ export class BuscarAgendasComponent implements OnInit {
         })
 
         this.modelo = {
-            fecha: [new Date()],
+            fecha: [''],
             horaInicio: [''],
-            // horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
-            // profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
-            // prestaciones: agenda.prestaciones[0].nombre,
-            // espacioFisico: agenda.espacioFisico.nombre,
-            // bloques: agenda.bloques
+            horaFin: [''],
+            espacioFisico: ['']
         };
     }
 
@@ -83,16 +80,15 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     verAgenda(agenda) {
+        this.seleccionada = true;
         var fecha = new Date(agenda.horaInicio);
         var horaFin = new Date(agenda.horaFin);
-        
         this.modelo = {
             fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
-            //inicio.getMinutes() < 10 ? '0' : ''
             horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '')+fecha.getMinutes(),
             horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
-            profesional: agenda.profesionales[0].nombre + ' ' + agenda.profesionales[0].apellido,
-            prestaciones: agenda.prestaciones[0].nombre,
+            profesionales: agenda.profesionales,
+            prestaciones: agenda.prestaciones,
             espacioFisico: agenda.espacioFisico.nombre,
             bloques: agenda.bloques
         };

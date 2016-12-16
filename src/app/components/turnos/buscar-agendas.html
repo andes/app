@@ -50,11 +50,9 @@
                                         <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
                                         <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
                                         <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico.nombre}}</span>
-
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <div class="row">
                                     <div class="col-md-5">
@@ -64,7 +62,6 @@
                                     <div class="col-md-5">
                                         <plex-button icon="eye" (click)="verAgenda(agenda)" title="Vista Previa">
                                         </plex-button>
-
                                     </div>
                                 </div>
                             </div>
@@ -74,8 +71,7 @@
             </plex-box>
         </form>
     </div>
-
-    <div *ngIf="agendas.length > 0" class="col-md-8">
+    <div *ngIf="seleccionada" class="col-md-8">
         <form>
             <plex-box type="info" title="Visualización de Agenda">
                 <div class="row">
@@ -94,23 +90,34 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <plex-text [(ngModel)]="modelo.profesional" name="profesional" label="Profesional" aria-readonly="true">
-                        </plex-text>
+                    <div class="col-md-6">
+                        <label>Profesionales</label>
+                        <div class="list-group">
+                            <a *ngFor="let profesional of modelo.profesionales; let i=index" class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4">{{profesional.nombre}} {{profesional.apellido}}</div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <plex-text [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Prestaciones">
-                        </plex-text>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <plex-text [(ngModel)]="modelo.espacioFisico" name="espacioFisico" label="Espacio Físico">
                         </plex-text>
-
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <label>Prestaciones</label>
+                        <div class="list-group">
+                            <a *ngFor="let prestacion of modelo.prestaciones; let i=index" class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4">{{prestacion.nombre}}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <label>Bloques</label>
                         <div class="list-group">
                             <a *ngFor="let bloque of modelo.bloques; let i=index" class="list-group-item">

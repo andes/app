@@ -146,7 +146,6 @@ export class AgendaComponent {
         });
         this.activarBloque(longitud);
         this.inicializarPrestacionesBloques(this.elementoActivo);
-
     }
 
     deleteBloque(indice: number) {
@@ -388,12 +387,13 @@ export class AgendaComponent {
                 }
             });
         });
-        
+
+        //Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;
-        if (this.modelo.horaInicio && this.modelo.horaFin){
+        if (this.modelo.horaInicio && this.modelo.horaFin) {
             let totalAgenda = this.modelo.horaFin.getTime() - this.modelo.horaInicio.getTime();
             if (totalBloques > totalAgenda) {
-                alerta = " Los turnos de los bloques superan el tiempo disponible para la agenda";
+                alerta = " Los turnos de los bloques superan los minutos disponibles de la agenda";
                 this.alertas.push(alerta);
             }
         }
@@ -425,6 +425,16 @@ export class AgendaComponent {
             this.modelo.estado = "Planificada";
             let bloques = this.modelo.bloques;
             bloques.forEach((bloque, index) => {
+                //aca debería cargar el arreglo de turnos
+                bloque.turnos = [];
+                for (var i = 0; i < bloque.cantidadTurnos; i++) {
+                    var turno = {
+                         horaInicio : new Date(bloque.horaInicio.getTime() + i*bloque.duracionTurno*60000),
+                         estado: "disponible"
+                    }
+                    bloque.turnos.push(turno);
+                }
+                
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.prestaciones = bloque.prestaciones.filter(function (el) {

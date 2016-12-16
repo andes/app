@@ -28,11 +28,11 @@
                     <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="cambioFecha()" name="modelo.fecha" label="Fecha">
                     </plex-datetime>
                 </div>
-                <div class="col-md-4">
+                <div *ngIf="modelo.fecha" class="col-md-4">
                     <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="cambioHoras('inicio')" name="modelo.horaInicio" label="Inicio">
                     </plex-datetime>
                 </div>
-                <div class="col-md-4">
+                <div *ngIf="modelo.fecha" class="col-md-4">
                     <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="cambioHoras('fin')" name="modelo.horaFin" label="Fin">
                     </plex-datetime>
                 </div>
