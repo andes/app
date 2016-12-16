@@ -1,6 +1,7 @@
 import { IProfesional } from '../IProfesional';
 import { IPrestacion } from './IPrestacion';
 import { IBloque } from './IBloque';
+import { ITurno } from './ITurno';
 
 export interface IAgenda{
     id: String,
@@ -15,5 +16,6 @@ export interface IAgenda{
     horaFin: Date,
     intercalar: Boolean,
     bloques: IBloque[],
+    turnos: ITurno[],
     estado: String 
 }
