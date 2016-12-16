@@ -24,7 +24,7 @@ import { ProfesionalCreateComponent } from './components/profesional/profesional
 import { ProfesionalUpdateComponent } from './components/profesional/profesional-update.component';
 
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
-import { EspecialidadCreateComponent} from './components/especialidad/especialidad-create.component';
+import { EspecialidadCreateComponent } from './components/especialidad/especialidad-create.component';
 import { EspecialidadUpdateComponent } from './components/especialidad/especialidad-update.component';
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
@@ -45,15 +45,16 @@ import { TipoEstablecimientoService } from './services/tipoEstablecimiento.servi
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
 
-import { NgModule }      from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent }  from './app.component';
+import { AppComponent } from './app.component';
+import { LOCALE_ID } from '@angular/core';
 
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { routing, appRoutingProviders} from './app.routing';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { routing, appRoutingProviders } from './app.routing';
 
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-import {ToggleButtonModule} from 'primeng/primeng';
+import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { ToggleButtonModule } from 'primeng/primeng';
 
 import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
@@ -61,49 +62,51 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
 @NgModule({
   imports: [
-    BrowserModule, 
-    ReactiveFormsModule, 
+    BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
-    HttpModule, 
+    HttpModule,
     DataTableModule,
-    SharedModule, 
-    ToggleButtonModule, 
+    SharedModule,
+    ToggleButtonModule,
     PlexModule,
     routing
   ],
 
   declarations: [
-              AppComponent, InicioComponent, 
-              OrganizacionComponent, OrganizacionCreateUpdateComponent, 
-              ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
-              ProfesionalCreateUpdateComponent,
-              EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
-              PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
-              ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, 
-              PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-              BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent
+    AppComponent, InicioComponent,
+    OrganizacionComponent, OrganizacionCreateUpdateComponent,
+    ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
+    ProfesionalCreateUpdateComponent,
+    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent,
+    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
+    ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent
   ],
   bootstrap: [AppComponent],
   providers: [
-              OrganizacionService, 
-              ProvinciaService, 
-              TipoEstablecimientoService, 
-              EspecialidadService, 
-              ProfesionalService, 
-              PaisService, 
-              LocalidadService, 
-              BarrioService, 
-              PacienteService, 
-              FinanciadorService,  
-              Plex,
-              PrestacionService,
-              appRoutingProviders,
-              ConfigPrestacionService,
-              AgendaComponent,
-              EspacioFisicoComponent,
-              AgendaService,
-              EspacioFisicoService,
-              ServerService
+    { provide: LOCALE_ID, useValue: "es-AR" },
+    Plex,
+
+    OrganizacionService,
+    ProvinciaService,
+    TipoEstablecimientoService,
+    EspecialidadService,
+    ProfesionalService,
+    PaisService,
+    LocalidadService,
+    BarrioService,
+    PacienteService,
+    FinanciadorService,
+    PrestacionService,
+    appRoutingProviders,
+    ConfigPrestacionService,
+    AgendaComponent,
+    EspacioFisicoComponent,
+    AgendaService,
+    EspacioFisicoService,
+    ServerService
   ]
 
 })

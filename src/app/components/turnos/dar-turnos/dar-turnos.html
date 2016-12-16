@@ -15,8 +15,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="text-center">
-                                <label><!--SPACER--></label>
-                                <h4>DICIEMBRE 2016</h4>
+                                <h4>
+                                    <plex-button type="link" icon="chevron-left"></plex-button>
+                                    {{ opciones.fecha | date: "MMM yy" | uppercase}}
+                                    <plex-button type="link" icon="chevron-right"></plex-button>
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -31,19 +34,18 @@
     </div>
     <div type="info" class="col-md-4">
         <plex-tabs>
-            <plex-tab title="xxx" icon="account">
-                <plex-box>
-                    <pre>
+            <plex-tab icon="account">
+                TODO: Componente Caro<br>
+                <pre>
                     {{ agenda | json}}
-                    </pre>
-                </plex-box>
+                </pre>
             </plex-tab>
-            <plex-tab title="xxx" icon="history">
+            <plex-tab icon="history">
                 <plex-box>
                     TODO: INFO DEL PACIENTE
                 </plex-box>
             </plex-tab>
-            <plex-tab title="Editar" icon="edit">
+            <plex-tab icon="pencil">
                 <plex-box>
                     TODO: EDITAR PACIENTE
                 </plex-box>
