@@ -1,46 +1,44 @@
 <div class="row">
-  <div *ngIf="modelo.agenda" class="col-md-12">
+  <div *ngIf="agenda" class="col-md-12">
     <form>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-8" align="center">
           <div class="box">
             <div class="box-content" align="center">
               <h1>
                 <small> 
-                    <div *ngFor="let profesional of modelo.agenda.profesionales let i=index">
-                        <div *ngIf="i<modelo.agenda.profesionales.length-1">
+                    <div *ngFor="let profesional of agenda.profesionales let i=index">
+                        <div *ngIf="i<agenda.profesionales.length-1">
                             {{profesional.nombre}} {{profesional.apellido}},
                         </div>
-                        <div *ngIf="i>=modelo.agenda.profesionales.length-1">
+                        <div *ngIf="i>=agenda.profesionales.length-1">
                             {{profesional.nombre}} {{profesional.apellido}}
                         </div>
                     </div>
                     <!--{{modelo.agenda.profesionales.length}}-->
                 </small>
+                <br>
+                <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)" ></plex-button>
+                {{agenda.horaInicio | date: 'dd/MM'}}
+                <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                <br><br>
+                <small>{{semana[agenda.horaInicio.getDay()]}}</small><br>
               </h1>
-              <h1>{{modelo.agenda.horaInicio | date: 'dd/MM'}} </h1>
-              <h1><small>{{semana[modelo.agenda.horaInicio.getDay()]}}</small></h1>
-              <h2><small>{{modelo.agenda.horaInicio | date: 'yyyy'}}</small></h2>
               <br>
             </div>
           </div>
-          <div align="center">
-            <plex-button icon="arrow-left-bold-circle-outline" (click)="verAgenda(false)"></plex-button>
-            <plex-button icon="arrow-right-bold-circle-outline" (click)="verAgenda(true)"></plex-button>
-          </div>
         </div>
       </div>
-      <br>
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-8">
           <plex-box>
-            <div *ngFor="let bloque of modelo.agenda.bloques let i=index">
+            <div *ngFor="let bloque of agenda.bloques let i=index">
               <div class="row">
                 <div *ngIf="bloque.turnos.length" class="col-md-12">
                   <h2>
                     <small>
-                            <span>{{bloque.descripcion}}</span>  <span class="badge"> {{bloque.duracionTurno}} '</span>
-                          </small>
+                        <span>{{bloque.descripcion}}</span>  <span class="badge"> {{bloque.duracionTurno}} '</span>
+                    </small>
                   </h2>
                 </div>
               </div>

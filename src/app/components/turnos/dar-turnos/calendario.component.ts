@@ -1,3 +1,4 @@
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
@@ -17,20 +18,22 @@ export class CalendarioComponent {
     @Output('agenda-changed') onChange = new EventEmitter();
     @Input('fecha') fecha: Date;
     @Input('agenda')
-    set agenda(value: any) {
+    set agenda(value: IAgenda) {
         this._agenda = value;
-        this.actualizar();
+        if (value)
+            this.actualizar();
     }
-    get agenda(): any {
+    get agenda(): IAgenda {
         return this._agenda;
     }
 
     @Input('agendas')
-    set agendas(value: Array<any>) {
+    set agendas(value: Array<IAgenda>) {
         this._agendas = value;
+        debugger
         this.actualizar();
     }
-    get agendas(): Array<any> {
+    get agendas(): Array<IAgenda> {
         return this._agendas;
     }
 
@@ -76,6 +79,7 @@ export class CalendarioComponent {
 
             // Selecciona la agenda
             this.agenda = dia.agenda;
+            debugger
             this.onChange.emit(dia.agenda);
         }
     }

@@ -1,3 +1,4 @@
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -10,8 +11,8 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
     templateUrl: 'dar-turnos.html', 
 })
 export class DarTurnosComponent implements AfterViewInit {
-    public agenda: any;
-    public agendas: any = [];
+    public agenda: IAgenda;
+    public agendas: IAgenda[];
     public opciones = {
         fecha: new Date(),
         prestacion: null,
@@ -42,6 +43,7 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarAgenda(agenda){
+        console.log("agenda "+agenda.horaInicio);
         this.agenda = agenda;
     }
 }

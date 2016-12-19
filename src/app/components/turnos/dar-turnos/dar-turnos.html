@@ -28,17 +28,14 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <calendario [agendas]="agendas" [fecha]="opciones.fecha" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+                <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></calendario>
             </div>
         </div>
     </div>
     <div type="info" class="col-md-4">
         <plex-tabs>
             <plex-tab icon="account">
-                TODO: Componente Caro<br>
-                <pre>
-                    {{ agenda | json}}
-                </pre>
+                <turnos-agendas [agendas]="agendas" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>
             </plex-tab>
             <plex-tab icon="history">
                 <plex-box>

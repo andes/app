@@ -1,3 +1,4 @@
+import { TurnosAgendaComponent } from './components/turnos/dar-turnos/turnos-agendas';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -82,7 +83,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, TurnosAgendaComponent
   ],
   bootstrap: [AppComponent],
   providers: [
