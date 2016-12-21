@@ -15,10 +15,9 @@
                             {{profesional.nombre}} {{profesional.apellido}}
                         </div>
                     </div>
-                    <!--{{modelo.agenda.profesionales.length}}-->
                 </small>
                 <br>
-                <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)" ></plex-button>
+                <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
                 {{agenda.horaInicio | date: 'dd/MM'}}
                 <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
                 <br><br>
@@ -32,7 +31,7 @@
       <div class="row">
         <div class="col-md-8">
           <plex-box>
-            <div *ngFor="let bloque of agenda.bloques let i=index">
+            <div *ngFor="let bloque of agenda.bloques let indiceBq=index">
               <div class="row">
                 <div *ngIf="bloque.turnos.length" class="col-md-12">
                   <h2>
@@ -42,11 +41,16 @@
                   </h2>
                 </div>
               </div>
-              <br>
               <div *ngFor="let turno of bloque.turnos; let i=index">
                 <div class="row">
-                  <div class="col-md-12">
-                    <plex-button type="link" label="{{turno.horaInicio | date: 'HH:mm'}}"></plex-button>
+                  <div *ngIf="turno.estado == 'disponible'" class="col-md-12">
+                    <plex-button type="link" label="{{turno.horaInicio | date: 'HH:mm'}}" (click)="seleccionarTurno(bloque,indiceBq,i)"></plex-button>
+                  </div>
+                  <div *ngIf="turno.estado == 'asignado'" class="col-md-4">
+                    <plex-button type="link" disabled="true" label="{{turno.horaInicio | date: 'HH:mm'}}" (click)="seleccionarTurno(bloque,i)"></plex-button>
+                  </div>
+                  <div *ngIf="turno.paciente" class="col-md-6">
+                    <plex-button type="link" disabled="true" label="{{turno.paciente.nombre}} {{turno.paciente.apellido}}"></plex-button>
                   </div>
                 </div>
                 <br>

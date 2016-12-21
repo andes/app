@@ -5,12 +5,14 @@ export interface ITurno{
     paciente:  {
         id: String,
         nombre: String,
-        apellido: String
+        apellido: String,
+        documento: String
     },
     pacientes:  [{
         id: String,
         nombre: String,
-        apellido: String
+        apellido: String,
+        documento: String
     }],
     prestacion: IPrestacion
 }

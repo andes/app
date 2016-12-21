@@ -1,52 +1,56 @@
 <div class="row">
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-12">
-                <plex-box>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="actualizar()">
-                            </plex-select>
-                        </div>
-                        <div class="col-md-4">
-                            <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
-                                (change)="actualizar()">
-                            </plex-select>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="text-center">
-                                <h4>
-                                    <plex-button type="link" icon="chevron-left"></plex-button>
-                                    {{ opciones.fecha | date: "MMM yy" | uppercase}}
-                                    <plex-button type="link" icon="chevron-right"></plex-button>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </plex-box>
+  <div class="col-md-8">
+    <div class="row">
+      <div class="col-md-12">
+        <plex-box>
+          <div class="row">
+            <div class="col-md-4">
+              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="actualizar('')">
+              </plex-select>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+            <div class="col-md-4">
+              <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
+                (change)="actualizar('')">
+              </plex-select>
             </div>
-        </div>
+            <div class="col-md-1">
+              <label>&nbsp;</label>
+              <plex-button icon="eraser" (click)="actualizar('sinFiltro')"></plex-button>
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <h4>
+                  <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
+                  {{ opciones.fecha | date: "MMM yy" | uppercase}}
+                  <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </plex-box>
+      </div>
     </div>
-    <div type="info" class="col-md-4">
-        <plex-tabs>
-            <plex-tab icon="account">
-                <turnos-agendas [agendas]="agendas" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>
-            </plex-tab>
-            <plex-tab icon="history">
-                <plex-box>
-                    TODO: INFO DEL PACIENTE
-                </plex-box>
-            </plex-tab>
-            <plex-tab icon="pencil">
-                <plex-box>
-                    TODO: EDITAR PACIENTE
-                </plex-box>
-            </plex-tab>
-        </plex-tabs>
+    <div class="row">
+      <div class="col-md-12">
+        <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+      </div>
     </div>
+  </div>
+  <div type="info" class="col-md-4">
+    <plex-tabs>
+      <plex-tab icon="account">
+        <turnos-agendas [agendas]="agendas" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>
+      </plex-tab>
+      <plex-tab icon="history">
+        <plex-box>
+          TODO: INFO DEL PACIENTE
+        </plex-box>
+      </plex-tab>
+      <plex-tab icon="pencil">
+        <plex-box>
+          TODO: EDITAR PACIENTE
+        </plex-box>
+      </plex-tab>
+    </plex-tabs>
+  </div>
 </div>

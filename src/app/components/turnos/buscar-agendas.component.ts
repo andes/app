@@ -93,9 +93,4 @@ export class BuscarAgendasComponent implements OnInit {
             bloques: agenda.bloques
         };
     }
-
-    // onReturn(): void {
-    //     this.showBuscarAgendas = true;
-    //     window.setTimeout(() => this.showAgenda = false, 100);
-    // }
 }

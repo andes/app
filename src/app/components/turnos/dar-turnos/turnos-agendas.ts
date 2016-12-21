@@ -1,11 +1,14 @@
+import { TurnoService } from './../../../services/turnos/turno.service';
+import { Observable } from 'rxjs/Rx';
+import { PacienteService } from './../../../services/paciente.service';
 import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { Plex } from 'andes-plex/src/lib/core/service';
+//Interfaces
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+//Servicios
 import { PrestacionService } from './../../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 @Component({
     selector: 'turnos-agendas',
@@ -13,17 +16,21 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 })
 export class TurnosAgendaComponent implements OnInit {
     constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder) { }
+        public serviceEspacioFisico: EspacioFisicoService, public serviceTurno: TurnoService) { }
 
-    public prestaciones: any = [];
     private _agendas: IAgenda[];
     private _agenda: IAgenda;
-    public turnos: any = [];
 
     semana: String[] = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
     showBuscarAgendas: boolean = true;
     showAgenda: boolean = false;
     indice: number = -1;
+    paciente: any = {
+        id: "57f66f2076e97c2d18f1808b",
+        nombre: "Ramiro",
+        apellido: "Diaz",
+        documento: "30403872"
+    }
 
     ngOnInit() {
     }
@@ -32,7 +39,6 @@ export class TurnosAgendaComponent implements OnInit {
     @Input('agendas')
     set agendas(value: Array<IAgenda>) {
         this._agendas = value;
-        //this.verAgenda(true);
     }
     get agendas(): Array<IAgenda> {
         return this._agendas;
@@ -74,5 +80,29 @@ export class TurnosAgendaComponent implements OnInit {
         }
         if (this.agenda)
             this.onChange.emit(this.agenda);
+    }
+
+    seleccionarTurno(bloque: any, indiceBq: number, indice: number) {
+        let inicio = bloque.turnos[indice].horaInicio;
+        this.plex.confirm('Asignación del turno de las ' +
+            inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') +
+            inicio.getMinutes() + " al paciente " + this.paciente.nombre + " " + 
+            this.paciente.apellido).then(resultado => {
+                //this.plex.alert("El turno se asignó correctamente");
+                let datosTurno = {
+                    "idAgenda": this.agenda.id,
+                    "indiceBloque": indiceBq,
+                    "indiceTurno": indice,
+                    "estado": "asignado",
+                    "paciente": this.paciente
+                }
+
+                let operacion: Observable<any>;
+                operacion = this.serviceTurno.save(datosTurno);
+                operacion.subscribe(resultado => {
+                    bloque.turnos[indice].estado = "asignado";
+                    this.plex.alert("El turno se asignó correctamente");
+                });
+            });
     }
 }

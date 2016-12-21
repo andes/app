@@ -30,7 +30,6 @@ export class CalendarioComponent {
     @Input('agendas')
     set agendas(value: Array<IAgenda>) {
         this._agendas = value;
-        debugger
         this.actualizar();
     }
     get agendas(): Array<IAgenda> {
@@ -79,7 +78,6 @@ export class CalendarioComponent {
 
             // Selecciona la agenda
             this.agenda = dia.agenda;
-            debugger
             this.onChange.emit(dia.agenda);
         }
     }
