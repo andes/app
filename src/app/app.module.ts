@@ -28,6 +28,7 @@ import { OrganizacionCreateComponent } from './components/organizacion/organizac
 import { OrganizacionUpdateComponent } from './components/organizacion/organizacion-update.component';
 
 import { PacienteComponent } from './components/paciente/paciente.component';
+import { PacienteSearchComponent} from './components/paciente/paciente-search.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 
@@ -73,7 +74,7 @@ import { PlexService } from 'andes-plex/src/lib/core/service';
               OrganizacionComponent, OrganizacionCreateComponent, OrganizacionUpdateComponent, 
               ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
               EspecialidadComponent, EspecialidadCreateComponent,EspecialidadUpdateComponent, 
-              PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
+              PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,PacienteSearchComponent,
               ConfigPrestacionComponent, PlantillaComponent, EspacioFisicoComponent, EspacioFisicoCreateComponent,
               EspacioFisicoUpdateComponent, PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent
   ],
