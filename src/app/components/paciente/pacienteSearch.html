@@ -1,0 +1,97 @@
+<div class="col-sm-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">Búsqueda de Pacientes</div>
+    <div class="panel-body">
+      <form [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Buscar con lector:</label>
+              <input type="text" class="form-control" #infoData formControlName="info" (change)="parseData(infoData.value)" placeholder="Lector de documento...">
+            </div>
+          </div>
+        </div>
+    <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" class="form-control"  formControlName="nombre" placeholder="Ingrese nombre...">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Apellido:</label>
+            <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese apellido...">
+          </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <label> Documento: </label>
+        <input type="number" class="form-control" formControlName="documento" placeholder="Ingresar DNI...">
+      </div>
+      <div class="col-md-3">
+         <plex-datetime label="Fecha Nacimiento" type="date" formControlName="fechaNacimiento" placeholder="Seleccione fecha..."></plex-datetime>
+      </div>
+      <div class="col-md-3">
+          <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione sexo..." label="Sexo:"></plex-select>
+      </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+      <div class="form-group" [ngClass]="{'has-error':error}">
+        <div class="alert alert-danger" *ngIf="error"> {{mensaje}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12 text-right">
+        <input type="button" class="btn btn-info" value="Buscar" (click)="findPacientes()">
+      </div>
+    </div>
+    </form>
+    <div class="row">&nbsp;</div>
+    <div class="form_group">
+      <div class="form-group">
+        <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+          <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+          <input #gb type="text" pInputText size="70" style="float:left" placeholder="Filtrar">
+        </div>
+        <p-dataTable [value]="pacientes" [rows]="10" [paginator]="true" [pageLinks]="3" [globalFilter]="gb" [rowsPerPageOptions]="[50,100,150]">
+          <p-column [style]="{'width':'30%'}" field="nombre" header="Nombre"></p-column>
+          <p-column [style]="{'width':'30%'}" field="apellido" header="Apellido"></p-column>
+          <p-column [style]="{'width':'8%'}" field="documento" header="DNI"></p-column>
+          <p-column [style]="{'width':'8%'}" field="fechaNacimiento" header="F. Nac">
+            <template let-paciente="rowData" pTemplate type="body">
+              <span>{{paciente.fechaNacimiento | date:"dd/MM/yy"}}</span>
+            </template>
+          </p-column>
+          <p-column [style]="{'width':'10%'}" field="sexo" header="Sexo"></p-column>
+          <p-column [style]="{'width':'10%'}" field="estado" header="Estado"></p-column>
+          <p-column [style]="{'width':'8%'}" field="activo" header="Activo">
+            <template let-paciente="rowData" pTemplate type="body">
+              <span>{{paciente.activo ? "SI" : "NO"}}</span>
+            </template>
+          </p-column>
+          <p-column [style]="{'width':'10%'}" header="% de similitud"></p-column>
+          <!--<p-column header="Acciones" [style]="{'width':'25%'}">
+                            <template let-paciente="rowData" pTemplate type="body">
+                                <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
+                                <button type="button" class="btn btn-sm btn-success" *ngIf="paciente.activo" (click)="onDisable(paciente)" pButton
+                                    icon="fa fa-check">Deshabilitar</button>
+                                <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onEnable(paciente)"
+                                    icon="fa fa-check">Habilitar</button>
+                            </template>
+                        </p-column>-->
+        </p-dataTable>
+      </div>
+    </div>
+    <div class="clear"></div>
+    <div class="row">
+      <div class="col-md-12">
+        <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nuevo Paciente">
+      </div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+</div>

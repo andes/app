@@ -33,6 +33,7 @@ import { OrganizacionComponent } from './components/organizacion/organizacion.co
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
 import { PacienteComponent } from './components/paciente/paciente.component';
+import { PacienteSearchComponent} from './components/paciente/paciente-search.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 
@@ -81,10 +82,11 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent,
-    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
+    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, TurnosAgendaComponent
+
   ],
   bootstrap: [AppComponent],
   providers: [
