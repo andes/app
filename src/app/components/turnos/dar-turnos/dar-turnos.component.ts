@@ -1,5 +1,3 @@
-type Estado = "seleccionada" | "noSeleccionada" | "confirmacion" | "noTurnos"
-
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
@@ -20,13 +18,11 @@ export class DarTurnosComponent implements AfterViewInit {
         prestacion: null,
         profesional: null,
     }
-    public estado: Estado;
 
     constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, public serviceAgenda: AgendaService) { }
 
     ngAfterViewInit() {
         this.actualizar("sinFiltro");
-        this.estado = "noSeleccionada";
     }
 
     loadPrestaciones(event) {
@@ -53,31 +49,10 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarAgenda(agenda) {
-       
+        debugger    
         this.agenda = agenda;
-        let noTurnos: boolean = true;
-        this.agenda.bloques.every(function (blq, index) {
-            blq.turnos.every(function (turno, index) {
-                if (turno.estado == "disponible") {
-                    noTurnos = false;
-                    return false;
-                }
-                else 
-                    return true;
-            });
-            if (noTurnos)
-                return false;
-            else 
-                return true;
-        });
-        console.log(this.estado);
-         debugger
-        if (noTurnos)
-            this.estado = "noTurnos";
-        else{
-            this.estado = "seleccionada";
-        }
-        console.log("segundo "+this.estado);
+        if (agenda==null)
+            this.actualizar("sinFiltro");
     }
 
     cambiarMes(signo) {
@@ -87,4 +62,4 @@ export class DarTurnosComponent implements AfterViewInit {
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
         this.actualizar('');
     }
-}
+} 
