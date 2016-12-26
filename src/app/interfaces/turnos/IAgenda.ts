@@ -16,6 +16,5 @@ export interface IAgenda{
     horaFin: Date,
     intercalar: Boolean,
     bloques: IBloque[],
-    turnos: ITurno[],
     estado: String 
 }

@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="pacienteSimultaneos"></plex-bool>
                     </div>
                     <div class="col-md-4" *ngIf="elementoActivo.pacienteSimultaneos">
@@ -211,6 +211,13 @@
                 <div class="row">
                     <div class="col-md-4">
                         <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
+                    </div>
+                    <div class="col-md-4" *ngIf="elementoActivo.citarPorBloque">
+                        <label class="col-md-8 control-label">Cant Pacientes</label>
+                        <div class="col-md-4">
+                            <plex-int [(ngModel)]="temp" name="cantidadBloque" placeholder="">
+                            </plex-int>
+                        </div>
                     </div>
                 </div>
                 <br>

@@ -10,8 +10,6 @@ export class TurnoService {
 
     constructor(private server: ServerService, private http: Http) { }
     save(turno: any): Observable<any>{
-        
-        console.log("servicio "+turno);
         if (turno.idAgenda)
             //this.organizacionUrl + "/" + organizacion.id
             return this.server.put(this.agendaUrl+ "/" + turno.idAgenda, turno);

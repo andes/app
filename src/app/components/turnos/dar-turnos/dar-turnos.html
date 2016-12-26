@@ -32,14 +32,14 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+        <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estado" (agenda-changed)="seleccionarAgenda($event)"></calendario>
       </div>
     </div>
   </div>
   <div type="info" class="col-md-4">
     <plex-tabs>
       <plex-tab icon="account">
-        <turnos-agendas [agendas]="agendas" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>
+        <turnos-agendas [agendas]="agendas" [agenda]="agenda" [estado]="estado" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>
       </plex-tab>
       <plex-tab icon="history">
         <plex-box>

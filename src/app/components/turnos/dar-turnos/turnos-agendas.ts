@@ -1,3 +1,5 @@
+import { IBloque } from './../../../interfaces/turnos/IBloque';
+import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { Observable } from 'rxjs/Rx';
 import { PacienteService } from './../../../services/paciente.service';
@@ -14,12 +16,19 @@ import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.
     selector: 'turnos-agendas',
     templateUrl: 'turnos-agendas.html'
 })
+
 export class TurnosAgendaComponent implements OnInit {
     constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
         public serviceEspacioFisico: EspacioFisicoService, public serviceTurno: TurnoService) { }
 
     private _agendas: IAgenda[];
     private _agenda: IAgenda;
+    private _estado: String;
+    private turno: ITurno[];
+    private bloque: IBloque[];
+    private indiceTurno: number;
+    private indiceBloque: number;
+    private telefono: String = "2994427394"
 
     semana: String[] = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
     showBuscarAgendas: boolean = true;
@@ -36,6 +45,7 @@ export class TurnosAgendaComponent implements OnInit {
     }
 
     @Output('agenda-changed') onChange = new EventEmitter();
+    @Output('turno-changed') turnoChange = new EventEmitter();
     @Input('agendas')
     set agendas(value: Array<IAgenda>) {
         this._agendas = value;
@@ -52,6 +62,14 @@ export class TurnosAgendaComponent implements OnInit {
     }
     get agenda(): IAgenda {
         return this._agenda;
+    }
+
+    @Input('estado')
+    set estado(value: String) {
+        this._estado = value;
+    }
+    get estado(): String {
+        return this._estado;
     }
 
     loadPrestaciones(event) {
@@ -83,26 +101,52 @@ export class TurnosAgendaComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indiceBq: number, indice: number) {
+        this.bloque = bloque;
+        this.indiceBloque = indiceBq;
+        this.indiceTurno = indice;
+        this.turno = bloque.turnos[indice];
         let inicio = bloque.turnos[indice].horaInicio;
-        this.plex.confirm('Asignación del turno de las ' +
-            inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') +
-            inicio.getMinutes() + " al paciente " + this.paciente.nombre + " " + 
-            this.paciente.apellido).then(resultado => {
-                //this.plex.alert("El turno se asignó correctamente");
-                let datosTurno = {
-                    "idAgenda": this.agenda.id,
-                    "indiceBloque": indiceBq,
-                    "indiceTurno": indice,
-                    "estado": "asignado",
-                    "paciente": this.paciente
-                }
+        this.estado = "confirmacion";
+        // this.plex.confirm('Asignación del turno de las ' +
+        //     inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') +
+        //     inicio.getMinutes() + " al paciente " + this.paciente.nombre + " " +
+        //     this.paciente.apellido).then(resultado => {
+        //         //this.plex.alert("El turno se asignó correctamente");
+        //         if (resultado) {
+        //             let datosTurno = {
+        //                 "idAgenda": this.agenda.id,
+        //                 "indiceBloque": indiceBq,
+        //                 "indiceTurno": indice,
+        //                 "estado": "asignado",
+        //                 "paciente": this.paciente
+        //             }
 
-                let operacion: Observable<any>;
-                operacion = this.serviceTurno.save(datosTurno);
-                operacion.subscribe(resultado => {
-                    bloque.turnos[indice].estado = "asignado";
-                    this.plex.alert("El turno se asignó correctamente");
-                });
-            });
+        //             let operacion: Observable<any>;
+        //             operacion = this.serviceTurno.save(datosTurno);
+        //             operacion.subscribe(resultado => {
+        //                 bloque.turnos[indice].estado = "asignado";
+        //                 bloque.turnos[indice].paciente = this.paciente;
+        //                 this.plex.alert("El turno se asignó correctamente");
+        //             });
+        //         }
+        //     });
+    }
+
+    onSave() {
+        let datosTurno = {
+            "idAgenda": this.agenda.id,
+            "indiceBloque": this.indiceBloque,
+            "indiceTurno": this.indiceTurno,
+            "estado": "asignado",
+            "paciente": this.paciente
+        }
+        
+        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = "asignado";
+        let operacion: Observable<any>;
+        operacion = this.serviceTurno.save(datosTurno);
+        operacion.subscribe(resultado => {
+            this.estado = "noSeleccionada";
+            this.plex.alert("El turno se asignó correctamente");
+        });
     }
 }

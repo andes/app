@@ -1,5 +1,5 @@
 <div class="row">
-  <div *ngIf="agenda" class="col-md-12">
+  <div *ngIf="estado=='seleccionada'" class="col-md-12">
     <form>
       <div class="row">
         <div class="col-md-8" align="center">
@@ -42,23 +42,108 @@
                 </div>
               </div>
               <div *ngFor="let turno of bloque.turnos; let i=index">
-                <div class="row">
-                  <div *ngIf="turno.estado == 'disponible'" class="col-md-12">
-                    <plex-button type="link" label="{{turno.horaInicio | date: 'HH:mm'}}" (click)="seleccionarTurno(bloque,indiceBq,i)"></plex-button>
+                <div *ngIf="turno.estado == 'disponible'" class="row">
+                  <div class="col-md-12">
+                    <a class="hover" (click)="seleccionarTurno(bloque,indiceBq,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                    <!--<plex-button type="link" label="{{turno.horaInicio | date: 'HH:mm'}}" (click)="seleccionarTurno(bloque,i)"></plex-button>-->
+                    <!--<button (click)="seleccionarTurno(bloque,indiceBq,i)">{{turno.horaInicio | date: 'HH:mm'}} </button>-->
                   </div>
-                  <div *ngIf="turno.estado == 'asignado'" class="col-md-4">
+                  <!--<div *ngIf="turno.estado == 'asignado'" class="col-md-4">
                     <plex-button type="link" disabled="true" label="{{turno.horaInicio | date: 'HH:mm'}}" (click)="seleccionarTurno(bloque,i)"></plex-button>
                   </div>
                   <div *ngIf="turno.paciente" class="col-md-6">
                     <plex-button type="link" disabled="true" label="{{turno.paciente.nombre}} {{turno.paciente.apellido}}"></plex-button>
-                  </div>
+                  </div>-->
                 </div>
-                <br>
+                <br *ngIf="turno.estado == 'disponible'">
               </div>
             </div>
           </plex-box>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+        </div>
+      </div>
     </form>
+  </div>
+  <div *ngIf="estado=='noSeleccionada'" class="col-md-12">
+    <plex-box title="Ultimas Búsquedas">
+      <div class="row">
+        <div class="col-md-12">
+          <label>Profesional: &nbsp;</label> <span>Horacio Marconi </span><br>
+          <label>Prestación: &nbsp;</label> <span>Neurología Adultos </span><br>
+          <label>Profesional: &nbsp;</label> <span>Jorge Perez &nbsp;</span><label>Prestación: &nbsp;</label> <span>Cardiología adultos </span><br>
+        </div>
+      </div>
+    </plex-box>
+    <div class="row">
+      <div class="col-md-12">
+        <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="estado=='noTurnos'" class="col-md-12">
+    <plex-box title="Alternativas">
+      <div class="row">
+        <div class="col-md-12">
+          <label>Alternativa 1: &nbsp;</label> <span>Juan Gomez 29/12/2016 </span><br>
+          <label>Alternativa 2: &nbsp;</label> <span>Pepe Mujica 03/01/2017 </span><br>
+        </div>
+      </div>
+    </plex-box>
+    <div class="row">
+      <div class="col-md-12">
+        <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="estado=='confirmacion'" class="col-md-12">
+    <plex-box title="Confirmar Turno">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}} ({{this.paciente.documento}})</div>
+          <div class="col-md-12"><label>Teléfono: &nbsp;</label><input value="{{telefono}}"></div>
+          <br><br>
+          <div class="col-md-6"><br><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
+          <div class="col-md-6"><br><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>
+          
+          <div class="col-md-12"><br><label>Profesionales: </label>
+            <div *ngFor="let profesional of agenda.profesionales let i=index">
+              <div *ngIf="i<agenda.profesionales.length-1">
+                {{profesional.nombre}} {{profesional.apellido}},
+              </div>
+              <div *ngIf="i>=agenda.profesionales.length-1">
+                {{profesional.nombre}} {{profesional.apellido}}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-12">
+            <br>
+            <label>Prestaciones: </label>
+            <div *ngFor="let prestacion of bloque.prestaciones let j=index">
+              <div *ngIf="j<bloque.prestaciones.length-1">
+                {{prestacion.nombre}},
+              </div>
+              <div *ngIf="j>=bloque.prestaciones.length-1">
+                {{prestacion.nombre}}
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-3">
+          <plex-button title="Confirmar" label="Confirmar" type="primary" (click)="onSave()"></plex-button>
+        </div>
+        <div class="col-md-3">
+          <plex-button title="Volver" label="Volver" type="default"></plex-button>
+        </div>
+      </div>
+    </plex-box>
   </div>
 </div>

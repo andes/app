@@ -10,6 +10,7 @@ import * as moment from 'moment';
 export class CalendarioComponent {
     private _agenda: any;
     private _agendas: Array<any>;
+    private _estado: String;
     private calendario: any = [];
     private diaSeleccionado: CalendarioDia;
 
@@ -34,6 +35,14 @@ export class CalendarioComponent {
     }
     get agendas(): Array<IAgenda> {
         return this._agendas;
+    }
+
+     @Input('estado')
+    set estado(value: String) {
+        this._estado = value;
+    }
+    get estado(): String {
+        return this._estado;
     }
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
@@ -78,6 +87,7 @@ export class CalendarioComponent {
 
             // Selecciona la agenda
             this.agenda = dia.agenda;
+            this.estado = "seleccionada";
             this.onChange.emit(dia.agenda);
         }
     }
