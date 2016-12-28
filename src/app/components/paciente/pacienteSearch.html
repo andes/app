@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-            <input type="text" class="form-control" #infoData formControlName="info" (change)="verifyDocument(infoData.value)" autofocus=true
+            <input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
               placeholder="Lector de documento...">
           </div>
         </div>

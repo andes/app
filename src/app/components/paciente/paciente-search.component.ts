@@ -159,7 +159,7 @@ export class PacienteSearchComponent implements OnInit {
 
     } else {
       
-      if (this.licenciaConductor.length < 19) {
+      if (this.licenciaConductor.length < 18) {
 
         var pos;
 
