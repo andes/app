@@ -63,7 +63,8 @@ export class PacienteSearchComponent implements OnInit {
 
   //Esta función hay que sacarla a UTILS para hacerla generica
   formatDate(date) {
-    var d = new Date(date),
+    if(date!= null){
+      var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -72,12 +73,19 @@ export class PacienteSearchComponent implements OnInit {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+    }else
+    {
+      return null
+    }
+    
   }
 
   loadPaciente() {
     this.error = false;
     var dto = null;
     var formulario = this.searchForm.value;
+    console.log('Esta es la fecha de nacimiento posta: ',formulario.fechaNacimiento);
+    console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
 
     dto = {
         nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
@@ -86,7 +94,7 @@ export class PacienteSearchComponent implements OnInit {
         fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
         sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
       }
-    console.log(dto);
+    console.log(dto)
     this.pacienteService.postSearch(dto)
       .subscribe(
         pacientes => {
