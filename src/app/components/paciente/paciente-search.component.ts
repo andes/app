@@ -61,12 +61,33 @@ export class PacienteSearchComponent implements OnInit {
 
   }
 
+  //Esta función hay que sacarla a UTILS para hacerla generica
+  formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
   loadPaciente() {
     this.error = false;
-    
+    var dto = null;
     var formulario = this.searchForm.value;
-    alert(formulario.apellido);
-    this.pacienteService.postSearch(formulario.apellido)
+
+    dto = {
+        nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
+        apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
+        documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*": "*" : "*",
+        fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
+        sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
+      }
+    console.log(dto);
+    this.pacienteService.postSearch(dto)
       .subscribe(
         pacientes => {
           this.pacientes = pacientes
@@ -84,15 +105,14 @@ export class PacienteSearchComponent implements OnInit {
     //Cambiar esta parte ya que las consultas se va a mandar por campos
     this.error = false;
     var formulario = this.searchForm.value;
-    if(this.documentScanned=="no"){
+    if (this.documentScanned == "no") {
       //Debo chequear porque no fue con código de barras
-      if(formulario.nombre=="" && formulario.apellido=="" && formulario.documento=="" && formulario.fechaNacimiento == null && formulario.sexo==""){
+      if (formulario.nombre == "" && formulario.apellido == "" && formulario.documento == "" && formulario.fechaNacimiento == null && formulario.sexo == "") {
         this.error = true;
         this.mensaje = "Debe ingresar datos en algún campo de búsqueda";
         return;
       }
     }
-    
     this.loadPaciente();
   }
 
@@ -100,6 +120,7 @@ export class PacienteSearchComponent implements OnInit {
   limpiarCampos() {
     var formulario = this.searchForm.value;
     this.error = false;
+    this.pacientes = null;
     this.searchForm.patchValue({
       info: "",
       apellido: "",
@@ -112,7 +133,7 @@ export class PacienteSearchComponent implements OnInit {
 
   //Método que verifica que tipo de documento se va a escanear (DU o Licencia de Conductor NACIONAL)
   verifyDocument(data: string) {
-  
+
     if (data) {
 
       if (data == "DNI") {
@@ -130,7 +151,7 @@ export class PacienteSearchComponent implements OnInit {
           }
         }
       }
- 
+
       if (this.documentScanned == "LICENCIA_CONDUCIR" || this.documentScanned == "DU") {
         this.parseDocument(data, this.documentScanned)
       }
@@ -139,26 +160,28 @@ export class PacienteSearchComponent implements OnInit {
 
   parseDocument(informacion: string, tipoDocumento: string) {
 
-
     if (tipoDocumento == "DU") {
       var data = informacion.split('"');
       //Parseo la fecha para darle el formato adecuado
       var fecha = data[6].split('-');
       var fechaNac = fecha[1] + '/' + fecha[0] + '/' + fecha[2];
-        //fin parseo de fecha
+      //fin parseo de fecha
       this.searchForm.patchValue({
         info: "", //Limpio el buscador
         apellido: data[1],
         nombre: data[2],
-        sexo: data[3] == "F" ? "femenino" : "masculino",
+        sexo:{
+          id:data[3] == "F" ? "femenino" : "masculino",
+          nombre:data[3] == "F" ? "Femenino" : "Masculino",
+        },
         documento: data[4],
         fechaNacimiento: new Date(fechaNac)
-      },);
+      }, );
       this.documentScanned = "no";
-     
+
 
     } else {
-      
+
       if (this.licenciaConductor.length < 18) {
 
         var pos;
@@ -180,7 +203,10 @@ export class PacienteSearchComponent implements OnInit {
           info: "",
           apellido: this.licenciaConductor[4],
           nombre: this.licenciaConductor[3],
-          sexo: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
+          sexo: {
+            id:this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
+          nombre:this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
+          },
           documento: this.licenciaConductor[1],
           fechaNacimiento: new Date(fechaNac)
         });

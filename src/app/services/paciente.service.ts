@@ -31,8 +31,8 @@ export class PacienteService {
                          .catch(this.handleError); //...errors if any
     } 
 
-    postSearch(infoBusqueda:string): Observable<IPaciente[]>{
-        let bodyString = {"infoBusqueda":infoBusqueda}
+    postSearch(dto:any): Observable<IPaciente[]>{
+        let bodyString = {"objetoBusqueda":dto}
         let headers      = new Headers({ 'Content-Type': 'application/json' });
         let options       = new RequestOptions({headers:headers});
         let pacientes;

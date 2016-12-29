@@ -68,7 +68,7 @@
       <p-column [style]="{'width':'8%'}" field="documento" header="DNI"></p-column>
       <p-column [style]="{'width':'8%'}" field="fechaNacimiento" header="F. Nac">
         <template let-paciente="rowData" pTemplate type="body">
-          <span>{{paciente.fechaNacimiento | date:"dd/MM/yy"}}</span>
+          <span>{{paciente.fechaNacimiento | date:"dd/MM/yyyy"}}</span>
         </template>
       </p-column>
       <p-column [style]="{'width':'10%'}" field="sexo" header="Sexo"></p-column>
@@ -78,7 +78,7 @@
           <span>{{paciente.activo ? "SI" : "NO"}}</span>
         </template>
       </p-column>
-      <p-column [style]="{'width':'10%'}" header="% de similitud"></p-column>
+      <!--<p-column [style]="{'width':'10%'}" header="% de similitud"></p-column>-->
       <!--<p-column header="Acciones" [style]="{'width':'25%'}">
                             <template let-paciente="rowData" pTemplate type="body">
                                 <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
