@@ -41,10 +41,13 @@ export class GestorAgendasComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+            debugger;
+            let fechaDesde = moment(value.fechaDesde).startOf('day').format();
+            let fechaHasta = moment(value.fechaHasta).endOf('day').format();
 
             this.serviceAgenda.get({
-                'fechaDesde': value.fechaDesde,
-                'fechaHasta': value.fechaHasta,
+                'fechaDesde': fechaDesde,
+                'fechaHasta': fechaHasta,
                 'idPrestacion': value.prestaciones.id,
                 'idProfesional': value.profesionales.id,
                 'idEspacioFisico': value.espacioFisico.id
