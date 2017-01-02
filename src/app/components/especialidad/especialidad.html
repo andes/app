@@ -6,13 +6,15 @@
                 <div class="form-group">
                     <label class="col-sm-1 control-label"> Cod. SISA: </label>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control" formControlName="codigoSisa" placeholder="Ingresar código...">
+                    <plex-text   formControlName="codigoSisa" placeholder="Ingresar código..."> 
+                    </plex-text>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Nombre:</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+                        <plex-text formControlName="nombre" placeholder="Ingrese nombre...">
+                        </plex-text>
                     </div>
                 </div>
             </form>
@@ -20,7 +22,8 @@
             <div class="clear"></div>
             <div class="row">
                 <div class="col-sm-12">
-                    <input class="btn btn-primary" type="button" (click)="showcreate = !showcreate" value="Nueva Especialidad">
+                     <plex-button type="primary" label="Nueva Especialidad" title="Nueva Especialidad" (click)="showcreate = !showcreate">
+                     </plex-button>
                 </div>
             </div>
 
@@ -41,10 +44,11 @@
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
                             <th>{{especialidad.habilitado ?'Sí':'No' }}</th>
-                            <td style="width:20px;"><button class="btn btn-primary" (click)="onEdit(especialidad)"><i class="glyphicon glyphicon-pencil"></i> Actualizar</button></td>
+                            <td style="width:20px;"><plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                            </plex-button></td>
                             <td style="width:20px;">
-                                <button class="btn btn-danger" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"><i class="glyphicon glyphicon-trash"></i> Borrar</button>
-                                <button class="btn btn-success" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)"><i class="glyphicon glyphicon-ok"></i> Activar</button>
+                                <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
+                                <plex-button icon="check" type="success" label="Activar" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)"> </plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -57,7 +61,7 @@
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <especialidad-create (data)='onReturn($event)'></especialidad-create>
+        <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
 
     </div>
 </div>
@@ -65,7 +69,7 @@
 <div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <especialidad-update [selectedEsp]="selectedEsp" (data)='onReturn($event)'></especialidad-update>
+        <especialidad-create-update [selectedEsp]="selectedEsp" (data)='onReturn($event)'></especialidad-create-update>
 
     </div>
 </div>

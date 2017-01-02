@@ -4,6 +4,8 @@ import { EspecialidadService } from './../../services/especialidad.service';
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Plex } from 'andes-plex/src/lib/core/service';
+import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
 @Component({
     selector: 'especialidades',
@@ -16,7 +18,7 @@ export class EspecialidadComponent implements OnInit {
     searchForm: FormGroup;
     selectedEsp: IEspecialidad;
 
-    constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }
+    constructor(private formBuilder: FormBuilder, public plex: Plex, private especialidadService: EspecialidadService) { }
 
 
     ngOnInit() {

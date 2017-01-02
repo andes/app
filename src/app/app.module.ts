@@ -28,6 +28,7 @@ import { ProfesionalUpdateComponent } from './components/profesional/profesional
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { EspecialidadCreateComponent } from './components/especialidad/especialidad-create.component';
 import { EspecialidadUpdateComponent } from './components/especialidad/especialidad-update.component';
+import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
@@ -80,7 +81,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
     ProfesionalCreateUpdateComponent,
-    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent,
+    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
