@@ -22,6 +22,7 @@ const appRoutes: Routes = [
   { path: 'pacienteSearch', component: PacienteSearchComponent},
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
+  { path: 'agenda', component: AgendaComponent},
   { path: 'turnos', component: DarTurnosComponent},  
   { path: '**', redirectTo: "inicio" } 
 ];

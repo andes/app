@@ -23,7 +23,8 @@ export class AppComponent {
         new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),        
         new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
         new SidebarItem('Prestacion', 'blur', '/prestacion'),
-        // new SidebarItem('Buscar Agendas', 'filter-outline', '/buscar_agendas')
+        new SidebarItem('Agendas', 'calendar', '/agenda'),
+        new SidebarItem('Turnos', 'calendar-check', '/turnos')
         ];
         this.plex.initStaticItems(items);
     }

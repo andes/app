@@ -71,7 +71,6 @@ export class DarTurnosComponent implements AfterViewInit {
             this.opciones.profesional = null;
         }
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; this.indice = -1; });
-
     }
 
     seleccionarAgenda(agenda) {
