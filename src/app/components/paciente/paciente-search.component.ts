@@ -1,3 +1,4 @@
+import { ConfigPrestacionService } from './../../services/turnos/configPrestacion.service';
 import {
   IPaciente
 } from './../../interfaces/IPaciente';
@@ -14,7 +15,8 @@ import {
   Output,
   Input,
   Renderer,
-  EventEmitter
+  EventEmitter,
+  ViewChildren
 } from '@angular/core';
 import {
   FormBuilder,
@@ -40,6 +42,7 @@ export class PacienteSearchComponent implements OnInit {
   documentScanned = "no";
   licenciaConductor = [];
   stringAnterior = "";
+  @ViewChildren('infoData') vc;
 
   constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
 
@@ -84,8 +87,8 @@ export class PacienteSearchComponent implements OnInit {
     this.error = false;
     var dto = null;
     var formulario = this.searchForm.value;
-    console.log('Esta es la fecha de nacimiento posta: ',formulario.fechaNacimiento);
-    console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
+    //console.log('Esta es la fecha de nacimiento posta: ',formulario.fechaNacimiento);
+    //console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
 
     dto = {
         nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
@@ -94,7 +97,7 @@ export class PacienteSearchComponent implements OnInit {
         fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
         sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
       }
-    console.log(dto)
+    //console.log(dto)
     this.pacienteService.postSearch(dto)
       .subscribe(
         pacientes => {
@@ -122,10 +125,15 @@ export class PacienteSearchComponent implements OnInit {
       }
     }
     this.loadPaciente();
+
+    //Seteo el foco en el lector de código de barras
+    this.vc.first.nativeElement.focus();
   }
 
   //Blanquea los campos de búsqueda y el lector de barras
   limpiarCampos() {
+    //Seteo el foco en el lector de código de barras
+    this.vc.first.nativeElement.focus();
     var formulario = this.searchForm.value;
     this.error = false;
     this.pacientes = null;
