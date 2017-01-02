@@ -1,4 +1,3 @@
-import { TurnosAgendaComponent } from './components/turnos/dar-turnos/turnos-agendas';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -34,6 +33,7 @@ import { OrganizacionComponent } from './components/organizacion/organizacion.co
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
 import { PacienteComponent } from './components/paciente/paciente.component';
+import { PacienteSearchComponent} from './components/paciente/paciente-search.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 
@@ -81,11 +81,12 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
     ProfesionalCreateUpdateComponent,
-    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,
+    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent,EspecialidadCreateUpdateComponent,
+    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, TurnosAgendaComponent
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent
+
   ],
   bootstrap: [AppComponent],
   providers: [

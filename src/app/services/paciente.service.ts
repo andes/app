@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 export class PacienteService {
 
    private pacienteUrl = AppSettings.API_ENDPOINT +'/paciente';  // URL to web api
-
+   private pacienteUrlSearch = AppSettings.API_ENDPOINT +'/paciente/search';  // URL to web api
    constructor(private http: Http) {}
 
    get(): Observable<IPaciente[]> {
@@ -23,7 +23,6 @@ export class PacienteService {
    }
 
    post(paciente: IPaciente): Observable<IPaciente> {
-        debugger;
         let bodyString = JSON.stringify(paciente); // Stringify payload
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
@@ -31,6 +30,16 @@ export class PacienteService {
                          .map((res:Response) => res.json()) // ...and calling .json() on the response to return data
                          .catch(this.handleError); //...errors if any
     } 
+
+    postSearch(dto:any): Observable<IPaciente[]>{
+        let bodyString = {"objetoBusqueda":dto}
+        let headers      = new Headers({ 'Content-Type': 'application/json' });
+        let options       = new RequestOptions({headers:headers});
+        let pacientes;
+        return this.http.post(this.pacienteUrlSearch, bodyString,options) 
+                         .map((res:Response) => {pacientes = res.json(); return pacientes}) 
+                         .catch(this.handleError); 
+    }
 
     getBySerch(apellido:string, nombre: string, documento: string, estado: string, fechaNac: Date, sexo: string): Observable<IPaciente[]> {
        debugger;

@@ -1,0 +1,102 @@
+<form [formGroup]="searchForm">
+  <plex-box type="success" title="Búsqueda de Pacientes">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
+              placeholder="Lector de documento...">
+          </div>
+        </div>
+        <!--<div class="col-md-3">
+              <div class="form-group">
+                <plex-button icon="account-check" title="verificar" label="Verificar Paciente" type="default" (click)="verifyDocument(infoData.value)"></plex-button>
+              </div>
+          </div>-->
+      </div>
+      <div>
+        <div class="row" ng-show="datosPaciente">
+          <div class="col-md-6">
+            <div class="form-group">
+              <plex-text label="Nombre:" placeholder="ingrese nombre..." formControlName="nombre"> </plex-text>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <plex-text label="Apellido:" placeholder="Ingrese apellido..." formControlName="apellido"> </plex-text>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <plex-int label="Documento:" placeholder="Ingrese documento..." formControlName="documento"> </plex-int>
+          </div>
+          <div class="col-md-3">
+            <plex-datetime label="Fecha Nacimiento" type="date" formControlName="fechaNacimiento" placeholder="Seleccione fecha..."></plex-datetime>
+          </div>
+          <div class="col-md-3">
+            <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione sexo..." label="Sexo:"></plex-select>
+          </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+          <div class="form-group" [ngClass]="{'has-error':error}">
+            <div class="alert alert-warning" *ngIf="error"> {{mensaje}}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12 text-right">
+            <plex-button icon="account-search" title="buscar" label="Buscar" type="default" (click)="findPacientes()"></plex-button>
+            <plex-button icon="delete" title="limpiar" label="limpiar" type="default" (click)="limpiarCampos()"></plex-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </plex-box>
+</form>
+<!--<div class="row">&nbsp;</div>-->
+<plex-box type="warning" title="Grilla de candidatos">
+<div class="form_group">
+  <div class="form-group">
+    <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+      <i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+      <input #gb type="text" pInputText size="70" style="float:left" placeholder="Filtrar">
+    </div>
+    <p-dataTable [value]="pacientes" [rows]="10" [paginator]="true" [pageLinks]="3" [globalFilter]="gb" [rowsPerPageOptions]="[50,100,150]">
+      <p-column [style]="{'width':'30%'}" field="nombre" header="Nombre"></p-column>
+      <p-column [style]="{'width':'30%'}" field="apellido" header="Apellido"></p-column>
+      <p-column [style]="{'width':'8%'}" field="documento" header="DNI"></p-column>
+      <p-column [style]="{'width':'8%'}" field="fechaNacimiento" header="F. Nac">
+        <template let-paciente="rowData" pTemplate type="body">
+          <span>{{paciente.fechaNacimiento | date:"dd/MM/yyyy"}}</span>
+        </template>
+      </p-column>
+      <p-column [style]="{'width':'10%'}" field="sexo" header="Sexo"></p-column>
+      <p-column [style]="{'width':'10%'}" field="estado" header="Estado"></p-column>
+      <p-column [style]="{'width':'8%'}" field="activo" header="Activo">
+        <template let-paciente="rowData" pTemplate type="body">
+          <span>{{paciente.activo ? "SI" : "NO"}}</span>
+        </template>
+      </p-column>
+      <!--<p-column [style]="{'width':'10%'}" header="% de similitud"></p-column>-->
+      <!--<p-column header="Acciones" [style]="{'width':'25%'}">
+                            <template let-paciente="rowData" pTemplate type="body">
+                                <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
+                                <button type="button" class="btn btn-sm btn-success" *ngIf="paciente.activo" (click)="onDisable(paciente)" pButton
+                                    icon="fa fa-check">Deshabilitar</button>
+                                <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onEnable(paciente)"
+                                    icon="fa fa-check">Habilitar</button>
+                            </template>
+                        </p-column>-->
+    </p-dataTable>
+  </div>
+</div>
+</plex-box>
+<div class="clear"></div>
+<div class="row">
+  <div class="col-md-12">
+     <plex-button icon="account-plus" title="Nuevo Paciente" label="Nuevo Paciente" type="danger"></plex-button>
+  </div>
+</div>
+<div class="clear"></div>
+

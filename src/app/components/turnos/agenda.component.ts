@@ -28,6 +28,7 @@ export class AgendaComponent {
     public alertas: String[] = [];
     public fecha: Date;
 
+    public temp: number = 4;
     showBuscarAgendas: boolean = false;
     showAgenda: boolean = true;
 
@@ -138,6 +139,7 @@ export class AgendaComponent {
             "horaFin": null,
             "duracionTurno": null,
             "cantidadSimultaneos": null,
+            "cantidadBloque": null,
             "accesoDirectoDelDia": 0, "accesoDirectoDelDiaPorc": 0,
             "accesoDirectoProgramado": 0, "accesoDirectoProgramadoPorc": 0,
             "reservadoGestion": 0, "reservadoGestionPorc": 0,
@@ -158,7 +160,7 @@ export class AgendaComponent {
 
     compararBloques(fecha1, fecha2): number {
         let indiceAux: Number;
-        if (fecha1 && fecha2) {
+        if (fecha1.horaInicio && fecha2.horaInicio) {
             if (fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime() > 0) {
                 indiceAux = fecha1.indice;
                 fecha1.indice = fecha2.indice;
@@ -219,8 +221,10 @@ export class AgendaComponent {
         this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
         var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
-        this.elementoActivo.horaInicio = inicio;
+
         if (inicio && fin) {
+            this.elementoActivo.horaInicio = inicio;
+            this.elementoActivo.horaFin = fin;
             this.elementoActivo.titulo = inicio.getHours() + ":" + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + "-" +
                 fin.getHours() + ":" + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
 
@@ -380,6 +384,9 @@ export class AgendaComponent {
 
             mapeo.forEach((bloqueMap, index) => {
                 if (bloqueMap) {
+                    console.log("inicio " + inicio);
+                    console.log("bloqueMap.horaInicio " + bloqueMap.horaInicio);
+                    console.log("bloqueMap.horaFin " + bloqueMap.horaFin);
                     if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0) {
                         alerta = "El bloque " + (bloque.indice + 1) + " se solapa con el " + (index + 1);
                         this.alertas.push(alerta);
@@ -429,12 +436,12 @@ export class AgendaComponent {
                 bloque.turnos = [];
                 for (var i = 0; i < bloque.cantidadTurnos; i++) {
                     var turno = {
-                         horaInicio : new Date(bloque.horaInicio.getTime() + i*bloque.duracionTurno*60000),
-                         estado: "disponible"
+                        horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
+                        estado: "disponible"
                     }
                     bloque.turnos.push(turno);
                 }
-                
+
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.prestaciones = bloque.prestaciones.filter(function (el) {

@@ -10,10 +10,10 @@ import * as moment from 'moment';
 export class CalendarioComponent {
     private _agenda: any;
     private _agendas: Array<any>;
+    private _estado: String;
     private calendario: any = [];
     private diaSeleccionado: CalendarioDia;
 
-    //constructor(private formBuilder: FormBuilder, public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, public serviceAgenda: AgendaService) { }
     // Propiedades
     @Output('agenda-changed') onChange = new EventEmitter();
     @Input('fecha') fecha: Date;
@@ -36,14 +36,31 @@ export class CalendarioComponent {
         return this._agendas;
     }
 
+    @Input('estado')
+    set estado(value: String) {
+        this._estado = value;
+    }
+    get estado(): String {
+        return this._estado; 
+    }
+
     /** Devuelve la primera agenda que encuentra de un día determinado */
-    private agendaPorFecha(fecha: moment.Moment): any {
+    private agendaPorFecha(fecha: moment.Moment): IAgenda {
         // TODO: optimizar esta búsqueda
         return this.agendas.find(i => {
             return moment(fecha).isSame(i.horaInicio, "day")
         });
     }
 
+    /** Devuelve las agendas correspondientes a un día determinado */
+    private agendasPorFecha(fecha: moment.Moment): IAgenda[] {
+        return this.agendas.filter(
+            function (value) {
+                return (moment(fecha).isSame(value.horaInicio, "day"));
+            }
+        );
+    }
+    
     /** Regenera el calendario */
     private actualizar() {
         if (this.fecha && this.agendas) {
@@ -78,6 +95,7 @@ export class CalendarioComponent {
 
             // Selecciona la agenda
             this.agenda = dia.agenda;
+            this.estado = "seleccionada";
             this.onChange.emit(dia.agenda);
         }
     }

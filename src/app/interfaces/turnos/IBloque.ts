@@ -1,3 +1,4 @@
+import { ITurno } from './ITurno';
 import { IPrestacion } from './IPrestacion';
 export interface IBloque{
     horaInicio: Date,
@@ -15,4 +16,6 @@ export interface IBloque{
     pacienteSimultaneos: Boolean,
     cantidadSimultaneos: Number,
     citarPorBloque: Boolean,
+    cantidadBloque: Number,
+    turnos: ITurno[]
 }
