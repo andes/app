@@ -1,10 +1,11 @@
-import { ProfesionalUpdateComponent } from './profesional-update.component';
-import { ProfesionalCreateComponent } from './profesional-create.component';
+import { ProfesionalCreateUpdateComponent } from './profesional-create-update.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Plex } from 'andes-plex/src/lib/core/service';
+import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
 @Component({
     selector: 'profesionales',
@@ -71,25 +72,18 @@ export class ProfesionalComponent implements OnInit {
     }
 
 
-    onDisable(objProfesional:IProfesional){
-        this.profesionalService.disable(objProfesional)
-            .subscribe(dato => this.loadProfesionales(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+
+     Activo(objProfesional:IProfesional) {
+         if(objProfesional.activo){
+       this.profesionalService.disable(objProfesional)
+            .subscribe(dato => this.loadProfesionales()) //Bind to view
+        }
+        else {
+           this.profesionalService.enable(objProfesional)
+            .subscribe(dato => this.loadProfesionales()) //Bind to view
+        }
     }
 
-     onEnable(objProfesional:IProfesional){
-        this.profesionalService.enable(objProfesional)
-            .subscribe(dato => this.loadProfesionales(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
 
     onEdit(objProfesional:IProfesional){
         this.showupdate = true;

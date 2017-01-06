@@ -1,33 +1,18 @@
-<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
-    <div class="panel panel-default">
-        <div class="panel-heading">Listado de Especialidades</div>
-        <div class="panel-body">
-            <form [formGroup]="searchForm" class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label"> Cod. SISA: </label>
-                    <div class="col-sm-9">
-                    <plex-text   formControlName="codigoSisa" placeholder="Ingresar código..."> 
-                    </plex-text>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Nombre:</label>
-                    <div class="col-sm-9">
-                        <plex-text formControlName="nombre" placeholder="Ingrese nombre...">
-                        </plex-text>
-                    </div>
-                </div>
+<div class="row">
+    <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
+        <plex-box title="Especialidades">
+            <form [formGroup]="searchForm">
+                <plex-text formControlName="codigoSisa" label="Codigo Sisa" placeholder="Ingresar código...">
+                </plex-text>
+                <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre...">
+                </plex-text>
             </form>
-
-            <div class="clear"></div>
             <div class="row">
                 <div class="col-sm-12">
-                     <plex-button type="primary" label="Nueva Especialidad" title="Nueva Especialidad" (click)="showcreate = !showcreate">
-                     </plex-button>
+                    <plex-button type="primary" label="Nueva Especialidad" title="Nueva Especialidad" (click)="showcreate = !showcreate">
+                    </plex-button>
                 </div>
             </div>
-
-            <div class="clear"></div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -43,33 +28,28 @@
                             <td>{{especialidad.codigo.sisa}}</td>
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
-                            <th>{{especialidad.habilitado ?'Sí':'No' }}</th>
-                            <td style="width:20px;"><plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                            </plex-button></td>
-                            <td style="width:20px;">
+                            <td>{{especialidad.habilitado ?'Sí':'No' }}</td>
+                            <td>
+                                <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                                </plex-button>
+                            </td>
+                            <td>
                                 <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
-                                <plex-button icon="check" type="success" label="Activar" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)"> </plex-button>
+                                <plex-button icon="check" type="success" label="Activar" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)">
+                                </plex-button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </plex-box>
     </div>
-</div>
-
-<div class="col-sm-12" *ngIf="showcreate">
-    <div class="panel panel-default">
+    <div class="col-sm-12" *ngIf="showcreate">
         <div class="clear"></div>
         <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
-
     </div>
-</div>
-
-<div class="col-sm-12" *ngIf="showupdate">
-    <div class="panel panel-default">
+    <div class="col-sm-12" *ngIf="showupdate">
         <div class="clear"></div>
         <especialidad-create-update [selectedEsp]="selectedEsp" (data)='onReturn($event)'></especialidad-create-update>
-
     </div>
 </div>

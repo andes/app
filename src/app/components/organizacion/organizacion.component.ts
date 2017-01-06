@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Plex } from 'andes-plex/src/lib/core/service';
+import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
 @Component({
     selector: 'organizaciones',
@@ -14,20 +16,20 @@ export class OrganizacionComponent implements OnInit {
     organizaciones: IOrganizacion[];
     searchForm: FormGroup;
     selectedOrg: IOrganizacion;
-        
+
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 
     checked: boolean = true;
 
     ngOnInit() {
+        debugger
         this.searchForm = this.formBuilder.group({
-            codigoSisa: [''],
-            nombre: ['']
+            nombre: [''],
+            activo: ['']
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            let codSisa = value.codigoSisa ? value.codigoSisa : ""
-            this.loadOrganizacionesFiltrados(codSisa, value.nombre);
+            this.loadOrganizacionesFiltrados(value.activo, value.nombre);
         })
 
         this.loadOrganizaciones();
@@ -36,23 +38,14 @@ export class OrganizacionComponent implements OnInit {
     loadOrganizaciones() {
         this.organizacionService.get({})
             .subscribe(
-            organizaciones => this.organizaciones = organizaciones, //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            organizaciones => this.organizaciones = organizaciones) //Bind to view
     }
 
-    loadOrganizacionesFiltrados(codigoSisa: string, nombre: String) {
-        this.organizacionService.get({ "codigoSisa": codigoSisa, "nombre": nombre })
+    loadOrganizacionesFiltrados(activo: boolean, nombre: String) {
+        console.log(activo);
+        this.organizacionService.get({ "activo": activo, "nombre": nombre })
             .subscribe(
-            organizaciones => this.organizaciones = organizaciones, //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            organizaciones => this.organizaciones = organizaciones) //Bind to view
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
@@ -63,27 +56,28 @@ export class OrganizacionComponent implements OnInit {
 
     onDisable(objOrganizacion: IOrganizacion) {
         this.organizacionService.disable(objOrganizacion)
-            .subscribe(dato => this.loadOrganizaciones(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            .subscribe(dato => this.loadOrganizaciones()) //Bind to view
     }
-
     onEnable(objOrganizacion: IOrganizacion) {
         this.organizacionService.enable(objOrganizacion)
-            .subscribe(dato => this.loadOrganizaciones(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            .subscribe(dato => this.loadOrganizaciones()) //Bind to view
     }
-    
+
+    Activo(objOrganizacion: IOrganizacion) {
+
+        if (objOrganizacion.activo) {
+
+            this.organizacionService.disable(objOrganizacion)
+                .subscribe(dato => { debugger; this.loadOrganizaciones() }) //Bind to view
+        }
+        else {
+            this.organizacionService.enable(objOrganizacion)
+                .subscribe(dato => this.loadOrganizaciones()) //Bind to view
+        }
+    }
+
     onEdit(objOrganizacion: IOrganizacion) {
         this.showcreate = true;
-        // this.showupdate = false;
         this.selectedOrg = objOrganizacion;
     }
 
