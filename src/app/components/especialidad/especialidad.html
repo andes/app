@@ -24,8 +24,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let especialidad of especialidades">
-                            <td>{{especialidad.codigo.sisa}}</td>
+                        <tr *ngFor="let especialidad of datos">
+                            <td>{{especialidad.codigo? especialidad.codigo.sisa: ''}}</td>
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
                             <td>{{especialidad.habilitado ?'Sí':'No' }}</td>
@@ -50,6 +50,6 @@
     </div>
     <div class="col-sm-12" *ngIf="showupdate">
         <div class="clear"></div>
-        <especialidad-create-update [selectedEsp]="selectedEsp" (data)='onReturn($event)'></especialidad-create-update>
+        <especialidad-create-update [seleccion]="seleccion" (data)='onReturn($event)'></especialidad-create-update>
     </div>
 </div>

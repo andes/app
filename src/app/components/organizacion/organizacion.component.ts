@@ -13,9 +13,9 @@ import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 })
 export class OrganizacionComponent implements OnInit {
     showcreate: boolean = false;
-    organizaciones: IOrganizacion[];
+    datos: IOrganizacion[];
     searchForm: FormGroup;
-    selectedOrg: IOrganizacion;
+    seleccion: IOrganizacion;
 
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 
@@ -28,38 +28,32 @@ export class OrganizacionComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            this.loadOrganizacionesFiltrados(value.activo, value.nombre);
+            this.loadDatos({ "activo":value.activo, "nombre":value.nombre});
         })
 
-        this.loadOrganizaciones();
+        this.loadDatos();
     }
 
-    loadOrganizaciones() {
-        this.organizacionService.get({})
+    loadDatos(parametros = {}){
+        this.organizacionService.get(parametros)
             .subscribe(
-            organizaciones => this.organizaciones = organizaciones) //Bind to view
-    }
-
-    loadOrganizacionesFiltrados(activo: boolean, nombre: String) {
-        console.log(activo);
-        this.organizacionService.get({ "activo": activo, "nombre": nombre })
-            .subscribe(
-            organizaciones => this.organizaciones = organizaciones) //Bind to view
+            datos => this.datos = datos) //Bind to view
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
         this.showcreate = false;
-        this.selectedOrg = null;
-        this.loadOrganizaciones();
+        this.seleccion = null;
+        this.loadDatos();
     }
 
     onDisable(objOrganizacion: IOrganizacion) {
         this.organizacionService.disable(objOrganizacion)
-            .subscribe(dato => this.loadOrganizaciones()) //Bind to view
+            .subscribe(dato => this.loadDatos()) //Bind to view
     }
+    
     onEnable(objOrganizacion: IOrganizacion) {
         this.organizacionService.enable(objOrganizacion)
-            .subscribe(dato => this.loadOrganizaciones()) //Bind to view
+            .subscribe(dato => this.loadDatos()) //Bind to view
     }
 
     Activo(objOrganizacion: IOrganizacion) {
@@ -67,17 +61,17 @@ export class OrganizacionComponent implements OnInit {
         if (objOrganizacion.activo) {
 
             this.organizacionService.disable(objOrganizacion)
-                .subscribe(dato => { debugger; this.loadOrganizaciones() }) //Bind to view
+                .subscribe(dato => { debugger; this.loadDatos() }) //Bind to view
         }
         else {
             this.organizacionService.enable(objOrganizacion)
-                .subscribe(dato => this.loadOrganizaciones()) //Bind to view
+                .subscribe(dato => this.loadDatos()) //Bind to view
         }
     }
 
     onEdit(objOrganizacion: IOrganizacion) {
         this.showcreate = true;
-        this.selectedOrg = objOrganizacion;
+        this.seleccion = objOrganizacion;
     }
 
 }

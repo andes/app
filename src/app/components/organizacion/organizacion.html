@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let organizacion of organizaciones">
+                <tr *ngFor="let organizacion of datos">
                     <td>{{organizacion.codigo.sisa}}</td>
                     <td>{{organizacion.nombre}}</td>
                     <td>
@@ -39,7 +39,7 @@
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="panel panel-default">
         <div class="clear"></div>
-        <organizacion-create-update [selectedOrg]="selectedOrg" (data)='onReturn($event)'></organizacion-create-update>
+        <organizacion-create-update [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>
     </div>
 </div>
 </plex-box>

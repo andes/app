@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let profesional of profesionales">
+                        <tr *ngFor="let profesional of datos">
                             <td>{{profesional.apellido}}</td>
                             <td>{{profesional.nombre}}</td>
                             <td>{{profesional.documento}}</td>
@@ -44,7 +44,7 @@
         <div class="col-sm-12" *ngIf="showupdate">
             <div class="panel panel-default">
                 <div class="clear"></div>
-                <profesional-create-update [selectedProfesional]="selectedProfesional" (data)='onReturn($event)'></profesional-create-update>
+                <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
             </div>
         </div>
     </div>

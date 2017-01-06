@@ -3,7 +3,7 @@ import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
@@ -14,11 +14,11 @@ import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 export class ProfesionalComponent implements OnInit {
     showcreate: boolean = false;
     showupdate: boolean = false;
-    profesionales: IProfesional[];
+    datos: IProfesional[];
     searchForm: FormGroup;
-    selectedProfesional: IProfesional;
+    seleccion: IProfesional;
 
-    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) {}
+    constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -28,67 +28,67 @@ export class ProfesionalComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            this.loadProfesionalesFiltrados(value.apellido,value.nombre,value.documento);
+            this.loadDatos({ "apellido": value.apellido, "nombre": value.nombre, "documento": value.documento });
         })
 
-        this.loadProfesionales();
+        this.loadDatos();
     }
 
-    loadProfesionales() {
-        this.profesionalService.get()
-            .subscribe(
-            profesionales => this.profesionales = profesionales, //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+    loadDatos(parametros = {}) {
+        this.profesionalService.get(parametros).subscribe(
+            datos => this.datos = datos) //Bind to view
     }
 
-    loadProfesionalesFiltrados(apellido: string,nombre: String,documento: String){
-         if (apellido || nombre || documento)
-         {
-             this.profesionalService.getByTerm(apellido,nombre,documento)
-            .subscribe(
-            profesionales =>this.profesionales = profesionales, //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-         }else
-         {
-             this.loadProfesionales();
-         }
-         
-    }
+    // loadProfesionales() {
+    //     this.profesionalService.get()
+    //         .subscribe(
+    //         profesionales => this.profesionales = profesionales, //Bind to view
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    // }
+
+    // loadProfesionalesFiltrados(apellido: string,nombre: String,documento: String){
+    //      if (apellido || nombre || documento)
+    //      {
+    //          this.profesionalService.getByTerm(apellido,nombre,documento)
+    //         .subscribe(
+    //         profesionales =>this.profesionales = profesionales, //Bind to view
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    //      }else
+    //      {
+    //          this.loadProfesionales();
+    //      }
+
+    // }
 
     onReturn(objProfesional: IProfesional): void {
         this.showcreate = false;
         this.showupdate = false;
-        if(objProfesional){
-            this.loadProfesionales();
-        } 
+        if (objProfesional) {
+            this.loadDatos();
+        }
     }
 
-
-
-     Activo(objProfesional:IProfesional) {
-         if(objProfesional.activo){
-       this.profesionalService.disable(objProfesional)
-            .subscribe(dato => this.loadProfesionales()) //Bind to view
+    Activo(objProfesional: IProfesional) {
+        if (objProfesional.activo) {
+            this.profesionalService.disable(objProfesional)
+                .subscribe(dato => this.loadDatos()) //Bind to view
         }
         else {
-           this.profesionalService.enable(objProfesional)
-            .subscribe(dato => this.loadProfesionales()) //Bind to view
+            this.profesionalService.enable(objProfesional)
+                .subscribe(dato => this.loadDatos()) //Bind to view
         }
     }
 
-
-    onEdit(objProfesional:IProfesional){
+    onEdit(objProfesional: IProfesional) {
         this.showupdate = true;
-        this.selectedProfesional = objProfesional;
-
+        this.seleccion = objProfesional;
     }
-
 }

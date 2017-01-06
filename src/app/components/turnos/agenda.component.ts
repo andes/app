@@ -58,7 +58,7 @@ export class AgendaComponent {
     }
 
     loadProfesionales(event) {
-        this.servicioProfesional.get().subscribe(event.callback);
+        this.servicioProfesional.get({}).subscribe(event.callback);
     }
 
     loadEspacios(event) {

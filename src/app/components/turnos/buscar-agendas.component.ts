@@ -68,7 +68,7 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        this.serviceProfesional.get().subscribe(event.callback);
+        this.serviceProfesional.get({}).subscribe(event.callback);
     }
 
     loadEspaciosFisicos(event) {

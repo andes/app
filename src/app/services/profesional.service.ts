@@ -15,28 +15,22 @@ export class ProfesionalService {
 
     private profesionalUrl = AppSettings.API_ENDPOINT + '/profesional';  // URL to web api
 
-    constructor(private http: Http) { }
+    constructor(private server: ServerService, private http: Http) { }
 
-    get(): Observable<IProfesional[]> {
-        return this.http.get(this.profesionalUrl)
-            .map((res: Response) => res.json())
-            .catch(this.handleError); //...errors if any*/
+    /**
+     * Metodo get. Trae el objeto organizacion.
+     * @param {any} params Opciones de busqueda
+     */
+    get(params: any): Observable<IProfesional[]> {
+        return this.server.get(this.profesionalUrl, params);
     }
-
-    post(profesional: IProfesional): Observable<IProfesional> {
-        debugger;
-        let bodyString = JSON.stringify(profesional); // Stringify payload
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-        return this.http.post(this.profesionalUrl, bodyString, options) // ...using post request
-            .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
-            .catch(this.handleError); //...errors if any
-    }
-
-    getByTerm(apellido: string, nombre: String, documento: String): Observable<IProfesional[]> {
-        return this.http.get(this.profesionalUrl + "?apellido=" + apellido + "&nombre=" + nombre + "&documento=" + documento)
-            .map((res: Response) => res.json())
-            .catch(this.handleError); //...errors if any*/
+    
+    /**
+     * Metodo post. Inserta un objeto organizacion nuevo.
+     * @param {IOrganizacion} organizacion Recibe IOrganizacion
+     */
+    post(organizacion: IProfesional): Observable<IProfesional> {
+        return this.server.post(this.profesionalUrl, organizacion) // ...using post request
     }
 
     disable(profesional: IProfesional): Observable<IProfesional> {
@@ -73,6 +67,4 @@ export class ProfesionalService {
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');
     }
-
-
 }

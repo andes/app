@@ -14,9 +14,9 @@ import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 export class EspecialidadComponent implements OnInit {
     showcreate: boolean = false;
     showupdate: boolean = false;
-    especialidades: IEspecialidad[];
+    datos: IEspecialidad[];
     searchForm: FormGroup;
-    selectedEsp: IEspecialidad;
+    seleccion: IEspecialidad;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private especialidadService: EspecialidadService) { }
 
@@ -29,47 +29,37 @@ export class EspecialidadComponent implements OnInit {
         //Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
             let codSisa = value.codigoSisa ? value.codigoSisa : ""
-            this.loadEspecialidadesFiltradas(codSisa, value.nombre);
+            this.loadDatos({"codigoSisa": codSisa, "nombre": value.nombre});
         })
 
-        this.loadEspecialidades();
+        this.loadDatos();
     }
 
-    loadEspecialidades() {
-        this.especialidadService.get({})
-            .subscribe(
-            especialidades => this.especialidades = especialidades) //Bind to view
-    }
-
-    loadEspecialidadesFiltradas(codigoSisa: string, nombre: String) {
-        this.especialidadService.get({
-            "codigoSisa": codigoSisa,
-            "nombre": nombre
-        })
-            .subscribe(
-            especialidades => this.especialidades = especialidades) //Bind to view
+    loadDatos(parametros = {}){
+        this.especialidadService.get(parametros).subscribe(
+            datos => this.datos = datos) //Bind to view
     }
 
     onReturn(objEspecialidad: IEspecialidad): void {
         this.showcreate = false;
         this.showupdate = false;
-        this.loadEspecialidades();
+        this.loadDatos();
     }
 
     onDisable(objEspecialidad: IEspecialidad) {
         this.especialidadService.disable(objEspecialidad)
-            .subscribe(dato => this.loadEspecialidades()) //Bind to view
+            .subscribe(datos => this.loadDatos()) //Bind to view
     }
 
     onEnable(objEspecialidad: IEspecialidad) {
         this.especialidadService.enable(objEspecialidad)
-            .subscribe(dato => this.loadEspecialidades()) //Bind to view
+            .subscribe(datos => this.loadDatos()) //Bind to view
     }
 
     onEdit(objEspecialidad: IEspecialidad) {
         this.showcreate = false;
         this.showupdate = true;
-        this.selectedEsp = objEspecialidad;
+        this.seleccion = objEspecialidad;
     }
 
 }

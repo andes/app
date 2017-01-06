@@ -10,7 +10,7 @@ import { IEspecialidad } from './../../interfaces/IEspecialidad';
 })
 export class EspecialidadCreateUpdateComponent implements OnInit {
     
-    @Input('selectedEsp') especialidadHija: IEspecialidad;
+    @Input('seleccion') seleccion: IEspecialidad;
     @Output()
     data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
     createForm: FormGroup;
@@ -18,15 +18,15 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
 
     ngOnInit() {
 
-        //consultamos si es que hay datos cargados en especialidadHija ... entonces hacemos un update y no un insert
-        let nombre = this.especialidadHija? this.especialidadHija.nombre: '';
-        let codigo = this.especialidadHija? this.especialidadHija.codigo.sisa: '';
-        let complejidad = this.especialidadHija? this.especialidadHija.complejidad: '';
-        let descripcion = this.especialidadHija? this.especialidadHija.descripcion: '';
-        let fechaAlta = this.especialidadHija? this.especialidadHija.fechaAlta: '';
-        let fechaBaja = this.especialidadHija? this.especialidadHija.fechaBaja: '';
-        let habilitado = this.especialidadHija? this.especialidadHija.habilitado: '';
-        let disciplina = this.especialidadHija? this.especialidadHija.disciplina: '';
+        //consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
+        let nombre = this.seleccion? this.seleccion.nombre: '';
+        let codigo = this.seleccion? this.seleccion.codigo.sisa: '';
+        let complejidad = this.seleccion? this.seleccion.complejidad: '';
+        let descripcion = this.seleccion? this.seleccion.descripcion: '';
+        let fechaAlta = this.seleccion? this.seleccion.fechaAlta: '';
+        let fechaBaja = this.seleccion? this.seleccion.fechaBaja: '';
+        let habilitado = this.seleccion? this.seleccion.habilitado: '';
+        let disciplina = this.seleccion? this.seleccion.disciplina: '';
         
 
        this.createForm = this.formBuilder.group({
@@ -47,10 +47,10 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
             model.habilitado = true;
             model.fechaAlta = Date();
 
-            if (this.especialidadHija){
-                model.fechaAlta = this.especialidadHija.fechaAlta;
-                model.fechaBaja = this.especialidadHija.fechaBaja;
-                model.id = this.especialidadHija.id;
+            if (this.seleccion){
+                model.fechaAlta = this.seleccion.fechaAlta;
+                model.fechaBaja = this.seleccion.fechaBaja;
+                model.id = this.seleccion.id;
                 debugger
                 espOperation = this.especialidadService.put(model);
             }

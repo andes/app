@@ -53,7 +53,21 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     loadProfesionales(event) {
-        this.serviceProfesional.get().subscribe(event.callback);
+        this.serviceProfesional.get({}).subscribe(event.callback);
+    }
+
+    filtroPrestacion() {
+        if (localStorage.getItem("prestacion")) {
+            if (localStorage.getItem("prestacion1")) {
+                localStorage.setItem("prestacion2", this.opciones.prestacion.nombre);
+            }
+            else {
+                localStorage.setItem("prestacion1", this.opciones.prestacion.nombre);
+            }
+        }
+        else
+            localStorage.setItem("prestacion", this.opciones.prestacion.nombre);
+        this.actualizar('');
     }
 
     actualizar(etiqueta) {
@@ -76,14 +90,14 @@ export class DarTurnosComponent implements AfterViewInit {
     seleccionarAgenda(agenda) {
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
-        let prestacion: String = this.opciones.prestacion?this.opciones.prestacion.id:"";
+        let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : "";
         this.bloques = this.agenda.bloques.filter(
             function (value) {
                 let prestacionesBlq = value.prestaciones.map(function (obj) {
                     return obj.id;
                 });
                 if (prestacion)
-                    return (prestacionesBlq.indexOf(prestacion)>=0);
+                    return (prestacionesBlq.indexOf(prestacion) >= 0);
                 else
                     return true;
             }

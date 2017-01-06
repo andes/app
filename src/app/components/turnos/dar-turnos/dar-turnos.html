@@ -5,7 +5,7 @@
         <plex-box>
           <div class="row">
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="actualizar('')">
+              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtroPrestacion()">
               </plex-select>
             </div>
             <div class="col-md-4">
@@ -102,7 +102,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <label>Profesional: &nbsp;</label> <span>Horacio Marconi </span><br>
-                  <label>Prestación: &nbsp;</label> <span>Neurología Adultos </span><br>
+                  <label>Prestación: &nbsp;</label> <span>{{cachePrestacion}} </span><br>
                   <label>Profesional: &nbsp;</label> <span>Jorge Perez &nbsp;</span><label>Prestación: &nbsp;</label> <span>Cardiología adultos </span><br>
                 </div>
               </div>

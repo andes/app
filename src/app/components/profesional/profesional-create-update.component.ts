@@ -8,14 +8,14 @@ import { ProfesionalService } from './../../services/profesional.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
-import { EspecialidadService} from './../../services/especialidad.service';
+import { EspecialidadService } from './../../services/especialidad.service';
 
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
-import {IPais} from './../../interfaces/IPais';
+import { IPais } from './../../interfaces/IPais';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { ILocalidad } from './../../interfaces/ILocalidad';
-import {IEspecialidad} from './../../interfaces/IEspecialidad';
+import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import * as enumerados from './../../utils/enumerados';
 
 @Component({
@@ -23,29 +23,29 @@ import * as enumerados from './../../utils/enumerados';
     templateUrl: 'profesional-create-update.html'
 })
 export class ProfesionalCreateUpdateComponent implements OnInit {
-    @Input('selectedProfesional') ProfesionalHijo: IProfesional;
+    @Input('seleccion') seleccion: IProfesional;
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
     createForm: FormGroup;
     //Definición de arreglos
-    sexos: any [];
-    generos:any [];
+    sexos: any[];
+    generos: any[];
     tipoComunicacion: any[];
     estadosCiviles: any[];
 
-    paises:IPais[] = [];
+    paises: IPais[] = [];
     provincias: IProvincia[] = [];
-    localidades: ILocalidad[]= [];
+    localidades: ILocalidad[] = [];
     todasProvincias: IProvincia[] = [];
     todasLocalidades: ILocalidad[] = [];
     todasEspecialidades: IEspecialidad[] = [];
-    
+
     constructor(private formBuilder: FormBuilder,
-                private profesionalService: ProfesionalService,
-                private paisService: PaisService,
-                private provinciaService: ProvinciaService,
-                private localidadService: LocalidadService,
-                private especialidadService: EspecialidadService) {}
+        private profesionalService: ProfesionalService,
+        private paisService: PaisService,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
+        private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
 
@@ -55,17 +55,17 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
 
 
-        //consultamos si es que hay datos cargados en ProfesionalHijo ... entonces hacemos un update y no un insert
-        let nombre = this.ProfesionalHijo? this.ProfesionalHijo.nombre: '';
-        let apellido = this.ProfesionalHijo? this.ProfesionalHijo.apellido: '';
-        let documento = this.ProfesionalHijo? this.ProfesionalHijo.documento: '';
-        let fechaNac = this.ProfesionalHijo? this.ProfesionalHijo.fechaNacimiento: null;
-        let fechaFalle = this.ProfesionalHijo? this.ProfesionalHijo.fechaFallecimiento: null;
-        let especialidades = this.ProfesionalHijo? this.ProfesionalHijo.especialidad: null;
-        let rol = this.ProfesionalHijo? this.ProfesionalHijo.rol: '';
-        let sexo = this.ProfesionalHijo? enumerados.getObjeto(this.ProfesionalHijo.sexo): null;
-        let genero = this.ProfesionalHijo? enumerados.getObjeto(this.ProfesionalHijo.genero): null;
-        let estadoCivil = this.ProfesionalHijo? enumerados.getObjeto(this.ProfesionalHijo.estadoCivil): null;
+        //consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
+        let nombre = this.seleccion ? this.seleccion.nombre : '';
+        let apellido = this.seleccion ? this.seleccion.apellido : '';
+        let documento = this.seleccion ? this.seleccion.documento : '';
+        let fechaNac = this.seleccion ? this.seleccion.fechaNacimiento : null;
+        let fechaFalle = this.seleccion ? this.seleccion.fechaFallecimiento : null;
+        let especialidades = this.seleccion ? this.seleccion.especialidad : null;
+        let rol = this.seleccion ? this.seleccion.rol : '';
+        let sexo = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
+        let genero = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
+        let estadoCivil = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
 
 
         this.createForm = this.formBuilder.group({
@@ -76,31 +76,31 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             fechaNacimiento: [fechaNac, Validators.required],
             fechaFallecimiento: [fechaFalle],
             sexo: [sexo],
-            genero:[genero],
+            genero: [genero],
             direccion: this.formBuilder.array([]),
             estadoCivil: [estadoCivil],
             foto: [''], //Queda pendiente para agregar un path o ver como se implementa
-            rol:[rol,Validators.required],
-            especialidad:[especialidades],
+            rol: [rol, Validators.required],
+            especialidad: [especialidades],
             matriculas: this.formBuilder.array([])
         });
 
-        if (this.ProfesionalHijo){
+        if (this.seleccion) {
             //Cargo arrays selecciondaos
             this.loadMatriculas();
-            this.loadContactos(); 
-            this.loadDirecciones();              
+            this.loadContactos();
+            this.loadDirecciones();
         }
-        
+
     }
 
     loadEspecialidades(event) {
-        this.especialidadService.get({nombre: event.query}).subscribe(event.callback)
+        this.especialidadService.get({ nombre: event.query }).subscribe(event.callback)
     }
 
-/* Codigo Direccion */
+    /* Codigo Direccion */
 
-iniDireccion(unaDireccion ? : IDireccion) {
+    iniDireccion(unaDireccion?: IDireccion) {
         // Inicializa contacto
         debugger;
         var myPais;
@@ -149,15 +149,15 @@ iniDireccion(unaDireccion ? : IDireccion) {
         }
     }
 
-    addDireccion(unaDireccion ? ) {
+    addDireccion(unaDireccion?) {
         debugger;
         // agrega formMatricula 
-        const control = < FormArray > this.createForm.controls['direccion'];
+        const control = <FormArray>this.createForm.controls['direccion'];
         control.push(this.iniDireccion(unaDireccion));
     }
 
-    loadDirecciones(){
-        this.ProfesionalHijo.direccion.forEach(element => {
+    loadDirecciones() {
+        this.seleccion.direccion.forEach(element => {
             this.addDireccion(element);
         });
     }
@@ -177,17 +177,17 @@ iniDireccion(unaDireccion ? : IDireccion) {
     }
 
     loadMatriculas() {
-        var cantidadMatriculasActuales = this.ProfesionalHijo.matriculas.length;
-        const control = < FormArray > this.createForm.controls['matriculas'];
+        var cantidadMatriculasActuales = this.seleccion.matriculas.length;
+        const control = <FormArray>this.createForm.controls['matriculas'];
         //Si tienen al menos una matrículas
         if (cantidadMatriculasActuales > 0) {
             for (var i = 0; i < cantidadMatriculasActuales; i++) {
                 var objMatricula: IMatricula;
-                objMatricula = this.ProfesionalHijo.matriculas[i];
+                objMatricula = this.seleccion.matriculas[i];
                 control.push(this.setMatricula(objMatricula))
             }
-        }else{
-            control.push(this.iniMatricula());               
+        } else {
+            control.push(this.iniMatricula());
         }
     }
 
@@ -214,8 +214,8 @@ iniDireccion(unaDireccion ? : IDireccion) {
         control.removeAt(i);
     }
 
-/*Código de filtrado de combos*/
-   loadPaises(event) {
+    /*Código de filtrado de combos*/
+    loadPaises(event) {
         this.paisService.get().subscribe(event.callback);
     }
 
@@ -247,17 +247,17 @@ iniDireccion(unaDireccion ? : IDireccion) {
     }
 
     addContacto() {
-        const control = <FormArray> this.createForm.controls['contacto'];
+        const control = <FormArray>this.createForm.controls['contacto'];
         control.push(this.initContacto(control.length + 1));
     }
 
-    removeContacto(indice: number){
-        const control = <FormArray> this.createForm.controls['contacto'];
+    removeContacto(indice: number) {
+        const control = <FormArray>this.createForm.controls['contacto'];
         control.removeAt(indice);
     }
 
     setContacto(cont: any) {
-        let tipo = cont? enumerados.getObjeto(cont.tipo): null;
+        let tipo = cont ? enumerados.getObjeto(cont.tipo) : null;
         return this.formBuilder.group({
             tipo: [tipo],
             valor: [cont.valor],
@@ -268,15 +268,15 @@ iniDireccion(unaDireccion ? : IDireccion) {
     }
 
     loadContactos() {
-        var cantidadContactosActuales = this.ProfesionalHijo.contacto.length;
-        const control = < FormArray > this.createForm.controls['contacto'];
+        var cantidadContactosActuales = this.seleccion.contacto.length;
+        const control = <FormArray>this.createForm.controls['contacto'];
 
         if (cantidadContactosActuales > 0) {
             for (var i = 0; i < cantidadContactosActuales; i++) {
-                var contacto: any = this.ProfesionalHijo.contacto[i];
+                var contacto: any = this.seleccion.contacto[i];
                 control.push(this.setContacto(contacto))
             }
-        }else{
+        } else {
             control.push(this.initContacto(1));
         }
     }
@@ -289,13 +289,13 @@ iniDireccion(unaDireccion ? : IDireccion) {
             model.genero = model.genero.id;
             model.sexo = model.sexo.id;
             model.estadoCivil = model.estadoCivil.id;
-            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem;})
+            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
             let profOperation: Observable<IProfesional>;
-            
-            if (this.ProfesionalHijo){
-                model.id = this.ProfesionalHijo.id;
+
+            if (this.seleccion) {
+                model.id = this.seleccion.id;
                 profOperation = this.profesionalService.put(model);
-            }else{
+            } else {
                 profOperation = this.profesionalService.post(model);
             }
 
