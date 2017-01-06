@@ -95,7 +95,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     loadEspecialidades(event) {
-        this.especialidadService.get().subscribe(event.callback)
+        this.especialidadService.get({nombre: event.query}).subscribe(event.callback)
     }
 
 /* Codigo Direccion */

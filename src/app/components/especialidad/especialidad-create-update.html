@@ -1,53 +1,25 @@
 <plex-box type="">
-<div class="col-sm-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">Alta de Especialidad</div>
-        <div class="panel-body">
-            <form [formGroup]="createForm">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label>Nombre:</label>
-                            <plex-text formControlName="nombre" placeholder="Ingrese nombre..."></plex-text>
-                            <label class="control-label text-danger" *ngIf="createForm.controls.nombre.errors">Este campo es obligatorio!</label>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label>Descripción:</label>
-                            <plex-text formControlName="descripcion" placeholder="Ingrese descripción..."></plex-text>
-                            <label class="control-label text-danger" *ngIf="createForm.controls.descripcion.errors">Este campo es obligatorio!</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Disciplina:</label>
-                            <plex-text formControlName="disciplina" placeholder="Ingrese la disciplina..."></plex-text>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Complejidad:</label>
-                            <plex-int formControlName="complejidad" placeholder="Ingrese nivel de complejidad..."></plex-int>
-                        </div>
-                    </div>
-                     <div class="row" formGroupName="codigo">
-                        <div class="col-sm-4">
-                            <label> Cod. SISA: </label>
-                            <plex-text formControlName="sisa" placeholder="Ingresar código..."></plex-text>
-                            <label class="control-label text-danger" *ngIf="createForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
-                        </div>
-                     </div>
-                </div>
-                <div class="row">
-                    <plex-button label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)"></plex-button>
-                    <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
-                </div>
-            </form>
-
+    <form [formGroup]="createForm">
+        <div class="row">
+            <div class="col-sm-12">
+                <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre..."></plex-text>
+            </div>
+            <div class="col-sm-12">
+                <plex-text formControlName="descripcion" label="Descripción:" placeholder="Ingrese descripción..."></plex-text>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-sm-4">
+                <plex-text formControlName="disciplina" label="Disciplina:" placeholder="Ingrese la disciplina..."></plex-text>
+            </div>
+            <div class="col-sm-4">
+                <plex-int formControlName="complejidad" label="Complejidad:" placeholder="Ingrese nivel de complejidad..."></plex-int>
+            </div>
+            <div class="col-sm-4" formGroupName="codigo">
+                <plex-text formControlName="sisa" label="Codigo Sisa:" placeholder="Ingresar código..."></plex-text>
+            </div>
+        </div>
+            <plex-button label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)"></plex-button>
+            <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
+    </form>
 </plex-box>

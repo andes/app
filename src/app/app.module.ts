@@ -1,4 +1,4 @@
-import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
+
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
@@ -21,12 +21,9 @@ import { HttpModule } from '@angular/http';
 import { InicioComponent } from './components/inicio/inicio.component';
 
 import { ProfesionalComponent } from './components/profesional/profesional.component';
-import { ProfesionalCreateComponent } from './components/profesional/profesional-create.component';
-import { ProfesionalUpdateComponent } from './components/profesional/profesional-update.component';
+import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
-import { EspecialidadCreateComponent } from './components/especialidad/especialidad-create.component';
-import { EspecialidadUpdateComponent } from './components/especialidad/especialidad-update.component';
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
@@ -78,10 +75,10 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
   declarations: [
     AppComponent, InicioComponent,
-    OrganizacionComponent, OrganizacionCreateUpdateComponent,
-    ProfesionalUpdateComponent, ProfesionalComponent, ProfesionalCreateComponent,
+    OrganizacionComponent, OrganizacionCreateUpdateComponent, 
+    ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
-    EspecialidadComponent, EspecialidadCreateComponent, EspecialidadUpdateComponent,EspecialidadCreateUpdateComponent,
+    EspecialidadComponent,EspecialidadCreateUpdateComponent,
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
