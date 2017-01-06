@@ -22,7 +22,6 @@ export class OrganizacionComponent implements OnInit {
     checked: boolean = true;
 
     ngOnInit() {
-        debugger
         this.searchForm = this.formBuilder.group({
             nombre: [''],
             activo: ['']

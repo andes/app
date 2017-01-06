@@ -233,7 +233,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (isvalid) {
             let estOperation: Observable<IOrganizacion>;
             model.activo = true;
-            debugger
             if (this.organizacionHijo) {
                 model.id = this.organizacionHijo.id;
                 estOperation = this.organizacionService.put(model);
