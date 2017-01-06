@@ -4,7 +4,7 @@
             <form [formGroup]="searchForm" class="form-horizontal">
                 <plex-int formControlName="documento" label="documento:" placeholder="Ingrese numero de Documento..."></plex-int>
                 <plex-text formControlName="apellido" label="Apellido:" placeholder="Filtrar por apellido..."></plex-text>
-                <plex-text formControlName="nombre" label="Nombre:" placeholder="Filtrar por nombre..."></plex-text>+
+                <plex-text formControlName="nombre" label="Nombre:" placeholder="Filtrar por nombre..."></plex-text>
             </form>
             <div class="table-responsive">
                 <table class="table">
@@ -28,9 +28,9 @@
                             <td></td>
                         </tr>
                     </tbody>
-                </table>
-                        <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional">               
-            </div>
+                </table></div>
+                        <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
+        
         </plex-box>
 
         <div class="col-sm-12" *ngIf="showcreate">
