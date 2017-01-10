@@ -25,10 +25,10 @@
                         <p class="text-center">{{organizacion.nivelComplejidad}}</p>
                     </td>
                     <td>
-                        <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="Activo(organizacion)"></plex-bool>
+                        <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
                     </td>
                     <td>
-                        <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                        <plex-button type="primary" label="Actualizar" (click)="onEdit(organizacion)">
                         </plex-button>
                     </td>
                 </tr>

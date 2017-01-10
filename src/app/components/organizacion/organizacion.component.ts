@@ -56,12 +56,11 @@ export class OrganizacionComponent implements OnInit {
             .subscribe(dato => this.loadDatos()) //Bind to view
     }
 
-    Activo(objOrganizacion: IOrganizacion) {
-
+    activate(objOrganizacion: IOrganizacion) {
         if (objOrganizacion.activo) {
 
             this.organizacionService.disable(objOrganizacion)
-                .subscribe(dato => { debugger; this.loadDatos() }) //Bind to view
+                .subscribe(dato => this.loadDatos()) //Bind to view
         }
         else {
             this.organizacionService.enable(objOrganizacion)

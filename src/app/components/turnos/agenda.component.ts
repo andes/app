@@ -384,9 +384,6 @@ export class AgendaComponent {
 
             mapeo.forEach((bloqueMap, index) => {
                 if (bloqueMap) {
-                    console.log("inicio " + inicio);
-                    console.log("bloqueMap.horaInicio " + bloqueMap.horaInicio);
-                    console.log("bloqueMap.horaFin " + bloqueMap.horaFin);
                     if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0) {
                         alerta = "El bloque " + (bloque.indice + 1) + " se solapa con el " + (index + 1);
                         this.alertas.push(alerta);
@@ -459,7 +456,6 @@ export class AgendaComponent {
                 });
                 bloque.prestaciones = prestacionesFormateadas;
             });
-            debugger
             espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.bloqueActivo = -1;

@@ -12,10 +12,7 @@ export interface IOrganizacion {
         remediar: String
     },
     nombre: String,
-    tipoEstablecimiento: {
-        id: String,
-        nombre: String
-    },
+    tipoEstablecimiento: String,
     //telecom
     telecom: [{
         tipo: tipoComunicacion,

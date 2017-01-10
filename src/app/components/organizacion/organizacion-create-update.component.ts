@@ -43,6 +43,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
         this.tiposContactos = enumerados.getTipoComunicacion();
+        console.log(this.seleccion);
         let nombre = this.seleccion ? this.seleccion.nombre : '';
         let nivelComplejidad = this.seleccion ? this.seleccion.nivelComplejidad : '';
         let sisa = this.seleccion ? this.seleccion.codigo.sisa : '';
@@ -58,7 +59,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             nombre: [nombre, Validators.required],
             nivelComplejidad: [nivelComplejidad],
             codigo: this.formBuilder.group({
-                sisa: [sisa, Validators.required],
+                sisa: [sisa, Validators.required], 
                 cuie: [cuie],
                 remediar: [remediar],
             }),
@@ -153,7 +154,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         // Inicializa edificio
         let cant = 0;
         let fecha = new Date();
-        console.log(unEdificio);
         if (tipo!="nuevo"){
             return this.formBuilder.group({
                 id: unEdificio.id,
@@ -231,16 +231,16 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     onSave(model: IOrganizacion, isvalid: boolean) {
         if (isvalid) {
-            let estOperation: Observable<IOrganizacion>;
+            let guardar: Observable<IOrganizacion>;
             model.activo = true;
             if (this.seleccion) {
                 model.id = this.seleccion.id;
-                estOperation = this.organizacionService.put(model);
+                guardar = this.organizacionService.put(model);
             }
             else
-                estOperation = this.organizacionService.post(model);
+                guardar = this.organizacionService.post(model);
 
-            estOperation.subscribe(resultado => { this.data.emit(resultado); });
+            guardar.subscribe(resultado => { this.data.emit(resultado); });
         } else {
             alert("Complete datos obligatorios");
         }
