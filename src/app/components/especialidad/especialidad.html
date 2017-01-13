@@ -28,16 +28,18 @@
                             <td>{{especialidad.codigo? especialidad.codigo.sisa: ''}}</td>
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
-                            <td>{{especialidad.habilitado ?'Sí':'No' }}</td>
                             <td>
-                                <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                                </plex-button>
+                            <plex-bool type="slide" [(ngModel)]="especialidad.habilitado" label="" name="especialidad.habilitado" (click)="activate(especialidad)"></plex-bool>    
                             </td>
                             <td>
+                                <!--<plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                                </plex-button> -->
+                            </td>
+                           <!-- <td>
                                 <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
                                 <plex-button icon="check" type="success" label="Activar" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)">
                                 </plex-button>
-                            </td>
+                            </td>-->
                         </tr>
                     </tbody>
                 </table>
