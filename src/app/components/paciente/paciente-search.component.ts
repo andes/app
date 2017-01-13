@@ -151,7 +151,7 @@ export class PacienteSearchComponent implements OnInit {
   verifyDocument(data: string) {
 
     if (data) {
-
+      debugger;
       if (data == "DNI") {
         //Corresponde a la licencia de conductor
         this.documentScanned = "LICENCIA_CONDUCIR";
@@ -161,10 +161,14 @@ export class PacienteSearchComponent implements OnInit {
       } else {
         if (this.documentScanned != "LICENCIA_CONDUCIR" && this.documentScanned != "DU") {
           var datosLector = data.split('"');
-          if (datosLector.length == 9) {
+          if (datosLector.length == 8 || datosLector.length == 9) {
             //Corresponde a DU
             this.documentScanned = "DU";
           }
+          else {
+           this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
+           this.error = true;
+        }
         }
       }
 
