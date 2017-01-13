@@ -11,7 +11,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 @Injectable()
 export class EspecialidadService {
 
-    private especialidadUrl = AppSettings.API_ENDPOINT + '/especialidad';  // URL to web api
+    private especialidadUrl = AppSettings.API_ENDPOINT + '/especialidades';  // URL to web api
 
     constructor(private server: ServerService) { }
 

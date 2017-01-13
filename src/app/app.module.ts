@@ -60,7 +60,7 @@ import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { ServerService } from 'andes-shared/src/lib/server.service';
 
-import  { InfiniteScroll }  from  'ng2-infinitescroll/app/directives/angular2-infinitescroll';
+
 import { ScrollDirective } from './scroll.directive';
 
 
@@ -87,7 +87,6 @@ import { ScrollDirective } from './scroll.directive';
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent,
-    InfiniteScroll,
     ScrollDirective
 
   ],

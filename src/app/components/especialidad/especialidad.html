@@ -2,10 +2,16 @@
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box title="Especialidades">
             <form [formGroup]="searchForm">
-                <plex-text formControlName="codigoSisa" label="Codigo Sisa" placeholder="Ingresar código...">
-                </plex-text>
-                <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre...">
-                </plex-text>
+                <div class="row">
+                    <div class="col-md-6">
+                        <plex-text formControlName="codigoSisa" label="Codigo Sisa" placeholder="Ingresar código...">
+                        </plex-text>
+                    </div>
+                    <div class="col-md-6">
+                        <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre...">
+                        </plex-text>
+                    </div>
+                </div>
             </form>
             <div class="row">
                 <div class="col-sm-12">
@@ -19,8 +25,9 @@
                         <tr>
                             <th>Codigo Sisa</th>
                             <th>Nombre</th>
-                            <th>disciplina</th>
+                            <th>Disciplina</th>
                             <th>Habilitado</th>
+                            <th>Actualizar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,13 +36,13 @@
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
                             <td>
-                            <plex-bool type="slide" [(ngModel)]="especialidad.habilitado" label="" name="especialidad.habilitado" (click)="activate(especialidad)"></plex-bool>    
+                                <plex-bool type="slide" [(ngModel)]="especialidad.habilitado" label="" name="especialidad.habilitado" (click)="activate(especialidad)"></plex-bool>
                             </td>
                             <td>
-                                <!--<plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                                </plex-button> -->
+                                <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                                </plex-button> 
                             </td>
-                           <!-- <td>
+                            <!-- <td>
                                 <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
                                 <plex-button icon="check" type="success" label="Activar" *ngIf="!especialidad.habilitado" (click)="onEnable(especialidad)">
                                 </plex-button>
