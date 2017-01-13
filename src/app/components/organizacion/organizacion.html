@@ -1,45 +1,46 @@
 <plex-box type="" title="Organizacion">
-<div class="col-sm-12" *ngIf="!showcreate">
-    <form [formGroup]="searchForm">
-        <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingresar nombre...">
-        </plex-text>
-        <plex-bool type="slide" formControlName="activo" label="Habilitado" name="activo"></plex-bool>
-    </form>
-    <plex-button type="primary" label="Nueva Organizacion" title="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Codigo Sisa</th>
-                    <th>Nombre</th>
-                    <th>Complejidad</th>
-                    <th>Habilitado</th>
-                    <th>Actualizar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let organizacion of datos">
-                    <td>{{organizacion.codigo.sisa}}</td>
-                    <td>{{organizacion.nombre}}</td>
-                    <td>
-                        <p class="text-center">{{organizacion.nivelComplejidad}}</p>
-                    </td>
-                    <td>
-                        <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
-                    </td>
-                    <td>
-                        <plex-button type="primary" label="Actualizar" (click)="onEdit(organizacion)">
-                        </plex-button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+    <div class="col-sm-12" *ngIf="!showcreate">
+        <form [formGroup]="searchForm">
+            <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingresar nombre...">
+            </plex-text>
+            <plex-bool type="slide" formControlName="activo" label="Habilitado" name="activo"></plex-bool>
+        </form>
+        <plex-button type="primary" label="Nueva Organizacion" title="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Codigo Sisa</th>
+                        <th>Nombre</th>
+                        <th>Complejidad</th>
+                        <th>Habilitado</th>
+                        <th>Actualizar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let organizacion of datos">
+                        <td>{{organizacion.codigo.sisa}}</td>
+                        <td>{{organizacion.nombre}}</td>
+                        <td>
+                            <p class="text-center">{{organizacion.nivelComplejidad}}</p>
+                        </td>
+                        <td>
+                            <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
+                        </td>
+                        <td>
+                            <plex-button type="primary" label="Actualizar" (click)="onEdit(organizacion)">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div class="col-sm-12" *ngIf="showcreate">
-    <div class="panel panel-default">
-        <div class="clear"></div>
-        <organizacion-create-update [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>
+    <div class="col-sm-12" *ngIf="showcreate">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <organizacion-create-update [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>
+        </div>
     </div>
-</div>
 </plex-box>

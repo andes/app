@@ -24,7 +24,8 @@ export class EspecialidadComponent implements OnInit {
         // Crea el formulario reactivo
         this.searchForm = this.formBuilder.group({
             codigoSisa: [''],
-            nombre: ['']
+            nombre: [''],
+            habilitado: ['']
         });
         //Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
@@ -46,20 +47,22 @@ export class EspecialidadComponent implements OnInit {
         this.loadDatos();
     }
 
-    onDisable(objEspecialidad: IEspecialidad) {
-        this.especialidadService.disable(objEspecialidad)
-            .subscribe(datos => this.loadDatos()) //Bind to view
-    }
-
-    onEnable(objEspecialidad: IEspecialidad) {
-        this.especialidadService.enable(objEspecialidad)
-            .subscribe(datos => this.loadDatos()) //Bind to view
-    }
-
     onEdit(objEspecialidad: IEspecialidad) {
         this.showcreate = false;
         this.showupdate = true;
         this.seleccion = objEspecialidad;
+    }
+
+      activate(objEspecialidad: IEspecialidad) {
+        if (objEspecialidad.habilitado) {
+
+           this.especialidadService.disable(objEspecialidad)
+            .subscribe(datos => this.loadDatos()) //Bind to view
+        }
+        else {
+             this.especialidadService.enable(objEspecialidad)
+            .subscribe(datos => this.loadDatos()) //Bind to view
+        }
     }
 
 }

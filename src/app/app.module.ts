@@ -30,7 +30,7 @@ import { OrganizacionComponent } from './components/organizacion/organizacion.co
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
 import { PacienteComponent } from './components/paciente/paciente.component';
-import { PacienteSearchComponent} from './components/paciente/paciente-search.component';
+import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 
@@ -60,6 +60,10 @@ import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { ServerService } from 'andes-shared/src/lib/server.service';
 
+import  { InfiniteScroll }  from  'ng2-infinitescroll/app/directives/angular2-infinitescroll';
+import { ScrollDirective } from './scroll.directive';
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -75,14 +79,16 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
   declarations: [
     AppComponent, InicioComponent,
-    OrganizacionComponent, OrganizacionCreateUpdateComponent, 
+    OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
-    EspecialidadComponent,EspecialidadCreateUpdateComponent,
-    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent,PacienteSearchComponent,
+    EspecialidadComponent, EspecialidadCreateUpdateComponent,
+    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent,
+    InfiniteScroll,
+    ScrollDirective
 
   ],
   bootstrap: [AppComponent],
