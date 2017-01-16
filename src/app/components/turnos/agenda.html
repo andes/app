@@ -1,5 +1,4 @@
 <div class="row" *ngIf="showAgenda">
-    
     <div class="col-md-5">
         <plex-box type="success" title="Agenda">
             <div class="row">
@@ -22,7 +21,7 @@
                         placeholder="Seleccione los profesionales" [multiple]="true" label-field="nombre+' '+apellido">
                     </plex-select>
                 </div>
-            </div> 
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="cambioFecha()" name="modelo.fecha" label="Fecha">
@@ -95,7 +94,8 @@
                         </div>
                         <div class="row" *ngIf="!modelo.intercalar">
                             <div class="col-md-6">
-                                <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')" label="Hora Inicio">
+                                <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')"
+                                    label="Hora Inicio">
                                 </plex-datetime>
                             </div>
                             <div class="col-md-6">
