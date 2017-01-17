@@ -23,7 +23,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import {} from '@angular/common';
+import { } from '@angular/common';
 
 
 @Component({
@@ -42,11 +42,15 @@ export class PacienteSearchComponent implements OnInit {
   documentScanned = "no";
   licenciaConductor = [];
   stringAnterior = "";
+  pacientesSearch: boolean = true;
   @ViewChildren('infoData') vc;
 
-  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
+  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
 
   checked: boolean = true;
+
+  @Output()
+  selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
   ngOnInit() {
 
@@ -66,21 +70,20 @@ export class PacienteSearchComponent implements OnInit {
 
   //Esta función hay que sacarla a UTILS para hacerla generica
   formatDate(date) {
-    if(date!= null){
+    if (date != null) {
       var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('-');
-    }else
-    {
+      return [year, month, day].join('-');
+    } else {
       return null
     }
-    
+
   }
 
   loadPaciente() {
@@ -91,25 +94,25 @@ export class PacienteSearchComponent implements OnInit {
     //console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
 
     dto = {
-        nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
-        apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
-        documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*": "*" : "*",
-        fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
-        sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
-      }
+      nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
+      apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
+      documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*" : "*" : "*",
+      fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
+      sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
+    }
     //console.log(dto)
     this.pacienteService.postSearch(dto)
       .subscribe(
-        pacientes => {
-          this.pacientes = pacientes
-        },
-        err => {
-          if (err) {
-            this.mensaje = "¡Error al intentar acceder a la base de datos!";
-            this.error = true;
-            return;
-          }
-        });
+      pacientes => {
+        this.pacientes = pacientes
+      },
+      err => {
+        if (err) {
+          this.mensaje = "¡Error al intentar acceder a la base de datos!";
+          this.error = true;
+          return;
+        }
+      });
   }
 
   findPacientes() {
@@ -190,9 +193,9 @@ export class PacienteSearchComponent implements OnInit {
         info: "", //Limpio el buscador
         apellido: data[1],
         nombre: data[2],
-        sexo:{
-          id:data[3] == "F" ? "femenino" : "masculino",
-          nombre:data[3] == "F" ? "Femenino" : "Masculino",
+        sexo: {
+          id: data[3] == "F" ? "femenino" : "masculino",
+          nombre: data[3] == "F" ? "Femenino" : "Masculino",
         },
         documento: data[4],
         fechaNacimiento: new Date(fechaNac)
@@ -224,8 +227,8 @@ export class PacienteSearchComponent implements OnInit {
           apellido: this.licenciaConductor[4],
           nombre: this.licenciaConductor[3],
           sexo: {
-            id:this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
-          nombre:this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
+            id: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
+            nombre: this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
           },
           documento: this.licenciaConductor[1],
           fechaNacimiento: new Date(fechaNac)
@@ -238,4 +241,8 @@ export class PacienteSearchComponent implements OnInit {
       }
     }
   }
+
+  darTurno(paciente: IPaciente) {
+    this.selected.emit(paciente);
+  }  
 }

@@ -1,17 +1,20 @@
-<div class="row">
+<div class="row" *ngIf="showDarTurnos">
   <div class="col-md-8">
     <div class="row">
       <div class="col-md-12">
         <plex-box>
           <div class="row">
+            <div class="col-md-12">
+              <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>                            
+            </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtroPrestacion()">
+              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col-md-4">
               <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
-                (change)="actualizar('')">
-              </plex-select>
+                (change)="filtrar()">
+                </plex-select>
             </div>
             <div class="col-md-1">
               <label>&nbsp;</label>
@@ -39,12 +42,12 @@
       <plex-tab icon="account">
         <div class="row">
           <div *ngIf="estadoT=='seleccionada'" class="col-md-12">
-              <div class="row">
-                <div class="col-md-8" align="center">
-                  <div class="box">
-                    <div class="box-content" align="center">
-                      <h1>
-                        <small> 
+            <div class="row">
+              <div class="col-md-8" align="center">
+                <div class="box">
+                  <div class="box-content" align="center">
+                    <h1>
+                      <small> 
                             <div *ngFor="let profesional of agenda.profesionales let i=index">
                                 <div *ngIf="i<agenda.profesionales.length-1">
                                     {{profesional.nombre}} {{profesional.apellido}},
@@ -54,57 +57,58 @@
                                 </div>
                             </div>
                         </small>
-                        <br>
-                        <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                        {{agenda.horaInicio | date: 'dd/MM'}}
-                        <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
-                        <br><br>
-                        <small>{{semana[agenda.horaInicio.getDay()]}}</small><br>
-                      </h1>
                       <br>
-                    </div>
+                      <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                      {{agenda.horaInicio | date: 'dd/MM'}}
+                      <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                      <br><br>
+                      <small>{{semana[agenda.horaInicio.getDay()]}}</small><br>
+                    </h1>
+                    <br>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8">
-                  <plex-box>
-                    <div *ngFor="let bloque of bloques; let indiceBq=index">
-                      <div class="row">
-                        <div *ngIf="bloque.turnos.length" class="col-md-12">
-                          <h2>
-                            <small>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <plex-box>
+                  <div *ngFor="let bloque of bloques; let indiceBq=index">
+                    <div class="row">
+                      <div *ngIf="bloque.turnos.length" class="col-md-12">
+                        <h2>
+                          <small>
                                 <span>{{bloque.descripcion}}</span>  <span class="badge"> {{bloque.duracionTurno}} '</span>
                             </small>
-                          </h2>
-                        </div>
-                      </div>
-                      <div *ngFor="let turno of bloque.turnos; let i=index">
-                        <div *ngIf="turno.estado == 'disponible'" class="row">
-                          <div class="col-md-12">
-                            <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
-                          </div>
-                        </div>
-                        <br *ngIf="turno.estado == 'disponible'">
+                        </h2>
                       </div>
                     </div>
-                  </plex-box>
-                </div>
+                    <div *ngFor="let turno of bloque.turnos; let i=index">
+                      <div *ngIf="turno.estado == 'disponible'" class="row">
+                        <div class="col-md-12">
+                          <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                        </div>
+                      </div>
+                      <br *ngIf="turno.estado == 'disponible'">
+                    </div>
+                  </div>
+                </plex-box>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
-                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
               </div>
+            </div>
           </div>
-          <div *ngIf="estadoT=='noSeleccionada'" class="col-md-12">
+          <div *ngIf="estadoT=='noSeleccionada'">
             <plex-box title="Ultimas Búsquedas">
-              <div class="row">
-                <div class="col-md-12">
-                  <label>Profesional: &nbsp;</label> <span>Horacio Marconi </span><br>
-                  <label>Prestación: &nbsp;</label> <span>{{cachePrestacion}} </span><br>
-                  <label>Profesional: &nbsp;</label> <span>Jorge Perez &nbsp;</span><label>Prestación: &nbsp;</label> <span>Cardiología adultos </span><br>
-                </div>
+              <div class="list-group">
+                <a *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBuqueda(i)">
+                  <div class="row">
+                    <div class="col-md-6" *ngIf="busqueda.prestacion"><label>Prestacion: &nbsp;</label> <span>{{busqueda.prestacion.nombre}} </span><br></div>
+                    <div class="col-md-6" *ngIf="busqueda.profesional"><label>Profesional: &nbsp;</label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
+                  </div>
+                </a>
               </div>
             </plex-box>
             <div class="row">
@@ -115,11 +119,11 @@
           </div>
           <div *ngIf="estadoT=='noTurnos'" class="col-md-12">
             <div class="row">
-                <div class="col-md-8" align="center">
-                  <div class="box">
-                    <div class="box-content" align="center">
-                      <h1>
-                        <small> 
+              <div class="col-md-8" align="center">
+                <div class="box">
+                  <div class="box-content" align="center">
+                    <h1>
+                      <small> 
                             <div *ngFor="let profesional of agenda.profesionales let i=index">
                                 <div *ngIf="i<agenda.profesionales.length-1">
                                     {{profesional.nombre}} {{profesional.apellido}},
@@ -129,25 +133,38 @@
                                 </div>
                             </div>
                         </small>
-                        <br>
-                        <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                        {{agenda.horaInicio | date: 'dd/MM'}}
-                        <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
-                        <br><br>
-                        <small>{{semana[agenda.horaInicio.getDay()]}}</small><br>
-                      </h1>
                       <br>
-                    </div>
+                      <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                      {{agenda.horaInicio | date: 'dd/MM'}}
+                      <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                      <br><br>
+                      <small>{{semana[agenda.horaInicio.getDay()]}}</small><br>
+                    </h1>
+                    <br>
                   </div>
                 </div>
               </div>
+            </div>
             <plex-box title="Alternativas">
-              <div class="row">
-                <div class="col-md-12">
-                  <label>Alternativa 1: &nbsp;</label> <span>Juan Gomez 29/12/2016 </span><br>
-                  <label>Alternativa 2: &nbsp;</label> <span>Pepe Mujica 03/01/2017 </span><br>
-                </div>
+              <div *ngIf="alternativas.length > 0" class="list-group">
+                <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
+                  <div class="row">
+                    <div class="col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: &nbsp;</label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12" *ngIf="alternativa.prestaciones"><label>Prestacion: &nbsp;</label> <span>{{alternativa.prestaciones[0].nombre}} </span><br></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: &nbsp;</label> <span>{{alternativa.profesionales[0].nombre}} {{alternativa.profesionales[0].apellido}} </span><br></div>
+                  </div>
+                </a>
               </div>
+              <div *ngIf="alternativas.length<=0">
+                <div class="row">
+                    <div class="col-md-12">No existen alternativas<br></div>
+                  </div>
+              </div>
+              
             </plex-box>
             <div class="row">
               <div class="col-md-12">
@@ -200,7 +217,6 @@
             </plex-box>
           </div>
         </div>
-        <!--<turnos-agendas [agendas]="agendas" [agenda]="agenda" (agenda-changed)="seleccionarAgenda($event)"></turnos-agendas>-->
       </plex-tab>
       <plex-tab icon="history">
         <plex-box>
@@ -213,5 +229,13 @@
         </plex-box>
       </plex-tab>
     </plex-tabs>
+  </div>
+</div>
+
+
+<div class="col-sm-12" *ngIf="pacientesSearch">
+  <div class="panel panel-default">
+    <div class="clear"></div>
+    <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
   </div>
 </div>

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+import { IPaciente } from './../../../interfaces/IPaciente';
 import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -13,6 +14,7 @@ import * as moment from 'moment';
 import { PrestacionService } from '../../../services/turnos/prestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+const size = 4;
 
 @Component({
     templateUrl: 'dar-turnos.html',
@@ -25,6 +27,7 @@ export class DarTurnosComponent implements AfterViewInit {
         prestacion: null,
         profesional: null,
     }
+
     public estadoT: Estado;
     private turno: ITurno[];
     private bloque: IBloque;
@@ -32,20 +35,26 @@ export class DarTurnosComponent implements AfterViewInit {
     private indiceTurno: number;
     private indiceBloque: number;
     private telefono: String = "2994427394";
+
+    private busquedas: any[] = localStorage.getItem("busquedas") ? JSON.parse(localStorage.getItem("busquedas")) : [];
+    private alternativas: any[] = [];
     indice: number = -1;
     semana: String[] = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
-    paciente: any = {
-        id: "57f66f2076e97c2d18f1808b",
-        nombre: "Ramiro",
-        apellido: "Diaz",
-        documento: "30403872"
+    paciente: any = {        
+        nombre: "",
+        apellido: "",
+        documento: ""
     }
+
+    pacientesSearch: boolean = false;
+    showDarTurnos: boolean = true;
 
     constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, public serviceAgenda: AgendaService,
         public serviceTurno: TurnoService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar("sinFiltro");
+
     }
 
     loadPrestaciones(event) {
@@ -56,17 +65,16 @@ export class DarTurnosComponent implements AfterViewInit {
         this.serviceProfesional.get({}).subscribe(event.callback);
     }
 
-    filtroPrestacion() {
-        if (localStorage.getItem("prestacion")) {
-            if (localStorage.getItem("prestacion1")) {
-                localStorage.setItem("prestacion2", this.opciones.prestacion.nombre);
-            }
-            else {
-                localStorage.setItem("prestacion1", this.opciones.prestacion.nombre);
-            }
+    filtrar() {
+        let search = {
+            "prestacion": this.opciones.prestacion ? this.opciones.prestacion : null,
+            "profesional": this.opciones.profesional ? this.opciones.profesional : null
         }
-        else
-            localStorage.setItem("prestacion", this.opciones.prestacion.nombre);
+        if (this.busquedas.length == size) {
+            this.busquedas.pop();
+        }
+        this.busquedas.push(search);
+        localStorage.setItem("busquedas", JSON.stringify(this.busquedas));
         this.actualizar('');
     }
 
@@ -118,8 +126,16 @@ export class DarTurnosComponent implements AfterViewInit {
             }
             if (hayLibre)
                 this.estadoT = "seleccionada";
-            else
+            else {
                 this.estadoT = "noTurnos";
+                if (this.opciones.prestacion || this.opciones.profesional){
+                    this.serviceAgenda.get({
+                        "fechaDesde": moment(this.agenda.horaInicio).add(1, 'day').toDate(),
+                        "idPrestacion": this.opciones.prestacion ? this.opciones.prestacion.id : null,
+                        "idProfesional": this.opciones.profesional ? this.opciones.profesional.id : null,
+                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; });
+                }
+            }
         }
     }
 
@@ -130,6 +146,16 @@ export class DarTurnosComponent implements AfterViewInit {
         this.turno = bloque.turnos[indice];
         let inicio = bloque.turnos[indice].horaInicio;
         this.estadoT = "confirmacion";
+    }
+
+    seleccionarBuqueda(indice: number) {
+        this.opciones.prestacion = this.busquedas[indice].prestacion;
+        this.opciones.profesional = this.busquedas[indice].profesional;
+        this.actualizar('');
+    }
+
+    seleccionarAlternativa(indice: number) {
+        this.seleccionarAgenda(this.alternativas[indice]);
     }
 
     verAgenda(suma: boolean) {
@@ -172,5 +198,17 @@ export class DarTurnosComponent implements AfterViewInit {
             this.actualizar("sinFiltro");
             this.plex.alert("El turno se asignó correctamente");
         });
+    }
+
+    buscarPaciente() {
+        this.showDarTurnos = false;
+        this.pacientesSearch = true;
+    }
+
+    onReturn(pacientes: IPaciente): void {
+        this.showDarTurnos = true;
+        window.setTimeout(() => this.pacientesSearch = false, 100);
+
+        this.paciente = pacientes;
     }
 } 
