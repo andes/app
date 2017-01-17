@@ -30,7 +30,19 @@
         </form>
 
         <plex-box type="info">
-
+            <div class="row">
+                <div class="col-md-4" *ngFor="let agenda of agendas; let i = index">
+                    <plex-box type="default">
+                        <div class="col-md-12">
+                            <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
+                            <plex-button icon="eraser" (click)="actualizar('sinFiltro')"></plex-button>
+                        </div>                        
+                    </plex-box>
+                </div>
+            </div>
         </plex-box>
     </div>
 

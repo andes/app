@@ -4,6 +4,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
+import { AgendaService } from './../../services/turnos/agenda.service';
 
 @Component({
     templateUrl: 'gestor-agendas.html',
@@ -12,9 +13,11 @@ import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.ser
 export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService) { }
+        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService) { }
 
     searchForm: FormGroup;
+
+    public agendas: any = [];
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -24,9 +27,26 @@ export class GestorAgendasComponent implements OnInit {
             profesionales: [''],
             espacioFisico: [''],
         });
+
+        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+
+            this.serviceAgenda.get({
+                "fechaDesde": value.fechaDesde,
+                "fechaHasta": value.fechaHasta,
+                "idPrestacion": value.prestaciones.id,
+                "idProfesional": value.profesionales.id,
+                "idEspacioFisico": value.espacioFisico.id
+            }).subscribe(
+                agendas => { this.agendas = agendas },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        })
     }
 
-     loadPrestaciones(event) {
+    loadPrestaciones(event) {
         this.servicioPrestacion.get().subscribe(event.callback);
     }
 
