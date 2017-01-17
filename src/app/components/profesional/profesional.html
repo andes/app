@@ -1,10 +1,19 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box type="" title="Profesionales">
-            <form [formGroup]="searchForm" class="form-horizontal">
-                <plex-int formControlName="documento" label="documento:" placeholder="Ingrese numero de Documento..."></plex-int>
-                <plex-text formControlName="apellido" label="Apellido:" placeholder="Filtrar por apellido..."></plex-text>
-                <plex-text formControlName="nombre" label="Nombre:" placeholder="Filtrar por nombre..."></plex-text>
+            <form [formGroup]="searchForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-int formControlName="documento" label="documento:" placeholder="Ingrese numero de Documento..."></plex-int>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text formControlName="apellido" label="Apellido:" placeholder="Filtrar por apellido..."></plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text formControlName="nombre" label="Nombre:" placeholder="Filtrar por nombre..."></plex-text>
+                    </div>
+                </div>
+                <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
             </form>
             <div class="table-responsive">
                 <table class="table">
@@ -14,7 +23,7 @@
                             <th>Nombre</th>
                             <th>Documento</th>
                             <th>Activo</th>
-                            <th>Acciones</th>
+                            <th>Actualizar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,12 +34,16 @@
                             <td>
                                 <plex-bool type="slide" [(ngModel)]="profesional.activo" label="" name="profesional.activo" (click)="Activo(profesional)"></plex-bool>
                             </td>
-                            <td></td>
+                            <td>
+                                <plex-button type="primary" label="Actualizar" (click)="onEdit(profesional)">
+                                </plex-button>
+                            </td>
                         </tr>
                     </tbody>
-                </table></div>
-                        <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
-        
+                </table>
+            </div>
+
+
         </plex-box>
 
         <div class="col-sm-12" *ngIf="showcreate">

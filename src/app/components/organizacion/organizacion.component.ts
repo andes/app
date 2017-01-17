@@ -45,7 +45,10 @@ export class OrganizacionComponent implements OnInit {
         let parametros = { "activo": this.value && this.value.activo, "nombre": this.value && this.value.nombre, "skip": this.skip, "limit": limit };
         this.organizacionService.get(parametros)
             .subscribe(
-            datos => this.datos = concatenar ? this.datos.concat(datos) : datos) //Bind to view
+            datos => {
+            this.datos = concatenar ? this.datos.concat(datos) : datos;
+                this.loader = false;
+            }) //Bind to view
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {

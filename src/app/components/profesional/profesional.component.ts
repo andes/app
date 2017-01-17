@@ -88,6 +88,7 @@ export class ProfesionalComponent implements OnInit {
     }
 
     onEdit(objProfesional: IProfesional) {
+        console.log(objProfesional);
         this.showupdate = true;
         this.seleccion = objProfesional;
     }
