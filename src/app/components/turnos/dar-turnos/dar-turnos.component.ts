@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+import { IPaciente } from './../../../interfaces/IPaciente';
 import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -39,18 +40,21 @@ export class DarTurnosComponent implements AfterViewInit {
     private alternativas: any[] = [];
     indice: number = -1;
     semana: String[] = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
-    paciente: any = {
-        id: "57f66f2076e97c2d18f1808b",
-        nombre: "Ramiro",
-        apellido: "Diaz",
-        documento: "30403872"
+    paciente: any = {        
+        nombre: "",
+        apellido: "",
+        documento: ""
     }
+
+    pacientesSearch: boolean = false;
+    showDarTurnos: boolean = true;
 
     constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, public serviceAgenda: AgendaService,
         public serviceTurno: TurnoService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar("sinFiltro");
+
     }
 
     loadPrestaciones(event) {
@@ -194,5 +198,17 @@ export class DarTurnosComponent implements AfterViewInit {
             this.actualizar("sinFiltro");
             this.plex.alert("El turno se asignó correctamente");
         });
+    }
+
+    buscarPaciente() {
+        this.showDarTurnos = false;
+        this.pacientesSearch = true;
+    }
+
+    onReturn(pacientes: IPaciente): void {
+        this.showDarTurnos = true;
+        window.setTimeout(() => this.pacientesSearch = false, 100);
+
+        this.paciente = pacientes;
     }
 } 
