@@ -7,7 +7,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 5;
+const limit = 10;
 
 @Component({
     selector: 'organizaciones',
@@ -22,7 +22,7 @@ export class OrganizacionComponent implements OnInit {
     skip: number = 0;
     nombre: string = " ";
     activo: Boolean = null;
-
+    loader: boolean = false;
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 
     checked: boolean = true;
@@ -84,6 +84,7 @@ export class OrganizacionComponent implements OnInit {
     nextPage() {
         this.skip += limit;
         this.loadDatos(true);
+        this.loader = true;
     }
 
 }

@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class ProfesionalService {
 
-    private profesionalUrl = AppSettings.API_ENDPOINT + '/profesional';  // URL to web api
+    private profesionalUrl = AppSettings.API_ENDPOINT + '/profesionales';  // URL to web api
 
     constructor(private server: ServerService, private http: Http) { }
 
