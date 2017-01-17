@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-8">
+        <form [formGroup]="searchForm">
+            <plex-box type="info" title="Gestor de Agendas">
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-datetime type="date" formControlName="fechaDesde" label="Desde" title="Fecha Desde">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-datetime type="date" formControlName="fechaHasta" label="Hasta" title="Fecha Hasta">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-select formControlName="prestaciones" (get-data)="loadPrestaciones($event)" label="Seleccione una prestación">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-select formControlName="profesionales" (get-data)="loadProfesionales($event)" label="Seleccione un profesional" label-field="nombre+' '+apellido">
+                        </plex-select>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-select formControlName="espacioFisico" (get-data)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico">
+                        </plex-select>
+                    </div>
+                </div>
+            </plex-box>
+        </form>
+
+        <plex-box type="info">
+
+        </plex-box>
+    </div>
+
+    <div type="info" class="col-md-4">
+        <plex-box>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
+                </div>
+
+                <div class="col-md-1">
+                    <label>&nbsp;</label>
+                    <plex-button icon="eraser" (click)="actualizar('sinFiltro')"></plex-button>
+                </div>
+
+            </div>
+        </plex-box>
+    </div>
+
+</div>

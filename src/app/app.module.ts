@@ -9,6 +9,7 @@ import { EditEspacioFisicoComponent } from './components/turnos/configuracion/es
 
 import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component'
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component'
+import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component'
 
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
@@ -86,7 +87,7 @@ import { ScrollDirective } from './scroll.directive';
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent,
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     ScrollDirective
 
   ],
