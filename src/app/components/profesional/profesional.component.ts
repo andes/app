@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
+const limit = 10;
+
 @Component({
     selector: 'profesionales',
     templateUrl: 'profesional.html'
@@ -17,6 +19,8 @@ export class ProfesionalComponent implements OnInit {
     datos: IProfesional[];
     searchForm: FormGroup;
     seleccion: IProfesional;
+    skip: number = 0;   
+    loader: boolean = false;
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
@@ -93,5 +97,11 @@ export class ProfesionalComponent implements OnInit {
         this.showcreate = false;
         this.showupdate = true;
         this.seleccion = objProfesional;
+    }
+
+     nextPage() {
+        this.skip += limit;
+        this.loadDatos(true);
+        this.loader = true;
     }
 }

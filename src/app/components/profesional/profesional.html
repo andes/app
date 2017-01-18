@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box type="" title="Profesionales">
+            <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-4">
