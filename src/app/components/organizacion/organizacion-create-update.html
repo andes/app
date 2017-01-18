@@ -5,7 +5,6 @@
                 <div class="col-sm-4">
                     <label> Cod. SISA: </label>
                     <input type="text" class="form-control" formControlName="sisa" placeholder="Ingrese código SISA">
-                    <label class="control-label text-danger" *ngIf="createForm.controls.codigo.controls.sisa.errors">Este campo es obligatorio!</label>
                 </div>
                 <div class="col-sm-4">
                     <plex-text label="Cod. CUIE:" formControlName="cuie" placeholder="Ingrese código CUIE"></plex-text>
@@ -19,7 +18,6 @@
                 <div class="col-sm-4">
                     <label>Nombre:</label>
                     <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                    <label class="control-label text-danger" *ngIf="createForm.controls.nombre.errors">Este campo es obligatorio!</label>
                 </div>
                 <div class="col-sm-4">
                     <plex-select formControlName="tipoEstablecimiento" (get-data)="loadTipos($event)" label="Tipo de Establecimiento:">
