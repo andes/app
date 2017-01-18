@@ -238,8 +238,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         let cant = 0;
         let fecha = new Date();
         return this.formBuilder.group({
-            tipo: [''],
-            valor: [''],
+            tipo: ['', Validators.required],
+            valor: ['', Validators.required],
             ranking: [rank],
             ultimaActualizacion: [fecha],
             activo: [true]
@@ -259,8 +259,8 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     setContacto(cont: any) {
         let tipo = cont ? enumerados.getObjeto(cont.tipo) : null;
         return this.formBuilder.group({
-            tipo: [tipo],
-            valor: [cont.valor],
+            tipo: [tipo, Validators.required ],
+            valor: [cont.valor, Validators.required],
             ranking: [cont.ranking],
             ultimaActualizacion: [cont.ultimaActualizacion],
             activo: [cont.activo]
