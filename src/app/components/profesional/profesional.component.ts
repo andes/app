@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 10;
+const limit = 2;
 
 @Component({
     selector: 'profesionales',
@@ -19,8 +19,9 @@ export class ProfesionalComponent implements OnInit {
     datos: IProfesional[];
     searchForm: FormGroup;
     seleccion: IProfesional;
-    skip: number = 0;   
+    skip: number = 0;
     loader: boolean = false;
+    value: any;
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
@@ -32,16 +33,21 @@ export class ProfesionalComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            this.loadDatos({ "apellido": value.apellido, "nombre": value.nombre, "documento": value.documento });
+            this.value = value;
+            this.skip = 0;
+            this.loadDatos(false);
         })
-
         this.loadDatos();
-        
+
     }
 
-    loadDatos(parametros = {}) {
+    loadDatos(concatenar: boolean = false) {
+        let parametros = { "apellido": this.value && this.value.apellido, "nombre": this.value && this.value.nombre, "documento": this.value && this.value.documento, "skip": this.skip, "limit": limit };
         this.profesionalService.get(parametros).subscribe(
-            datos => this.datos = datos) //Bind to view
+            datos => {
+                this.datos = concatenar ? this.datos.concat(datos) : datos;
+                this.loader = false;
+            }) //Bind to view
     }
 
     // loadProfesionales() {
@@ -99,7 +105,7 @@ export class ProfesionalComponent implements OnInit {
         this.seleccion = objProfesional;
     }
 
-     nextPage() {
+    nextPage() {
         this.skip += limit;
         this.loadDatos(true);
         this.loader = true;
