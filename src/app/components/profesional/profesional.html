@@ -42,23 +42,18 @@
                     </tbody>
                 </table>
             </div>
-
-
         </plex-box>
-
-        <div class="col-sm-12" *ngIf="showcreate">
-            <div class="panel panel-default">
-                <div class="clear"></div>
-                <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
-
-            </div>
+    </div>
+    <div class="col-sm-12" *ngIf="showcreate">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
         </div>
-
-        <div class="col-sm-12" *ngIf="showupdate">
-            <div class="panel panel-default">
-                <div class="clear"></div>
-                <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
-            </div>
+    </div>
+    <div class="col-sm-12" *ngIf="showupdate">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
         </div>
     </div>
 </div>

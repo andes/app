@@ -32,6 +32,7 @@ export class ProfesionalComponent implements OnInit {
         })
 
         this.loadDatos();
+        
     }
 
     loadDatos(parametros = {}) {
@@ -89,6 +90,7 @@ export class ProfesionalComponent implements OnInit {
 
     onEdit(objProfesional: IProfesional) {
         console.log(objProfesional);
+        this.showcreate = false;
         this.showupdate = true;
         this.seleccion = objProfesional;
     }
