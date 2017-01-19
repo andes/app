@@ -7,7 +7,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 10;
+const limit = 25;
 
 @Component({
     selector: 'organizaciones',
