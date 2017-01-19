@@ -32,15 +32,21 @@
         <plex-box type="info">
             <div class="row">
                 <div class="col-md-4" *ngFor="let agenda of agendas; let i = index">
-                    <plex-box type="default">
-                        <div class="col-md-12">
-                            <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
-                        </div>
-                        <div class="col-md-12">
-                            <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
-                            <plex-button icon="eraser" (click)="actualizar('sinFiltro')"></plex-button>
-                        </div>                        
-                    </plex-box>
+                    <a (click)="verAgenda(agenda)">
+                        <plex-box type="default">
+
+                            <div class="col-md-12">
+                                <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
+                            </div>
+                            <div class="col-md-10">
+                                <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
+                            </div>
+                            <div class="col-md-2">
+                                <i *ngIf="agenda.agendaSeleccionada == true" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
+                            </div>
+
+                        </plex-box>
+                    </a>
                 </div>
             </div>
         </plex-box>
@@ -48,18 +54,80 @@
 
     <div type="info" class="col-md-4">
         <plex-box>
+            <div class="row" *ngIf="modelo.fecha">
+                <div class="col-md-7">
+                    <div class="col-md-12">
+                        <div>
+                            <label>Fecha: </label>
+                        </div>
+                        <span> {{modelo.fecha}} - {{modelo.horaInicio}} a {{modelo.horaFin}}</span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div>
+                            <label>Espacio Físico: </label>
+                        </div>
+                        <span> {{modelo.espacioFisico}}</span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Profesional: </label>
+                        <div *ngFor="let profesional of modelo.profesionales; let i=index">
+                            <span>{{profesional.nombre}} {{profesional.apellido}}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Prestaciones: </label>
+                        <div *ngFor="let prestacion of modelo.prestaciones; let i=index">
+                            <span>{{prestacion.nombre}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <plex-button icon="eye" (click)="verAgenda(agenda)" label="Ver" title="Vista Previa">
+                        </plex-button>
+                    </div>
+
+                    <div class="form-group">
+                        <plex-button icon="lock" (click)="cerrarAgenda(agenda)" label="Cerrar" title="Cerrar Agenda">
+                        </plex-button>
+                    </div>
+
+                    <div class="form-group">
+                        <plex-button icon="panorama-fisheye" (click)="publicarAgenda(agenda)" label="Publicar" title="Publicar Agenda">
+                        </plex-button>
+                    </div>
+
+                    <div class="form-group">
+                        <plex-button icon="receipt" (click)="clonarAgenda(agenda)" label="Clonar" title="Clonar Agenda">
+                        </plex-button>
+                    </div>
+
+                    <div class="form-group">
+                        <plex-button icon="label" (click)="suspenderAgenda(agenda)" label="Suspender" title="Suspender Agenda">
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </plex-box>
+
+        <plex-box>
             <div class="row">
-                <div class="col-md-12">
-                    <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
+                <div class="col-md-6">
+                    <label>Turnos</label>
+                    <div class="list-group">
+                        <a *ngFor="let bloque of bloques; let i=index" class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-4">{{bloque.descripcion}}</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-
-                <div class="col-md-1">
-                    <label>&nbsp;</label>
-                    <plex-button icon="eraser" (click)="actualizar('sinFiltro')"></plex-button>
-                </div>
-
             </div>
         </plex-box>
     </div>
-
 </div>
+

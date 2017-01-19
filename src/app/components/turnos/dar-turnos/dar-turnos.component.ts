@@ -96,6 +96,7 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarAgenda(agenda) {
+        debugger;
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
         let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : "";
