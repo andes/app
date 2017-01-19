@@ -1,3 +1,4 @@
+import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -86,7 +87,7 @@ import { ScrollDirective } from './scroll.directive';
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent,
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, ClonarAgendaComponent,
     ScrollDirective
 
   ],

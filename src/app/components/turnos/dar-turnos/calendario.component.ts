@@ -63,8 +63,10 @@ export class CalendarioComponent {
     
     /** Regenera el calendario */
     private actualizar() {
+        
         if (this.fecha && this.agendas) {
             let inicio = moment(this.fecha).startOf("month").startOf("week");
+            
             this.diaSeleccionado = null;
             this.calendario = [];
             for (let r = 1; r <= 5; r++) {
@@ -73,6 +75,9 @@ export class CalendarioComponent {
                 for (let c = 1; c <= 7; c++) {
                     inicio.add(1, "day");
                     let dia = new CalendarioDia(inicio.toDate(), this.agendaPorFecha(inicio));
+                    //console.log(dia.fecha);
+                    console.log(inicio);
+                    
                     week.push(dia);
 
                     // ¿Hay una agenda seleccionada?
@@ -86,6 +91,7 @@ export class CalendarioComponent {
     }
 
     private seleccionar(dia: CalendarioDia) {
+        debugger
         // Sólo permite seleccionar días con agenda
         if (dia.agenda) {
             if (this.diaSeleccionado)
