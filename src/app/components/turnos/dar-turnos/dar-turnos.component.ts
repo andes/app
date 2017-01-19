@@ -40,10 +40,10 @@ export class DarTurnosComponent implements AfterViewInit {
     private alternativas: any[] = [];
     indice: number = -1;
     semana: String[] = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"];
-    paciente: any = {        
-        nombre: "",
-        apellido: "",
-        documento: ""
+    paciente: any = {
+        "documento": "30403872",
+        "apellido": "Diaz",
+        "nombre": "Ramiro",
     }
 
     pacientesSearch: boolean = false;
@@ -96,9 +96,12 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarAgenda(agenda) {
+        debugger
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
         let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : "";
+        
+        /*Filtra los bloques segun el filtro prestacion*/
         this.bloques = this.agenda.bloques.filter(
             function (value) {
                 let prestacionesBlq = value.prestaciones.map(function (obj) {
@@ -110,25 +113,15 @@ export class DarTurnosComponent implements AfterViewInit {
                     return true;
             }
         );
-        let hayLibre: boolean = false;
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
-            //for (let bloque of this.agenda.bloques) {
-            for (let bloque of this.bloques) {
-                for (let turno of bloque.turnos) {
-                    if (turno.estado == "disponible") {
-                        hayLibre = true;
-                        break;
-                    }
-                }
-                if (hayLibre)
-                    break;
-            }
-            if (hayLibre)
+            /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
+            if (this.agenda.turnosDisponibles > 0)
                 this.estadoT = "seleccionada";
+            /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
             else {
                 this.estadoT = "noTurnos";
-                if (this.opciones.prestacion || this.opciones.profesional){
+                if (this.opciones.prestacion || this.opciones.profesional) {
                     this.serviceAgenda.get({
                         "fechaDesde": moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                         "idPrestacion": this.opciones.prestacion ? this.opciones.prestacion.id : null,
@@ -181,14 +174,39 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     onSave() {
+        let pacientes: any[];
+        let estado: String = "asignado";
+        this.paciente = {
+            "documento": "30403872",
+            "apellido": "Diaz",
+            "nombre": "Ramiro",
+        };
+
+        if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
+            pacientes = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].pacientes.
+                map(elem => { elem.nombre = elem.nombre, elem.apellido = elem.apellido, elem.documento = elem.documento; return elem; });
+            pacientes.push(this.paciente);
+            if (pacientes.length == this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
+                estado = "asignado";
+                this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = "asignado";
+            }
+            else
+                estado = "disponible"
+        }
+        else
+            this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = "asignado";
+
         let datosTurno = {
             "idAgenda": this.agenda.id,
             "indiceBloque": this.indiceBloque,
             "indiceTurno": this.indiceTurno,
-            "estado": "asignado",
-            "paciente": this.paciente
+            "simultaneos": this.agenda.bloques[this.indiceBloque].pacienteSimultaneos,
+            "cantsimultaneos": this.agenda.bloques[this.indiceBloque].cantidadSimultaneos,
+            "estado": estado,
+            "paciente": this.paciente,
+            "pacientes": pacientes
         }
-        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = "asignado";
+
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
         operacion.subscribe(resultado => {
@@ -208,7 +226,6 @@ export class DarTurnosComponent implements AfterViewInit {
     onReturn(pacientes: IPaciente): void {
         this.showDarTurnos = true;
         window.setTimeout(() => this.pacientesSearch = false, 100);
-
         this.paciente = pacientes;
     }
 } 

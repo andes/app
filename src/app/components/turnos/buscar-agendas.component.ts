@@ -39,7 +39,6 @@ export class BuscarAgendasComponent implements OnInit {
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-
             this.serviceAgenda.get({
                 "fechaDesde": value.fechaDesde,
                 "fechaHasta": value.fechaHasta,
@@ -80,6 +79,7 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     verAgenda(agenda) {
+        debugger
         this.seleccionada = true;
         var fecha = new Date(agenda.horaInicio);
         var horaFin = new Date(agenda.horaFin);

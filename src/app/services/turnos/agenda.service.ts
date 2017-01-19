@@ -6,7 +6,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
 @Injectable()
 export class AgendaService {
-    private agendaUrl = 'http://localhost:3002/api/turnos/agenda';  // URL to web api
+    private agendaUrl = 'http://localhost:3002/api/modules/turnos/agenda';  // URL to web api
 
     constructor(private server: ServerService, private http: Http) { }
 

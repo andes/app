@@ -431,6 +431,7 @@ export class AgendaComponent {
             bloques.forEach((bloque, index) => {
                 //aca debería cargar el arreglo de turnos
                 bloque.turnos = [];
+                //let simultaneos: number = bloque.pacienteSimultaneos? bloque.cantidadSimultaneos:0;
                 for (var i = 0; i < bloque.cantidadTurnos; i++) {
                     var turno = {
                         horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
@@ -468,9 +469,6 @@ export class AgendaComponent {
     }
 
     onCancel() {
-        // this.showBuscarAgendas = true;
-        // this.showAgenda = false;
-
         this.router.navigate(['/inicio']);
         return false;
     }
