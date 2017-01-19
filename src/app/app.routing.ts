@@ -1,5 +1,7 @@
+
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
+import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -23,7 +25,8 @@ const appRoutes: Routes = [
   { path: 'espacio_fisico', component: EspacioFisicoComponent},
   { path: 'prestacion', component: PrestacionComponent},
   { path: 'agenda', component: AgendaComponent},
-  { path: 'turnos', component: DarTurnosComponent},  
+  { path: 'turnos', component: DarTurnosComponent},
+  { path: 'clonarAgenda', component: ClonarAgendaComponent},  
   { path: '**', redirectTo: "inicio" } 
 ];
 

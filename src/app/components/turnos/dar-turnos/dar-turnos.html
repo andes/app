@@ -5,7 +5,7 @@
         <plex-box>
           <div class="row">
             <div class="col-md-12">
-              <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>                            
+              <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
             </div>
             <div class="col-md-4">
               <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
@@ -83,12 +83,22 @@
                       </div>
                     </div>
                     <div *ngFor="let turno of bloque.turnos; let i=index">
-                      <div *ngIf="turno.estado == 'disponible'" class="row">
-                        <div class="col-md-12">
-                          <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                      <div *ngIf="!bloque.pacienteSimultaneos">
+                        <div *ngIf="turno.estado == 'disponible'" class="row">
+                          <div class="col-md-12">
+                            <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                          </div>
                         </div>
+                        <br *ngIf="turno.estado == 'disponible'">
                       </div>
-                      <br *ngIf="turno.estado == 'disponible'">
+                      <div *ngIf="bloque.pacienteSimultaneos">
+                        <div *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos" class="row">
+                          <div class="col-md-12">
+                            <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                          </div>
+                        </div>
+                        <br *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos">
+                      </div>
                     </div>
                   </div>
                 </plex-box>
@@ -161,10 +171,9 @@
               </div>
               <div *ngIf="alternativas.length<=0">
                 <div class="row">
-                    <div class="col-md-12">No existen alternativas<br></div>
-                  </div>
+                  <div class="col-md-12">No existen alternativas<br></div>
+                </div>
               </div>
-              
             </plex-box>
             <div class="row">
               <div class="col-md-12">
@@ -193,15 +202,18 @@
                   </div>
                   <div class="col-md-12">
                     <br>
-                    <label>Prestaciones: </label>
-                    <div *ngFor="let prestacion of bloque.prestaciones let j=index">
+                    <label>Prestación: </label>
+                    <div *ngIf="turno.prestacion">
+                      {{turno.prestacion.nombre}}
+                    </div>
+                    <!--<div *ngFor="let prestacion of bloque.prestaciones let j=index">
                       <div *ngIf="j<bloque.prestaciones.length-1">
                         {{prestacion.nombre}},
                       </div>
                       <div *ngIf="j>=bloque.prestaciones.length-1">
                         {{prestacion.nombre}}
                       </div>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
               </div>
@@ -231,8 +243,6 @@
     </plex-tabs>
   </div>
 </div>
-
-
 <div class="col-sm-12" *ngIf="pacientesSearch">
   <div class="panel panel-default">
     <div class="clear"></div>
