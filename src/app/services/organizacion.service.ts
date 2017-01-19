@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class OrganizacionService {
 
-    private organizacionUrl = AppSettings.API_ENDPOINT + '/organizacion';  // URL to web api
+    private organizacionUrl = AppSettings.API_ENDPOINT + '/core/tm/organizacion';  // URL to web api
 
     constructor(private server: ServerService, private http: Http) { }
 

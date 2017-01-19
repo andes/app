@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 2;
+const limit = 25;
 
 @Component({
     selector: 'especialidades',
@@ -30,7 +30,7 @@ export class EspecialidadComponent implements OnInit {
         this.searchForm = this.formBuilder.group({
             codigoSisa: [''],
             nombre: [''],
-            habilitado: ['']
+            activo: ['']
         });
         //Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
@@ -67,7 +67,7 @@ export class EspecialidadComponent implements OnInit {
     }
 
     activate(objEspecialidad: IEspecialidad) {
-        if (objEspecialidad.habilitado) {
+        if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
                 .subscribe(datos => this.loadDatos()) //Bind to view
