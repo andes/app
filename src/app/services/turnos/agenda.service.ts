@@ -1,3 +1,4 @@
+import { AppSettings } from './../../appSettings';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Observable } from 'rxjs/Rx';
@@ -6,7 +7,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 
 @Injectable()
 export class AgendaService {
-    private agendaUrl = 'http://localhost:3002/api/modules/turnos/agenda';  // URL to web api
+    private agendaUrl = AppSettings.API_ENDPOINT +'/modules/turnos/agenda';  // URL to web api
 
     constructor(private server: ServerService, private http: Http) { }
 

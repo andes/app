@@ -76,7 +76,7 @@ export class CalendarioComponent {
                     inicio.add(1, "day");
                     let dia = new CalendarioDia(inicio.toDate(), this.agendaPorFecha(inicio));
                     //console.log(dia.fecha);
-                    console.log(inicio);
+                    //console.log(inicio);
                     
                     week.push(dia);
 
@@ -91,7 +91,6 @@ export class CalendarioComponent {
     }
 
     private seleccionar(dia: CalendarioDia) {
-        debugger
         // Sólo permite seleccionar días con agenda
         if (dia.agenda) {
             if (this.diaSeleccionado)
