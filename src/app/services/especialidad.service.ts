@@ -48,7 +48,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     disable(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        especialidad.habilitado = false;
+        especialidad.activo = false;
         especialidad.fechaBaja = new Date();
         return this.put(especialidad);
     }
@@ -57,7 +57,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     enable(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        especialidad.habilitado = true;
+        especialidad.activo = true;
         return this.put(especialidad);
     }
 }

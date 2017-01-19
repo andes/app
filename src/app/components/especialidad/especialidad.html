@@ -37,7 +37,7 @@
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
                             <td>
-                                <plex-bool type="slide" [(ngModel)]="especialidad.habilitado" label="" name="especialidad.habilitado" (click)="activate(especialidad)"></plex-bool>
+                                <plex-bool type="slide" [(ngModel)]="especialidad.activo" label="" name="especialidad.activo" (click)="activate(especialidad)"></plex-bool>
                             </td>
                             <td>
                                 <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">

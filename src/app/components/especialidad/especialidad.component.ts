@@ -30,7 +30,7 @@ export class EspecialidadComponent implements OnInit {
         this.searchForm = this.formBuilder.group({
             codigoSisa: [''],
             nombre: [''],
-            habilitado: ['']
+            activo: ['']
         });
         //Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
@@ -67,7 +67,7 @@ export class EspecialidadComponent implements OnInit {
     }
 
     activate(objEspecialidad: IEspecialidad) {
-        if (objEspecialidad.habilitado) {
+        if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
                 .subscribe(datos => this.loadDatos()) //Bind to view
