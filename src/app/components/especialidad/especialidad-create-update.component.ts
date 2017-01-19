@@ -25,7 +25,7 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
         let descripcion = this.seleccion? this.seleccion.descripcion: '';
         let fechaAlta = this.seleccion? this.seleccion.fechaAlta: '';
         let fechaBaja = this.seleccion? this.seleccion.fechaBaja: '';
-        let habilitado = this.seleccion? this.seleccion.habilitado: '';
+        let activo = this.seleccion? this.seleccion.activo: '';
         let disciplina = this.seleccion? this.seleccion.disciplina: '';
         
 
@@ -44,7 +44,7 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
     onSave(model: any, isvalid: boolean) {
         if (isvalid) {
             let espOperation: Observable<IEspecialidad>;
-            model.habilitado = true;
+            model.activo = true;
             model.fechaAlta = Date();
 
             if (this.seleccion){

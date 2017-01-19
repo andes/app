@@ -2,9 +2,16 @@
     <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
     <div class="col-sm-12" *ngIf="!showcreate">
         <form [formGroup]="searchForm">
-            <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingresar nombre...">
-            </plex-text>
-            <plex-bool type="slide" formControlName="activo" label="Habilitado" name="activo"></plex-bool>
+            <div class="row">
+                <div class="col-md-6">
+                    <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingresar nombre...">
+                    </plex-text>
+                </div>
+                <div class="col-md-4">
+                    <label>Habilitado</label>
+                    <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
+                </div>
+            </div>
         </form>
         <plex-button type="primary" label="Nueva Organizacion" title="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
         <div class="table-responsive">
@@ -38,7 +45,7 @@
         </div>
         <plex-loader *ngIf="loader"></plex-loader>
     </div>
-    
+
     <div class="col-sm-12" *ngIf="showcreate">
         <div class="panel panel-default">
             <div class="clear"></div>
