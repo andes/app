@@ -66,7 +66,9 @@ export class EspecialidadComponent implements OnInit {
         this.seleccion = objEspecialidad;
     }
 
-    activate(objEspecialidad: IEspecialidad) {
+
+      activate(objEspecialidad: IEspecialidad) {
+
         if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
