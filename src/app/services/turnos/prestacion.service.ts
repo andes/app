@@ -1,3 +1,4 @@
+import { AppSettings } from './../../appSettings';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Observable } from 'rxjs/Rx';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
@@ -9,7 +10,7 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class PrestacionService {
-    private prestacionUrl = 'http://localhost:3002/api/turnos/prestacion';  // URL to web api
+    private prestacionUrl = AppSettings.API_ENDPOINT +'/modules/turnos/prestacion';
     constructor(private http: Http) { }
 
     get(): Observable<IPrestacion[]> {
