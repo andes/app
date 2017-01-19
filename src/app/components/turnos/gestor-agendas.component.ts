@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit, Directive, HostBinding, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
@@ -11,7 +11,7 @@ import { IBloque } from './../../interfaces/turnos/IBloque';
 import { TurnoService } from './../../services/turnos/turno.service';
 
 @Component({
-    templateUrl: 'gestor-agendas.html',
+    templateUrl: 'gestor-agendas.html'
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -84,9 +84,13 @@ export class GestorAgendasComponent implements OnInit {
 
         this.agenda = agenda;
 
-        if (this.agendaSel)
+        if (this.agendaSel) {
             this.agendaSel.agendaSeleccionada = false;
+            this.agendaSel.agendaSeleccionadaColor = 'default';
+        }
+
         agenda.agendaSeleccionada = true;
+        agenda.agendaSeleccionadaColor = 'success';
 
         this.agendaSel = agenda;
         debugger;
@@ -102,4 +106,5 @@ export class GestorAgendasComponent implements OnInit {
 
 class AgendaSeleccionada {
     public agendaSeleccionada: boolean;
+    public agendaSeleccionadaColor: String;
 }

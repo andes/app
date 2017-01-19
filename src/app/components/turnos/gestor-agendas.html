@@ -29,45 +29,65 @@
             </plex-box>
         </form>
 
-        <plex-box type="info">
-            <div class="row">
-                <div class="col-md-4" *ngFor="let agenda of agendas; let i = index">
-                    <a (click)="verAgenda(agenda)">
-                        <plex-box type="default">
-
-                            <div class="col-md-12">
-                                <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
-                            </div>
-                            <div class="col-md-10">
-                                <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
-                            </div>
-                            <div class="col-md-2">
-                                <i *ngIf="agenda.agendaSeleccionada == true" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
-                            </div>
-
-                        </plex-box>
-                    </a>
-                </div>
+        <div class="row">
+            <div class="col-md-4" *ngFor="let agenda of agendas; let i = index">
+                <a (click)="verAgenda(agenda)" class="hover">
+                    <plex-box type={{agenda.agendaSeleccionadaColor}}>
+                        <div class="col-md-12">
+                            <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
+                        </div>
+                        <div class="col-md-10">
+                            <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
+                        </div>
+                        <div class="col-md-2">
+                            <i *ngIf="agenda.agendaSeleccionada == true" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
+                        </div>
+                    </plex-box>
+                </a>
             </div>
-        </plex-box>
+        </div>
     </div>
 
-    <div type="info" class="col-md-4">
+    <div type="info" class="col-md-4" *ngIf="modelo.fecha">
         <plex-box>
-            <div class="row" *ngIf="modelo.fecha">
-                <div class="col-md-7">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <plex-button icon="eye" (click)="verAgenda(agenda)" title="Vista Previa">
+                                </plex-button>
+                            </td>
+                            <td>
+                                <plex-button icon="power" (click)="verAgenda(agenda)" title="Vista Previa">
+                                </plex-button>
+                            </td>
+                            <td>
+                                <plex-button icon="lock" (click)="verAgenda(agenda)" title="Vista Previa">
+                                </plex-button>
+                            </td>
+                            <td>
+                                <plex-button icon="panorama-fisheye" (click)="verAgenda(agenda)" title="Vista Previa">
+                                </plex-button>
+                            </td>
+                            <td>
+                                <plex-button icon="label" (click)="verAgenda(agenda)" title="Vista Previa">
+                                </plex-button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
                     <div class="col-md-12">
-                        <div>
-                            <label>Fecha: </label>
-                        </div>
-                        <span> {{modelo.fecha}} - {{modelo.horaInicio}} a {{modelo.horaFin}}</span>
+                        <span><b>Fecha:</b> {{modelo.fecha}} - {{modelo.horaInicio}} a {{modelo.horaFin}}</span>
                     </div>
 
                     <div class="col-md-12">
-                        <div>
-                            <label>Espacio Físico: </label>
-                        </div>
-                        <span> {{modelo.espacioFisico}}</span>
+                        <span><b>Espacio Físico:</b> {{modelo.espacioFisico}}</span>
                     </div>
 
                     <div class="col-md-12">
@@ -84,50 +104,38 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <plex-button icon="eye" (click)="verAgenda(agenda)" label="Ver" title="Vista Previa">
-                        </plex-button>
-                    </div>
-
-                    <div class="form-group">
-                        <plex-button icon="lock" (click)="cerrarAgenda(agenda)" label="Cerrar" title="Cerrar Agenda">
-                        </plex-button>
-                    </div>
-
-                    <div class="form-group">
-                        <plex-button icon="panorama-fisheye" (click)="publicarAgenda(agenda)" label="Publicar" title="Publicar Agenda">
-                        </plex-button>
-                    </div>
-
-                    <div class="form-group">
-                        <plex-button icon="receipt" (click)="clonarAgenda(agenda)" label="Clonar" title="Clonar Agenda">
-                        </plex-button>
-                    </div>
-
-                    <div class="form-group">
-                        <plex-button icon="label" (click)="suspenderAgenda(agenda)" label="Suspender" title="Suspender Agenda">
-                        </plex-button>
-                    </div>
-                </div>
             </div>
         </plex-box>
 
         <plex-box>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label>Turnos</label>
                     <div class="list-group">
-                        <a *ngFor="let bloque of bloques; let i=index" class="list-group-item">
+                        <div *ngFor="let bloque of bloques; let i=index">
                             <div class="row">
-                                <div class="col-md-4">{{bloque.descripcion}}</div>
+                                <div class="col-md-12">
+                                    <span><b>Bloque: </b>{{bloque.descripcion}}</span>
+                                    <table class="table table-hover">
+                                        <tr *ngFor="let turno of bloque.turnos; let i=index">
+                                            <td><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
+                                            <td [ngClass]="{'text-success success': turno.paciente}"><span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
+                                                <span *ngIf="!turno.paciente">Disponible</span></td>
+
+                                            <td><a><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
+                                            <td><a><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a></td>
+                                            <td><a><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a></td>
+                                            <td><a><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
+                                            <td><a><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </plex-box>
     </div>
 </div>
-
