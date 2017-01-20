@@ -26,9 +26,10 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     createForm: FormGroup;
+    //definición de arreglos
     tipos: ITipoEstablecimiento[];
     tiposcom: String[];
-    tiposContactos: String[];
+    tipoComunicacion: any[];
     paises: IPais[];
     provincias: IProvincia[];
     todasProvincias: IProvincia[];
@@ -36,18 +37,19 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     todasLocalidades: ILocalidad[];
     barrios: IBarrio[];
 
-    constructor(private formBuilder: FormBuilder, 
-        private organizacionService: OrganizacionService, 
+    constructor(private formBuilder: FormBuilder,
+        private organizacionService: OrganizacionService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private BarrioService: BarrioService, 
+        private BarrioService: BarrioService,
         private tipoEstablecimientoService: TipoEstablecimientoService) { }
 
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
-        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         console.log(this.seleccion);
+
         let nombre = this.seleccion ? this.seleccion.nombre : '';
         let nivelComplejidad = this.seleccion ? this.seleccion.nivelComplejidad : '';
         let sisa = this.seleccion ? this.seleccion.codigo.sisa : '';
@@ -59,11 +61,13 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         let provincia = this.seleccion ? this.seleccion.direccion[0].ubicacion.provincia : '';
         let localidad = this.seleccion ? this.seleccion.direccion[0].ubicacion.localidad : '';
         let codigoPostal = this.seleccion ? this.seleccion.direccion[0].codigoPostal : '';
+
+
         this.createForm = this.formBuilder.group({
             nombre: [nombre, Validators.required],
             nivelComplejidad: [nivelComplejidad],
             codigo: this.formBuilder.group({
-                sisa: [sisa, Validators.required], 
+                sisa: [sisa, Validators.required],
                 cuie: [cuie],
                 remediar: [remediar],
             }),
@@ -81,24 +85,24 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 longitud: [''],
                 activo: [true]
             }),
-            telecom: this.formBuilder.array([]),
+            //telecom: this.formBuilder.array([]),
             contacto: this.formBuilder.array([]),
             edificio: this.formBuilder.array([])
         });
 
         if (this.seleccion) {
-            this.seleccion.telecom.forEach(element => {
+            this.loadContactos();
+            /*this.seleccion.telecom.forEach(element => {
                 this.addTelecom(element);
-            });
-            this.seleccion.contacto.forEach(element => {
-                this.addContacto(element);
-            });
+            });*/
             this.seleccion.edificio.forEach(element => {
-                this.addEdificio(element,"previo");
+                this.addEdificio(element, "previo");
             });
         }
     }
 
+  /* Código de Telecom 
+  
     addTelecom(unTelecom) {
         const control = <FormArray>this.createForm.controls['telecom'];
         control.push(this.iniTelecom(unTelecom));
@@ -120,45 +124,68 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         // elimina formTelecom
         const control = <FormArray>this.createForm.controls['telecom'];
         control.removeAt(i);
-    }
+    }*/
 
-    addContacto(unContacto) {
-        // agrega formContacto 
-        const control = <FormArray>this.createForm.controls['contacto'];
-        control.push(this.iniContacto(unContacto));
-    }
+    /*Código de contactos*/
 
-    iniContacto(unContacto) {
+    initContacto(rank: Number) {
         // Inicializa contacto
         let cant = 0;
         let fecha = new Date();
         return this.formBuilder.group({
-            proposito: unContacto.proposito,
-            nombre: unContacto.nombre,
-            apellido: unContacto.apellido,
-            tipo: unContacto.tipo,
-            valor: unContacto.valor,
-            activo: unContacto.activo
+            tipo: ['', Validators.required],
+            valor: ['', Validators.required],
+            ranking: [rank],
+            ultimaActualizacion: [fecha],
+            activo: [true]
         });
     }
 
-    removeContacto(i: number) {
-        // elimina formContacto
+    addContacto() {
         const control = <FormArray>this.createForm.controls['contacto'];
-        control.removeAt(i);
+        control.push(this.initContacto(control.length + 1));
     }
- 
+
+    removeContacto(indice: number) {
+        const control = <FormArray>this.createForm.controls['contacto'];
+        control.removeAt(indice);
+    }
+
+    setContacto(cont: any) {
+        let tipo = cont ? enumerados.getObjeto(cont.tipo) : null;
+        return this.formBuilder.group({
+            tipo: [tipo, Validators.required],
+            valor: [cont.valor, Validators.required],
+            ranking: [cont.ranking],
+            ultimaActualizacion: [cont.ultimaActualizacion],
+            activo: [cont.activo]
+        })
+    }
+
+    loadContactos() {
+        var cantidadContactosActuales = this.seleccion.contacto.length;
+        const control = <FormArray>this.createForm.controls['contacto'];
+
+        if (cantidadContactosActuales > 0) {
+            for (var i = 0; i < cantidadContactosActuales; i++) {
+                var contacto: any = this.seleccion.contacto[i];
+                control.push(this.setContacto(contacto))
+            }
+        } else {
+            control.push(this.initContacto(1));
+        }
+    }
     addEdificio(unEdificio, tipo) {
         // agrega formContacto 
         const control = <FormArray>this.createForm.controls['edificio'];
-        control.push(this.iniEdificio(unEdificio,tipo));
+        control.push(this.iniEdificio(unEdificio, tipo));
     }
 
     iniEdificio(unEdificio, tipo) {
         // Inicializa edificio
         let cant = 0;
         let fecha = new Date();
-        if (tipo!="nuevo"){
+        if (tipo != "nuevo") {
             return this.formBuilder.group({
                 id: unEdificio.id,
                 _id: unEdificio.id,
@@ -184,7 +211,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 }),
             });
         }
-        else{
+        else {
             return this.formBuilder.group({
                 descripcion: unEdificio.descripcion,
                 direccion: this.formBuilder.group({
@@ -238,10 +265,11 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
     }
 
-    onSave(model: IOrganizacion, isvalid: boolean) {
+    onSave(model: any, isvalid: boolean) {
         if (isvalid) {
             let guardar: Observable<IOrganizacion>;
             model.activo = true;
+            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
             if (this.seleccion) {
                 model.id = this.seleccion.id;
                 guardar = this.organizacionService.put(model);

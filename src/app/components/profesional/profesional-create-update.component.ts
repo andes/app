@@ -3,13 +3,11 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 // import { FORM_DIRECTIVES } from '@angular/common';
-
 import { ProfesionalService } from './../../services/profesional.service';
 import { PaisService } from './../../services/pais.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { LocalidadService } from './../../services/localidad.service';
 import { EspecialidadService } from './../../services/especialidad.service';
-
 import { IProfesional } from './../../interfaces/IProfesional';
 import { IMatricula } from './../../interfaces/IMatricula';
 import { IPais } from './../../interfaces/IPais';
