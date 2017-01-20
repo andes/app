@@ -1,7 +1,5 @@
 import { BarrioService } from './../../services/barrio.service';
-import { LocalidadService } from './../../services/localidad.service';
 import { IPais } from './../../interfaces/IPais';
-import { PaisService } from './../../services/pais.service';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { Observable } from 'rxjs/Rx';
@@ -11,11 +9,13 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
-import { ProvinciaService } from './../../services/provincia.service';
 import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import * as enumerados from './../../utils/enumerados';
+import { PaisService } from './../../services/pais.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { LocalidadService } from './../../services/localidad.service';
 
 @Component({
     selector: 'organizacion-create-update',
@@ -36,9 +36,13 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     todasLocalidades: ILocalidad[];
     barrios: IBarrio[];
 
-    constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService, private PaisService: PaisService,
-        private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService,
-        private BarrioService: BarrioService, private tipoEstablecimientoService: TipoEstablecimientoService) { }
+    constructor(private formBuilder: FormBuilder, 
+        private organizacionService: OrganizacionService, 
+        private paisService: PaisService,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
+        private BarrioService: BarrioService, 
+        private tipoEstablecimientoService: TipoEstablecimientoService) { }
 
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
@@ -217,16 +221,21 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         this.tipoEstablecimientoService.get().subscribe(event.callback);
     }
 
+    /*Código de filtrado de combos*/
     loadPaises(event) {
-        this.PaisService.get().subscribe(event.callback);
+        this.paisService.get().subscribe(event.callback);
     }
 
     loadProvincias(event, pais) {
-        this.ProvinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
+        debugger;
+        console.log("pais " + pais.value.id);
+        this.provinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
-        this.LocalidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
+        debugger;
+        console.log("provincia " + provincia.value.id);
+        this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
     }
 
     onSave(model: IOrganizacion, isvalid: boolean) {

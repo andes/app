@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 5;
+const limit = 25;
 
 @Component({
     selector: 'profesionales',
@@ -47,6 +47,7 @@ export class ProfesionalComponent implements OnInit {
             .subscribe(
             datos => {
                 this.datos = concatenar ? this.datos.concat(datos) : datos;
+                debugger;
                 this.loader = false;
             }) //Bind to view
     }
