@@ -1,0 +1,33 @@
+<div class="row" *ngIf="showTurnos">
+    <!--<div class="col-md-12" >
+        <span><b>Fecha:</b> {{modelo.fecha}} - {{modelo.horaInicio}} a {{modelo.horaFin}}</span>
+    </div>-->
+    <plex-box>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Turnos: {{ag.horaInicio | date: 'dd/MM/yyyy'}}</label>
+                <div class="list-group">                    
+                        <div *ngFor="let bloque of ag.bloques; let i=index">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span><b>Bloque: </b>{{bloque.descripcion}}</span>
+                                <table class="table table-hover">
+                                    <tr *ngFor="let turno of bloque.turnos; let i=index">
+                                        <td><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
+                                        <td [ngClass]="{'text-success success': turno.paciente}"><span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
+                                            <span *ngIf="!turno.paciente">Disponible</span></td>
+                                        <td><a class="hover"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
+                                        <td><a class="hover"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a></td>
+                                        <td><a class="hover"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a></td>
+                                        <td><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
+                                        <td><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</div>

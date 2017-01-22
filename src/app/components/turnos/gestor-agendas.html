@@ -34,7 +34,7 @@
                 <a (click)="verAgenda(agenda)" class="hover">
                     <plex-box type={{agenda.agendaSeleccionadaColor}}>
                         <div class="col-md-12">
-                            <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH'}} a {{agenda.horaFin | date: 'mm'}} HS.</label>
+                            <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} HS.</label>
                         </div>
                         <div class="col-md-10">
                             <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
@@ -48,94 +48,21 @@
         </div>
     </div>
 
-    <div type="info" class="col-md-4" *ngIf="modelo.fecha">
-        <plex-box>
+    <!--<div type="info" class="col-md-4" *ngIf="modelo.fecha">-->
 
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table">
-                        <tr>
-                            <td>
-                                <plex-button icon="eye" (click)="verAgenda(agenda)" title="Vista Previa">
-                                </plex-button>
-                            </td>
-                            <td>
-                                <plex-button icon="power" (click)="verAgenda(agenda)" title="Vista Previa">
-                                </plex-button>
-                            </td>
-                            <td>
-                                <plex-button icon="lock" (click)="verAgenda(agenda)" title="Vista Previa">
-                                </plex-button>
-                            </td>
-                            <td>
-                                <plex-button icon="panorama-fisheye" (click)="verAgenda(agenda)" title="Vista Previa">
-                                </plex-button>
-                            </td>
-                            <td>
-                                <plex-button icon="label" (click)="verAgenda(agenda)" title="Vista Previa">
-                                </plex-button>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
+            <!--<div class="panel panel-default">-->
+            <div class="clear"></div>
+            <vista-agenda [vistaAgenda]="vistaAgenda"></vista-agenda>
+            <!--</div>-->
+        </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-12">
-                        <span><b>Fecha:</b> {{modelo.fecha}} - {{modelo.horaInicio}} a {{modelo.horaFin}}</span>
-                    </div>
-
-                    <div class="col-md-12">
-                        <span><b>Espacio Físico:</b> {{modelo.espacioFisico}}</span>
-                    </div>
-
-                    <div class="col-md-12">
-                        <label>Profesional: </label>
-                        <div *ngFor="let profesional of modelo.profesionales; let i=index">
-                            <span>{{profesional.nombre}} {{profesional.apellido}}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <label>Prestaciones: </label>
-                        <div *ngFor="let prestacion of modelo.prestaciones; let i=index">
-                            <span>{{prestacion.nombre}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </plex-box>
-
-        <plex-box>
-            <div class="row">
-                <div class="col-md-12">
-                    <label>Turnos</label>
-                    <div class="list-group">
-                        <div *ngFor="let bloque of bloques; let i=index">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <span><b>Bloque: </b>{{bloque.descripcion}}</span>
-                                    <table class="table table-hover">
-                                        <tr *ngFor="let turno of bloque.turnos; let i=index">
-                                            <td><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
-                                            <td [ngClass]="{'text-success success': turno.paciente}"><span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
-                                                <span *ngIf="!turno.paciente">Disponible</span></td>
-
-                                            <td><a class="hover"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
-                                            <td><a class="hover"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a></td>
-                                            <td><a class="hover"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a></td>
-                                            <td><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
-                                            <td><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
-                                        </tr>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </plex-box>
-    </div>
+        <div type="info" class="col-sm-4" *ngIf="showTurnos">
+            <!--<div class="panel panel-default">-->
+            <div class="clear"></div>
+            <turnos [ag]="ag"></turnos>
+            <!--</div>-->
+        </div>
+        <!--</div>-->
+    <!--</div>-->
 </div>
