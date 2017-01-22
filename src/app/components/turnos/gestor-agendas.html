@@ -48,21 +48,13 @@
         </div>
     </div>
 
-    <!--<div type="info" class="col-md-4" *ngIf="modelo.fecha">-->
+    <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
+        <div class="clear"></div>
+        <vista-agenda [vistaAgenda]="vistaAgenda"></vista-agenda>
+    </div>
 
-        <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
-            <!--<div class="panel panel-default">-->
-            <div class="clear"></div>
-            <vista-agenda [vistaAgenda]="vistaAgenda"></vista-agenda>
-            <!--</div>-->
-        </div>
-
-        <div type="info" class="col-sm-4" *ngIf="showTurnos">
-            <!--<div class="panel panel-default">-->
-            <div class="clear"></div>
-            <turnos [ag]="ag"></turnos>
-            <!--</div>-->
-        </div>
-        <!--</div>-->
-    <!--</div>-->
+    <div type="info" class="col-sm-4" *ngIf="showTurnos">
+        <div class="clear"></div>
+        <turnos [ag]="ag"></turnos>
+    </div>
 </div>
