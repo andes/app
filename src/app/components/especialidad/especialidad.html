@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box title="Especialidades">
+            <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-6">
@@ -40,7 +41,7 @@
                             </td>
                             <td>
                                 <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                                </plex-button> 
+                                </plex-button>
                             </td>
                             <!-- <td>
                                 <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
@@ -51,6 +52,7 @@
                     </tbody>
                 </table>
             </div>
+            <plex-loader *ngIf="loader"></plex-loader>
         </plex-box>
     </div>
     <div class="col-sm-12" *ngIf="showcreate">

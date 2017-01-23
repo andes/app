@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class ProvinciaService {
 
-   private provinciaUrl = AppSettings.API_ENDPOINT + '/provincia';  // URL to web api
+   private provinciaUrl = AppSettings.API_ENDPOINT + '/core/tm/provincia';  // URL to web api
 
    constructor(private server: ServerService, private http: Http) {}
 

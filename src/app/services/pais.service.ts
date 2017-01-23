@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class PaisService {
 
-   private paisUrl = AppSettings.API_ENDPOINT +'/pais';  // URL to web api
+   private paisUrl = AppSettings.API_ENDPOINT +'/core/tm/pais';  // URL to web api
 
    constructor(private http: Http) {}
 
