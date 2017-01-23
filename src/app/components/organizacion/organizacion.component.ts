@@ -23,6 +23,9 @@ export class OrganizacionComponent implements OnInit {
     nombre: string = " ";
     activo: Boolean = null;
     loader: boolean = false;
+    finScroll: boolean = false;
+    tengoDatos: boolean = true;
+
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 
     checked: boolean = true;
@@ -46,9 +49,20 @@ export class OrganizacionComponent implements OnInit {
         this.organizacionService.get(parametros)
             .subscribe(
             datos => {
-            this.datos = concatenar ? this.datos.concat(datos) : datos;
+                if (concatenar) {
+                    if (datos.length > 0) {
+                        this.datos = this.datos.concat(datos);
+                    }
+                    else {
+                        this.finScroll = true;
+                        this.tengoDatos = false;
+                    }
+                } else {
+                    this.datos = datos;
+                    this.finScroll = false;
+                }
                 this.loader = false;
-            }) //Bind to view
+            })
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
@@ -85,9 +99,11 @@ export class OrganizacionComponent implements OnInit {
     }
 
     nextPage() {
-        this.skip += limit;
-        this.loadDatos(true);
-        this.loader = true;
+        if (this.tengoDatos) {
+            this.skip += limit;
+            this.loadDatos(true);
+            this.loader = true;
+        }
     }
 
 }

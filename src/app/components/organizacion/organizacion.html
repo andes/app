@@ -44,6 +44,9 @@
             </table>
         </div>
         <plex-loader *ngIf="loader"></plex-loader>
+        <div *ngIf="finScroll" class="alert alert-warning">
+                <p style="text-align: center;"> No se encontraron más resultados </p> <!-- pasar a un componente de plex -->
+            </div>
     </div>
 
     <div class="col-sm-12" *ngIf="showcreate">

@@ -21,7 +21,9 @@ export class EspecialidadComponent implements OnInit {
     seleccion: IEspecialidad;
     skip: number = 0;
     loader: boolean = false;
+    finScroll: boolean = false;
     value: any;
+    tengoDatos: boolean = true;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private especialidadService: EspecialidadService) { }
 
@@ -37,6 +39,7 @@ export class EspecialidadComponent implements OnInit {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
+           
         })
         this.loadDatos();
     }
@@ -49,7 +52,19 @@ export class EspecialidadComponent implements OnInit {
 
         this.especialidadService.get(parametros).subscribe(
             datos => {
-                this.datos = concatenar ? this.datos.concat(datos) : datos;
+                if (concatenar) {
+                    if (datos.length > 0) {
+                        this.datos = this.datos.concat(datos);
+                    }
+                    else {
+                        this.finScroll = true;
+                        this.tengoDatos = false;
+                    }
+                } else {
+                    this.datos = datos;
+                    this.finScroll = false;
+                }
+
                 this.loader = false;
             }) //Bind to view
     }
@@ -81,9 +96,11 @@ export class EspecialidadComponent implements OnInit {
     }
 
     nextPage() {
-        this.skip += limit;
-        this.loadDatos(true);
-        this.loader = true;
+        if (this.tengoDatos) {
+            this.skip += limit;
+            this.loadDatos(true);
+            this.loader = true;
+        }
     }
 
 }

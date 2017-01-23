@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-const limit = 5;
+const limit = 7;
 
 @Component({
     selector: 'profesionales',
@@ -21,7 +21,10 @@ export class ProfesionalComponent implements OnInit {
     seleccion: IProfesional;
     skip: number = 0;
     loader: boolean = false;
+    finScroll: boolean = false;
+    tengoDatos: boolean = true;
     value: any;
+    cantidad: IProfesional[];
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
@@ -46,9 +49,31 @@ export class ProfesionalComponent implements OnInit {
         this.profesionalService.get(parametros)
             .subscribe(
             datos => {
-                this.datos = concatenar ? this.datos.concat(datos) : datos;
+                if (concatenar) {
+                    if (datos.length > 0) {
+                        this.datos = this.datos.concat(datos);
+                    }
+                    else {
+                        this.finScroll = true;
+                        this.tengoDatos = false;
+                    }
+                } else {
+                    this.datos = datos;
+                    this.finScroll = false;
+                }
+
+                //this.datos.length;
                 this.loader = false;
             }) //Bind to view
+
+        //Todo esto trae el total de profesionales.. VEER..
+        let parametro = { limit: '' };
+        this.profesionalService.get(parametro)
+            .subscribe(
+            cantidad => {
+                this.cantidad = cantidad;
+                console.log(this.cantidad);
+            })
     }
 
     // loadProfesionales() {
@@ -107,8 +132,11 @@ export class ProfesionalComponent implements OnInit {
     }
 
     nextPage() {
-        this.skip += limit;
-        this.loadDatos(true);
-        this.loader = true;
+        if (this.tengoDatos){
+            this.skip += limit;
+            this.loadDatos(true);
+            this.loader = true;
+        }
     }
+
 }
