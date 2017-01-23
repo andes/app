@@ -7,11 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
-<<<<<<< HEAD
 const limit = 7;
-=======
-const limit = 25;
->>>>>>> 596e7c7fb53b77bd2978be0d73bbe6184a63fddf
 
 @Component({
     selector: 'profesionales',
@@ -29,6 +25,7 @@ export class ProfesionalComponent implements OnInit {
     tengoDatos: boolean = true;
     value: any;
     cantidad: IProfesional[];
+   
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
@@ -53,7 +50,6 @@ export class ProfesionalComponent implements OnInit {
         this.profesionalService.get(parametros)
             .subscribe(
             datos => {
-<<<<<<< HEAD
                 if (concatenar) {
                     if (datos.length > 0) {
                         this.datos = this.datos.concat(datos);
@@ -67,11 +63,6 @@ export class ProfesionalComponent implements OnInit {
                     this.finScroll = false;
                 }
 
-                //this.datos.length;
-=======
-                this.datos = concatenar ? this.datos.concat(datos) : datos;
-                debugger;
->>>>>>> 596e7c7fb53b77bd2978be0d73bbe6184a63fddf
                 this.loader = false;
             }) //Bind to view
 
