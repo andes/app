@@ -16,7 +16,7 @@ export class AgendaService {
         return this.server.get(this.agendaUrl, params);
     }
 
-    getById(id: String): Observable<IAgenda[]> {
+    getById(id: String): Observable<IAgenda> {
         return this.server.get(this.agendaUrl + "/" + id, null);
     }
 
