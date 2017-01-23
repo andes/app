@@ -92,6 +92,7 @@ export class CalendarioComponent {
 
     private seleccionar(dia: CalendarioDia) {
         // Sólo permite seleccionar días con agenda
+        debugger;
         if (dia.agenda) {
             if (this.diaSeleccionado)
                 this.diaSeleccionado.seleccionado = false;
