@@ -24,7 +24,8 @@ export class AppComponent {
         new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
         new SidebarItem('Prestacion', 'blur', '/prestacion'),
         new SidebarItem('Agendas', 'calendar', '/agenda'),
-        new SidebarItem('Turnos', 'calendar-check', '/turnos')
+        new SidebarItem('Turnos', 'calendar-check', '/turnos'),
+        new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas')
         ];
         this.plex.initStaticItems(items);
     }
