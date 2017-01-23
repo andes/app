@@ -6,26 +6,25 @@ import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { TurnosComponent } from './turnos.component';
-import { VistaAgendaComponent } from './vista-agenda.component';
 
 @Component({
     templateUrl: 'gestor-agendas.html'
 })
 
-export class GestorAgendasComponent implements OnInit {    
+export class GestorAgendasComponent implements OnInit {
 
-    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService) { }
+    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
+        public serviceAgenda: AgendaService) { }
 
-    searchForm: FormGroup;
-
-    public agendas: any = [];    
+    public agendas: any = [];
     public agendaSel: AgendaSeleccionada;
 
     public showTurnos: boolean = false;
     public showVistaAgendas: boolean = false;
-    
+
+    searchForm: FormGroup;
+
     ag: IAgenda;
     vistaAgenda: IAgenda;
 
@@ -42,13 +41,13 @@ export class GestorAgendasComponent implements OnInit {
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
 
             this.serviceAgenda.get({
-                "fechaDesde": value.fechaDesde,
+                'fechaDesde': value.fechaDesde,
                 "fechaHasta": value.fechaHasta,
                 "idPrestacion": value.prestaciones.id,
                 "idProfesional": value.profesionales.id,
                 "idEspacioFisico": value.espacioFisico.id
             }).subscribe(
-                agendas => { this.agendas = agendas },
+                agendas => { this.agendas = agendas; },
                 err => {
                     if (err) {
                         console.log(err);
@@ -72,7 +71,6 @@ export class GestorAgendasComponent implements OnInit {
     verAgenda(agenda) {
         this.ag = agenda;
         this.vistaAgenda = agenda;
-        
         if (this.agendaSel) {
             this.agendaSel.agendaSeleccionada = false;
             this.agendaSel.agendaSeleccionadaColor = 'default';
@@ -85,7 +83,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
-    }  
+    }
 }
 
 class AgendaSeleccionada {
