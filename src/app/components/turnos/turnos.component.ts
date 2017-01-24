@@ -9,9 +9,10 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 
 export class TurnosComponent {
 
-    constructor(public plex: Plex) { }
-
+    @Input() ag: IAgenda;
     showTurnos: boolean = true;
 
-    @Input() ag: IAgenda;
+    public pacienteTurnos: String;
+
+    constructor(public plex: Plex) { }
 }
