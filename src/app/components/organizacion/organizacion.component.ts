@@ -80,6 +80,7 @@ export class OrganizacionComponent implements OnInit {
     }
 
     onEdit(objOrganizacion: IOrganizacion) {
+        debugger;
         this.showcreate = true;
         this.seleccion = objOrganizacion;
     }

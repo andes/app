@@ -37,13 +37,15 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     todasLocalidades: ILocalidad[];
     barrios: IBarrio[];
 
-    constructor(private formBuilder: FormBuilder,
+    constructor(
+        private formBuilder: FormBuilder,
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private BarrioService: BarrioService,
-        private tipoEstablecimientoService: TipoEstablecimientoService) { }
+        private tipoEstablecimientoService: TipoEstablecimientoService
+    ) { }
 
     ngOnInit() {
         this.tiposcom = enumerados.getTipoComunicacion();
@@ -55,12 +57,13 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         let sisa = this.seleccion ? this.seleccion.codigo.sisa : '';
         let cuie = this.seleccion ? this.seleccion.codigo.cuie : '';
         let remediar = this.seleccion ? this.seleccion.codigo.remediar : '';
+        debugger;
         let tipoEstablecimiento = this.seleccion ? this.seleccion.tipoEstablecimiento : '';
-        let valor = this.seleccion ? this.seleccion.direccion[0].valor : '';
-        let pais = this.seleccion ? this.seleccion.direccion[0].ubicacion.pais : '';
-        let provincia = this.seleccion ? this.seleccion.direccion[0].ubicacion.provincia : '';
-        let localidad = this.seleccion ? this.seleccion.direccion[0].ubicacion.localidad : '';
-        let codigoPostal = this.seleccion ? this.seleccion.direccion[0].codigoPostal : '';
+        let valor = this.seleccion ? this.seleccion.direccion.valor : '';
+        let pais = this.seleccion ? this.seleccion.direccion.ubicacion.pais : '';
+        let provincia = this.seleccion ? this.seleccion.direccion.ubicacion.provincia : '';
+        let localidad = this.seleccion ? this.seleccion.direccion.ubicacion.localidad : '';
+        let codigoPostal = this.seleccion ? this.seleccion.direccion.codigoPostal : '';
 
 
         this.createForm = this.formBuilder.group({
@@ -100,31 +103,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             });
         }
     }
-
-  /* Código de Telecom 
-  
-    addTelecom(unTelecom) {
-        const control = <FormArray>this.createForm.controls['telecom'];
-        control.push(this.iniTelecom(unTelecom));
-    }
-
-    iniTelecom(unTelecom) {
-        // Inicializa telecom
-        let cant = 0;
-        let fecha = new Date();
-        return this.formBuilder.group({
-            tipo: unTelecom.tipo,
-            valor: unTelecom.valor,
-            ranking: unTelecom.ranking,
-            activo: unTelecom.activo
-        });
-    }
-
-    removeTelecom(i: number) {
-        // elimina formTelecom
-        const control = <FormArray>this.createForm.controls['telecom'];
-        control.removeAt(i);
-    }*/
 
     /*Código de contactos*/
 
@@ -178,7 +156,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     addEdificio(unEdificio, tipo) {
         // agrega formContacto 
         const control = <FormArray>this.createForm.controls['edificio'];
-        control.push(this.iniEdificio(unEdificio, tipo));
+        control.push(this.iniEdificio(unEdificio, "nuevo"));
     }
 
     iniEdificio(unEdificio, tipo) {
@@ -193,12 +171,12 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 direccion: this.formBuilder.group({
                     valor: unEdificio.direccion ? unEdificio.direccion.valor : [''],
                     ubicacion: this.formBuilder.group({
-                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.seleccion ? this.seleccion.direccion[0].ubicacion.pais : [''],
-                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.seleccion ? this.seleccion.direccion[0].ubicacion.provincia : [''],
-                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.seleccion ? this.seleccion.direccion[0].ubicacion.localidad : ['']
+                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.seleccion ? this.seleccion.direccion.ubicacion.pais : [''],
+                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.seleccion ? this.seleccion.direccion.ubicacion.provincia : [''],
+                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.seleccion ? this.seleccion.direccion.ubicacion.localidad : ['']
                     }),
                     ranking: unEdificio.direccion ? unEdificio.direccion.ranking : [''],
-                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.seleccion ? this.seleccion.direccion[0].codigoPostal : [''],
+                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.seleccion ? this.seleccion.direccion.codigoPostal : [''],
                     latitud: [''],
                     longitud: [''],
                     activo: [true]
@@ -217,12 +195,12 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 direccion: this.formBuilder.group({
                     valor: unEdificio.direccion ? unEdificio.direccion.valor : [''],
                     ubicacion: this.formBuilder.group({
-                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.seleccion ? this.seleccion.direccion[0].ubicacion.pais : [''],
-                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.seleccion ? this.seleccion.direccion[0].ubicacion.provincia : [''],
-                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.seleccion ? this.seleccion.direccion[0].ubicacion.localidad : ['']
+                        pais: unEdificio.direccion ? unEdificio.direccion.ubicacion.pais : this.seleccion ? this.seleccion.direccion.ubicacion.pais : [''],
+                        provincia: unEdificio.direccion ? unEdificio.direccion.ubicacion.provincia : this.seleccion ? this.seleccion.direccion.ubicacion.provincia : [''],
+                        localidad: unEdificio.direccion ? unEdificio.direccion.ubicacion.localidad : this.seleccion ? this.seleccion.direccion.ubicacion.localidad : ['']
                     }),
                     ranking: unEdificio.direccion ? unEdificio.direccion.ranking : [''],
-                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.seleccion ? this.seleccion.direccion[0].codigoPostal : [''],
+                    codigoPostal: unEdificio.direccion ? unEdificio.direccion.codigoPostal : this.seleccion ? this.seleccion.direccion.codigoPostal : [''],
                     latitud: [''],
                     longitud: [''],
                     activo: [true]
@@ -269,6 +247,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (isvalid) {
             let guardar: Observable<IOrganizacion>;
             model.activo = true;
+            debugger;
             model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
             if (this.seleccion) {
                 model.id = this.seleccion.id;
