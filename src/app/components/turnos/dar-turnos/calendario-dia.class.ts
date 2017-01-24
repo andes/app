@@ -1,13 +1,13 @@
-type Estado = "vacio" | "disponible" | "ocupado"
+type Estado = 'vacio' | 'disponible' | 'ocupado'
 
 export class CalendarioDia {
     public seleccionado: boolean;
     public estado: Estado;
 
     constructor(public fecha: Date, public agenda: any) {
-        if (!agenda)
-            this.estado = "vacio";
-        else {
+        if (!agenda){
+            this.estado = 'vacio';
+        } else {
             // TODO: controlar si hay turnos disponibles
             // let disponible: boolean = false;
             // this.agenda.bloques.every(function (bloque, index) {
@@ -24,10 +24,11 @@ export class CalendarioDia {
             //     else return true;
             // });
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
-            if (disponible)
-                this.estado = "disponible";
-            else    
-                this.estado = "ocupado";
+            if (disponible){
+                this.estado = 'disponible';
+            } else {
+                this.estado = 'ocupado';
+            }
         }
     }
 }

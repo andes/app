@@ -49,8 +49,8 @@ export class DarTurnosComponent implements AfterViewInit {
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
 
-    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, public serviceAgenda: AgendaService,
-        public serviceTurno: TurnoService, public plex: Plex) { }
+    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, 
+    public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
@@ -69,7 +69,7 @@ export class DarTurnosComponent implements AfterViewInit {
         let search = {
             'prestacion': this.opciones.prestacion ? this.opciones.prestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
-        }
+        };
         if (this.busquedas.length == size) {
             this.busquedas.pop();
         }
@@ -86,9 +86,8 @@ export class DarTurnosComponent implements AfterViewInit {
             params = {
                 'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : '',
                 'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : ''
-            }
-        }
-        else {
+            };
+        } else {
             this.opciones.prestacion = null;
             this.opciones.profesional = null;
         }
@@ -96,30 +95,29 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarAgenda(agenda) {
-
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
         let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : '';
-        
         /*Filtra los bloques segun el filtro prestacion*/
         this.bloques = this.agenda.bloques.filter(
             function (value) {
                 let prestacionesBlq = value.prestaciones.map(function (obj) {
                     return obj.id;
                 });
-                if (prestacion)
+                if (prestacion) {
                     return (prestacionesBlq.indexOf(prestacion) >= 0);
-                else
+                } else {
                     return true;
+                }
             }
         );
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
-            if (this.agenda.turnosDisponibles > 0)
+            if (this.agenda.turnosDisponibles > 0){
                 this.estadoT = 'seleccionada';
+            } else {
             /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
-            else {
                 this.estadoT = 'noTurnos';
                 if (this.opciones.prestacion || this.opciones.profesional) {
                     this.serviceAgenda.get({
@@ -137,7 +135,7 @@ export class DarTurnosComponent implements AfterViewInit {
         this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
         this.indiceTurno = indice;
         this.turno = bloque.turnos[indice];
-        let inicio = bloque.turnos[indice].horaInicio;
+        // let inicio = bloque.turnos[indice].horaInicio;
         this.estadoT = 'confirmacion';
     }
 
@@ -153,12 +151,13 @@ export class DarTurnosComponent implements AfterViewInit {
 
     verAgenda(suma: boolean) {
         if (this.agendas) {
-            var condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
+            let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (condiciones) {
-                if (suma)
-                    this.indice++
-                else
+                if (suma){
+                    this.indice++;
+                } else{
                     this.indice--;
+                }
                 this.agenda = this.agendas[this.indice];
             }
         }
@@ -166,10 +165,11 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     cambiarMes(signo) {
-        if (signo == '+')
+        if (signo == '+'){
             this.opciones.fecha = moment(this.opciones.fecha).add(1, 'M').toDate();
-        else
+        } else{
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
+        }
         this.actualizar('');
     }
 
@@ -189,12 +189,12 @@ export class DarTurnosComponent implements AfterViewInit {
             if (pacientes.length == this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
                 estado = 'asignado';
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+            } else {
+                estado = 'disponible';
             }
-            else
-                estado = 'disponible'
-        }
-        else
+        } else{
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+        }
 
         let datosTurno = {
             'idAgenda': this.agenda.id,
@@ -210,7 +210,6 @@ export class DarTurnosComponent implements AfterViewInit {
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
         operacion.subscribe(resultado => {
-            debugger
             this.estadoT = 'noSeleccionada';
             this.agenda = null;
             this.actualizar('sinFiltro');
@@ -228,4 +227,4 @@ export class DarTurnosComponent implements AfterViewInit {
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
     }
-} 
+}

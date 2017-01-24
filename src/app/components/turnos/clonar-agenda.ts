@@ -1,3 +1,4 @@
+import { CalendarioDia } from './dar-turnos/calendario-dia.class';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Observable } from 'rxjs/Rx';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
@@ -12,14 +13,17 @@ type Estado = 'noSeleccionado' | 'seleccionado'
 })
 
 export class ClonarAgendaComponent implements OnInit {
-    // public agenda: IAgenda;
-    // public agendas: IAgenda[] = [];
     private _agenda: any;
-    private _agendas: Array<any>;
     private fecha: Date = new Date();
     private calendario: any = [];
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
+    private click: boolean = false;
+    private agendas: IAgenda[] = [];
+    private agendasFiltradas: IAgenda[] = [];
+    private inicioMesMoment: moment.Moment;
+    private inicioMesDate;
+    private finMesDate;
 
     @Input('agenda')
     set agenda(value: any) {
@@ -28,28 +32,32 @@ export class ClonarAgendaComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
-    @Input('agendas')
-    set agendas(value: Array<IAgenda>) {
-        this._agendas = value;
-    }
-    get agendas(): Array<IAgenda> {
-        return this._agendas;
-    }
-
-    constructor(private ServicioAgenda: AgendaService, public plex: Plex) { }
+    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 
     ngOnInit() {
-        this.ServicioAgenda.getById('5863d1d5d5cc0b46a7e9fa8b').subscribe(agenda => {
+        // Esto va a cambiar, aca se pasa la agenda que viene de la pantalla anterior
+        this.serviceAgenda.getById('583dbcf713593558cca963aa').subscribe(agenda => {
             this.agenda = agenda;
-            let inicio: Date = this.agenda.horaInicio;
-            inicio.setHours(0) ;
-            this.seleccionados.push(inicio.getTime()); this.cargarCalendario();
+            let inicio = new Date(this.agenda.horaInicio);
+            inicio.setHours(0);
+            this.seleccionados.push(inicio.getTime());
+            this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
+            this.inicioMesDate = this.inicioMesMoment.toDate();
+            this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
+            let params = {
+                // idPrestacion : '5829daa039ad24c49548edf0'
+                fechaDesde: this.inicioMesDate,
+                fechaHasta: this.finMesDate,
+                prestaciones: JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem }))
+            };
+            this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; debugger });
+            this.cargarCalendario();
         });
     }
 
     private cargarCalendario() {
-        let inicio = moment(this.fecha).startOf('month').startOf('week');
-        let inicioD: Date;
+        // let inicio = moment(this.fecha).startOf('month').startOf('week'); this.inicioMesMoment
+        // let inicioD: Date; this.inicioMesDate
         let dia: any = {};
         this.calendario = [];
 
@@ -57,20 +65,32 @@ export class ClonarAgendaComponent implements OnInit {
             let week = [];
             this.calendario.push(week);
             for (let c = 1; c <= 7; c++) {
+                this.inicioMesMoment.add(1, 'day');
+                this.inicioMesDate = this.inicioMesMoment.toDate();
                 let indice = -1;
-                if (this.seleccionados){
-                    indice = this.seleccionados.indexOf(inicioD.getTime())
+                if (this.seleccionados) {
+                    indice = this.seleccionados.indexOf(this.inicioMesDate.getTime());
                 }
                 if (indice >= 0) {
-                    dia = {
-                        fecha: inicio.toDate(),
-                        estado: 'seleccionado'
+                    if (indice === 0) {
+                        dia = {
+                            fecha: this.inicioMesMoment.toDate(),
+                            estado: 'seleccionado',
+                            original: true
+                        };
+                    } else {
+                        dia = {
+                            fecha: this.inicioMesMoment.toDate(),
+                            estado: 'seleccionado',
+                            original: false
+                        };
                     }
                 } else {
                     dia = {
-                        fecha: inicio.toDate(),
-                        estado: this.estado
-                    }
+                        fecha: this.inicioMesMoment.toDate(),
+                        estado: this.estado,
+                        original: false
+                    };
                 }
                 week.push(dia);
             }
@@ -87,12 +107,25 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public seleccionar(dia: any) {
-        if (dia.estado === 'noSeleccionado'){
+        // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
+        if (dia.estado === 'noSeleccionado') {
             dia.estado = 'seleccionado';
+            this.seleccionados.push(dia.fecha.getTime());
+            // this.click = true;
+            this.agendasFiltradas = this.agendas.filter(
+                function (value) {
+                    return (moment(dia.fecha).isSame(moment(value.horaInicio), 'day'));
+                }
+            );
         } else {
-            dia.estado = 'noSeleccionado';
+            this.agendasFiltradas = [];
+            if (dia.original !== true) {
+                dia.estado = 'noSeleccionado';
+                let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                this.seleccionados.splice(i, 1);
+            }
         }
-        this.seleccionados.push(dia.fecha.getTime());
+        console.log('agendas filtradas ', this.agendasFiltradas);
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -113,12 +146,12 @@ export class ClonarAgendaComponent implements OnInit {
 
     public clonar() {
         let seleccionada = new Date(this.seleccionados[0]);
+        let operaciones: Observable<IAgenda>[] = [];
         let operacion: Observable<IAgenda>;
-        this.seleccionados.forEach((seleccion, index) => {
+        this.seleccionados.forEach((seleccion, index0) => {
             seleccionada = new Date(seleccion);
-            if (seleccionada) {
+            if (seleccionada && index0 > 0) {
                 let newHoraInicio = this.combinarFechas(seleccionada, new Date(this.agenda.horaInicio));
-                console.log('AgendaService.horaInicio ', newHoraInicio);
                 let newHoraFin = this.combinarFechas(seleccionada, this.agenda.horaFin);
                 this.agenda.horaInicio = newHoraInicio;
                 this.agenda.horaFin = newHoraFin;
@@ -130,19 +163,33 @@ export class ClonarAgendaComponent implements OnInit {
                     newFinBloque = this.combinarFechas(seleccionada, bloque.horaFin);
                     bloque.horaInicio = newIniBloque;
                     bloque.horaFin = newFinBloque;
-                    bloque.turnos.forEach((turno, index2) => {
+                    bloque.turnos.forEach((turno, index1) => {
                         newIniTurno = this.combinarFechas(seleccionada, turno.horaInicio);
                         turno.horaInicio = newIniTurno;
-                    })
+                    });
                 });
                 delete this.agenda._id;
                 delete this.agenda.id;
-                operacion = this.ServicioAgenda.save(this.agenda);
-                operacion.subscribe(resultado => {
-                    this.plex.alert('La agenda se clonó correctamente');
-                });
+                operacion = this.serviceAgenda.save(this.agenda);
+                operaciones.push(operacion);
+                // operacion.subscribe(resultado => {
+                //     this.plex.alert('La agenda se clonó correctamente');
+                // });
             }
         });
-
+        Observable.forkJoin(operaciones).subscribe(
+            function (x) {
+                console.log('Next: %s', x);
+            },
+            function (err) {
+                console.log('Error: %s', err);
+            },
+            function () {
+                console.log('Completed');
+                alert('La agenda se clonó correctamente');
+                // ver pq no puedo usar el plex alert
+                // this.plex.alert('La agenda se clonó correctamente');
+            }
+        );
     }
 }
