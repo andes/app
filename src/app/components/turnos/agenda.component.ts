@@ -14,7 +14,7 @@ import * as operaciones from './../../utils/operacionesJSON';
 @Component({
     templateUrl: 'agenda.html',
 })
-export class AgendaComponent implements OnInit{
+export class AgendaComponent implements OnInit {
     @Output() data: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
     public agenda: any = {};
     public modelo: any = {};
@@ -25,7 +25,6 @@ export class AgendaComponent implements OnInit{
     public elementoActivo: any = { descripcion: null };
     public alertas: String[] = [];
     public fecha: Date;
-
     public temp: number = 4;
     showBuscarAgendas: boolean = false;
     showAgenda: boolean = true;
@@ -42,7 +41,7 @@ export class AgendaComponent implements OnInit{
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
         this.calculosInicio();
-        if (!this.modelo.intercalar){
+        if (!this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
         }
     }
@@ -70,7 +69,7 @@ export class AgendaComponent implements OnInit{
                 let copiaPrestacion = operaciones.clonarObjeto(prestacion);
                 if (bloque.prestaciones) {
                     let i = bloque.prestaciones.map(function (e) { return e.nombre; }).
-                    indexOf(copiaPrestacion.nombre);
+                        indexOf(copiaPrestacion.nombre);
                     if (i >= 0) {
                         bloque.prestaciones[i].activo = true;
                     } else {
@@ -101,13 +100,13 @@ export class AgendaComponent implements OnInit{
 
             if (bloque.cantidadTurnos) {
                 bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor
-                ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
+                    ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
                 bloque.accesoDirectoProgramado ? bloque.accesoDirectoProgramadoPorc = Math.floor
-                ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
+                    ((bloque.accesoDirectoProgramado * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoProgramadoPorc = 0;
                 bloque.reservadoGestion ? bloque.reservadoGestionPorc = Math.floor
-                ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
+                    ((bloque.reservadoGestion * 100) / bloque.cantidadTurnos) : bloque.reservadoGestionPorc = 0;
                 bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor
-                ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
+                    ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
                 if (!this.modelo.intercalar) {
                     let duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
                     bloque.duracionTurno = Math.floor(duracion);
@@ -169,13 +168,13 @@ export class AgendaComponent implements OnInit{
                 fecha2.indice = indiceAux;
             }
             return fecha1.horaInicio.getTime() - fecha2.horaInicio.getTime();
-        } else{
+        } else {
             return 0;
         }
     }
 
     compararFechas(fecha1: Date, fecha2: Date): number {
-        if (fecha1 && fecha2){
+        if (fecha1 && fecha2) {
             return fecha1.getTime() - fecha2.getTime();
         } else {
             return 0;
@@ -189,13 +188,13 @@ export class AgendaComponent implements OnInit{
             let bloquePrestaciones = bloque.prestaciones;
             bloquePrestaciones.forEach((bloquePrestacion, index) => {
                 let i = this.modelo.prestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
-                if (i < 0){
+                if (i < 0) {
                     bloquePrestaciones.splice(index, 1);
                 }
             });
 
             // Si se agrego una prestacion, la agrego a los bloques
-            this.modelo.prestaciones.forEach((prestacion, index) => {
+            this.modelo.prestaciones.forEach((prestacion, index2) => {
                 let copiaPrestacion = operaciones.clonarObjeto(prestacion);
                 let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
                 if (i < 0) {
@@ -214,17 +213,18 @@ export class AgendaComponent implements OnInit{
 
     cambioHoras(cual: String) {
         this.fecha = new Date(this.modelo.fecha);
-        if (cual === 'inicio')
+        if (cual === 'inicio') {
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-        else
+        } else {
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+        }
         this.validarTodo();
     }
 
     cambioHoraBloques(texto: String) {
         this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
-        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
         if (inicio && fin) {
             this.elementoActivo.horaInicio = inicio;
@@ -240,8 +240,9 @@ export class AgendaComponent implements OnInit{
             }
             this.validarTodo();
         }
-        if (texto === 'inicio' && !this.modelo.intercalar)
+        if (texto === 'inicio' && !this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
+        }
 
         this.bloqueActivo = this.elementoActivo.indice;
         this.activarBloque(this.elementoActivo.indice);
@@ -249,13 +250,15 @@ export class AgendaComponent implements OnInit{
 
     cambiaTurnos(cual: String) {
         this.fecha = new Date(this.modelo.fecha);
-        var inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
-        var fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
+        let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
+        let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
         if (inicio && fin) {
-            if (cual === 'cantidad' && this.elementoActivo.cantidadTurnos)
+            if (cual === 'cantidad' && this.elementoActivo.cantidadTurnos) {
                 this.elementoActivo.duracionTurno = this.calcularDuracion(inicio, fin, this.elementoActivo.cantidadTurnos);
-            if (cual === 'duracion' && this.elementoActivo.duracionTurno)
+            }
+            if (cual === 'duracion' && this.elementoActivo.duracionTurno) {
                 this.elementoActivo.cantidadTurnos = this.calcularCantidad(inicio, fin, this.elementoActivo.duracionTurno);
+            }
             this.verificarCantidades();
         }
         this.validarTodo();
@@ -264,16 +267,20 @@ export class AgendaComponent implements OnInit{
     cambiaCantTipo(cual: String) {
         switch (cual) {
             case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
+                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                 break;
             case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
+                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                 break;
             case 'reservadoGestion':
-                this.elementoActivo.reservadoGestionPorc = Math.floor((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                this.elementoActivo.reservadoGestionPorc = Math.floor
+                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                 break;
             case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesionalPorc = Math.floor((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                this.elementoActivo.reservadoProfesionalPorc = Math.floor
+                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
                 break;
         }
         this.validarTodo();
@@ -282,16 +289,20 @@ export class AgendaComponent implements OnInit{
     cambiaPorcentajeTipo(cual: String) {
         switch (cual) {
             case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDia = Math.floor((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                this.elementoActivo.accesoDirectoDelDia = Math.floor
+                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
             case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramado = Math.floor((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                this.elementoActivo.accesoDirectoProgramado = Math.floor
+                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
             case 'reservadoGestion':
-                this.elementoActivo.reservadoGestion = Math.floor((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                this.elementoActivo.reservadoGestion = Math.floor
+                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
             case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesional = Math.floor((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                this.elementoActivo.reservadoProfesional = Math.floor
+                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
                 break;
         }
         this.validarTodo();
@@ -313,12 +324,12 @@ export class AgendaComponent implements OnInit{
             fin = moment(fin);
             let total = fin.diff(inicio, 'minutes');
             return Math.floor(total / cantidad);
-        }
-        else {
-            if (this.elementoActivo.duracionTurno)
+        } else {
+            if (this.elementoActivo.duracionTurno) {
                 return this.elementoActivo.duracionTurno;
-            else
+            } else {
                 return null;
+            }
         }
     }
 
@@ -328,12 +339,12 @@ export class AgendaComponent implements OnInit{
             fin = moment(fin);
             let total = fin.diff(inicio, 'minutes');
             return Math.floor(total / duracion);
-        }
-        else {
-            if (this.elementoActivo.cantidadTurnos)
+        } else {
+            if (this.elementoActivo.cantidadTurnos) {
                 return this.elementoActivo.cantidadTurnos;
-            else
+            } else {
                 return null;
+            }
         }
     }
 
@@ -345,26 +356,27 @@ export class AgendaComponent implements OnInit{
     }
 
     validarTodo() {
-        var alerta: string;
-        var indice: number;
-        var fechaaux = this.modelo.fecha;
+        let alerta: string;
+        let indice: number;
+        let fechaaux = this.modelo.fecha;
         let bloques = this.modelo.bloques;
         this.alertas = [];
         let totalBloques = 0;
         bloques.forEach((bloque, index) => {
-            var inicio = this.combinarFechas(fechaaux, bloque.horaInicio);
-            var fin = this.combinarFechas(fechaaux, bloque.horaFin);
+            let inicio = this.combinarFechas(fechaaux, bloque.horaInicio);
+            let fin = this.combinarFechas(fechaaux, bloque.horaFin);
 
-            if (bloque.cantidadTurnos && bloque.duracionTurno)
+            if (bloque.cantidadTurnos && bloque.duracionTurno) {
                 totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
-
+            }
             if (this.compararFechas(this.modelo.horaInicio, inicio) > 0 || this.compararFechas(this.modelo.horaFin, fin) < 0) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
                 indice = this.alertas.indexOf(alerta);
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
+                > bloque.cantidadTurnos) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
                 this.alertas.push(alerta);
             }
@@ -381,15 +393,15 @@ export class AgendaComponent implements OnInit{
                     robj['horaInicio'] = obj.horaInicio;
                     robj['horaFin'] = obj.horaFin;
                     return robj;
-                }
-                else
+                } else {
                     return null;
+                }
             });
 
-            mapeo.forEach((bloqueMap, index) => {
+            mapeo.forEach((bloqueMap, index1) => {
                 if (bloqueMap) {
                     if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0) {
-                        alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index + 1);
+                        alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
                         this.alertas.push(alerta);
                     }
                 }
@@ -418,9 +430,9 @@ export class AgendaComponent implements OnInit{
             minutes = fecha2.getMinutes();
             auxiliar.setHours(horas, minutes);
             return auxiliar;
-        }
-        else
+        } else {
             return null;
+        }
     }
 
     onSave(isvalid: boolean) {
@@ -436,8 +448,8 @@ export class AgendaComponent implements OnInit{
                 // aca debería cargar el arreglo de turnos
                 bloque.turnos = [];
                 // let simultaneos: number = bloque.pacienteSimultaneos? bloque.cantidadSimultaneos:0;
-                for (var i = 0; i < bloque.cantidadTurnos; i++) {
-                    var turno = {
+                for (let i = 0; i < bloque.cantidadTurnos; i++) {
+                    let turno = {
                         horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
                         estado: 'disponible'
                     }
@@ -451,7 +463,7 @@ export class AgendaComponent implements OnInit{
                 });
                 prestacionesFormateadas = [];
                 prestacionesFormateadas = bloque.prestaciones.map(function (obj) {
-                    var rObj = {};
+                    let rObj = {};
                     if (obj.activo) {
                         rObj['_id'] = obj._id;
                         rObj['id'] = obj.id;
@@ -467,9 +479,9 @@ export class AgendaComponent implements OnInit{
                 this.cargarAgenda(resultado);
                 this.plex.alert('La agenda se guardo correctamente');
             });
-        }
-        else
+        } else {
             alert('Complete datos obligatorios');
+        }
     }
 
     onCancel() {

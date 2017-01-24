@@ -40,13 +40,13 @@ export class BuscarAgendasComponent implements OnInit {
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
             this.serviceAgenda.get({
-                "fechaDesde": value.fechaDesde,
-                "fechaHasta": value.fechaHasta,
-                "idPrestacion": value.prestaciones.id,
-                "idProfesional": value.profesionales.id,
-                "idEspacioFisico": value.espacioFisico.id
+                fechaDesde: value.fechaDesde,
+                fechaHasta: value.fechaHasta,
+                idPrestacion: value.prestaciones.id,
+                idProfesional: value.profesionales.id,
+                idEspacioFisico : value.espacioFisico.id
             }).subscribe(
-                agendas => { this.agendas = agendas },
+                agendas => { this.agendas = agendas; },
                 err => {
                     if (err) {
                         console.log(err);
@@ -79,10 +79,9 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     verAgenda(agenda) {
-        debugger
         this.seleccionada = true;
-        var fecha = new Date(agenda.horaInicio);
-        var horaFin = new Date(agenda.horaFin);
+        let fecha = new Date(agenda.horaInicio);
+        let horaFin = new Date(agenda.horaFin);
         this.modelo = {
             fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
             horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '')+fecha.getMinutes(),

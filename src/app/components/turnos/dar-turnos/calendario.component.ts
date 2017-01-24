@@ -20,8 +20,9 @@ export class CalendarioComponent {
     @Input('agenda')
     set agenda(value: IAgenda) {
         this._agenda = value;
-        if (value)
+        if (value){
             this.actualizar();
+        }
     }
     get agenda(): IAgenda {
         return this._agenda;
@@ -48,40 +49,34 @@ export class CalendarioComponent {
     private agendaPorFecha(fecha: moment.Moment): IAgenda {
         // TODO: optimizar esta búsqueda
         return this.agendas.find(i => {
-            return moment(fecha).isSame(i.horaInicio, "day")
+            return moment(fecha).isSame(i.horaInicio, 'day')
         });
     }
 
     /** Devuelve las agendas correspondientes a un día determinado */
-    private agendasPorFecha(fecha: moment.Moment): IAgenda[] {
+    public agendasPorFecha(fecha: moment.Moment): IAgenda[] {
         return this.agendas.filter(
             function (value) {
-                return (moment(fecha).isSame(value.horaInicio, "day"));
+                return (moment(fecha).isSame(value.horaInicio, 'day'));
             }
         );
     }
-    
     /** Regenera el calendario */
     private actualizar() {
-        
         if (this.fecha && this.agendas) {
-            let inicio = moment(this.fecha).startOf("month").startOf("week");
-            
+            let inicio = moment(this.fecha).startOf('month').startOf('week');
             this.diaSeleccionado = null;
             this.calendario = [];
             for (let r = 1; r <= 5; r++) {
                 let week = [];
                 this.calendario.push(week);
                 for (let c = 1; c <= 7; c++) {
-                    inicio.add(1, "day");
+                    inicio.add(1, 'day');
                     let dia = new CalendarioDia(inicio.toDate(), this.agendaPorFecha(inicio));
-                    //console.log(dia.fecha);
-                    //console.log(inicio);
-                    
                     week.push(dia);
 
                     // ¿Hay una agenda seleccionada?
-                    if (dia.agenda && this.agenda && inicio.isSame(this.agenda.horaInicio, "day")) {
+                    if (dia.agenda && this.agenda && inicio.isSame(this.agenda.horaInicio, 'day')) {
                         dia.seleccionado = true;
                         this.diaSeleccionado = dia;
                     }
@@ -90,18 +85,17 @@ export class CalendarioComponent {
         }
     }
 
-    private seleccionar(dia: CalendarioDia) {
+    public seleccionar(dia: CalendarioDia) {
         // Sólo permite seleccionar días con agenda
-        debugger;
         if (dia.agenda) {
-            if (this.diaSeleccionado)
+            if (this.diaSeleccionado){
                 this.diaSeleccionado.seleccionado = false;
+            }
             dia.seleccionado = true;
             this.diaSeleccionado = dia;
-
             // Selecciona la agenda
             this.agenda = dia.agenda;
-            this.estado = "seleccionada";
+            this.estado = 'seleccionada';
             this.onChange.emit(dia.agenda);
         }
     }
