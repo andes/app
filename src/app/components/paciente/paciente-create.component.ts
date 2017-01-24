@@ -3,8 +3,8 @@ import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IPais } from './../../interfaces/IPais';
 import { IFinanciador } from './../../interfaces/IFinanciador';
-import {Observable} from 'rxjs/Rx';
-import { Component, OnInit, Output, Input, EventEmitter} from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import { BarrioService } from './../../services/barrio.service';
@@ -14,7 +14,7 @@ import { PaisService } from './../../services/pais.service';
 import { PacienteService } from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
 
-import {IPaciente } from './../../interfaces/IPaciente';
+import { IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
 
 @Component({
@@ -35,7 +35,7 @@ export class PacienteCreateComponent implements OnInit {
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
     todasProvincias: IProvincia[] = [];
-    localidades: ILocalidad[]= [];
+    localidades: ILocalidad[] = [];
     todasLocalidades: ILocalidad[] = [];
     showCargar: boolean;
     error: boolean = false;
@@ -45,18 +45,18 @@ export class PacienteCreateComponent implements OnInit {
     pacRelacionados = [];
 
     constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
-    private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService, 
-    private BarrioService: BarrioService,private pacienteService: PacienteService, 
-                private financiadorService: FinanciadorService) {}
+        private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService,
+        private BarrioService: BarrioService, private pacienteService: PacienteService,
+        private financiadorService: FinanciadorService) { }
 
     ngOnInit() {
 
         //CArga de combos
-        this.PaisService.get().subscribe(resultado => {this.paises = resultado});
-        this.ProvinciaService.get("").subscribe(resultado => {this.todasProvincias = resultado});
-        this.LocalidadService.get("").subscribe(resultado => {this.todasLocalidades = resultado});
-        this.financiadorService.get().subscribe(resultado => {this.obrasSociales = resultado});
-        
+        this.PaisService.get().subscribe(resultado => { this.paises = resultado });
+        this.ProvinciaService.get("").subscribe(resultado => { this.todasProvincias = resultado });
+        this.LocalidadService.get("").subscribe(resultado => { this.todasLocalidades = resultado });
+        this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
+
         this.showCargar = false;
         this.sexos = enumerados.getSexo();
         this.generos = enumerados.getGenero();
@@ -97,7 +97,7 @@ export class PacienteCreateComponent implements OnInit {
             ]),
             relaciones: this.formBuilder.array([
             ]),
-            activo:[true]
+            activo: [true]
         });
     }
 
@@ -127,7 +127,7 @@ export class PacienteCreateComponent implements OnInit {
         });
     }
 
-    iniRelacion(){
+    iniRelacion() {
         return this.formBuilder.group({
             relacion: [''],
             referencia: [''],
@@ -139,7 +139,7 @@ export class PacienteCreateComponent implements OnInit {
 
     addContacto() {
         // agrega formMatricula 
-        const control = <FormArray> this.createForm.controls['contacto'];
+        const control = <FormArray>this.createForm.controls['contacto'];
         control.push(this.iniContacto(control.length));
     }
 
@@ -152,11 +152,11 @@ export class PacienteCreateComponent implements OnInit {
     onSave(model: IPaciente, isvalid: boolean) {
         debugger;
         if (isvalid) {
-            let operacionPac: Observable < IPaciente > ;
-             operacionPac = this.pacienteService.post(model);
-             operacionPac.subscribe(resultado => {
-                  this.data.emit(resultado)
-             });
+            let operacionPac: Observable<IPaciente>;
+            operacionPac = this.pacienteService.post(model);
+            operacionPac.subscribe(resultado => {
+                this.data.emit(resultado)
+            });
 
         } else {
             alert("Complete datos obligatorios");
@@ -167,19 +167,19 @@ export class PacienteCreateComponent implements OnInit {
         this.data.emit(null)
     }
 
-    filtrarProvincias(indexPais: number){
-        var pais = this.paises[(indexPais-1)];
+    filtrarProvincias(indexPais: number) {
+        var pais = this.paises[(indexPais - 1)];
         this.provincias = this.todasProvincias.filter((p) => p.pais.id == pais.id);
     }
 
-    filtrarLocalidades(indexProvincia: number){
-        var provincia = this.provincias[(indexProvincia-1)];
+    filtrarLocalidades(indexProvincia: number) {
+        var provincia = this.provincias[(indexProvincia - 1)];
         this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == provincia.id);
     }
 
-    addFinanciador(){
-   // agrega form Financiador u obra Social
-        const control = <FormArray> this.createForm.controls['financiador'];
+    addFinanciador() {
+        // agrega form Financiador u obra Social
+        const control = <FormArray>this.createForm.controls['financiador'];
         control.push(this.iniFinanciador(control.length));
     }
 
@@ -189,9 +189,9 @@ export class PacienteCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    addRelacion(){
-   // agrega form Financiador u obra Social
-        const control = <FormArray> this.createForm.controls['relaciones'];
+    addRelacion() {
+        // agrega form Financiador u obra Social
+        const control = <FormArray>this.createForm.controls['relaciones'];
         control.push(this.iniRelacion());
     }
 
@@ -201,7 +201,7 @@ export class PacienteCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    buscarPacRelacionado(){
+    buscarPacRelacionado() {
         //var formsRel = this.createForm.value.relaciones[i];
         var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
         var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
@@ -212,24 +212,27 @@ export class PacienteCreateComponent implements OnInit {
             this.mensaje = "Debe completar al menos un campo de búsqueda";
             return;
         }
-
-        this.pacienteService.getBySerch(apellido, nombre, documento, "", null, "")
-                                .subscribe(resultado => {
-                                        if(resultado.length>0) {
-                                            this.pacRelacionados = resultado;
-                                            this.showCargar = false;
-                                            this.error = false;
-                                            this.mensaje = "";
-                                        } else {
-                                            this.pacRelacionados = []
-                                            this.showCargar = true;
-                                            this.error = true;
-                                            this.mensaje = "No se encontraron datos registrados";
-                                        }
-                                    });
+        var pacBusqueda = {
+            "apellido": apellido, "nombre": nombre, "documento": documento,
+            "estado": "", "fechaNac": null, "sexo": ""
+        };
+        this.pacienteService.get(pacBusqueda)
+            .subscribe(resultado => {
+                if (resultado.length > 0) {
+                    this.pacRelacionados = resultado;
+                    this.showCargar = false;
+                    this.error = false;
+                    this.mensaje = "";
+                } else {
+                    this.pacRelacionados = []
+                    this.showCargar = true;
+                    this.error = true;
+                    this.mensaje = "No se encontraron datos registrados";
+                }
+            });
     }
 
-    setRelacion(relacion:String,nombre:String, apellido: String, documento: String, referencia: String){
+    setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
         return this.formBuilder.group({
             relacion: [relacion],
             referencia: [referencia],
@@ -239,10 +242,10 @@ export class PacienteCreateComponent implements OnInit {
         });
     }
 
-    validar(paciente: IPaciente){
+    validar(paciente: IPaciente) {
         var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
         const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion,paciente.nombre,paciente.apellido,paciente.documento,paciente.id));
+        control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
 
         (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
         (document.getElementById("relNombre") as HTMLSelectElement).value = "";
@@ -252,7 +255,7 @@ export class PacienteCreateComponent implements OnInit {
         this.pacRelacionados = []
     }
 
-    cargarDatos(){
+    cargarDatos() {
         this.error = false;
         this.mensaje = "";
         var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
@@ -267,7 +270,7 @@ export class PacienteCreateComponent implements OnInit {
         }
 
         const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion,nombre,apellido,documento, ""));
+        control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
 
         (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
         (document.getElementById("relNombre") as HTMLSelectElement).value = "";

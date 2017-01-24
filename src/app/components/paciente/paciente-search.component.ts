@@ -100,10 +100,12 @@ export class PacienteSearchComponent implements OnInit {
       fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
       sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
     }
-    //console.log(dto)
+    debugger;
+    console.log(dto)
     this.pacienteService.postSearch(dto)
       .subscribe(
       pacientes => {
+        debugger;
         this.pacientes = pacientes
       },
       err => {
@@ -169,9 +171,9 @@ export class PacienteSearchComponent implements OnInit {
             this.documentScanned = "DU";
           }
           else {
-           this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
-           this.error = true;
-        }
+            this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
+            this.error = true;
+          }
         }
       }
 
@@ -244,5 +246,5 @@ export class PacienteSearchComponent implements OnInit {
 
   darTurno(paciente: IPaciente) {
     this.selected.emit(paciente);
-  }  
+  }
 }

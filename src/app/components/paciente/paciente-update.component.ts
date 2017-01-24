@@ -63,7 +63,7 @@ import {
 })
 export class PacienteUpdateComponent implements OnInit {
 
-    @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
+    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
     @Input('selectedPaciente') pacienteHijo: IPaciente;
 
     updateForm: FormGroup;
@@ -94,7 +94,7 @@ export class PacienteUpdateComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
         private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService,
         private BarrioService: BarrioService, private pacienteService: PacienteService,
-        private financiadorService: FinanciadorService) {}
+        private financiadorService: FinanciadorService) { }
 
     ngOnInit() {
 
@@ -148,7 +148,7 @@ export class PacienteUpdateComponent implements OnInit {
 
     }
 
-    iniDireccion(unaDireccion ? : IDireccion) {
+    iniDireccion(unaDireccion?: IDireccion) {
         // Inicializa contacto
         debugger;
         if (unaDireccion) {
@@ -194,7 +194,7 @@ export class PacienteUpdateComponent implements OnInit {
         }
     }
 
-    iniContacto(unContacto ? ) {
+    iniContacto(unContacto?) {
         // Inicializa contacto
         let cant = 0;
         let fecha = new Date();
@@ -219,11 +219,11 @@ export class PacienteUpdateComponent implements OnInit {
         }
     }
 
-    iniFinanciador(unFinanciador ? ) {
+    iniFinanciador(unFinanciador?) {
         // form Financiador u obra Social
         let cant = 0;
         let fecha = new Date();
-        if(unFinanciador){
+        if (unFinanciador) {
             return this.formBuilder.group({
                 entidad: [unFinanciador.entidad],
                 ranking: [unFinanciador.ranking],
@@ -231,18 +231,18 @@ export class PacienteUpdateComponent implements OnInit {
                 fechaBaja: [unFinanciador.fechaBaja],
                 activo: [unFinanciador.activo]
             });
-        }else{
+        } else {
             return this.formBuilder.group({
-            entidad: [''],
-            ranking: [''],
-            fechaAlta: [''],
-            fechaBaja: [''],
-            activo: ['']
-        });  
+                entidad: [''],
+                ranking: [''],
+                fechaAlta: [''],
+                fechaBaja: [''],
+                activo: ['']
+            });
         }
     }
 
-    iniRelacion(unaRelacion ? ) {
+    iniRelacion(unaRelacion?) {
         debugger;
         if (unaRelacion) {
             return this.formBuilder.group({
@@ -263,33 +263,33 @@ export class PacienteUpdateComponent implements OnInit {
         }
     }
 
-    addContacto(unContacto ? ) {
+    addContacto(unContacto?) {
         // agrega formMatricula 
-        const control = < FormArray > this.updateForm.controls['contacto'];
+        const control = <FormArray>this.updateForm.controls['contacto'];
         control.push(this.iniContacto(unContacto));
     }
 
     removeContacto(i: number) {
         // elimina formMatricula
-        const control = < FormArray > this.updateForm.controls['contacto'];
+        const control = <FormArray>this.updateForm.controls['contacto'];
         control.removeAt(i);
     }
 
-    addDireccion(unaDireccion ? ) {
+    addDireccion(unaDireccion?) {
         debugger;
         // agrega formMatricula 
-        const control = < FormArray > this.updateForm.controls['direccion'];
+        const control = <FormArray>this.updateForm.controls['direccion'];
         control.push(this.iniDireccion(unaDireccion));
     }
 
     onSave(model: IPaciente, isvalid: boolean) {
         debugger;
         if (isvalid) {
-            let operacionPac: Observable < IPaciente > ;
+            let operacionPac: Observable<IPaciente>;
             operacionPac = this.pacienteService.put(model);
 
             operacionPac.subscribe(resultado => {
-              this.data.emit(resultado)
+                this.data.emit(resultado)
             });
 
         } else {
@@ -315,27 +315,27 @@ export class PacienteUpdateComponent implements OnInit {
         this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == provincia.id);
     }
 
-    addFinanciador(unFinanciador ? ) {
+    addFinanciador(unFinanciador?) {
         // agrega form Financiador u obra Social
-        const control = < FormArray > this.updateForm.controls['financiador'];
+        const control = <FormArray>this.updateForm.controls['financiador'];
         control.push(this.iniFinanciador(unFinanciador));
     }
 
     removeFinanciador(i: number) {
         // elimina form Financiador u obra Social
-        const control = < FormArray > this.updateForm.controls['financiador'];
+        const control = <FormArray>this.updateForm.controls['financiador'];
         control.removeAt(i);
     }
 
-    addRelacion(unaRelacion ? ) {
+    addRelacion(unaRelacion?) {
         // agrega form Financiador u obra Social
-        const control = < FormArray > this.updateForm.controls['relaciones'];
+        const control = <FormArray>this.updateForm.controls['relaciones'];
         control.push(this.iniRelacion(unaRelacion));
     }
 
     removeRelacion(i: number) {
         // elimina form Financiador u obra Social
-        const control = < FormArray > this.updateForm.controls['relaciones'];
+        const control = <FormArray>this.updateForm.controls['relaciones'];
         control.removeAt(i);
     }
 
@@ -352,15 +352,19 @@ export class PacienteUpdateComponent implements OnInit {
             return;
         }
 
-        this.pacienteService.getBySerch(apellido, nombre, documento, "", null, "")
+        var pacBusqueda = {
+            "apellido": apellido, "nombre": nombre, "documento": documento,
+            "estado": "", "fechaNac": null, "sexo": ""
+        };
+        this.pacienteService.get(pacBusqueda)
             .subscribe(resultado => {
                 debugger;
-                if (resultado.length>0) {
+                if (resultado.length > 0) {
                     this.pacRelacionados = resultado;
                     this.showCargar = false;
                     this.error = false;
                     this.mensaje = "";
-                }else {
+                } else {
                     this.pacRelacionados = []
                     this.showCargar = true;
                     this.error = true;
@@ -370,7 +374,7 @@ export class PacienteUpdateComponent implements OnInit {
     }
 
     setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia?: String) {
-        var reOID = referencia? referencia:null;
+        var reOID = referencia ? referencia : null;
         return this.formBuilder.group({
             relacion: [relacion],
             referencia: [reOID],
@@ -383,7 +387,7 @@ export class PacienteUpdateComponent implements OnInit {
     validar(paciente: IPaciente) {
         debugger;
         var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
-        const control = < FormArray > this.updateForm.controls['relaciones'];
+        const control = <FormArray>this.updateForm.controls['relaciones'];
         control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
 
         (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
@@ -411,7 +415,7 @@ export class PacienteUpdateComponent implements OnInit {
             return;
         }
 
-        const control = < FormArray > this.updateForm.controls['relaciones'];
+        const control = <FormArray>this.updateForm.controls['relaciones'];
         control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
 
         (document.getElementById("relRelacion") as HTMLSelectElement).value = "";

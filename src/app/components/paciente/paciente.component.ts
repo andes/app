@@ -44,7 +44,7 @@ export class PacienteComponent implements OnInit {
     searchForm: FormGroup;
     selectedPaciente: IPaciente;
 
-    constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
+    constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
 
     checked: boolean = true;
 
@@ -70,18 +70,21 @@ export class PacienteComponent implements OnInit {
     loadPaciente() {
         this.error = false;
         var formulario = this.searchForm.value;
-        this.pacienteService.getBySerch(formulario.apellido, formulario.nombre, formulario.documento, formulario.estado,
-                formulario.fechaNacimiento, formulario.sexo)
+        var pacBusqueda = {
+            "apellido": formulario.apellido, "nombre": formulario.nombre, "documento": formulario.documento,
+            "estado": formulario.estado, "fechaNac": formulario.fechaNacimiento, "sexo": formulario.sexo
+        };
+        this.pacienteService.get(pacBusqueda)
             .subscribe(
-                pacientes => this.pacientes = pacientes, //Bind to view
-                err => {
-                    if (err) {
-                        console.log(err);
-                        this.error = true;
-                        return;
+            pacientes => this.pacientes = pacientes, //Bind to view
+            err => {
+                if (err) {
+                    console.log(err);
+                    this.error = true;
+                    return;
 
-                    }
-                });
+                }
+            });
     }
 
     findPacientes() {
@@ -101,33 +104,33 @@ export class PacienteComponent implements OnInit {
         this.error = false;
         this.pacienteService.disable(objPaciente)
             .subscribe(dato => this.loadPaciente(), //Bind to view
-                err => {
-                    if (err) {
-                        console.log(err);
-                        this.error = true;
-                        this.mensaje = "Ha ocurrido un error";
-                        return;
-                    }
-                });
+            err => {
+                if (err) {
+                    console.log(err);
+                    this.error = true;
+                    this.mensaje = "Ha ocurrido un error";
+                    return;
+                }
+            });
     }
 
     onReturn(objPaciente: IPaciente): void {
         this.showcreate = false;
         this.showupdate = false;
-        if(objPaciente){
-           this.loadPaciente();
-        } 
+        if (objPaciente) {
+            this.loadPaciente();
+        }
     }
 
     onEnable(objPaciente: IPaciente) {
         this.error = false;
         this.pacienteService.enable(objPaciente)
             .subscribe(dato => this.loadPaciente(), //Bind to view
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     onEdit(objPaciente: IPaciente) {
