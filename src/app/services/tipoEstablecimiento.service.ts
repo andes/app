@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class TipoEstablecimientoService {
 
-   private tipoEstablecimientoUrl = AppSettings.API_ENDPOINT + '/tipoEstablecimiento';  // URL to web api
+   private tipoEstablecimientoUrl = AppSettings.API_ENDPOINT + '/core/tm/tipoEstablecimiento';  // URL to web api
 
    constructor(private http: Http) {}
 
@@ -26,6 +26,5 @@ export class TipoEstablecimientoService {
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');
     }
-
-   
+       
 }

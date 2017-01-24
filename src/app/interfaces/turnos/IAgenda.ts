@@ -5,7 +5,6 @@ import { ITurno } from './ITurno';
 
 export interface IAgenda{
     id: String,
-    nombre: String,
     prestaciones: IPrestacion[],
     profesionales: IProfesional[],
     espacioFisico:  {
@@ -16,5 +15,6 @@ export interface IAgenda{
     horaFin: Date,
     intercalar: Boolean,
     bloques: IBloque[],
-    estado: String 
+    estado: String,
+    turnosDisponibles: number
 }

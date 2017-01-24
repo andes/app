@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box title="Especialidades">
+            <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-6">
@@ -36,11 +37,11 @@
                             <td>{{especialidad.nombre}}</td>
                             <td>{{especialidad.disciplina}}</td>
                             <td>
-                                <plex-bool type="slide" [(ngModel)]="especialidad.habilitado" label="" name="especialidad.habilitado" (click)="activate(especialidad)"></plex-bool>
+                                <plex-bool type="slide" [(ngModel)]="especialidad.activo" label="" name="especialidad.activo" (click)="activate(especialidad)"></plex-bool>
                             </td>
                             <td>
                                 <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                                </plex-button> 
+                                </plex-button>
                             </td>
                             <!-- <td>
                                 <plex-button icon="delete" type="danger" label="Borrar" *ngIf="especialidad.habilitado" (click)="onDisable(especialidad)"></plex-button>
@@ -51,14 +52,18 @@
                     </tbody>
                 </table>
             </div>
+            <plex-loader *ngIf="loader"></plex-loader>
+            <div *ngIf="finScroll" class="alert alert-warning">
+                   <p style="text-align: center;"> No se encontraron más resultados </p> <!-- pasar a un componente de plex -->
+            </div>
         </plex-box>
+        </div>
+        <div class="col-sm-12" *ngIf="showcreate">
+            <div class="clear"></div>
+            <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
+        </div>
+        <div class="col-sm-12" *ngIf="showupdate">
+            <div class="clear"></div>
+            <especialidad-create-update [seleccion]="seleccion" (data)='onReturn($event)'></especialidad-create-update>
+        </div>
     </div>
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="clear"></div>
-        <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
-    </div>
-    <div class="col-sm-12" *ngIf="showupdate">
-        <div class="clear"></div>
-        <especialidad-create-update [seleccion]="seleccion" (data)='onReturn($event)'></especialidad-create-update>
-    </div>
-</div>

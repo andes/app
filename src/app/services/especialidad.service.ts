@@ -11,7 +11,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
 @Injectable()
 export class EspecialidadService {
 
-    private especialidadUrl = AppSettings.API_ENDPOINT + '/especialidades';  // URL to web api
+    private especialidadUrl = AppSettings.API_ENDPOINT + '/core/tm/especialidades';  // URL to web api
 
     constructor(private server: ServerService) { }
 
@@ -48,7 +48,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     disable(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        especialidad.habilitado = false;
+        especialidad.activo = false;
         especialidad.fechaBaja = new Date();
         return this.put(especialidad);
     }
@@ -57,7 +57,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     enable(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        especialidad.habilitado = true;
+        especialidad.activo = true;
         return this.put(especialidad);
     }
 }

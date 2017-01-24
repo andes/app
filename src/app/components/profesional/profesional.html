@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box type="" title="Profesionales">
+            <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-4">
@@ -41,6 +42,10 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <plex-loader *ngIf="loader"></plex-loader>
+            <div *ngIf="finScroll" class="alert alert-warning">
+                <p style="text-align: center;"> No se encontraron más resultados </p> <!-- pasar a un componente de plex -->
             </div>
         </plex-box>
     </div>

@@ -1,0 +1,58 @@
+<div class="row" *ngIf="showVistaAgendas">
+    <plex-box>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(agenda)" title="Editar Agenda">
+                            </plex-button>
+                        </td>
+                        <td>
+                            <plex-button icon="mdi mdi-power" (click)="suspenderAgenda(agenda)" title="Suspender Agenda">
+                            </plex-button>
+                        </td>
+                        <td>
+                            <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
+                            </plex-button>
+                        </td>
+                        <td>
+                            <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="publicarAgenda(agenda)" title="Publicar Agenda">
+                            </plex-button>
+                        </td>
+                        <td>
+                            <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda(agenda)" title="Clonar Agenda">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-12">
+                    <span><b>Fecha:</b> {{vistaAgenda.horaInicio | date: 'dd/MM/yyyy'}} - {{vistaAgenda.horaInicio | date: 'HH:mm'}} a {{vistaAgenda.horaFin | date: 'HH:mm'}}</span>
+                </div>
+
+                <div class="col-md-12">
+                    <span><b>Espacio Físico:</b> {{vistaAgenda.espacioFisico.nombre}}</span>
+                </div>
+
+                <div class="col-md-12">
+                    <label>Profesional: </label>                    
+                        <div *ngFor="let profesional of vistaAgenda.profesionales; let i=index">
+                        <span>{{profesional.nombre}} {{profesional.apellido}}</span>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <label>Prestaciones: </label>
+                    <div *ngFor="let prestacion of vistaAgenda.prestaciones; let i=index">
+                        <span>{{prestacion.nombre}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</div>

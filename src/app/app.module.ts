@@ -1,3 +1,4 @@
+import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -7,9 +8,12 @@ import { TurnoService } from './services/turnos/turno.service';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 
-import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component'
-import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component'
-import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component'
+import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component';
+import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
+import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
+import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
+import { TurnosComponent } from './components/turnos/turnos.component';
+import { VistaAgendaComponent } from './components/turnos/vista-agenda.component';
 
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
@@ -50,7 +54,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { LOCALE_ID } from '@angular/core';
 
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing, appRoutingProviders } from './app.routing';
 
 import { DataTableModule, SharedModule } from 'primeng/primeng';
@@ -82,11 +86,12 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent,
+    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
+    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent
   ],
   bootstrap: [AppComponent],
   providers: [
-    { provide: LOCALE_ID, useValue: "es-AR" },
+    { provide: LOCALE_ID, useValue: 'es-AR' },
     Plex,
     OrganizacionService,
     ProvinciaService,

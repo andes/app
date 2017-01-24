@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
+const limit = 25;
+
 @Component({
     selector: 'especialidades',
     templateUrl: 'especialidad.html'
@@ -17,6 +19,11 @@ export class EspecialidadComponent implements OnInit {
     datos: IEspecialidad[];
     searchForm: FormGroup;
     seleccion: IEspecialidad;
+    skip: number = 0;
+    loader: boolean = false;
+    finScroll: boolean = false;
+    value: any;
+    tengoDatos: boolean = true;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private especialidadService: EspecialidadService) { }
 
@@ -25,20 +32,41 @@ export class EspecialidadComponent implements OnInit {
         this.searchForm = this.formBuilder.group({
             codigoSisa: [''],
             nombre: [''],
-            habilitado: ['']
+            activo: ['']
         });
         //Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            let codSisa = value.codigoSisa ? value.codigoSisa : ""
-            this.loadDatos({"codigoSisa": codSisa, "nombre": value.nombre});
+            this.value = value;
+            this.skip = 0;
+            this.loadDatos(false);
+           
         })
-
         this.loadDatos();
     }
 
-    loadDatos(parametros = {}){
+    loadDatos(concatenar: boolean = false) {
+        let parametros = {
+            "codigoSisa": this.value && this.value.codigoSisa,
+            "nombre": this.value && this.value.nombre, "skip": this.skip, "limit": limit
+        };
+
         this.especialidadService.get(parametros).subscribe(
-            datos => this.datos = datos) //Bind to view
+            datos => {
+                if (concatenar) {
+                    if (datos.length > 0) {
+                        this.datos = this.datos.concat(datos);
+                    }
+                    else {
+                        this.finScroll = true;
+                        this.tengoDatos = false;
+                    }
+                } else {
+                    this.datos = datos;
+                    this.finScroll = false;
+                }
+
+                this.loader = false;
+            }) //Bind to view
     }
 
     onReturn(objEspecialidad: IEspecialidad): void {
@@ -53,15 +81,25 @@ export class EspecialidadComponent implements OnInit {
         this.seleccion = objEspecialidad;
     }
 
-      activate(objEspecialidad: IEspecialidad) {
-        if (objEspecialidad.habilitado) {
 
-           this.especialidadService.disable(objEspecialidad)
-            .subscribe(datos => this.loadDatos()) //Bind to view
+      activate(objEspecialidad: IEspecialidad) {
+
+        if (objEspecialidad.activo) {
+
+            this.especialidadService.disable(objEspecialidad)
+                .subscribe(datos => this.loadDatos()) //Bind to view
         }
         else {
-             this.especialidadService.enable(objEspecialidad)
-            .subscribe(datos => this.loadDatos()) //Bind to view
+            this.especialidadService.enable(objEspecialidad)
+                .subscribe(datos => this.loadDatos()) //Bind to view
+        }
+    }
+
+    nextPage() {
+        if (this.tengoDatos) {
+            this.skip += limit;
+            this.loadDatos(true);
+            this.loader = true;
         }
     }
 
