@@ -26,6 +26,5 @@ export class TipoEstablecimientoService {
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');
     }
-
-   
+       
 }
