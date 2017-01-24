@@ -1,7 +1,7 @@
 
 
 export enum Sexo {
-   "femenino", "masculino", "otro"
+  'femenino', 'masculino', 'otro'
 }
 
 export enum Genero {
@@ -31,8 +31,12 @@ export function titleCase(str) {
   }).join(' ');
 }
 
+
 export function getObjeto(elemento) {
-  return {'id': elemento, 'nombre': titleCase(elemento)};
+  return {
+    'id': elemento,
+    'nombre': titleCase(elemento)  
+  };
 }
 
 export function getSexo(){

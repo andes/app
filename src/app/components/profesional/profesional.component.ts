@@ -24,8 +24,8 @@ export class ProfesionalComponent implements OnInit {
     finScroll: boolean = false;
     tengoDatos: boolean = true;
     value: any;
-    cantidad: IProfesional[];
-   
+    //cantidad: IProfesional[];
+
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
 
@@ -62,48 +62,9 @@ export class ProfesionalComponent implements OnInit {
                     this.datos = datos;
                     this.finScroll = false;
                 }
-
                 this.loader = false;
-            }) //Bind to view
-
-        //Todo esto trae el total de profesionales.. VEER..
-        let parametro = { limit: '' };
-        this.profesionalService.get(parametro)
-            .subscribe(
-            cantidad => {
-                this.cantidad = cantidad;
-                console.log(this.cantidad);
             })
     }
-
-    // loadProfesionales() {
-    //     this.profesionalService.get()
-    //         .subscribe(
-    //         profesionales => this.profesionales = profesionales, //Bind to view
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
-
-    // loadProfesionalesFiltrados(apellido: string,nombre: String,documento: String){
-    //      if (apellido || nombre || documento)
-    //      {
-    //          this.profesionalService.getByTerm(apellido,nombre,documento)
-    //         .subscribe(
-    //         profesionales =>this.profesionales = profesionales, //Bind to view
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    //      }else
-    //      {
-    //          this.loadProfesionales();
-    //      }
-
-    // }
 
     onReturn(objProfesional: IProfesional): void {
         this.showcreate = false;
@@ -131,8 +92,8 @@ export class ProfesionalComponent implements OnInit {
         this.seleccion = objProfesional;
     }
 
-    nextPage() {
-        if (this.tengoDatos){
+      nextPage() {
+        if (this.tengoDatos) {
             this.skip += limit;
             this.loadDatos(true);
             this.loader = true;

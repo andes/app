@@ -46,7 +46,6 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
-
         this.sexos = enumerados.getObjSexos();
         this.generos = enumerados.getObjGeneros();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
@@ -61,10 +60,20 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         let fechaFalle = this.seleccion ? this.seleccion.fechaFallecimiento : null;
         let especialidades = this.seleccion ? this.seleccion.especialidad : null;
         let rol = this.seleccion ? this.seleccion.rol : '';
-        let sexo = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
+        debugger;
+        //let sexo = 'masculino';
+        //console.log('no te rompas');
+        let sexoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
+        // console.log(sexoSelected);
+        // console.log('-------------------------');
+        // console.log('-------------------------');
+        // console.log('-------------------------');
+        // console.log('-------------------------');
+        //let sexo = 'masculino';
         let genero = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
+        //let genero = 'masculino';
         let estadoCivil = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
-
+        //let estadoCivil = "soltero";
 
         this.createForm = this.formBuilder.group({
             nombre: [nombre, Validators.required],
@@ -73,7 +82,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             contacto: this.formBuilder.array([]),
             fechaNacimiento: [fechaNac, Validators.required],
             fechaFallecimiento: [fechaFalle],
-            sexo: [sexo],
+            sexo: [sexoSelected],
             genero: [genero],
             direccion: this.formBuilder.array([]),
             estadoCivil: [estadoCivil],
