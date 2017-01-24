@@ -98,9 +98,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             /*this.seleccion.telecom.forEach(element => {
                 this.addTelecom(element);
             });*/
-            this.seleccion.edificio.forEach(element => {
-                this.addEdificio(element, "previo");
-            });
+            this.loadEdificios();
         }
     }
 
@@ -152,6 +150,14 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         } else {
             control.push(this.initContacto(1));
         }
+    }
+
+    /*Cod. edificio*/
+
+    loadEdificios() {
+        this.seleccion.edificio.forEach(element => {
+            this.addEdificio(element, "previo");
+        });
     }
     addEdificio(unEdificio, tipo) {
         // agrega formContacto 
@@ -249,6 +255,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             model.activo = true;
             debugger;
             model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
+            model.edificio = model.edificio.map(elem => { return elem; })
             if (this.seleccion) {
                 model.id = this.seleccion.id;
                 guardar = this.organizacionService.put(model);
