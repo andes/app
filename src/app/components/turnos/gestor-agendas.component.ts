@@ -77,12 +77,21 @@ export class GestorAgendasComponent implements OnInit {
         }
 
         agenda.agendaSeleccionada = true;
-        agenda.agendaSeleccionadaColor = 'success';
+
+        this.setColorEstadoAgenda(this.ag);
 
         this.agendaSel = agenda;
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
+    }
+
+    setColorEstadoAgenda(agenda) {
+        if (agenda.estado === 'Suspendida') {
+            agenda.agendaSeleccionadaColor = 'danger';
+        } else {
+            agenda.agendaSeleccionadaColor = 'success';
+        }
     }
 }
 

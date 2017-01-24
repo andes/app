@@ -20,7 +20,7 @@
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
-                                        <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)"><a class="hover"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a></td>
+                                        <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center"><a class="hover"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a></td>
                                     </tr>
                                 </table>
                             </div>
