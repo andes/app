@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class FinanciadorService {
 
-   private financiadorUrl = AppSettings.API_ENDPOINT + '/financiador';  // URL to web api
+   private financiadorUrl = AppSettings.API_ENDPOINT + '/financiadores';  // URL to web api
 
    constructor(private http: Http) {}
 

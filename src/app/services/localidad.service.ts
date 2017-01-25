@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class LocalidadService {
 
-   private localidadUrl = AppSettings.API_ENDPOINT + '/core/tm/localidad';  // URL to web api
+   private localidadUrl = AppSettings.API_ENDPOINT + '/core/tm/localidades';  // URL to web api
 
    constructor(private server: ServerService, private http: Http) {}
 

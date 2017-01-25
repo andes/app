@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class BarrioService {
 
-   private barrioUrl = AppSettings.API_ENDPOINT + '/barrio';  // URL to web api
+   private barrioUrl = AppSettings.API_ENDPOINT + '/barrios';  // URL to web api
 
    constructor(private http: Http) {}
 

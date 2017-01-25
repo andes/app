@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class TipoEstablecimientoService {
 
-   private tipoEstablecimientoUrl = AppSettings.API_ENDPOINT + '/core/tm/tipoEstablecimiento';  // URL to web api
+   private tipoEstablecimientoUrl = AppSettings.API_ENDPOINT + '/core/tm/tiposEstablecimiento';  // URL to web api
 
    constructor(private http: Http) {}
 
