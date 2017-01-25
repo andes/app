@@ -49,7 +49,7 @@
                                     <div class="col-md-12">
                                         <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
                                         <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico.nombre}}</span>
+                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
                                     </div>
                                 </div>
                             </div>

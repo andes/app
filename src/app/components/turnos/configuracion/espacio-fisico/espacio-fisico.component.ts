@@ -1,7 +1,5 @@
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
@@ -12,7 +10,6 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 })
 
 export class EspacioFisicoComponent implements OnInit {
-    //showcreate: boolean = false;
     showupdate: boolean = false;
     espaciosFisicos: IEspacioFisico[];
     searchForm: FormGroup;
@@ -25,7 +22,7 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     loadEspaciosFisicos() {
-        this.espacioFisicoService.get()
+        this.espacioFisicoService.get({})
             .subscribe(
             espaciosFisicos => this.espaciosFisicos = espaciosFisicos, //Bind to view
             err => {
@@ -36,7 +33,6 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     onReturn(espacioFisico: IEspacioFisico): void {
-        //this.showcreate = false;
         this.showupdate = false;
         this.selectedEspacioFisico = null;
         this.loadEspaciosFisicos();
@@ -63,7 +59,6 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
      onEdit(espacioFisico: IEspacioFisico) {
-        //this.showcreate = false;
         this.showupdate = true;
         this.selectedEspacioFisico = espacioFisico;
     }

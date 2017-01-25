@@ -25,8 +25,8 @@ export class AgendaComponent implements OnInit {
     public elementoActivo: any = { descripcion: null };
     public alertas: String[] = [];
     public fecha: Date;
-    public temp: number = 4;
     showBuscarAgendas: boolean = false;
+    showClonar: boolean = false;
     showAgenda: boolean = true;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private router: Router,
@@ -34,7 +34,7 @@ export class AgendaComponent implements OnInit {
         public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
 
     ngOnInit() {
-        this.modelo.bloques = [];
+        // this.modelo.bloques = [];
         this.bloqueActivo = -1;
     }
 
@@ -60,7 +60,7 @@ export class AgendaComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        this.servicioEspacioFisico.get().subscribe(event.callback);
+        this.servicioEspacioFisico.get({}).subscribe(event.callback);
     }
 
     inicializarPrestacionesBloques(bloque) {
@@ -206,6 +206,7 @@ export class AgendaComponent implements OnInit {
     }
 
     cambioFecha() {
+        // TODO: chequear que la fecha no sea anterior
         this.fecha = new Date(this.modelo.fecha);
         this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
         this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
@@ -436,51 +437,62 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave(isvalid: boolean) {
-        if (isvalid) {
-            let espOperation: Observable<IAgenda>;
-            let prestacionesFormateadas: any[];
-            this.fecha = new Date(this.modelo.fecha);
-            this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-            this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            this.modelo.estado = 'Planificada';
-            let bloques = this.modelo.bloques;
-            bloques.forEach((bloque, index) => {
-                // aca debería cargar el arreglo de turnos
-                bloque.turnos = [];
-                // let simultaneos: number = bloque.pacienteSimultaneos? bloque.cantidadSimultaneos:0;
-                for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                    let turno = {
-                        horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
-                        estado: 'disponible'
+        if (Object.keys(this.modelo).length > 0) {
+            if (isvalid) {
+                let espOperation: Observable<IAgenda>;
+                let prestacionesFormateadas: any[];
+                this.fecha = new Date(this.modelo.fecha);
+                this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+                this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+                this.modelo.estado = 'Planificada';
+                let bloques = this.modelo.bloques;
+                bloques.forEach((bloque, index) => {
+                    // aca debería cargar el arreglo de turnos
+                    bloque.turnos = [];
+                    // let simultaneos: number = bloque.pacienteSimultaneos? bloque.cantidadSimultaneos:0;
+                    for (let i = 0; i < bloque.cantidadTurnos; i++) {
+                        let turno = {
+                            horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
+                            estado: 'disponible'
+                        };
+                        bloque.turnos.push(turno);
                     }
-                    bloque.turnos.push(turno);
-                }
 
-                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
-                bloque.prestaciones = bloque.prestaciones.filter(function (el) {
-                    return el.activo === true;
+                    bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                    bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
+                    bloque.prestaciones = bloque.prestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                    prestacionesFormateadas = [];
+                    prestacionesFormateadas = bloque.prestaciones.map(function (obj) {
+                        let rObj = {};
+                        if (obj.activo) {
+                            rObj['_id'] = obj._id;
+                            rObj['id'] = obj.id;
+                            rObj['nombre'] = obj.nombre;
+                            return rObj;
+                        }
+                    });
+                    bloque.prestaciones = prestacionesFormateadas;
                 });
-                prestacionesFormateadas = [];
-                prestacionesFormateadas = bloque.prestaciones.map(function (obj) {
-                    let rObj = {};
-                    if (obj.activo) {
-                        rObj['_id'] = obj._id;
-                        rObj['id'] = obj.id;
-                        rObj['nombre'] = obj.nombre;
-                        return rObj;
-                    }
+                espOperation = this.ServicioAgenda.save(this.modelo);
+                espOperation.subscribe(resultado => {
+                    this.bloqueActivo = -1;
+                    this.cargarAgenda(resultado);
+                    this.plex.alert('La agenda se guardo correctamente');
                 });
-                bloque.prestaciones = prestacionesFormateadas;
-            });
-            espOperation = this.ServicioAgenda.save(this.modelo);
-            espOperation.subscribe(resultado => {
-                this.bloqueActivo = -1;
-                this.cargarAgenda(resultado);
-                this.plex.alert('La agenda se guardo correctamente');
-            });
-        } else {
-            alert('Complete datos obligatorios');
+            } else {
+                alert('Complete datos obligatorios');
+            }
+        }
+    }
+
+    onClon() {
+        if (Object.keys(this.modelo).length > 0) {
+            this.onSave(true);
+            this.showClonar = true;
+            this.showBuscarAgendas = false;
+            this.showAgenda = false;
         }
     }
 

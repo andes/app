@@ -18,13 +18,14 @@ export class ClonarAgendaComponent implements OnInit {
     private calendario: any = [];
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
-    private click: boolean = false;
-    private agendas: IAgenda[] = [];
-    private agendasFiltradas: IAgenda[] = [];
+    private agendas: IAgenda[] = []; // Agendas del mes seleccionado
+    private agendasPrestaciones: String[] = []; // Ids de Agendas del mes seleccionado con al menos una prestacion en comun con la original
+    private agendasFiltradas: IAgenda[] = []; // Las agendas que hay en el día, cuando se selecciona una fecha para clonar
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
-
+    private original: boolean = true;
+    public danger = 'list-group-item-danger';
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -36,28 +37,34 @@ export class ClonarAgendaComponent implements OnInit {
 
     ngOnInit() {
         // Esto va a cambiar, aca se pasa la agenda que viene de la pantalla anterior
-        this.serviceAgenda.getById('583dbcf713593558cca963aa').subscribe(agenda => {
-            this.agenda = agenda;
-            let inicio = new Date(this.agenda.horaInicio);
-            inicio.setHours(0);
-            this.seleccionados.push(inicio.getTime());
-            this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
-            this.inicioMesDate = this.inicioMesMoment.toDate();
-            this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
-            let params = {
-                // idPrestacion : '5829daa039ad24c49548edf0'
-                fechaDesde: this.inicioMesDate,
-                fechaHasta: this.finMesDate,
-                prestaciones: JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem }))
-            };
-            this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; debugger });
-            this.cargarCalendario();
+        // this.serviceAgenda.getById('583dbcf713593558cca963aa').subscribe(agenda => {
+        //     this.agenda = agenda;
+        //     this.actualizar();
+        // });
+        this.actualizar();
+    }
+
+    private actualizar() {
+        // this.agenda = agenda;
+        let inicio = new Date(this.agenda.horaInicio);
+        inicio.setHours(0);
+        this.seleccionados.push(inicio.getTime());
+        this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
+        this.inicioMesDate = this.inicioMesMoment.toDate();
+        this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
+        let params = {
+            fechaDesde: this.inicioMesDate,
+            fechaHasta: this.finMesDate,
+        };
+        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas });
+        params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            this.agendasPrestaciones = agendas.map(function (ag) { return ag.id; });
         });
+        this.cargarCalendario();
     }
 
     private cargarCalendario() {
-        // let inicio = moment(this.fecha).startOf('month').startOf('week'); this.inicioMesMoment
-        // let inicioD: Date; this.inicioMesDate
         let dia: any = {};
         this.calendario = [];
 
@@ -103,15 +110,19 @@ export class ClonarAgendaComponent implements OnInit {
         } else {
             this.fecha = moment(this.fecha).subtract(1, 'M').toDate();
         }
-        this.cargarCalendario();
+        this.actualizar();
     }
 
     public seleccionar(dia: any) {
         // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
-        if (dia.estado === 'noSeleccionado') {
+        if (dia.original) {
+            this.original = true;
+        } else {
+            this.original = false;
+        }
+        if (dia.estado === 'noSeleccionado' && this.original !== true) {
             dia.estado = 'seleccionado';
             this.seleccionados.push(dia.fecha.getTime());
-            // this.click = true;
             this.agendasFiltradas = this.agendas.filter(
                 function (value) {
                     return (moment(dia.fecha).isSame(moment(value.horaInicio), 'day'));
@@ -119,7 +130,7 @@ export class ClonarAgendaComponent implements OnInit {
             );
         } else {
             this.agendasFiltradas = [];
-            if (dia.original !== true) {
+            if (this.original !== true) {
                 dia.estado = 'noSeleccionado';
                 let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                 this.seleccionados.splice(i, 1);
@@ -172,9 +183,6 @@ export class ClonarAgendaComponent implements OnInit {
                 delete this.agenda.id;
                 operacion = this.serviceAgenda.save(this.agenda);
                 operaciones.push(operacion);
-                // operacion.subscribe(resultado => {
-                //     this.plex.alert('La agenda se clonó correctamente');
-                // });
             }
         });
         Observable.forkJoin(operaciones).subscribe(

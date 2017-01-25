@@ -71,10 +71,11 @@ export class BuscarAgendasComponent implements OnInit {
     }
 
     loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get().subscribe(event.callback);
+        this.serviceEspacioFisico.get({}).subscribe(event.callback);
     }
 
     editarAgenda(agenda: IAgenda) {
+        // TODO: chequear que no me deje editar para algunos estados de la agenda, o para una agenda con fecha anterior?
         this.selected.emit(agenda);
     }
 
