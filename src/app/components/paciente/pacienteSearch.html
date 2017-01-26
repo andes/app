@@ -1,22 +1,113 @@
-<div class="row" *ngIf="pacientesSearch">
-  <div class="col-md-12">
-    <form [formGroup]="searchForm">
-      <plex-box type="success" title="Búsqueda de Pacientes">
-        <div class="col-sm-12">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
-                  placeholder="Lector de documento...">
-              </div>
+<!--<div class="row" *ngIf="pacientesSearch">-->
+<div class="row">
+  <div class="col-md-8">
+    <plex-box type="info" title="Búsqueda de Pacientes">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-md-11" *ngIf="!pacientesSearch">
+            <div class="form-group">
+              <!--<input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
+                  placeholder="Lector de documento...">-->
+              <input type="text" class="form-control" #infoData autofocus=true placeholder="Buscar......" (keyup.enter)="searchInputData(infoData.value)">
             </div>
-            <!--<div class="col-md-3">
-              <div class="form-group">
-                <plex-button icon="account-check" title="verificar" label="Verificar Paciente" type="default" (click)="verifyDocument(infoData.value)"></plex-button>
-              </div>
-          </div>-->
           </div>
-          <div>
+          <div class="col-md-11" *ngIf="pacientesSearch">
+            <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="basic-addon1">DNI:</span>
+                  <input type="text" class="form-control" placeholder="Ingrese..." aria-describedby="basic-addon1">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="basic-addon2">Nombre:</span>
+                  <input type="text" class="form-control" placeholder="Ingrese.." aria-describedby="basic-addon2">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="basic-addon3">Apellido:</span>
+                  <input type="text" class="form-control" placeholder="Ingrese..." aria-describedby="basic-addon3">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group input-group-sm">
+                  <plex-button icon="account-search" title="buscar" label="Buscar" type="default"></plex-button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-sm-1">
+            <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
+          </div>
+        </div>
+      </div>
+    </plex-box>
+    <plex-box type="danger" *ngIf="error">
+       <div class="alert alert-danger" role="alert"> {{mensaje}}</div>
+    </plex-box>
+    <plex-box type="info" title="Grilla de candidatos" *ngIf="pacientesEncontrados" >
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Nombre/s</th>
+              <th>Apellido/s</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Sexo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--<tr>
+                    <td>{{especialidad.codigo? especialidad.codigo.sisa: ''}}</td>
+                            <td>{{especialidad.nombre}}</td>
+                            <td>{{especialidad.disciplina}}</td>
+                            <td>
+                                <plex-bool type="slide" [(ngModel)]="especialidad.activo" label="" name="especialidad.activo" (click)="activate(especialidad)"></plex-bool>
+                            </td>
+                            <td>
+                                <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
+                                </plex-button>
+                            </td>
+                  </tr>-->
+          </tbody>
+        </table>
+      </div>
+    </plex-box>
+  </div>
+  <div class="col-md-4">
+    <plex-box type="info" title="Panel de eventos del sistema">
+      <div class="list-group">
+        <a href="#" class="list-group-item active">Últimas Pacientes encontrados <span class="badge">3</span></a>
+        <a href="#" class="list-group-item">Juan Perez</a>
+        <a href="#" class="list-group-item">Pedro Gomez</a>
+        <a href="#" class="list-group-item">Horacio Martinez</a>
+      </div>
+      <div class="panel panel-warning">
+        <div class="panel-heading">Avisos importantes</div>
+        <div class="panel-body">
+          Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI o Licencia del conductor Nacional
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Recordatorios</div>
+        <div class="panel-body">
+          RECUERDE XXX
+        </div>
+      </div>
+    </plex-box>
+  </div>
+</div>
+<!--<tr>
+      <td>
+        <div class="col-md-8">
+          
+        </div>
+      </td>
+    </tr>-->
+<!--<div>
             <div class="row" ng-show="datosPaciente">
               <div class="col-md-6">
                 <div class="form-group">
@@ -52,12 +143,11 @@
                 <plex-button icon="delete" title="limpiar" label="limpiar" type="default" (click)="limpiarCampos()"></plex-button>
               </div>
             </div>
-          </div>
-        </div>
-      </plex-box>
-    </form>
-    <!--<div class="row">&nbsp;</div>-->
-    <plex-box type="warning" title="Grilla de candidatos">
+          </div>-->
+<!--</div>
+      </plex-box>-->
+<!--<div class="row">&nbsp;</div>-->
+<!--<plex-box type="warning" title="Grilla de candidatos">
       <div class="form_group">
         <div class="form-group">
           <div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
@@ -86,7 +176,7 @@
               </template>
             </p-column>
             <!--<p-column [style]="{'width':'10%'}" header="% de similitud"></p-column>-->
-            <!--<p-column header="Acciones" [style]="{'width':'25%'}">
+<!--<p-column header="Acciones" [style]="{'width':'25%'}">
                             <template let-paciente="rowData" pTemplate type="body">
                                 <button type="button" class="btn btn-sm btn-primary" pButton *ngIf="paciente.activo" (click)="onEdit(paciente)" icon="fa-search">Actualizar</button>
                                 <button type="button" class="btn btn-sm btn-success" *ngIf="paciente.activo" (click)="onDisable(paciente)" pButton
@@ -94,17 +184,15 @@
                                 <button type="button" class="btn btn-sm btn-danger" *ngIf="!paciente.activo" pButton (click)="onEnable(paciente)"
                                     icon="fa fa-check">Habilitar</button>
                             </template>
-                        </p-column>-->
+                        </p-column>
           </p-dataTable>
         </div>
       </div>
-    </plex-box>
-    <div class="clear"></div>
+    </plex-box>-->
+<!--<div class="clear"></div>
     <div class="row">
       <div class="col-md-12">
         <plex-button icon="account-plus" title="Nuevo Paciente" label="Nuevo Paciente" type="danger"></plex-button>
       </div>
     </div>
-    <div class="clear"></div>
-  </div>
-</div>
+    <div class="clear"></div>-->
