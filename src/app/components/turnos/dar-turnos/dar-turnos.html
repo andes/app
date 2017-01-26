@@ -186,7 +186,10 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}} ({{this.paciente.documento}})</div>
-                  <div class="col-md-12"><label>Teléfono: &nbsp;</label><input value="{{telefono}}"></div>
+                  <!--<div class="col-md-12"><label>Teléfono: &nbsp;</label><input [(ngModel)]="paciente.telefono">-->
+                  <div class="col-md-12">
+                    <plex-text [(ngModel)]="telefono"></plex-text>
+                  </div>
                   <br><br>
                   <div class="col-md-6"><br><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
                   <div class="col-md-6"><br><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>

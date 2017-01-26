@@ -6,7 +6,8 @@ export interface ITurno{
         id: String,
         nombre: String,
         apellido: String,
-        documento: String
+        documento: String,
+        telefono: String
     },
     pacientes:  [{
         id: String,

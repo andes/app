@@ -34,7 +34,7 @@ export class DarTurnosComponent implements AfterViewInit {
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
-    private telefono: String = '2994427394';
+    private telefono: String = '';
 
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
@@ -44,13 +44,15 @@ export class DarTurnosComponent implements AfterViewInit {
         'documento': '30403872',
         'apellido': 'Diaz',
         'nombre': 'Ramiro',
-    }
+        'telefono': ''
+    };
+
 
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
 
-    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, 
-    public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
+    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
+        public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
@@ -114,10 +116,10 @@ export class DarTurnosComponent implements AfterViewInit {
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
-            if (this.agenda.turnosDisponibles > 0){
+            if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
             } else {
-            /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
+                /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                 this.estadoT = 'noTurnos';
                 if (this.opciones.prestacion || this.opciones.profesional) {
                     this.serviceAgenda.get({
@@ -153,9 +155,9 @@ export class DarTurnosComponent implements AfterViewInit {
         if (this.agendas) {
             let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (condiciones) {
-                if (suma){
+                if (suma) {
                     this.indice++;
-                } else{
+                } else {
                     this.indice--;
                 }
                 this.agenda = this.agendas[this.indice];
@@ -165,9 +167,9 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     cambiarMes(signo) {
-        if (signo == '+'){
+        if (signo == '+') {
             this.opciones.fecha = moment(this.opciones.fecha).add(1, 'M').toDate();
-        } else{
+        } else {
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
         }
         this.actualizar('');
@@ -180,6 +182,7 @@ export class DarTurnosComponent implements AfterViewInit {
             'documento': '30403872',
             'apellido': 'Diaz',
             'nombre': 'Ramiro',
+            'telefono': this.telefono
         };
 
         if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
@@ -192,7 +195,7 @@ export class DarTurnosComponent implements AfterViewInit {
             } else {
                 estado = 'disponible';
             }
-        } else{
+        } else {
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         }
 
