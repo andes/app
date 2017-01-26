@@ -12,11 +12,12 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class PacienteService {
 
-   private pacienteUrl = AppSettings.API_ENDPOINT +'/paciente';  // URL to web api
-   private pacienteUrlSearch = AppSettings.API_ENDPOINT +'/paciente/search';  // URL to web api
+   private pacienteUrl = AppSettings.API_ENDPOINT +'/core/mpi/pacientes';  // URL to web api
+   private pacienteUrlSearch = AppSettings.API_ENDPOINT +'/core/mpi/pacientes/search';  // URL to web api
    constructor(private http: Http) {}
 
    get(): Observable<IPaciente[]> {
+       debugger;
        return this.http.get(this.pacienteUrl)
            .map((res:Response) => res.json())
            .catch(this.handleError); //...errors if any*/
