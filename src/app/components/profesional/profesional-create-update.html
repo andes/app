@@ -58,48 +58,58 @@
             <div class="row">
                 <div class="col-md-12">
                     <plex-box type="warning" title="Matrículas" formArrayName="matriculas">
-                        <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
-                            <div class="panel-heading">
-                                <div align="right" *ngIf="createForm.controls.matriculas.controls.length > 1" (click)="removeMatricula(i)">
-                                    <i class="glyphicon glyphicon-remove-circle"></i>
-                                </div>
-                            </div>
-                            <div class="panel-body" [formGroupName]="i">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <plex-text label="Número Matrícula" formControlName="numero">
-                                        </plex-text>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <plex-datetime label="Fecha Inicio" type="date" formControlName="fechaInicio">
-                                        </plex-datetime>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <plex-datetime label="Fecha Vencimiento" type="date" formControlName="fechaVencimiento">
-                                        </plex-datetime>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <plex-text label="Descripción" formControlName="descripcion">
-                                        </plex-text>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <plex-bool formControlName="activo" label="Vigente"></plex-bool>
-                                    </div>
-                                </div>
+                        <!-- <div *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="panel panel-default">
 
-                            </div>
-                        </div>
+
+            
+
+
+                            <div class="panel-body" [formGroupName]="i">-->
+                        <table *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="table table-striped">
+                            <tr [formGroupName]="i">
+                                <td>
+                                    <plex-text label="Número Matrícula" formControlName="numero">
+                                    </plex-text>
+                                </td>
+                                <td>
+                                    <plex-datetime label="Fecha Inicio" type="date" formControlName="fechaInicio">
+                                    </plex-datetime>
+                                </td>
+                                <td>
+                                    <plex-datetime label="Fecha Vencimiento" type="date" formControlName="fechaVencimiento">
+                                    </plex-datetime>
+                                </td>
+
+
+                                <td>
+                                    <plex-text label="Descripción" formControlName="descripcion">
+                                    </plex-text>
+                                </td>
+
+                                <td>
+                                    <label>Vigente</label>
+                                    <plex-bool type="slide" formControlName="activo"></plex-bool>
+                                </td>
+                                <td *ngIf="createForm.controls.matriculas.controls.length > 1">
+                                    <label>Borrar</label>
+                                    <plex-button class="warning" icon="delete" (click)="removeMatricula(i)">
+                                    </plex-button>
+                                </td>
+
+                            </tr>
+                        </table>
+                        <!-- </div> -->
+
+
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="margin-20">
-                                    <plex-button label="Agregar Matrícula" icon="add circle outline" (click)="addMatricula()"></plex-button>
+                                    <plex-button type="primary" label="Agregar Matrícula" icon="add circle outline" (click)="addMatricula()"></plex-button>
                                 </div>
                             </div>
                         </div>
+                        <!--    </div> -->
                     </plex-box>
                 </div>
             </div>
@@ -109,35 +119,41 @@
             <div class="row">
                 <div class="col-sm-12">
                     <plex-box type="warning" title="Contacto" formArrayName="contacto">
-                        <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
-                            <div class="panel-heading">
-                                <div align="right" *ngIf="createForm.controls.contacto.controls.length > 1" (click)="removeContacto(i)">
-                                    <i class="glyphicon glyphicon-remove-circle"></i>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row" [formGroupName]="i">
-                                    <div class="col-md-4">
-                                        <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo:">
-                                        </plex-select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <plex-text label="Dato:" formControlName="valor">
-                                        </plex-text>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <plex-int label="Orden:" formControlName="ranking">
-                                        </plex-int>
-                                    </div>
-                                    <div class="col-md-2"> <br>
-                                        <plex-bool formControlName="activo" label="Activo"></plex-bool>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <table *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default table table-striped">
+                            <tr [formGroupName]="i">
+                                <td>
+                                    <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo">
+                                    </plex-select>
+                                </td>
+                                <td>
+                                    <plex-text label="Dato" formControlName="valor">
+                                    </plex-text>
+                                </td>
+                                <td>
+                                    <plex-int label="Orden" formControlName="ranking">
+                                    </plex-int>
+                                </td>
+
+                                <td>
+                                    <label>Activo</label><br>
+                                    <plex-bool type="slide" formControlName="activo"></plex-bool>
+                                </td>
+                                <td *ngIf="createForm.controls.contacto.controls.length > 1">
+                                    <label>Borrar</label><br>
+                                    <plex-button icon="delete" (click)="removeContacto(i)">
+                                    </plex-button>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+
+
+
                         <div class="row">
                             <div class="col-md-6">
-                                <plex-button label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                                <plex-button type="primary" label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
                             </div>
                         </div>
                     </plex-box>
@@ -145,21 +161,44 @@
             </div>
             <div class="row">&nbsp;</div>
             <plex-box type="warning" title="Dirección" formArrayName="direccion">
-                <plex-button label="Agregar Dirección" icon="add circle outline" (click)="addDireccion()"></plex-button>
-                <div *ngFor="let dir of createForm.controls.direccion.controls; let i=index">
-                    <div [formGroupName]="i">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
-                                </plex-text>
-                            </div>
-                            <div class="col-md-4">
-                                <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
-                                </plex-text>
-                            </div>
-                        </div>
-                        <div class="row">&nbsp;</div>
+                <table *ngFor="let dir of createForm.controls.direccion.controls; let i=index" class="panel panel-default table table-striped">
+                    <tr [formGroupName]="i">
+
+                        <td>
+                            <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
+                            </plex-text>
+                        </td>
+                        <td>
+                            <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
+                            </plex-text>
+                        </td>
+
                         <div formGroupName="ubicacion">
+
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Pais" formControlName="pais" (get-data)="loadPaises($event)" label="País:">
+                                </plex-select>
+                            </td>
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (get-data)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
+                                </plex-select>
+                            </td>
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (get-data)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
+                                    label="Localidad:">
+                                </plex-select>
+                            </td>
+
+                        </div>
+                        <td>
+                            <label>Activo</label>
+                            <plex-bool type="slide" formControlName="activo"></plex-bool>
+                        </td>
+                    </tr>
+                </table>
+                 <plex-button type="primary" label="Agregar Dirección" icon="add circle outline" (click)="addDireccion()"></plex-button>
+               
+                <!--<div formGroupName="ubicacion">
                             <div class="row">
                                 <div class="col-md-4">
                                     <plex-select formControlName="pais" (get-data)="loadPaises($event)" label="País:">
@@ -182,7 +221,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </plex-box>
             <div class="row">&nbsp;</div>
             <div align="right" class="row">
