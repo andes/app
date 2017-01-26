@@ -65,7 +65,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get().subscribe(event.callback);
+        this.serviceEspacioFisico.get({}).subscribe(event.callback);
     }
 
     verAgenda(agenda) {
