@@ -1,269 +1,230 @@
-<div class="col-sm-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">Alta de Pacientes</div>
-        <div class="panel-body">
-            <form [formGroup]="createForm">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Nombre:</label>
-                            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                            <label class="control-label text-danger" *ngIf="!createForm.controls.nombre.valid">
-                                (*)</label>
-                        </div>
+<div class="row">
+  <form [formGroup]="createForm">
+    <div class="col-md-8">
+      <plex-box type="sucess" title="Alta de Pacientes">
+        <plex-tabs>
+          <plex-tab icon="account" >
+          <plex-box type="warning"  title="Datos básicos">
+            <div class="row">
+              <div class="col-sm-4">
+                <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
+                </plex-text>
+              </div>
+              <div class="col-sm-4">
+                <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
+                </plex-text>
+              </div>
+              <div class="col-sm-4">
+                <plex-text label="Alias" formControlName="alias" placeholder="Ingrese alias...">
+                </plex-text>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <plex-int label="Número de Documento" formControlName="documento" placeholder="Ingresar DNI...">
+                </plex-int>
+              </div>
+              <div class="col-md-4">
+                <plex-datetime label="Fecha de Nacimiento" type="date" formControlName="fechaNacimiento">
+                </plex-datetime>
+              </div>
+              <div class="col-md-4">
+                <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." label="Sexo:">
+                </plex-select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Género:">
+                </plex-select>
+              </div>
+              <div class="col-md-4">
+                <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
+                </plex-select>
+              </div>
+            </div>
+          </plex-box>
+          </plex-tab>
+          <plex-tab icon="contact-mail" title="Datos de contacto">
+            <plex-box type="warning" title="Contacto" formArrayName="contacto">
+              <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
+                <div class="panel-heading">
+                  <div align="right" *ngIf="createForm.controls.contacto.controls.length > 1" (click)="removeContacto(i)">
+                    <i class="glyphicon glyphicon-remove-circle"></i>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="row" [formGroupName]="i">
+                    <div class="col-md-4">
+                      <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo:">
+                      </plex-select>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Apellido:</label>
-                            <input type="text" class="form-control" formControlName="apellido" placeholder="Ingrese apellido...">
+                    <div class="col-md-4">
+                      <plex-text label="Dato:" formControlName="valor">
+                      </plex-text>
+                    </div>
+                    <div class="col-md-2">
+                      <plex-int label="Orden:" formControlName="ranking">
+                      </plex-int>
+                    </div>
+                    <div class="col-md-2"> <br>
+                      <plex-bool formControlName="activo" label="Activo"></plex-bool>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <plex-button label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                </div>
+              </div>
+            </plex-box>
+            <div class="row">&nbsp;</div>
+            <plex-box type="warning" title="Dirección" formArrayName="direccion">
+              <div *ngFor="let dir of createForm.controls.direccion.controls; let i=index">
+                <div class="panel-heading">
+                  <div align="right" *ngIf="createForm.controls.direccion.controls.length > 1" (click)="removeDireccion(i)">
+                    <i class="glyphicon glyphicon-remove-circle"></i>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="row" [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
+                        </plex-text>
+                      </div>
+                      <div class="col-md-4">
+                        <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
+                        </plex-text>
+                      </div>
+                    </div>
+                    <div class="row">&nbsp;</div>
+                    <div formGroupName="ubicacion">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <plex-select formControlName="pais" (get-data)="loadPaises($event)" label="País:">
+                          </plex-select>
+                        </div>
+                        <div class="col-md-4">
+                          <plex-select formControlName="provincia" (get-data)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
+                          </plex-select>
+                        </div>
+                        <div class="col-md-4">
+                          <plex-select formControlName="localidad" (get-data)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:">
+                          </plex-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-2">
+                        <plex-bool formControlName="activo" label="Activo"></plex-bool>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <plex-button label="Agregar Dirección" icon="add circle outline" (click)="addDireccion()"></plex-button>
+                </div>
+              </div>
+            </plex-box>
 
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Alias:</label>
-                            <input type="text" class="form-control" formControlName="alias" placeholder="Ingrese alias...">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label> Documento: </label>
-                        <input type="number" class="form-control" formControlName="documento" placeholder="Ingresar DNI...">
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Fecha de Nacimiento: </label>
-                        <input type="date" class="form-control" formControlName="fechaNacimiento" placeholder="Ingresar Fecha de Nacimiento...">
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Estado: </label>
-                        <select class="form-control" formControlName="estado">
-                            <option value="">...</option>
-                            <option *ngFor="let estado of estados" >{{estado}}</option>
-                        </select>
-                        <label class="control-label text-danger" *ngIf="!createForm.controls.estado.valid">
-                                (*)</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label> Sexo: </label>
-                        <select class="form-control" formControlName="sexo">
-                            <option value="">...</option>
-                            <option *ngFor="let sexo of sexos" >{{sexo}}</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Genero: </label>
-                        <select class="form-control" formControlName="genero">
-                            <option value="">...</option>
-                            <option *ngFor="let genero of generos" >{{genero}}</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label> Estado Civil: </label>
-                        <select class="form-control" formControlName="estadoCivil">
-                            <option value="">...</option>
-                            <option *ngFor="let estCivil of estadosCiviles" >{{estCivil}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div class="panel panel-default" formArrayName="contacto">
-                    <div class="panel-heading"> Contactos </div>
-                    <div class="panel-body">
-                        <div class="list-group" *ngFor="let co of createForm.controls.contacto.controls; let i=index">
-                            <div class="row list-group-item" [formGroupName]="i">
-                                <span class="badge" (click)="removeContacto(i)">x</span>
-                                <div class="col-sm-4">
-                                    <label> Tipo: </label>
-                                    <select class="form-control" formControlName="tipo">
-                                        <option value="">...</option>
-                                        <option *ngFor="let tipo of tiposContactos" >{{tipo}}</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label> Dato: </label>
-                                    <input type="text" class="form-control" formControlName="valor">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label> Orden: </label>
-                                    <input type="number" class="form-control" formControlName="ranking">
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <a (click)="addContacto()" style="cursor: default">Agregar Contacto +</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div class="panel panel-default" formArrayName="direccion">
-                    <div class="panel-heading"> Dirección </div>
-                    <div class="panel-body" *ngFor="let dir of createForm.controls.direccion.controls; let i=index">
-                        <div [formGroupName]="i">
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <label> Detalle de Domicilio: </label>
-                                    <input type="text" class="form-control" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3....">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label> CP: </label>
-                                    <input type="text" class="form-control" formControlName="codigoPostal" placeholder="Ingrese CP...">
-                                </div>
-                            </div>
-                            <div formGroupName="ubicacion">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label> País: </label>
-                                        <select class="form-control" formControlName="pais" #pais (change)="filtrarProvincias(pais.selectedIndex)">
-                                        <option [ngValue]="">Seleccione...</option>
-                                        <option *ngFor="let pais of paises" [ngValue]="pais">{{pais.nombre}}</option>
-                                    </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label> Provincia: </label>
-                                        <select class="form-control" formControlName="provincia" #provincia (change)="filtrarLocalidades(provincia.selectedIndex)"> 
-                                            <option value="">...</option>
-                                            <option *ngFor="let provincia of provincias" [ngValue]="provincia">{{provincia.nombre}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label> Localidad: </label>
-                                        <select class="form-control" formControlName="localidad">
-                                            <option value="">...</option>
-                                            <option *ngFor="let localidad of localidades" [ngValue]="localidad">{{localidad.nombre}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div class="panel panel-default" formArrayName="financiador">
-                    <div class="panel-heading"> Financiador </div>
-                    <div class="panel-body">
-                        <div class="list-group" *ngFor="let fi of createForm.controls.financiador.controls; let i=index">
-                            <div class="row list-group-item" [formGroupName]="i">
-                                <span class="badge" (click)="removeFinanciador(i)">x</span>
-                                <div class="col-sm-4">
-                                    <label> Obra Social: </label>
-                                    <select class="form-control" formControlName="entidad">
-                                        <option value="">...</option>
-                                        <option *ngFor="let obraSocial of obrasSociales" [ngValue]="obraSocial" >{{obraSocial.nombre}}</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label> Fecha Alta: </label>
-                                    <input type="date" class="form-control" formControlName="fechaAlta">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label> Orden: </label>
-                                    <input type="number" class="form-control" formControlName="ranking">
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" formControlName="activo" checked="checked">Activo</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6">
-                                <a (click)="addFinanciador()" style="cursor: default">Agregar Obra Social +</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div class="panel panel-default">
-                    <div class="panel-heading"> Relaciones </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label> Relación: </label>
-                                <select id="relRelacion" class="form-control">
-                                        <option value="">...</option>
-                                        <option *ngFor="let rt of relacionTutores" [ngValue]="rt" >{{rt}}</option>
-                                    </select>
-                                <span class="red" *ngIf="showCargar">*</span>
-                            </div>
-                            <div class="col-sm-4">
-                                <label> Apellido: </label>
-                                <input type="text" id="relApellido" class="form-control">
-                                <span class="red" *ngIf="showCargar">*</span>
-                            </div>
-                            <div class="col-sm-4">
-                                <label> Nombre: </label>
-                                <input type="text" id="relNombre" class="form-control">
-                                <span class="red" *ngIf="showCargar">*</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label> Documento: </label>
-                                <input type="number" id="relDocumento" class="form-control">
-                                <span class="red" *ngIf="showCargar">*</span>
-                            </div>
-                            <div class="col-sm-3"><br>
-                                <input type="button" class="btn btn-sm btn-primary" (click)="buscarPacRelacionado()" value="Buscar">
-                                <input type="button" class="btn btn-sm btn-success" (click)="cargarDatos()" *ngIf="showCargar" value="Cargar">
-                            </div>
-                        </div>
-                        <div class="row">&nbsp;</div>
-                        <div class="row">
-                            <div class="form-group" [ngClass]="{'has-error':error}">
-                                <div class="alert alert-danger" *ngIf="error"> {{mensaje}}</div>
-                            </div>
-                        </div>
-                        <div class="row center">
-                            <div class="col-sm-10">
-                                <ul class="list-group">
-                                    <li *ngFor="let paciente of pacRelacionados" class="list-group-item">
-                                        ({{paciente.documento}}) - {{paciente.nombreCompleto}} / {{paciente.fechaNacimiento | date:"dd/MM/yyyy"}}
-                                        <span class="badge success" (click)="validar(paciente)"> 
-                                               <i class="glyphicon glyphicon-ok"></i> </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">&nbsp;</div>
-                        <div class="row"></div>
-                        <div class="row center">
-                            <div class="col-sm-10" formArrayName="relaciones">
-                                <ul class="list-group" *ngFor="let rel of createForm.controls.relaciones.controls; let i=index">
-                                    <li [formGroupName]="i" class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-sm-3"><input type="text" class="form-control" formControlName="relacion"></div>
-                                            <div class="col-sm-4"><input type="text" class="form-control" formControlName="documento"></div>
-                                            <div class="col-sm-4"> <input type="text" class="form-control" formControlName="nombre"></div>
-                                            <div class="col-sm-1 rigth"><span class="badge" (click)="removeRelacion(i)"> x </span></div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
 
+          </plex-tab>
+          <plex-tab icon="cards" title="Datos Financiador">
+            <plex-box type="warning" title="Financiador" formArrayName="financiador">
+              <div *ngFor="let fi of createForm.controls.financiador.controls; let i=index" class="panel panel-default">
+                <div class="panel-heading">
+                  <div align="right" *ngIf="createForm.controls.financiador.controls.length > 1" (click)="removeFinanciador(i)">
+                    <i class="glyphicon glyphicon-remove-circle"></i>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="row" [formGroupName]="i">
+                    <div class="col-md-4">
+                      <plex-select formControlName="entidad" [data]="obrasSociales" placeholder="Seleccione..." label="Obra Social:">
+                      </plex-select>
                     </div>
-                </div>
-                <div class="row">&nbsp;</div>
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <button class="btn btn-primary" type="submit" (click)="onSave(createForm.value, createForm.valid)">Guardar</button>
-                        <button class="btn btn-default" type="submit" (click)="onCancel()">Cancelar</button></div>
+                    <div class="col-md-4">
+                      <plex-datetime label="Fecha Alta" type="date" formControlName="fechaAlta">
+                      </plex-datetime>
+                    </div>
+                    <div class="col-md-4">
+                      <plex-int label="Orden:" formControlName="ranking">
+                      </plex-int>
+                    </div>
+                    <div class="col-md-2"> <br>
+                      <plex-bool formControlName="activo" label="Activo"></plex-bool>
+                    </div>
+                  </div>
                 </div>
-            </form>
-        </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <plex-button label="Agregar Obra Social" icon="add circle outline" (click)="addFinanciador()"></plex-button>
+                </div>
+              </div>
+            </plex-box>
+
+          </plex-tab>
+          <plex-tab icon="account-multiple" title="Datos Familiares">
+            <plex-box type="warning" title="Datos Familiares">
+              <div class="panel-body">
+              <div class="row">
+                  <div class="col-md-4">
+                    <plex-select formControlName="relRelacion" [data]="relacionTutores" placeholder="Seleccione..." label="Relación:">
+                    </plex-select>
+                  </div>
+              </div>
+            </div>
+            </plex-box>
+
+          </plex-tab>
+
+
+        </plex-tabs>
+
+      </plex-box>
     </div>
+
+    <div class="col-md-4">
+      <plex-box type="info" title="Checkout">
+        <div class="row">
+          <div class="col-md-4">
+            <label>Nombre</label>
+            <div class="row">
+              <div class="col-md-4">{{createForm.value.nombre}}</div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Apellido</label>
+            <div class="row">
+              <div class="col-md-4">{{createForm.value.apellido}}</div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>D.N.I.</label>
+            <div class="row">
+              <div class="col-md-4">{{createForm.value.documento}}</div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+
+      </plex-box>
+
+    </div>
+  </form>
 </div>

@@ -1,4 +1,5 @@
 import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from './../../interfaces/IDireccion';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IPais } from './../../interfaces/IPais';
@@ -22,20 +23,21 @@ import { IProvincia } from './../../interfaces/IProvincia';
     templateUrl: 'paciente-create.html'
 })
 export class PacienteCreateComponent implements OnInit {
-
+    @Input('seleccion') seleccion: IPaciente;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     createForm: FormGroup;
     estados = [];
-    sexos = [];
-    generos = [];
+    sexos : any [];
+    generos :any [];
+    estadosCiviles : any [];
+    tipoComunicacion : any [];
     relacionTutores = [];
-    estadosCiviles = [];
-    tiposContactos = [];
+
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
-    todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
+    todasProvincias: IProvincia[] = [];
     todasLocalidades: ILocalidad[] = [];
     showCargar: boolean;
     error: boolean = false;
@@ -44,54 +46,52 @@ export class PacienteCreateComponent implements OnInit {
     obrasSociales: IFinanciador[] = [];
     pacRelacionados = [];
 
-    constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
-        private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService,
-        private BarrioService: BarrioService, private pacienteService: PacienteService,
+    constructor(private formBuilder: FormBuilder,
+        private paisService: PaisService,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
+        private BarrioService: BarrioService,
+        private pacienteService: PacienteService,
         private financiadorService: FinanciadorService) { }
 
     ngOnInit() {
 
-        //CArga de combos
-        this.PaisService.get().subscribe(resultado => { this.paises = resultado });
-        this.ProvinciaService.get("").subscribe(resultado => { this.todasProvincias = resultado });
-        this.LocalidadService.get("").subscribe(resultado => { this.todasLocalidades = resultado });
-        this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
-
+        // //Se cargan los combos
+        this.financiadorService.get().subscribe(resultado => {this.obrasSociales = resultado});
+        //Se cargan los enumerados
         this.showCargar = false;
-        this.sexos = enumerados.getSexo();
-        this.generos = enumerados.getGenero();
-        this.estadosCiviles = enumerados.getEstadoCivil();
-        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        this.relacionTutores = enumerados.getRelacionTutor();
+        this.relacionTutores = enumerados.getRelacionTutor(); debugger;
+
+        //Se verifican los datos en la seleccion
+        let nombre = this.seleccion ? this.seleccion.nombre : '';
+        let apellido = this.seleccion ? this.seleccion.apellido : '';
+        let alias = this.seleccion ? this.seleccion.alias : '';
+        let documento = this.seleccion ? this.seleccion.documento : '';
+        let fechaNac = this.seleccion ? this.seleccion.fechaNacimiento : null;
+        let sexoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
+        let generoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
+        let estadoCivilSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
 
         this.createForm = this.formBuilder.group({
-            nombre: ['', Validators.required],
-            apellido: [''],
-            alias: [''],
-            documento: [''],
-            fechaNacimiento: [],
+            nombre: [nombre, Validators.required],
+            apellido: [apellido, Validators.required],
+            alias: [alias,Validators.required],
+            documento: [documento,Validators.required],
+            fechaNacimiento: [fechaNac,Validators.required],
             estado: ['', Validators.required],
-            sexo: [''],
-            genero: [''],
-            estadoCivil: [''],
+            sexo: [sexoSelected],
+            genero: [generoSelected],
+            estadoCivil: [estadoCivilSelected],
             contacto: this.formBuilder.array([
+              this.iniContacto(1)
             ]),
             direccion: this.formBuilder.array([
-                this.formBuilder.group({
-                    valor: [''],
-                    ubicacion: this.formBuilder.group({
-                        pais: [''],
-                        provincia: [''],
-                        localidad: [''],
-                        barrio: ['']
-                    }),
-                    ranking: [1],
-                    codigoPostal: [''],
-                    latitud: [''],
-                    longitud: [''],
-                    activo: [true]
-                })
+                this.iniDireccion()
             ]),
             financiador: this.formBuilder.array([
             ]),
@@ -102,7 +102,7 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     iniContacto(rank: Number) {
-        // Inicializa contacto
+        // Inicializa los datos del contacto
         let cant = 0;
         let fecha = new Date();
         return this.formBuilder.group({
@@ -138,15 +138,96 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     addContacto() {
-        // agrega formMatricula 
         const control = <FormArray>this.createForm.controls['contacto'];
         control.push(this.iniContacto(control.length));
     }
 
     removeContacto(i: number) {
-        // elimina formMatricula
         const control = <FormArray>this.createForm.controls['contacto'];
         control.removeAt(i);
+    }
+
+    iniDireccion(unaDireccion?: IDireccion) {
+        // Inicializa Direccion
+        //debugger;
+        var myPais;
+        var myProvincia;
+        var myLocalidad;
+        if (unaDireccion) {
+            if (unaDireccion.ubicacion) {
+                if (unaDireccion.ubicacion.pais) {
+                    myPais = unaDireccion.ubicacion.pais;
+                    if (unaDireccion.ubicacion.provincia) {
+                        this.provincias = this.todasProvincias.filter((p) => p.pais.id == myPais.id);
+                        myProvincia = unaDireccion.ubicacion.provincia;
+                        if (unaDireccion.ubicacion.localidad) {
+                            this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == myProvincia.id);
+                            myLocalidad = unaDireccion.ubicacion.localidad;
+                        }
+                    }
+                }
+            }
+
+            return this.formBuilder.group({
+                valor: [unaDireccion.valor],
+                ubicacion: this.formBuilder.group({
+                    pais: [myPais],
+                    provincia: [myProvincia],
+                    localidad: [myLocalidad]
+                }),
+                ranking: [unaDireccion.ranking],
+                codigoPostal: [unaDireccion.codigoPostal],
+                ultimaActualizacion: [unaDireccion.ultimaActualizacion],
+                activo: [unaDireccion.activo]
+            })
+        } else {
+            return this.formBuilder.group({
+                valor: [''],
+                ubicacion: this.formBuilder.group({
+                    pais: [''],
+                    provincia: [''],
+                    localidad: ['']
+                }),
+                ranking: [1],
+                codigoPostal: [''],
+                ultimaActualizacion: [''],
+                activo: [true]
+            })
+        }
+    }
+
+    addDireccion(unaDireccion?) {
+        // agrega una Direccion al array de direcciones
+        const control = <FormArray>this.createForm.controls['direccion'];
+        control.push(this.iniDireccion(unaDireccion));
+    }
+
+    loadDirecciones() {
+        this.seleccion.direccion.forEach(element => {
+            this.addDireccion(element);
+        });
+    }
+
+    removeDireccion(indice: number) {
+        const control = <FormArray>this.createForm.controls['direccion'];
+        control.removeAt(indice);
+    }
+
+    /*Código de filtrado de combos*/
+    loadPaises(event) {
+        this.paisService.get().subscribe(event.callback);
+    }
+
+    loadProvincias(event, pais) {
+        debugger;
+        console.log("pais " + pais.value.id);
+        this.provinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
+    }
+
+    loadLocalidades(event, provincia) {
+        debugger;
+        console.log("provincia " + provincia.value.id);
+        this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
     }
 
     onSave(model: IPaciente, isvalid: boolean) {
