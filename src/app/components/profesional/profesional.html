@@ -1,64 +1,69 @@
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
-        <plex-box type="" title="Profesionales">
+        <!--<plex-box type="" title="">-->
             <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-            <form [formGroup]="searchForm">
-                <div class="row">
-                    <div class="col-md-4">
-                        <plex-int formControlName="documento" label="documento:" placeholder="Ingrese numero de Documento..."></plex-int>
+            <plex-box type="" title="Profesionales">
+                <form [formGroup]="searchForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <plex-int formControlName="documento" label="Documento" placeholder="Ingrese numero de Documento..."></plex-int>
+                        </div>
+                        <div class="col-md-4">
+                            <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
+                        </div>
+                        <div class="col-md-4">
+                            <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre..."></plex-text>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <plex-text formControlName="apellido" label="Apellido:" placeholder="Filtrar por apellido..."></plex-text>
-                    </div>
-                    <div class="col-md-4">
-                        <plex-text formControlName="nombre" label="Nombre:" placeholder="Filtrar por nombre..."></plex-text>
-                    </div>
+                </form>
+                <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
+            </plex-box>
+            <plex-box type="" title="">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Documento</th>
+                                <th>Activo</th>
+                                <th>Actualizar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let profesional of datos">
+                                <td>{{profesional.apellido}}</td>
+                                <td>{{profesional.nombre}}</td>
+                                <td>{{profesional.documento}}</td>
+                                <td>
+                                    <plex-bool type="slide" [(ngModel)]="profesional.activo" label="" name="profesional.activo" (click)="Activo(profesional)"></plex-bool>
+                                </td>
+                                <td>
+                                    <plex-button type="primary" label="Actualizar" (click)="onEdit(profesional)">
+                                    </plex-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
-            <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
-                            <th>Documento</th>
-                            <th>Activo</th>
-                            <th>Actualizar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let profesional of datos">
-                            <td>{{profesional.apellido}}</td>
-                            <td>{{profesional.nombre}}</td>
-                            <td>{{profesional.documento}}</td>
-                            <td>
-                                <plex-bool type="slide" [(ngModel)]="profesional.activo" label="" name="profesional.activo" (click)="Activo(profesional)"></plex-bool>
-                            </td>
-                            <td>
-                                <plex-button type="primary" label="Actualizar" (click)="onEdit(profesional)">
-                                </plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <plex-loader *ngIf="loader"></plex-loader>
-            <div *ngIf="finScroll" class="alert alert-warning">
-                <p style="text-align: center;"> No se encontraron más resultados </p> <!-- pasar a un componente de plex -->
-            </div>
-        </plex-box>
+                <plex-loader *ngIf="loader"></plex-loader>
+                <div *ngIf="finScroll" class="alert alert-warning">
+                    <p style="text-align: center;"> No se encontraron más resultados </p>
+<!-- pasar a un componente de plex -->
+</div>
+</plex-box>
+<!--</plex-box>-->
+</div>
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
     </div>
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
-        </div>
+</div>
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
     </div>
-    <div class="col-sm-12" *ngIf="showupdate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
-        </div>
-    </div>
+</div>
 </div>
