@@ -10,7 +10,7 @@
     <table *ngIf="calendario" class="table table-striped">
       <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" class="text-center" [ngClass]="{'bg-primary primary': (day.estado == 'seleccionado') && (day.original == false),
-        'bg-success success': (day.estado == 'seleccionado') && (day.original == true) ,'hover': true}" (click)="seleccionar(day)">
+        'bg-success success': day.original == true ,'hover': true}" (click)="seleccionar(day)">
           <div>{{ day.fecha | date:"d" }}</div>
           <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
           <div>

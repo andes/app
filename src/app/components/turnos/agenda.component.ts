@@ -34,7 +34,7 @@ export class AgendaComponent implements OnInit {
         public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
 
     ngOnInit() {
-        // this.modelo.bloques = [];
+        this.modelo.bloques = [];
         this.bloqueActivo = -1;
     }
 
@@ -97,7 +97,6 @@ export class AgendaComponent implements OnInit {
                 bloque.titulo = inicio.getHours() + ':' + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + '-' +
                     fin.getHours() + ':' + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
             }
-
             if (bloque.cantidadTurnos) {
                 bloque.accesoDirectoDelDia ? bloque.accesoDirectoDelDiaPorc = Math.floor
                     ((bloque.accesoDirectoDelDia * 100) / bloque.cantidadTurnos) : bloque.accesoDirectoDelDiaPorc = 0;
@@ -429,14 +428,15 @@ export class AgendaComponent implements OnInit {
             auxiliar = new Date(fecha1);
             horas = fecha2.getHours();
             minutes = fecha2.getMinutes();
-            auxiliar.setHours(horas, minutes);
+            //Date.setHours(hour, min, sec, millisec)
+            auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
         } else {
             return null;
         }
     }
 
-    onSave(isvalid: boolean) {
+    onSave(isvalid: boolean, clonar: boolean) {
         if (Object.keys(this.modelo).length > 0) {
             if (isvalid) {
                 let espOperation: Observable<IAgenda>;
@@ -480,6 +480,11 @@ export class AgendaComponent implements OnInit {
                     this.bloqueActivo = -1;
                     this.cargarAgenda(resultado);
                     this.plex.alert('La agenda se guardo correctamente');
+                    if (clonar) {
+                        this.showClonar = true;
+                        this.showBuscarAgendas = false;
+                        this.showAgenda = false;
+                    }
                 });
             } else {
                 alert('Complete datos obligatorios');
@@ -489,10 +494,7 @@ export class AgendaComponent implements OnInit {
 
     onClon() {
         if (Object.keys(this.modelo).length > 0) {
-            this.onSave(true);
-            this.showClonar = true;
-            this.showBuscarAgendas = false;
-            this.showAgenda = false;
+            this.onSave(true, true);
         }
     }
 

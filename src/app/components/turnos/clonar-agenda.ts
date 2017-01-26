@@ -25,6 +25,7 @@ export class ClonarAgendaComponent implements OnInit {
     private inicioMesDate;
     private finMesDate;
     private original: boolean = true;
+    private inicioAgenda: Date;
     public danger = 'list-group-item-danger';
     @Input('agenda')
     set agenda(value: any) {
@@ -36,19 +37,20 @@ export class ClonarAgendaComponent implements OnInit {
     constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 
     ngOnInit() {
-        // Esto va a cambiar, aca se pasa la agenda que viene de la pantalla anterior
+        // Cableado
         // this.serviceAgenda.getById('583dbcf713593558cca963aa').subscribe(agenda => {
         //     this.agenda = agenda;
         //     this.actualizar();
         // });
+        this.inicioAgenda = new Date(this.agenda.horaInicio);
+        this.inicioAgenda.setHours(0, 0, 0, 0);
         this.actualizar();
     }
 
     private actualizar() {
-        // this.agenda = agenda;
-        let inicio = new Date(this.agenda.horaInicio);
-        inicio.setHours(0);
-        this.seleccionados.push(inicio.getTime());
+        if (this.seleccionados.indexOf(this.inicioAgenda.getTime()) < 0) {
+            this.seleccionados.push(this.inicioAgenda.getTime());
+        }
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
@@ -56,7 +58,7 @@ export class ClonarAgendaComponent implements OnInit {
             fechaDesde: this.inicioMesDate,
             fechaHasta: this.finMesDate,
         };
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas });
+        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
         this.serviceAgenda.get(params).subscribe(agendas => {
             this.agendasPrestaciones = agendas.map(function (ag) { return ag.id; });
@@ -76,6 +78,8 @@ export class ClonarAgendaComponent implements OnInit {
                 this.inicioMesDate = this.inicioMesMoment.toDate();
                 let indice = -1;
                 if (this.seleccionados) {
+                    console.log('seleccionados ', this.seleccionados);
+                    console.log('aaa', this.inicioMesDate.getTime());
                     indice = this.seleccionados.indexOf(this.inicioMesDate.getTime());
                 }
                 if (indice >= 0) {
@@ -148,7 +152,7 @@ export class ClonarAgendaComponent implements OnInit {
             auxiliar = new Date(fecha1);
             horas = fecha2.getHours();
             minutes = fecha2.getMinutes();
-            auxiliar.setHours(horas, minutes);
+            auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
         } else {
             return null;
