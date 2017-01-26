@@ -13,8 +13,6 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 })
 
 export class BuscarAgendasComponent implements OnInit {
-    constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder) { }
 
     public modelo: any = {};
     public prestaciones: any = [];
@@ -28,6 +26,9 @@ export class BuscarAgendasComponent implements OnInit {
     selected: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
 
     searchForm: FormGroup;
+
+    constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
+        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -52,7 +53,7 @@ export class BuscarAgendasComponent implements OnInit {
                         console.log(err);
                     }
                 });
-        })
+        });
 
         this.modelo = {
             fecha: [''],
@@ -85,8 +86,8 @@ export class BuscarAgendasComponent implements OnInit {
         let horaFin = new Date(agenda.horaFin);
         this.modelo = {
             fecha: fecha.getDate() + '/' + fecha.getMonth() + '/' + fecha.getFullYear(),
-            horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '')+fecha.getMinutes(),
-            horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '')+horaFin.getMinutes(),
+            horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '') + fecha.getMinutes(),
+            horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '') + horaFin.getMinutes(),
             profesionales: agenda.profesionales,
             prestaciones: agenda.prestaciones,
             espacioFisico: agenda.espacioFisico.nombre,

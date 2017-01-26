@@ -5,6 +5,7 @@ import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
 import { AgendaService } from './services/turnos/agenda.service';
 import { TurnoService } from './services/turnos/turno.service';
+import { SmsService } from './services/turnos/sms.service';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 
@@ -111,7 +112,8 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     AgendaService,
     TurnoService,
     EspacioFisicoService,
-    ServerService
+    ServerService,
+    SmsService
   ]
 
 })
