@@ -1,4 +1,6 @@
-import { ConfigPrestacionService } from './../../services/turnos/configPrestacion.service';
+import {
+  ConfigPrestacionService
+} from './../../services/turnos/configPrestacion.service';
 import {
   IPaciente
 } from './../../interfaces/IPaciente';
@@ -23,7 +25,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { } from '@angular/common';
+import {} from '@angular/common';
 
 
 @Component({
@@ -33,38 +35,47 @@ import { } from '@angular/common';
 export class PacienteSearchComponent implements OnInit {
 
   error: boolean = false;
-  mensaje: string = "";
+  pacientesEncontrados = false;
+  mensaje: string = '';
   pacientes: IPaciente[];
   estados: string[] = [];
   sexos: any[] = [];
-  searchForm: FormGroup;
   selectedPaciente: IPaciente;
-  documentScanned = "no";
+  documentScanned = 'no';
   licenciaConductor = [];
-  stringAnterior = "";
-  pacientesSearch: boolean = true;
+  stringAnterior = '';
+  pacientesSearch: boolean;
+  /*La primera vez arranca con el slide off para la búsqueda por DNI o SUGGEST. En caso de activarlo debería mostrar los campos*/
+  modeloSlide: any;
+
   @ViewChildren('infoData') vc;
 
-  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
 
-  checked: boolean = true;
+  constructor(private pacienteService: PacienteService) {}
+
+  //checked: boolean = true;
 
   @Output()
-  selected: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+  selected: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
 
   ngOnInit() {
+    this.modeloSlide = {
+      activo: false
+    };
+    // this.sexos = enumerados.getObjSexos();
+  }
 
-    this.sexos = enumerados.getObjSexos();
 
-    this.searchForm = this.formBuilder.group({
-      nombre: [''],
-      apellido: [''],
-      documento: [''],
-      sexo: [''],
-      estado: [''],
-      fechaNacimiento: [null],
-      info: ['']
-    });
+  /*Activa la búsqueda por campos*/
+  activate(event: any) {
+    if (event) {
+      this.pacientesSearch = true;
+      this.modeloSlide.activo = true;
+    } else {
+      this.pacientesSearch = false;
+      this.modeloSlide.activo = false;
+    }
+
 
   }
 
@@ -86,50 +97,70 @@ export class PacienteSearchComponent implements OnInit {
 
   }
 
-  loadPaciente() {
-    this.error = false;
-    var dto = null;
-    var formulario = this.searchForm.value;
+  //loadPaciente() {
+    // this.error = false;
+    // var dto = null;
+    // var formulario = this.searchForm.value;
     //console.log('Esta es la fecha de nacimiento posta: ',formulario.fechaNacimiento);
     //console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
 
-    dto = {
-      nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
-      apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
-      documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*" : "*" : "*",
-      fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
-      sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
-    }
-    debugger;
-    console.log(dto)
+
+    // dto = {
+    //   nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
+    //   apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
+    //   documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*" : "*" : "*",
+    //   fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
+    //   sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
+    // }
+    // //console.log(dto)
+    // this.pacienteService.postSearch(dto)
+    //   .subscribe(
+    //   pacientes => {
+    //     this.pacientes = pacientes
+    //   },
+    //   err => {
+    //     if (err) {
+    //       this.mensaje = "¡Error al intentar acceder a la base de datos!";
+    //       this.error = true;
+    //       return;
+    //     }
+    //   });
+  //}
+
+
+  loadPaciente(dto) {
+    this.error = false;
     this.pacienteService.postSearch(dto)
       .subscribe(
-      pacientes => {
-        debugger;
-        this.pacientes = pacientes
-      },
-      err => {
-        if (err) {
-          this.mensaje = "¡Error al intentar acceder a la base de datos!";
-          this.error = true;
-          return;
+        pacientes => {
+          this.pacientesEncontrados = true;
+          this.pacientes = pacientes;
+        },
+        err => {
+          if (err) {
+            this.mensaje = ' ¡Error al intentar acceder a la base de datos! ';
+            this.error = true;
+            return;
+          }
+
         }
-      });
+      );
   }
+
 
   findPacientes() {
     //Cambiar esta parte ya que las consultas se va a mandar por campos
     this.error = false;
-    var formulario = this.searchForm.value;
+    //var formulario = this.searchForm.value;
     if (this.documentScanned == "no") {
       //Debo chequear porque no fue con código de barras
-      if (formulario.nombre == "" && formulario.apellido == "" && formulario.documento == "" && formulario.fechaNacimiento == null && formulario.sexo == "") {
-        this.error = true;
-        this.mensaje = "Debe ingresar datos en algún campo de búsqueda";
-        return;
-      }
+      //if (formulario.nombre == "" && formulario.apellido == "" && formulario.documento == "" && formulario.fechaNacimiento == null && formulario.sexo == "") {
+      this.error = true;
+      this.mensaje = "Debe ingresar datos en algún campo de búsqueda";
+      return;
+      //}
     }
-    this.loadPaciente();
+     
 
     //Seteo el foco en el lector de código de barras
     this.vc.first.nativeElement.focus();
@@ -139,47 +170,54 @@ export class PacienteSearchComponent implements OnInit {
   limpiarCampos() {
     //Seteo el foco en el lector de código de barras
     this.vc.first.nativeElement.focus();
-    var formulario = this.searchForm.value;
+    //var formulario = this.searchForm.value;
     this.error = false;
     this.pacientes = null;
-    this.searchForm.patchValue({
-      info: "",
-      apellido: "",
-      nombre: "",
-      sexo: "",
-      documento: "",
-      fechaNacimiento: ""
-    }, );
+    //this.searchForm.patchValue({
+    // info: "",
+    // apellido: "",
+    // nombre: "",
+    // sexo: "",
+    // documento: "",
+    // fechaNacimiento: ""
+    //}, );
   }
 
-  //Método que verifica que tipo de documento se va a escanear (DU o Licencia de Conductor NACIONAL)
-  verifyDocument(data: string) {
+  //Método que verifica los datos de entrada y realiza la búsqueda
+  searchInputData(data: string) {
 
     if (data) {
-      debugger;
-      if (data == "DNI") {
-        //Corresponde a la licencia de conductor
-        this.documentScanned = "LICENCIA_CONDUCIR";
-        //inicializo cadena anterior
-        this.stringAnterior = data
 
-      } else {
-        if (this.documentScanned != "LICENCIA_CONDUCIR" && this.documentScanned != "DU") {
-          var datosLector = data.split('"');
-          if (datosLector.length == 8 || datosLector.length == 9) {
-            //Corresponde a DU
-            this.documentScanned = "DU";
-          }
-          else {
-            this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
-            this.error = true;
-          }
-        }
-      }
+     
+      //lo primero es parsear la cadena de entrada con expresiones regulares a ver si es algún tipo de doc válido
+      //Luego llamar al servicio
+      this.loadPaciente(data);
 
-      if (this.documentScanned == "LICENCIA_CONDUCIR" || this.documentScanned == "DU") {
-        this.parseDocument(data, this.documentScanned)
-      }
+
+
+      // if (data == "DNI") {
+      //   //Corresponde a la licencia de conductor
+      //   this.documentScanned = "LICENCIA_CONDUCIR";
+      //   //inicializo cadena anterior
+      //   this.stringAnterior = data
+
+      // } else {
+      //   if (this.documentScanned != "LICENCIA_CONDUCIR" && this.documentScanned != "DU") {
+      //     var datosLector = data.split('"');
+      //     if (datosLector.length == 8 || datosLector.length == 9) {
+      //       //Corresponde a DU
+      //       this.documentScanned = "DU";
+      //     } else {
+      //       this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
+      //       this.error = true;
+      //     }
+      //   }
+      // }
+
+      // if (this.documentScanned == "LICENCIA_CONDUCIR" || this.documentScanned == "DU") {
+      //   this.parseDocument(data, this.documentScanned)
+      // }
+
     }
   }
 
@@ -191,17 +229,17 @@ export class PacienteSearchComponent implements OnInit {
       var fecha = data[6].split('-');
       var fechaNac = fecha[1] + '/' + fecha[0] + '/' + fecha[2];
       //fin parseo de fecha
-      this.searchForm.patchValue({
-        info: "", //Limpio el buscador
-        apellido: data[1],
-        nombre: data[2],
-        sexo: {
-          id: data[3] == "F" ? "femenino" : "masculino",
-          nombre: data[3] == "F" ? "Femenino" : "Masculino",
-        },
-        documento: data[4],
-        fechaNacimiento: new Date(fechaNac)
-      }, );
+      //this.searchForm.patchValue({
+      // info: "", //Limpio el buscador
+      // apellido: data[1],
+      // nombre: data[2],
+      // sexo: {
+      //   id: data[3] == "F" ? "femenino" : "masculino",
+      //   nombre: data[3] == "F" ? "Femenino" : "Masculino",
+      // },
+      // documento: data[4],
+      // fechaNacimiento: new Date(fechaNac)
+      //}, );
       this.documentScanned = "no";
 
 
@@ -224,17 +262,17 @@ export class PacienteSearchComponent implements OnInit {
 
         var d = this.licenciaConductor[5].split('-');
         var fechaNac = d[1] + '/' + d[0] + '/' + d[2]
-        this.searchForm.patchValue({
-          info: "",
-          apellido: this.licenciaConductor[4],
-          nombre: this.licenciaConductor[3],
-          sexo: {
-            id: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
-            nombre: this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
-          },
-          documento: this.licenciaConductor[1],
-          fechaNacimiento: new Date(fechaNac)
-        });
+        //this.searchForm.patchValue({
+        // info: "",
+        // apellido: this.licenciaConductor[4],
+        // nombre: this.licenciaConductor[3],
+        // sexo: {
+        //   id: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
+        //   nombre: this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
+        // },
+        // documento: this.licenciaConductor[1],
+        // fechaNacimiento: new Date(fechaNac)
+        //});
 
         //Limpiamos las variables globales de control
         this.licenciaConductor = [];
