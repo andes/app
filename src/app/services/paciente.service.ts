@@ -17,7 +17,6 @@ export class PacienteService {
     private pacienteUrlSearch = AppSettings.API_ENDPOINT + '/core/mpi/pacientes/search';  // URL to web api
     constructor(private server: ServerService, private http: Http) { }
 
-
     /**
      * Metodo get. Trae el objeto paciente.
      * @param {any} params Opciones de busqueda

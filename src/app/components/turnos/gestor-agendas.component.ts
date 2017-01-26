@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
@@ -13,10 +13,6 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 
 export class GestorAgendasComponent implements OnInit {
 
-    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
-        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService) { }
-
     public agendas: any = [];
     public agendaSel: AgendaSeleccionada;
 
@@ -27,6 +23,10 @@ export class GestorAgendasComponent implements OnInit {
 
     ag: IAgenda;
     vistaAgenda: IAgenda;
+
+    constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
+        public serviceAgenda: AgendaService) { }
 
     ngOnInit() {
 
@@ -42,10 +42,10 @@ export class GestorAgendasComponent implements OnInit {
 
             this.serviceAgenda.get({
                 'fechaDesde': value.fechaDesde,
-                "fechaHasta": value.fechaHasta,
-                "idPrestacion": value.prestaciones.id,
-                "idProfesional": value.profesionales.id,
-                "idEspacioFisico": value.espacioFisico.id
+                'fechaHasta': value.fechaHasta,
+                'idPrestacion': value.prestaciones.id,
+                'idProfesional': value.profesionales.id,
+                'idEspacioFisico': value.espacioFisico.id
             }).subscribe(
                 agendas => { this.agendas = agendas; },
                 err => {
@@ -53,7 +53,7 @@ export class GestorAgendasComponent implements OnInit {
                         console.log(err);
                     }
                 });
-        })
+        });
     }
 
     loadPrestaciones(event) {
@@ -65,7 +65,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get().subscribe(event.callback);
+        this.serviceEspacioFisico.get({}).subscribe(event.callback);
     }
 
     verAgenda(agenda) {
@@ -77,12 +77,21 @@ export class GestorAgendasComponent implements OnInit {
         }
 
         agenda.agendaSeleccionada = true;
-        agenda.agendaSeleccionadaColor = 'success';
+
+        this.setColorEstadoAgenda(this.ag);
 
         this.agendaSel = agenda;
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
+    }
+
+    setColorEstadoAgenda(agenda) {
+        if (agenda.estado === 'Suspendida') {
+            agenda.agendaSeleccionadaColor = 'danger';
+        } else {
+            agenda.agendaSeleccionadaColor = 'success';
+        }
     }
 }
 

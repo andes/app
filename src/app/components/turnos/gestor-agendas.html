@@ -40,7 +40,8 @@
                             <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
                         </div>
                         <div class="col-md-2">
-                            <i *ngIf="agenda.agendaSeleccionada == true" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
+                            <i *ngIf="(agenda.agendaSeleccionada == true) && (agenda.estado != 'Suspendida')" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
+                            <i *ngIf="(agenda.agendaSeleccionada == true) && (agenda.estado == 'Suspendida')" class="mdi mdi-mdi mdi-power" [ngClass]="{'text-danger danger': agenda.agendaSeleccionada}"></i>
                         </div>
                     </plex-box>
                 </a>
