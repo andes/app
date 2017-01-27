@@ -168,8 +168,11 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             this.addDireccion(element);
         });
     }
-
-
+    removeDireccion(i: number) {
+        // elimina formMatricula
+        const control = <FormArray>this.createForm.controls['direccion'];
+        control.removeAt(i);
+    }
     /*Código de matriculas*/
 
     setMatricula(objMat: IMatricula) {
