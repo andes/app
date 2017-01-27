@@ -33,9 +33,15 @@ import {} from '@angular/common';
   templateUrl: 'pacienteSearch.html'
 })
 export class PacienteSearchComponent implements OnInit {
-
   error: boolean = false;
+  pacientesScan = false;
   pacientesEncontrados = false;
+  dniScan: string = '';
+  nombreScan: string = '';
+  apellidoScan: string = '';
+  sexoScan: string = '';
+  similitudScan: number = 0;
+  fechaNacimientoScan: string = '';
   mensaje: string = '';
   pacientes: IPaciente[];
   estados: string[] = [];
@@ -47,6 +53,7 @@ export class PacienteSearchComponent implements OnInit {
   pacientesSearch: boolean;
   /*La primera vez arranca con el slide off para la búsqueda por DNI o SUGGEST. En caso de activarlo debería mostrar los campos*/
   modeloSlide: any;
+  modeloSearch: any;
 
   @ViewChildren('infoData') vc;
 
@@ -68,6 +75,9 @@ export class PacienteSearchComponent implements OnInit {
 
   /*Activa la búsqueda por campos*/
   activate(event: any) {
+    this.pacientesScan = false;
+    this.error = false;
+
     if (event) {
       this.pacientesSearch = true;
       this.modeloSlide.activo = true;
@@ -79,7 +89,7 @@ export class PacienteSearchComponent implements OnInit {
 
   }
 
-  //Esta función hay que sacarla a UTILS para hacerla generica
+  /*Esta funciones hay que sacarlas a UTILS para hacerla generica*/
   formatDate(date) {
     if (date != null) {
       var d = new Date(date),
@@ -92,41 +102,33 @@ export class PacienteSearchComponent implements OnInit {
 
       return [year, month, day].join('-');
     } else {
-      return null
+      return null;
     }
-
   }
+  verificarExpresion(cadena) {
+    let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
+    /*OJO se puede seguir parseando mejor pero no conozco bien el formato ya que está sacado de un ejemplo (Mi carnet)*/
+    let lic = new RegExp('DNI\r\n[0-9]{7,8}\r\nM\r\n.+\r\n.+\r\n[0-9]{2}-[0-9]{2}-[0-9]{4}\r\n[A-Z]+\r\n.+\r\n.+');
+    let resultado = !du.test(cadena) ? !lic.test(cadena) ? 0 : 2 : 1;
+    return resultado;
+  }
+  /*Fin de funciones útiles */
 
-  //loadPaciente() {
-    // this.error = false;
-    // var dto = null;
-    // var formulario = this.searchForm.value;
-    //console.log('Esta es la fecha de nacimiento posta: ',formulario.fechaNacimiento);
-    //console.log('Esta es la que mando al filtro:', this.formatDate(formulario.fechaNacimiento));
-
-
-    // dto = {
-    //   nombre: formulario.nombre != "" ? formulario.nombre != null ? formulario.nombre + "*" : "*" : "*",
-    //   apellido: formulario.apellido != "" ? formulario.apellido != null ? formulario.apellido + "*" : "*" : "*",
-    //   documento: formulario.documento != "" ? formulario.documento != null ? formulario.documento + "*" : "*" : "*",
-    //   fechaNacimiento: formulario.fechaNacimiento != null ? formulario.fechaNacimiento ? this.formatDate(formulario.fechaNacimiento) : "*" : "*",
-    //   sexo: formulario.sexo != "" ? formulario.sexo != null ? formulario.sexo.id : "*" : "*",
-    // }
-    // //console.log(dto)
-    // this.pacienteService.postSearch(dto)
-    //   .subscribe(
-    //   pacientes => {
-    //     this.pacientes = pacientes
-    //   },
-    //   err => {
-    //     if (err) {
-    //       this.mensaje = "¡Error al intentar acceder a la base de datos!";
-    //       this.error = true;
-    //       return;
-    //     }
-    //   });
-  //}
-
+  /*Método que verifica los datos de entrada y realiza la búsqueda*/
+  searchInputData(data: string) {
+    this.pacientesScan = false;
+    this.error = false;
+    if (data) {
+      /*llamamos al método para ver si es una lectura a parsear o para búsqueda por suggest*/
+      let tipoDocumentacion = this.verificarExpresion(data);
+      this.parseDocument(data, tipoDocumentacion);
+      /*Luego llamo al serivicio */
+      /*this.loadPaciente(data);*/
+    } else {
+      this.mensaje = 'Debe ingresar datos para buscar';
+      this.error = true;
+    }
+  }
 
   loadPaciente(dto) {
     this.error = false;
@@ -148,138 +150,72 @@ export class PacienteSearchComponent implements OnInit {
   }
 
 
-  findPacientes() {
-    //Cambiar esta parte ya que las consultas se va a mandar por campos
-    this.error = false;
-    //var formulario = this.searchForm.value;
-    if (this.documentScanned == "no") {
-      //Debo chequear porque no fue con código de barras
-      //if (formulario.nombre == "" && formulario.apellido == "" && formulario.documento == "" && formulario.fechaNacimiento == null && formulario.sexo == "") {
-      this.error = true;
-      this.mensaje = "Debe ingresar datos en algún campo de búsqueda";
-      return;
-      //}
-    }
-     
-
-    //Seteo el foco en el lector de código de barras
-    this.vc.first.nativeElement.focus();
-  }
-
-  //Blanquea los campos de búsqueda y el lector de barras
+  /*Blanquea los campos de búsqueda y el lector de barras*/
   limpiarCampos() {
-    //Seteo el foco en el lector de código de barras
     this.vc.first.nativeElement.focus();
-    //var formulario = this.searchForm.value;
     this.error = false;
     this.pacientes = null;
-    //this.searchForm.patchValue({
-    // info: "",
-    // apellido: "",
-    // nombre: "",
-    // sexo: "",
-    // documento: "",
-    // fechaNacimiento: ""
-    //}, );
   }
+  /*Parseo de documentos escaneados */
+  parseDocument(informacion: string, tipoDocumento: number) {
 
-  //Método que verifica los datos de entrada y realiza la búsqueda
-  searchInputData(data: string) {
+    switch (tipoDocumento){
+      case 1: {
+        this.similitudScan = Math.round(Math.random() * (100 - 90) + 90);
+        this.modeloSearch = '';
+        this.pacientesScan = true;
+        let data = informacion.split('"');
+        let fecha = data[6].split('-');
+        let fechaNac = fecha[0] + '/' + fecha[1] + '/' + fecha[2];
+        this.apellidoScan = data[1];
+        this.nombreScan = data[2];
+        this.sexoScan = data[3] === 'F' ? 'FEMENINO' : 'MASCULINO';
+        this.dniScan = data[4];
+        this.fechaNacimientoScan = fechaNac;
+        break;
+      }
+      case 2: {
+             /*TODO: Para mejorar!! --------------------------
+            if (this.licenciaConductor.length < 18) {
+            var pos;
+            if (this.stringAnterior.length == informacion.length) {
+              pos = 0;
+            } else {
+              pos = this.stringAnterior.length;
+            }
 
-    if (data) {
+            this.stringAnterior = informacion;
+            this.licenciaConductor.push(this.stringAnterior.substring(pos));
+            console.log(this.licenciaConductor)
+          } else {
+            var d = this.licenciaConductor[5].split('-');
+            var fechaNac = d[1] + '/' + d[0] + '/' + d[2]
+            //this.searchForm.patchValue({
+            // info: "",
+            // apellido: this.licenciaConductor[4],
+            // nombre: this.licenciaConductor[3],
+            // sexo: {
+            //   id: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
+            //   nombre: this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
+            // },
+            // documento: this.licenciaConductor[1],
+            // fechaNacimiento: new Date(fechaNac)
+            //});
 
-     
-      //lo primero es parsear la cadena de entrada con expresiones regulares a ver si es algún tipo de doc válido
-      //Luego llamar al servicio
-      this.loadPaciente(data);
-
-
-
-      // if (data == "DNI") {
-      //   //Corresponde a la licencia de conductor
-      //   this.documentScanned = "LICENCIA_CONDUCIR";
-      //   //inicializo cadena anterior
-      //   this.stringAnterior = data
-
-      // } else {
-      //   if (this.documentScanned != "LICENCIA_CONDUCIR" && this.documentScanned != "DU") {
-      //     var datosLector = data.split('"');
-      //     if (datosLector.length == 8 || datosLector.length == 9) {
-      //       //Corresponde a DU
-      //       this.documentScanned = "DU";
-      //     } else {
-      //       this.mensaje = "¡No es posible procesar el formato del documento ingresado!";
-      //       this.error = true;
-      //     }
-      //   }
-      // }
-
-      // if (this.documentScanned == "LICENCIA_CONDUCIR" || this.documentScanned == "DU") {
-      //   this.parseDocument(data, this.documentScanned)
-      // }
-
-    }
-  }
-
-  parseDocument(informacion: string, tipoDocumento: string) {
-
-    if (tipoDocumento == "DU") {
-      var data = informacion.split('"');
-      //Parseo la fecha para darle el formato adecuado
-      var fecha = data[6].split('-');
-      var fechaNac = fecha[1] + '/' + fecha[0] + '/' + fecha[2];
-      //fin parseo de fecha
-      //this.searchForm.patchValue({
-      // info: "", //Limpio el buscador
-      // apellido: data[1],
-      // nombre: data[2],
-      // sexo: {
-      //   id: data[3] == "F" ? "femenino" : "masculino",
-      //   nombre: data[3] == "F" ? "Femenino" : "Masculino",
-      // },
-      // documento: data[4],
-      // fechaNacimiento: new Date(fechaNac)
-      //}, );
-      this.documentScanned = "no";
-
-
-    } else {
-
-      if (this.licenciaConductor.length < 18) {
-
-        var pos;
-
-        if (this.stringAnterior.length == informacion.length) {
-          pos = 0;
-        } else {
-          pos = this.stringAnterior.length;
+            //Limpiamos las variables globales de control
+            this.licenciaConductor = [];
+            this.documentScanned = "no";
+            this.stringAnterior = "";
+            }
+            */
+            break;
         }
-
-        this.stringAnterior = informacion;
-        this.licenciaConductor.push(this.stringAnterior.substring(pos));
-        console.log(this.licenciaConductor)
-      } else {
-
-        var d = this.licenciaConductor[5].split('-');
-        var fechaNac = d[1] + '/' + d[0] + '/' + d[2]
-        //this.searchForm.patchValue({
-        // info: "",
-        // apellido: this.licenciaConductor[4],
-        // nombre: this.licenciaConductor[3],
-        // sexo: {
-        //   id: this.licenciaConductor[2] == "F" ? "femenino" : "masculino",
-        //   nombre: this.licenciaConductor[2] == "F" ? "Femenino" : "Masculino",
-        // },
-        // documento: this.licenciaConductor[1],
-        // fechaNacimiento: new Date(fechaNac)
-        //});
-
-        //Limpiamos las variables globales de control
-        this.licenciaConductor = [];
-        this.documentScanned = "no";
-        this.stringAnterior = "";
+      default: {
+        /*Cuando no es un documento sino que es un sugerido para buscar por elasticsearch */
+        break;
       }
     }
+    
   }
 
   darTurno(paciente: IPaciente) {
