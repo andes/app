@@ -32,7 +32,7 @@ export class PacienteCreateComponent implements OnInit {
     generos :any [];
     estadosCiviles : any [];
     tipoComunicacion : any [];
-    relacionTutores = [];
+    relacionTutores : any [];
 
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
@@ -65,7 +65,7 @@ export class PacienteCreateComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        this.relacionTutores = enumerados.getRelacionTutor(); debugger;
+        this.relacionTutores = enumerados.getObjRelacionTutor();
 
         //Se verifican los datos en la seleccion
         let nombre = this.seleccion ? this.seleccion.nombre : '';
@@ -96,6 +96,7 @@ export class PacienteCreateComponent implements OnInit {
             financiador: this.formBuilder.array([
             ]),
             relaciones: this.formBuilder.array([
+              //this.iniRelacion()
             ]),
             activo: [true]
         });
@@ -130,7 +131,7 @@ export class PacienteCreateComponent implements OnInit {
     iniRelacion() {
         return this.formBuilder.group({
             relacion: [''],
-            referencia: [''],
+            //referencia: [''],
             apellido: [''],
             nombre: [''],
             documento: ['']
@@ -219,19 +220,16 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     loadProvincias(event, pais) {
-        debugger;
         console.log("pais " + pais.value.id);
         this.provinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
-        debugger;
         console.log("provincia " + provincia.value.id);
         this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
     }
 
     onSave(model: IPaciente, isvalid: boolean) {
-        debugger;
         if (isvalid) {
             let operacionPac: Observable<IPaciente>;
             operacionPac = this.pacienteService.post(model);

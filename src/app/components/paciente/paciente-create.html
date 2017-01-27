@@ -3,47 +3,47 @@
     <div class="col-md-8">
       <plex-box type="sucess" title="Alta de Pacientes">
         <plex-tabs>
-          <plex-tab icon="account" >
-          <plex-box type="warning"  title="Datos básicos">
-            <div class="row">
-              <div class="col-sm-4">
-                <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
-                </plex-text>
+          <plex-tab icon="account">
+            <plex-box type="warning" title="Datos básicos">
+              <div class="row">
+                <div class="col-sm-4">
+                  <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
+                  </plex-text>
+                </div>
+                <div class="col-sm-4">
+                  <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
+                  </plex-text>
+                </div>
+                <div class="col-sm-4">
+                  <plex-text label="Alias" formControlName="alias" placeholder="Ingrese alias...">
+                  </plex-text>
+                </div>
               </div>
-              <div class="col-sm-4">
-                <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
-                </plex-text>
+              <div class="row">
+                <div class="col-md-4">
+                  <plex-int label="Número de Documento" formControlName="documento" placeholder="Ingresar DNI...">
+                  </plex-int>
+                </div>
+                <div class="col-md-4">
+                  <plex-datetime label="Fecha de Nacimiento" type="date" formControlName="fechaNacimiento">
+                  </plex-datetime>
+                </div>
+                <div class="col-md-4">
+                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." label="Sexo:">
+                  </plex-select>
+                </div>
               </div>
-              <div class="col-sm-4">
-                <plex-text label="Alias" formControlName="alias" placeholder="Ingrese alias...">
-                </plex-text>
+              <div class="row">
+                <div class="col-md-4">
+                  <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Género:">
+                  </plex-select>
+                </div>
+                <div class="col-md-4">
+                  <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
+                  </plex-select>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <plex-int label="Número de Documento" formControlName="documento" placeholder="Ingresar DNI...">
-                </plex-int>
-              </div>
-              <div class="col-md-4">
-                <plex-datetime label="Fecha de Nacimiento" type="date" formControlName="fechaNacimiento">
-                </plex-datetime>
-              </div>
-              <div class="col-md-4">
-                <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." label="Sexo:">
-                </plex-select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Género:">
-                </plex-select>
-              </div>
-              <div class="col-md-4">
-                <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
-                </plex-select>
-              </div>
-            </div>
-          </plex-box>
+            </plex-box>
           </plex-tab>
           <plex-tab icon="contact-mail" title="Datos de contacto">
             <plex-box type="warning" title="Contacto" formArrayName="contacto">
@@ -171,15 +171,39 @@
 
           </plex-tab>
           <plex-tab icon="account-multiple" title="Datos Familiares">
-            <plex-box type="warning" title="Datos Familiares">
-              <div class="panel-body">
-              <div class="row">
-                  <div class="col-md-4">
-                    <plex-select formControlName="relRelacion" [data]="relacionTutores" placeholder="Seleccione..." label="Relación:">
-                    </plex-select>
+            <plex-box type="warning" title="Datos Familiares" formArrayName="relaciones">
+              <div *ngFor="let co of createForm.controls.relaciones.controls; let i=index" class="panel panel-default">
+                <div class="panel-heading">
+                  <div align="right" *ngIf="createForm.controls.relaciones.controls.length > 1" (click)="removeRelacion(i)">
+                    <i class="glyphicon glyphicon-remove-circle"></i>
                   </div>
+                </div>
+                <div class="panel-body">
+                  <div class="row" [formGroupName]="i">
+                    <div class="col-md-3">
+                      <plex-select formControlName="relacion" [data]="relacionTutores" label="Relación:">
+                      </plex-select>
+                    </div>
+                    <div class="col-md-3">
+                      <plex-text label="Nombre:" formControlName="nombre">
+                      </plex-text>
+                    </div>
+                    <div class="col-md-3">
+                      <plex-text label="Apellido:" formControlName="apellido">
+                      </plex-text>
+                    </div>
+                    <div class="col-md-3">
+                      <plex-int label="Documento" formControlName="documento" placeholder="Ingresar DNI...">
+                      </plex-int>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <plex-button label="Agregar Relación" icon="add circle outline" (click)="addRelacion()"></plex-button>
+                </div>
+              </div>
             </plex-box>
 
           </plex-tab>
@@ -194,18 +218,16 @@
       <plex-box type="info" title="Checkout">
         <div class="row">
           <div class="col-md-4">
-            <label>Nombre</label>
             <div class="row">
-              <div class="col-md-4">{{createForm.value.nombre}}</div>
+              <div class="col-md-4"><h2>{{createForm.value.nombre}}</h2></div>
             </div>
 
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <label>Apellido</label>
             <div class="row">
-              <div class="col-md-4">{{createForm.value.apellido}}</div>
+              <div class="col-md-4"><h2>{{createForm.value.apellido}}</h2></div>
             </div>
 
           </div>
