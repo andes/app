@@ -9,7 +9,7 @@
               <!--<input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
                   placeholder="Lector de documento...">-->
               <input type="text" [(ngModel)]="modeloSearch" class="form-control" #infoData autofocus=true placeholder="Buscar..."
-                (keyup.Shift)="searchInputData(infoData.value)">
+                (keyup.Enter)="searchInputData(infoData.value)">
             </div>
           </div>
           <div class="col-md-11" *ngIf="pacientesSearch">
