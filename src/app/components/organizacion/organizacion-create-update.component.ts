@@ -51,7 +51,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         this.tiposcom = enumerados.getTipoComunicacion();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         console.log(this.seleccion);
-
+        console.log('Entro aca INi');
         let nombre = this.seleccion ? this.seleccion.nombre : '';
         let nivelComplejidad = this.seleccion ? this.seleccion.nivelComplejidad : '';
         let sisa = this.seleccion ? this.seleccion.codigo.sisa : '';
@@ -253,12 +253,14 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         if (isvalid) {
             let guardar: Observable<IOrganizacion>;
             model.activo = true;
-            debugger;
+            //debugger;
             model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
             model.edificio = model.edificio.map(elem => { return elem; })
             if (this.seleccion) {
                 model.id = this.seleccion.id;
                 guardar = this.organizacionService.put(model);
+                
+                console.log(model);
             }
             else
                 guardar = this.organizacionService.post(model);
