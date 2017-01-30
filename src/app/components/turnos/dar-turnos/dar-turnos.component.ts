@@ -7,7 +7,7 @@ import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
-import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
 // Servicios
@@ -38,6 +38,7 @@ export class DarTurnosComponent implements AfterViewInit {
 
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
+    private reqfiltros: boolean = false;
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
     paciente: any = {
@@ -46,7 +47,6 @@ export class DarTurnosComponent implements AfterViewInit {
         'nombre': 'Ramiro',
         'telefono': ''
     };
-
 
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
@@ -99,6 +99,7 @@ export class DarTurnosComponent implements AfterViewInit {
     seleccionarAgenda(agenda) {
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
+        this.alternativas = [];
         let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : '';
         /*Filtra los bloques segun el filtro prestacion*/
         this.bloques = this.agenda.bloques.filter(
@@ -126,7 +127,9 @@ export class DarTurnosComponent implements AfterViewInit {
                         'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                         'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : null,
                         'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
-                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; });
+                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; this.reqfiltros = false; });
+                } else {
+                    this.reqfiltros = true;
                 }
             }
         }
@@ -208,7 +211,7 @@ export class DarTurnosComponent implements AfterViewInit {
             'estado': estado,
             'paciente': this.paciente,
             'pacientes': pacientes
-        }
+        };
 
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
@@ -225,9 +228,41 @@ export class DarTurnosComponent implements AfterViewInit {
         this.pacientesSearch = true;
     }
 
+    public tieneTurnos(bloque: IBloque): boolean {
+
+        let turnos = bloque.turnos;
+        if (turnos.find(turno => turno.estado === 'disponible')){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     onReturn(pacientes: IPaciente): void {
         this.showDarTurnos = true;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
+    }
+
+    listaEspera() {
+        if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
+            let datosPrestacion = !this.opciones.prestacion ? null : {
+                id: this.opciones.prestacion.id,
+                nombre: this.opciones.prestacion.nombre
+            };
+            let datosProfesional = !this.opciones.profesional ? null : {
+                id: this.opciones.profesional.id,
+                nombre: this.opciones.profesional.nombre,
+                apellido: this.opciones.profesional.apellido
+            };
+            let datosLista = {
+                paciente: this.paciente,
+                prestacion: datosPrestacion,
+                profesional: datosProfesional,
+                fecha: this.agenda.horaInicio,
+                estado: 'demandaRechazada'
+            };
+            // TODO: llamar al servicio para hacer un post (falta crear servicio)
+        }
     }
 }
