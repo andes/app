@@ -73,8 +73,9 @@
               <div class="col-md-8">
                 <plex-box>
                   <div *ngFor="let bloque of bloques; let indiceBq=index">
-                    <div class="row">
-                      <div *ngIf="bloque.turnos.length" class="col-md-12">
+                    <div *ngIf="tieneTurnos(bloque)" class="row">
+                      <!--<div *ngIf="bloque.turnos.length>0" class="col-md-12">-->
+                      <div class="col-md-12">
                         <h2>
                           <small>
                                 <span>{{bloque.descripcion}}</span>  <span class="badge"> {{bloque.duracionTurno}} '</span>
@@ -106,7 +107,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+                <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="listaEspera()"></plex-button>
               </div>
             </div>
           </div>
@@ -162,14 +163,22 @@
                     <div class="col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: &nbsp;</label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12" *ngIf="alternativa.prestaciones"><label>Prestacion: &nbsp;</label> <span>{{alternativa.prestaciones[0].nombre}} </span><br></div>
+                    <div class="col-md-12" *ngIf="alternativa.prestaciones"><label>Prestacion: &nbsp;</label>
+                      <span *ngFor="let prestacion of alternativa.prestaciones">{{prestacion.nombre}} - </span><br></div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: &nbsp;</label> <span>{{alternativa.profesionales[0].nombre}} {{alternativa.profesionales[0].apellido}} </span><br></div>
+                    <div class="col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: &nbsp;</label>
+                      <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span><br></div>
+                    <!--<span>{{alternativa.profesionales[0].nombre}} {{alternativa.profesionales[0].apellido}} </span><br></div>-->
                   </div>
                 </a>
               </div>
-              <div *ngIf="alternativas.length<=0">
+              <div *ngIf="reqfiltros">
+                <div class="row">
+                  <div class="col-md-12">Debe ingresar algún filtro para buscar alternativas<br></div>
+                </div>
+              </div>
+              <div *ngIf="alternativas.length<=0 && !reqfiltros">
                 <div class="row">
                   <div class="col-md-12">No existen alternativas<br></div>
                 </div>

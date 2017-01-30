@@ -7,7 +7,7 @@ import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
-import { Component, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
 // Servicios
@@ -38,19 +38,21 @@ export class DarTurnosComponent implements AfterViewInit {
 
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
+    private reqfiltros: boolean = false;
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
     paciente: any = {
-        'documento': '30403872',
-        'apellido': 'Diaz',
-        'nombre': 'Ramiro',
-    }
+        'id': '586e6e8427d3107fde10f992',
+        'documento': '44463333',
+        'apellido': 'Albarracin',
+        'nombre': 'Joaquin',
+    };
 
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
 
-    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService, 
-    public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
+    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
+        public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
@@ -97,6 +99,7 @@ export class DarTurnosComponent implements AfterViewInit {
     seleccionarAgenda(agenda) {
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
+        this.alternativas = [];
         let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : '';
         /*Filtra los bloques segun el filtro prestacion*/
         this.bloques = this.agenda.bloques.filter(
@@ -114,17 +117,19 @@ export class DarTurnosComponent implements AfterViewInit {
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
-            if (this.agenda.turnosDisponibles > 0){
+            if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
             } else {
-            /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
+                /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                 this.estadoT = 'noTurnos';
                 if (this.opciones.prestacion || this.opciones.profesional) {
                     this.serviceAgenda.get({
                         'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                         'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : null,
                         'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
-                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; });
+                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; this.reqfiltros = false; });
+                } else {
+                    this.reqfiltros = true;
                 }
             }
         }
@@ -153,9 +158,9 @@ export class DarTurnosComponent implements AfterViewInit {
         if (this.agendas) {
             let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (condiciones) {
-                if (suma){
+                if (suma) {
                     this.indice++;
-                } else{
+                } else {
                     this.indice--;
                 }
                 this.agenda = this.agendas[this.indice];
@@ -165,9 +170,9 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     cambiarMes(signo) {
-        if (signo == '+'){
+        if (signo == '+') {
             this.opciones.fecha = moment(this.opciones.fecha).add(1, 'M').toDate();
-        } else{
+        } else {
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
         }
         this.actualizar('');
@@ -176,12 +181,6 @@ export class DarTurnosComponent implements AfterViewInit {
     onSave() {
         let pacientes: any[];
         let estado: String = 'asignado';
-        this.paciente = {
-            'documento': '30403872',
-            'apellido': 'Diaz',
-            'nombre': 'Ramiro',
-        };
-
         if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
             pacientes = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].pacientes.
                 map(elem => { elem.nombre = elem.nombre, elem.apellido = elem.apellido, elem.documento = elem.documento; return elem; });
@@ -192,7 +191,7 @@ export class DarTurnosComponent implements AfterViewInit {
             } else {
                 estado = 'disponible';
             }
-        } else{
+        } else {
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         }
 
@@ -205,7 +204,7 @@ export class DarTurnosComponent implements AfterViewInit {
             'estado': estado,
             'paciente': this.paciente,
             'pacientes': pacientes
-        }
+        };
 
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
@@ -222,9 +221,41 @@ export class DarTurnosComponent implements AfterViewInit {
         this.pacientesSearch = true;
     }
 
+    public tieneTurnos(bloque: IBloque): boolean {
+
+        let turnos = bloque.turnos;
+        if (turnos.find(turno => turno.estado === 'disponible')){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     onReturn(pacientes: IPaciente): void {
         this.showDarTurnos = true;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
+    }
+
+    listaEspera() {
+        if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
+            let datosPrestacion = !this.opciones.prestacion ? null : {
+                id: this.opciones.prestacion.id,
+                nombre: this.opciones.prestacion.nombre
+            };
+            let datosProfesional = !this.opciones.profesional ? null : {
+                id: this.opciones.profesional.id,
+                nombre: this.opciones.profesional.nombre,
+                apellido: this.opciones.profesional.apellido
+            };
+            let datosLista = {
+                paciente: this.paciente,
+                prestacion: datosPrestacion,
+                profesional: datosProfesional,
+                fecha: this.agenda.horaInicio,
+                estado: 'demandaRechazada'
+            };
+            // TODO: llamar al servicio para hacer un post (falta crear servicio)
+        }
     }
 }

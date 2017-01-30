@@ -78,8 +78,6 @@ export class ClonarAgendaComponent implements OnInit {
                 this.inicioMesDate = this.inicioMesMoment.toDate();
                 let indice = -1;
                 if (this.seleccionados) {
-                    console.log('seleccionados ', this.seleccionados);
-                    console.log('aaa', this.inicioMesDate.getTime());
                     indice = this.seleccionados.indexOf(this.inicioMesDate.getTime());
                 }
                 if (indice >= 0) {
@@ -199,7 +197,7 @@ export class ClonarAgendaComponent implements OnInit {
             function () {
                 console.log('Completed');
                 alert('La agenda se clonó correctamente');
-                // ver pq no puedo usar el plex alert
+                // TODO: ver pq no puedo usar el plex alert
                 // this.plex.alert('La agenda se clonó correctamente');
             }
         );
