@@ -280,82 +280,82 @@ export class PacienteCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    buscarPacRelacionado() {
-        //var formsRel = this.createForm.value.relaciones[i];
-        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
-        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
-        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
-
-        if ((nombre == "") && (apellido == "") && (documento == "")) {
-            this.error = true;
-            this.mensaje = "Debe completar al menos un campo de búsqueda";
-            return;
-        }
-        var pacBusqueda = {
-            "apellido": apellido, "nombre": nombre, "documento": documento,
-            "estado": "", "fechaNac": null, "sexo": ""
-        };
-        this.pacienteService.get(pacBusqueda)
-            .subscribe(resultado => {
-                if (resultado.length > 0) {
-                    this.pacRelacionados = resultado;
-                    this.showCargar = false;
-                    this.error = false;
-                    this.mensaje = "";
-                } else {
-                    this.pacRelacionados = []
-                    this.showCargar = true;
-                    this.error = true;
-                    this.mensaje = "No se encontraron datos registrados";
-                }
-            });
-    }
-
-    setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
-        return this.formBuilder.group({
-            relacion: [relacion],
-            referencia: [referencia],
-            apellido: [apellido],
-            nombre: [nombre],
-            documento: [documento]
-        });
-    }
-
-    validar(paciente: IPaciente) {
-        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
-        const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
-
-        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
-        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
-        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
-        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
-
-        this.pacRelacionados = []
-    }
-
-    cargarDatos() {
-        this.error = false;
-        this.mensaje = "";
-        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
-        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
-        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
-        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
-
-        if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
-            this.error = true;
-            this.mensaje = "Debe completar los datos solicitados";
-            return;
-        }
-
-        const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
-
-        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
-        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
-        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
-        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
-
-    }
+    // buscarPacRelacionado() {
+    //     //var formsRel = this.createForm.value.relaciones[i];
+    //     var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+    //     var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+    //     var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+    //
+    //     if ((nombre == "") && (apellido == "") && (documento == "")) {
+    //         this.error = true;
+    //         this.mensaje = "Debe completar al menos un campo de búsqueda";
+    //         return;
+    //     }
+    //     var pacBusqueda = {
+    //         "apellido": apellido, "nombre": nombre, "documento": documento,
+    //         "estado": "", "fechaNac": null, "sexo": ""
+    //     };
+    //     this.pacienteService.get(pacBusqueda)
+    //         .subscribe(resultado => {
+    //             if (resultado.length > 0) {
+    //                 this.pacRelacionados = resultado;
+    //                 this.showCargar = false;
+    //                 this.error = false;
+    //                 this.mensaje = "";
+    //             } else {
+    //                 this.pacRelacionados = []
+    //                 this.showCargar = true;
+    //                 this.error = true;
+    //                 this.mensaje = "No se encontraron datos registrados";
+    //             }
+    //         });
+    // }
+    //
+    // setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
+    //     return this.formBuilder.group({
+    //         relacion: [relacion],
+    //         referencia: [referencia],
+    //         apellido: [apellido],
+    //         nombre: [nombre],
+    //         documento: [documento]
+    //     });
+    // }
+    //
+    // validar(paciente: IPaciente) {
+    //     var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+    //     const control = <FormArray>this.createForm.controls['relaciones'];
+    //     control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
+    //
+    //     (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+    //
+    //     this.pacRelacionados = []
+    // }
+    //
+    // cargarDatos() {
+    //     this.error = false;
+    //     this.mensaje = "";
+    //     var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+    //     var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+    //     var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+    //     var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+    //
+    //     if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
+    //         this.error = true;
+    //         this.mensaje = "Debe completar los datos solicitados";
+    //         return;
+    //     }
+    //
+    //     const control = <FormArray>this.createForm.controls['relaciones'];
+    //     control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
+    //
+    //     (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+    //
+    // }
 
 }
