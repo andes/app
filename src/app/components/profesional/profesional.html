@@ -1,4 +1,4 @@
-<div class="row">
+
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <!--<plex-box type="" title="">-->
             <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
@@ -20,7 +20,7 @@
             </plex-box>
             <plex-box type="" title="">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Apellido</th>
@@ -65,5 +65,4 @@
         <div class="clear"></div>
         <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
     </div>
-</div>
 </div>
