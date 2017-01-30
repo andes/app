@@ -12,20 +12,23 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class FinanciadorService {
 
-   private financiadorUrl = AppSettings.API_ENDPOINT + '/financiadores';  // URL to web api
 
-   constructor(private http: Http) {}
+  // private financiadorUrl = AppSettings.API_ENDPOINT + '/financiadores';  // URL to web api
 
-   get(): Observable<IFinanciador[]> {
-       return this.http.get(this.financiadorUrl)
-           .map((res:Response) => res.json())
-           .catch(this.handleError); //...errors if any*/
-   }
+  private financiadorUrl = AppSettings.API_ENDPOINT + '/core/tm/financiadores';  // URL to web api
 
-  handleError(error: any){
-        console.log(error.json());
-        return Observable.throw(error.json().error || 'Server error');
-    }
+  constructor(private http: Http) { }
 
-   
+  get(): Observable<IFinanciador[]> {
+    return this.http.get(this.financiadorUrl)
+      .map((res: Response) => res.json())
+      .catch(this.handleError); //...errors if any*/
+  }
+
+  handleError(error: any) {
+    console.log(error.json());
+    return Observable.throw(error.json().error || 'Server error');
+  }
+
+
 }

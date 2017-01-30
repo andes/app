@@ -1,4 +1,4 @@
-<div class="row">
+
     <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
         <plex-box title="Especialidades">
             <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
@@ -9,11 +9,13 @@
                         </plex-text>
                     </div>
                     <div class="col-md-6">
-                        <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre...">
+                        <plex-text formControlName="nombre" label="Nombre" placeholder="Ingrese nombre...">
                         </plex-text>
                     </div>
                 </div>
             </form>
+        </plex-box>
+        <plex-box>
             <div class="row">
                 <div class="col-sm-12">
                     <plex-button type="primary" label="Nueva Especialidad" title="Nueva Especialidad" (click)="showcreate = !showcreate">
@@ -21,7 +23,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Codigo Sisa</th>
@@ -54,16 +56,16 @@
             </div>
             <plex-loader *ngIf="loader"></plex-loader>
             <div *ngIf="finScroll" class="alert alert-warning">
-                   <p style="text-align: center;"> No se encontraron más resultados </p> <!-- pasar a un componente de plex -->
-            </div>
-        </plex-box>
-        </div>
-        <div class="col-sm-12" *ngIf="showcreate">
-            <div class="clear"></div>
-            <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
-        </div>
-        <div class="col-sm-12" *ngIf="showupdate">
-            <div class="clear"></div>
-            <especialidad-create-update [seleccion]="seleccion" (data)='onReturn($event)'></especialidad-create-update>
-        </div>
-    </div>
+                <p style="text-align: center;"> No se encontraron más resultados </p>
+<!-- pasar a un componente de plex -->
+</div>
+</plex-box>
+</div>
+<div class="col-sm-12" *ngIf="showcreate">
+    <div class="clear"></div>
+    <especialidad-create-update (data)='onReturn($event)'></especialidad-create-update>
+</div>
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="clear"></div>
+    <especialidad-create-update [seleccion]="seleccion" (data)='onReturn($event)'></especialidad-create-update>
+</div>

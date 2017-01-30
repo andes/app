@@ -8,7 +8,8 @@
             <div class="form-group">
               <!--<input type="text" class="form-control" #infoData formControlName="info" (keyup.enter)="verifyDocument(infoData.value)" autofocus=true
                   placeholder="Lector de documento...">-->
-              <input type="text" class="form-control" #infoData autofocus=true placeholder="Buscar......" (keyup.enter)="searchInputData(infoData.value)">
+              <input type="text" [(ngModel)]="modeloSearch" class="form-control" #infoData autofocus=true placeholder="Buscar..."
+                (keyup.Enter)="searchInputData(infoData.value)">
             </div>
           </div>
           <div class="col-md-11" *ngIf="pacientesSearch">
@@ -45,9 +46,9 @@
       </div>
     </plex-box>
     <plex-box type="danger" *ngIf="error">
-       <div class="alert alert-danger" role="alert"> {{mensaje}}</div>
+      {{mensaje}}
     </plex-box>
-    <plex-box type="info" title="Grilla de candidatos" *ngIf="pacientesEncontrados" >
+    <plex-box type="info" title="Grilla de candidatos" *ngIf="pacientesEncontrados">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -57,56 +58,92 @@
               <th>Apellido/s</th>
               <th>Fecha de Nacimiento</th>
               <th>Sexo</th>
+              <th>% Similitud</th>
             </tr>
           </thead>
           <tbody>
-            <!--<tr>
-                    <td>{{especialidad.codigo? especialidad.codigo.sisa: ''}}</td>
-                            <td>{{especialidad.nombre}}</td>
-                            <td>{{especialidad.disciplina}}</td>
-                            <td>
-                                <plex-bool type="slide" [(ngModel)]="especialidad.activo" label="" name="especialidad.activo" (click)="activate(especialidad)"></plex-bool>
-                            </td>
-                            <td>
-                                <plex-button type="primary" label="Actualizar" (click)="onEdit(especialidad)">
-                                </plex-button>
-                            </td>
-                  </tr>-->
+            No se han encontrado registros de ese paciente
+          </tbody>
+        </table>
+      </div>
+    </plex-box>
+    <!--Esta parte la dejo hardcodeada sólo para la demo. Luego quitar-->
+    <plex-box type="info" title="Grilla de candidatos" *ngIf="pacientesScan">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Nombre/s</th>
+              <th>Apellido/s</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Sexo</th>
+              <th>% Similitud</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {{dniScan}}
+              </td>
+              <td>
+                {{nombreScan}}
+              </td>
+              <td>
+                {{apellidoScan}}
+              </td>
+              <td>
+                {{fechaNacimientoScan}}
+              </td>
+              <td>
+                {{sexoScan}}
+              </td>
+              <td>
+                {{similitudScan}}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
     </plex-box>
   </div>
   <div class="col-md-4">
-    <plex-box type="info" title="Panel de eventos del sistema">
-      <div class="list-group">
-        <a href="#" class="list-group-item active">Últimas Pacientes encontrados <span class="badge">3</span></a>
-        <a href="#" class="list-group-item">Juan Perez</a>
-        <a href="#" class="list-group-item">Pedro Gomez</a>
-        <a href="#" class="list-group-item">Horacio Martinez</a>
+    <plex-box type="info" title="Panel de Eventos">
+      <div class="panel panel-success" *ngIf="pacientesScan">
+        <div class="panel-heading">Lectura de documentación</div>
+        <div class="panel panel-body">
+          <div><span>DNI: {{dniScan}}</span></div>
+          <div><span>NOMBRE: {{nombreScan}}</span></div>
+          <div><span>APELLIDO: {{apellidoScan}} </span></div>
+          <div><span>FECHA NACIMIENTO: {{fechaNacimientoScan}} </span></div>
+          <div><span>SEXO: {{sexoScan}} </span></div>
+        </div>
       </div>
       <div class="panel panel-warning">
-        <div class="panel-heading">Avisos importantes</div>
-        <div class="panel-body">
-          Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI o Licencia del conductor Nacional
-        </div>
-      </div>
-      <div class="panel panel-default">
         <div class="panel-heading">Recordatorios</div>
         <div class="panel-body">
-          RECUERDE XXX
+          <ul>
+            <li>
+              <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI o Licencia del conductor Nacional.</li>
+            <li>
+              <p>Recuerde actualizar la información de contacto.</li>
+          </ul>
         </div>
       </div>
-    </plex-box>
+      <div class="list-group">
+        <a href="#" class="list-group-item active">Últimas búsquedas realizadas <span class="badge">7</span></a>
+        <a href="#" class="list-group-item">13865896 - Juan Perez</a>
+        <a href="#" class="list-group-item">20695896 - Pedro Gomez</a>
+        <a href="#" class="list-group-item">12965874 - Horacio Martinez</a>
+        <a href="#" class="list-group-item">26584894 - Laura Monteverde</a>
+        <a href="#" class="list-group-item">17965452 - Cristina Gomez</a>
+        <a href="#" class="list-group-item"> 7566546 - Juan José Yañez</a>
+        <a href="#" class="list-group-item">96545114 - Orlando Johnson</a>
+      </div>
+     </plex-box>
   </div>
 </div>
-<!--<tr>
-      <td>
-        <div class="col-md-8">
-          
-        </div>
-      </td>
-    </tr>-->
+
 <!--<div>
             <div class="row" ng-show="datosPaciente">
               <div class="col-md-6">

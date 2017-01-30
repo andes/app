@@ -1,4 +1,5 @@
 import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from './../../interfaces/IDireccion';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
 import { IPais } from './../../interfaces/IPais';
@@ -22,20 +23,21 @@ import { IProvincia } from './../../interfaces/IProvincia';
     templateUrl: 'paciente-create.html'
 })
 export class PacienteCreateComponent implements OnInit {
-
+    @Input('seleccion') seleccion: IPaciente;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     createForm: FormGroup;
     estados = [];
-    sexos = [];
-    generos = [];
-    relacionTutores = [];
-    estadosCiviles = [];
-    tiposContactos = [];
+    sexos : any [];
+    generos :any [];
+    estadosCiviles : any [];
+    tipoComunicacion : any [];
+    relacionTutores : any [];
+
     paises: IPais[] = [];
     provincias: IProvincia[] = [];
-    todasProvincias: IProvincia[] = [];
     localidades: ILocalidad[] = [];
+    todasProvincias: IProvincia[] = [];
     todasLocalidades: ILocalidad[] = [];
     showCargar: boolean;
     error: boolean = false;
@@ -44,65 +46,64 @@ export class PacienteCreateComponent implements OnInit {
     obrasSociales: IFinanciador[] = [];
     pacRelacionados = [];
 
-    constructor(private formBuilder: FormBuilder, private PaisService: PaisService,
-        private ProvinciaService: ProvinciaService, private LocalidadService: LocalidadService,
-        private BarrioService: BarrioService, private pacienteService: PacienteService,
+    constructor(private formBuilder: FormBuilder,
+        private paisService: PaisService,
+        private provinciaService: ProvinciaService,
+        private localidadService: LocalidadService,
+        private BarrioService: BarrioService,
+        private pacienteService: PacienteService,
         private financiadorService: FinanciadorService) { }
 
     ngOnInit() {
 
-        //CArga de combos
-        this.PaisService.get().subscribe(resultado => { this.paises = resultado });
-        this.ProvinciaService.get("").subscribe(resultado => { this.todasProvincias = resultado });
-        this.LocalidadService.get("").subscribe(resultado => { this.todasLocalidades = resultado });
-        this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
-
+        // //Se cargan los combos
+        this.financiadorService.get().subscribe(resultado => {this.obrasSociales = resultado});
+        //Se cargan los enumerados
         this.showCargar = false;
-        this.sexos = enumerados.getSexo();
-        this.generos = enumerados.getGenero();
-        this.estadosCiviles = enumerados.getEstadoCivil();
-        this.tiposContactos = enumerados.getTipoComunicacion();
+        this.sexos = enumerados.getObjSexos();
+        this.generos = enumerados.getObjGeneros();
+        this.estadosCiviles = enumerados.getObjEstadoCivil();
+        this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
-        this.relacionTutores = enumerados.getRelacionTutor();
+        this.relacionTutores = enumerados.getObjRelacionTutor();
+
+        //Se verifican los datos en la seleccion
+        let nombre = this.seleccion ? this.seleccion.nombre : '';
+        let apellido = this.seleccion ? this.seleccion.apellido : '';
+        let alias = this.seleccion ? this.seleccion.alias : '';
+        let documento = this.seleccion ? this.seleccion.documento : '';
+        let fechaNac = this.seleccion ? this.seleccion.fechaNacimiento : null;
+        let sexoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
+        let generoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
+        let estadoCivilSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
 
         this.createForm = this.formBuilder.group({
-            nombre: ['', Validators.required],
-            apellido: [''],
-            alias: [''],
-            documento: [''],
-            fechaNacimiento: [],
+            nombre: [nombre, Validators.required],
+            apellido: [apellido, Validators.required],
+            alias: [alias,Validators.required],
+            documento: [documento,Validators.required],
+            fechaNacimiento: [fechaNac,Validators.required],
             estado: ['', Validators.required],
-            sexo: [''],
-            genero: [''],
-            estadoCivil: [''],
+            sexo: [sexoSelected],
+            genero: [generoSelected],
+            estadoCivil: [estadoCivilSelected],
             contacto: this.formBuilder.array([
+              this.iniContacto(1)
             ]),
             direccion: this.formBuilder.array([
-                this.formBuilder.group({
-                    valor: [''],
-                    ubicacion: this.formBuilder.group({
-                        pais: [''],
-                        provincia: [''],
-                        localidad: [''],
-                        barrio: ['']
-                    }),
-                    ranking: [1],
-                    codigoPostal: [''],
-                    latitud: [''],
-                    longitud: [''],
-                    activo: [true]
-                })
+                this.iniDireccion()
             ]),
             financiador: this.formBuilder.array([
             ]),
             relaciones: this.formBuilder.array([
+              //this.iniRelacion()
             ]),
             activo: [true]
         });
     }
 
     iniContacto(rank: Number) {
-        // Inicializa contacto
+        // Inicializa los datos del contacto
         let cant = 0;
         let fecha = new Date();
         return this.formBuilder.group({
@@ -130,7 +131,7 @@ export class PacienteCreateComponent implements OnInit {
     iniRelacion() {
         return this.formBuilder.group({
             relacion: [''],
-            referencia: [''],
+            //referencia: [''],
             apellido: [''],
             nombre: [''],
             documento: ['']
@@ -138,19 +139,97 @@ export class PacienteCreateComponent implements OnInit {
     }
 
     addContacto() {
-        // agrega formMatricula 
         const control = <FormArray>this.createForm.controls['contacto'];
         control.push(this.iniContacto(control.length));
     }
 
     removeContacto(i: number) {
-        // elimina formMatricula
         const control = <FormArray>this.createForm.controls['contacto'];
         control.removeAt(i);
     }
 
+    iniDireccion(unaDireccion?: IDireccion) {
+        // Inicializa Direccion
+        //debugger;
+        var myPais;
+        var myProvincia;
+        var myLocalidad;
+        if (unaDireccion) {
+            if (unaDireccion.ubicacion) {
+                if (unaDireccion.ubicacion.pais) {
+                    myPais = unaDireccion.ubicacion.pais;
+                    if (unaDireccion.ubicacion.provincia) {
+                        this.provincias = this.todasProvincias.filter((p) => p.pais.id == myPais.id);
+                        myProvincia = unaDireccion.ubicacion.provincia;
+                        if (unaDireccion.ubicacion.localidad) {
+                            this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == myProvincia.id);
+                            myLocalidad = unaDireccion.ubicacion.localidad;
+                        }
+                    }
+                }
+            }
+
+            return this.formBuilder.group({
+                valor: [unaDireccion.valor],
+                ubicacion: this.formBuilder.group({
+                    pais: [myPais],
+                    provincia: [myProvincia],
+                    localidad: [myLocalidad]
+                }),
+                ranking: [unaDireccion.ranking],
+                codigoPostal: [unaDireccion.codigoPostal],
+                ultimaActualizacion: [unaDireccion.ultimaActualizacion],
+                activo: [unaDireccion.activo]
+            })
+        } else {
+            return this.formBuilder.group({
+                valor: [''],
+                ubicacion: this.formBuilder.group({
+                    pais: [''],
+                    provincia: [''],
+                    localidad: ['']
+                }),
+                ranking: [1],
+                codigoPostal: [''],
+                ultimaActualizacion: [''],
+                activo: [true]
+            })
+        }
+    }
+
+    addDireccion(unaDireccion?) {
+        // agrega una Direccion al array de direcciones
+        const control = <FormArray>this.createForm.controls['direccion'];
+        control.push(this.iniDireccion(unaDireccion));
+    }
+
+    loadDirecciones() {
+        this.seleccion.direccion.forEach(element => {
+            this.addDireccion(element);
+        });
+    }
+
+    removeDireccion(indice: number) {
+        const control = <FormArray>this.createForm.controls['direccion'];
+        control.removeAt(indice);
+    }
+
+    /*Código de filtrado de combos*/
+    loadPaises(event) {
+        this.paisService.get().subscribe(event.callback);
+    }
+
+    loadProvincias(event, pais) {
+        console.log("pais " + pais.value.id);
+        this.provinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
+    }
+
+    loadLocalidades(event, provincia) {
+        console.log("provincia " + provincia.value.id);
+        this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
+    }
+
     onSave(model: IPaciente, isvalid: boolean) {
-        debugger;
         if (isvalid) {
             let operacionPac: Observable<IPaciente>;
             operacionPac = this.pacienteService.post(model);
@@ -201,82 +280,82 @@ export class PacienteCreateComponent implements OnInit {
         control.removeAt(i);
     }
 
-    buscarPacRelacionado() {
-        //var formsRel = this.createForm.value.relaciones[i];
-        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
-        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
-        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
-
-        if ((nombre == "") && (apellido == "") && (documento == "")) {
-            this.error = true;
-            this.mensaje = "Debe completar al menos un campo de búsqueda";
-            return;
-        }
-        var pacBusqueda = {
-            "apellido": apellido, "nombre": nombre, "documento": documento,
-            "estado": "", "fechaNac": null, "sexo": ""
-        };
-        this.pacienteService.get(pacBusqueda)
-            .subscribe(resultado => {
-                if (resultado.length > 0) {
-                    this.pacRelacionados = resultado;
-                    this.showCargar = false;
-                    this.error = false;
-                    this.mensaje = "";
-                } else {
-                    this.pacRelacionados = []
-                    this.showCargar = true;
-                    this.error = true;
-                    this.mensaje = "No se encontraron datos registrados";
-                }
-            });
-    }
-
-    setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
-        return this.formBuilder.group({
-            relacion: [relacion],
-            referencia: [referencia],
-            apellido: [apellido],
-            nombre: [nombre],
-            documento: [documento]
-        });
-    }
-
-    validar(paciente: IPaciente) {
-        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
-        const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
-
-        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
-        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
-        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
-        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
-
-        this.pacRelacionados = []
-    }
-
-    cargarDatos() {
-        this.error = false;
-        this.mensaje = "";
-        var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
-        var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
-        var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
-        var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
-
-        if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
-            this.error = true;
-            this.mensaje = "Debe completar los datos solicitados";
-            return;
-        }
-
-        const control = <FormArray>this.createForm.controls['relaciones'];
-        control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
-
-        (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
-        (document.getElementById("relNombre") as HTMLSelectElement).value = "";
-        (document.getElementById("relApellido") as HTMLSelectElement).value = "";
-        (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
-
-    }
+    // buscarPacRelacionado() {
+    //     //var formsRel = this.createForm.value.relaciones[i];
+    //     var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+    //     var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+    //     var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+    //
+    //     if ((nombre == "") && (apellido == "") && (documento == "")) {
+    //         this.error = true;
+    //         this.mensaje = "Debe completar al menos un campo de búsqueda";
+    //         return;
+    //     }
+    //     var pacBusqueda = {
+    //         "apellido": apellido, "nombre": nombre, "documento": documento,
+    //         "estado": "", "fechaNac": null, "sexo": ""
+    //     };
+    //     this.pacienteService.get(pacBusqueda)
+    //         .subscribe(resultado => {
+    //             if (resultado.length > 0) {
+    //                 this.pacRelacionados = resultado;
+    //                 this.showCargar = false;
+    //                 this.error = false;
+    //                 this.mensaje = "";
+    //             } else {
+    //                 this.pacRelacionados = []
+    //                 this.showCargar = true;
+    //                 this.error = true;
+    //                 this.mensaje = "No se encontraron datos registrados";
+    //             }
+    //         });
+    // }
+    //
+    // setRelacion(relacion: String, nombre: String, apellido: String, documento: String, referencia: String) {
+    //     return this.formBuilder.group({
+    //         relacion: [relacion],
+    //         referencia: [referencia],
+    //         apellido: [apellido],
+    //         nombre: [nombre],
+    //         documento: [documento]
+    //     });
+    // }
+    //
+    // validar(paciente: IPaciente) {
+    //     var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+    //     const control = <FormArray>this.createForm.controls['relaciones'];
+    //     control.push(this.setRelacion(relacion, paciente.nombre, paciente.apellido, paciente.documento, paciente.id));
+    //
+    //     (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+    //
+    //     this.pacRelacionados = []
+    // }
+    //
+    // cargarDatos() {
+    //     this.error = false;
+    //     this.mensaje = "";
+    //     var relacion = (document.getElementById("relRelacion") as HTMLSelectElement).value;
+    //     var nombre = (document.getElementById("relNombre") as HTMLSelectElement).value;
+    //     var apellido = (document.getElementById("relApellido") as HTMLSelectElement).value;
+    //     var documento = (document.getElementById("relDocumento") as HTMLSelectElement).value;
+    //
+    //     if ((nombre == "") || (apellido == "") || (documento == "") || (relacion == "")) {
+    //         this.error = true;
+    //         this.mensaje = "Debe completar los datos solicitados";
+    //         return;
+    //     }
+    //
+    //     const control = <FormArray>this.createForm.controls['relaciones'];
+    //     control.push(this.setRelacion(relacion, nombre, apellido, documento, ""));
+    //
+    //     (document.getElementById("relRelacion") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relNombre") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relApellido") as HTMLSelectElement).value = "";
+    //     (document.getElementById("relDocumento") as HTMLSelectElement).value = "";
+    //
+    // }
 
 }

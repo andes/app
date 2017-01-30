@@ -102,7 +102,7 @@ export class PacienteUpdateComponent implements OnInit {
         this.PaisService.get().subscribe(resultado => this.paises = resultado);
         this.ProvinciaService.get("").subscribe(resultado => this.todasProvincias = resultado);
         this.LocalidadService.get("").subscribe(resultado => this.todasLocalidades = resultado);
-        this.financiadorService.get().subscribe(resultado => this.obrasSociales = resultado);
+        this.financiadorService.get().subscribe(resultado => {debugger;this.obrasSociales = resultado});
 
         this.showCargar = false;
         this.sexos = enumerados.getSexo();
@@ -264,7 +264,7 @@ export class PacienteUpdateComponent implements OnInit {
     }
 
     addContacto(unContacto?) {
-        // agrega formMatricula 
+        // agrega formMatricula
         const control = <FormArray>this.updateForm.controls['contacto'];
         control.push(this.iniContacto(unContacto));
     }
@@ -277,7 +277,7 @@ export class PacienteUpdateComponent implements OnInit {
 
     addDireccion(unaDireccion?) {
         debugger;
-        // agrega formMatricula 
+        // agrega formMatricula
         const control = <FormArray>this.updateForm.controls['direccion'];
         control.push(this.iniDireccion(unaDireccion));
     }
