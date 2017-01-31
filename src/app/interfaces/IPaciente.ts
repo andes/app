@@ -3,51 +3,58 @@ import { IDireccion } from './IDireccion';
 import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
 
 
-export interface IPaciente{
-    id: String,
-    documento: String,
-    activo: Boolean,
-    estado: String,
-    nombre: String,
-    apellido: String,
-    alias: String,
+export interface IPaciente {
+    id: String;
+    documento: String;
+    activo: Boolean;
+    estado: String;
+    nombre: String;
+    apellido: String;
+    nombreCompleto: String;
+    alias: String;
     contacto: [{
-        tipo: String,
-        valor: String,
-        ranking: Number,
-        ultimaActualizacion: Date,
+        tipo: String;
+        valor: String;
+        ranking: Number;
+        ultimaActualizacion: Date;
         activo: Boolean
-    }],
-    sexo: Sexo,
-    genero: Genero,
-    fechaNacimiento: Date, // Fecha Nacimiento
-    fechaFallecimiento: Date,
+    }];
+    sexo: Sexo;
+    genero: Genero;
+    fechaNacimiento: Date; // Fecha Nacimiento
+    edad: Number;
+    fechaFallecimiento: Date;
     direccion: [{
-        valor: String,
-        codigoPostal: String,
-        ubicacion: IUbicacion,
-        ranking: Number,
-        geoReferencia: [Number],
-        ultimaActualizacion: Date,
+        valor: String;
+        codigoPostal: String;
+        ubicacion: IUbicacion;
+        ranking: Number;
+        geoReferencia: [Number];
+        ultimaActualizacion: Date;
         activo: Boolean
-    }],
-    estadoCivil: EstadoCivil,
-    foto: String,
+    }];
+    estadoCivil: EstadoCivil;
+    foto: String;
     relaciones: [{
-        relacion: String,
-        referencia: String,
-        nombre: String,
-        apellido: String,
+        relacion: String;
+        referencia: String;
+        nombre: String;
+        apellido: String;
         documento: String
-    }],
-    financiador: [{ //obrasocial, plan sumar 
+    }];
+    financiador: [{ //obrasocial; plan sumar 
         entidad: {
-            id: String,
+            id: String;
             nombre: String
-        },
-        activo: Boolean,
-        fechaAlta: Date,
-        fechaBaja: Date,
-        ranking: Number,
+        };
+        activo: Boolean;
+        fechaAlta: Date;
+        fechaBaja: Date;
+        ranking: Number;
     }]
+
 }
+
+export abstract class absPaciente {
+
+} 

@@ -16,16 +16,17 @@ export class AppComponent {
 
     loadSideBar() {
         let items = [
-        new SidebarItem('Inicio', 'creation', '/inicio'),
-        new SidebarItem('Organizacion', 'hospital-building', '/organizacion'),
-        new SidebarItem('Profesional', 'human-male', '/profesional'),
-        new SidebarItem('Especialidad', 'certificate', '/especialidad'),
-        new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),        
-        new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
-        new SidebarItem('Prestacion', 'blur', '/prestacion'),
-        new SidebarItem('Agendas', 'calendar', '/agenda'),
-        new SidebarItem('Turnos', 'calendar-check', '/turnos'),
-        new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas')
+            new SidebarItem('Inicio', 'creation', '/inicio'),
+            new SidebarItem('Organizacion', 'hospital-building', '/organizacion'),
+            new SidebarItem('Profesional', 'human-male', '/profesional'),
+            new SidebarItem('Especialidad', 'certificate', '/especialidad'),
+            new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),
+            new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
+            new SidebarItem('Prestacion', 'blur', '/prestacion'),
+            new SidebarItem('Agendas', 'calendar', '/agenda'),
+            new SidebarItem('Turnos', 'calendar-check', '/turnos'),
+            new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas'),
+            new SidebarItem('Tensión', 'calendar-check', '/rup')
         ];
         this.plex.initStaticItems(items);
     }

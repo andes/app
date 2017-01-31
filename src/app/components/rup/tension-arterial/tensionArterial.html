@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-md-6">
+        <tensionDiastolica [paciente]="paciente"></tensionDiastolica>
+    </div>
+    <div class="col-md-6">
+        <tensionSistolica [paciente]="paciente" #sistolica></tensionSistolica>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        {{tensionArterial | json}}
+    </div>
+</div>

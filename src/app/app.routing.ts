@@ -1,3 +1,4 @@
+import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
+  { path: 'rup', component: TensionArterialComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 
