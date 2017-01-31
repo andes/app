@@ -7,9 +7,11 @@
                     <div *ngFor="let bloque of ag.bloques; let i=index">
                         <div class="row">
                             <div class="col-md-12">
-                                <span><b>Bloque: </b>{{bloque.descripcion}}</span>
-                                <plex-button icon="mdi mdi-message-draw" title="Enviar SMS" type="default" (click)="enviarSMS(bloque.turnos)">
-                                </plex-button>
+                                <div class="col-md-7"><span><b>Bloque: </b>{{bloque.descripcion}}</span></div>
+                                <div class="col-md-5" *ngIf="ag.estado == 'Suspendida'">
+                                    <a class="hover" (click)="enviarSMS(bloque.turnos)"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a>
+                                </div>
+
                                 <table class="table table-hover">
                                     <tr *ngFor="let turno of bloque.turnos; let i=index">
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')"><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
@@ -22,11 +24,10 @@
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
-                                        <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center"><a class="hover" >
-                                            <i title="Enviar SMS" class="mdi mdi-message-draw"></i></a></td>
-                                        <!--<td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
-                                            <plex-bool label="SMS"></plex-bool>
-                                        </td>-->
+                                        <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
+                                            <i *ngIf="!smsEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
+                                            <i *ngIf="smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
+                                        </td>
 
                                     </tr>
                                 </table>
