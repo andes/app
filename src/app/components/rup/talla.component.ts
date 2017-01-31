@@ -2,21 +2,21 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'temperatura',
-    templateUrl: 'temperatura.html'
+    selector: 'talla',
+    templateUrl: 'talla.html'
 })
-export class TemperaturaComponent {
+export class TallaComponent {
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') prestacion: any;
     @Input('required') required: Boolean;
 
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
-    temperatura: Number = null;
+    talla: Number = null;
     mensaje: String = null;
 
     devolverValores() {
-        this.evtData.emit(this.temperatura);
+        this.evtData.emit(this.talla);
 
         // agregar validaciones aca en base al paciente y el tipo de prestacion
         // if (this.temperatura > 10){

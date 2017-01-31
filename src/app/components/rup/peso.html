@@ -1,0 +1,8 @@
+<plex-int placeholder="..." [(ngModel)]="peso" name="peso" label="Peso" suffix=" Kg " min="0" max="400"
+(change)="devolverValores()"
+>
+</plex-int>
+
+<p *ngIf="mensaje">
+    {{mensaje}}
+</p>

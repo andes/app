@@ -1,0 +1,6 @@
+<plex-int placeholder="..." [(ngModel)]="temperatura" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45" (change)="devolverValores()">
+</plex-int>
+
+<p *ngIf="mensaje">
+    {{mensaje}}
+</p>
