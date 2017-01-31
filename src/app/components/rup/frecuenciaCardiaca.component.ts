@@ -2,16 +2,16 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'tensionSistolica',
-    templateUrl: 'tensionSistolica.html'
+    selector: 'frecuenciaCardiaca',
+    templateUrl: 'frecuenciaCardiaca.html'
 })
-export class TensionSistolicaComponent{
+export class FrecuenciaCardiacaComponent{
 
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    tensionSistolica: Number = null;
+    frecuenciaCardiaca: Number = null;
     mensaje: String = null;
 
 
@@ -19,10 +19,10 @@ export class TensionSistolicaComponent{
     }
 
     devolverValores(){
-        this.evtData.emit(this.tensionSistolica);
+        this.evtData.emit(this.frecuenciaCardiaca);
 
         // agregar validaciones aca en base al paciente y el tipo de prestacion
-        // if (this.tensionDiastolica > 10){
+        // if (this.frecuenciaRespiratoria > 10){
         // }
     }
 

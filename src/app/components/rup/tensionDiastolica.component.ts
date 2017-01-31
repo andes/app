@@ -10,13 +10,13 @@ export class TensionDiastolicaComponent {
     @Input('tipoPrestacion') prestacion: any;
     @Input('required') required: Boolean;
 
-    @Output() diastolica: EventEmitter<Number> = new EventEmitter<Number>();
+    @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
     tensionDiastolica: Number = null;
     mensaje: String = null;
 
     devolverValores(){
-        this.diastolica.emit(this.tensionDiastolica);
+        this.evtData.emit(this.tensionDiastolica);
 
         // agregar validaciones aca en base al paciente y el tipo de prestacion
         // if (this.tensionDiastolica > 10){

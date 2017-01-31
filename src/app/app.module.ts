@@ -1,3 +1,5 @@
+import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca.component';
+import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
@@ -92,7 +94,8 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent
+    TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent,
+    FrecuenciaRespiratoriaComponent, FrecuenciaCardiacaComponent
   ],
   bootstrap: [AppComponent],
   providers: [
