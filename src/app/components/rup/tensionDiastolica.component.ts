@@ -1,30 +1,27 @@
-import { PacienteService } from './../../services/paciente.service';
-import { IPaciente } from './../../interfaces/IPaciente';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+import { IPaciente } from '../../interfaces/IPaciente';
+import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'tensionDiastolica',
     templateUrl: 'tensionDiastolica.html'
 })
-export class TensionDiastolicaComponent implements OnInit {
-
+export class TensionDiastolicaComponent {
     @Input('paciente') paciente: IPaciente;
+    @Input('tipoPrestacion') prestacion: any;
+    @Input('required') required: Boolean;
+
+    @Output() diastolica: EventEmitter<Number> = new EventEmitter<Number>();
 
     tensionDiastolica: Number = null;
+    mensaje: String = null;
 
-    ngOnInit() {
-        // if (this.paciente.edad < 3) {
-        //     this.tensionDiastolica = {
-        //         min: 20,
-        //         max: 200,
-        //         valor: 20
-        //     }
+    devolverValores(){
+        this.diastolica.emit(this.tensionDiastolica);
+
+        // agregar validaciones aca en base al paciente y el tipo de prestacion
+        // if (this.tensionDiastolica > 10){
         // }
     }
-
 
 
 }

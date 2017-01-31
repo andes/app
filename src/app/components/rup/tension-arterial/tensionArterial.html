@@ -1,15 +1,18 @@
-<div class="row">
-    <div class="col-md-6">
-        <tensionDiastolica [paciente]="paciente"></tensionDiastolica>
-    </div>
-    <div class="col-md-6">
-        <tensionSistolica [paciente]="paciente" #sistolica></tensionSistolica>
+<form>
+    <div class="row">
+        <div class="col-md-6">
+            <tensionDiastolica [paciente]="paciente" [tipoPrestacion]="prestacionDiastolica" (diastolica)="onReturnDiastolica($event)" ></tensionDiastolica>
+        </div>
+        <div class="col-md-6">
+            <tensionSistolica [paciente]="paciente" [tipoPrestacion]="prestacionSistolica" (sistolica)="onReturnSistolica($event)" ></tensionSistolica>
+        </div>
+
+        <!--<button type="submit" (click)="showData()">Mostrar</button>-->
     </div>
 
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        {{tensionArterial | json}}
+    <div class="row">
+        <div class="col-md-6">
+            {{tensionArterial | json}}
+        </div>
     </div>
-</div>
+</form>

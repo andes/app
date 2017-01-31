@@ -1,4 +1,4 @@
-import { TensionSistolicaComponent } from './components/rup/tensionSistolica.compponent';
+import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';

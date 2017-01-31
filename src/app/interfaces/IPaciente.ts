@@ -54,7 +54,3 @@ export interface IPaciente {
     }]
 
 }
-
-export abstract class absPaciente {
-
-} 

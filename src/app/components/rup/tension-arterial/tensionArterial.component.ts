@@ -1,7 +1,7 @@
-import { TensionSistolicaComponent } from './../tensionSistolica.compponent';
+import { TensionSistolicaComponent } from './../tensionSistolica.component';
 import { TensionDiastolicaComponent } from './../tensionDiastolica.component';
 import { IPaciente } from './../../../interfaces/IPaciente';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
@@ -11,19 +11,17 @@ import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
     templateUrl: 'tensionArterial.html'
 })
 export class TensionArterialComponent implements OnInit {
-    //@Input('paciente') paciente: IPaciente;
-
-    @ViewChild(TensionDiastolicaComponent)
-    tensionDiastolicaChild: TensionDiastolicaComponent;
-
-    @ViewChild(TensionSistolicaComponent)
-    tensionSistolicaChild: TensionSistolicaComponent;
 
     paciente: any;
-    tensionArterial: any;
+    // resultados a devolver
+    data: Object = {};
+
+    // tipos de prestaciones a utilizar
+    prestacionDiastolica: any;
+    prestacionSistolica: any;
 
     ngOnInit() {
-        debugger;
+        // debugger;
         this.paciente = {
             "id": "588257bce70a44138c44a002",
             "documento": "93155329",
@@ -36,23 +34,31 @@ export class TensionArterialComponent implements OnInit {
             "estadoCivil": "",
             "activo": true
         }
+
+        this.prestacionDiastolica = {
+            "_id" : "5890730a0c4eccd05d2a7a43",
+            "key" : "tensionDiastolica",
+            "nombre" : "Tension diastólica",
+            "autonoma" : false,
+            "activo" : true,
+            "componente" : "rup/tensionDiastolica.component.ts"
+        };
+
+        this.prestacionSistolica = {
+            "_id" : "589072ee0c4eccd05d2a7a42",
+            "key" : "tensionSistolica",
+            "nombre" : "Tension sistólica",
+            "autonoma" : false,
+            "activo" : true,
+            "componente" : "rup/tensionSistolica.component.ts"
+        };
     }
 
-    ngAfterViewInit() {
-        debugger;
-        var diastolica: Number = this.tensionDiastolicaChild.tensionDiastolica;
-        var sistolica: Number = this.tensionSistolicaChild.tensionSistolica;
-        this.tensionArterial = {
-            tensionSistolica: this.tensionSistolicaChild.tensionSistolica,
-            tensionDiastolica: this.tensionDiastolicaChild.tensionDiastolica
-        }
-
-        // this.tensionArterial = {
-        //     tensionSistolica: 212,
-        //     tensionDiastolica: 21
-        // }
+    onReturnDiastolica(tensionDiastolica: Number){
+        this.data[this.prestacionDiastolica.key] = tensionDiastolica;
     }
 
-
-
+    onReturnSistolica(tensionSistolica: Number){
+        this.data[this.prestacionSistolica.key] = tensionSistolica;
+    }
 }
