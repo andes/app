@@ -99,8 +99,8 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent,
-    FrecuenciaRespiratoriaComponent, FrecuenciaCardiacaComponent, temperaturaComponent, tallaComponent,
-    saturacionOxigenoComponent, pesoComponent
+    FrecuenciaRespiratoriaComponent, FrecuenciaCardiacaComponent, TemperaturaComponent, TallaComponent,
+    SaturacionOxigenoComponent, PesoComponent
   ],
   bootstrap: [AppComponent],
   providers: [
