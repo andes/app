@@ -5,7 +5,7 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
     selector: 'talla',
     templateUrl: 'talla.html'
 })
-export class TemperaturaComponent {
+export class TallaComponent {
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') prestacion: any;
     @Input('required') required: Boolean;
