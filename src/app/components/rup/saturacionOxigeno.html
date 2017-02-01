@@ -1,0 +1,7 @@
+<plex-int placeholder="..." [(ngModel)]="saturacionOxigeno" name="saturacionOxigeno" label="Saturación de Oxígeno" suffix=" % " min="0" max="100"
+(change)="devolverValores()">
+</plex-int>
+
+<p *ngIf="mensaje">
+    {{mensaje}}
+</p>

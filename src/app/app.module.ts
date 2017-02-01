@@ -1,3 +1,12 @@
+import { PesoComponent } from './components/rup/peso.component';
+import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
+import { TallaComponent } from './components/rup/talla.component';
+import { TemperaturaComponent } from './components/rup/temperatura.component';
+import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca.component';
+import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
+import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
+import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
+import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -87,7 +96,10 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent
+    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
+    TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent,
+    FrecuenciaRespiratoriaComponent, FrecuenciaCardiacaComponent, TemperaturaComponent, TallaComponent,
+    SaturacionOxigenoComponent, PesoComponent
   ],
   bootstrap: [AppComponent],
   providers: [

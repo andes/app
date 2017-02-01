@@ -1,0 +1,8 @@
+<plex-int placeholder="..." [(ngModel)]="tensionDiastolica" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="20" max="300"
+(change)="devolverValores()"
+>
+</plex-int>
+
+<p *ngIf="mensaje">
+    {{mensaje}}
+</p>

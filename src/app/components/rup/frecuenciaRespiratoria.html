@@ -1,0 +1,8 @@
+<plex-int placeholder="..." [(ngModel)]="frecuenciaRespiratoria" name="frecuenciaRespiratoria" label="Frecuencia respiratoria" suffix="RPM" min="10" max="100"
+(change)="devolverValores()"
+>
+</plex-int>
+
+<p *ngIf="mensaje">
+    {{mensaje}}
+</p>
