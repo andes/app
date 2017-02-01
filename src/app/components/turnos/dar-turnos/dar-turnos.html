@@ -45,18 +45,18 @@
             <div class="row">
               <div class="col-md-8" align="center">
                 <div class="box">
-                  <div class="box-content" align="center">
+                  <div class="box-content" align="center" title="{{prestaciones}}">
                     <h1>
                       <small> 
-                            <div *ngFor="let profesional of agenda.profesionales let i=index">
-                                <div *ngIf="i<agenda.profesionales.length-1">
-                                    {{profesional.nombre}} {{profesional.apellido}},
-                                </div>
-                                <div *ngIf="i>=agenda.profesionales.length-1">
-                                    {{profesional.nombre}} {{profesional.apellido}}
-                                </div>
-                            </div>
-                        </small>
+                          <div *ngFor="let profesional of agenda.profesionales let i=index">
+                              <div *ngIf="i<agenda.profesionales.length-1">
+                                  {{profesional.nombre}} {{profesional.apellido}},
+                              </div>
+                              <div *ngIf="i>=agenda.profesionales.length-1">
+                                  {{profesional.nombre}} {{profesional.apellido}}
+                              </div>
+                          </div>
+                      </small>
                       <br>
                       <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
                       {{agenda.horaInicio | date: 'dd/MM'}}
@@ -74,7 +74,6 @@
                 <plex-box>
                   <div *ngFor="let bloque of bloques; let indiceBq=index">
                     <div *ngIf="tieneTurnos(bloque)" class="row">
-                      <!--<div *ngIf="bloque.turnos.length>0" class="col-md-12">-->
                       <div class="col-md-12">
                         <h2>
                           <small>
@@ -169,7 +168,6 @@
                   <div class="row">
                     <div class="col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: &nbsp;</label>
                       <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span><br></div>
-                    <!--<span>{{alternativa.profesionales[0].nombre}} {{alternativa.profesionales[0].apellido}} </span><br></div>-->
                   </div>
                 </a>
               </div>
@@ -194,14 +192,14 @@
             <plex-box type="warning" title="Confirmar Turno">
               <div class="row">
                 <div class="col-md-12">
-                  <div class="col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}} ({{this.paciente.documento}})</div>
+                  <div class="col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}}</div>
+                  <div class="col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
                   <!--<div class="col-md-12"><label>Teléfono: &nbsp;</label><input [(ngModel)]="paciente.telefono">-->
                   <div class="col-md-12">
-                    <plex-text [(ngModel)]="telefono"></plex-text>
+                    <plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>
                   </div>
-                  <br><br>
-                  <div class="col-md-6"><br><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
-                  <div class="col-md-6"><br><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>
+                  <div class="col-md-6"><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
+                  <div class="col-md-6"><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>
                   <div class="col-md-12"><br><label>Profesionales: </label>
                     <div *ngFor="let profesional of agenda.profesionales let i=index">
                       <div *ngIf="i<agenda.profesionales.length-1">
@@ -218,14 +216,10 @@
                     <div *ngIf="turno.prestacion">
                       {{turno.prestacion.nombre}}
                     </div>
-                    <!--<div *ngFor="let prestacion of bloque.prestaciones let j=index">
-                      <div *ngIf="j<bloque.prestaciones.length-1">
-                        {{prestacion.nombre}},
-                      </div>
-                      <div *ngIf="j>=bloque.prestaciones.length-1">
-                        {{prestacion.nombre}}
-                      </div>
-                    </div>-->
+                    <div *ngIf="!turno.prestacion">
+                      <plex-select [(ngModel)]="turnoPrestacion" [data]="bloque.prestaciones">
+                      </plex-select>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -20,7 +20,6 @@ import { PrestacionComponent } from './components/turnos/configuracion/prestacio
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
 
-import { ConfigPrestacionComponent } from './components/turnos/configPrestacion.component';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { HttpModule } from '@angular/http';
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -85,7 +84,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
-    ConfigPrestacionComponent, AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent

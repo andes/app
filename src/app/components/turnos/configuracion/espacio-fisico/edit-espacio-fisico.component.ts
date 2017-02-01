@@ -1,7 +1,5 @@
-import { IOrganizacion } from './../../../../interfaces/IOrganizacion';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
@@ -32,7 +30,7 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById("57e9670e52df311059bc8964").subscribe(respuesta => {event.callback(respuesta.edificio)});
+        this.OrganizacionService.getById('57e9670e52df311059bc8964').subscribe(respuesta => {event.callback(respuesta.edificio); });
     }
 
     onClick(modelo: IEspacioFisico) {
@@ -40,9 +38,9 @@ export class EditEspacioFisicoComponent implements OnInit {
         if (this.espacioFisicoHijo) {
             modelo.id = this.espacioFisicoHijo.id;
             estOperation = this.EspacioFisicoService.put(modelo);
-        }
-        else
+        } else {
             estOperation = this.EspacioFisicoService.post(modelo);
+        }
         estOperation.subscribe(resultado => this.data.emit(resultado));
     }
 

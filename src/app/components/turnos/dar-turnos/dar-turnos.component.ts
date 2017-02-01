@@ -11,6 +11,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
 // Servicios
+import { PacienteService } from '../../../services/paciente.service';
 import { PrestacionService } from '../../../services/turnos/prestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
@@ -26,41 +27,53 @@ export class DarTurnosComponent implements AfterViewInit {
         fecha: new Date(),
         prestacion: null,
         profesional: null,
-    }
+    };
 
     public estadoT: Estado;
-    private turno: ITurno[];
+    private turno: ITurno;
     private bloque: IBloque;
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
     private telefono: String = '';
-
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
     private reqfiltros: boolean = false;
+    private prestaciones: String = '';
+    private turnoPrestacion: any = {};
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
+    // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     paciente: any = {
-        'documento': '30403872',
-        'apellido': 'Diaz',
-        'nombre': 'Ramiro',
-        'telefono': ''
+        id: '57f66f2076e97c2d18f1808b',
+        documento: '30403872',
+        apellido: 'Diaz',
+        nombre: 'Ramiro',
+        contacto: [{
+            tipo: 'Teléfono Fijo',
+            valor: '2995573273',
+            ranking: 1,
+            activo: true
+        }]
     };
-
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
+    cambioTelefono: boolean = false;
 
     constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public plex: Plex) { }
+        public serviceAgenda: AgendaService, public serviceTurno: TurnoService,
+        public servicePaciente: PacienteService, public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
-
+        let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
+        // this.telefono = contacto.valor;
+        console.log ('contacto ', contacto[0].valor);
+        this.telefono = contacto[0].valor;
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get().subscribe(event.callback);
+        this.servicioPrestacion.get({}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -72,7 +85,7 @@ export class DarTurnosComponent implements AfterViewInit {
             'prestacion': this.opciones.prestacion ? this.opciones.prestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
         };
-        if (this.busquedas.length == size) {
+        if (this.busquedas.length === size) {
             this.busquedas.pop();
         }
         this.busquedas.push(search);
@@ -84,7 +97,7 @@ export class DarTurnosComponent implements AfterViewInit {
         let params: any = {};
         this.estadoT = 'noSeleccionada';
         this.agenda = null;
-        if (etiqueta != 'sinFiltro') {
+        if (etiqueta !== 'sinFiltro') {
             params = {
                 'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : '',
                 'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : ''
@@ -119,6 +132,15 @@ export class DarTurnosComponent implements AfterViewInit {
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
             if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
+                this.prestaciones = '';
+                if (this.agenda.prestaciones.length > 1) {
+                    this.agenda.prestaciones.forEach((prestacion, ind) => {
+                        this.prestaciones = this.prestaciones ? this.prestaciones + '\n' + prestacion.nombre : prestacion.nombre;
+                    });
+                } else {
+                    this.prestaciones = this.agenda.prestaciones[0].nombre;
+                    this.turnoPrestacion = this.agenda.prestaciones[0];
+                }
             } else {
                 /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                 this.estadoT = 'noTurnos';
@@ -140,7 +162,9 @@ export class DarTurnosComponent implements AfterViewInit {
         this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
         this.indiceTurno = indice;
         this.turno = bloque.turnos[indice];
-        // let inicio = bloque.turnos[indice].horaInicio;
+        if (this.bloque.prestaciones.length === 1) {
+            this.turno.prestacion = this.bloque.prestaciones[0];
+        }
         this.estadoT = 'confirmacion';
     }
 
@@ -170,7 +194,7 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     cambiarMes(signo) {
-        if (signo == '+') {
+        if (signo === '+') {
             this.opciones.fecha = moment(this.opciones.fecha).add(1, 'M').toDate();
         } else {
             this.opciones.fecha = moment(this.opciones.fecha).subtract(1, 'M').toDate();
@@ -178,21 +202,33 @@ export class DarTurnosComponent implements AfterViewInit {
         this.actualizar('');
     }
 
+    cambiarTelefono() {
+        this.cambioTelefono = true;
+    }
+
     onSave() {
+        console.log(this.turnoPrestacion);
         let pacientes: any[];
         let estado: String = 'asignado';
-        this.paciente = {
-            'documento': '30403872',
-            'apellido': 'Diaz',
-            'nombre': 'Ramiro',
-            'telefono': this.telefono
+        let pacienteSave = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            telefono: this.telefono
         };
+        // this.paciente = {
+        //     documento: '30403872',
+        //     apellido: 'Diaz',
+        //     nombre: 'Ramiro',
+        //     telefono: this.telefono
+        // };
 
         if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
             pacientes = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].pacientes.
-                map(elem => { elem.nombre = elem.nombre, elem.apellido = elem.apellido, elem.documento = elem.documento; return elem; });
+            map(function(elem){return {nombre: elem.nombre, apellido: elem.apellido, documento: elem.documento}; });
             pacientes.push(this.paciente);
-            if (pacientes.length == this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
+            if (pacientes.length === this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
                 estado = 'asignado';
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
             } else {
@@ -203,16 +239,18 @@ export class DarTurnosComponent implements AfterViewInit {
         }
 
         let datosTurno = {
-            'idAgenda': this.agenda.id,
-            'indiceBloque': this.indiceBloque,
-            'indiceTurno': this.indiceTurno,
-            'simultaneos': this.agenda.bloques[this.indiceBloque].pacienteSimultaneos,
-            'cantsimultaneos': this.agenda.bloques[this.indiceBloque].cantidadSimultaneos,
-            'estado': estado,
-            'paciente': this.paciente,
-            'pacientes': pacientes
-        };
+            idAgenda: this.agenda.id,
+            indiceBloque: this.indiceBloque,
+            indiceTurno: this.indiceTurno,
+            simultaneos: this.agenda.bloques[this.indiceBloque].pacienteSimultaneos,
+            cantsimultaneos: this.agenda.bloques[this.indiceBloque].cantidadSimultaneos,
+            estado: estado,
+            // paciente: this.paciente,
+            paciente: pacienteSave,
+            pacientes: pacientes,
+            prestacion: this.turnoPrestacion
 
+        };
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
         operacion.subscribe(resultado => {
@@ -221,6 +259,11 @@ export class DarTurnosComponent implements AfterViewInit {
             this.actualizar('sinFiltro');
             this.plex.alert('El turno se asignó correctamente');
         });
+        // TODO: Si cambió el teléfono lo actualizo en MPI?
+        // if (this.cambioTelefono){
+        //     let mpi: Observable<any>;
+        //     mpi = this.servicePaciente.put();
+        // }
     }
 
     buscarPaciente() {
@@ -242,6 +285,7 @@ export class DarTurnosComponent implements AfterViewInit {
         this.showDarTurnos = true;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
+        // TODO: recorrer contactos para buscar el teléfono
     }
 
     listaEspera() {

@@ -20,7 +20,7 @@ export class AgendaService {
     }
 
     save(agenda: IAgenda): Observable<IAgenda> {
-        if (agenda.id){
+        if (agenda.id) {
             return this.server.put(this.agendaUrl + '/' + agenda.id, agenda);
         } else {
             return this.server.post(this.agendaUrl, agenda);

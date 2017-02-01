@@ -1,4 +1,3 @@
-import { CalendarioDia } from './dar-turnos/calendario-dia.class';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Observable } from 'rxjs/Rx';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';

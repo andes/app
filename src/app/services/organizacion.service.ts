@@ -22,7 +22,7 @@ export class OrganizacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IOrganizacion[]> {
-        console.log ("url ", this.organizacionUrl);
+        console.log ('url ', this.organizacionUrl);
         return this.server.get(this.organizacionUrl, params);
     }
     /**
@@ -30,7 +30,7 @@ export class OrganizacionService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IOrganizacion> {
-        return this.server.get(this.organizacionUrl + "/" + id, null);
+        return this.server.get(this.organizacionUrl + '/' + id, null);
     }
     /**
      * Metodo post. Inserta un objeto organizacion nuevo.
@@ -45,7 +45,7 @@ export class OrganizacionService {
      */
 
     put(organizacion: IOrganizacion): Observable<IOrganizacion> {
-        return this.server.put(this.organizacionUrl + "/" + organizacion.id, organizacion) // ...using post request
+        return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion) // ...using post request
     }
 
     /**
@@ -55,7 +55,7 @@ export class OrganizacionService {
     disable(organizacion: IOrganizacion): Observable<IOrganizacion> {
         organizacion.activo = false;
         organizacion.fechaBaja = new Date();
-        return this.put(organizacion)    
+        return this.put(organizacion);
     }
 
      /**

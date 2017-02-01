@@ -52,7 +52,7 @@ export class AgendaComponent implements OnInit {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get().subscribe(event.callback);
+        this.servicioPrestacion.get({}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -86,6 +86,7 @@ export class AgendaComponent implements OnInit {
 
     public calculosInicio() {
         this.modelo.fecha = this.modelo.horaInicio;
+        // this.modelo.fecha = new Date();
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             bloque.indice = index;
@@ -115,9 +116,7 @@ export class AgendaComponent implements OnInit {
                 bloque.accesoDirectoProgramadoPorc = 0;
                 bloque.reservadoGestionPorc = 0;
                 bloque.reservadoProfesionalPorc = 0;
-                // bloque.duracionTurno = 0
             }
-
             this.inicializarPrestacionesBloques(bloque);
         });
         this.validarTodo();
@@ -182,7 +181,7 @@ export class AgendaComponent implements OnInit {
 
     cambioPrestaciones() {
         let bloques = this.modelo.bloques;
-        bloques.forEach((bloque, index) => {
+        bloques.forEach((bloque) => {
             // Si se elimino una prestación, la saco de los bloques
             let bloquePrestaciones = bloque.prestaciones;
             bloquePrestaciones.forEach((bloquePrestacion, index) => {
@@ -193,7 +192,7 @@ export class AgendaComponent implements OnInit {
             });
 
             // Si se agrego una prestacion, la agrego a los bloques
-            this.modelo.prestaciones.forEach((prestacion, index2) => {
+            this.modelo.prestaciones.forEach((prestacion) => {
                 let copiaPrestacion = operaciones.clonarObjeto(prestacion);
                 let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
                 if (i < 0) {
@@ -428,7 +427,7 @@ export class AgendaComponent implements OnInit {
             auxiliar = new Date(fecha1);
             horas = fecha2.getHours();
             minutes = fecha2.getMinutes();
-            //Date.setHours(hour, min, sec, millisec)
+            // Date.setHours(hour, min, sec, millisec)
             auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
         } else {
@@ -440,16 +439,13 @@ export class AgendaComponent implements OnInit {
         if (Object.keys(this.modelo).length > 0) {
             if (isvalid) {
                 let espOperation: Observable<IAgenda>;
-                let prestacionesFormateadas: any[];
                 this.fecha = new Date(this.modelo.fecha);
                 this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
                 this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
                 this.modelo.estado = 'Planificada';
                 let bloques = this.modelo.bloques;
                 bloques.forEach((bloque, index) => {
-                    // aca debería cargar el arreglo de turnos
                     bloque.turnos = [];
-                    // let simultaneos: number = bloque.pacienteSimultaneos? bloque.cantidadSimultaneos:0;
                     for (let i = 0; i < bloque.cantidadTurnos; i++) {
                         let turno = {
                             horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
@@ -463,17 +459,6 @@ export class AgendaComponent implements OnInit {
                     bloque.prestaciones = bloque.prestaciones.filter(function (el) {
                         return el.activo === true;
                     });
-                    prestacionesFormateadas = [];
-                    prestacionesFormateadas = bloque.prestaciones.map(function (obj) {
-                        let rObj = {};
-                        if (obj.activo) {
-                            rObj['_id'] = obj._id;
-                            rObj['id'] = obj.id;
-                            rObj['nombre'] = obj.nombre;
-                            return rObj;
-                        }
-                    });
-                    bloque.prestaciones = prestacionesFormateadas;
                 });
                 espOperation = this.ServicioAgenda.save(this.modelo);
                 espOperation.subscribe(resultado => {

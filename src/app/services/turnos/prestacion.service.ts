@@ -1,7 +1,8 @@
+import { ServerService } from 'andes-shared/src/lib/server.service';
 import { AppSettings } from './../../appSettings';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
+import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
@@ -10,61 +11,47 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class PrestacionService {
-    private prestacionUrl = AppSettings.API_ENDPOINT +'/modules/turnos/prestacion';
-    constructor(private http: Http) { }
+    private prestacionUrl = AppSettings.API_ENDPOINT + '/modules/turnos/prestacion';
+    constructor(private http: Http, private server: ServerService) { }
 
-    get(): Observable<IPrestacion[]> {
-        return this.http.get(this.prestacionUrl)
-            .map((res: Response) => res.json())
-            .catch(this.handleError);
+    /**
+     * Metodo get. Trae el objeto prestacion.
+     * @param {any} params Opciones de busqueda
+     */
+    get(params: any): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionUrl, params)
     }
-    
+    /**
+     * Metodo post. Inserta un objeto prestacion nuevo.
+     * @param {IPrestacion} prestacion Recibe IPrestacion
+     */
     post(prestacion: IPrestacion): Observable<IPrestacion> {
-
-        let bodyString = JSON.stringify(prestacion);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.post(this.prestacionUrl, bodyString, options) // ...using post request
-            .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
-            .catch(this.handleError); //...errors if any
+        return this.server.post(this.prestacionUrl, prestacion);
     }
-
+    /**
+     * Metodo put. Actualiza un objeto prestacion nuevo.
+     * @param {IPrestacion} prestacion Recibe IPrestacion
+     */
     put(prestacion: IPrestacion): Observable<IPrestacion> {
-
-        let bodyString = JSON.stringify(prestacion); // Stringify payload
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.put(this.prestacionUrl + "/" + prestacion.id, bodyString, options) // ...using post request
-            .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
-            .catch(this.handleError); //...errors if any
+        return this.server.put(this.prestacionUrl + '/' + prestacion.id, prestacion)
     }
-
+    /**
+     * Metodo disable. deshabilita prestacion.
+     * @param {IEspecialidad} prestacion Recibe IPrestacion
+     */
     disable(prestacion: IPrestacion): Observable<IPrestacion> {
         prestacion.activo = false;
-
-        let bodyString = JSON.stringify(prestacion); // Stringify payload
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.put(this.prestacionUrl + "/" + prestacion.id, bodyString, options) // ...using post request
-            .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
-            .catch(this.handleError); //...errors if any
+        prestacion.fechaBaja = new Date();
+        return this.put(prestacion);
     }
-
+   /**
+     * Metodo enable. habilita prestacion.
+     * @param {IPrestacion} prestacion Recibe IPrestacion
+     */
     enable(prestacion: IPrestacion): Observable<IPrestacion> {
         prestacion.activo = true;
-
-        let bodyString = JSON.stringify(prestacion); // Stringify payload
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.put(this.prestacionUrl + "/" + prestacion.id, bodyString, options) // ...using post request
-            .map((res: Response) => res.json()) // ...and calling .json() on the response to return data
-            .catch(this.handleError); //...errors if any
+        return this.put(prestacion);
     }
-
     handleError(error: any) {
         console.log(error.json());
         return Observable.throw(error.json().error || 'Server error');

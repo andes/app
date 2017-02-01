@@ -1,7 +1,6 @@
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { FormGroup } from '@angular/forms';
 
 import { IPrestacion } from './../../../../interfaces/turnos/IPrestacion';
 import { PrestacionService } from './../../../../services/turnos/prestacion.service';
@@ -27,7 +26,7 @@ export class PrestacionComponent implements OnInit {
     }
 
     loadPrestacion() {
-        this.prestacionService.get()
+        this.prestacionService.get({})
             .subscribe(
             prestacion => this.prestacion = prestacion,
             err => {
@@ -46,7 +45,7 @@ export class PrestacionComponent implements OnInit {
 
     onDisable(prestacion: IPrestacion) {
         this.prestacionService.disable(prestacion)
-            .subscribe(dato => this.loadPrestacion(), //Bind to view
+            .subscribe(dato => this.loadPrestacion(), // Bind to view
             err => {
                 if (err) {
                     console.log(err);
@@ -56,7 +55,7 @@ export class PrestacionComponent implements OnInit {
 
     onEnable(prestacion: IPrestacion) {
         this.prestacionService.enable(prestacion)
-            .subscribe(dato => this.loadPrestacion(), //Bind to view
+            .subscribe(dato => this.loadPrestacion(), // Bind to view
             err => {
                 if (err) {
                     console.log(err);

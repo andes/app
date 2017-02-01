@@ -57,7 +57,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get().subscribe(event.callback);
+        this.servicioPrestacion.get({}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
