@@ -17,23 +17,34 @@ export class TurnosComponent {
     showTurnos: boolean = true;
     numero: String = '';
     smsEnviado: boolean = false;
+    smsLoader: boolean = false;
+    resultado: any;
 
     enviarSMS(turno: any) {
-this.smsEnviado = true;
+        this.smsLoader = true;
+
         for (let x = 0; x < turno.length; x++) {
             if (turno[x].paciente != null) {
-                // this.telefonos.push(turno[x].paciente.telefono);
-debugger;
-                this.smsService.enviarSms(turno[x].paciente.telefono).subscribe(resultado => {
-                    this.plex.alert('El sms se envío correctamente');
-                    
-                });
+
+                this.smsService.enviarSms(turno[x].paciente.telefono).subscribe(
+                    resultado => {
+                        this.resultado = resultado;
+
+                        if (resultado === '0') {
+                            this.smsLoader = false;
+                            this.smsEnviado = true;
+                        } else {
+                            this.smsLoader = false;
+                            this.smsEnviado = false;
+                        }
+                    },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
             }
         }
-
-        // this.smsService.enviarSms(this.telefonos).subscribe(resultado => {
-        //     this.plex.alert('El sms se envío correctamente');
-        // });
     }
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService) { }

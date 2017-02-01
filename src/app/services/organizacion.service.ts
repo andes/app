@@ -2,8 +2,8 @@ import { AppSettings } from './../appSettings';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Http } from '@angular/http';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -15,7 +15,7 @@ export class OrganizacionService {
     private organizacionUrl = AppSettings.API_ENDPOINT + '/core/tm/organizaciones';  // URL to web api
 
 
-    constructor(private server: ServerService, private http: Http) { }
+    constructor(private server: Server, private http: Http) { }
 
     /**
      * Metodo get. Trae el objeto organizacion.
@@ -64,6 +64,6 @@ export class OrganizacionService {
      */
     enable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         establecimiento.activo = true;
-        return this.put(establecimiento)
+        return this.put(establecimiento);
     }
 }

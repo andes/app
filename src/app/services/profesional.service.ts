@@ -2,7 +2,7 @@ import { AppSettings } from './../appSettings';
 import { IProfesional } from './../interfaces/IProfesional';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';
@@ -15,7 +15,7 @@ export class ProfesionalService {
 
     private profesionalUrl = AppSettings.API_ENDPOINT + '/core/tm/profesionales';  // URL to web api
 
-    constructor(private server: ServerService, private http: Http) { }
+    constructor(private server: Server, private http: Http) { }
 
     /**
      * Metodo get. Trae el objeto organizacion.

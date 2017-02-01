@@ -4,6 +4,12 @@
             <plex-box type="info" title="Gestor de Agendas">
                 <div class="row">
                     <div class="col-md-4">
+                        <plex-button icon="mdi mdi-plus-box" label="Crear Agenda" (click)="crearAgenda(agenda)" title="Crear Agenda">
+                        </plex-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
                         <plex-datetime type="date" formControlName="fechaDesde" label="Desde" title="Fecha Desde">
                         </plex-datetime>
                     </div>
