@@ -18,15 +18,16 @@
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')" [ngClass]="{'text-success success': turno.paciente}">
                                             <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span></td>
-                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
+                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover" (onClick)="darAsistencia()"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
-                                            <i *ngIf="!smsEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
-                                            <i *ngIf="smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
+                                            <i *ngIf="(!smsEnviado) && (!smsLoader)"  title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
+                                            <i *ngIf="(smsEnviado) && (!smsLoader)" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
+                                            <i *ngIf="smsLoader" title="Enviando SMS" class="text-info info mdi mdi-auto-upload"></i>
                                         </td>
 
                                     </tr>
