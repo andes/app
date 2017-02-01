@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import * as moment from 'moment';
 
 @Component({
     templateUrl: 'gestor-agendas.html'
@@ -26,7 +28,7 @@ export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService) { }
+        public serviceAgenda: AgendaService, private router: Router) { }
 
     ngOnInit() {
 
@@ -54,6 +56,30 @@ export class GestorAgendasComponent implements OnInit {
                     }
                 });
         });
+
+        this.loadAgendas();
+    }
+
+    loadAgendas() {
+
+        let fecha = moment().format();
+
+        let fechaDesde = moment(fecha).startOf('day').format();
+        let fechaHasta = moment(fecha).endOf('day').format();
+
+        this.serviceAgenda.get({
+            'fechaDesde': fechaDesde,
+            'fechaHasta': fechaHasta,
+            'idPrestacion': '',
+            'idProfesional': '',
+            'idEspacioFisico': ''
+        }).subscribe(
+            agendas => { this.agendas = agendas; },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     loadPrestaciones(event) {
@@ -71,6 +97,7 @@ export class GestorAgendasComponent implements OnInit {
     verAgenda(agenda) {
         this.ag = agenda;
         this.vistaAgenda = agenda;
+
         if (this.agendaSel) {
             this.agendaSel.agendaSeleccionada = false;
             this.agendaSel.agendaSeleccionadaColor = 'default';
@@ -93,6 +120,12 @@ export class GestorAgendasComponent implements OnInit {
             agenda.agendaSeleccionadaColor = 'success';
         }
     }
+
+    crearAgenda() {
+        this.router.navigate(['./agenda']);
+        return false;
+    }
+
 }
 
 class AgendaSeleccionada {

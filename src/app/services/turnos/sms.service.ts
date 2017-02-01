@@ -12,7 +12,7 @@ export class SmsService {
     constructor(private server: Server, private http: Http) { }
 
     enviarSms(numero): Observable<String> {
-
+        
         return this.http.get(this.smsUrl + numero)
             .map((res: Response) => res.json())
             .catch(this.handleError);
