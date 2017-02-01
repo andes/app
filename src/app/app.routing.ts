@@ -1,3 +1,4 @@
+import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -32,7 +33,7 @@ const appRoutes: Routes = [
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
-  { path: 'rup', component: TensionArterialComponent },
+  { path: 'rup', component: SignosVitalesComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

@@ -1,0 +1,31 @@
+<form>
+  <div class="row">
+    <div class="col-md-4">
+      <peso [paciente]="paciente" [tipoPrestacion]="prestacionPeso" (evtData)="onReturn($event, 'prestacionPeso')"></peso>
+    </div>
+    <div class="col-md-4">
+      <temperatura [paciente]="paciente" [tipoPrestacion]="prestacionTemperatura" (evtData)="onReturn($event, 'prestacionTemperatura')"></temperatura>
+    </div>
+    <div class="col-md-4">
+      <saturacionOxigeno [paciente]="paciente" [tipoPrestacion]="prestacionSaturacionOxigeno" (evtData)="onReturn($event, 'prestacionSaturacionOxigeno')"></saturacionOxigeno>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <frecuenciaCardiaca [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaCardiaca" (evtData)="onReturn($event, 'prestacionFrecuenciaCardiaca')"></frecuenciaCardiaca>
+    </div>
+    <div class="col-md-6">
+      <frecuenciaRespiratoria [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaRespiratoria" (evtData)="onReturn($event, 'prestacionFrecuenciaRespiratoria')"></frecuenciaRespiratoria>
+    </div>
+  </div>
+  <div class="row panel">
+    <div class="col-md-12">
+      <tensionArterial [paciente]="paciente" [tipoPrestacion]="prestacionTensionArterial" (evtData)="onReturn($event, 'prestacionTensionArterial')"></tensionArterial>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{data | json}}
+    </div>
+  </div>
+</form>
