@@ -464,11 +464,12 @@ export class AgendaComponent implements OnInit {
                 espOperation.subscribe(resultado => {
                     this.bloqueActivo = -1;
                     this.cargarAgenda(resultado);
-                    this.plex.alert('La agenda se guardo correctamente');
                     if (clonar) {
                         this.showClonar = true;
                         this.showBuscarAgendas = false;
                         this.showAgenda = false;
+                    } else {
+                        this.plex.alert('La agenda se guardo correctamente');
                     }
                 });
             } else {

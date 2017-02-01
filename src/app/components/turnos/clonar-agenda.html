@@ -22,6 +22,35 @@
       </tr>
     </table>
   </div>
+  <div class="col-md-4">
+    <plex-box type="success" title="Agenda Original">
+      <div class="row">
+        <div class="col-md-12">
+          <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+          <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+          <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <label>Bloques</label>
+          <div class="list-group">
+            <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item">
+              <div class="row">
+                <div class="col-md-6">{{unBloque.descripcion}}</div>
+                <div class="col-md-6">{{unBloque.titulo}}</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </plex-box>
+  </div>
   <div *ngIf="agendasFiltradas.length>0" class="col-md-4">
     <plex-box title="Agendas del día">
       <ul class="list-group">
@@ -29,67 +58,32 @@
           <li class="list-group-item {{agendasPrestaciones.indexOf(agenda.id)>0?danger:''}}">
             <div class="row">
               <div class="col-md-12">
-                <div class="row">
-                  <div class="col-md-12">
-                    <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
-                    <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-                    <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <label>Bloques</label>
-                    <div class="list-group">
-                      <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item {{agendasPrestaciones.indexOf(agenda.id)>0?danger:''}}">
-                        <div class="row">
-                          <div class="col-md-6">{{unBloque.descripcion}}</div>
-                          <div class="col-md-6">{{unBloque.titulo}}</div>
-                        </div>
-                      </a>
+                <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+                <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label>Bloques</label>
+                <div class="list-group">
+                  <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item {{agendasPrestaciones.indexOf(agenda.id)>0?danger:''}}">
+                    <div class="row">
+                      <div class="col-md-6">{{unBloque.descripcion}}</div>
+                      <div class="col-md-6">{{unBloque.titulo}}</div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </div>
             </div>
           </li>
         </div>
       </ul>
-    </plex-box>
-  </div>
-  <div *ngIf="agenda && original" class="col-md-4">
-    <plex-box type="success" title="Agenda Original">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-12">
-            <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
-            <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-            <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <label>Bloques</label>
-            <div class="list-group">
-              <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item">
-                <div class="row">
-                  <div class="col-md-6">{{unBloque.descripcion}}</div>
-                  <div class="col-md-6">{{unBloque.titulo}}</div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
     </plex-box>
   </div>
 </div>

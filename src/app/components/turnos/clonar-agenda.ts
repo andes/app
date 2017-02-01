@@ -137,7 +137,6 @@ export class ClonarAgendaComponent implements OnInit {
                 this.seleccionados.splice(i, 1);
             }
         }
-        console.log('agendas filtradas ', this.agendasFiltradas);
     }
 
     combinarFechas(fecha1, fecha2) {
