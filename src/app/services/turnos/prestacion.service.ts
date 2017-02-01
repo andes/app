@@ -1,4 +1,4 @@
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 import { AppSettings } from './../../appSettings';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Observable } from 'rxjs/Rx';
@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class PrestacionService {
     private prestacionUrl = AppSettings.API_ENDPOINT + '/modules/turnos/prestacion';
-    constructor(private http: Http, private server: ServerService) { }
+    constructor(private http: Http, private server: Server) { }
 
     /**
      * Metodo get. Trae el objeto prestacion.

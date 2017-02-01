@@ -1,8 +1,8 @@
 import { AppSettings } from './../appSettings';
 import { IProvincia } from './../interfaces/IProvincia';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Http } from '@angular/http';
+import { Server} from 'andes-shared/src/lib/server/server.service';
 import 'rxjs/add/operator/toPromise';
 
 import {Observable} from 'rxjs/Rx';
@@ -15,7 +15,7 @@ export class ProvinciaService {
 
    private provinciaUrl = AppSettings.API_ENDPOINT + '/core/tm/provincias';  // URL to web api
 
-   constructor(private server: ServerService, private http: Http) {}
+   constructor(private server: Server, private http: Http) {}
 
 //    get(): Observable<IProvincia[]> {
 //        return this.http.get(this.provinciaUrl)

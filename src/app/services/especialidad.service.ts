@@ -1,19 +1,18 @@
 import { AppSettings } from './../appSettings';
 import { IEspecialidad } from './../interfaces/IEspecialidad';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 
 @Injectable()
 export class EspecialidadService {
 
     private especialidadUrl = AppSettings.API_ENDPOINT + '/core/tm/especialidades';  // URL to web api
 
-    constructor(private server: ServerService) { }
+    constructor(private server: Server) { }
 
     /**
      * Metodo get. Trae el objeto especialidad.

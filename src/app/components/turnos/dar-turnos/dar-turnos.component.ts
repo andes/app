@@ -68,7 +68,7 @@ export class DarTurnosComponent implements AfterViewInit {
         this.actualizar('sinFiltro');
         let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
         // this.telefono = contacto.valor;
-        console.log ('contacto ', contacto[0].valor);
+        console.log('contacto ', contacto[0].valor);
         this.telefono = contacto[0].valor;
     }
 
@@ -226,7 +226,7 @@ export class DarTurnosComponent implements AfterViewInit {
 
         if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
             pacientes = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].pacientes.
-            map(function(elem){return {nombre: elem.nombre, apellido: elem.apellido, documento: elem.documento}; });
+                map(function (elem) { return { nombre: elem.nombre, apellido: elem.apellido, documento: elem.documento }; });
             pacientes.push(this.paciente);
             if (pacientes.length === this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
                 estado = 'asignado';
@@ -260,10 +260,16 @@ export class DarTurnosComponent implements AfterViewInit {
             this.plex.alert('El turno se asignó correctamente');
         });
         // TODO: Si cambió el teléfono lo actualizo en MPI?
-        // if (this.cambioTelefono){
-        //     let mpi: Observable<any>;
-        //     mpi = this.servicePaciente.put();
-        // }
+        if (this.cambioTelefono) {
+            let mpi: Observable<any>;
+            let cambios = {
+                telefono: this.telefono
+            };
+            mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
+            mpi.subscribe(resultado => {
+                this.plex.alert('Se actualizó el numero de telefono');
+            });
+        }
     }
 
     buscarPaciente() {
@@ -274,7 +280,7 @@ export class DarTurnosComponent implements AfterViewInit {
     public tieneTurnos(bloque: IBloque): boolean {
 
         let turnos = bloque.turnos;
-        if (turnos.find(turno => turno.estado === 'disponible')){
+        if (turnos.find(turno => turno.estado === 'disponible')) {
             return true;
         } else {
             return false;

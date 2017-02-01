@@ -71,7 +71,7 @@ import { ToggleButtonModule } from 'primeng/primeng';
 
 import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 
 @NgModule({
   imports: [
@@ -123,7 +123,7 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     AgendaService,
     TurnoService,
     EspacioFisicoService,
-    ServerService,
+    Server,
     SmsService
   ]
 

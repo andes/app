@@ -1,8 +1,8 @@
 import { AppSettings } from './../appSettings';
 import { IPaciente } from './../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import { ServerService } from 'andes-shared/src/lib/server.service';
+import { Http } from '@angular/http';
+import { Server } from 'andes-shared/src/lib/server/server.service';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';
@@ -15,7 +15,7 @@ export class PacienteService {
 
     private pacienteUrl = AppSettings.API_ENDPOINT + '/core/mpi/pacientes';  // URL to web api
     private pacienteUrlSearch = AppSettings.API_ENDPOINT + '/core/mpi/pacientes/search';  // URL to web api
-    constructor(private server: ServerService, private http: Http) { }
+    constructor(private server: Server, private http: Http) { }
 
     /**
      * Metodo get. Trae el objeto paciente.
@@ -30,7 +30,7 @@ export class PacienteService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IPaciente> {
-        return this.server.get(this.pacienteUrl + "/" + id, null)
+        return this.server.get(this.pacienteUrl + '/' + id, null)
     }
 
     /**
@@ -38,7 +38,7 @@ export class PacienteService {
      * @param {IPaciente} paciente Recibe IPaciente
      */
     post(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.get(this.pacienteUrl, paciente);
+        return this.server.post(this.pacienteUrl, paciente);
     }
 
     /**
@@ -46,7 +46,16 @@ export class PacienteService {
      * @param {IPaciente} paciente Recibe IPaciente
      */
     put(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.get(this.pacienteUrl + "/" + paciente.id, paciente);
+        return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
+    }
+
+    /**
+     * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
+     * @param {any} cambios Recibe any
+     */
+    patch(id: number, cambios: any): Observable<IPaciente> {
+        console.log(cambios);
+        return this.server.patch(this.pacienteUrl + '/' + id, cambios);
     }
 
     /**
