@@ -19,14 +19,14 @@ export class EspecialidadService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IEspecialidad[]> {
-        return this.server.get(this.especialidadUrl, params)
+        return this.server.get(this.especialidadUrl, {params: params, showError: true});
     }
     /**
      * Metodo getById. Trae el objeto especialidad por su Id.
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IEspecialidad> {
-        return this.server.get(this.especialidadUrl + "/" + id, null)
+        return this.server.get(this.especialidadUrl + '/' + id, null)
     }
     /**
      * Metodo post. Inserta un objeto especialidad nuevo.
@@ -40,7 +40,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     put(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        return this.server.put(this.especialidadUrl + "/" + especialidad.id, especialidad)
+        return this.server.put(this.especialidadUrl + '/' + especialidad.id, especialidad)
     }
     /**
      * Metodo disable. deshabilita especialidad.

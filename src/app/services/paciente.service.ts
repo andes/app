@@ -22,7 +22,7 @@ export class PacienteService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl, params); //...errors if any*/
+        return this.server.get(this.pacienteUrl, {params: params, showError: true}); //...errors if any*/
     }
 
     /**

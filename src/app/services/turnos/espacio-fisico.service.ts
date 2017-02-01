@@ -15,7 +15,7 @@ export class EspacioFisicoService {
     constructor(private server: Server, private http: Http) { }
 
     get(params: any): Observable<IEspacioFisico[]> {
-        return this.server.get(this.espacioFisicoUrl, params);
+        return this.server.get(this.espacioFisicoUrl, {params: params, showError: true});
     }
 
     post(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
@@ -28,8 +28,7 @@ export class EspacioFisicoService {
 
     disable(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
         espacioFisico.activo = false;
-        // espacioFisico.fechaBaja = new Date();
-        return this.put(espacioFisico);   
+        return this.put(espacioFisico);
     }
 
     enable(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {

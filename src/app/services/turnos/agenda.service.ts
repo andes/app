@@ -12,7 +12,7 @@ export class AgendaService {
     constructor(private server: Server, private http: Http) { }
 
     get(params: any): Observable<IAgenda[]> {
-        return this.server.get(this.agendaUrl, params);
+        return this.server.get(this.agendaUrl, {params: params, showError: true});
     }
 
     getById(id: String): Observable<IAgenda> {

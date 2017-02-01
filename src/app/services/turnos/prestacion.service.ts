@@ -19,7 +19,7 @@ export class PrestacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionUrl, params)
+        return this.server.get(this.prestacionUrl, {params: params, showError: true});
     }
     /**
      * Metodo post. Inserta un objeto prestacion nuevo.
