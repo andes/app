@@ -80,7 +80,6 @@ export class GestorAgendasComponent implements OnInit {
                     console.log(err);
                 }
             });
-
     }
 
     loadPrestaciones(event) {

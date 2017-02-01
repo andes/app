@@ -18,7 +18,7 @@
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')" [ngClass]="{'text-success success': turno.paciente}">
                                             <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span></td>
-                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
+                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover" (onClick)="darAsistencia()"><i title="Dar Asistencia"  class="text-success success mdi mdi-checkbox-marked-outline"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
