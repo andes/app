@@ -12,7 +12,12 @@ import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 })
 export class TensionArterialComponent implements OnInit {
 
-    paciente: any;
+    @Input('paciente') paciente: any;
+
+    @Input('tipoPrestacion') tipoPrestacion: any;
+
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+
     // resultados a devolver
     data: Object = {};
 
@@ -36,29 +41,27 @@ export class TensionArterialComponent implements OnInit {
         }
 
         this.prestacionDiastolica = {
-            "_id" : "5890730a0c4eccd05d2a7a43",
-            "key" : "tensionDiastolica",
-            "nombre" : "Tension diastólica",
-            "autonoma" : false,
-            "activo" : true,
-            "componente" : "rup/tensionDiastolica.component.ts"
+            "_id": "5890730a0c4eccd05d2a7a43",
+            "key": "tensionDiastolica",
+            "nombre": "Tension diastólica",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/tensionDiastolica.component.ts"
         };
 
         this.prestacionSistolica = {
-            "_id" : "589072ee0c4eccd05d2a7a42",
-            "key" : "tensionSistolica",
-            "nombre" : "Tension sistólica",
-            "autonoma" : false,
-            "activo" : true,
-            "componente" : "rup/tensionSistolica.component.ts"
+            "_id": "589072ee0c4eccd05d2a7a42",
+            "key": "tensionSistolica",
+            "nombre": "Tension sistólica",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/tensionSistolica.component.ts"
         };
     }
 
-    onReturnDiastolica(tensionDiastolica: Number){
-        this.data[this.prestacionDiastolica.key] = tensionDiastolica;
+    onReturn(valor: Number, tipoPrestacion: any) {
+        this.data[tipoPrestacion] = valor;
+        this.evtData.emit(this.data);
     }
 
-    onReturnSistolica(tensionSistolica: Number){
-        this.data[this.prestacionSistolica.key] = tensionSistolica;
-    }
 }

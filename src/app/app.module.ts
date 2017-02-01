@@ -1,3 +1,4 @@
+// RUP
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
 import { TallaComponent } from './components/rup/talla.component';
@@ -6,9 +7,11 @@ import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca
 import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
+import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
-import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
+// Fin Componentes RUP
 
+import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { PrestacionService } from './services/turnos/prestacion.service';
@@ -42,10 +45,12 @@ import { EspecialidadCreateUpdateComponent } from './components/especialidad/esp
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
+// Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
+// Fin Componentes MPI
 
 import { OrganizacionService } from './services/organizacion.service';
 import { ProfesionalService } from './services/profesional.service';
@@ -98,8 +103,13 @@ import { ServerService } from 'andes-shared/src/lib/server.service';
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent,
-    FrecuenciaRespiratoriaComponent, FrecuenciaCardiacaComponent, TemperaturaComponent, TallaComponent,
-    SaturacionOxigenoComponent, PesoComponent
+    FrecuenciaRespiratoriaComponent,
+    FrecuenciaCardiacaComponent,
+    TemperaturaComponent,
+    TallaComponent,
+    SaturacionOxigenoComponent,
+    PesoComponent,
+    SignosVitalesComponent
   ],
   bootstrap: [AppComponent],
   providers: [
