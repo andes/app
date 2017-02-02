@@ -1,3 +1,4 @@
+//import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -5,6 +6,8 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
 import { IPaciente } from './../../../interfaces/IPaciente';
+
+//import { TipoPrestacionService } from './../../../services/rup/tipoPrestacion.service';
 
 import { FrecuenciaCardiacaComponent } from './../frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './../frecuenciaRespiratoria.component';
@@ -21,7 +24,10 @@ export class SignosVitalesComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+    //@Input('tipoPrestacion') tipoPrestacion: ITipoPrestacion;
+
     //@Input('paciente') paciente: any;
+    tipoPrestacion: any;
 
     paciente: any; // será un IPaciente
 
@@ -35,6 +41,15 @@ export class SignosVitalesComponent implements OnInit {
     prestacionSaturacionOxigeno: any;
     prestacionTemperatura: any;
     prestacionTensionArterial: any;
+
+
+    // prestaciones: ITipoPrestacion[] = [];
+    
+
+    // constructor(private formBuilder: FormBuilder, private servTipoPrestacion: TipoPrestacionService) { 
+
+    // }
+
 
     ngOnInit() {
         // debugger;
@@ -50,7 +65,7 @@ export class SignosVitalesComponent implements OnInit {
             "estadoCivil": "",
             "activo": true
         }
-
+        
         this.prestacionFrecuenciaCardiaca = {
             "_id": "5890c8aa7358af394f6d52d6",
             "key": "frecuenciaCardiaca",
@@ -108,6 +123,59 @@ export class SignosVitalesComponent implements OnInit {
             ],
             "componente": "rup/tension-arterial/tensionArterial.component.ts"
         };
+        
+
+        /*this.tipoPrestacion.ejecucion = [{
+            "_id": "5890c8aa7358af394f6d52d6",
+            "key": "frecuenciaCardiaca",
+            "nombre": "Frecuencia cardíaca",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/frecuenciaCardiaca.component.ts"
+        }, {
+            "_id": "5890c8f77358af394f6d52d7",
+            "key": "frecuenciaRespiratoria",
+            "nombre": "Frecuencia respiratoria",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/frecuenciaRespiratoria.component.ts"
+        }, {
+            "_id": "5890c93f7358af394f6d52d9",
+            "key": "peso",
+            "nombre": "Peso",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/peso.component.ts"
+        }, {
+            "_id": "5890c92c7358af394f6d52d8",
+            "key": "saturacionOxigeno",
+            "nombre": "Saturación oxigeno",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/saturacionOxigeno.component.ts"
+        }, {
+            "_id": "5890ca047358af394f6d52dc",
+            "key": "temperatura",
+            "nombre": "Temperatura",
+            "autonoma": false,
+            "activo": true,
+            "componente": "rup/temperatura.component.ts"
+        }, {
+            "_id": "589073500c4eccd05d2a7a44",
+            "key": "tensionArterial",
+            "nombre": "Tension arterial",
+            "autonoma": false,
+            "activo": true,
+            "ejecucion": [
+                "589073500c4eccd05d2a7a42",
+                "589073500c4eccd05d2a7a43"
+            ],
+            "componente": "rup/tension-arterial/tensionArterial.component.ts"
+        }];
+
+        // this.prestaciones[] = tipoPrestacionesServices.get(@Input idPadre);
+
+        */
 
     }
 
