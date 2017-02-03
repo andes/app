@@ -62,6 +62,7 @@ import { PacienteService } from './services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
+import { ListaEsperaService } from './services/turnos/listaEspera.service';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -133,6 +134,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     AgendaService,
     TurnoService,
     EspacioFisicoService,
+    ListaEsperaService,
     Server,
     SmsService
   ]

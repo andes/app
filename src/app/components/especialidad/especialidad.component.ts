@@ -34,12 +34,12 @@ export class EspecialidadComponent implements OnInit {
             nombre: [''],
             activo: ['']
         });
-        //Genera la busqueda con el evento change.
+        // Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
-           
+
         })
         this.loadDatos();
     }
@@ -55,8 +55,7 @@ export class EspecialidadComponent implements OnInit {
                 if (concatenar) {
                     if (datos.length > 0) {
                         this.datos = this.datos.concat(datos);
-                    }
-                    else {
+                    } else {
                         this.finScroll = true;
                         this.tengoDatos = false;
                     }
@@ -66,7 +65,7 @@ export class EspecialidadComponent implements OnInit {
                 }
 
                 this.loader = false;
-            }) //Bind to view
+            }); // Bind to view
     }
 
     onReturn(objEspecialidad: IEspecialidad): void {
@@ -82,7 +81,7 @@ export class EspecialidadComponent implements OnInit {
     }
 
 
-      activate(objEspecialidad: IEspecialidad) {
+    activate(objEspecialidad: IEspecialidad) {
 
         if (objEspecialidad.activo) {
 

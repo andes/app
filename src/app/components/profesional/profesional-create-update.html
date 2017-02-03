@@ -51,7 +51,7 @@
                 <div class="col-md-12">
                     <plex-select formControlName="especialidad" (get-data)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:"
                         placeholder="Seleccione las especialidades del profesional">
-                    </plex-select>
+                        </plex-select>
                 </div>
             </div>
             <div class="row">&nbsp;</div>
@@ -156,12 +156,12 @@
                             <td class="col-md-4">
                                 <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (get-data)="loadProvincias($event, dir.controls.ubicacion.controls.pais)"
                                     label="Provincia:">
-                                </plex-select>
+                                    </plex-select>
                             </td>
                             <td class="col-md-4">
                                 <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (get-data)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
                                     label="Localidad:">
-                                </plex-select>
+                                    </plex-select>
                             </td>
                         </div>
                         <td>

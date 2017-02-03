@@ -7,6 +7,7 @@ import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
+import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Component, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -15,11 +16,13 @@ import { PacienteService } from '../../../services/paciente.service';
 import { PrestacionService } from '../../../services/turnos/prestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 const size = 4;
 
 @Component({
-    templateUrl: 'dar-turnos.html',
+    templateUrl: 'dar-turnos.html'
 })
+
 export class DarTurnosComponent implements AfterViewInit {
     public agenda: IAgenda;
     public agendas: IAgenda[];
@@ -60,9 +63,13 @@ export class DarTurnosComponent implements AfterViewInit {
     showDarTurnos: boolean = true;
     cambioTelefono: boolean = false;
 
-    constructor(public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceAgenda: AgendaService, public serviceTurno: TurnoService,
-        public servicePaciente: PacienteService, public plex: Plex) { }
+    constructor(public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService,
+        public serviceAgenda: AgendaService,
+        public serviceListaEspera: ListaEsperaService,
+        public serviceTurno: TurnoService,
+        public servicePaciente: PacienteService,
+        public plex: Plex) { }
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
@@ -208,6 +215,7 @@ export class DarTurnosComponent implements AfterViewInit {
 
     onSave() {
         console.log(this.turnoPrestacion);
+        debugger;
         let pacientes: any[];
         let estado: String = 'asignado';
         let pacienteSave = {
@@ -278,7 +286,6 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     public tieneTurnos(bloque: IBloque): boolean {
-
         let turnos = bloque.turnos;
         if (turnos.find(turno => turno.estado === 'disponible')) {
             return true;
@@ -294,25 +301,36 @@ export class DarTurnosComponent implements AfterViewInit {
         // TODO: recorrer contactos para buscar el teléfono
     }
 
-    listaEspera() {
-        if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
-            let datosPrestacion = !this.opciones.prestacion ? null : {
-                id: this.opciones.prestacion.id,
-                nombre: this.opciones.prestacion.nombre
+    onCancel() {
+        let listaEspera: any;
+        let operacion: Observable<IListaEspera>;
+       // if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
+            let datosPrestacion = {
+                id: '581792ad3d52685d1ecdaa05',// this.opciones.prestacion.id,
+                nombre: 'Cardiología adultos'// this.opciones.prestacion.nombre
             };
             let datosProfesional = !this.opciones.profesional ? null : {
                 id: this.opciones.profesional.id,
                 nombre: this.opciones.profesional.nombre,
                 apellido: this.opciones.profesional.apellido
             };
-            let datosLista = {
-                paciente: this.paciente,
-                prestacion: datosPrestacion,
-                profesional: datosProfesional,
-                fecha: this.agenda.horaInicio,
-                estado: 'demandaRechazada'
+            let datosPaciente = {
+                id: this.paciente.id,
+                nombre: this.paciente.nombre,
+                apellido: this.paciente.apellido,
+                documento: this.paciente.documento
             };
-            // TODO: llamar al servicio para hacer un post (falta crear servicio)
+            debugger;
+            listaEspera = {
+            fecha : this.agenda.horaInicio,
+            estado : 'demandaRechazada',
+            prestacion : datosPrestacion,
+            profesional : datosProfesional,
+            paciente : datosPaciente,
         }
+            operacion = this.serviceListaEspera.post(listaEspera);
+            operacion.subscribe();
+            // TODO: llamar al servicio para hacer un post (falta crear servicio)
+        // }
     }
 }
