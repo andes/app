@@ -4,7 +4,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { PacienteService } from './../../services/paciente.service';
 import { SmsService } from './../../services/turnos/sms.service';
 import { IPaciente } from './../../interfaces/IPaciente';
-
+import { AgendaService } from '../../services/turnos/agenda.service';
 
 @Component({
     selector: 'turnos',
@@ -19,6 +19,26 @@ export class TurnosComponent {
     smsEnviado: boolean = false;
     smsLoader: boolean = false;
     resultado: any;
+
+
+    darAsistencia(agenda: IAgenda, bloque: any, turno: any) {
+        debugger;
+
+        let indexBloque = agenda.bloques.indexOf(bloque);
+        let indexTurno = agenda.bloques[indexBloque].turnos.indexOf(turno);
+
+        // agenda.bloques[indexBloque].turnos[indexTurno].asistencia = true;
+
+        let patch = {
+            'op': 'replace',
+            'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia',
+            'value': 'true'
+        };
+
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.plex.alert('Se creo la asistencia: ');
+        });
+    }
 
     enviarSMS(turno: any) {
         this.smsLoader = true;
@@ -47,5 +67,6 @@ export class TurnosComponent {
         }
     }
 
-    constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService) { }
+    constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
+        public serviceAgenda: AgendaService) { }
 }
