@@ -20,24 +20,32 @@ export class TurnosComponent {
     smsLoader: boolean = false;
     resultado: any;
 
+    public estadoAsistencia: boolean;
 
-    darAsistencia(agenda: IAgenda, bloque: any, turno: any) {
-        debugger;
-
+    asistencia(agenda: IAgenda, bloque: any, turno: any) {
         let indexBloque = agenda.bloques.indexOf(bloque);
         let indexTurno = agenda.bloques[indexBloque].turnos.indexOf(turno);
 
-        // agenda.bloques[indexBloque].turnos[indexTurno].asistencia = true;
+        let patch: any = {};
 
-        let patch = {
-            'op': 'replace',
-            'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia',
-            'value': 'true'
-        };
+        if (turno.asistencia) {
+            patch = {
+                'op': 'replace', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false'
+            };
+        } else {
+            patch = {
+                'op': 'replace', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'true'
+            };
+        }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.plex.alert('Se creo la asistencia: ');
-        });
+            this.ag = resultado;
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     enviarSMS(turno: any) {
