@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'saturacionOxigeno',
+    selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
 })
 export class SaturacionOxigenoComponent {

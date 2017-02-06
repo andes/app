@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'frecuenciaRespiratoria',
+    selector: 'rup-frecuencia-respiratoria',
     templateUrl: 'frecuenciaRespiratoria.html'
 })
 export class FrecuenciaRespiratoriaComponent{

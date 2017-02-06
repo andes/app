@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'tensionDiastolica',
+    selector: 'rup-tension-diastolica',
     templateUrl: 'tensionDiastolica.html'
 })
 export class TensionDiastolicaComponent {

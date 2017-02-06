@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'talla',
+    selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
 export class TallaComponent {

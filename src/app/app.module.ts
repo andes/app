@@ -9,6 +9,8 @@ import { TensionSistolicaComponent } from './components/rup/tensionSistolica.com
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
+import { ObservacionesComponent } from './components/rup/observaciones.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 // Fin Componentes RUP
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -110,7 +112,9 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     TallaComponent,
     SaturacionOxigenoComponent,
     PesoComponent,
-    SignosVitalesComponent
+    SignosVitalesComponent,
+    ObservacionesComponent,
+    ConsultaGeneralClinicaMedicaComponent
   ],
   bootstrap: [AppComponent],
   providers: [

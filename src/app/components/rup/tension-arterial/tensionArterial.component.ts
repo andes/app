@@ -2,12 +2,12 @@ import { TensionSistolicaComponent } from './../tensionSistolica.component';
 import { TensionDiastolicaComponent } from './../tensionDiastolica.component';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// import { Plex } from 'andes-plex/src/lib/core/service';
+// import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 
 @Component({
-    selector: 'tensionArterial',
+    selector: 'rup-tension-arterial',
     templateUrl: 'tensionArterial.html'
 })
 export class TensionArterialComponent implements OnInit {
@@ -28,34 +28,34 @@ export class TensionArterialComponent implements OnInit {
     ngOnInit() {
         // debugger;
         this.paciente = {
-            "id": "588257bce70a44138c44a002",
-            "documento": "93155329",
-            "estado": "validado",
-            "nombre": "SERGIO ECIO JUAN",
-            "apellido": "GIORGIS",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": "02/11/1993",
-            "estadoCivil": "",
-            "activo": true
+            'id': '588257bce70a44138c44a002',
+            'documento': '93155329',
+            'estado': 'validado',
+            'nombre': 'SERGIO ECIO JUAN',
+            'apellido': 'GIORGIS',
+            'sexo': 'masculino',
+            'genero': 'masculino',
+            'fechaNacimiento': '02/11/1993',
+            'estadoCivil': '',
+            'activo': true
         }
 
         this.prestacionDiastolica = {
-            "_id": "5890730a0c4eccd05d2a7a43",
-            "key": "tensionDiastolica",
-            "nombre": "Tension diastólica",
-            "autonoma": false,
-            "activo": true,
-            "componente": "rup/tensionDiastolica.component.ts"
+            '_id': '5890730a0c4eccd05d2a7a43',
+            'key': 'tensionDiastolica',
+            'nombre': 'Tension diastólica',
+            'autonoma': false,
+            'activo': true,
+            'componente': 'rup/tensionDiastolica.component.ts'
         };
 
         this.prestacionSistolica = {
-            "_id": "589072ee0c4eccd05d2a7a42",
-            "key": "tensionSistolica",
-            "nombre": "Tension sistólica",
-            "autonoma": false,
-            "activo": true,
-            "componente": "rup/tensionSistolica.component.ts"
+            '_id': '589072ee0c4eccd05d2a7a42',
+            'key': 'tensionSistolica',
+            'nombre': 'Tension sistólica',
+            'autonoma': false,
+            'activo': true,
+            'componente': 'rup/tensionSistolica.component.ts'
         };
     }
 
