@@ -30,14 +30,47 @@ export class TurnosComponent {
 
         if (turno.asistencia) {
             patch = {
-                'op': 'replace', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false'
+                'op': 'asistenciaTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false'
             };
         } else {
             patch = {
-                'op': 'replace', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'true'
+                'op': 'asistenciaTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'true'
             };
         }
 
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.ag = resultado;
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    cancelarTurno(agenda: IAgenda, bloque: any, turno: any) {
+        let indexBloque = agenda.bloques.indexOf(bloque);
+        let indexTurno = agenda.bloques[indexBloque].turnos.indexOf(turno);
+
+        let patch: any = {};
+
+        // patch = [
+        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
+        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false' },
+        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
+        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' }
+        // ];
+
+        patch = {
+            'op': 'cancelarTurno',
+            'path': [
+                { 'estado': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
+                { 'paciente': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.paciente', 'value': {} },
+                { 'prestacion': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.prestacion', 'value': {} }
+            ]
+        };
+
+        debugger;
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
             this.ag = resultado;
         },
