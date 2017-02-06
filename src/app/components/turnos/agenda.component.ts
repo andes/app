@@ -85,6 +85,7 @@ export class AgendaComponent implements OnInit {
     }
 
     public calculosInicio() {
+        console.log('modelo ', this.modelo);
         this.modelo.fecha = this.modelo.horaInicio;
         // this.modelo.fecha = new Date();
         let bloques = this.modelo.bloques;
@@ -150,11 +151,16 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        if (this.plex.confirm('Confirma que desea eliminar el bloque?')) {
-            this.modelo.bloques.splice(indice, 1);
-            this.bloqueActivo = -1;
-            this.validarTodo();
+        this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
+            if (confirma) {
+                this.modelo.bloques.splice(indice, 1);
+                this.bloqueActivo = -1;
+                this.validarTodo();
+            }
         }
+        ).catch(() => {
+            alert('no borra');
+        });
     }
 
     compararBloques(fecha1, fecha2): number {
