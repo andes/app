@@ -1,31 +1,32 @@
-<form>
+
   <div class="row">
     <div class="col-md-4">
-      <peso [paciente]="paciente" [tipoPrestacion]="prestacionPeso" (evtData)="onReturn($event, 'prestacionPeso')"></peso>
+      <rup-peso [paciente]="paciente" [tipoPrestacion]="prestacionPeso" (evtData)="onReturn($event, 'prestacionPeso')"></rup-peso>
     </div>
     <div class="col-md-4">
-      <temperatura [paciente]="paciente" [tipoPrestacion]="prestacionTemperatura" (evtData)="onReturn($event, 'prestacionTemperatura')"></temperatura>
+      <rup-temperatura [paciente]="paciente" [tipoPrestacion]="prestacionTemperatura" (evtData)="onReturn($event, 'prestacionTemperatura')"></rup-temperatura>
     </div>
     <div class="col-md-4">
-      <saturacionOxigeno [paciente]="paciente" [tipoPrestacion]="prestacionSaturacionOxigeno" (evtData)="onReturn($event, 'prestacionSaturacionOxigeno')"></saturacionOxigeno>
+      <rup-saturacion-oxigeno [paciente]="paciente" [tipoPrestacion]="prestacionSaturacionOxigeno" (evtData)="onReturn($event, 'prestacionSaturacionOxigeno')"></rup-saturacion-oxigeno>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
-      <frecuenciaCardiaca [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaCardiaca" (evtData)="onReturn($event, 'prestacionFrecuenciaCardiaca')"></frecuenciaCardiaca>
+      <rup-frecuencia-cardiaca [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaCardiaca" (evtData)="onReturn($event, 'prestacionFrecuenciaCardiaca')"></rup-frecuencia-cardiaca>
     </div>
     <div class="col-md-6">
-      <frecuenciaRespiratoria [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaRespiratoria" (evtData)="onReturn($event, 'prestacionFrecuenciaRespiratoria')"></frecuenciaRespiratoria>
+      <rup-frecuencia-respiratoria [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaRespiratoria" (evtData)="onReturn($event, 'prestacionFrecuenciaRespiratoria')"></rup-frecuencia-respiratoria>
     </div>
   </div>
   <div class="row panel">
     <div class="col-md-12">
-      <tensionArterial [paciente]="paciente" [tipoPrestacion]="prestacionTensionArterial" (evtData)="onReturn($event, 'prestacionTensionArterial')"></tensionArterial>
+      <rup-tension-arterial [paciente]="paciente" [tipoPrestacion]="prestacionTensionArterial" (evtData)="onReturn($event, 'prestacionTensionArterial')"></rup-tension-arterial>
     </div>
   </div>
-  <div class="row">
+
+   <!--<div class="row">
     <div class="col-md-12">
-      {{data | json}}
+      <rup-observaciones [paciente]="paciente" [tipoPrestacion]="prestacionObservacion" (evtData)="onReturn($event, 'prestacionObservacion')"></rup-observaciones>
     </div>
   </div>
-</form>
+  -->

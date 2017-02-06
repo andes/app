@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'temperatura',
+    selector: 'rup-temperatura',
     templateUrl: 'temperatura.html'
 })
 export class TemperaturaComponent {

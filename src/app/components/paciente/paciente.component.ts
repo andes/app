@@ -37,7 +37,7 @@ export class PacienteComponent implements OnInit {
     showcreate: boolean = false;
     showupdate: boolean = false;
     error: boolean = false;
-    mensaje: string = "";
+    mensaje: string = '';
     pacientes: IPaciente[];
     estados: string[] = [];
     sexos: string[] = [];
@@ -71,12 +71,12 @@ export class PacienteComponent implements OnInit {
         this.error = false;
         var formulario = this.searchForm.value;
         var pacBusqueda = {
-            "apellido": formulario.apellido, "nombre": formulario.nombre, "documento": formulario.documento,
-            "estado": formulario.estado, "fechaNac": formulario.fechaNacimiento, "sexo": formulario.sexo
+            'apellido': formulario.apellido, 'nombre': formulario.nombre, 'documento': formulario.documento,
+            'estado': formulario.estado, 'fechaNac': formulario.fechaNacimiento, 'sexo': formulario.sexo
         };
         this.pacienteService.get(pacBusqueda)
             .subscribe(
-            pacientes => this.pacientes = pacientes, //Bind to view
+            pacientes => this.pacientes = pacientes, // Bind to view
             err => {
                 if (err) {
                     console.log(err);
@@ -90,10 +90,10 @@ export class PacienteComponent implements OnInit {
     findPacientes() {
         this.error = false;
         var formulario = this.searchForm.value;
-        if ((formulario.apellido == "") && (formulario.nombre == "") && (formulario.documento == "") &&
-            (formulario.sexo == "") && (formulario.estado == "") && (formulario.fechaNacimiento == "")) {
+        if ((formulario.apellido === '') && (formulario.nombre === '') && (formulario.documento === '') &&
+            (formulario.sexo === '') && (formulario.estado === '') && (formulario.fechaNacimiento === '')) {
             this.error = true;
-            this.mensaje = "Debe completar al menos un campo de búsqueda";
+            this.mensaje = 'Debe completar al menos un campo de búsqueda';
             return;
         }
         this.loadPaciente();
@@ -108,7 +108,7 @@ export class PacienteComponent implements OnInit {
                 if (err) {
                     console.log(err);
                     this.error = true;
-                    this.mensaje = "Ha ocurrido un error";
+                    this.mensaje = 'Ha ocurrido un error';
                     return;
                 }
             });
@@ -125,7 +125,7 @@ export class PacienteComponent implements OnInit {
     onEnable(objPaciente: IPaciente) {
         this.error = false;
         this.pacienteService.enable(objPaciente)
-            .subscribe(dato => this.loadPaciente(), //Bind to view
+            .subscribe(dato => this.loadPaciente(), // Bind to view
             err => {
                 if (err) {
                     console.log(err);
