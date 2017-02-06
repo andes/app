@@ -25,7 +25,7 @@
                                             <a *ngIf="(ag.estado != 'Suspendida') && (turno.asistencia)" class="hover" (click)="asistencia(ag, bloque, turno)"><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
                                         </td>
 
-                                        <td *ngIf="!turno.paciente">
+                                        <td *ngIf="(ag.estado != 'Suspendida') && (!turno.paciente)">
                                             <i title="Turno Disponible" class="text-info info mdi mdi-select"></i>
                                         </td>
 

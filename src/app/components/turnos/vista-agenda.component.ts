@@ -19,10 +19,21 @@ export class VistaAgendaComponent {
     constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
     suspenderAgenda(agenda) {
-        agenda.estado = 'Suspendida';
+        let patch: any = {};
 
-        this.serviceAgenda.save(agenda).subscribe(resultado => {
-            this.plex.alert('La agenda paso a Estado: ' + agenda.estado);
+        patch = {
+            'op': 'suspenderAgenda', 'path': 'estado', 'value': 'Suspendida'
+        };
+
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            agenda.estado = resultado.estado;
+            debugger;
+            this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
         });
+        // agenda.estado = 'Suspendida';
+
+        // this.serviceAgenda.save(agenda).subscribe(resultado => {
+        //     this.plex.alert('La agenda paso a Estado: ' + agenda.estado);
+        // });
     }
 }

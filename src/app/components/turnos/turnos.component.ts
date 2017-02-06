@@ -54,13 +54,6 @@ export class TurnosComponent {
 
         let patch: any = {};
 
-        // patch = [
-        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
-        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false' },
-        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
-        //     { 'op': 'cancelarTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' }
-        // ];
-
         patch = {
             'op': 'cancelarTurno',
             'path': [
@@ -70,7 +63,6 @@ export class TurnosComponent {
             ]
         };
 
-        debugger;
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
             this.ag = resultado;
         },
