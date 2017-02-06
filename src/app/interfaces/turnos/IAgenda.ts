@@ -5,7 +5,14 @@ import { IBloque } from './IBloque';
 export interface IAgenda {
     id: String;
     prestaciones: IPrestacion[];
-    profesionales: IProfesional[];
+    // profesionales: IProfesional[];
+    profesionales: [
+        {
+             id: String,
+             nombre: String,
+             apellido: String
+        }
+    ];
     espacioFisico:  {
         id: String,
         nombre: String
