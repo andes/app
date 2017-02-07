@@ -46,15 +46,20 @@ export class ProfesionalComponent implements OnInit {
     }
 
     loadDatos(concatenar: boolean = false) {
-        let parametros = { "apellido": this.value && this.value.apellido, "nombre": this.value && this.value.nombre, "documento": this.value && this.value.documento, "skip": this.skip, "limit": limit };
+        let parametros = {
+            "apellido": this.value && this.value.apellido,
+            "nombre": this.value && this.value.nombre,
+            "documento": this.value && this.value.documento,
+            "skip": this.skip,
+            "limit": limit
+        };
         this.profesionalService.get(parametros)
             .subscribe(
             datos => {
                 if (concatenar) {
                     if (datos.length > 0) {
                         this.datos = this.datos.concat(datos);
-                    }
-                    else {
+                    } else {
                         this.finScroll = true;
                         this.tengoDatos = false;
                     }
@@ -63,7 +68,7 @@ export class ProfesionalComponent implements OnInit {
                     this.finScroll = false;
                 }
                 this.loader = false;
-            })
+            });
     }
 
     onReturn(objProfesional: IProfesional): void {
@@ -77,11 +82,10 @@ export class ProfesionalComponent implements OnInit {
     Activo(objProfesional: IProfesional) {
         if (objProfesional.activo) {
             this.profesionalService.disable(objProfesional)
-                .subscribe(dato => this.loadDatos()) //Bind to view
-        }
-        else {
+                .subscribe(dato => this.loadDatos()); // Bind to view
+        } else {
             this.profesionalService.enable(objProfesional)
-                .subscribe(dato => this.loadDatos()) //Bind to view
+                .subscribe(dato => this.loadDatos()); // Bind to view
         }
     }
 
@@ -92,7 +96,7 @@ export class ProfesionalComponent implements OnInit {
         this.seleccion = objProfesional;
     }
 
-      nextPage() {
+    nextPage() {
         if (this.tengoDatos) {
             this.skip += limit;
             this.loadDatos(true);

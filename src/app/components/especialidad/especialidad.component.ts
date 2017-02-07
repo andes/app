@@ -46,8 +46,8 @@ export class EspecialidadComponent implements OnInit {
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            "codigoSisa": this.value && this.value.codigoSisa,
-            "nombre": this.value && this.value.nombre, "skip": this.skip, "limit": limit
+            'codigoSisa': this.value && this.value.codigoSisa,
+            'nombre': this.value && this.value.nombre, 'skip': this.skip, 'limit': limit
         };
 
         this.especialidadService.get(parametros).subscribe(
@@ -86,11 +86,10 @@ export class EspecialidadComponent implements OnInit {
         if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
-                .subscribe(datos => this.loadDatos()) //Bind to view
-        }
-        else {
+                .subscribe(datos => this.loadDatos());  // Bind to view
+        } else {
             this.especialidadService.enable(objEspecialidad)
-                .subscribe(datos => this.loadDatos()) //Bind to view
+                .subscribe(datos => this.loadDatos());  // Bind to view
         }
     }
 
