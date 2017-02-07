@@ -89,15 +89,15 @@
                             <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
                           </div>
                         </div>
-                        <br *ngIf="turno.estado == 'disponible'">
+                        <br *ngIf="turno.estado == 'disponible' && i+1<bloque.turnos.length">
                       </div>
                       <div *ngIf="bloque.pacienteSimultaneos">
-                        <div *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos" class="row">
+                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
                           <div class="col-md-12">
                             <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
                           </div>
                         </div>
-                        <br *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos">
+                        <br *ngIf="turno.estado == 'disponible'  && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
                       </div>
                     </div>
                   </div>
@@ -196,7 +196,9 @@
                   <div class="col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
                   <!--<div class="col-md-12"><label>Teléfono: &nbsp;</label><input [(ngModel)]="paciente.telefono">-->
                   <div class="col-md-12">
-                    <plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>
+                    <plex-phone label="Ingrese en número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono">
+                    </plex-phone>
+                    <!--<plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>-->
                   </div>
                   <div class="col-md-6"><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
                   <div class="col-md-6"><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>

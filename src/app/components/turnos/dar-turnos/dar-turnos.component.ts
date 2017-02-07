@@ -213,9 +213,14 @@ export class DarTurnosComponent implements AfterViewInit {
         this.cambioTelefono = true;
     }
 
+    primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {
+        return (indiceT - 1 < 0)
+            || (turno.horaInicio.getTime() !== bloque.turnos[(indiceT - 1)].horaInicio.getTime())
+            || ((turno.horaInicio.getTime() === bloque.turnos[(indiceT - 1)].horaInicio.getTime())
+                && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
+    }
+
     onSave() {
-        console.log(this.turnoPrestacion);
-        let pacientes: any[];
         let estado: String = 'asignado';
         let pacienteSave = {
             id: this.paciente.id,
@@ -224,37 +229,13 @@ export class DarTurnosComponent implements AfterViewInit {
             nombre: this.paciente.nombre,
             telefono: this.telefono
         };
-        // this.paciente = {
-        //     documento: '30403872',
-        //     apellido: 'Diaz',
-        //     nombre: 'Ramiro',
-        //     telefono: this.telefono
-        // };
-
-        if (this.agenda.bloques[this.indiceBloque].pacienteSimultaneos) {
-            pacientes = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].pacientes.
-                map(function (elem) { return { nombre: elem.nombre, apellido: elem.apellido, documento: elem.documento }; });
-            pacientes.push(this.paciente);
-            if (pacientes.length === this.agenda.bloques[this.indiceBloque].cantidadSimultaneos) {
-                estado = 'asignado';
-                this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-            } else {
-                estado = 'disponible';
-            }
-        } else {
-            this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-        }
-
+        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         let datosTurno = {
             idAgenda: this.agenda.id,
             indiceBloque: this.indiceBloque,
             indiceTurno: this.indiceTurno,
-            simultaneos: this.agenda.bloques[this.indiceBloque].pacienteSimultaneos,
-            cantsimultaneos: this.agenda.bloques[this.indiceBloque].cantidadSimultaneos,
             estado: estado,
-            // paciente: this.paciente,
             paciente: pacienteSave,
-            pacientes: pacientes,
             prestacion: this.turnoPrestacion
 
         };
@@ -266,7 +247,7 @@ export class DarTurnosComponent implements AfterViewInit {
             this.actualizar('sinFiltro');
             this.plex.alert('El turno se asignó correctamente');
         });
-        // TODO: Si cambió el teléfono lo actualizo en MPI?
+        // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
             let mpi: Observable<any>;
             let cambios = {
@@ -305,10 +286,8 @@ export class DarTurnosComponent implements AfterViewInit {
         let operacion: Observable<IListaEspera>;
         // if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
         let datosPrestacion = {
-            id: '581792ad3d52685d1ecdaa05',
-            // id: this.opciones.prestacion.id,
-            nombre: 'Cardiología adultos'
-            // nombre: this.opciones.prestacion.nombre
+            id: '581792ad3d52685d1ecdaa05', // this.opciones.prestacion.id,
+            nombre: 'Cardiología adultos'// this.opciones.prestacion.nombre
         };
         let datosProfesional = !this.opciones.profesional ? null : {
             id: this.opciones.profesional.id,
@@ -330,7 +309,5 @@ export class DarTurnosComponent implements AfterViewInit {
         };
         operacion = this.serviceListaEspera.post(listaEspera);
         operacion.subscribe();
-        // TODO: llamar al servicio para hacer un post (falta crear servicio)
-        // }
     }
 }
