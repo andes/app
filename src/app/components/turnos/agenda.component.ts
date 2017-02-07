@@ -457,7 +457,13 @@ export class AgendaComponent implements OnInit {
                             horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
                             estado: 'disponible'
                         };
-                        bloque.turnos.push(turno);
+                        if (bloque.pacienteSimultaneos) {
+                            for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                                bloque.turnos.push(turno);
+                            }
+                        } else {
+                            bloque.turnos.push(turno);
+                        }
                     }
 
                     bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
