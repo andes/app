@@ -25,6 +25,7 @@ export class AppComponent {
             new SidebarItem('Prestacion', 'blur', '/prestacion'),
             new SidebarItem('Agendas', 'calendar', '/agenda'),
             new SidebarItem('Turnos', 'calendar-check', '/turnos'),
+            new SidebarItem('Lista de Espera', 'calendar-check', '/listaEspera'),
             new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas'),
             new SidebarItem('rup Prestaciones', 'calendar-check', '/rup')
         ];

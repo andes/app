@@ -51,6 +51,10 @@ import { EspecialidadCreateUpdateComponent } from './components/especialidad/esp
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
+import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
+import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
+
+
 // Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
@@ -120,7 +124,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ObservacionesComponent,
     ConsultaGeneralClinicaMedicaComponent,
     PrestacionesPendientesComponent,
-    PrestacionEjecucionComponent
+    PrestacionEjecucionComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
   ],
   bootstrap: [AppComponent],
   providers: [

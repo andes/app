@@ -50,8 +50,8 @@ export class DarTurnosComponent implements AfterViewInit {
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
         documento: '30403872',
-        apellido: 'Diaz',
-        nombre: 'Ramiro',
+        apellido: 'Mal',
+        nombre: 'Hardcodear Esta',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
@@ -215,7 +215,6 @@ export class DarTurnosComponent implements AfterViewInit {
 
     onSave() {
         console.log(this.turnoPrestacion);
-        debugger;
         let pacientes: any[];
         let estado: String = 'asignado';
         let pacienteSave = {
@@ -304,33 +303,34 @@ export class DarTurnosComponent implements AfterViewInit {
     onCancel() {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
-       // if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
-            let datosPrestacion = {
-                id: '581792ad3d52685d1ecdaa05',// this.opciones.prestacion.id,
-                nombre: 'Cardiología adultos'// this.opciones.prestacion.nombre
-            };
-            let datosProfesional = !this.opciones.profesional ? null : {
-                id: this.opciones.profesional.id,
-                nombre: this.opciones.profesional.nombre,
-                apellido: this.opciones.profesional.apellido
-            };
-            let datosPaciente = {
-                id: this.paciente.id,
-                nombre: this.paciente.nombre,
-                apellido: this.paciente.apellido,
-                documento: this.paciente.documento
-            };
-            debugger;
-            listaEspera = {
-            fecha : this.agenda.horaInicio,
-            estado : 'demandaRechazada',
-            prestacion : datosPrestacion,
-            profesional : datosProfesional,
-            paciente : datosPaciente,
-        }
-            operacion = this.serviceListaEspera.post(listaEspera);
-            operacion.subscribe();
-            // TODO: llamar al servicio para hacer un post (falta crear servicio)
+        // if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
+        let datosPrestacion = {
+            id: '581792ad3d52685d1ecdaa05',
+            // id: this.opciones.prestacion.id,
+            nombre: 'Cardiología adultos'
+            // nombre: this.opciones.prestacion.nombre
+        };
+        let datosProfesional = !this.opciones.profesional ? null : {
+            id: this.opciones.profesional.id,
+            nombre: this.opciones.profesional.nombre,
+            apellido: this.opciones.profesional.apellido
+        };
+        let datosPaciente = {
+            id: this.paciente.id,
+            nombre: this.paciente.nombre,
+            apellido: this.paciente.apellido,
+            documento: this.paciente.documento
+        };
+        listaEspera = {
+            fecha: this.agenda.horaInicio,
+            estado: 'demandaRechazada',
+            prestacion: datosPrestacion,
+            profesional: datosProfesional,
+            paciente: datosPaciente,
+        };
+        operacion = this.serviceListaEspera.post(listaEspera);
+        operacion.subscribe();
+        // TODO: llamar al servicio para hacer un post (falta crear servicio)
         // }
     }
 }
