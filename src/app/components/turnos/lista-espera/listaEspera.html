@@ -27,6 +27,8 @@
                             <th>Paciente</th>
                             <th>Prestación</th>
                             <th>Profesional</th>
+                            <th>Origen</th>
+                            <th>Fecha</th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -40,16 +42,18 @@
                             <td>
                                 <span *ngIf="listaEspera.profesional">{{listaEspera.profesional.nombre}} {{listaEspera.profesional.apellido}} </span>
                             </td>
-                             <td>
+                            <td>{{listaEspera.estado}}</td>
+                            <td>{{listaEspera.fecha | date:"d-MM-yy" }}</td>
+                            <td>
                                 <plex-button type="primary" icon="magnify" label="Ver más"></plex-button>
                             </td>
                             <td>
                                 <plex-button type="primary" icon="account-card-details" label="Datos Paciente"></plex-button>
-                            </td>                            
+                            </td>
                             <td>
                                 <plex-button type="success" icon="calendar-clock" label="Asignar Turno"></plex-button>
                             </td>
-                           
+
                         </tr>
                     </tbody>
                 </table>
