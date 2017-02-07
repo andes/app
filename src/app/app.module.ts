@@ -1,3 +1,4 @@
+import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 // RUP
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
@@ -11,6 +12,9 @@ import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVi
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
+
+import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 // Fin Componentes RUP
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -114,7 +118,9 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     PesoComponent,
     SignosVitalesComponent,
     ObservacionesComponent,
-    ConsultaGeneralClinicaMedicaComponent
+    ConsultaGeneralClinicaMedicaComponent,
+    PrestacionesPendientesComponent,
+    PrestacionEjecucionComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -140,7 +146,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     EspacioFisicoService,
     ListaEsperaService,
     Server,
-    SmsService
+    SmsService,
+    PrestacionPacienteService
   ]
 
 })

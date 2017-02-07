@@ -1,0 +1,19 @@
+<div *ngIf="showPendientes">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Prestaciones Pendientes: <span> {{tipoPrestacion.nombre}}</span></h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let prestacion of listaPrestaciones" (click)="elegirPrestacion(prestacion)">
+                    {{prestacion.paciente.nombreCompleto}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div *ngIf="!showPendientes">
+    <rup-prestacionEjecucion [prestacion]="prestacionSeleccionada"></rup-prestacionEjecucion>
+</div>

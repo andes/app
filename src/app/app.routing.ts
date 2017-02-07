@@ -1,3 +1,4 @@
+import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -34,7 +35,7 @@ const appRoutes: Routes = [
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
-  { path: 'rup', component: ConsultaGeneralClinicaMedicaComponent },
+  { path: 'rup', component: PrestacionesPendientesComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

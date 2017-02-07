@@ -26,7 +26,7 @@ export class AppComponent {
             new SidebarItem('Agendas', 'calendar', '/agenda'),
             new SidebarItem('Turnos', 'calendar-check', '/turnos'),
             new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas'),
-            new SidebarItem('Tensión', 'calendar-check', '/rup')
+            new SidebarItem('rup Prestaciones', 'calendar-check', '/rup')
         ];
         this.plex.initStaticItems(items);
     }
