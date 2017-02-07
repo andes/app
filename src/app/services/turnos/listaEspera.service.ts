@@ -12,9 +12,11 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class ListaEsperaService {
+
     private listaEsperaUrl = AppSettings.API_ENDPOINT + '/modules/turnos/listaEspera';  // URL to web api
 
     constructor(private server: Server, private http: Http) { }
+
   /**
      * Metodo get. Trae el objeto organizacion.
      * @param {any} params Opciones de busqueda

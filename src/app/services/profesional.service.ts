@@ -29,7 +29,7 @@ export class ProfesionalService {
      * @param {IOrganizacion} organizacion Recibe IOrganizacion
      */
     post(organizacion: IProfesional): Observable<IProfesional> {
-        return this.server.post(this.profesionalUrl, organizacion) // ...using post request
+        return this.server.post(this.profesionalUrl, organizacion); // ...using post request
     }
 
     disable(profesional: IProfesional): Observable<IProfesional> {

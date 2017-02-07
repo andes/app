@@ -1,11 +1,10 @@
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { ListaEsperaCreateUpdateComponent } from './listaEspera-create-update.component';
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-const limit = 10;
+const limit = 50;
 
 @Component({
     selector: 'listaEspera',
@@ -28,20 +27,25 @@ export class ListaEsperaComponent implements OnInit {
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
+            apellido: [''],
             nombre: [''],
-            activo: true
+            documento: ['']
         });
 
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            this.value = value;
-            this.skip = 0;
-            this.loadDatos(false);
-        });
-        this.loadDatos(false);
+        this.searchForm.valueChanges.debounceTime(200).subscribe(
+            (value) => {
+                this.value = value;
+                this.skip = 0;
+                this.loadDatos(false);
+            });
+        this.loadDatos();
     }
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
+            'apellido': this.value && this.value.apellido,
+            'nombre': this.value && this.value.nombre,
+            'documento': this.value && this.value.documento,
             'skip': this.skip,
             'limit': limit
         };

@@ -1,34 +1,54 @@
-<div class="row">
+<plex-box type="success" title="Agregar Paciente a Lista de Espera">
 
-    <div class="col-sm-12" *ngIf="!showcreate && !pacientesSearch">
-        <plex-box type="success" title="Agregar Paciente a Lista de Espera">
+    <div class="row">
+        <div class="col-sm-12" *ngIf="!showcreate && !pacientesSearch">
             <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
-        </plex-box>
 
-        <div class="col-md-4">
-            <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones">
-            </plex-select>
+            <div class="row">
+                <div class="col-md-4">
+                    <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones">
+                    </plex-select>
+                </div>
+
+                <div class="col-md-4">
+                    <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido">
+                    </plex-select>
+                </div>
+
+                <div class="col-md-4">
+                    <plex-datetime type="date" [(ngModel)]="opciones.fecha" (change)="cambioFecha()" label="Fecha de Activación">
+                    </plex-datetime>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <plex-text [(ngModel)]="opciones.observaciones"  label="Observaciones" placeholder="Ingrese observaciones..."></plex-text>
+                </div>
+                <div class="col-sm-4">
+                    <plex-text [(ngModel)]="opciones.telefono" label="Teléfono" placeholder="Ingrese un teléfono..."></plex-text>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave()" title="Guardar">
+                    </plex-button>
+                    <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel()" title="Cancelar">
+                    </plex-button>
+                    <div class="row">&nbsp;</div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-4">
-            <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido">
-            </plex-select>
-        </div>
 
-        <div class="col-sm-12">
-            <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave()" title="Guardar">
-            </plex-button>
-            <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel()" title="Cancelar">
-            </plex-button>
-            <div class="row">&nbsp;</div>
+        <div class="col-sm-12" *ngIf="pacientesSearch">
+            <div class="panel panel-default">
+                <div class="clear"></div>
+                <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
+            </div>
         </div>
+        <div class="row">&nbsp;</div>
+
     </div>
-
-    <div class="col-sm-12" *ngIf="pacientesSearch">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
-        </div>
-    </div>
-    <div class="row">&nbsp;</div>
-</div>
+</plex-box>

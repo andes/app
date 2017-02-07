@@ -11,7 +11,8 @@ import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.c
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaGeneralClinicaMedicaComponent } from
+  './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
