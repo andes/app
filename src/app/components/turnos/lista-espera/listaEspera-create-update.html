@@ -6,17 +6,17 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones">
+                    <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones">
                     </plex-select>
                 </div>
 
                 <div class="col-md-4">
-                    <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido">
+                    <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" labelField="nombre + ' ' + apellido">
                     </plex-select>
                 </div>
 
                 <div class="col-md-4">
-                    <plex-datetime type="date" [(ngModel)]="opciones.fecha" (change)="cambioFecha()" label="Fecha de Activación">
+                    <plex-datetime type="date" [(ngModel)]="opciones.fecha" label="Fecha de Activación">
                     </plex-datetime>
                 </div>
             </div>

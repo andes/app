@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
+import { Plex } from 'andes-plex/src/lib/core/service';
 import * as moment from 'moment';
 
 // Interfaces
@@ -34,8 +35,8 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
         documento: '30403872',
-        apellido: 'Mal',
-        nombre: 'Hardcodear Esta',
+        apellido: 'Serralima',
+        nombre: 'Maria Marta',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
@@ -51,6 +52,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
         public pacienteService: PacienteService,
         public listaEsperaService: ListaEsperaService,
         public prestacionService: PrestacionService,
+        public plex: Plex,
         private router: Router
     ) { }
 
