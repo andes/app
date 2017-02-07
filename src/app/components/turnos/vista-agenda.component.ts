@@ -27,13 +27,8 @@ export class VistaAgendaComponent {
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
             agenda.estado = resultado.estado;
-            debugger;
+
             this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
         });
-        // agenda.estado = 'Suspendida';
-
-        // this.serviceAgenda.save(agenda).subscribe(resultado => {
-        //     this.plex.alert('La agenda paso a Estado: ' + agenda.estado);
-        // });
     }
 }

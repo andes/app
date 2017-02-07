@@ -22,46 +22,33 @@ export class TurnosComponent {
 
     public estadoAsistencia: boolean;
 
-    asistencia(agenda: IAgenda, bloque: any, turno: any) {
-        let indexBloque = agenda.bloques.indexOf(bloque);
-        let indexTurno = agenda.bloques[indexBloque].turnos.indexOf(turno);
-
+    eventosTurno(agenda: IAgenda, turno: any, event) {
+        let btnClicked = event.currentTarget.id;
         let patch: any = {};
 
-        if (turno.asistencia) {
+        if (btnClicked === 'cancelarTurno') {
             patch = {
-                'op': 'asistenciaTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'false'
+                'op': 'cancelarTurno',
+                'idTurno': turno.id,
+                'estado': 'disponible',
+                'paciente': {},
+                'prestacion': []
             };
-        } else {
-            patch = {
-                'op': 'asistenciaTurno', 'path': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.asistencia', 'value': 'true'
-            };
+        } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
+            if (turno.asistencia) {
+                patch = {
+                    'op': 'asistenciaTurno',
+                    'idTurno': turno.id,
+                    'asistencia': false,
+                };
+            } else {
+                patch = {
+                    'op': 'asistenciaTurno',
+                    'idTurno': turno.id,
+                    'asistencia': true,
+                };
+            }
         }
-
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.ag = resultado;
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
-
-    cancelarTurno(agenda: IAgenda, bloque: any, turno: any) {
-        let indexBloque = agenda.bloques.indexOf(bloque);
-        let indexTurno = agenda.bloques[indexBloque].turnos.indexOf(turno);
-
-        let patch: any = {};
-
-        patch = {
-            'op': 'cancelarTurno',
-            'path': [
-                { 'estado': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.estado', 'value': 'disponible' },
-                { 'paciente': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.paciente', 'value': {} },
-                { 'prestacion': 'bloques.' + indexBloque + '.turnos.' + indexTurno + '.prestacion', 'value': {} }
-            ]
-        };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
             this.ag = resultado;
