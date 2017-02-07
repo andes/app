@@ -10,7 +10,7 @@
     <table *ngIf="calendario" class="table table-striped">
       <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" class="text-center" [ngClass]="{'bg-primary primary': (day.estado == 'seleccionado') && (day.original == false),
-        'bg-success success': day.original == true ,'hover': true}" (click)="seleccionar(day)">
+        'bg-success success': day.original == true ,'hover': day.fecha.getTime() >= hoy.getTime()}" (click)="seleccionar(day)">
           <div>{{ day.fecha | date:"d" }}</div>
           <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
           <div>
@@ -21,6 +21,7 @@
           </td>
       </tr>
     </table>
+    <plex-button title="Clonar Agenda" label="Clonar Agenda" type="danger" (click)="clonar()"></plex-button>
   </div>
   <div class="col-md-4">
     <plex-box type="success" title="Agenda Original">
@@ -52,32 +53,47 @@
     </plex-box>
   </div>
   <div *ngIf="agendasFiltradas.length>0" class="col-md-4">
-    <plex-box title="Agendas del día">
+    <plex-box title="Agendas en conflicto" type="danger">
       <ul class="list-group">
-        <div *ngFor="let agenda of agendasFiltradas; let i = index">
-          <li class="list-group-item {{agendasPrestaciones.indexOf(agenda.id)>0?danger:''}}">
+        <div *ngFor="let agendaF of agendasFiltradas; let i = index">
+          <li class="list-group-item">
             <div class="row">
               <div class="col-md-12">
-                <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
+                <span><b>Fecha:</b> {{agendaF.horaInicio | date: 'dd/MM/yyyy'}} - {{agendaF.horaInicio | date: 'HH:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}</span>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
-                <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
-                <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-                <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
+                <b>Profesional: </b><span *ngFor="let profesional of agendaF.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agendaF.prestaciones">{{prestacion.nombre}} - </span>
+                <br /><b>Espacio Físico: </b><span>{{agendaF.espacioFisico?agendaF.espacioFisico.nombre:''}}</span>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 <label>Bloques</label>
                 <div class="list-group">
-                  <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item {{agendasPrestaciones.indexOf(agenda.id)>0?danger:''}}">
+                  <a *ngFor="let unBloque of agendaF.bloques; let i=index" class="list-group-item">
                     <div class="row">
                       <div class="col-md-6">{{unBloque.descripcion}}</div>
                       <div class="col-md-6">{{unBloque.titulo}}</div>
                     </div>
                   </a>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                  <li *ngIf="agendaF.conflictoEF">
+                    Conflicto con Espacio Físico
+                  </li>
+                  <li *ngIf="agendaF.conflictoProfesional">
+                    Conflicto con Profesionales
+                  </li>
+                  <li *ngIf="agendaF.conflictoPrestacion">
+                    Conflicto con Tipos de Prestación
+                  </li>
                 </div>
               </div>
             </div>
@@ -87,8 +103,8 @@
     </plex-box>
   </div>
 </div>
-<div class="row">
+<!--<div class="row">
   <div class="col-md-12">
     <plex-button title="Clonar Agenda" label="Clonar Agenda" type="danger" (click)="clonar()"></plex-button>
   </div>
-</div>
+</div>-->

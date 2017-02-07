@@ -8,11 +8,11 @@
               <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
             </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
                 (change)="filtrar()">
                 </plex-select>
             </div>
