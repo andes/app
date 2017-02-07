@@ -1,6 +1,6 @@
-import { Component, AfterViewInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { PacienteService } from './../../services/paciente.service';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { PacienteUpdateComponent } from './paciente-update.component';
@@ -11,39 +11,33 @@ import {
 
 @Component({
   selector: 'pacientes',
-  templateUrl: 'paciente.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: 'paciente.html'
 })
 
-export class PacienteComponent implements AfterViewInit {
-  @Output()
-  found: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
+export class PacienteComponent implements OnInit {
   @Output()
   selected: EventEmitter<any> = new EventEmitter<any>();
   showcreate: boolean = false;
   showupdate: boolean = false;
   error: boolean = false;
   mensaje: string = "";
-  pacientes: IPaciente[];
   searchForm: FormGroup;
   selectedPaciente: IPaciente;
-  seachTextModel: string;
+  searchTextModel: string;
   pacientesSearch: boolean = false;
-  results$: Subject<Array<any>> = new Subject<Array<any>>();
+  //results$: Subject<Array<any>> = new Subject<Array<any>>();
+  resultados$: Observable<any>;
   modeloSlide: any;
   active: boolean = false;
-  seachText: FormControl = new FormControl('');
+  searchText: FormControl = new FormControl('');
   nuevoPaciente: boolean = false;
   pacientesScan: boolean = false;
   pacienteScaneado: any = {};
+  pacientesLista: Array<any> = new Array<any>();
+
 
   constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {
-    this.results$.subscribe((res) => {
-      this.found.emit(res);
-    });
   }
-
-  //checked: boolean = true;
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
@@ -54,28 +48,14 @@ export class PacienteComponent implements AfterViewInit {
     this.modeloSlide = {
       activo: false
     };
-  }
 
-  /*Activa la búsqueda por campos*/
-  activate(event: any) {
-    if (event) {
-      this.pacientesSearch = true;
-      this.modeloSlide.activo = true;
-    } else {
-      this.pacientesSearch = false;
-      this.modeloSlide.activo = false;
-    }
-  }
-
-  ngAfterViewInit() {
-    this.seachText
+    this.resultados$ = this.searchText
       .valueChanges
-      .map((text: any) => text ? text.trim() : '')                                             // Se ignoran los espacios
-      .do(searchString => searchString ? this.mensaje = 'Buscando...' : this.mensaje = '')
-      .debounceTime(500)                          // Se esperan un milisegundos para que complete la busqueda
+      .map((value: any) => value ? value.trim() : '')             // ignore spaces
+      .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
+      .debounceTime(700)                                          // wait when input completed
       .distinctUntilChanged()
       .switchMap(searchString => {
-        this.nuevoPaciente = false;
         return new Promise<Array<any>>((resolve, reject) => {
           if (searchString) {
             // Se verifica mediante expresiones regulares el string recibido
@@ -84,36 +64,81 @@ export class PacienteComponent implements AfterViewInit {
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
                 let results: Array<any> = resultados;
-                if (results.length > 0) {
-                  this.mensaje = '';
-                } else {
-                  if (this.seachTextModel && this.seachTextModel.trim()) {
-                    if (this.pacientesScan) {
-                      this.mensaje = 'Presione - Nuevo Paciente - para dar de alta al paciente';
-                    } else {
-                      this.mensaje = 'Sin resultados';
-                    }
-
-                  }
-                  this.nuevoPaciente = true;
-                }
                 resolve(results);
               },
               err => {
                 reject(err);
+
               });
           } else {
             this.mensaje = 'Ingrese los datos del paciente';
+            this.nuevoPaciente = false;
             resolve([]);
           }
-        });
+        })
+      })                  // request switchable
+      .map((esResult: any) => {
+        // extract results
+        this.nuevoPaciente = true;
+        if (esResult.length > 0) {
+          this.mensaje = '';
+          return esResult;
+        } else {
+          if (this.searchTextModel && this.searchTextModel.trim()) {
+            if (this.pacientesScan) {
+              this.mensaje = 'Presione - Nuevo Paciente - para dar de alta al paciente';
+            } else {
+              this.mensaje = 'Sin resultados';
+            }
+
+          }
+
+          return [];
+        }
       })
-      .catch(this.handleError)
-      .subscribe(this.results$);
+      .catch(this.handleError);
+  }
+
+  // Otra opción en caso para realizar la búsquedas searchMatch
+  //   this.searchText.valueChanges
+  //     .map((text: any) => text ? text : '')                                             // Se ignoran los espacios
+  //     .do(searchString => searchString ? this.mensaje = 'Buscando...' : this.mensaje = '')
+  //     .debounceTime(500)
+  //     .distinctUntilChanged()
+  //     // .subscribe(searchString => {
+  //     //   console.log(searchString);
+  //     //   if (searchString) {
+  //     //     this.pacienteService.search(searchString, this.pacienteScaneado)
+  //     //       .subscribe(resultados => {
+  //     //         this.pacientesLista = resultados;
+  //     //       });
+  //     //
+  //     //   }
+  //     //   else {
+  //     //     this.pacientesLista = [];
+  //     //   }
+  //     //
+  //     // });
+
+  /*Activa la búsqueda por campos*/
+  activate(event: any) {
+
+    this.searchText.setValue('');
+    this.pacientesLista = [];
+    this.nuevoPaciente = false;
+
+    if (event) {
+      this.pacientesSearch = true;
+      this.modeloSlide.activo = true;
+
+    } else {
+      this.pacientesSearch = false;
+      this.modeloSlide.activo = false;
+
+    }
   }
 
   private verificarInput(cadena) {
-    debugger;
     // let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
     let parse = [];
     let datosDni = cadena.split('"');
@@ -140,34 +165,12 @@ export class PacienteComponent implements AfterViewInit {
 
   findPacientes() {
     let dto = this.searchForm.value;
-    debugger;
-    var dtoBusqueda = {
-      'apellido': dto.apellido, 'nombre': dto.nombre, 'documento': String(dto.documento),
+    let dtoBusqueda = {
+      'apellido': dto.apellido, 'nombre': dto.nombre, 'documento': dto.documento.toString(),
     };
-    this.pacienteService.searchMatch('documento', dto)
-      .subscribe(resultados => {
-        let results: Array<any> = resultados;
-        if (results.length > 0) {
-          this.mensaje = '';
-        } else {
-          if (this.seachTextModel && this.seachTextModel.trim()) {
-            this.mensaje = 'Sin resultados';
-          }
-        }
+    this.pacienteService.searchMatch('documento', dtoBusqueda)
+      .subscribe(value => { this.pacientesLista = value });
 
-        // resolve(results);
-      },
-      err => {
-        // reject(err);
-        this.mensaje = 'Error al realizar las búsquedas';
-      });
-
-
-  }
-
-
-  resultSelected(result) {
-    this.selected.next(result);
   }
 
 
@@ -175,35 +178,12 @@ export class PacienteComponent implements AfterViewInit {
     this.mensaje = 'Error al realizar las búsquedas';
   }
 
-  // onDisable(objPaciente: IPaciente) {
-  //   this.error = false;
-  //   this.pacienteService.disable(objPaciente)
-  //     .subscribe(dato => this.loadPaciente(), //Bind to view
-  //     err => {
-  //       if (err) {
-  //         console.log(err);
-  //         this.error = true;
-  //         this.mensaje = "Ha ocurrido un error";
-  //         return;
-  //       }
-  //     });
-  // }
 
   onReturn(objPaciente: IPaciente): void {
     this.showcreate = false;
     this.showupdate = false;
   }
 
-  // onEnable(objPaciente: IPaciente) {
-  //   this.error = false;
-  //   this.pacienteService.enable(objPaciente)
-  //     .subscribe(dato => this.loadPaciente(), //Bind to view
-  //     err => {
-  //       if (err) {
-  //         console.log(err);
-  //       }
-  //     });
-  // }
 
   onEdit(objPaciente: IPaciente) {
     this.showcreate = false;

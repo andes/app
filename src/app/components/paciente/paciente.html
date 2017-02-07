@@ -6,7 +6,7 @@
           <div class="row">
             <div class="col-md-11" *ngIf="!pacientesSearch">
               <div class="form-group">
-                <input  (focus)="active = true" [formControl]="seachText" [(ngModel)]="seachTextModel" class="form-control" placeholder="Buscar...">
+                <input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
               </div>
             </div>
             <div class="col-md-11" *ngIf="pacientesSearch">
@@ -46,12 +46,7 @@
 
       <plex-box type="info" title="Pacientes Encontrados">
         <!-- Search results -->
-        <div [class.hidden]="!active">
-          <!-- <ul>
-            <li *ngFor="let result of results$ | async" (mousedown)="resutSelected(result)">
-              <span>{{result.documento| uppercase}} - {{result.nombre| uppercase}} - {{result.apellido| uppercase}}</span>
-            </li>
-          </ul> -->
+        <div *ngIf="!pacientesSearch" >
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -62,10 +57,35 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let result of results$ | async" (mousedown)="resultSelected(result)">
-                  <td>{{result.documento}}</td>
-                  <td>{{result.nombre| uppercase}}</td>
-                  <td>{{result.apellido| uppercase}}</td>
+                <tr *ngFor="let paciente of resultados$ | async" >
+                  <td>{{paciente.documento}}</td>
+                  <td>{{paciente.nombre| uppercase}}</td>
+                  <td>{{paciente.apellido| uppercase}}</td>
+                  <td>
+                      <plex-button type="primary" label="Actualizar" (click)="onEdit(paciente)">
+                      </plex-button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="pacientesSearch" >
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Documento</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let paciente of pacientesLista" >
+                  <td>{{paciente.documento}}</td>
+                  <td>{{paciente.nombre| uppercase}}</td>
+                  <td>{{paciente.apellido| uppercase}}</td>
                   <td>
                       <plex-button type="primary" label="Actualizar" (click)="onEdit(paciente)">
                       </plex-button>
@@ -77,7 +97,7 @@
         </div>
       </plex-box>
       <div class="row">
-        <plex-box type="danger" *ngIf="!!ensaje && active">
+        <plex-box type="danger" *ngIf="!!mensaje && active">
           {{mensaje}}
         </plex-box>
       </div>
