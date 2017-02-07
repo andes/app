@@ -1,17 +1,12 @@
-<div class="row">
-    <div class="col-md-12">
-        <rup-signos-vitales [paciente]="paciente"  [tipoPrestacion]="prestacionSignosVitales" (evtData)="onReturn($event, 'prestacionSignosVitales')"></rup-signos-vitales>
+<plex-box type="default" title="Consulta de Clínica Médica">
+    <div class="row">
+        <div class="col-md-12">
+            <rup-signos-vitales [paciente]="paciente" [tipoPrestacion]="prestacionSignosVitales" (evtData)="onReturn($event, 'prestacionSignosVitales')"></rup-signos-vitales>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <rup-talla [paciente]="paciente"  [tipoPrestacion]="prestacionTalla" (evtData)="onReturn($event, 'prestacionTalla')"></rup-talla>
+    <div class="row">
+        <div class="col-md-12">
+            <rup-talla [paciente]="paciente" [tipoPrestacion]="prestacionTalla" (evtData)="onReturn($event, 'prestacionTalla')"></rup-talla>
+        </div>
     </div>
-</div>
-
-
-<div class="row">
-    <div class="col-md-12">
-        {{data | json}}
-    </div>
-</div>
+</plex-box>

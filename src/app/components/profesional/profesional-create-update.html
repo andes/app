@@ -49,7 +49,7 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
-                    <plex-select formControlName="especialidad" (get-data)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:"
+                    <plex-select formControlName="especialidad" (getData)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:"
                         placeholder="Seleccione las especialidades del profesional">
                         </plex-select>
                 </div>
@@ -150,16 +150,16 @@
                         <div formGroupName="ubicacion">
 
                             <td class="col-md-4">
-                                <plex-select placeholder="Seleccione Pais" formControlName="pais" (get-data)="loadPaises($event)" label="País:">
+                                <plex-select placeholder="Seleccione Pais" formControlName="pais" (getData)="loadPaises($event)" label="País:">
                                 </plex-select>
                             </td>
                             <td class="col-md-4">
-                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (get-data)="loadProvincias($event, dir.controls.ubicacion.controls.pais)"
+                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)"
                                     label="Provincia:">
                                     </plex-select>
                             </td>
                             <td class="col-md-4">
-                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (get-data)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
+                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
                                     label="Localidad:">
                                     </plex-select>
                             </td>

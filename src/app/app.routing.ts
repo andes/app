@@ -1,10 +1,11 @@
+import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
-
+import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
@@ -32,9 +33,10 @@ const appRoutes: Routes = [
   { path: 'prestacion', component: PrestacionComponent },
   { path: 'agenda', component: AgendaComponent },
   { path: 'turnos', component: DarTurnosComponent },
+  { path: 'listaEspera', component: ListaEsperaComponent },
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
-  { path: 'rup', component: ConsultaGeneralClinicaMedicaComponent },
+  { path: 'rup', component: PrestacionesPendientesComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

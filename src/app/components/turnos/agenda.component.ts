@@ -85,6 +85,7 @@ export class AgendaComponent implements OnInit {
     }
 
     public calculosInicio() {
+        console.log('modelo ', this.modelo);
         this.modelo.fecha = this.modelo.horaInicio;
         // this.modelo.fecha = new Date();
         let bloques = this.modelo.bloques;
@@ -150,11 +151,16 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        if (this.plex.confirm('Confirma que desea eliminar el bloque?')) {
-            this.modelo.bloques.splice(indice, 1);
-            this.bloqueActivo = -1;
-            this.validarTodo();
+        this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
+            if (confirma) {
+                this.modelo.bloques.splice(indice, 1);
+                this.bloqueActivo = -1;
+                this.validarTodo();
+            }
         }
+        ).catch(() => {
+            alert('no borra');
+        });
     }
 
     compararBloques(fecha1, fecha2): number {
@@ -451,7 +457,13 @@ export class AgendaComponent implements OnInit {
                             horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
                             estado: 'disponible'
                         };
-                        bloque.turnos.push(turno);
+                        if (bloque.pacienteSimultaneos) {
+                            for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                                bloque.turnos.push(turno);
+                            }
+                        } else {
+                            bloque.turnos.push(turno);
+                        }
                     }
 
                     bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
