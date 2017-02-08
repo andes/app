@@ -68,6 +68,11 @@ export class VistaAgendaComponent {
         });
     }
 
+    cancelar() {
+        this.showDatosAgenda = true;
+        this.showEditarAgenda = false;
+    }
+
     loadProfesionales(event) {
         this.servicioProfesional.get({}).subscribe(event.callback);
     }

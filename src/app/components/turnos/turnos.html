@@ -41,9 +41,8 @@
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
                                             <i *ngIf="(!smsEnviado) && (!smsLoader)" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
                                             <i *ngIf="(smsEnviado) && (!smsLoader)" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
-                                            <i *ngIf="smsLoader" title="Enviando SMS" class="text-info info mdi mdi-auto-upload"></i>
+                                            <plex-loader *ngIf="smsLoader" type="ball-pulse"></plex-loader>
                                         </td>
-
                                     </tr>
                                 </table>
                             </div>
