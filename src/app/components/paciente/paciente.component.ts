@@ -34,6 +34,7 @@ export class PacienteComponent implements OnInit {
   pacientesScan: boolean = false;
   pacienteScaneado: any = {};
   pacientesLista: Array<any> = new Array<any>();
+  fechaActual: Date = new Date();
 
 
   constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {
@@ -52,7 +53,8 @@ export class PacienteComponent implements OnInit {
     this.resultados$ = this.searchText
       .valueChanges
       .map((value: any) => value ? value.trim() : '')             // ignore spaces
-      .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
+      .do(value => value ? this.active = true:this.active=false)
+      // .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
       .debounceTime(700)                                          // wait when input completed
       .distinctUntilChanged()
       .switchMap(searchString => {
@@ -64,6 +66,7 @@ export class PacienteComponent implements OnInit {
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
                 let results: Array<any> = resultados;
+                this.active = false;
                 resolve(results);
               },
               err => {
@@ -164,12 +167,13 @@ export class PacienteComponent implements OnInit {
   }
 
   findPacientes() {
+    debugger;
     let dto = this.searchForm.value;
     let dtoBusqueda = {
       'apellido': dto.apellido, 'nombre': dto.nombre, 'documento': dto.documento.toString(),
     };
     this.pacienteService.searchMatch('documento', dtoBusqueda)
-      .subscribe(value => { this.pacientesLista = value });
+      .subscribe(value => { this.pacientesLista = value ; debugger });
 
   }
 

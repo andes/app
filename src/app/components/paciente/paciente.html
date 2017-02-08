@@ -6,7 +6,8 @@
           <div class="row">
             <div class="col-md-11" *ngIf="!pacientesSearch">
               <div class="form-group">
-                <input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
+                <!--<input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">-->
+                <input [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
               </div>
             </div>
             <div class="col-md-11" *ngIf="pacientesSearch">
@@ -33,20 +34,23 @@
                 </div>
               </form>
             </div>
-
             <div class="col-sm-1">
               <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
             </div>
           </div>
-          <plex-button type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
+        </div>
+        <div>
+          <plex-button icon="account-plus" type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
         </div>
       </plex-box>
       <div>
       </div>
-
+      <div class="row">
+        <plex-loader *ngIf="active"></plex-loader>
+      </div>
       <plex-box type="info" title="Pacientes Encontrados">
         <!-- Search results -->
-        <div *ngIf="!pacientesSearch" >
+        <div *ngIf="!pacientesSearch">
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -57,21 +61,20 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let paciente of resultados$ | async" >
+                <tr *ngFor="let paciente of resultados$ | async">
                   <td>{{paciente.documento}}</td>
                   <td>{{paciente.nombre| uppercase}}</td>
                   <td>{{paciente.apellido| uppercase}}</td>
                   <td>
-                      <plex-button type="primary" label="Actualizar" (click)="onEdit(paciente)">
-                      </plex-button>
+                    <plex-button icon="pencil" type="primary" label="Modificar" (click)="onEdit(paciente)">
+                    </plex-button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
-        <div *ngIf="pacientesSearch" >
+        <div *ngIf="pacientesSearch">
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -82,13 +85,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let paciente of pacientesLista" >
+                <tr *ngFor="let paciente of pacientesLista">
                   <td>{{paciente.documento}}</td>
                   <td>{{paciente.nombre| uppercase}}</td>
                   <td>{{paciente.apellido| uppercase}}</td>
                   <td>
-                      <plex-button type="primary" label="Actualizar" (click)="onEdit(paciente)">
-                      </plex-button>
+                    <plex-button type="primary" label="Actualizar" (click)="onEdit(paciente)">
+                    </plex-button>
                   </td>
                 </tr>
               </tbody>
@@ -97,7 +100,7 @@
         </div>
       </plex-box>
       <div class="row">
-        <plex-box type="danger" *ngIf="!!mensaje && active">
+        <plex-box type="danger" *ngIf="!!mensaje">
           {{mensaje}}
         </plex-box>
       </div>
@@ -120,41 +123,34 @@
           <div class="panel-body">
             <ul>
               <li>
-                <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI</li>
+                <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI
+              </li>
               <li>
-                <p>Recuerde actualizar la información de contacto.</li>
+                <p>Recuerde actualizar la información de contacto.
+              </li>
             </ul>
           </div>
         </div>
-        <div class="list-group">
-          <a href="#" class="list-group-item active">Últimas búsquedas realizadas <span class="badge">7</span></a>
-          <a href="#" class="list-group-item">13865896 - Juan Perez</a>
-          <a href="#" class="list-group-item">20695896 - Pedro Gomez</a>
-          <a href="#" class="list-group-item">12965874 - Horacio Martinez</a>
-          <a href="#" class="list-group-item">26584894 - Laura Monteverde</a>
-          <a href="#" class="list-group-item">17965452 - Cristina Gomez</a>
-          <a href="#" class="list-group-item"> 7566546 - Juan José Yañez</a>
-          <a href="#" class="list-group-item">96545114 - Orlando Johnson</a>
+        <div class="panel panel-success">
+          <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
+          <div class="panel-body">
+            <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">698.632</span></p>
+            <p> Cantidad de pacientes fallecidos registrados <span class="badge">23.564</span></p>
+          </div>
         </div>
       </plex-box>
     </div>
   </div>
-
-
 </div>
-
 <div class="col-md-12" *ngIf="showcreate">
-    <div class="panel panel-default">
-        <div class="clear"></div>
-        <paciente-create (data)='onReturn($event)'></paciente-create>
-
-    </div>
+  <div class="panel panel-default">
+    <div class="clear"></div>
+    <paciente-create (data)='onReturn($event)'></paciente-create>
+  </div>
 </div>
-
 <div class="col-sm-12" *ngIf="showupdate">
-    <div class="panel panel-default">
-        <div class="clear"></div>
-        <paciente-create [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create>
-
-    </div>
+  <div class="panel panel-default">
+    <div class="clear"></div>
+    <paciente-create [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create>
+  </div>
 </div>
