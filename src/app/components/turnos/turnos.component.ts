@@ -31,7 +31,7 @@ export class TurnosComponent {
                 'idTurno': turno.id,
                 'estado': 'disponible',
                 'paciente': {},
-                'prestacion': []
+                'prestacion': null
             };
         } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
             if (turno.asistencia) {
