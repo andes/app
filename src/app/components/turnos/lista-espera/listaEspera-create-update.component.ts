@@ -96,7 +96,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
         let fechaActual = moment().format();
         listaEspera = {
             fecha: fechaActual,
-            estado: 'demandaRechazada',
+            estado: 'Ingreso Manual',
             prestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,

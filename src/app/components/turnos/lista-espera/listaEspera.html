@@ -1,7 +1,7 @@
 <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
 <div class="row">
     <div class="col-sm-12" *ngIf="!showcreate">
-        <plex-box type="" title="Lista de Espera">
+        <plex-box type="success" title="Lista de Espera">
             <form [formGroup]="searchForm">
                 <div class="row">
                     <div class="col-md-4">
@@ -18,7 +18,7 @@
             <plex-button type="primary" label="Agregar Paciente" title="Agregar Paciente" (click)="showcreate = !showcreate"></plex-button>
         </plex-box>
 
-        <plex-box>
+        <plex-box type="success">
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>

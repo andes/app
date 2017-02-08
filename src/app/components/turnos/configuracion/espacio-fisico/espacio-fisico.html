@@ -1,4 +1,68 @@
 <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
+    <plex-box title="Espacios Físicos">
+        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <plex-text formControlName="nombre" label="Nombre" placeholder="Ingrese nombre...">
+                    </plex-text>
+                </div>
+                <div class="col-md-6">
+                    <plex-text formControlName="descripcion" label="Descripción" placeholder="Ingresar descripción...">
+                    </plex-text>
+                </div>
+            </div>
+        </form>
+    </plex-box>
+    <plex-box>
+        <div class="row">
+            <div class="col-sm-12">
+                <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showupdate = !showupdate">
+                </plex-button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Activo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let espacioFisico of espaciosFisicos">
+                        <td>{{espacioFisico.nombre}}</td>
+                        <td>{{espacioFisico.descripcion}}</td>
+                        <td>
+                            <plex-bool type="slide" [(ngModel)]="espacioFisico.activo" label="" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
+                        </td>
+                        <td>
+                            <plex-button type="primary" label="Actualizar" (click)="onEdit(espacioFisico)"> </plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <plex-loader *ngIf="loader"></plex-loader>
+        <div *ngIf="finScroll" class="alert alert-warning">
+            <p style="text-align: center;"> No se encontraron más resultados </p>
+            <!-- pasar a un componente de plex -->
+        </div>
+    </plex-box>
+
+</div>
+<div class="col-sm-12" *ngIf="showupdate">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <edit-espacio-fisico [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></edit-espacio-fisico>
+    </div>
+
+
+
+    <!--<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
     <div class="panel panel-default">
         <div class="panel-heading">Listado de Espacios Físicos</div>
         <div class="panel-body">
@@ -44,16 +108,9 @@
     </div>
 </div>
 
-<!--<div class="col-sm-12" *ngIf="showcreate">
-    <div class="panel panel-default">
-        <div class="clear"></div>
-        <espacio-fisico-create (data)='onReturn($event)'></espacio-fisico-create>
-    </div>
-</div>-->
-
 <div class="col-sm-12" *ngIf="showupdate">
     <div class="panel panel-default">
         <div class="clear"></div>
         <edit-espacio-fisico [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></edit-espacio-fisico>
     </div>
-</div>
+</div>-->
