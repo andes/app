@@ -28,7 +28,8 @@ export class VistaAgendaComponent {
         let patch: any = {};
 
         patch = {
-            'op': 'suspenderAgenda', 'path': 'estado', 'value': 'Suspendida'
+            'op': 'suspenderAgenda',
+            'estado': 'Suspendida'
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
@@ -55,8 +56,14 @@ export class VistaAgendaComponent {
             'profesional': profesional,
             'espacioFisico': espacioFisico
         };
-        debugger;
+
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.vistaAgenda = resultado;
+            this.modelo = resultado;
+
+            this.showDatosAgenda = true;
+            this.showEditarAgenda = false;
+
             this.plex.alert('La agenda se guardó correctamente ');
         });
     }
