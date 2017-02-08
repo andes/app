@@ -103,15 +103,15 @@
                     <div formGroupName="ubicacion">
                       <div class="row">
                         <div class="col-md-4">
-                          <plex-select formControlName="pais" (get-data)="loadPaises($event)" label="País:">
+                          <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="provincia" (get-data)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
+                          <plex-select formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="localidad" (get-data)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:">
+                          <plex-select formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:">
                           </plex-select>
                         </div>
                       </div>

@@ -6,20 +6,19 @@ import { AgendaService } from './../../services/turnos/agenda.service';
 import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado'
 @Component({
-    // tslint:disable-next-line:component-selector-prefix
     selector: 'clonar-agenda',
     templateUrl: 'clonar-agenda.html'
 })
 
 export class ClonarAgendaComponent implements OnInit {
     private _agenda: any;
-    private fecha: Date = new Date();
+    public hoy: Date = new Date();
+    private fecha: Date;
     private calendario: any = [];
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
-    private agendasPrestaciones: String[] = []; // Ids de Agendas del mes seleccionado con al menos una prestacion en comun con la original
-    private agendasFiltradas: IAgenda[] = []; // Las agendas que hay en el día, cuando se selecciona una fecha para clonar
+    private agendasFiltradas: any[] = []; // Las agendas que hay en el día, cuando se selecciona una fecha para clonar
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
@@ -43,6 +42,8 @@ export class ClonarAgendaComponent implements OnInit {
         // });
         this.inicioAgenda = new Date(this.agenda.horaInicio);
         this.inicioAgenda.setHours(0, 0, 0, 0);
+        this.hoy.setHours(0, 0, 0, 0);
+        this.fecha = this.inicioAgenda;
         this.actualizar();
     }
 
@@ -56,12 +57,11 @@ export class ClonarAgendaComponent implements OnInit {
         let params = {
             fechaDesde: this.inicioMesDate,
             fechaHasta: this.finMesDate,
+            espacioFisico: this.agenda.espacioFisico.id
         };
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
-        this.serviceAgenda.get(params).subscribe(agendas => {
-            this.agendasPrestaciones = agendas.map(function (ag) { return ag.id; });
-        });
+        params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
+        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         this.cargarCalendario();
     }
 
@@ -115,29 +115,53 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public seleccionar(dia: any) {
-        // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
-        if (dia.original) {
-            this.original = true;
-        } else {
-            this.original = false;
-        }
-        if (dia.estado === 'noSeleccionado' && this.original !== true) {
-            dia.estado = 'seleccionado';
-            this.seleccionados.push(dia.fecha.getTime());
-            this.agendasFiltradas = this.agendas.filter(
-                function (value) {
-                    return (moment(dia.fecha).isSame(moment(value.horaInicio), 'day'));
-                }
-            );
-        } else {
-            this.agendasFiltradas = [];
-            if (this.original !== true) {
-                dia.estado = 'noSeleccionado';
-                let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
-                this.seleccionados.splice(i, 1);
+        if (dia.fecha.getTime() >= this.hoy.getTime()){
+            let original = this.agenda;
+            // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
+            if (dia.original) {
+                this.original = true;
+            } else {
+                this.original = false;
             }
+            if (dia.estado === 'noSeleccionado' && this.original !== true) {
+                dia.estado = 'seleccionado';
+                this.seleccionados.push(dia.fecha.getTime());
+                let band = false;
+                let originalIni = moment(original.horaInicio).format('HH:mm');
+                let originalFin = moment(original.horaFin).format('HH:mm');
+                this.agendasFiltradas = this.agendas.filter(
+                    function (actual) {
+                        let actualIni = moment(original.horaInicio).format('HH:mm');
+                        let actualFin = moment(original.horaInicio).format('HH:mm');
+                        band = moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
+                        band = band &&
+                            ((originalIni <= actualIni && actualIni <= originalFin)
+                                || (originalIni <= actualFin && actualFin <= originalFin));
+                        return band;
+                    }
+                );
+            } else {
+                this.agendasFiltradas = [];
+                if (this.original !== true) {
+                    dia.estado = 'noSeleccionado';
+                    let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                    this.seleccionados.splice(i, 1);
+                }
+            }
+            this.agendasFiltradas.forEach((agenda, index) => {
+                if (agenda.profesionales.map(elem => { return elem.id; }).some
+                (v => {return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                    agenda.conflictoProfesional = 1;
+                }
+                if (agenda.prestaciones.map(elem => { return elem.id; }).some
+                (v => {return this.agenda.prestaciones.map(elem => { return elem.id; }).includes(v); })) {
+                    agenda.conflictoPrestacion = 1;
+                }
+                if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
+                    agenda.conflictoEF = 1;
+                }
+            });
         }
-        console.log('agendas filtradas ', this.agendasFiltradas);
     }
 
     combinarFechas(fecha1, fecha2) {

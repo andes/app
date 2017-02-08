@@ -9,7 +9,23 @@ import { TensionSistolicaComponent } from './components/rup/tensionSistolica.com
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
+import { ObservacionesComponent } from './components/rup/observaciones.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
+
+import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
+import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
+import { DashboardComponent } from './components/rup/dashboard.component';
+import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // Fin Componentes RUP
+
+// Servicios RUP //
+import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { TipoProblemaService } from './services/rup/tipoProblema.service';
+import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
+import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+// Fin Servicios RUP //
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -45,6 +61,9 @@ import { EspecialidadCreateUpdateComponent } from './components/especialidad/esp
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
 
+import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
+import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
+
 // Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
@@ -62,6 +81,7 @@ import { PacienteService } from './services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
+import { ListaEsperaService } from './services/turnos/listaEspera.service';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -109,7 +129,15 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     TallaComponent,
     SaturacionOxigenoComponent,
     PesoComponent,
-    SignosVitalesComponent
+    SignosVitalesComponent,
+    ObservacionesComponent,
+    ConsultaGeneralClinicaMedicaComponent,
+    PrestacionesPendientesComponent,
+    PrestacionEjecucionComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
+    EvolucionProblemaComponent, EvolucionTodosProblemasComponent,
+    DashboardComponent,
+    HeaderPacienteComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -133,8 +161,13 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     AgendaService,
     TurnoService,
     EspacioFisicoService,
+    ListaEsperaService,
     Server,
-    SmsService
+    SmsService,
+    PrestacionPacienteService,
+    ProblemaPacienteService,
+    TipoProblemaService,
+    TipoPrestacionService
   ]
 
 })

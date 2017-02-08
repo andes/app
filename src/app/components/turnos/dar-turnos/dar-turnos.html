@@ -8,11 +8,11 @@
               <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
             </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.prestacion" (get-data)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.profesional" (get-data)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
                 (change)="filtrar()">
                 </plex-select>
             </div>
@@ -89,15 +89,15 @@
                             <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
                           </div>
                         </div>
-                        <br *ngIf="turno.estado == 'disponible'">
+                        <br *ngIf="turno.estado == 'disponible' && i+1<bloque.turnos.length">
                       </div>
                       <div *ngIf="bloque.pacienteSimultaneos">
-                        <div *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos" class="row">
+                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
                           <div class="col-md-12">
                             <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
                           </div>
                         </div>
-                        <br *ngIf="turno.pacientes.length < bloque.cantidadSimultaneos">
+                        <br *ngIf="turno.estado == 'disponible'  && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
                       </div>
                     </div>
                   </div>
@@ -106,7 +106,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="listaEspera()"></plex-button>
+                <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
               </div>
             </div>
           </div>
@@ -196,7 +196,9 @@
                   <div class="col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
                   <!--<div class="col-md-12"><label>Teléfono: &nbsp;</label><input [(ngModel)]="paciente.telefono">-->
                   <div class="col-md-12">
-                    <plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>
+                    <plex-phone label="Ingrese en número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono">
+                    </plex-phone>
+                    <!--<plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>-->
                   </div>
                   <div class="col-md-6"><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
                   <div class="col-md-6"><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>

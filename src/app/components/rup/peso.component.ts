@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'peso',
+    selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
 export class PesoComponent {

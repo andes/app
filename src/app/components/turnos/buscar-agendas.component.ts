@@ -4,7 +4,7 @@ import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 
 @Component({

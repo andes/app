@@ -1,19 +1,21 @@
-import { IProfesional } from '../IProfesional';
-import { IPrestacion } from './IPrestacion';
-import { IBloque } from './IBloque';
-
-export interface IAgenda {
+export interface IListaEspera {
     id: String;
-    prestaciones: IPrestacion[];
-    profesionales: IProfesional[];
-    espacioFisico:  {
+    fecha: Date;
+    vencimiento: Date;
+    estado: String;
+    profesional: {
+        id: String,
+        nombre: String,
+        apellido: String
+    };
+    prestacion: {
         id: String,
         nombre: String
     };
-    horaInicio: Date;
-    horaFin: Date;
-    intercalar: Boolean;
-    bloques: IBloque[];
-    estado: String;
-    turnosDisponibles: number;
+    paciente: {
+        id: String,
+        nombre: String,
+        apellido: String,
+        documento: String
+    };
 }

@@ -1,7 +1,7 @@
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 const limit = 25;
 
@@ -16,15 +16,14 @@ export class OrganizacionComponent implements OnInit {
     seleccion: IOrganizacion;
     value: any;
     skip: number = 0;
-    nombre: string = " ";
+    nombre: string = '';
     activo: Boolean = null;
     loader: boolean = false;
     finScroll: boolean = false;
     tengoDatos: boolean = true;
+    checked: boolean = true;
 
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
-
-    checked: boolean = true;
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -36,20 +35,22 @@ export class OrganizacionComponent implements OnInit {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
-        })
+        });
         this.loadDatos();
     }
 
     loadDatos(concatenar: boolean = false) {
-        let parametros = { "activo": this.value && this.value.activo, "nombre": this.value && this.value.nombre, "skip": this.skip, "limit": limit };
+        let parametros = {
+            'activo': this.value && this.value.activo, 'nombre':
+            this.value && this.value.nombre, 'skip': this.skip, 'limit': limit
+        };
         this.organizacionService.get(parametros)
             .subscribe(
             datos => {
                 if (concatenar) {
                     if (datos.length > 0) {
                         this.datos = this.datos.concat(datos);
-                    }
-                    else {
+                    } else {
                         this.finScroll = true;
                         this.tengoDatos = false;
                     }
@@ -58,7 +59,7 @@ export class OrganizacionComponent implements OnInit {
                     this.finScroll = false;
                 }
                 this.loader = false;
-            })
+            });
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
@@ -69,28 +70,26 @@ export class OrganizacionComponent implements OnInit {
 
     onDisable(objOrganizacion: IOrganizacion) {
         this.organizacionService.disable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()) //Bind to view
+            .subscribe(dato => this.loadDatos()); // Bind to view
     }
 
     onEnable(objOrganizacion: IOrganizacion) {
         this.organizacionService.enable(objOrganizacion)
-            .subscribe(dato => this.loadDatos()) //Bind to view
+            .subscribe(dato => this.loadDatos()); // Bind to view
     }
 
     activate(objOrganizacion: IOrganizacion) {
         if (objOrganizacion.activo) {
 
             this.organizacionService.disable(objOrganizacion)
-                .subscribe(dato => this.loadDatos()) //Bind to view
-        }
-        else {
+                .subscribe(dato => this.loadDatos()); // Bind to view
+        } else {
             this.organizacionService.enable(objOrganizacion)
-                .subscribe(dato => this.loadDatos()) //Bind to view
+                .subscribe(dato => this.loadDatos()); // Bind to view
         }
     }
 
     onEdit(objOrganizacion: IOrganizacion) {
-        debugger;
         this.showcreate = true;
         this.seleccion = objOrganizacion;
     }
@@ -102,5 +101,4 @@ export class OrganizacionComponent implements OnInit {
             this.loader = true;
         }
     }
-
 }

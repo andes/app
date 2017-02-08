@@ -1,142 +1,198 @@
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Subject, Observable } from 'rxjs';
+import { PacienteService } from './../../services/paciente.service';
+import { IPaciente } from './../../interfaces/IPaciente';
 import { PacienteUpdateComponent } from './paciente-update.component';
-import {
-    PacienteCreateComponent
-} from './paciente-create.component';
-import {
-    IPaciente
-} from './../../interfaces/IPaciente';
-import {
-    PacienteService
-} from './../../services/paciente.service';
-import * as enumerados from './../../utils/enumerados';
-
-import {
-    Observable
-} from 'rxjs/Rx';
-import {
-    Component,
-    OnInit,
-    Output,
-    Input,
-    EventEmitter
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    Validators
-} from '@angular/forms';
+import { PacienteCreateComponent } from './paciente-create.component';
 import {
 } from '@angular/common';
 
 
 @Component({
-    selector: 'pacientes',
-    templateUrl: 'paciente.html'
+  selector: 'pacientes',
+  templateUrl: 'paciente.html'
 })
+
 export class PacienteComponent implements OnInit {
-    showcreate: boolean = false;
-    showupdate: boolean = false;
-    error: boolean = false;
-    mensaje: string = "";
-    pacientes: IPaciente[];
-    estados: string[] = [];
-    sexos: string[] = [];
-    searchForm: FormGroup;
-    selectedPaciente: IPaciente;
+  @Output()
+  selected: EventEmitter<any> = new EventEmitter<any>();
+  showcreate: boolean = false;
+  showupdate: boolean = false;
+  error: boolean = false;
+  mensaje: string = "";
+  searchForm: FormGroup;
+  selectedPaciente: IPaciente;
+  searchTextModel: string;
+  pacientesSearch: boolean = false;
+  //results$: Subject<Array<any>> = new Subject<Array<any>>();
+  resultados$: Observable<any>;
+  modeloSlide: any;
+  active: boolean = false;
+  searchText: FormControl = new FormControl('');
+  nuevoPaciente: boolean = false;
+  pacientesScan: boolean = false;
+  pacienteScaneado: any = {};
+  pacientesLista: Array<any> = new Array<any>();
+  fechaActual: Date = new Date();
 
-    constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
 
-    checked: boolean = true;
+  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {
+  }
 
-    ngOnInit() {
+  ngOnInit() {
+    this.searchForm = this.formBuilder.group({
+      documento: [''],
+      nombre: [''],
+      apellido: [''],
+    });
+    this.modeloSlide = {
+      activo: false
+    };
 
-        this.sexos = enumerados.getSexo();
-        this.estados = enumerados.getEstados();
+    this.resultados$ = this.searchText
+      .valueChanges
+      .map((value: any) => value ? value.trim() : '')             // ignore spaces
+      .do(value => value ? this.active = true:this.active=false)
+      // .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
+      .debounceTime(700)                                          // wait when input completed
+      .distinctUntilChanged()
+      .switchMap(searchString => {
+        return new Promise<Array<any>>((resolve, reject) => {
+          if (searchString) {
+            // Se verifica mediante expresiones regulares el string recibido
+            // para controlar si se realizó un escaneo de DNI
+            this.verificarInput(searchString);
+            this.pacienteService.search(searchString, this.pacienteScaneado)
+              .subscribe(resultados => {
+                let results: Array<any> = resultados;
+                this.active = false;
+                resolve(results);
+              },
+              err => {
+                reject(err);
 
-        this.searchForm = this.formBuilder.group({
-            nombre: [''],
-            apellido: [''],
-            documento: [''],
-            sexo: [''],
-            estado: [''],
-            fechaNacimiento: ['']
-        });
+              });
+          } else {
+            this.mensaje = 'Ingrese los datos del paciente';
+            this.nuevoPaciente = false;
+            resolve([]);
+          }
+        })
+      })                  // request switchable
+      .map((esResult: any) => {
+        // extract results
+        this.nuevoPaciente = true;
+        if (esResult.length > 0) {
+          this.mensaje = '';
+          return esResult;
+        } else {
+          if (this.searchTextModel && this.searchTextModel.trim()) {
+            if (this.pacientesScan) {
+              this.mensaje = 'Presione - Nuevo Paciente - para dar de alta al paciente';
+            } else {
+              this.mensaje = 'Sin resultados';
+            }
 
-        /*this.searchForm.valueChanges.debounceTime(200).subscribe((form) => {
-            this.loadPacientes(form.nombre, form.apellido,form.documento,form.sexo,form.estado,form.fechaNacimiento);
-        })*/
-    }
+          }
 
-    loadPaciente() {
-        this.error = false;
-        var formulario = this.searchForm.value;
-        var pacBusqueda = {
-            "apellido": formulario.apellido, "nombre": formulario.nombre, "documento": formulario.documento,
-            "estado": formulario.estado, "fechaNac": formulario.fechaNacimiento, "sexo": formulario.sexo
-        };
-        this.pacienteService.get(pacBusqueda)
-            .subscribe(
-            pacientes => this.pacientes = pacientes, //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                    this.error = true;
-                    return;
-
-                }
-            });
-    }
-
-    findPacientes() {
-        this.error = false;
-        var formulario = this.searchForm.value;
-        if ((formulario.apellido == "") && (formulario.nombre == "") && (formulario.documento == "") &&
-            (formulario.sexo == "") && (formulario.estado == "") && (formulario.fechaNacimiento == "")) {
-            this.error = true;
-            this.mensaje = "Debe completar al menos un campo de búsqueda";
-            return;
+          return [];
         }
-        this.loadPaciente();
+      })
+      .catch(this.handleError);
+  }
+
+  // Otra opción en caso para realizar la búsquedas searchMatch
+  //   this.searchText.valueChanges
+  //     .map((text: any) => text ? text : '')                                             // Se ignoran los espacios
+  //     .do(searchString => searchString ? this.mensaje = 'Buscando...' : this.mensaje = '')
+  //     .debounceTime(500)
+  //     .distinctUntilChanged()
+  //     // .subscribe(searchString => {
+  //     //   console.log(searchString);
+  //     //   if (searchString) {
+  //     //     this.pacienteService.search(searchString, this.pacienteScaneado)
+  //     //       .subscribe(resultados => {
+  //     //         this.pacientesLista = resultados;
+  //     //       });
+  //     //
+  //     //   }
+  //     //   else {
+  //     //     this.pacientesLista = [];
+  //     //   }
+  //     //
+  //     // });
+
+  /*Activa la búsqueda por campos*/
+  activate(event: any) {
+
+    this.searchText.setValue('');
+    this.pacientesLista = [];
+    this.nuevoPaciente = false;
+
+    if (event) {
+      this.pacientesSearch = true;
+      this.modeloSlide.activo = true;
+
+    } else {
+      this.pacientesSearch = false;
+      this.modeloSlide.activo = false;
+
     }
+  }
+
+  private verificarInput(cadena) {
+    // let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
+    let parse = [];
+    let datosDni = cadena.split('"');
+    // Si la cadena, es la lectura del código del documento
+    // la búsqueda se realiza por nombre, apellido, documento, sexo, fecha de nacimiento
+    if (datosDni.length >= 9) {
+      // Los datos se ordenan de la siguiente forma documento, apellido, nombre, sexo, fechadenacimiento
+      let sexo = (datosDni[3] = 'F') ? 'femenino' : 'masculino';
+      // parse = datosDni[4] + ' ' + datosDni[1] + ' ' + datosDni[2] + ' ' + sexo;
+      parse = [datosDni[4], datosDni[1], datosDni[2], sexo];
+      this.pacientesScan = true;
+      this.pacienteScaneado.documento = datosDni[4];
+      this.pacienteScaneado.apellido = datosDni[1];
+      this.pacienteScaneado.nombre = datosDni[2];
+      this.pacienteScaneado.sexo = sexo;
+    } else {
+      this.pacientesScan = false;
+      this.pacienteScaneado.documento = '';
+      this.pacienteScaneado.apellido = '';
+      this.pacienteScaneado.nombre = '';
+    }
+    return parse;
+  }
+
+  findPacientes() {
+    debugger;
+    let dto = this.searchForm.value;
+    let dtoBusqueda = {
+      'apellido': dto.apellido, 'nombre': dto.nombre, 'documento': dto.documento.toString(),
+    };
+    this.pacienteService.searchMatch('documento', dtoBusqueda)
+      .subscribe(value => { this.pacientesLista = value ; debugger });
+
+  }
 
 
-    onDisable(objPaciente: IPaciente) {
-        this.error = false;
-        this.pacienteService.disable(objPaciente)
-            .subscribe(dato => this.loadPaciente(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                    this.error = true;
-                    this.mensaje = "Ha ocurrido un error";
-                    return;
-                }
-            });
-    }
+  handleError(): any {
+    this.mensaje = 'Error al realizar las búsquedas';
+  }
 
-    onReturn(objPaciente: IPaciente): void {
-        this.showcreate = false;
-        this.showupdate = false;
-        if (objPaciente) {
-            this.loadPaciente();
-        }
-    }
 
-    onEnable(objPaciente: IPaciente) {
-        this.error = false;
-        this.pacienteService.enable(objPaciente)
-            .subscribe(dato => this.loadPaciente(), //Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
+  onReturn(objPaciente: IPaciente): void {
+    this.showcreate = false;
+    this.showupdate = false;
+  }
 
-    onEdit(objPaciente: IPaciente) {
-        this.showcreate = false;
-        this.showupdate = true;
-        this.selectedPaciente = objPaciente;
-    }
+
+  onEdit(objPaciente: IPaciente) {
+    this.showcreate = false;
+    this.showupdate = true;
+    this.selectedPaciente = objPaciente;
+  }
 
 }

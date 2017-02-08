@@ -3,21 +3,21 @@
     <plex-box type="success" title="Agenda">
       <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Tipos de Prestación" (get-data)="loadPrestaciones($event)"
+          <plex-select [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Tipos de Prestación" (getData)="loadPrestaciones($event)"
             placeholder="Seleccione las prestaciones" [multiple]="true" (change)="cambioPrestaciones()">
             </plex-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (get-data)="loadEspacios($event)" label="Espacio Físico"
+          <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
             placeholder="Seleccione un espacio">
             </plex-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (get-data)="loadProfesionales($event)"
+          <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
             placeholder="Seleccione los profesionales" [multiple]="true" label-field="nombre+' '+apellido">
             </plex-select>
         </div>

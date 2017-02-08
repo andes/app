@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { EspecialidadService } from './../../services/especialidad.service';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 
@@ -9,7 +9,7 @@ import { IEspecialidad } from './../../interfaces/IEspecialidad';
     templateUrl: 'especialidad-create-update.html'
 })
 export class EspecialidadCreateUpdateComponent implements OnInit {
-    
+
     @Input('seleccion') seleccion: IEspecialidad;
     @Output()
     data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
@@ -18,26 +18,26 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
 
     ngOnInit() {
 
-        //consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
-        let nombre = this.seleccion? this.seleccion.nombre: '';
-        let codigo = this.seleccion? this.seleccion.codigo.sisa: '';
-        let complejidad = this.seleccion? this.seleccion.complejidad: '';
-        let descripcion = this.seleccion? this.seleccion.descripcion: '';
-        let fechaAlta = this.seleccion? this.seleccion.fechaAlta: '';
-        let fechaBaja = this.seleccion? this.seleccion.fechaBaja: '';
-        let activo = this.seleccion? this.seleccion.activo: '';
-        let disciplina = this.seleccion? this.seleccion.disciplina: '';
-        
+        // consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
+        let nombre = this.seleccion ? this.seleccion.nombre : '';
+        let codigo = this.seleccion ? this.seleccion.codigo.sisa : '';
+        let complejidad = this.seleccion ? this.seleccion.complejidad : '';
+        let descripcion = this.seleccion ? this.seleccion.descripcion : '';
+        let fechaAlta = this.seleccion ? this.seleccion.fechaAlta : '';
+        let fechaBaja = this.seleccion ? this.seleccion.fechaBaja : '';
+        let activo = this.seleccion ? this.seleccion.activo : '';
+        let disciplina = this.seleccion ? this.seleccion.disciplina : '';
 
-       this.createForm = this.formBuilder.group({
+
+        this.createForm = this.formBuilder.group({
             nombre: [nombre, Validators.required],
             descripcion: [descripcion],
             disciplina: [disciplina],
             complejidad: [complejidad],
             codigo: this.formBuilder.group({
-                sisa: [codigo, Validators.required]  
+                sisa: [codigo, Validators.required]
             }),
-            
+
         });
     }
 
@@ -47,28 +47,25 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
             model.activo = true;
             model.fechaAlta = Date();
 
-            if (this.seleccion){
+            if (this.seleccion) {
                 model.fechaAlta = this.seleccion.fechaAlta;
                 model.fechaBaja = this.seleccion.fechaBaja;
                 model.id = this.seleccion.id;
-                debugger
                 espOperation = this.especialidadService.put(model);
-            }
-            else{
+            } else {
                 espOperation = this.especialidadService.post(model);
             }
 
             espOperation.subscribe(resultado => this.data.emit(resultado));
-        } 
-        else {
-            alert("Complete datos obligatorios");
+        } else {
+            alert('Complete datos obligatorios');
         }
 
     }
 
     onCancel() {
-            this.data.emit(null)
-            return false;
+        this.data.emit(null)
+        return false;
     }
 
 }

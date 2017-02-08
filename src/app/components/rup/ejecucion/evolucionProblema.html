@@ -1,0 +1,22 @@
+<div class="box">
+    <div class="box-header clearfix">
+        <h4 class="box-title">Evolucionar problema: {{problema.tipoProblema.nombre}}</h4>
+        <div class="pull-right">
+            <plex-button title="Evolucionar Problema " label="Evolucionar " (click)="evolucionarProblema()" type="success btn-sm"></plex-button>
+            <plex-button title="Eliminar " label=" " icon="close " (click)="cerrar()" type="danger btn-sm"></plex-button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                <textarea class="form-control" rows="8" [(ngModel)]="textoEvolucion"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <plex-bool [(ngModel)]="problema.activo" label="¿Está activo?" name="activo" type="slide"></plex-bool>
+            </div>
+        </div>
+
+    </div>
+</div>

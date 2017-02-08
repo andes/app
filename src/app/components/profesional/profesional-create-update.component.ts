@@ -25,7 +25,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
     createForm: FormGroup;
-    //Definición de arreglos
+    // Definición de arreglos
     sexos: any[];
     generos: any[];
     tipoComunicacion: any[];
@@ -52,7 +52,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         this.estadosCiviles = enumerados.getObjEstadoCivil();
 
 
-        //consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
+        // consultamos si es que hay datos cargados en seleccion ... entonces hacemos un update y no un insert
         let nombre = this.seleccion ? this.seleccion.nombre : '';
         let apellido = this.seleccion ? this.seleccion.apellido : '';
         let documento = this.seleccion ? this.seleccion.documento : '';
@@ -60,20 +60,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         let fechaFalle = this.seleccion ? this.seleccion.fechaFallecimiento : null;
         let especialidades = this.seleccion ? this.seleccion.especialidad : null;
         let rol = this.seleccion ? this.seleccion.rol : '';
-        debugger;
-        //let sexo = 'masculino';
-        //console.log('no te rompas');
         let sexoSelected = this.seleccion ? enumerados.getObjeto(this.seleccion.sexo) : null;
-        // console.log(sexoSelected);
-        // console.log('-------------------------');
-        // console.log('-------------------------');
-        // console.log('-------------------------');
-        // console.log('-------------------------');
-        //let sexo = 'masculino';
         let genero = this.seleccion ? enumerados.getObjeto(this.seleccion.genero) : null;
-        //let genero = 'masculino';
         let estadoCivil = this.seleccion ? enumerados.getObjeto(this.seleccion.estadoCivil) : null;
-        //let estadoCivil = "soltero";
 
         this.createForm = this.formBuilder.group({
             nombre: [nombre, Validators.required],
@@ -86,14 +75,14 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             genero: [genero],
             direccion: this.formBuilder.array([]),
             estadoCivil: [estadoCivil],
-            foto: [''], //Queda pendiente para agregar un path o ver como se implementa
+            foto: [''], // Queda pendiente para agregar un path o ver como se implementa
             rol: [rol, Validators.required],
             especialidad: [especialidades],
             matriculas: this.formBuilder.array([])
         });
 
         if (this.seleccion) {
-            //Cargo arrays selecciondaos
+            // Cargo arrays selecciondaos
             this.loadMatriculas();
             this.loadContactos();
             this.loadDirecciones();
@@ -102,26 +91,25 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     loadEspecialidades(event) {
-        this.especialidadService.get({ nombre: event.query }).subscribe(event.callback)
+        this.especialidadService.get({ nombre: event.query }).subscribe(event.callback);
     }
 
     /* Codigo Direccion */
 
     iniDireccion(unaDireccion?: IDireccion) {
         // Inicializa contacto
-        debugger;
-        var myPais;
-        var myProvincia;
-        var myLocalidad;
+        let myPais;
+        let myProvincia;
+        let myLocalidad;
         if (unaDireccion) {
             if (unaDireccion.ubicacion) {
                 if (unaDireccion.ubicacion.pais) {
                     myPais = unaDireccion.ubicacion.pais;
                     if (unaDireccion.ubicacion.provincia) {
-                        this.provincias = this.todasProvincias.filter((p) => p.pais.id == myPais.id);
+                        this.provincias = this.todasProvincias.filter((p) => p.pais.id === myPais.id);
                         myProvincia = unaDireccion.ubicacion.provincia;
                         if (unaDireccion.ubicacion.localidad) {
-                            this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id == myProvincia.id);
+                            this.localidades = this.todasLocalidades.filter((loc) => loc.provincia.id === myProvincia.id);
                             myLocalidad = unaDireccion.ubicacion.localidad;
                         }
                     }
@@ -139,7 +127,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                 codigoPostal: [unaDireccion.codigoPostal],
                 ultimaActualizacion: [unaDireccion.ultimaActualizacion],
                 activo: [unaDireccion.activo]
-            })
+            });
         } else {
             return this.formBuilder.group({
                 valor: [''],
@@ -152,12 +140,11 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                 codigoPostal: [''],
                 ultimaActualizacion: [''],
                 activo: [true]
-            })
+            });
         }
     }
 
     addDireccion(unaDireccion?) {
-        debugger;
         // agrega formMatricula 
         const control = <FormArray>this.createForm.controls['direccion'];
         control.push(this.iniDireccion(unaDireccion));
@@ -183,18 +170,18 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             fechaInicio: [objMat.fechaInicio],
             fechaVencimiento: [objMat.fechaVencimiento],
 
-        })
+        });
     }
 
     loadMatriculas() {
-        var cantidadMatriculasActuales = this.seleccion.matriculas.length;
+        let cantidadMatriculasActuales = this.seleccion.matriculas.length;
         const control = <FormArray>this.createForm.controls['matriculas'];
-        //Si tienen al menos una matrículas
+        // Si tienen al menos una matrículas
         if (cantidadMatriculasActuales > 0) {
-            for (var i = 0; i < cantidadMatriculasActuales; i++) {
-                var objMatricula: IMatricula;
+            for (let i = 0; i < cantidadMatriculasActuales; i++) {
+                let objMatricula: IMatricula;
                 objMatricula = this.seleccion.matriculas[i];
-                control.push(this.setMatricula(objMatricula))
+                control.push(this.setMatricula(objMatricula));
             }
         } else {
             control.push(this.iniMatricula());
@@ -230,22 +217,19 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     loadProvincias(event, pais) {
-        debugger;
-        console.log("pais " + pais.value.id);
-        this.provinciaService.get({ "pais": pais.value.id }).subscribe(event.callback);
+        console.log('pais' + pais.value.id);
+        this.provinciaService.get({'pais': pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
-        debugger;
-        console.log("provincia " + provincia.value.id);
-        this.localidadService.get({ "provincia": provincia.value.id }).subscribe(event.callback);
+        console.log('provincia' + provincia.value.id);
+        this.localidadService.get({'provincia': provincia.value.id }).subscribe(event.callback);
     }
 
     /*Código de contactos*/
 
     initContacto(rank: Number) {
         // Inicializa contacto
-        let cant = 0;
         let fecha = new Date();
         return this.formBuilder.group({
             tipo: ['', Validators.required],
@@ -269,22 +253,22 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     setContacto(cont: any) {
         let tipo = cont ? enumerados.getObjeto(cont.tipo) : null;
         return this.formBuilder.group({
-            tipo: [tipo, Validators.required ],
+            tipo: [tipo, Validators.required],
             valor: [cont.valor, Validators.required],
             ranking: [cont.ranking],
             ultimaActualizacion: [cont.ultimaActualizacion],
             activo: [cont.activo]
-        })
+        });
     }
 
     loadContactos() {
-        var cantidadContactosActuales = this.seleccion.contacto.length;
+        let cantidadContactosActuales = this.seleccion.contacto.length;
         const control = <FormArray>this.createForm.controls['contacto'];
 
         if (cantidadContactosActuales > 0) {
-            for (var i = 0; i < cantidadContactosActuales; i++) {
-                var contacto: any = this.seleccion.contacto[i];
-                control.push(this.setContacto(contacto))
+            for (let i = 0; i < cantidadContactosActuales; i++) {
+                let contacto: any = this.seleccion.contacto[i];
+                control.push(this.setContacto(contacto));
             }
         } else {
             control.push(this.initContacto(1));
@@ -293,13 +277,12 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     /*Guardar los datos*/
     onSave(model: any, isvalid: boolean) {
-        debugger;
         if (isvalid) {
             model.activo = true;
             model.genero = model.genero.id;
             model.sexo = model.sexo.id;
             model.estadoCivil = model.estadoCivil.id;
-            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; })
+            model.contacto = model.contacto.map(elem => { elem.tipo = elem.tipo.id; return elem; });
             let profOperation: Observable<IProfesional>;
 
             if (this.seleccion) {
@@ -312,7 +295,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
             profOperation.subscribe(resultado => this.data.emit(resultado));
 
         } else {
-            alert("Complete datos obligatorios");
+            alert('Complete datos obligatorios');
         }
     }
 

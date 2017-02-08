@@ -34,20 +34,20 @@ export class EspecialidadComponent implements OnInit {
             nombre: [''],
             activo: ['']
         });
-        //Genera la busqueda con el evento change.
+        // Genera la busqueda con el evento change.
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
-           
+
         })
         this.loadDatos();
     }
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            "codigoSisa": this.value && this.value.codigoSisa,
-            "nombre": this.value && this.value.nombre, "skip": this.skip, "limit": limit
+            'codigoSisa': this.value && this.value.codigoSisa,
+            'nombre': this.value && this.value.nombre, 'skip': this.skip, 'limit': limit
         };
 
         this.especialidadService.get(parametros).subscribe(
@@ -55,8 +55,7 @@ export class EspecialidadComponent implements OnInit {
                 if (concatenar) {
                     if (datos.length > 0) {
                         this.datos = this.datos.concat(datos);
-                    }
-                    else {
+                    } else {
                         this.finScroll = true;
                         this.tengoDatos = false;
                     }
@@ -66,7 +65,7 @@ export class EspecialidadComponent implements OnInit {
                 }
 
                 this.loader = false;
-            }) //Bind to view
+            }); // Bind to view
     }
 
     onReturn(objEspecialidad: IEspecialidad): void {
@@ -82,16 +81,15 @@ export class EspecialidadComponent implements OnInit {
     }
 
 
-      activate(objEspecialidad: IEspecialidad) {
+    activate(objEspecialidad: IEspecialidad) {
 
         if (objEspecialidad.activo) {
 
             this.especialidadService.disable(objEspecialidad)
-                .subscribe(datos => this.loadDatos()) //Bind to view
-        }
-        else {
+                .subscribe(datos => this.loadDatos());  // Bind to view
+        } else {
             this.especialidadService.enable(objEspecialidad)
-                .subscribe(datos => this.loadDatos()) //Bind to view
+                .subscribe(datos => this.loadDatos());  // Bind to view
         }
     }
 
