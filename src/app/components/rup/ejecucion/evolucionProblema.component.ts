@@ -2,7 +2,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ProblemaPacienteService } from './../../../services/rup/ProblemaPaciente.service';
+import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';

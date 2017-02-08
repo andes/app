@@ -4,7 +4,7 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ProblemaPacienteService } from './../../../services/rup/ProblemaPaciente.service';
+import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
@@ -28,7 +28,7 @@ export class PrestacionesPendientesComponent implements OnInit {
     showPendientes = true;
     enEjecucion = false;
 
-    constructor(private servicioPrestacion: PrestacionPacienteService) {
+    constructor(private servicioPrestacion: PrestacionPacienteService, private servicioProblemasPaciente: ProblemaPacienteService) {
 
     }
 

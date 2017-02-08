@@ -77,7 +77,7 @@
         <plex-box type="primary" title="Planes">
             <div class="row">
                 <div class="col-md-5">
-                    <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (get-data)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>
+                    <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (getData)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>
                 </div>
                 <div class="col-md-5">
                     <plex-select [(ngModel)]="nuevaPrestacionListaProblemas" name="nuevaPrestacionProblemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>

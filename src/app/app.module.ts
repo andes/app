@@ -23,7 +23,7 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 // Servicios RUP //
 import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
 import { TipoProblemaService } from './services/rup/tipoProblema.service';
-import { ProblemaPacienteService } from './services/rup/ProblemaPaciente.service';
+import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 // Fin Servicios RUP //
 
