@@ -5,7 +5,7 @@
                 <table class="table">
                     <tr>
                         <td>
-                            <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(agenda)" title="Editar Agenda">
+                            <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
                             </plex-button>
                         </td>
                         <td>
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" *ngIf="showDatosAgenda">
             <div class="col-md-12">
                 <div class="col-md-12">
                     <span><b>Fecha:</b> {{vistaAgenda.horaInicio | date: 'dd/MM/yyyy'}} - {{vistaAgenda.horaInicio | date: 'HH:mm'}} a {{vistaAgenda.horaFin | date: 'HH:mm'}}</span>
@@ -40,8 +40,8 @@
                 </div>
 
                 <div class="col-md-12">
-                    <label>Profesional: </label>                    
-                        <div *ngFor="let profesional of vistaAgenda.profesionales; let i=index">
+                    <label>Profesional: </label>
+                    <div *ngFor="let profesional of vistaAgenda.profesionales; let i=index">
                         <span>{{profesional.nombre}} {{profesional.apellido}}</span>
                     </div>
                 </div>
@@ -52,6 +52,24 @@
                         <span>{{prestacion.nombre}}</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="showEditarAgenda">
+            <div class="col-md-12">
+                <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
+                    placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre + ' ' + apellido">
+                </plex-select>
+            </div>
+            <div class="col-md-12">
+                <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                    placeholder="Seleccione un espacio">
+                </plex-select>
+            </div>
+
+            <div class="col-md-2" align="right">
+                <plex-button icon="mdi-content-save" title="Guardar" label="Guardar" type="default" (click)="guardarAgenda(vistaAgenda)">
+                </plex-button>
             </div>
         </div>
     </plex-box>

@@ -3,7 +3,6 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PacienteService } from './../../services/paciente.service';
 import { SmsService } from './../../services/turnos/sms.service';
-import { IPaciente } from './../../interfaces/IPaciente';
 import { AgendaService } from '../../services/turnos/agenda.service';
 
 @Component({

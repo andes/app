@@ -20,6 +20,7 @@ export class GestorAgendasComponent implements OnInit {
 
     public showTurnos: boolean = false;
     public showVistaAgendas: boolean = false;
+    public showDatosAgenda: boolean = false;
 
     searchForm: FormGroup;
 
@@ -114,6 +115,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
+        this.showDatosAgenda = true;
     }
 
     setColorEstadoAgenda(agenda) {
