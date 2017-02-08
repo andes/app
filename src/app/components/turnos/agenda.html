@@ -18,21 +18,21 @@
       <div class="row">
         <div class="col-md-12">
           <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-            placeholder="Seleccione los profesionales" [multiple]="true" label-field="nombre+' '+apellido">
+            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido">
             </plex-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
-          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="cambioFecha()" name="modelo.fecha" label="Fecha">
+          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
           </plex-datetime>
         </div>
         <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="cambioHoras('inicio')" name="modelo.horaInicio" label="Inicio">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
           </plex-datetime>
         </div>
         <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="cambioHoras('fin')" name="modelo.horaFin" label="Fin">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
           </plex-datetime>
         </div>
       </div>
@@ -62,7 +62,7 @@
       <br>
       <div class="row">
         <div class="col-md-12">
-          <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" type="primary" (click)="addBloque()">
+          <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" (click)="addBloque()">
           </plex-button>
         </div>
       </div>
@@ -198,27 +198,21 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div *ngIf="!elementoActivo.citarPorBloque" class="col-md-4">
             <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="pacienteSimultaneos"></plex-bool>
           </div>
-          <div class="col-md-8" *ngIf="elementoActivo.pacienteSimultaneos">
-            <label class="col-md-4 control-label">Cant Simultaneos</label>
-            <div class="col-md-4">
-              <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="">
-              </plex-int>
-            </div>
+          <div *ngIf="elementoActivo.pacienteSimultaneos" class="col-md-4">
+            <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="Cantidad Simultaneos" required>
+            </plex-int>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div *ngIf="!elementoActivo.pacienteSimultaneos" class="col-md-4">
             <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
           </div>
-          <div class="col-md-8" *ngIf="elementoActivo.citarPorBloque">
-            <label class="col-md-4 control-label">Cant Pacientes</label>
-            <div class="col-md-4">
-              <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="">
-              </plex-int>
-            </div>
+          <div *ngIf="elementoActivo.citarPorBloque" class="col-md-4">
+            <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
+            </plex-int>
           </div>
         </div>
         <br>
