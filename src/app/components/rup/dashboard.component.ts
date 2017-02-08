@@ -1,3 +1,5 @@
+import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
+import { PrestacionPacienteService } from './../../services/rup/prestacionPaciente.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 import { IPrestacionPaciente } from '../../interfaces/rup/IPrestacionPaciente';
@@ -14,25 +16,34 @@ export class DashboardComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     paciente: IPaciente;
+    // prestacion: IPrestacionPaciente;
+    idPrestacion: String;
+    listaProblemas: IProblemaPaciente[] = [];
 
-    constructor(private servicioProblemasPaciente: ProblemaPacienteService) {
+    constructor(private servicioProblemasPaciente: ProblemaPacienteService,
+        private servicioPrestacionPaciente: PrestacionPacienteService) {
 
     }
 
     ngOnInit() {
-        console.log(this.prestacion);
-        this.paciente = this.prestacion.paciente;
-
-        let params = {params: {idPaciente: this.prestacion.paciente.id}};
-
-        this.servicioProblemasPaciente.get(params).subscribe(function(data){
-            this.listaProblemas = data;
-        });
-
-
+       this.loadProblemas();
     }
 
-    iniciarPrestacion(){
+    loadProblemas(){
+        this.servicioProblemasPaciente.get({idPaciente: this.prestacion.paciente.id}).subscribe(problemas => {
+            this.listaProblemas = problemas;
+        });
+    }
 
+
+    iniciarPrestacion(){
+        this.prestacion.estado.push({
+            timestamp: new Date(),
+            tipo: 'ejecucion'
+        });
+
+         this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
+            this.prestacion = prestacion;
+        });
     }
 }

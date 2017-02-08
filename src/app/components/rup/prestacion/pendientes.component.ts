@@ -1,7 +1,8 @@
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
@@ -25,10 +26,15 @@ export class PrestacionesPendientesComponent implements OnInit {
     data: Object = {};
     listaPrestaciones: IPrestacionPaciente[] = [];
     prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
+
     showPendientes = true;
+    showDashboard = false;
+
     enEjecucion = false;
 
-    constructor(private servicioPrestacion: PrestacionPacienteService, private servicioProblemasPaciente: ProblemaPacienteService) {
+    constructor(private servicioPrestacion: PrestacionPacienteService, 
+        private servicioProblemasPaciente: ProblemaPacienteService,
+        private router: Router) {
 
     }
 
@@ -62,6 +68,8 @@ export class PrestacionesPendientesComponent implements OnInit {
     elegirPrestacion(prestacion: IPrestacionPaciente) {
         this.prestacionSeleccionada = prestacion;
         this.showPendientes = false;
+
+        this.showDashboard = true;
     }
 
 }

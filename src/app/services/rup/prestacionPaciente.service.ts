@@ -30,8 +30,15 @@ export class PrestacionPacienteService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IPrestacionPaciente> {
-        var url = this.prestacionesUrl + "/prestaciones/" + id;
+        var url = this.prestacionesUrl + "/" + id;
         return this.server.get(url, null)
     }
 
+    /**
+     * Metodo put. Actualiza un objeto prestacionPaciente.
+     * @param {IPrestacionPaciente} problema Recibe IPrestacionPaciente
+     */
+    put(prestacion: IPrestacionPaciente): Observable<IPrestacionPaciente> {
+        return this.server.put(this.prestacionesUrl + "/" + prestacion.id, prestacion);
+    }
 }
