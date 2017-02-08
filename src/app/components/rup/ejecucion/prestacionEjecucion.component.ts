@@ -23,7 +23,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     @Input() prestacion: IPrestacionPaciente;
-    listaProblemas: IProblemaPaciente[] = null;
+    listaProblemas: IProblemaPaciente[] = [];
     problemaBuscar: String = "";
     tiposProblemas = [];
     tipoProblema = null
@@ -95,6 +95,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     onReturn(dato: IProblemaPaciente) {
         this.showEvolucionar = false;
         console.log(dato);
+    }
+
+    onReturnTodos(dato: IProblemaPaciente[]) {
     }
 
 }

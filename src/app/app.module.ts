@@ -1,3 +1,8 @@
+import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
+import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { TipoProblemaService } from './services/rup/tipoProblema.service';
+import { ProblemaPacienteService } from './services/rup/ProblemaPaciente.service';
+import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 // RUP
 import { PesoComponent } from './components/rup/peso.component';
@@ -126,7 +131,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ConsultaGeneralClinicaMedicaComponent,
     PrestacionesPendientesComponent,
     PrestacionEjecucionComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
+    EvolucionProblemaComponent, EvolucionTodosProblemasComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -153,7 +159,10 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ListaEsperaService,
     Server,
     SmsService,
-    PrestacionPacienteService
+    PrestacionPacienteService,
+    ProblemaPacienteService,
+    TipoProblemaService,
+    TipoPrestacionService
   ]
 
 })
