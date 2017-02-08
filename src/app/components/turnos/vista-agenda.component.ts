@@ -4,6 +4,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'vista-agenda',
@@ -22,7 +23,7 @@ export class VistaAgendaComponent {
     public modelo: any = {};
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService) { }
+        public servicioEspacioFisico: EspacioFisicoService, public router: Router) { }
 
     suspenderAgenda(agenda) {
         let patch: any = {};
@@ -71,6 +72,11 @@ export class VistaAgendaComponent {
     cancelar() {
         this.showDatosAgenda = true;
         this.showEditarAgenda = false;
+    }
+
+    publicarAgenda(agenda: IAgenda) {
+        this.router.navigate(['./agenda']);
+        return false;
     }
 
     loadProfesionales(event) {
