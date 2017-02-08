@@ -11,11 +11,13 @@ import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.c
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
-import { ConsultaGeneralClinicaMedicaComponent } from
-  './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { DashboardComponent } from './components/rup/dashboard.component';
+import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // Fin Componentes RUP
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -51,10 +53,6 @@ import { EspecialidadCreateUpdateComponent } from './components/especialidad/esp
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-
-import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
-import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
-
 
 // Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -126,7 +124,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ConsultaGeneralClinicaMedicaComponent,
     PrestacionesPendientesComponent,
     PrestacionEjecucionComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
+    DashboardComponent,
+    HeaderPacienteComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -153,7 +152,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ListaEsperaService,
     Server,
     SmsService,
-    PrestacionPacienteService
+    PrestacionPacienteService,
+    TipoPrestacionService
   ]
 
 })

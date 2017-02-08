@@ -1,0 +1,35 @@
+<header-paciente [paciente]="paciente"></header-paciente>
+
+<plex-box>
+    <div class="row">
+        <div class="col-md-6">
+            <b class="celeste">Tipo de prestación: </b> {{prestacion.solicitud.tipoPrestacion.nombre}}
+        </div>
+        <div class="col-md-6">
+            {{prestacion.paciente.apellido}} {{prestacion.paciente.nombre}} > {{prestacion.solicitud.tipoPrestacion.nombre}}
+        </div>
+    </div>
+</plex-box>
+
+<plex-box>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Problemas</h4>
+            <ul class="list-group">
+                <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
+                    <div *ngIf="problema.evoluciones[problema.evoluciones.length-1].activo">
+                        {{problema.tipoProblema.nombre}}
+                        <br />
+                        {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <plex-button title="Iniciar prestación" label="Iniciar" type="success" class="pull-right" (click)="iniciarPrestacion()"></plex-button>
+        </div>
+    </div>
+</plex-box>

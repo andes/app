@@ -1,3 +1,8 @@
+<style>
+.msg-problema{border: 1px solid #ff9900; color: #ff9900; margin-bottom: 10px; padding: 10px;}
+.msg-problema i{color: #ff9900;}
+</style>
+
 <div class="row">
     <div class="col-md-12">
         <plex-box>
@@ -30,7 +35,48 @@
     </div>
     <div class="col-md-6 ">
         <plex-box type="primary" title="Prestaciones">
+
             <rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>
+        </plex-box>
+
+
+        <plex-box type="primary" title="Planes">
+            <div class="row">
+                <div class="col-md-5">
+                    <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (get-data)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>
+                </div>
+                <div class="col-md-5">
+                    <plex-select [(ngModel)]="nuevaPrestacionListaProblemas" name="nuevaPrestacionProblemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                </div>
+                <div class="col-md-2">
+                    <plex-button title="Agregar al plan" label="" icon="mdi mdi-plus" type="primary " (click)="agregarPrestacionFutura()"></plex-button>
+                </div>               
+            </div>
+
+            <div *ngFor="let prestacionFutura of prestacionesFuturas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
+               
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-md-10">
+                        <p>
+                            {{prestacionFutura.solicitud.tipoPrestacion.nombre}}
+                        </p>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <plex-button title="Eliminar " label=" " icon="close " type="danger " (click)="borrarPrestacionFutura(i)"></plex-button>
+                    </div>
+                </div>
+
+                 <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
+                    <div class="row ">
+                        <div class="col-md-12">
+                            <div class="msg-problema">
+                                <i class="mdi mdi-link"> </i>
+                                Prestacion asignada a <b>{{problema.nombre}}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </plex-box>
     </div>
 </div>

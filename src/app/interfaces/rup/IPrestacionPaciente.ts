@@ -7,6 +7,7 @@ import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IPaciente } from './../IPaciente';
 
 export interface IPrestacionPaciente {
+    id: String,
     idPrestacionOrigen: String, // prestacion desde la que se solicita
     paciente: IPaciente,
     solicitud: {

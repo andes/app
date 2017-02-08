@@ -26,6 +26,7 @@ export class PrestacionesPendientesComponent implements OnInit {
     listaPrestaciones: IPrestacionPaciente[] = [];
     prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
     showPendientes = true;
+    enEjecucion = false;
 
     constructor(private servicioPrestacion: PrestacionPacienteService) {
 

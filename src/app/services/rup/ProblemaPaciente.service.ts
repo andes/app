@@ -18,7 +18,7 @@ export class ProblemaPacienteService {
     constructor(private server: Server) { }
 
     /**
-     * Metodo get. Trae el objeto tipoPrestacion.
+     * Metodo get. Trae el objeto problemas del paciente.
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IProblemaPaciente[]> {
@@ -26,8 +26,9 @@ export class ProblemaPacienteService {
         return this.server.get(url, params)
     }
     /**
-     * Metodo getById. Trae el objeto tipoPrestacion por su Id.
-     * @param {String} id Busca por Id
+     * Metodo getById. Trae lista de problemas del paciente por su Id de problema.
+     * @param {String} idPaciente Busca por Id de paciente
+     * @param {String} idProblema Busca por Id del problema
      */
     getById(idPaciente: String, idProblema: String): Observable<IProblemaPaciente> {
         var url = this.problemaUrl + "/pacientes/" + idPaciente + "/problemas/" + idProblema;

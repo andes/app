@@ -1,0 +1,32 @@
+<style>
+.celeste {color: #00A8E0;}
+.gris {color: #b1b1b1;}
+
+.bl{border-left: 1px solid #cccccc;}
+
+.capitalize{text-transform: capitalize;}
+</style>
+
+<plex-box type="primary">
+    <div class="row">
+        <div class="col-md-8">
+            <h4>
+                <strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}
+            </h4>
+            <small class="gris">
+                <span *ngIf="paciente.edad">{{paciente.edad}} años |</span> Documento: {{paciente.documento}}
+            </small>
+        </div>
+        <div class="col-md-2 bl capitalize">
+            <b>Estado</b>
+            <br />
+            {{paciente.estado}}
+        </div>
+        
+        <div class="col-md-2 bl">
+            <b>Obra social</b>
+            <br />
+            {{paciente.financiador[0].entidad.nombre}}
+        </div>
+    </div>
+</plex-box>

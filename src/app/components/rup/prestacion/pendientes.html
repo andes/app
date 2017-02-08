@@ -15,5 +15,8 @@
     </div>
 </div>
 <div *ngIf="!showPendientes">
-    <rup-prestacionEjecucion [prestacion]="prestacionSeleccionada"></rup-prestacionEjecucion>
+    <rup-dashboard [prestacion]="prestacionSeleccionada"></rup-dashboard>
+</div>
+<div *ngIf="prestacionSeleccionada.estado == 'ejecucion">
+    <rup-prestacionEjecucion [prestacion]="prestacionSeleccionada'"></rup-prestacionEjecucion>
 </div>
