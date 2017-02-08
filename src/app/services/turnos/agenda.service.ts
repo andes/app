@@ -12,16 +12,23 @@ export class AgendaService {
     constructor(private server: Server, private http: Http) { }
 
     get(params: any): Observable<IAgenda[]> {
-        return this.server.get(this.agendaUrl, {params: params, showError: true});
+        return this.server.get(this.agendaUrl, { params: params, showError: true });
     }
 
     getById(id: String): Observable<IAgenda> {
         return this.server.get(this.agendaUrl + '/' + id, null);
     }
 
+    patch(id: String, cambios: any): Observable<IAgenda> {
+        debugger;
+        console.log(cambios);
+        return this.server.patch(this.agendaUrl + '/' + id, cambios);
+    }
+
     save(agenda: IAgenda): Observable<IAgenda> {
+        debugger;
         if (agenda.id) {
-            return this.server.put(this.agendaUrl + '/' + agenda.id, agenda);
+            return this.server.patch(this.agendaUrl + '/' + agenda.id, agenda);
         } else {
             return this.server.post(this.agendaUrl, agenda);
         }
