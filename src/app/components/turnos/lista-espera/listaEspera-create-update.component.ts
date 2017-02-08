@@ -34,9 +34,9 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
-        documento: '30403872',
-        apellido: 'Serralima',
-        nombre: 'Maria Marta',
+        documento: '71470',
+        apellido: 'Ortega',
+        nombre: 'Ariel Arnaldo',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
@@ -96,7 +96,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
         let fechaActual = moment().format();
         listaEspera = {
             fecha: fechaActual,
-            estado: 'demandaRechazada',
+            estado: 'Ingreso Manual',
             prestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
