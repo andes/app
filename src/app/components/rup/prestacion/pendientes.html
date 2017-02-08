@@ -14,10 +14,10 @@
         </div>
     </div>
 </div>
-<!--<div *ngIf="!showPendientes">
+<div *ngIf="showDashboard">
     <rup-dashboard [prestacion]="prestacionSeleccionada"></rup-dashboard>
-</div>-->
-<!--<div *ngIf="prestacionSeleccionada.estado == 'ejecucion'">-->
-<div *ngIf="!showPendientes">
+</div>
+
+<div *ngIf="!showEjecucion">
     <rup-prestacionEjecucion [prestacion]="prestacionSeleccionada"></rup-prestacionEjecucion>
 </div>

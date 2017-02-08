@@ -1,3 +1,4 @@
+import { DashboardComponent } from './components/rup/dashboard.component';
 import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
@@ -37,6 +38,8 @@ const appRoutes: Routes = [
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
   { path: 'rup', component: PrestacionesPendientesComponent },
+  { path: 'rup/dashboard/:id', component: DashboardComponent },
+  // { path: 'rup/:id?*/', component: DashboardComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

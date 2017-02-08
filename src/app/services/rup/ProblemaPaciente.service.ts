@@ -22,9 +22,10 @@ export class ProblemaPacienteService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IProblemaPaciente[]> {
-        let url = this.problemaUrl + "/pacientes/" + params.idPaciente + "/problemas";
-        return this.server.get(url, { params: params, showError: true })
+        let url = this.problemaUrl + '/pacientes/' + params.idPaciente + '/problemas';
+        return this.server.get(url, { params: params, showError: true });
     }
+
     /**
 
      * Metodo getById. Trae lista de problemas del paciente por su Id de problema.
@@ -32,8 +33,8 @@ export class ProblemaPacienteService {
      * @param {String} idProblema Busca por Id del problema
      */
     getById(idPaciente: String, idProblema: String): Observable<IProblemaPaciente> {
-        var url = this.problemaUrl + "/pacientes/" + idPaciente + "/problemas/" + idProblema;
-        return this.server.get(url, null)
+        let url = this.problemaUrl + '/pacientes/' + idPaciente + '/problemas/' + idProblema;
+        return this.server.get(url, null);
     }
 
     /**
@@ -41,7 +42,7 @@ export class ProblemaPacienteService {
      * @param {IProblemaPaciente} problema Recibe IProblemaPaciente
      */
     post(problema: IProblemaPaciente): Observable<IProblemaPaciente> {
-        return this.server.post(this.problemaUrl + "/problemas/", problema);
+        return this.server.post(this.problemaUrl + '/problemas/', problema);
     }
     /**
      * Metodo put. Actualiza un objeto problemaPaciente.
@@ -50,7 +51,7 @@ export class ProblemaPacienteService {
     put(problema: IProblemaPaciente): Observable<IProblemaPaciente> {
         debugger;
         console.log(problema);
-        return this.server.put(this.problemaUrl + '/problemas/' + problema.id, problema)
+        return this.server.put(this.problemaUrl + '/problemas/' + problema.id, problema);
     }
 
     /**
@@ -58,7 +59,7 @@ export class ProblemaPacienteService {
      * @param {IProblemaPaciente[]} problemas Recibe IProblemaPaciente[]
      */
     putAll(problemas: IProblemaPaciente[]) {
-        return this.server.put(this.problemaUrl + "/problemas/", problemas);
+        return this.server.put(this.problemaUrl + '/problemas/', problemas);
     }
 
 
