@@ -13,9 +13,9 @@
                                 </div>
 
                                 <table class="table table-hover">
-                                    <tr *ngFor="let turno of bloque.turnos; let i=index">
+                                    <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')"><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
-                                        <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')" [ngClass]="{'text-success success': turno.paciente}">
+                                        <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')" >
                                             <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span>
                                         </td>
