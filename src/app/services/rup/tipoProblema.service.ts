@@ -1,3 +1,4 @@
+import { ITipoProblema } from './../../interfaces/rup/ITipoProblema';
 import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
 import { AppSettings } from './../../appSettings';
 
@@ -21,7 +22,7 @@ export class TipoProblemaService {
      * Metodo get. Trae el objeto tipoPrestacion.
      * @param {any} params Opciones de busqueda
      */
-    get(params: any): Observable<IProblemaPaciente[]> {
+    get(params: any): Observable<ITipoProblema[]> {
         return this.server.get(this.problemaUrl, params)
     }
 
@@ -29,7 +30,7 @@ export class TipoProblemaService {
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IProblemaPaciente> {
+    getById(id: String): Observable<ITipoProblema> {
         var url = this.problemaUrl + "/" + id;
         return this.server.get(url, null)
     }

@@ -1,34 +1,68 @@
 <div class="row">
     <div class="col-md-12">
         <plex-box>
-            <p><strong>{{paciente.Apellido}}</strong>, <small>{{paciente.Nombre}}</small></p>
+            <h4><strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}</h4>
+            <small><span *ngIf="paciente.edad">{{paciente.edad}} años |</span> Documento: {{paciente.documento}}</small>
         </plex-box>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
-        <plex-box type="primary" title="Problemas">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Asociados a la consulta</h4>
+    <div class="col-md-8">
+        <div class="box box-primary">
+            <div class="box-header with-border clearfix">
+                <h3 class="box-title">Problemas</h3>
+                <div class="col-md-6 pull-right">
+                    <div>
+                        <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" (change)="agregarProblema()" placeholder="Agregar Problema">
+                        </plex-select>
+                    </div>
+                    <!-- /input-group -->
+                </div>
+                <div class="col-md-3 pull-right text-right">
+                    <plex-button title="Evolucionar los Problemas" label="Evolucionar los Problemas " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
+
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="list-group">
-                        <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                            {{problema.tipoProblema.nombre}}
-                            <span class="pull-right">
-                                <plex-button title="Evolucionar Problema " label="Evolucionar " type="primary "></plex-button>
-                                <plex-button title="Eliminar " label=" " icon="close " type="danger "></plex-button>
-                            </span>
-                        </li>
-                    </ul>
+            <div class="box-body">
+                <div *ngIf="!showEvolucionar && !showEvolTodo">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Asociados a la consulta</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="list-group">
+                                <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{problema.tipoProblema.nombre}}
+                                            <span class="pull-right">
+                                            <plex-button title="Evolucionar Problema " label="Evolucionar " (click)="evolucionarProblema(problema)" type="primary btn-sm"></plex-button>
+                                            <plex-button title="Eliminar " label=" " icon="close " (click)="eliminarProblema(problema)" type="danger btn-sm"></plex-button>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="showEvolucionar && !showEvolTodo">
+                            <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!showEvolucionar && showEvolTodo">
+
+
                 </div>
             </div>
-        </plex-box>
+        </div>
     </div>
-    <div class="col-md-6 ">
+    <div class="col-md-4">
         <plex-box type="primary" title="Prestaciones">
             <rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>
         </plex-box>

@@ -5,15 +5,10 @@ import { IPaciente } from './../IPaciente';
 
 
 export interface IProblemaPaciente {
+    id: String,
     tipoProblema: ITipoProblema,
     idProblemaOrigen: [String],
     paciente: IPaciente,
-    codificador: {
-        nombre: String,
-        codigo: String,
-        jerarquia: String,
-        origen: String
-    },
     fechaInicio: Date,
     evoluciones: [{
         fecha: Date,

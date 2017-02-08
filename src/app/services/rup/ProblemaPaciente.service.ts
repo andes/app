@@ -18,20 +18,46 @@ export class ProblemaPacienteService {
     constructor(private server: Server) { }
 
     /**
-     * Metodo get. Trae el objeto tipoPrestacion.
+     * Metodo get. Trae listado de objetos problema.
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IProblemaPaciente[]> {
         let url = this.problemaUrl + "/pacientes/" + params.idPaciente + "/problemas";
-        return this.server.get(url, params)
+        return this.server.get(url, { params: params, showError: true })
     }
     /**
-     * Metodo getById. Trae el objeto tipoPrestacion por su Id.
+     * Metodo getById. Trae el objeto problema por su Id.
      * @param {String} id Busca por Id
      */
     getById(idPaciente: String, idProblema: String): Observable<IProblemaPaciente> {
         var url = this.problemaUrl + "/pacientes/" + idPaciente + "/problemas/" + idProblema;
         return this.server.get(url, null)
     }
+
+    /**
+     * Metodo post. Inserta un objeto problemaPaciente nuevo.
+     * @param {IProblemaPaciente} problema Recibe IProblemaPaciente
+     */
+    post(problema: IProblemaPaciente): Observable<IProblemaPaciente> {
+        return this.server.post(this.problemaUrl + "/problemas/", problema);
+    }
+    /**
+     * Metodo put. Actualiza un objeto problemaPaciente.
+     * @param {IProblemaPaciente} problema Recibe IProblemaPaciente
+     */
+    put(problema: IProblemaPaciente): Observable<IProblemaPaciente> {
+        debugger;
+        console.log(problema);
+        return this.server.put(this.problemaUrl + '/problemas/' + problema.id, problema)
+    }
+
+    /**
+     * Metodo putAll. Actualiza muchos problemaPaciente.
+     * @param {IProblemaPaciente[]} problemas Recibe IProblemaPaciente[]
+     */
+    putAll(problemas: IProblemaPaciente[]) {
+        return this.server.put(this.problemaUrl + "/problemas/", problemas);
+    }
+
 
 }
