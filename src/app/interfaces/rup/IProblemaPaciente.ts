@@ -9,12 +9,6 @@ export interface IProblemaPaciente {
     tipoProblema: ITipoProblema,
     idProblemaOrigen: [String],
     paciente: IPaciente,
-    codificador: {
-        nombre: String,
-        codigo: String,
-        jerarquia: String,
-        origen: String
-    },
     fechaInicio: Date,
     evoluciones: [{
         fecha: Date,

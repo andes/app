@@ -18,7 +18,6 @@ export class ConsultaGeneralClinicaMedicaComponent implements OnInit {
 
     mensaje: String = null;
 
-
     data: Object = {};
 
     ngOnInit() {
@@ -39,40 +38,40 @@ export class ConsultaGeneralClinicaMedicaComponent implements OnInit {
         this.prestacionConsultaGeneralClinicaMedica = {
             'id': '5894657e7358af394f6d52e2',
             'key': 'consultaGeneralClinicaMedica',
-            'nombre' : 'Consulta general de clínica médica',
-            'autonoma' : true,
-            'activo' : true,
-            'ejecucion' : [ 
-                '5891e543159eb45d71236e52', 
+            'nombre': 'Consulta general de clínica médica',
+            'autonoma': true,
+            'activo': true,
+            'ejecucion': [
+                '5891e543159eb45d71236e52',
                 '5890c94d7358af394f6d52da'
             ],
-            'componente' : 'rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.componente.ts'
+            'componente': 'rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.componente.ts'
         };
 
         this.prestacionSignosVitales = {
-            'id' : '5891e543159eb45d71236e52',
-            'key' : 'signosVitales',
-            'nombre' : 'Signos Vitales',
-            'autonoma' : false,
-            'activo' : true,
-            'ejecucion' : [ 
-                '589073500c4eccd05d2a7a44', 
-                '5890c8aa7358af394f6d52d6', 
-                '5890c8f77358af394f6d52d7', 
-                '5890c92c7358af394f6d52d8', 
-                '5890c93f7358af394f6d52d9', 
+            'id': '5891e543159eb45d71236e52',
+            'key': 'signosVitales',
+            'nombre': 'Signos Vitales',
+            'autonoma': false,
+            'activo': true,
+            'ejecucion': [
+                '589073500c4eccd05d2a7a44',
+                '5890c8aa7358af394f6d52d6',
+                '5890c8f77358af394f6d52d7',
+                '5890c92c7358af394f6d52d8',
+                '5890c93f7358af394f6d52d9',
                 '5890ca047358af394f6d52dc'
             ],
-            'componente' : 'rup/signos-vitales/signosVitales.component.ts'
+            'componente': 'rup/signos-vitales/signosVitales.component.ts'
         };
 
         this.prestacionTalla = {
-            'id' : '5890c94d7358af394f6d52da',
-            'key' : 'talla',
-            'nombre' : 'Talla',
-            'autonoma' : false,
-            'activo' : true,
-            'componente' : 'rup/talla.component.ts'
+            'id': '5890c94d7358af394f6d52da',
+            'key': 'talla',
+            'nombre': 'Talla',
+            'autonoma': false,
+            'activo': true,
+            'componente': 'rup/talla.component.ts'
         }
     }
 

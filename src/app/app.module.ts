@@ -1,4 +1,3 @@
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 // RUP
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
@@ -14,11 +13,19 @@ import { ObservacionesComponent } from './components/rup/observaciones.component
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
 
-import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
+import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { DashboardComponent } from './components/rup/dashboard.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // Fin Componentes RUP
+
+// Servicios RUP //
+import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { TipoProblemaService } from './services/rup/tipoProblema.service';
+import { ProblemaPacienteService } from './services/rup/ProblemaPaciente.service';
+import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+// Fin Servicios RUP //
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -53,6 +60,9 @@ import { EspecialidadCreateUpdateComponent } from './components/especialidad/esp
 
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+
+import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
+import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 
 // Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -124,6 +134,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ConsultaGeneralClinicaMedicaComponent,
     PrestacionesPendientesComponent,
     PrestacionEjecucionComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
+    EvolucionProblemaComponent, EvolucionTodosProblemasComponent,
     DashboardComponent,
     HeaderPacienteComponent
   ],
@@ -153,6 +165,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     Server,
     SmsService,
     PrestacionPacienteService,
+    ProblemaPacienteService,
+    TipoProblemaService,
     TipoPrestacionService
   ]
 
