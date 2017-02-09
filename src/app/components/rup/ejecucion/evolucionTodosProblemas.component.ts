@@ -17,7 +17,6 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 export class EvolucionTodosProblemasComponent implements OnInit {
 
     @Output() evtData: EventEmitter<IProblemaPaciente[]> = new EventEmitter<IProblemaPaciente[]>();
-
     @Input() problemas: IProblemaPaciente[];
     textoEvolucion: String = "";
 
@@ -30,22 +29,22 @@ export class EvolucionTodosProblemasComponent implements OnInit {
         debugger;
     }
 
-    evolucionarProblema() {
-        var dato = {
-            fecha: new Date(),
-            activo: true,
-            observacion: this.textoEvolucion,
-            profesional: null, //TODO: traer profesional login
-            organizacion: null //TODO: traer organizacion login
-        }
-
+    evolucionar() {
         let cant = this.problemas.length;
         for (let i = 0; i < cant; i++) {
+            var dato = {
+                fecha: new Date(),
+                activo: this.problemas[i].activo,
+                observacion: this.textoEvolucion,
+                profesional: null, //TODO: traer profesional login
+                organizacion: null //TODO: traer organizacion login
+            }
             this.problemas[i].evoluciones.push(dato);
         }
 
         this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
             if (resultado) {
+                debugger;
                 this.evtData.emit(this.problemas);
             } else {
                 this.plex.alert('Ha ocurrido un error al almacenar la evolución de los problemas');
