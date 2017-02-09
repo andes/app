@@ -1,6 +1,14 @@
 <style>
-.msg-problema{border: 1px solid #ff9900; color: #ff9900; margin-bottom: 10px; padding: 10px;}
-.msg-problema i{color: #ff9900;}
+    .msg-problema {
+        border: 1px solid #ff9900;
+        color: #ff9900;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    
+    .msg-problema i {
+        color: #ff9900;
+    }
 </style>
 
 <div class="row">
@@ -25,7 +33,6 @@
                 </div>
                 <div class="col-md-3 pull-right text-right">
                     <plex-button title="Evolucionar los Problemas" label="Evolucionar los Problemas " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
-
                 </div>
             </div>
             <div class="box-body">
@@ -48,6 +55,16 @@
                                         </span>
                                         </div>
                                     </div>
+                                    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                        <div class="col-md-12">
+                                            <strong> Última evolución: </strong> {{problema.evoluciones[problema.evoluciones.length - 1].observacion}}
+                                            <br />
+                                            <small class="gris">
+                                                {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} - Profesional: 
+                                            </small>
+                                        </div>
+                                    </div>
+
                                 </li>
                             </ul>
                         </div>
@@ -84,11 +101,11 @@
                 </div>
                 <div class="col-md-2">
                     <plex-button title="Agregar al plan" label="" icon="mdi mdi-plus" type="primary " (click)="agregarPrestacionFutura()"></plex-button>
-                </div>               
+                </div>
             </div>
 
             <div *ngFor="let prestacionFutura of prestacionesFuturas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
-               
+
                 <div class="row" style="margin-bottom: 20px;">
                     <div class="col-md-10">
                         <p>
@@ -100,12 +117,11 @@
                     </div>
                 </div>
 
-                 <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
+                <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
                     <div class="row ">
                         <div class="col-md-12">
                             <div class="msg-problema">
-                                <i class="mdi mdi-link"> </i>
-                                Prestacion asignada a <b>{{problema.nombre}}</b>
+                                <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.nombre}}</b>
                             </div>
                         </div>
                     </div>

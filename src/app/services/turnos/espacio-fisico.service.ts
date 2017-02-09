@@ -2,7 +2,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { AppSettings } from './../../appSettings';
 import { IEspacioFisico } from './../../interfaces/turnos/IEspacioFisico';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
@@ -19,11 +19,11 @@ export class EspacioFisicoService {
     }
 
     post(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
-        return this.server.post(this.espacioFisicoUrl, espacioFisico) // ...using post request
+        return this.server.post(this.espacioFisicoUrl, espacioFisico);
     }
 
     put(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
-        return this.server.put(this.espacioFisicoUrl + '/' + espacioFisico.id, espacioFisico) // ...using post request
+        return this.server.put(this.espacioFisicoUrl + '/' + espacioFisico.id, espacioFisico);
     }
 
     disable(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {

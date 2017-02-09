@@ -83,7 +83,7 @@
                       </div>
                     </div>
                     <div *ngFor="let turno of bloque.turnos; let i=index">
-                      <div *ngIf="!bloque.pacienteSimultaneos">
+                      <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
                         <div *ngIf="turno.estado == 'disponible'" class="row">
                           <div class="col-md-12">
                             <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
@@ -98,6 +98,14 @@
                           </div>
                         </div>
                         <br *ngIf="turno.estado == 'disponible'  && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
+                      </div>
+                      <div *ngIf="bloque.citarPorBloque">
+                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
+                          <div class="col-md-12">
+                            <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                          </div>
+                        </div>
+                        <br *ngIf="turno.estado == 'disponible'  && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
                       </div>
                     </div>
                   </div>

@@ -31,6 +31,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     tipoProblema = null
     paciente: IPaciente = null;
     showEvolucionar = false;
+    showEvolTodo = false;
     problemaEvolucionar: any;
 
 
@@ -47,6 +48,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
+        private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex) {
     }
 
@@ -65,7 +67,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.paciente = this.prestacion.paciente;
 
         // preparamos el array con los datos de los problemas como lo necesita plex-select
-        this.problemasPrestaciones = this.prestacion.solicitud.listaProblemas.map(function(problema){
+        this.problemasPrestaciones = this.prestacion.solicitud.listaProblemas.map(function (problema) {
             return {
                 id: problema.id,
                 nombre: problema.tipoProblema.nombre
@@ -78,7 +80,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.serviceTipoPrestacion.get(event.query).subscribe(event.callback);
     }
 
-    agregarPrestacionFutura(){
+    agregarPrestacionFutura() {
         // asignamos valores a la nueva prestacion
         this.nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
@@ -86,7 +88,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             solicitud: {
                 tipoPrestacion: this.nuevoTipoPrestacion,
                 fecha: new Date(),
-                listaProblemas : this.nuevaPrestacionListaProblemas.filter(function(problema){
+                listaProblemas: this.nuevaPrestacionListaProblemas.filter(function (problema) {
                     return problema.id
                 })
             }
@@ -99,7 +101,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.nuevaPrestacionListaProblemas = [];
     }
 
-    borrarPrestacionFutura(index){
+    borrarPrestacionFutura(index) {
         this.prestacionesFuturas.splice(index, 1);
     }
 
@@ -107,31 +109,58 @@ export class PrestacionEjecucionComponent implements OnInit {
         return this.listaProblemas.find(elem => elem.tipoProblema.nombre == tipoProblema.nombre)
     }
 
+
+    guardarProblema(nuevoProblema) {
+        debugger;
+        console.log(this.listaProblemas);
+        this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
+            debugger;
+            if (resultado) {
+                this.listaProblemas.push(resultado);
+            } else {
+                this.plex.alert('Error al intentar asociar el problema a la consulta');
+            }
+        });
+    }
+
     agregarProblema() {
         debugger;
-        if (this.existeProblema(this.tipoProblema)) {
+        if (!this.existeProblema(this.tipoProblema)) {
             let nuevoProblema = {
                 id: null,
                 tipoProblema: this.tipoProblema,
                 idProblemaOrigen: null,
                 paciente: this.paciente,
                 fechaInicio: new Date(),
-                evoluciones: null
+                activo: true,
+                evoluciones: []
             };
-            this.listaProblemas.push(nuevoProblema);
+
+            this.guardarProblema(nuevoProblema);
 
         } else {
             this.plex.alert('EL problema ya existe para esta consulta');
         }
-
-
     }
 
+    eliminarProblema(problema: IProblemaPaciente) {
+        this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
+            debugger;
+            if (resultado) {
+
+            }
+        });
+    }
 
     evolucionarProblema(problema) {
         this.showEvolucionar = true;
         this.problemaEvolucionar = problema;
 
+    }
+
+    evolucionarTodo() {
+        this.showEvolucionar = false;
+        this.showEvolTodo = true;
     }
 
     onReturn(dato: IProblemaPaciente) {
@@ -140,5 +169,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnTodos(dato: IProblemaPaciente[]) {
+        this.showEvolucionar = false;
+        this.showEvolTodo = false;
     }
 }

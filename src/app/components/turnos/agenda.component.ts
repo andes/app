@@ -85,9 +85,7 @@ export class AgendaComponent implements OnInit {
     }
 
     public calculosInicio() {
-        console.log('modelo ', this.modelo);
         this.modelo.fecha = this.modelo.horaInicio;
-        // this.modelo.fecha = new Date();
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
             bloque.indice = index;
@@ -121,11 +119,15 @@ export class AgendaComponent implements OnInit {
             this.inicializarPrestacionesBloques(bloque);
         });
         this.validarTodo();
+        this.activarBloque(0);
+        // this.bloqueActivo = 0;
+        // this.elementoActivo = this.modelo.bloques[0];
     }
 
     activarBloque(indice: number) {
         this.bloqueActivo = indice;
         this.elementoActivo = this.modelo.bloques[indice];
+        console.log('Elemento Activo', this.elementoActivo.cantidadSimultaneos);
     }
 
     addBloque() {
@@ -209,31 +211,12 @@ export class AgendaComponent implements OnInit {
         });
     }
 
-    cambioFecha() {
-        // TODO: chequear que la fecha no sea anterior
-        this.fecha = new Date(this.modelo.fecha);
-        this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-        this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-    }
-
-    cambioHoras(cual: String) {
-        this.fecha = new Date(this.modelo.fecha);
-        if (cual === 'inicio') {
-            this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-        } else {
-            this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-        }
-        this.validarTodo();
-    }
-
     cambioHoraBloques(texto: String) {
         this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
         let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
         if (inicio && fin) {
-            this.elementoActivo.horaInicio = inicio;
-            this.elementoActivo.horaFin = fin;
             this.elementoActivo.titulo = inicio.getHours() + ':' + (inicio.getMinutes() < 10 ? '0' : '') + inicio.getMinutes() + '-' +
                 fin.getHours() + ':' + (fin.getMinutes() < 10 ? '0' : '') + fin.getMinutes();
 
@@ -323,6 +306,17 @@ export class AgendaComponent implements OnInit {
         }
     }
 
+    xor(seleccion) {
+        if (seleccion === 'simultaneos') {
+            if (this.elementoActivo.citarPorBloque ) {
+                console.log('acaa');
+                this.plex.alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
+                this.elementoActivo.pacienteSimultaneos = false;
+            }
+        }
+        alert('y ahora??'+ seleccion);
+    }
+
     calcularDuracion(inicio, fin, cantidad) {
         if (cantidad && inicio && fin) {
             inicio = moment(inicio);
@@ -363,18 +357,20 @@ export class AgendaComponent implements OnInit {
     validarTodo() {
         let alerta: string;
         let indice: number;
-        let fechaaux = this.modelo.fecha;
+        this.fecha = new Date(this.modelo.fecha);
+        let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+        let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
         let bloques = this.modelo.bloques;
         this.alertas = [];
         let totalBloques = 0;
         bloques.forEach((bloque, index) => {
-            let inicio = this.combinarFechas(fechaaux, bloque.horaInicio);
-            let fin = this.combinarFechas(fechaaux, bloque.horaFin);
+            let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+            let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
             if (bloque.cantidadTurnos && bloque.duracionTurno) {
                 totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
             }
-            if (this.compararFechas(this.modelo.horaInicio, inicio) > 0 || this.compararFechas(this.modelo.horaFin, fin) < 0) {
+            if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
                 indice = this.alertas.indexOf(alerta);
                 this.alertas.push(alerta);
@@ -405,7 +401,9 @@ export class AgendaComponent implements OnInit {
 
             mapeo.forEach((bloqueMap, index1) => {
                 if (bloqueMap) {
-                    if (this.compararFechas(inicio, bloqueMap.horaFin) < 0 && this.compararFechas(bloqueMap.horaInicio, inicio) < 0) {
+                    let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
+                    let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
+                    if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
                         alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
                         this.alertas.push(alerta);
                     }
@@ -415,8 +413,8 @@ export class AgendaComponent implements OnInit {
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;
-        if (this.modelo.horaInicio && this.modelo.horaFin) {
-            let totalAgenda = this.modelo.horaFin.getTime() - this.modelo.horaInicio.getTime();
+        if (iniAgenda && finAgenda) {
+            let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
             if (totalBloques > totalAgenda) {
                 alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';
                 this.alertas.push(alerta);
@@ -458,11 +456,24 @@ export class AgendaComponent implements OnInit {
                             estado: 'disponible'
                         };
                         if (bloque.pacienteSimultaneos) {
+                            // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
                             for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
                                 bloque.turnos.push(turno);
                             }
                         } else {
-                            bloque.turnos.push(turno);
+                            if (bloque.citarPorBloque) { 
+                                // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
+                                for (let j = 0; j < bloque.cantidadBloque; j++) {
+                                    turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
+                                        bloque.cantidadBloque * 60000);
+                                    if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
+                                        bloque.turnos.push(turno);
+                                    }
+                                }
+                            } else { 
+                                // Bloque sin simultaneos ni Citación por bloque
+                                bloque.turnos.push(turno);
+                            }
                         }
                     }
 

@@ -43,6 +43,7 @@ import { GestorAgendasComponent } from './components/turnos/gestor-agendas.compo
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { VistaAgendaComponent } from './components/turnos/vista-agenda.component';
+import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
@@ -118,7 +119,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
-    AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, PanelEspacioComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
