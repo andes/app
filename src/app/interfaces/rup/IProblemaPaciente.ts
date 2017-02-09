@@ -10,6 +10,7 @@ export interface IProblemaPaciente {
     idProblemaOrigen: [String],
     paciente: IPaciente,
     fechaInicio: Date,
+    activo: Boolean,
     evoluciones: [{
         fecha: Date,
         activo: Boolean,

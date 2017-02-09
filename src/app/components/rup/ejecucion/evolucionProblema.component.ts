@@ -22,7 +22,7 @@ export class EvolucionProblemaComponent implements OnInit {
 
     @Input() problema: IProblemaPaciente;
     textoEvolucion: String = "";
-
+    activo: Boolean = false;
 
     constructor(private servProbPaciente: ProblemaPacienteService,
         public plex: Plex) { }
@@ -30,17 +30,21 @@ export class EvolucionProblemaComponent implements OnInit {
 
     ngOnInit() {
         debugger;
+        let evols = this.problema.evoluciones;
+        this.activo = this.problema.activo;
     }
 
     evolucionarProblema() {
         var dato = {
             fecha: new Date(),
-            activo: true,
+            activo: this.activo,
             observacion: this.textoEvolucion,
             profesional: null,
             organizacion: null
         }
+        this.problema.activo = this.activo;
         this.problema.evoluciones.push(dato);
+        console.log(this.problema);
         this.servProbPaciente.put(this.problema).subscribe(resultado => {
             if (resultado) {
                 this.evtData.emit(this.problema);
@@ -49,9 +53,6 @@ export class EvolucionProblemaComponent implements OnInit {
             }
 
         });
-
-
-
 
     }
 
