@@ -76,8 +76,16 @@ export class VistaAgendaComponent {
     }
 
     publicarAgenda(agenda: IAgenda) {
-        this.router.navigate(['./agenda']);
-        return false;
+        let patch = {
+            'op': 'publicarAgenda',
+            'estado': 'Publicada'
+        };
+
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.vistaAgenda = resultado;
+
+            this.plex.alert('La agenda se publicó correctamente ');
+        });
     }
 
     clonarAgenda(agenda: IAgenda) {
