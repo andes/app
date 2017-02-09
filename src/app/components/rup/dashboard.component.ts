@@ -20,6 +20,8 @@ export class DashboardComponent implements OnInit {
     idPrestacion: String;
     listaProblemas: IProblemaPaciente[] = [];
 
+    showEjecucion = false;
+
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService) {
 
@@ -45,5 +47,9 @@ export class DashboardComponent implements OnInit {
          this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
             this.prestacion = prestacion;
         });
+    }
+
+    verPrestacion(){
+        this.showEjecucion = true;
     }
 }

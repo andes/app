@@ -88,8 +88,8 @@
         <plex-box type="primary" title="Prestaciones">
 
             <rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>
+            <plex-button title="Evolucionar" label="Evolucionar"  type="success" (click)="evolucionarPrestacion()" class="pull-right"></plex-button>
         </plex-box>
-
 
         <plex-box type="primary" title="Planes">
             <div class="row">
@@ -104,9 +104,10 @@
                 </div>
             </div>
 
-            <div *ngFor="let prestacionFutura of prestacionesFuturas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
 
-                <div class="row" style="margin-bottom: 20px;">
+            <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
+            
+                <div class="row" style="margin-bottom: 20px;" *ngIf="prestacionFutura.solicitud">
                     <div class="col-md-10">
                         <p>
                             {{prestacionFutura.solicitud.tipoPrestacion.nombre}}
@@ -115,18 +116,24 @@
                     <div class="col-md-2 text-right">
                         <plex-button title="Eliminar " label=" " icon="close " type="danger " (click)="borrarPrestacionFutura(i)"></plex-button>
                     </div>
+
                 </div>
 
-                <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
-                    <div class="row ">
-                        <div class="col-md-12">
-                            <div class="msg-problema">
-                                <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.nombre}}</b>
+
+                <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
+                    <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <div class="msg-problema">
+                                    <i class="mdi mdi-link"> </i>
+                                    Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </plex-box>
     </div>
 </div>

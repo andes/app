@@ -9,6 +9,9 @@
             <ul class="list-group">
                 <li class="list-group-item" *ngFor="let prestacion of listaPrestaciones" (click)="elegirPrestacion(prestacion)">
                     {{prestacion.paciente.nombreCompleto}}
+                    <span class="label label-warning">
+                        {{prestacion.estado[prestacion.estado.length-1].tipo}}
+                    </span>
                 </li>
             </ul>
         </div>
@@ -16,8 +19,4 @@
 </div>
 <div *ngIf="showDashboard">
     <rup-dashboard [prestacion]="prestacionSeleccionada"></rup-dashboard>
-</div>
-
-<div *ngIf="!showEjecucion">
-    <rup-prestacionEjecucion [prestacion]="prestacionSeleccionada"></rup-prestacionEjecucion>
 </div>

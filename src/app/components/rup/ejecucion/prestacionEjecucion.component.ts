@@ -1,3 +1,4 @@
+import { PrestacionService } from './../../../services/turnos/prestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -37,12 +38,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // objeto para crear una nueva prestacion y asignar al array de prestaciones futuras
     nuevaPrestacion: any;
-    nuevoTipoPrestacion: ITipoPrestacion;
-    nuevaPrestacionListaProblemas: any;
-    // nuevasPrestaciones: IPrestacionPaciente[] = [];
+    nuevoTipoPrestacion: ITipoPrestacion; // utilizado para el select
+    nuevaPrestacionListaProblemas: any = [];
     // listado de prestaciones futuras a pedir en el plan
     prestacionesFuturas: IPrestacionPaciente[] = [];
-    // lista de problemas al mostrar cuando pedimos una prestacion en el plan
+    // lista de problemas al mostrar cuando pedimos una nueva prestacion en el plan
     problemasPrestaciones: any = {};
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -73,32 +73,67 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nombre: problema.tipoProblema.nombre
             };
         });
+        console.log(this.prestacion);
     }
-
 
     buscarTipoPrestacion(event) {
         this.serviceTipoPrestacion.get(event.query).subscribe(event.callback);
     }
 
     agregarPrestacionFutura() {
-        // asignamos valores a la nueva prestacion
-        this.nuevaPrestacion = {
-            idPrestacionOrigen: this.prestacion.id,
-            paciente: this.paciente,
-            solicitud: {
-                tipoPrestacion: this.nuevoTipoPrestacion,
-                fecha: new Date(),
-                listaProblemas: this.nuevaPrestacionListaProblemas.filter(function (problema) {
-                    return problema.id
-                })
+        if (this.nuevoTipoPrestacion) {
+
+            // asignamos valores a la nueva prestacion
+            this.nuevaPrestacion = {
+                idPrestacionOrigen: this.prestacion.id,
+                paciente: this.paciente.id,
+                solicitud: {
+                    tipoPrestacion: this.nuevoTipoPrestacion,
+                    fecha: new Date(),
+                    listaProblemas: []
+                },
+                estado: {
+                    timestamp: Date(),
+                    tipo: 'pendiente'
+                }
+            };
+
+            // si he agregado algun problema a la nueva prestacion
+            // entonces asigno su id a la prestacion a guardar
+            if (this.nuevaPrestacionListaProblemas && this.nuevaPrestacionListaProblemas.length){
+                // inicializamos el array en caso de que haga falta
+                // if (typeof this.nuevaPrestacion.solicitud.listaProblemas === 'undefined') {
+                //     this.nuevaPrestacion.solicitud.listaProblemas = [];
+                // }
+                // recorremos array de problemas y asignamos a la nueva prestacion
+                for (let problema of this.nuevaPrestacionListaProblemas) {
+                    this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
+                }
             }
-        };
 
-        // asignamos la nueva prestacion al array de prestacionesSolicitadas de la prestacion origen
-        this.prestacionesFuturas.push(this.nuevaPrestacion);
+            // guardamos la nueva prestacion 
+            this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+                // this.prestacionesFuturas.push(prestacionFutura);
 
-        this.nuevoTipoPrestacion = null;
-        this.nuevaPrestacionListaProblemas = [];
+                // asignamos la prestacion nueva al array de prestaciones futuras
+                this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+
+                // actualizamos la prestacion de origen
+                this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
+                    // this.prestacion = prestacionActualizada;
+                    // buscamos la prestacion actualizada con los datos populados
+                    this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                        console.log(prestacion);
+                        this.prestacion = prestacion;
+                    });
+                });
+            });
+
+            this.nuevoTipoPrestacion = null;
+            this.nuevaPrestacionListaProblemas = [];
+        } else {
+            this.plex.alert('Debe seleccionar una prestación');
+        }
     }
 
     borrarPrestacionFutura(index) {

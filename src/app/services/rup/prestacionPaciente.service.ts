@@ -35,6 +35,14 @@ export class PrestacionPacienteService {
     }
 
     /**
+     * Metodo post. Inserta un objeto prestacionPaciente nuevo.
+     * @param {IPrestacionPaciente} prestacion Recibe IPrestacionPaciente
+     */
+    post(prestacion: IPrestacionPaciente): Observable<IPrestacionPaciente> {
+        return this.server.post(this.prestacionesUrl, prestacion);
+    }
+
+    /**
      * Metodo put. Actualiza un objeto prestacionPaciente.
      * @param {IPrestacionPaciente} problema Recibe IPrestacionPaciente
      */
