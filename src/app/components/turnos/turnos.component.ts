@@ -47,6 +47,12 @@ export class TurnosComponent {
                     'asistencia': true,
                 };
             }
+        } else if (btnClicked === 'bloquearTurno') {
+            patch = {
+                'op': 'bloquearTurno',
+                'idTurno': turno.id,
+                'estado': 'bloqueado',
+            };
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {

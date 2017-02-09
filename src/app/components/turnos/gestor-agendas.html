@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="showGestorAgendas">
     <div class="col-md-8">
         <form [formGroup]="searchForm">
             <plex-box type="info" title="Gestor de Agendas">
@@ -55,13 +55,18 @@
         </div>
     </div>
 
+
     <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
         <div class="clear"></div>
-        <vista-agenda [vistaAgenda]="vistaAgenda"></vista-agenda>
+        <vista-agenda [vistaAgenda]="vistaAgenda" (onVoted)="onVoted($event)"></vista-agenda>
     </div>
 
     <div type="info" class="col-sm-4" *ngIf="showTurnos">
         <div class="clear"></div>
         <turnos [ag]="ag"></turnos>
     </div>
+</div>
+
+<div class="col-sm-12" *ngIf="showClonar">
+    <clonar-agenda [agenda]="modelo"></clonar-agenda>
 </div>

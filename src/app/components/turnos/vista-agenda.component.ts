@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { AgendaService } from '../../services/turnos/agenda.service';
@@ -16,8 +16,15 @@ export class VistaAgendaComponent {
     showVistaAgendas: boolean = true;
     showDatosAgenda: boolean = true;
     showEditarAgenda: boolean = false;
+    showClonar: boolean = false;
+    public showGestorAgendas: boolean = false;
+    public showTurnos: boolean = false;
+
+    public pepe: boolean = false;
 
     @Input() vistaAgenda: IAgenda;
+
+    @Output() onVoted = new EventEmitter<boolean>();
 
     public agendas: IAgenda[];
     public modelo: any = {};
@@ -77,6 +84,19 @@ export class VistaAgendaComponent {
     publicarAgenda(agenda: IAgenda) {
         this.router.navigate(['./agenda']);
         return false;
+    }
+
+    clonarAgenda(agenda: IAgenda) {
+        // this.router.navigate(['./clonarAgenda', agenda]);
+        // this.router.navigate(['/info'], { queryParams: { agenda } });
+
+        // return false;
+        this.modelo = agenda;
+
+        // this.showTurnos = false;
+        // this.showClonar = true;
+        debugger;
+        this.onVoted.emit(this.modelo);
     }
 
     loadProfesionales(event) {

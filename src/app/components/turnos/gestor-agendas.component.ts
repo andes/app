@@ -18,9 +18,13 @@ export class GestorAgendasComponent implements OnInit {
     public agendas: any = [];
     public agendaSel: AgendaSeleccionada;
 
+    public showGestorAgendas: boolean = true;
     public showTurnos: boolean = false;
     public showVistaAgendas: boolean = false;
     public showDatosAgenda: boolean = false;
+    public showClonar: boolean = false;
+
+    public modelo: any = {};
 
     searchForm: FormGroup;
 
@@ -62,6 +66,12 @@ export class GestorAgendasComponent implements OnInit {
         });
 
         this.loadAgendas();
+    }
+
+    onVoted(modelo) {
+        this.modelo = modelo;
+        this.showGestorAgendas = false;
+        this.showClonar = true;
     }
 
     loadAgendas() {
@@ -129,6 +139,10 @@ export class GestorAgendasComponent implements OnInit {
     crearAgenda() {
         this.router.navigate(['./agenda']);
         return false;
+    }
+
+    gestorAgendas() {
+        this.showGestorAgendas = false;
     }
 
 }

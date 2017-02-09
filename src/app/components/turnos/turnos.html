@@ -35,7 +35,7 @@
                                             <a id="cancelarTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
                                         </td>
 
-                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
+                                        <td *ngIf="ag.estado != 'Suspendida'"><a id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
