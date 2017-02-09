@@ -16,10 +16,22 @@
         <th scope="row">08:00</th>
         <td rowspan="2" [ngClass]="{'hover':true, 'bg-success success': true}">Dr. Murakami</td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <!--<td *ngFor="let espacio of espacios; let i=index"></td>
         <td rowspan="3" [ngClass]="{'hover':true, 'bg-warning warning': true}">Dr. Paez</td>
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>-->
       </tr>
       <tr>
         <th scope="row">09:00</th>
@@ -27,30 +39,23 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
       <tr>
         <th scope="row">10:00</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
       </tr>
       <tr>
         <th scope="row">11:00</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
       </tr>
       <tr>
         <th scope="row">12:00</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
       </tr>
     </tbody>
   </table>

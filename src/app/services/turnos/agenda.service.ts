@@ -20,15 +20,13 @@ export class AgendaService {
     }
 
     patch(id: String, cambios: any): Observable<IAgenda> {
-        debugger;
         console.log(cambios);
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 
     save(agenda: IAgenda): Observable<IAgenda> {
-        debugger;
         if (agenda.id) {
-            return this.server.patch(this.agendaUrl + '/' + agenda.id, agenda);
+            return this.server.put(this.agendaUrl + '/' + agenda.id, agenda);
         } else {
             return this.server.post(this.agendaUrl, agenda);
         }

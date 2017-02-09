@@ -50,8 +50,8 @@ export class DarTurnosComponent implements AfterViewInit {
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
         documento: '30403872',
-        apellido: 'Mal',
-        nombre: 'Hardcodear Esta',
+        apellido: 'Lopez',
+        nombre: 'Diego',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
