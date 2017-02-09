@@ -58,7 +58,7 @@
 
     <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
         <div class="clear"></div>
-        <vista-agenda [vistaAgenda]="vistaAgenda" (onVoted)="onVoted($event)"></vista-agenda>
+        <vista-agenda [vistaAgenda]="vistaAgenda" (clonar)="clonar($event)"></vista-agenda>
     </div>
 
     <div type="info" class="col-sm-4" *ngIf="showTurnos">

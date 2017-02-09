@@ -68,8 +68,9 @@ export class GestorAgendasComponent implements OnInit {
         this.loadAgendas();
     }
 
-    onVoted(modelo) {
+    clonar(modelo) {
         this.modelo = modelo;
+
         this.showGestorAgendas = false;
         this.showClonar = true;
     }
@@ -144,7 +145,6 @@ export class GestorAgendasComponent implements OnInit {
     gestorAgendas() {
         this.showGestorAgendas = false;
     }
-
 }
 
 class AgendaSeleccionada {

@@ -16,17 +16,11 @@ export class VistaAgendaComponent {
     showVistaAgendas: boolean = true;
     showDatosAgenda: boolean = true;
     showEditarAgenda: boolean = false;
-    showClonar: boolean = false;
-    public showGestorAgendas: boolean = false;
-    public showTurnos: boolean = false;
-
-    public pepe: boolean = false;
 
     @Input() vistaAgenda: IAgenda;
 
-    @Output() onVoted = new EventEmitter<boolean>();
+    @Output() clonar = new EventEmitter<boolean>();
 
-    public agendas: IAgenda[];
     public modelo: any = {};
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
@@ -87,16 +81,9 @@ export class VistaAgendaComponent {
     }
 
     clonarAgenda(agenda: IAgenda) {
-        // this.router.navigate(['./clonarAgenda', agenda]);
-        // this.router.navigate(['/info'], { queryParams: { agenda } });
-
-        // return false;
         this.modelo = agenda;
 
-        // this.showTurnos = false;
-        // this.showClonar = true;
-        debugger;
-        this.onVoted.emit(this.modelo);
+        this.clonar.emit(this.modelo);
     }
 
     loadProfesionales(event) {
