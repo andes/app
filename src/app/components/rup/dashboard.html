@@ -1,5 +1,4 @@
-
-<div>
+<div *ngIf="!showEjecucion">
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>
 
     <plex-box>
@@ -20,13 +19,19 @@
                 <h4>Problemas</h4>
                 <ul class="list-group">
                     <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                        <div *ngIf="problema.evoluciones[problema.evoluciones.length-1].activo">
+                        <div >
                             {{problema.tipoProblema.nombre}}
                             <br />
                             <small class="gris">
                                 {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
                             </small>
-
+                            <span class="label label-success pull-right" *ngIf="problema.evoluciones && problema.evoluciones[problema.evoluciones.length-1] && problema.evoluciones[problema.evoluciones.length-1].activo">
+                                Activo
+                            </span>
+                            <span class="label label-danger pull-right" 
+                                *ngIf="problema.evoluciones && problema.evoluciones[problema.evoluciones.length-1] && !problema.evoluciones[problema.evoluciones.length-1].activo">
+                                Inactivo
+                            </span>
                         </div>
                     </li>
                 </ul>
@@ -43,4 +48,8 @@
             </div>
         </div>
     </plex-box>
+</div>
+
+<div *ngIf="showEjecucion">
+    <rup-prestacionEjecucion [prestacion]="prestacion"></rup-prestacionEjecucion>
 </div>

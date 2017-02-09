@@ -24,7 +24,7 @@
             {{paciente.estado}}
         </div>
         
-        <div class="col-md-2 bl">
+        <div class="col-md-2 bl" *ngIf="paciente.financiador[0]">
             <b>Obra social</b>
             <br />
             {{paciente.financiador[0].entidad.nombre}}

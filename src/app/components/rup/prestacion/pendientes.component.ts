@@ -60,7 +60,8 @@ export class PrestacionesPendientesComponent implements OnInit {
     }
 
     loadPrestaciones() {
-        this.servicioPrestacion.get({ estado: 'pendiente', idTipoPrestacion: this.tipoPrestacion.id }).subscribe(resultado => {
+        // this.servicioPrestacion.get({ estado: 'pendiente', idTipoPrestacion: this.tipoPrestacion.id }).subscribe(resultado => {
+        this.servicioPrestacion.get({ idTipoPrestacion: this.tipoPrestacion.id }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
         });
     }
