@@ -75,6 +75,12 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = true;
     }
 
+    cancelaClonar() {
+        debugger;
+        this.showGestorAgendas = true;
+        this.showClonar = false;
+    }
+
     loadAgendas() {
 
         let fecha = moment().format();

@@ -68,5 +68,5 @@
 </div>
 
 <div class="col-sm-12" *ngIf="showClonar">
-    <clonar-agenda [agenda]="modelo"></clonar-agenda>
+    <clonar-agenda [agenda]="modelo" (cancelaClonar)="cancelaClonar($event)"></clonar-agenda>
 </div>

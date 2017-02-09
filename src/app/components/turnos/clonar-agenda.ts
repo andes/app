@@ -1,7 +1,7 @@
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Observable } from 'rxjs/Rx';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado'
@@ -32,6 +32,9 @@ export class ClonarAgendaComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
+
+    @Output() cancelaClonar = new EventEmitter<boolean>();
+
     constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 
     ngOnInit() {
@@ -224,5 +227,10 @@ export class ClonarAgendaComponent implements OnInit {
                 // this.plex.alert('La agenda se clonó correctamente');
             }
         );
+    }
+
+    cancelar() {
+        debugger;
+        this.cancelaClonar.emit(true);
     }
 }
