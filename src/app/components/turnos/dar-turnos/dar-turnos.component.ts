@@ -302,7 +302,7 @@ export class DarTurnosComponent implements AfterViewInit {
         };
         listaEspera = {
             fecha: this.agenda.horaInicio,
-            estado: 'demandaRechazada',
+            estado: 'Demanda Rechazada',
             prestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
