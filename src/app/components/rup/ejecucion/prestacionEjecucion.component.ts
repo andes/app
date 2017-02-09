@@ -118,15 +118,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 // asignamos la prestacion nueva al array de prestaciones futuras
                 this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
 
-                // actualizamos la prestacion de origen
-                this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
-                    // this.prestacion = prestacionActualizada;
-                    // buscamos la prestacion actualizada con los datos populados
-                    this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-                        console.log(prestacion);
-                        this.prestacion = prestacion;
-                    });
-                });
+               this.updatePrestacion();
             });
 
             this.nuevoTipoPrestacion = null;
@@ -134,6 +126,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             this.plex.alert('Debe seleccionar una prestación');
         }
+    }
+
+    updatePrestacion(){
+         // actualizamos la prestacion de origen
+        this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
+            // this.prestacion = prestacionActualizada;
+            // buscamos la prestacion actualizada con los datos populados
+            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+            });
+        });
     }
 
     borrarPrestacionFutura(index) {
@@ -152,6 +155,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             debugger;
             if (resultado) {
                 this.listaProblemas.push(resultado);
+
+                // asignamos el problema a la prestacion de origen
+                // this.prestacion.solicitud.listaProblemas.push(resultado);
+                this.updatePrestacion();
             } else {
                 this.plex.alert('Error al intentar asociar el problema a la consulta');
             }
