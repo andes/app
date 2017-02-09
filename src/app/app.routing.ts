@@ -8,7 +8,7 @@ import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
-
+import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
@@ -37,6 +37,7 @@ const appRoutes: Routes = [
   { path: 'listaEspera', component: ListaEsperaComponent },
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
+  { path: 'panelEspacio', component: PanelEspacioComponent },
   { path: 'rup', component: PrestacionesPendientesComponent },
   { path: 'rup/dashboard/:id', component: DashboardComponent },
   // { path: 'rup/:id?*/', component: DashboardComponent },
