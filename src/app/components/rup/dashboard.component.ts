@@ -52,4 +52,8 @@ export class DashboardComponent implements OnInit {
     verPrestacion(){
         this.showEjecucion = true;
     }
+
+    volver() {
+        this.showEjecucion = false;
+    }
 }
