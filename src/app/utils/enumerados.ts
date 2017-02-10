@@ -53,6 +53,7 @@ export function getObjSexos() {
 }
 
 export function getTipoComunicacion() {
+  debugger;
   let arrTC = Object.keys(tipoComunicacion);
   arrTC = arrTC.slice(arrTC.length / 2);
   return arrTC;
@@ -61,7 +62,11 @@ export function getTipoComunicacion() {
 export function getObjTipoComunicacion() {
   let arrTC = Object.keys(tipoComunicacion);
   arrTC = arrTC.slice(arrTC.length / 2);
-  let salida = arrTC.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+  let salida = arrTC.map(elem => {
+    let idEnumerado = elem.split(' ')[1] ? elem.split(' ')[1] : elem.split(' ')[0] ;
+    console.log(idEnumerado);
+    return { 'id': idEnumerado.toLowerCase(), 'nombre': titleCase(elem) }
+  });
   return salida;
 }
 

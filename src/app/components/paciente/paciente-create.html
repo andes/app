@@ -3,15 +3,15 @@
     <div class="col-md-8">
       <plex-box type="sucess" title="Alta de Pacientes">
         <plex-tabs>
-          <plex-tab icon="account">
+          <plex-tab icon="account" id="datosBasicos">
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
+                  <plex-text label="Nombre" formControlName="nombre" [required]="true" placeholder="Ingrese nombre...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
-                  <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
+                  <plex-text label="Apellido" formControlName="apellido" [required]="true" placeholder="Ingrese apellido...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -45,7 +45,7 @@
               </div>
             </plex-box>
           </plex-tab>
-          <plex-tab icon="contact-mail" title="Datos de contacto">
+          <plex-tab icon="contact-mail" title="Datos de contacto" id="contacto">
             <plex-box type="warning" title="Contacto" formArrayName="contacto">
               <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
                 <div class="panel-heading">
@@ -56,12 +56,12 @@
                 <div class="panel-body">
                   <div class="row" [formGroupName]="i">
                     <div class="col-md-4">
-                      <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo:">
+                      <plex-select formControlName="tipo" [data]="tipoComunicacion" id="id" placeholder="Seleccione..." label="Tipo:">
                       </plex-select>
                     </div>
                     <div class="col-md-4">
-                      <plex-text label="Dato:" formControlName="valor">
-                      </plex-text>
+                      <plex-phone label="Dato:" formControlName="valor">
+                      </plex-phone>
                     </div>
                     <div class="col-md-2">
                       <plex-int label="Orden:" formControlName="ranking">
@@ -185,6 +185,10 @@
                       </plex-select>
                     </div>
                     <div class="col-md-3">
+                      <plex-int label="Documento" formControlName="documento" placeholder="Ingresar DNI...">
+                      </plex-int>
+                    </div>
+                    <div class="col-md-3">
                       <plex-text label="Nombre:" formControlName="nombre">
                       </plex-text>
                     </div>
@@ -192,16 +196,20 @@
                       <plex-text label="Apellido:" formControlName="apellido">
                       </plex-text>
                     </div>
-                    <div class="col-md-3">
-                      <plex-int label="Documento" formControlName="documento" placeholder="Ingresar DNI...">
-                      </plex-int>
-                    </div>
+                  </div>
+                  <div *ngIf=familiaresPacientes class="alert alert-warning" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">info</span> Quiza quiso decir
+                  </div>
+                  <div *ngFor="let familiar of familiaresPacientes" (click)="addFamiliar(familiar,i)" >
+                    {{ familiar.documento }}   {{ familiar.nombre }}   {{ familiar.apellido }}
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <plex-button label="Agregar Relación" icon="add circle outline" (click)="addRelacion()"></plex-button>
+
                 </div>
               </div>
             </plex-box>
@@ -219,32 +227,52 @@
         <div class="row">
           <div class="col-md-4">
             <div class="row">
-              <div class="col-md-4"><h2>{{createForm.value.nombre}}</h2></div>
+              <div class="col-md-4"><h4>{{createForm.value.nombre}}</h4></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-4"><h4><strong>{{createForm.value.apellido}}</strong></h4></div>
             </div>
 
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <div class="row">
-              <div class="col-md-4"><h2>{{createForm.value.apellido}}</h2></div>
-            </div>
-
+            <h4>D.N.I. {{createForm.value.documento}} </h4>
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-6">
-            <label>D.N.I.</label>
+            <label>Fecha de Nacimiento</label>
             <div class="row">
-              <div class="col-md-4">{{createForm.value.documento}}</div>
+              <div class="col-md-4">{{createForm.value.fechaNacimiento | date: 'dd/MM/yyyy'}}</div>
             </div>
-
+          </div>
+        </div>
+        <div class="row"></div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Sexo</label>
+            <div class="row">
+              <div class="col-md-4">{{createForm.value.sexo}}</div>
+            </div>
           </div>
         </div>
 
-
-
-
+      </plex-box>
+      <plex-box>
+        <div class="row">
+          <div class="col-sm-12">
+            <plex-button title="Guardar" label="Confirmar Información" type="primary" (click)="onSave(createForm.value, createForm.valid)">
+            </plex-button>
+            <plex-button title="Cancelar" label="Cancelar" type="danger" (click)="onCancel()">
+            </plex-button>
+          </div>
+        </div>
       </plex-box>
 
     </div>
