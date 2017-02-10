@@ -37,17 +37,23 @@
                 </ul>
             </div>
         </div>
-
+    </plex-box>
+    <plex-box>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-6 pull-left">
+                <plex-button title="Evolucionar los Problemas" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
+            </div>
+            <div class="col-lg-6 pull-right">
 
-                <plex-button title="Ver prestación" label="Ver" type="success" class="pull-right" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
 
-                <plex-button title="Iniciar prestación" label="Iniciar" type="success" class="pull-right" (click)="iniciarPrestacion()"
+                <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
+
+                <plex-button title="Iniciar prestación" label="Iniciar" type="success"  (click)="iniciarPrestacion()"
                     *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
             </div>
         </div>
-    </plex-box>
+    
+     </plex-box>
 </div>
 
 <div *ngIf="showEjecucion">
