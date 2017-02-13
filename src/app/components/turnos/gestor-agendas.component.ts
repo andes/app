@@ -18,6 +18,8 @@ export class GestorAgendasComponent implements OnInit {
     public agendas: any = [];
     public agendaSel: AgendaSeleccionada;
 
+    agendasSeleccionadas: any[] = [];
+
     public showGestorAgendas: boolean = true;
     public showTurnos: boolean = false;
     public showVistaAgendas: boolean = false;
@@ -118,17 +120,24 @@ export class GestorAgendasComponent implements OnInit {
     verAgenda(agenda) {
         this.ag = agenda;
         this.vistaAgenda = agenda;
+        debugger;
 
-        if (this.agendaSel) {
-            this.agendaSel.agendaSeleccionada = false;
-            this.agendaSel.agendaSeleccionadaColor = 'default';
+        let index;
+
+        if (agenda.agendaSeleccionada) {
+            agenda.agendaSeleccionada = false;
+            agenda.agendaSeleccionadaColor = 'default';
+
+            index = this.agendasSeleccionadas.indexOf(agenda);
+            this.agendasSeleccionadas.splice(index, 1);
+        } else {
+            agenda.agendaSeleccionada = true;
+
+            this.agendaSel = agenda;
+            this.agendasSeleccionadas.push(agenda);
         }
 
-        agenda.agendaSeleccionada = true;
-
         this.setColorEstadoAgenda(this.ag);
-
-        this.agendaSel = agenda;
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
