@@ -32,7 +32,7 @@
                     <!-- /input-group -->
                 </div>
                 <div class="col-md-3 pull-right text-right">
-                    <plex-button title="Evolucionar los Problemas" label="Evolucionar los Problemas " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
+                    <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
                 </div>
             </div>
             <div class="box-body">
@@ -89,7 +89,7 @@
             <!--<rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>-->
             <fieldset>
                 <legend>Consulta de medicina general</legend>
-                
+
                 <fieldset>
                     <legend>Signos vitales</legend>
                     <div class="row">
@@ -102,11 +102,11 @@
                             <plex-select [(ngModel)]="listaProbPrestacion.signosVitales" label="Vincular a problemas" name="signosVitalesListaProblemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
                         </div>
                     </div>
-                     <plex-button title="Evolucionar" label="Evolucionar"  type="success" (click)="evolucionarPrestacion(prestacionSignosVitales)" class="pull-right"></plex-button>
+                    <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(prestacionSignosVitales)" class="pull-right"></plex-button>
                 </fieldset>
 
                 <legend>Talla</legend>
-                
+
                 <div class="row">
                     <div class="col-md-12">
                         <rup-talla [paciente]="paciente" [tipoPrestacion]="prestacionTalla" (evtData)="onReturnValores($event, prestacionTalla)"></rup-talla>
@@ -118,8 +118,8 @@
                     </div>
                 </div>
             </fieldset>
-            
-            <plex-button title="Confirmar" label="Confirmar"  type="success" (click)="evolucionarPrestacion(prestacionTalla)" class="pull-right"></plex-button>
+
+            <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(prestacionTalla)" class="pull-right"></plex-button>
         </plex-box>
 
         <plex-box type="primary" title="Planes">
@@ -137,7 +137,7 @@
 
 
             <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
-            
+
                 <div class="row" style="margin-bottom: 20px;" *ngIf="prestacionFutura.solicitud">
                     <div class="col-md-10">
                         <p>
@@ -156,15 +156,14 @@
                         <div class="row ">
                             <div class="col-md-12">
                                 <div class="msg-problema">
-                                    <i class="mdi mdi-link"> </i>
-                                    Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
+                                    <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         </plex-box>
     </div>
 </div>

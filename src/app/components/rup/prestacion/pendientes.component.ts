@@ -32,7 +32,7 @@ export class PrestacionesPendientesComponent implements OnInit {
 
     enEjecucion = false;
 
-    constructor(private servicioPrestacion: PrestacionPacienteService, 
+    constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
         private router: Router) {
 
@@ -45,8 +45,8 @@ export class PrestacionesPendientesComponent implements OnInit {
         this.tipoPrestacion = {
             id: "5894657e7358af394f6d52e2",
             key: "consultaGeneralClinicaMedica",
-            nombre: "Consulta general de clínica médica",
-            descripcion: "Consulta general de clínica médica",
+            nombre: "Consulta de medicina general",
+            descripcion: "Consulta de medicina general",
             codigo: null,
             autonoma: true,
             solicitud: null,

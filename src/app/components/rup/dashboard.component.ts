@@ -28,28 +28,30 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-       this.loadProblemas();
+        this.loadProblemas();
     }
 
-    loadProblemas(){
-        this.servicioProblemasPaciente.get({idPaciente: this.prestacion.paciente.id}).subscribe(problemas => {
+    loadProblemas() {
+        this.servicioProblemasPaciente.get({ idPaciente: this.prestacion.paciente.id }).subscribe(problemas => {
             this.listaProblemas = problemas;
         });
     }
 
 
-    iniciarPrestacion(){
+    iniciarPrestacion() {
         this.prestacion.estado.push({
             timestamp: new Date(),
             tipo: 'ejecucion'
         });
 
-         this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
-            this.prestacion = prestacion;
+        this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
+            //this.prestacion = prestacion;
+            this.showEjecucion = true;
         });
+
     }
 
-    verPrestacion(){
+    verPrestacion() {
         this.showEjecucion = true;
     }
 
