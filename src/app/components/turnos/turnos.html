@@ -15,7 +15,7 @@
                                 <table class="table table-hover">
                                     <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')"><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
-                                        <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')" >
+                                        <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')">
                                             <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span>
                                         </td>
@@ -35,7 +35,10 @@
                                             <a id="cancelarTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
                                         </td>
 
-                                        <td *ngIf="ag.estado != 'Suspendida'"><a id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Bloquear Turno" class="text-success success mdi mdi-block-helper"></i></a></td>
+                                        <td *ngIf="ag.estado != 'Suspendida'">
+                                            <a id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Bloquear Turno"                                             
+                                            [ngClass]="(turno.estado == 'bloqueado') ? 'text-success success mdi mdi-block-helper':'text-success success mdi mdi-brightness-1'" ></i></a>
+                                        </td>
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
