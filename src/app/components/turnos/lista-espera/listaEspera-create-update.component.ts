@@ -34,9 +34,9 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
-        documento: '71470',
-        apellido: 'Ortega',
-        nombre: 'Ariel Arnaldo',
+        documento: '20567899',
+        apellido: 'García',
+        nombre: 'Pablo',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
@@ -102,8 +102,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
             paciente: datosPaciente,
         };
         operacion = this.listaEsperaService.post(listaEspera);
-        operacion.subscribe();
-        this.data.emit(null);
+        operacion.subscribe(resultado => this.data.emit(resultado));
         return false;
     }
 }

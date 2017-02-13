@@ -20,7 +20,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="box box-primary">
             <div class="box-header with-border clearfix">
                 <h3 class="box-title">Problemas</h3>
@@ -84,11 +84,42 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <plex-box type="primary" title="Prestaciones">
+            <!--<rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>-->
+            <fieldset>
+                <legend>Consulta de medicina general</legend>
+                
+                <fieldset>
+                    <legend>Signos vitales</legend>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <rup-signos-vitales [paciente]="paciente" [tipoPrestacion]="prestacionSignosVitales" (evtData)="onReturnValores($event, prestacionSignosVitales)"></rup-signos-vitales>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <plex-select [(ngModel)]="listaProbPrestacion.signosVitales" label="Vincular a problemas" name="signosVitalesListaProblemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                        </div>
+                    </div>
+                     <plex-button title="Evolucionar" label="Evolucionar"  type="success" (click)="evolucionarPrestacion(prestacionSignosVitales)" class="pull-right"></plex-button>
+                </fieldset>
 
-            <rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>
-            <plex-button title="Evolucionar" label="Evolucionar"  type="success" (click)="evolucionarPrestacion()" class="pull-right"></plex-button>
+                <legend>Talla</legend>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <rup-talla [paciente]="paciente" [tipoPrestacion]="prestacionTalla" (evtData)="onReturnValores($event, prestacionTalla)"></rup-talla>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <plex-select [(ngModel)]="listaProbPrestacion.talla" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <plex-button title="Confirmar" label="Confirmar"  type="success" (click)="evolucionarPrestacion(prestacionTalla)" class="pull-right"></plex-button>
         </plex-box>
 
         <plex-box type="primary" title="Planes">
@@ -137,3 +168,12 @@
         </plex-box>
     </div>
 </div>
+
+<plex-box>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
+            <plex-button title="Guardar" label="GUARDAR" (click)="guardarPrestacion()" type="success btn-sm"></plex-button>
+        </div>
+    </div>
+</plex-box>

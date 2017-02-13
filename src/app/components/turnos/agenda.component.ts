@@ -192,22 +192,28 @@ export class AgendaComponent implements OnInit {
         bloques.forEach((bloque) => {
             // Si se elimino una prestación, la saco de los bloques
             let bloquePrestaciones = bloque.prestaciones;
-            bloquePrestaciones.forEach((bloquePrestacion, index) => {
-                let i = this.modelo.prestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
-                if (i < 0) {
-                    bloquePrestaciones.splice(index, 1);
-                }
-            });
+            if (bloquePrestaciones) {
+                bloquePrestaciones.forEach((bloquePrestacion, index) => {
+                    if (this.modelo.prestaciones) {
+                        let i = this.modelo.prestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
+                        if (i < 0) {
+                            bloquePrestaciones.splice(index, 1);
+                        }
+                    }
+                });
+            }
 
             // Si se agrego una prestacion, la agrego a los bloques
-            this.modelo.prestaciones.forEach((prestacion) => {
-                let copiaPrestacion = operaciones.clonarObjeto(prestacion);
-                let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
-                if (i < 0) {
-                    bloque.prestaciones.push(copiaPrestacion);
-                    bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
-                }
-            });
+            if (this.modelo.prestaciones) {
+                this.modelo.prestaciones.forEach((prestacion) => {
+                    let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                    let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                    if (i < 0) {
+                        bloque.prestaciones.push(copiaPrestacion);
+                        bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
+                    }
+                });
+            }
         });
     }
 
@@ -308,13 +314,13 @@ export class AgendaComponent implements OnInit {
 
     xor(seleccion) {
         if (seleccion === 'simultaneos') {
-            if (this.elementoActivo.citarPorBloque ) {
+            if (this.elementoActivo.citarPorBloque) {
                 console.log('acaa');
                 this.plex.alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
-        alert('y ahora??'+ seleccion);
+        alert('y ahora??' + seleccion);
     }
 
     calcularDuracion(inicio, fin, cantidad) {
@@ -461,7 +467,7 @@ export class AgendaComponent implements OnInit {
                                 bloque.turnos.push(turno);
                             }
                         } else {
-                            if (bloque.citarPorBloque) { 
+                            if (bloque.citarPorBloque) {
                                 // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                                 for (let j = 0; j < bloque.cantidadBloque; j++) {
                                     turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
@@ -470,7 +476,7 @@ export class AgendaComponent implements OnInit {
                                         bloque.turnos.push(turno);
                                     }
                                 }
-                            } else { 
+                            } else {
                                 // Bloque sin simultaneos ni Citación por bloque
                                 bloque.turnos.push(turno);
                             }
@@ -485,6 +491,7 @@ export class AgendaComponent implements OnInit {
                 });
                 espOperation = this.ServicioAgenda.save(this.modelo);
                 espOperation.subscribe(resultado => {
+                    debugger
                     this.bloqueActivo = -1;
                     this.cargarAgenda(resultado);
                     if (clonar) {
