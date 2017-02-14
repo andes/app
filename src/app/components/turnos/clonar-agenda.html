@@ -10,7 +10,7 @@
     <table *ngIf="calendario" class="table table-striped">
       <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" class="text-center" [ngClass]="{'bg-primary primary': (day.estado == 'seleccionado') && (day.original == false),
-        'bg-success success': day.original == true ,'hover': day.fecha.getTime() >= hoy.getTime()}" (click)="seleccionar(day)">
+        'bg-success success': day.original == true ,'hover': day.fecha.getTime() >= hoy.getTime()}" (click)="seleccionar(day)" style="width: 50px; height: 80px">
           <div>{{ day.fecha | date:"d" }}</div>
           <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
           <div>
@@ -85,16 +85,18 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="alert alert-warning" role="alert">
-                  <li *ngIf="agendaF.conflictoEF">
-                    Conflicto con Espacio Físico
-                  </li>
-                  <li *ngIf="agendaF.conflictoProfesional">
-                    Conflicto con Profesionales
-                  </li>
-                  <li *ngIf="agendaF.conflictoPrestacion">
-                    Conflicto con Tipos de Prestación
-                  </li>
+                <div class="alert alert-danger" role="alert">
+                  <ul>
+                    <li *ngIf="agendaF.conflictoEF">
+                      Conflicto con Espacio Físico
+                    </li>
+                    <li *ngIf="agendaF.conflictoProfesional">
+                      Conflicto con Profesionales
+                    </li>
+                    <li *ngIf="agendaF.conflictoPrestacion">
+                      Conflicto con Tipos de Prestación
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
