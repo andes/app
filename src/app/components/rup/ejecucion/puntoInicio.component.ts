@@ -11,16 +11,15 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 @Component({
-    selector: 'rup-prestacionesPendientes',
-    templateUrl: 'pendientes.html'
+    selector: 'rup-puntoInicio',
+    templateUrl: 'puntoInicio.html'
 })
-export class PrestacionesPendientesComponent implements OnInit {
+export class PuntoInicioComponent implements OnInit {
 
     //@Input() profesional: any;
 
     //@Input() tipoPrestacione: any;
     tipoPrestacion: ITipoPrestacion; // será un IPaciente
-
 
     // resultados a devolver
     data: Object = {};
@@ -41,7 +40,6 @@ export class PrestacionesPendientesComponent implements OnInit {
 
     ngOnInit() {
         // debugger;
-
         this.tipoPrestacion = {
             id: "5894657e7358af394f6d52e2",
             key: "consultaGeneralClinicaMedica",
@@ -52,7 +50,10 @@ export class PrestacionesPendientesComponent implements OnInit {
             solicitud: null,
             ejecucion: null,
             activo: true,
-            componente: ""
+            componente: {
+                nombre: "",
+                ruta: ""
+            }
         }
 
         this.loadPrestaciones();
