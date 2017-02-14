@@ -100,6 +100,14 @@ export class PacienteService {
 
   }
 
+  save(paciente: IPaciente): Observable<IPaciente> {
+      if (paciente.id) {
+          return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
+      } else {
+          return this.server.post(this.pacienteUrl, paciente);
+      }
+  }
+
 
 
 }

@@ -28,30 +28,17 @@ export class TurnosComponent {
         if (btnClicked === 'cancelarTurno') {
             patch = {
                 'op': 'cancelarTurno',
-                'idTurno': turno.id,
-                'estado': 'disponible',
-                'paciente': {},
-                'prestacion': null
+                'idTurno': turno.id
             };
         } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
-            if (turno.asistencia) {
-                patch = {
-                    'op': 'asistenciaTurno',
-                    'idTurno': turno.id,
-                    'asistencia': false,
-                };
-            } else {
-                patch = {
-                    'op': 'asistenciaTurno',
-                    'idTurno': turno.id,
-                    'asistencia': true,
-                };
-            }
+            patch = {
+                'op': 'asistenciaTurno',
+                'idTurno': turno.id
+            };
         } else if (btnClicked === 'bloquearTurno') {
             patch = {
                 'op': 'bloquearTurno',
-                'idTurno': turno.id,
-                'estado': 'bloqueado',
+                'idTurno': turno.id
             };
         }
 
