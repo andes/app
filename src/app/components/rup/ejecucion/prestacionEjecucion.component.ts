@@ -47,10 +47,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // lista de problemas al mostrar cuando pedimos una nueva prestacion en el plan
     problemasPrestaciones: any = {};
 
-    listaProbPrestacion = {
-        talla: [],
-        signosVitales: []
-    }
+    listaProblemaPrestacion = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -105,7 +102,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nombre: problema.tipoProblema.nombre
             };
         });
-        console.log(this.prestacion);
+        //console.log(this.prestacion);
     }
 
     buscarTipoPrestacion(event) {
@@ -182,7 +179,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     guardarProblema(nuevoProblema) {
         //debugger;
-        console.log(this.listaProblemas);
+        //console.log(this.listaProblemas);
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
             //debugger;
             if (resultado) {
@@ -240,7 +237,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onReturn(dato: IProblemaPaciente) {
         this.showEvolucionar = false;
-        console.log(dato);
+        //console.log(dato);
     }
 
     onReturnTodos(dato: IProblemaPaciente[]) {
@@ -254,20 +251,27 @@ export class PrestacionEjecucionComponent implements OnInit {
         valoresPrestacion[tipoPrestacion.key] = valor;
 
         this.data[tipoPrestacion.key] = valoresPrestacion;
-        console.log(this.data);
+        //console.log(this.data);
 
         // agregar validaciones aca en base al paciente y el tipo de prestacion
         // if (this.tensionDiastolica > 10){
         // }
     }
 
-    evolucionarPrestacion(tipoPrestacion) {
-        // asignamos valores a la nueva prestacion
+    onReturnComponente(datos, tipoPrestacionActual) {
+
+        console.log("dato del componente", datos);
+        this.data[tipoPrestacionActual.key] = datos;
+    }
+
+    evolucionarPrestacion(tipoPrestacionActual) {
+        console.log("en confirmacion", this.data[tipoPrestacionActual.key]);
+        // // asignamos valores a la nueva prestacion
         this.nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
             paciente: this.paciente.id,
             solicitud: {
-                tipoPrestacion: tipoPrestacion,
+                tipoPrestacion: tipoPrestacionActual,
                 fecha: new Date(),
                 listaProblemas: []
             },
@@ -278,7 +282,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             ejecucion: {
                 fecha: new Date(),
                 evoluciones: [{
-                    valores: this.data[tipoPrestacion.key],
+                    valores: this.data[tipoPrestacionActual.key],
                     estado: [{
                         timestamp: new Date(),
                         tipo: 'ejecucion'
@@ -289,13 +293,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // si he agregado algun problema a la nueva prestacion
         // entonces asigno su id a la prestacion a guardar
-        if (this.listaProbPrestacion[tipoPrestacion.key] && this.listaProbPrestacion[tipoPrestacion.key].length) {
+        if (this.listaProblemaPrestacion[tipoPrestacionActual.key] && this.listaProblemaPrestacion[tipoPrestacionActual.key].length) {
             // inicializamos el array en caso de que haga falta
             // if (typeof this.nuevaPrestacion.solicitud.listaProblemas === 'undefined') {
             //     this.nuevaPrestacion.solicitud.listaProblemas = [];
             // }
             // recorremos array de problemas y asignamos a la nueva prestacion
-            for (let problema of this.listaProbPrestacion[tipoPrestacion.key]) {
+            for (let problema of this.listaProblemaPrestacion[tipoPrestacionActual.key]) {
                 this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
             }
         }
@@ -304,6 +308,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // // guardamos la nueva prestacion 
         this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+
+            // asignamos la prestacion nueva al array de prestaciones futuras
+            this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+
             // this.prestacionesFuturas.push(prestacionFutura);
             this.plex.alert('Prestacion confirmada');
 

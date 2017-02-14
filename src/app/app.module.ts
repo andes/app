@@ -1,31 +1,5 @@
 // RUP
-import { PesoComponent } from './components/rup/peso.component';
-import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
-import { TallaComponent } from './components/rup/talla.component';
-import { TemperaturaComponent } from './components/rup/temperatura.component';
-import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca.component';
-import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
-import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
-import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
-import { ObservacionesComponent } from './components/rup/observaciones.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
-import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
-
-import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
-import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-import { DashboardComponent } from './components/rup/dashboard.component';
-import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
-// Fin Componentes RUP
-
-// Servicios RUP //
-import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
-import { TipoProblemaService } from './services/rup/tipoProblema.service';
-import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
-import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-// Fin Servicios RUP //
+import { RupModule } from './rup.module';
 
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -109,7 +83,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     SharedModule,
     ToggleButtonModule,
     PlexModule,
-    routing
+    routing,
+    RupModule
   ],
 
   declarations: [
@@ -123,22 +98,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    TensionArterialComponent, TensionDiastolicaComponent, TensionSistolicaComponent,
-    FrecuenciaRespiratoriaComponent,
-    FrecuenciaCardiacaComponent,
-    TemperaturaComponent,
-    TallaComponent,
-    SaturacionOxigenoComponent,
-    PesoComponent,
-    SignosVitalesComponent,
-    ObservacionesComponent,
-    ConsultaGeneralClinicaMedicaComponent,
-    PrestacionesPendientesComponent,
-    PrestacionEjecucionComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    EvolucionProblemaComponent, EvolucionTodosProblemasComponent,
-    DashboardComponent,
-    HeaderPacienteComponent
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -164,11 +124,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     EspacioFisicoService,
     ListaEsperaService,
     Server,
-    SmsService,
-    PrestacionPacienteService,
-    ProblemaPacienteService,
-    TipoProblemaService,
-    TipoPrestacionService
+    SmsService
   ]
 
 })
