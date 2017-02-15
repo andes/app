@@ -74,4 +74,9 @@ export class PuntoInicioComponent implements OnInit {
         this.showDashboard = true;
     }
 
+    onReturn() {
+        this.showPendientes = true;
+        this.showDashboard = false;
+    }
+
 }

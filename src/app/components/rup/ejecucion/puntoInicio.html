@@ -18,5 +18,5 @@
     </div>
 </div>
 <div *ngIf="showDashboard">
-    <rup-resumen [prestacion]="prestacionSeleccionada"></rup-resumen>
+    <rup-resumen [prestacion]="prestacionSeleccionada" (evtData)="onReturn()"></rup-resumen>
 </div>

@@ -33,6 +33,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     paciente: IPaciente = null;
     showEvolucionar = false;
     showEvolTodo = false;
+    showValidar = false;
     problemaEvolucionar: any;
     data: Object = {};
     prestacionSignosVitales: any;
@@ -318,5 +319,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+
+    validarPrestacion() {
+        this.showValidar = true;
+    }
 
 }
