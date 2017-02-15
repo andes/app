@@ -19,7 +19,6 @@ import { TurnosComponent } from './components/turnos/turnos.component';
 import { VistaAgendaComponent } from './components/turnos/vista-agenda.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 
-import { FullcalendarComponent } from './components/turnos/configuracion/espacio-fisico/fullcalendar.component';
 
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
@@ -104,7 +103,7 @@ import {CalendarComponent} from 'angular2-fullcalendar/src/calendar/calendar';
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,FullcalendarComponent
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
   ],
   bootstrap: [AppComponent],
   providers: [
