@@ -19,6 +19,8 @@ import { TurnosComponent } from './components/turnos/turnos.component';
 import { VistaAgendaComponent } from './components/turnos/vista-agenda.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 
+import { FullcalendarComponent } from './components/turnos/configuracion/espacio-fisico/fullcalendar.component';
+
 import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
@@ -73,6 +75,9 @@ import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Server } from 'andes-shared/src/lib/server/server.service';
 
+import {CalendarComponent} from 'angular2-fullcalendar/src/calendar/calendar';
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -88,6 +93,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
   ],
 
   declarations: [
+     CalendarComponent,
     AppComponent, InicioComponent,
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
@@ -98,7 +104,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent,FullcalendarComponent
   ],
   bootstrap: [AppComponent],
   providers: [
