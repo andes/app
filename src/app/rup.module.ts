@@ -1,3 +1,4 @@
+import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -67,6 +68,7 @@ export const RUP_COMPONENTS = [
     PrestacionEjecucionComponent,
     ResumenComponent,
     HeaderPacienteComponent,
+    PrestacionValidacionComponent
     // PacienteComponent
 ];
 

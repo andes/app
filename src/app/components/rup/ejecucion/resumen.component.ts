@@ -57,5 +57,6 @@ export class ResumenComponent implements OnInit {
 
     volver() {
         this.showEjecucion = false;
+        this.evtData.emit(null);
     }
 }
