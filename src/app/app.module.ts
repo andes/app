@@ -42,7 +42,7 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 // Componentes MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
-import { PacienteCreateComponent } from './components/paciente/paciente-create.component';
+import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 // Fin Componentes MPI
 
@@ -93,7 +93,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
+    PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     AgendaComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, PanelEspacioComponent,
     PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
