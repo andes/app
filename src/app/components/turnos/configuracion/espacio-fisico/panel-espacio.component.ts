@@ -20,7 +20,7 @@ export class PanelEspacioComponent implements OnInit {
     public horarios: any[] = [];
     public consultorios: any[] = [];
     public listaAgenda: any[] = [];
-    public listaConsultorios: any[] = ['consultorio 1 ', 'consultorio 2'];
+    public listaConsultorios: any[] = ['consultorio 1 ', 'consultorio 2','consultorio 3', 'consultorio 4', 'consultorio 5'];
     // @Input('agenda')
     // set agenda(value: any) {
     //     this._agenda = value;
@@ -34,7 +34,8 @@ export class PanelEspacioComponent implements OnInit {
         fin: moment(new Date(this.fechaActual.setHours(12, 0, 0, 0))),
         medico: 'Murakami',
         consultorio: 'consultorio 2',
-        rows: 0
+        rows: 0,
+        saltear: false
     };
 
     public filas = 2;
@@ -57,10 +58,10 @@ export class PanelEspacioComponent implements OnInit {
             for (let i = 0; i < this.listaConsultorios.length; i++) {
                 if (inicioM.isBetween(this.agenda.inicio, this.agenda.fin, null, '[)') &&
                     this.agenda.consultorio === this.listaConsultorios[i]) {
-                    if (this.agenda.rows === 0) {
-                        this.agenda.rows = this.agenda.fin.diff(this.agenda.inicio, 'm') / this.unidad;
+                    if (this.agenda.rows > 1 && this.agenda.saltear === false) {
+                        lista.push(this.agenda);
+                        this.agenda.saltear = true;
                     }
-                    lista.push(this.agenda);
                 } else {
                     lista.push('');
                 }

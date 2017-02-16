@@ -5,8 +5,8 @@
   </tr>
   <tr *ngFor="let horario of horarios">
     <td>{{horario.hora}}</td>
-    <td *ngFor="let agenda of horario.lista">
-      <div *ngIf="agenda.rows>0">{{agenda.medico}}</div>
+    <td *ngFor="let agenda of horario.lista" [attr.rowspan] ="agenda.rows" [ngClass]="{'bg-success success': agenda.rows > 1}">
+      <div  *ngIf="agenda.rows>0">{{agenda.medico}}</div>
     </td>
   </tr>
 </table>
