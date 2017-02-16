@@ -1,6 +1,6 @@
 <div class="col-sm-12" *ngIf="!showcreate">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
       <plex-box type="info" title="Búsqueda de Pacientes">
         <div class="col-sm-11">
           <div class="row">
@@ -50,9 +50,9 @@
       </div>
       <plex-box type="info" title="Pacientes Encontrados">
         <!-- Search results -->
-        <div *ngIf="!pacientesSearch">
+        <div class="hover" *ngIf="!pacientesSearch">
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th>Documento</th>
@@ -69,18 +69,14 @@
                   <td>{{paciente.apellido| uppercase}}</td>
                   <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                   <td>{{paciente.sexo}}</td>
-                  <td>
-                    <plex-button icon="pencil" type="primary" label="Seleccionar" (click)="onSelect(paciente)">
-                    </plex-button>
-                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        <div *ngIf="pacientesSearch">
+        <div class="hover" *ngIf="pacientesSearch">
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th>Documento</th>
@@ -97,10 +93,6 @@
                   <td>{{paciente.apellido| uppercase}}</td>
                   <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                   <td>{{paciente.sexo}}</td>
-                  <td>
-                    <plex-button type="primary" label="Seleccionar" (click)="onSelect(paciente)">
-                    </plex-button>
-                  </td>
                 </tr>
               </tbody>
             </table>
@@ -114,21 +106,14 @@
       </div>
     </div>
     <!--fin de col-md-8 -->
-    <div class="col-md-4">
+    <div class="col-md-5">
       <plex-box type="info" title="Panel de Eventos">
         <div class="panel panel-success" *ngIf="(pacientesScan || selectedPaciente)">
-          <plex-box type="info" title="Checkout">
+          <plex-box type="info" title="Paciente Seleccionado">
             <div class="row">
-              <div class="col-md-4">
-                <div class="col-md-4">
-                  <h4>{{selectedPaciente.nombre}}</h4></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="col-md-4">
-                  <h4><strong>{{selectedPaciente.apellido}}</strong></h4></div>
-              </div>
+              <div class="col-md-12">
+                  <h4><strong>{{selectedPaciente.nombre}} {{selectedPaciente.apellido}}</strong></h4>
+             </div>
             </div>
             <div class="row">
               <div class="col-md-6">
@@ -160,6 +145,16 @@
               </div>
             </div>
             <br>
+            <div *ngIf="pacientesScan && mensaje">
+              <div class="alert alert-warning" role="alert">
+                    {{mensaje}}
+              </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12" *ngIf="selectedPaciente && !mensaje">
+                <plex-button icon="account-edit" type="primary" label="Seleccionar" (click)="onSelect(selectedPaciente)"></plex-button>     
+               </div>
+            </div>
           </plex-box>
         </div>
         <div class="panel panel-warning" *ngIf="!(pacientesScan || selectedPaciente)">

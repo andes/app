@@ -1,11 +1,28 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { Subject, Observable } from 'rxjs';
-import { PacienteService } from './../../services/paciente.service';
-import { IPaciente } from './../../interfaces/IPaciente';
-import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
 import {
-} from '@angular/common';
+  Component,
+  Output,
+  EventEmitter,
+  OnInit
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl
+} from '@angular/forms';
+import {
+  Subject,
+  Observable
+} from 'rxjs';
+import {
+  PacienteService
+} from './../../services/paciente.service';
+import {
+  IPaciente
+} from './../../interfaces/IPaciente';
+import {
+  PacienteCreateUpdateComponent
+} from './paciente-create-update.component';
+import {} from '@angular/common';
 
 
 @Component({
@@ -15,28 +32,27 @@ import {
 
 export class PacienteSearchComponent implements OnInit {
   @Output()
-  selected: EventEmitter<any> = new EventEmitter<any>();
+  selected: EventEmitter < any > = new EventEmitter < any > ();
   showcreate: boolean = false;
   // showupdate: boolean = false;
   error: boolean = false;
   mensaje: string = '';
   searchForm: FormGroup;
-  selectedPaciente: IPaciente;
+  selectedPaciente: IPaciente = null;
   searchTextModel: string;
   pacientesSearch: boolean = false;
-  resultados$: Observable<any>;
+  resultados$: Observable < any > ;
   modeloSlide: any;
   active: boolean = false;
   searchText: FormControl = new FormControl('');
   nuevoPaciente: boolean = false;
   pacientesScan: boolean = false;
   pacienteScaneado: any = {};
-  pacientesLista: Array<any> = new Array<any>();
+  pacientesLista: Array < any > = new Array < any > ();
   fechaActual: Date = new Date();
 
 
-  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {
-  }
+  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
@@ -50,37 +66,43 @@ export class PacienteSearchComponent implements OnInit {
 
     this.resultados$ = this.searchText
       .valueChanges
-      .map((value: any) => value ? value.trim() : '')             // ignore spaces
+      .map((value: any) => value ? value.trim() : '') // ignore spaces
       .do(value => value ? this.active = true : this.active = false)
       // .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
-      .debounceTime(700)                                          // wait when input completed
+      .debounceTime(700) // wait when input completed
       .distinctUntilChanged()
       .switchMap(searchString => {
-        return new Promise<Array<any>>((resolve, reject) => {
+        return new Promise < Array < any >> ((resolve, reject) => {
           if (searchString) {
             // Se verifica mediante expresiones regulares el string recibido
             // para controlar si se realizó un escaneo de DNI
             this.verificarInput(searchString);
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
-                let results: Array<any> = resultados;
-                this.active = false;
-                resolve(results);
-              },
-              err => {
-                reject(err);
+                  //Tengo que limpiar la variable
+                 
+                  let results: Array < any > = resultados;
+                  this.active = false;
+                  resolve(results);
+                },
+                err => {
+                  reject(err);
 
-              });
+                });
           } else {
             this.mensaje = 'Ingrese los datos del paciente';
+            this.selectedPaciente = null;
+            this.pacientesScan = false;
             this.nuevoPaciente = false;
             resolve([]);
           }
         })
-      })                  // request switchable
+      }) // request switchable
       .map((esResult: any) => {
         // extract results
+        //debugger;
         this.nuevoPaciente = true;
+       
         if (esResult.length > 0) {
           this.mensaje = '';
           return esResult;
@@ -124,7 +146,7 @@ export class PacienteSearchComponent implements OnInit {
     let datosDni = cadena.split('"');
     // Si la cadena, es la lectura del código del documento
     // la búsqueda se realiza por nombre, apellido, documento, sexo, fecha de nacimiento
-    if (datosDni.length >= 9) {
+    if (datosDni.length >= 8) {
       this.parseDocument(datosDni);
 
     } else {
@@ -141,25 +163,33 @@ export class PacienteSearchComponent implements OnInit {
 
     this.pacientesScan = true;
     // Los datos se ordenan de la siguiente forma documento, apellido, nombre, sexo, fechadenacimiento
-    let sexo = (datosDni[3] = 'F') ? 'femenino' : 'masculino';
+    let sexo = (datosDni[3] === 'F') ? 'femenino' : 'masculino';
     let fecha = datosDni[6].split('-');
     this.pacienteScaneado.documento = datosDni[4];
     this.pacienteScaneado.apellido = datosDni[1];
     this.pacienteScaneado.nombre = datosDni[2];
     this.pacienteScaneado.sexo = sexo;
     this.pacienteScaneado.estado = 'validado';
-    this.pacienteScaneado.fechaNacimiento = new Date(fecha[2], ( parseInt(fecha[1]) - 1), fecha[0]);
+    this.pacienteScaneado.fechaNacimiento = new Date(fecha[2], (parseInt(fecha[1]) - 1), fecha[0]);
     this.selectedPaciente = this.pacienteScaneado;
 
   }
 
   findPacientes() {
     let dto = this.searchForm.value;
-    let dtoBusqueda = {
-      'apellido': dto.apellido, 'nombre': dto.nombre, 'documento': dto.documento.toString(),
-    };
+    let dtoBusqueda;
+
+
+    dtoBusqueda = {
+      'apellido': dto.apellido,
+      'nombre': dto.nombre,
+      'documento': dto.documento.toString(),
+    }
+
     this.pacienteService.searchMatch('documento', dtoBusqueda)
-      .subscribe(value => { this.pacientesLista = value; debugger });
+      .subscribe(value => {
+        this.pacientesLista = value
+      });
 
   }
 
@@ -175,12 +205,17 @@ export class PacienteSearchComponent implements OnInit {
 
 
   onSelect(objPaciente: IPaciente) {
+   
     this.showcreate = false;
     this.selectedPaciente = objPaciente;
     this.selected.emit(objPaciente);
   }
 
-  mostrarPaciente(paciente: any){
+  mostrarPaciente(paciente: any) {
+    //Si el paciente está validado no debería permitir generar uno nuevo
+    if (paciente.estado === 'validado')
+      this.nuevoPaciente = false;
+
     this.selectedPaciente = paciente;
   }
 
