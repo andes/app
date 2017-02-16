@@ -54,6 +54,7 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.indexOf(this.inicioAgenda.getTime()) < 0) {
             this.seleccionados.push(this.inicioAgenda.getTime());
         }
+        moment.locale('en');
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
@@ -62,7 +63,7 @@ export class ClonarAgendaComponent implements OnInit {
             fechaHasta: this.finMesDate,
             espacioFisico: this.agenda.espacioFisico.id
         };
-        params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
+        // params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
         params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         this.cargarCalendario();
@@ -156,10 +157,10 @@ export class ClonarAgendaComponent implements OnInit {
                 (v => {return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                     agenda.conflictoProfesional = 1;
                 }
-                if (agenda.prestaciones.map(elem => { return elem.id; }).some
-                (v => {return this.agenda.prestaciones.map(elem => { return elem.id; }).includes(v); })) {
-                    agenda.conflictoPrestacion = 1;
-                }
+                // if (agenda.prestaciones.map(elem => { return elem.id; }).some
+                // (v => {return this.agenda.prestaciones.map(elem => { return elem.id; }).includes(v); })) {
+                //     agenda.conflictoPrestacion = 1;
+                // }
                 if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                     agenda.conflictoEF = 1;
                 }

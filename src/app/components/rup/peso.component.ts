@@ -7,6 +7,7 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
 })
 export class PesoComponent {
 
+    @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -14,11 +15,21 @@ export class PesoComponent {
     peso: Number = null;
     mensaje: String = null;
 
+     data: any = {
+        valor: this.peso,
+        mensaje: {
+            texto: String,
+        },
+    };
+
     ngOnInit() {
+         if (this.datosIngreso) {
+            this.peso = this.datosIngreso;
+        }
     }
 
     devolverValores() {
-        this.evtData.emit(this.peso);
+        this.evtData.emit(this.data);
 
         // agregar validaciones aca en base al paciente y el tipo de prestacion
         // if (this.tensionDiastolica > 10){

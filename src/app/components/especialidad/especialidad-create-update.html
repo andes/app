@@ -1,25 +1,23 @@
 <plex-box type="">
-    <form [formGroup]="createForm">
         <div class="row">
             <div class="col-sm-12">
-                <plex-text formControlName="nombre" label="Nombre:" placeholder="Ingrese nombre..."></plex-text>
+                <plex-text [(ngModel)]="modelo.nombre" label="Nombre:" placeholder="Ingrese nombre..."></plex-text>
             </div>
             <div class="col-sm-12">
-                <plex-text formControlName="descripcion" label="Descripción:" placeholder="Ingrese descripción..."></plex-text>
+                <plex-text [(ngModel)]="modelo.descripcion" label="Descripción:" placeholder="Ingrese descripción..."></plex-text>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <plex-text formControlName="disciplina" label="Disciplina:" placeholder="Ingrese la disciplina..."></plex-text>
+                <plex-text [(ngModel)]="modelo.disciplina" label="Disciplina:" placeholder="Ingrese la disciplina..."></plex-text>
             </div>
             <div class="col-sm-4">
-                <plex-int formControlName="complejidad" label="Complejidad:" placeholder="Ingrese nivel de complejidad..."></plex-int>
+                <plex-int [(ngModel)]="modelo.complejidad" label="Complejidad:" placeholder="Ingrese nivel de complejidad..."></plex-int>
             </div>
-            <div class="col-sm-4" formGroupName="codigo">
-                <plex-text formControlName="sisa" label="Codigo Sisa:" placeholder="Ingresar código..."></plex-text>
+            <div class="col-sm-4">
+                <plex-text [(ngModel)]="modelo.codigo.sisa" label="Codigo Sisa:" placeholder="Ingresar código..."></plex-text>
             </div>
         </div>
-            <plex-button label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)"></plex-button>
+            <plex-button label="Guardar" type="primary" (click)="onSave()"></plex-button>
             <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
-    </form>
 </plex-box>
