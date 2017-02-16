@@ -33,12 +33,18 @@ export class PanelEspacioComponent implements OnInit {
         inicio: moment(new Date(this.fechaActual.setHours(9, 0, 0, 0))),
         fin: moment(new Date(this.fechaActual.setHours(12, 0, 0, 0))),
         medico: 'Murakami',
-        consultorio: 'consultorio 2'
+        consultorio: 'consultorio 2',
+        rows: 0
     };
+
     public filas = 2;
+    public miente = true;
     constructor(private serviceAgenda: AgendaService, private serviceEspacio: EspacioFisicoService, public plex: Plex) { }
 
     ngOnInit() {
+        if (this.agenda.rows === 0) {
+            this.agenda.rows = this.agenda.fin.diff(this.agenda.inicio, 'm') / this.unidad;
+        }
         this.loadEspacios();
         this.inicio = new Date(this.fechaActual.setHours(8, 0, 0, 0));
         let inicioM = moment(this.inicio);
@@ -46,29 +52,15 @@ export class PanelEspacioComponent implements OnInit {
         let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
         let cantidadBloques = diferencia / this.unidad;
 
-        // for (let j = 0; j < cantidadBloques; j++) {
-        //     let lista = [];
-        //     for (let i = 0; i < this.listaConsultorios.length; i++) {
-        //         if (inicioM.isBetween(this.agenda.inicio, this.agenda.fin, null, '[)') &&
-        //             this.agenda.consultorio === this.listaConsultorios[i]) {
-        //             lista.push(this.agenda.medico);
-        //         } else {
-        //             lista.push('');
-        //         }
-        //     }
-        //     let elemento = {
-        //         hora: inicioM.format('hh:mm'),
-        //         lista: lista
-        //     }
-        //     this.horarios.push(elemento);
-        //     inicioM.add(this.unidad, 'm');
-        // }
-        for (let j = 0; j < this.listaConsultorios.length; j++) {
+        for (let j = 0; j < cantidadBloques; j++) {
             let lista = [];
-            for (let i = 0; i < cantidadBloques; i++) {
+            for (let i = 0; i < this.listaConsultorios.length; i++) {
                 if (inicioM.isBetween(this.agenda.inicio, this.agenda.fin, null, '[)') &&
-                    this.agenda.consultorio === this.listaConsultorios[j]) {
-                    lista.push(this.agenda.medico);
+                    this.agenda.consultorio === this.listaConsultorios[i]) {
+                    if (this.agenda.rows === 0) {
+                        this.agenda.rows = this.agenda.fin.diff(this.agenda.inicio, 'm') / this.unidad;
+                    }
+                    lista.push(this.agenda);
                 } else {
                     lista.push('');
                 }
@@ -76,14 +68,31 @@ export class PanelEspacioComponent implements OnInit {
             let elemento = {
                 hora: inicioM.format('hh:mm'),
                 lista: lista
-            }
-            // this.horarios.push(elemento);
-            this.consultorios.push(elemento);
+            };
+            this.horarios.push(elemento);
             inicioM.add(this.unidad, 'm');
         }
-        console.log('lista', this.consultorios);
+        // for (let j = 0; j < this.listaConsultorios.length; j++) {
+        //     let lista = [];
+        //     inicioM = moment(this.inicio);
+        //     for (let i = 0; i < cantidadBloques; i++) {
+        //         if (inicioM.isBetween(this.agenda.inicio, this.agenda.fin, null, '[)') &&
+        //             this.agenda.consultorio === this.listaConsultorios[j]) {
+        //             lista.push(this.agenda.medico);
+        //         } else {
+        //             lista.push('');
+        //         }
+        //         inicioM.add(this.unidad, 'm');
+        //     }
+        //     let elemento = {
+        //         consultorio: this.listaConsultorios[j],
+        //         lista: lista
+        //     }
+        //     // this.horarios.push(elemento);
+        //     this.consultorios.push(elemento);
+        // }
+        console.log('lista', this.horarios);
     };
-
     loadEspacios() {
         this.serviceEspacio.get({}).subscribe(espacios => { this.espacios = espacios; console.log('espacios ', this.espacios); });
     }
