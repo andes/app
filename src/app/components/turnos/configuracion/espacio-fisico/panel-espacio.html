@@ -1,62 +1,14 @@
-<plex-box>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th *ngFor="let espacio of espacios; let i=index">{{espacio.nombre}}</th>
-        <!--<th>Consultorio 2</th>
-        <th>Consultorio 3</th>
-        <th>Consultorio 4</th>
-        <th>Consultorio 5</th>
-        <th>Consultorio 6</th>-->
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">08:00</th>
-        <td rowspan="2" [ngClass]="{'hover':true, 'bg-success success': true}">Dr. Murakami</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <!--<td *ngFor="let espacio of espacios; let i=index"></td>
-        <td rowspan="3" [ngClass]="{'hover':true, 'bg-warning warning': true}">Dr. Paez</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>-->
-      </tr>
-      <tr>
-        <th scope="row">09:00</th>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <th scope="row">10:00</th>
-        <td *ngFor="let espacio of espacios; let i=index"></td>
-      </tr>
-      <tr>
-        <th scope="row">11:00</th>
-        <td *ngFor="let espacio of espacios; let i=index"></td>
-      </tr>
-      <tr>
-        <th scope="row">12:00</th>
-        <td *ngFor="let espacio of espacios; let i=index"></td>
-      </tr>
-    </tbody>
-  </table>
-</plex-box>
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th *ngFor="let consultorio of listaConsultorios; let i=index">{{consultorio}}</th>
+  </tr>
+  <tr *ngFor="let horario of horarios">
+    <td>{{horario.hora}}</td>
+    <td *ngFor="let agenda of horario.lista" [attr.rowspan] ="agenda.rows" [ngClass]="{'bg-success success': agenda.rows > 1}">
+      <div  *ngIf="agenda.rows>0">{{agenda.medico}}</div>
+    </td>
+  </tr>
+</table>
+<!--<td [attr.rowspan] ="filas">pepe</td>
+ *ngIf="!medico.saltear"-->

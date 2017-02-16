@@ -10,6 +10,7 @@
                                 <div class="col-md-7"><span><b>Bloque: </b>{{bloque.descripcion}}</span></div>
                                 <div class="col-md-5" *ngIf="ag.estado == 'Suspendida'">
                                     <a class="hover" (click)="enviarSMS(bloque.turnos)"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a>
+                                    <a class="hover" (click)="agregarPacienteListaEspera(ag)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
                                 </div>
 
                                 <table class="table table-hover">
@@ -39,13 +40,16 @@
                                             <a id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Bloquear Turno"                                             
                                             [ngClass]="(turno.estado == 'bloqueado') ? 'text-success success mdi mdi-block-helper':'text-success success mdi mdi-brightness-1'" ></i></a>
                                         </td>
-                                        
+
                                         <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
                                             <i *ngIf="(!smsEnviado) && (!smsLoader)" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
                                             <i *ngIf="(smsEnviado) && (!smsLoader)" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
                                             <plex-loader *ngIf="smsLoader" type="ball-pulse"></plex-loader>
+                                        </td>
+                                        <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)">
+                                            <plex-bool name="seleccionar" (click)="agregarPaciente(turno)"></plex-bool>
                                         </td>
                                     </tr>
                                 </table>

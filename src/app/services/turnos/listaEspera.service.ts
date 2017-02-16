@@ -17,20 +17,30 @@ export class ListaEsperaService {
 
     constructor(private server: Server, private http: Http) { }
 
-  /**
-     * Metodo get. Trae el objeto organizacion.
-     * @param {any} params Opciones de busqueda
-     */
+    /**
+       * Metodo get. Trae el objeto organizacion.
+       * @param {any} params Opciones de busqueda
+       */
     get(params: any): Observable<IListaEspera[]> {
-        return this.server.get(this.listaEsperaUrl, {params: params, showError: true});
+        return this.server.get(this.listaEsperaUrl, { params: params, showError: true });
     }
 
     post(listaEspera: IListaEspera): Observable<IListaEspera> {
         return this.server.post(this.listaEsperaUrl, listaEspera);
     }
 
+    postXIdAgenda(id: String, cambios: any): Observable<IListaEspera> {
+        debugger;
+        return this.server.post(this.listaEsperaUrl + '/IdAgenda/' + id, cambios);
+    }
+
     getById(id: String): Observable<IListaEspera> {
         return this.server.get(this.listaEsperaUrl + '/' + id, null);
+    }
+
+    patch(id: String, cambios: any): Observable<IListaEspera> {
+        console.log(cambios);
+        return this.server.patch(this.listaEsperaUrl + '/' + id, cambios);
     }
 
     save(listaEspera: IListaEspera): Observable<IListaEspera> {
