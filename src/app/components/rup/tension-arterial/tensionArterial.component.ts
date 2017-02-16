@@ -13,7 +13,7 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 export class TensionArterialComponent implements OnInit {
 
     @Input('paciente') paciente: any;
-
+    @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -24,21 +24,34 @@ export class TensionArterialComponent implements OnInit {
     // tipos de prestaciones a utilizar
     prestacionDiastolica: any;
     prestacionSistolica: any;
+    valor = {
+        tensionDiastolica: null,
+        tensionSistolica: null,
+    };
 
     ngOnInit() {
-        // debugger;
-        this.paciente = {
-            'id': '588257bce70a44138c44a002',
-            'documento': '93155329',
-            'estado': 'validado',
-            'nombre': 'SERGIO ECIO JUAN',
-            'apellido': 'GIORGIS',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': '02/11/1993',
-            'estadoCivil': '',
-            'activo': true
+        if (this.datosIngreso){
+            if(this.datosIngreso.tensionDiastolica){
+            this.valor.tensionDiastolica = this.datosIngreso.tensionDiastolica;
         }
+          if(this.datosIngreso.tensionSistolica){
+            this.valor.tensionSistolica = this.datosIngreso.tensionSistolica;
+            }
+        }
+
+        // debugger;
+        // this.paciente = {
+        //     'id': '588257bce70a44138c44a002',
+        //     'documento': '93155329',
+        //     'estado': 'validado',
+        //     'nombre': 'SERGIO ECIO JUAN',
+        //     'apellido': 'GIORGIS',
+        //     'sexo': 'masculino',
+        //     'genero': 'masculino',
+        //     'fechaNacimiento': '02/11/1993',
+        //     'estadoCivil': '',
+        //     'activo': true
+        // }
 
         this.prestacionDiastolica = {
             '_id': '5890730a0c4eccd05d2a7a43',

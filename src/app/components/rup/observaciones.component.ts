@@ -6,7 +6,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
     templateUrl: 'observaciones.html'
 })
 export class ObservacionesComponent {
-
+    @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -14,7 +14,10 @@ export class ObservacionesComponent {
     observaciones: Number = null;
     mensaje: String = null;
 
-    ngOnInit() {
+  ngOnInit() {
+        if (this.datosIngreso) {
+            this.observaciones = this.datosIngreso;
+        }
     }
 
     devolverValores() {

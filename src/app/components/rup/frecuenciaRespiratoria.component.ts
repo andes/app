@@ -6,7 +6,7 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
     templateUrl: 'frecuenciaRespiratoria.html'
 })
 export class FrecuenciaRespiratoriaComponent{
-
+    @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -16,6 +16,9 @@ export class FrecuenciaRespiratoriaComponent{
 
 
     ngOnInit() {
+        if (this.datosIngreso) {
+            this.frecuenciaRespiratoria = this.datosIngreso;
+        }
     }
 
     devolverValores(){

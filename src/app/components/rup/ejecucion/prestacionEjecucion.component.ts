@@ -33,10 +33,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     paciente: IPaciente = null;
     showEvolucionar = false;
     showEvolTodo = false;
+    showValidar = false;
     problemaEvolucionar: any;
     data: Object = {};
-    prestacionSignosVitales: any;
-    prestacionTalla: any;
+    // prestacionSignosVitales: any;
+    // prestacionTalla: any;
 
     // objeto para crear una nueva prestacion y asignar al array de prestaciones futuras
     nuevaPrestacion: any;
@@ -58,31 +59,31 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     ngOnInit() {
         // debugger;
-        this.prestacionSignosVitales = {
-            'id': '5891e543159eb45d71236e52',
-            'key': 'signosVitales',
-            'nombre': 'Signos Vitales',
-            'autonoma': false,
-            'activo': true,
-            'ejecucion': [
-                '589073500c4eccd05d2a7a44',
-                '5890c8aa7358af394f6d52d6',
-                '5890c8f77358af394f6d52d7',
-                '5890c92c7358af394f6d52d8',
-                '5890c93f7358af394f6d52d9',
-                '5890ca047358af394f6d52dc'
-            ],
-            'componente': 'rup/signos-vitales/signosVitales.component.ts'
-        };
+        // this.prestacionSignosVitales = {
+        //     'id': '5891e543159eb45d71236e52',
+        //     'key': 'signosVitales',
+        //     'nombre': 'Signos Vitales',
+        //     'autonoma': false,
+        //     'activo': true,
+        //     'ejecucion': [
+        //         '589073500c4eccd05d2a7a44',
+        //         '5890c8aa7358af394f6d52d6',
+        //         '5890c8f77358af394f6d52d7',
+        //         '5890c92c7358af394f6d52d8',
+        //         '5890c93f7358af394f6d52d9',
+        //         '5890ca047358af394f6d52dc'
+        //     ],
+        //     'componente': 'rup/signos-vitales/signosVitales.component.ts'
+        // };
 
-        this.prestacionTalla = {
-            'id': '5890c94d7358af394f6d52da',
-            'key': 'talla',
-            'nombre': 'Talla',
-            'autonoma': false,
-            'activo': true,
-            'componente': 'rup/talla.component.ts'
-        }
+        // this.prestacionTalla = {
+        //     'id': '5890c94d7358af394f6d52da',
+        //     'key': 'talla',
+        //     'nombre': 'Talla',
+        //     'autonoma': false,
+        //     'activo': true,
+        //     'componente': 'rup/talla.component.ts'
+        // }
         this.cargarDatosPrestacion();
     }
 
@@ -102,7 +103,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nombre: problema.tipoProblema.nombre
             };
         });
-        //console.log(this.prestacion);
+        console.log(this.prestacion);
     }
 
     buscarTipoPrestacion(event) {
@@ -115,7 +116,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // asignamos valores a la nueva prestacion
             this.nuevaPrestacion = {
                 idPrestacionOrigen: this.prestacion.id,
-                paciente: this.paciente.id,
+                paciente: this.prestacion.paciente.id,
                 solicitud: {
                     tipoPrestacion: this.nuevoTipoPrestacion,
                     fecha: new Date(),
@@ -269,7 +270,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // // asignamos valores a la nueva prestacion
         this.nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
-            paciente: this.paciente.id,
+            paciente: this.prestacion.paciente.id,
             solicitud: {
                 tipoPrestacion: tipoPrestacionActual,
                 fecha: new Date(),
@@ -318,5 +319,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+
+    validarPrestacion() {
+        this.showValidar = true;
+    }
 
 }
