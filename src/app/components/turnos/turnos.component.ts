@@ -39,7 +39,7 @@ export class TurnosComponent {
     eventosTurno(agenda: IAgenda, turno: any, event) {
         let btnClicked = event.currentTarget.id;
         let patch: any = {};
-debugger;
+
         if (btnClicked === 'cancelarTurno') {
             patch = {
                 'op': 'cancelarTurno',
@@ -68,7 +68,6 @@ debugger;
     }
 
     agregarPacienteListaEspera(agenda: any) {
-        debugger;
         let patch: any = {};
 
         patch = {
@@ -77,7 +76,7 @@ debugger;
             'pacientes': this.pacientesSeleccionados
         };
 
-        this.listaEsperaService.patch(agenda.id, patch).subscribe(resultado => agenda = resultado);
+        this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => agenda = resultado);
     }
 
     enviarSMS() {
