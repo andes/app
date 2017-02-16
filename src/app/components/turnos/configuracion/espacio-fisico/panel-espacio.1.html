@@ -1,0 +1,49 @@
+<plex-box>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th *ngFor="let espacio of espacios; let i=index">{{espacio.nombre}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">08:00</th>
+        <td rowspan="2" [ngClass]="{'hover':true, 'bg-success success': true}">Dr. Murakami</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">09:00</th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">10:00</th>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
+      </tr>
+      <tr>
+        <th scope="row">11:00</th>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
+      </tr>
+      <tr>
+        <th scope="row">12:00</th>
+        <td *ngFor="let espacio of espacios; let i=index"></td>
+      </tr>
+    </tbody>
+  </table>
+</plex-box>
