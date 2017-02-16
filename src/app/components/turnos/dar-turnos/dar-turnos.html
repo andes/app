@@ -12,7 +12,7 @@
               </plex-select>
             </div>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" label-field="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" labelField="nombre + ' ' + apellido"
                 (change)="filtrar()">
                 </plex-select>
             </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estado" (agenda-changed)="seleccionarAgenda($event)"></calendario>
+        <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estado" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
       </div>
     </div>
   </div>
@@ -121,7 +121,7 @@
           <div *ngIf="estadoT=='noSeleccionada'">
             <plex-box title="Ultimas Búsquedas">
               <div class="list-group">
-                <a *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBuqueda(i)">
+                <a *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
                     <div class="col-md-6" *ngIf="busqueda.prestacion"><label>Prestacion: &nbsp;</label> <span>{{busqueda.prestacion.nombre}} </span><br></div>
                     <div class="col-md-6" *ngIf="busqueda.profesional"><label>Profesional: &nbsp;</label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
@@ -202,30 +202,22 @@
                 <div class="col-md-12">
                   <div class="col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}}</div>
                   <div class="col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
-                  <!--<div class="col-md-12"><label>Teléfono: &nbsp;</label><input [(ngModel)]="paciente.telefono">-->
                   <div class="col-md-12">
                     <plex-phone label="Ingrese en número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono">
                     </plex-phone>
-                    <!--<plex-text [(ngModel)]="telefono" label="Teléfono" (change)="cambiarTelefono()"></plex-text>-->
                   </div>
                   <div class="col-md-6"><label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}</div>
                   <div class="col-md-6"><label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}</div>
                   <div class="col-md-12"><br><label>Profesionales: </label>
                     <div *ngFor="let profesional of agenda.profesionales let i=index">
-                      <div *ngIf="i<agenda.profesionales.length-1">
-                        {{profesional.nombre}} {{profesional.apellido}},
-                      </div>
-                      <div *ngIf="i>=agenda.profesionales.length-1">
-                        {{profesional.nombre}} {{profesional.apellido}}
-                      </div>
+                      <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}},</div>
+                      <div *ngIf="i>=agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
                     </div>
                   </div>
                   <div class="col-md-12">
                     <br>
                     <label>Prestación: </label>
-                    <div *ngIf="turno.prestacion">
-                      {{turno.prestacion.nombre}}
-                    </div>
+                    <div *ngIf="turno.prestacion">{{turno.prestacion.nombre}}</div>
                     <div *ngIf="!turno.prestacion">
                       <plex-select [(ngModel)]="turnoPrestacion" [data]="bloque.prestaciones">
                       </plex-select>

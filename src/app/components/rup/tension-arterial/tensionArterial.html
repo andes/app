@@ -1,8 +1,19 @@
 <div class="row">
+<<<<<<< HEAD
   <div class="col-md-6">
     <rup-tension-diastolica [paciente]="paciente" [tipoPrestacion]="prestacionDiastolica" [datosIngreso]="valor.tensionDiastolica"  (evtData)="onReturn($event, 'tensionDiastolica')"></rup-tension-diastolica>
   </div>
   <div class="col-md-6">
     <rup-tension-sistolica [paciente]="paciente" [tipoPrestacion]="prestacionSistolica" [datosIngreso]="valor.tensionSistolica"  (evtData)="onReturn($event, 'tensionSistolica')"></rup-tension-sistolica>
   </div>
+=======
+    <div class="col-md-6">
+        <rup-tension-diastolica [paciente]="paciente" [tipoPrestacion]="prestacionDiastolica" (evtData)="onReturn($event, 'tensionDiastolica')"></rup-tension-diastolica>
+    </div>
+    <div class="col-md-6">
+        <rup-tension-sistolica [paciente]="paciente" [tipoPrestacion]="prestacionSistolica" (evtData)="onReturn($event, 'tensionSistolica')"></rup-tension-sistolica>
+    </div>
+>>>>>>> 0a68ebafd9c4686305f7f8e13310d0611420596a
 </div>
+
+<p>{{data | json}}</p>

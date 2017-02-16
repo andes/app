@@ -1,4 +1,4 @@
-export interface ITipoPrestacion{
+export interface ITipoPrestacion {
     id: String,
     key: String,
     nombre: String,
@@ -13,5 +13,8 @@ export interface ITipoPrestacion{
     solicitud: [ITipoPrestacion],
     ejecucion: [ITipoPrestacion],
     activo: Boolean,
-    componente: String
+    componente: {
+        nombre: String,
+        ruta: String
+    }
 }

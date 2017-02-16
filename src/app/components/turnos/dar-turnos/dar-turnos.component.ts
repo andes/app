@@ -10,6 +10,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Component, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
+moment.locale('en');
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -74,8 +75,6 @@ export class DarTurnosComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
         let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
-        // this.telefono = contacto.valor;
-        console.log('contacto ', contacto[0].valor);
         this.telefono = contacto[0].valor;
     }
 
@@ -113,10 +112,19 @@ export class DarTurnosComponent implements AfterViewInit {
             this.opciones.prestacion = null;
             this.opciones.profesional = null;
         }
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; this.indice = -1; });
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            this.agendas = agendas; this.indice = -1;
+            this.agendas.sort(
+                function (a, b) {
+                    return a.horaInicio.getTime() - b.horaInicio.getTime()
+                        || b.turnosDisponibles - a.turnosDisponibles;
+                }
+            );
+        });
     }
 
     seleccionarAgenda(agenda) {
+        console.log('agenda ', agenda);
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
         this.alternativas = [];
@@ -136,13 +144,14 @@ export class DarTurnosComponent implements AfterViewInit {
         );
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
+            debugger
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
             if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
                 this.prestaciones = '';
                 if (this.agenda.prestaciones.length > 1) {
-                    this.agenda.prestaciones.forEach((prestacion, ind) => {
-                        this.prestaciones = this.prestaciones ? this.prestaciones + '\n' + prestacion.nombre : prestacion.nombre;
+                    this.agenda.prestaciones.forEach((cadaprestacion, ind) => {
+                        this.prestaciones = this.prestaciones ? this.prestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
                     });
                 } else {
                     this.prestaciones = this.agenda.prestaciones[0].nombre;
@@ -156,7 +165,7 @@ export class DarTurnosComponent implements AfterViewInit {
                         'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                         'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : null,
                         'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
-                    }).subscribe(alternativas => { this.alternativas = alternativas; this.indice = -1; this.reqfiltros = false; });
+                    }).subscribe(alternativas => { this.alternativas = alternativas; this.reqfiltros = false; });
                 } else {
                     this.reqfiltros = true;
                 }
@@ -175,7 +184,7 @@ export class DarTurnosComponent implements AfterViewInit {
         this.estadoT = 'confirmacion';
     }
 
-    seleccionarBuqueda(indice: number) {
+    seleccionarBusqueda(indice: number) {
         this.opciones.prestacion = this.busquedas[indice].prestacion;
         this.opciones.profesional = this.busquedas[indice].profesional;
         this.actualizar('');
@@ -186,6 +195,7 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     verAgenda(suma: boolean) {
+        debugger;
         if (this.agendas) {
             let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (condiciones) {
@@ -278,13 +288,11 @@ export class DarTurnosComponent implements AfterViewInit {
         this.showDarTurnos = true;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
-        // TODO: recorrer contactos para buscar el teléfono
     }
 
     onCancel() {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
-        // if (this.estadoT === 'noTurnos' && !this.reqfiltros && this.alternativas.length === 0) {
         let datosPrestacion = {
             id: '581792ad3d52685d1ecdaa05', // this.opciones.prestacion.id,
             nombre: 'Cardiología adultos'// this.opciones.prestacion.nombre

@@ -7,7 +7,7 @@
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" [required]="true" placeholder="Ingrese nombre...">
+                  <plex-text label="Nombre" formControlName="nombre" [required]="true" placeholder="Ingrese nombre..." >
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -49,7 +49,7 @@
             <plex-box type="warning" title="Contacto" formArrayName="contacto">
               <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
                 <div class="panel-heading">
-                  <div align="right" *ngIf="createForm.controls.contacto.controls.length > 1" (click)="removeContacto(i)">
+                  <div align="right" *ngIf="createForm.controls.contacto.controls.length > 0" (click)="removeContacto(i)">
                     <i class="glyphicon glyphicon-remove-circle"></i>
                   </div>
                 </div>
@@ -60,8 +60,8 @@
                       </plex-select>
                     </div>
                     <div class="col-md-4">
-                      <plex-phone label="Dato:" formControlName="valor">
-                      </plex-phone>
+                      <plex-text label="Dato:" formControlName="valor">
+                      </plex-text>
                     </div>
                     <div class="col-md-2">
                       <plex-int label="Orden:" formControlName="ranking">
@@ -103,15 +103,15 @@
                     <div formGroupName="ubicacion">
                       <div class="row">
                         <div class="col-md-4">
-                          <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
+                          <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:" labelField="nombre">
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
+                          <plex-select formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais) " label="Provincia:" labelField="nombre">
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:">
+                          <plex-select formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:" labelField="nombre">
                           </plex-select>
                         </div>
                       </div>
@@ -197,7 +197,7 @@
                       </plex-text>
                     </div>
                   </div>
-                  <div *ngIf=familiaresPacientes class="alert alert-warning" role="alert">
+                  <div *ngIf="familiaresPacientes.length > 0" class="alert alert-warning" role="alert">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">info</span> Quiza quiso decir
                   </div>
@@ -226,17 +226,12 @@
       <plex-box type="info" title="Checkout">
         <div class="row">
           <div class="col-md-4">
-            <div class="row">
               <div class="col-md-4"><h4>{{createForm.value.nombre}}</h4></div>
-            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <div class="row">
               <div class="col-md-4"><h4><strong>{{createForm.value.apellido}}</strong></h4></div>
-            </div>
-
           </div>
         </div>
         <div class="row">
@@ -244,7 +239,6 @@
             <h4>D.N.I. {{createForm.value.documento}} </h4>
           </div>
         </div>
-
         <div class="row">
           <div class="col-md-6">
             <label>Fecha de Nacimiento</label>
@@ -253,7 +247,7 @@
             </div>
           </div>
         </div>
-        <div class="row"></div>
+        <br>
         <div class="row">
           <div class="col-md-6">
             <label>Sexo</label>
@@ -262,7 +256,6 @@
             </div>
           </div>
         </div>
-
       </plex-box>
       <plex-box>
         <div class="row">

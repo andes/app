@@ -11,16 +11,15 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 @Component({
-    selector: 'rup-prestacionesPendientes',
-    templateUrl: 'pendientes.html'
+    selector: 'rup-puntoInicio',
+    templateUrl: 'puntoInicio.html'
 })
-export class PrestacionesPendientesComponent implements OnInit {
+export class PuntoInicioComponent implements OnInit {
 
     //@Input() profesional: any;
 
     //@Input() tipoPrestacione: any;
     tipoPrestacion: ITipoPrestacion; // será un IPaciente
-
 
     // resultados a devolver
     data: Object = {};
@@ -32,7 +31,7 @@ export class PrestacionesPendientesComponent implements OnInit {
 
     enEjecucion = false;
 
-    constructor(private servicioPrestacion: PrestacionPacienteService, 
+    constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
         private router: Router) {
 
@@ -41,18 +40,20 @@ export class PrestacionesPendientesComponent implements OnInit {
 
     ngOnInit() {
         // debugger;
-
         this.tipoPrestacion = {
             id: "5894657e7358af394f6d52e2",
             key: "consultaGeneralClinicaMedica",
-            nombre: "Consulta general de clínica médica",
-            descripcion: "Consulta general de clínica médica",
+            nombre: "Consulta de medicina general",
+            descripcion: "Consulta de medicina general",
             codigo: null,
             autonoma: true,
             solicitud: null,
             ejecucion: null,
             activo: true,
-            componente: ""
+            componente: {
+                nombre: "",
+                ruta: ""
+            }
         }
 
         this.loadPrestaciones();
@@ -71,6 +72,11 @@ export class PrestacionesPendientesComponent implements OnInit {
         this.showPendientes = false;
 
         this.showDashboard = true;
+    }
+
+    onReturn() {
+        this.showPendientes = true;
+        this.showDashboard = false;
     }
 
 }

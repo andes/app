@@ -1,5 +1,5 @@
-import { DashboardComponent } from './components/rup/dashboard.component';
-import { PrestacionesPendientesComponent } from './components/rup/prestacion/pendientes.component';
+import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
+import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -38,8 +38,8 @@ const appRoutes: Routes = [
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
   { path: 'gestor_agendas', component: GestorAgendasComponent },
   { path: 'panelEspacio', component: PanelEspacioComponent },
-  { path: 'rup', component: PrestacionesPendientesComponent },
-  { path: 'rup/dashboard/:id', component: DashboardComponent },
+  { path: 'rup', component: PuntoInicioComponent },
+  { path: 'rup/dashboard/:id', component: ResumenComponent },
   // { path: 'rup/:id?*/', component: DashboardComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
