@@ -114,7 +114,7 @@
                 </div>
             </fieldset>-->
                 <fieldset *ngIf="prestacion.paciente">
-                    <legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>
+                    <!--<legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>-->
                     <div *ngFor="let tipoPrestacion of prestacion.solicitud.tipoPrestacion.ejecucion">
                         <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
                         </rup>
