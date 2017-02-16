@@ -1,27 +1,14 @@
-<!--<table class="table table-striped">
+<table class="table table-striped">
   <tr>
     <th>#</th>
     <th *ngFor="let consultorio of listaConsultorios; let i=index">{{consultorio}}</th>
   </tr>
   <tr *ngFor="let horario of horarios">
     <td>{{horario.hora}}</td>
-    
-    <td *ngFor="let medico of horario.lista">
-      <div>{{medico}}</div>
-    </td>
-  </tr>
-</table>-->
-<!--<td [attr.rowspan] ="filas">pepe</td>-->
-<table class="table table-striped">
-  <tr>
-    <th>#</th>
-    <th *ngFor="let consultorio of listaConsultorios; let i=index">{{consultorio}}</th>
-  </tr>
-  <tr *ngFor="let consultorio of consultorios">
-    <td>{{consultorio.hora}}</td>
-    
-    <td *ngFor="let medico of consultorio.lista">
-      <div>{{medico}}</div>
+    <td *ngFor="let agenda of horario.lista">
+      <div *ngIf="agenda.rows>0">{{agenda.medico}}</div>
     </td>
   </tr>
 </table>
+<!--<td [attr.rowspan] ="filas">pepe</td>
+ *ngIf="!medico.saltear"-->
