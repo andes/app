@@ -64,7 +64,7 @@ export class PesoComponent {
             if(this.peso < 9,53){ //p3
                 this.mensaje= 'Bajo Peso'
             }
-            if(this.peso < 15,09){ //p97
+            if(this.peso < 15,9){ //p97
                 this.mensaje= 'Sobrepeso'
             }
         }
