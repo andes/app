@@ -120,7 +120,6 @@ export class GestorAgendasComponent implements OnInit {
     verAgenda(agenda) {
         this.ag = agenda;
         this.vistaAgenda = agenda;
-        debugger;
 
         let index;
 
