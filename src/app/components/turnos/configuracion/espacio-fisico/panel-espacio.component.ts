@@ -41,7 +41,7 @@ export class PanelEspacioComponent implements OnInit {
         // if (this.agenda.rows === 0) {
         //     this.agenda.rows = this.agenda.fin.diff(this.agenda.inicio, 'm') / this.unidad;
         // }
-        
+
         // this.inicio = new Date(this.fechaActual.setHours(8, 0, 0, 0));
         // let inicioM = moment(this.inicio);
         // this.fin = new Date(this.fechaActual.setHours(13, 0, 0, 0));
@@ -99,7 +99,7 @@ export class PanelEspacioComponent implements OnInit {
             fechaHasta: this.fecha.setHours(23, 59, 0, 0),
         };
         this.serviceAgenda.get(params).subscribe(
-            agendas => { this.agendas = agendas; this.llenarConsultorios();},
+            agendas => { this.agendas = agendas; this.llenarConsultorios(); },
             err => {
                 if (err) {
                     console.log(err);
@@ -109,39 +109,47 @@ export class PanelEspacioComponent implements OnInit {
 
     llenarConsultorios() {
         console.log('Agendas ', this.agendas);
-        this.agenda = this.agendas[0];
-        if (!this.agenda.rows) {
-            this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
-        }
-        this.agenda.saltear = false;
-        this.agenda.medico = 'Haruki Murakami';
-        this.agenda.consultorio = 'consultorio 2';
+        // this.agenda = this.agendas[0];
+        // if (!this.agenda.rows) {
+        //     this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
+        // }
+        // this.agenda.saltear = false;
         this.inicio = new Date(this.fecha.setHours(8, 0, 0, 0));
         let inicioM = moment(this.inicio);
-        this.fin = new Date(this.fecha.setHours(13, 0, 0, 0));
+        this.fin = new Date(this.fecha.setHours(20, 0, 0, 0));
         let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
         let cantidadBloques = diferencia / this.unidad;
-        debugger
+
+
         for (let j = 0; j < cantidadBloques; j++) {
-            let lista = [];
-            for (let i = 0; i < this.listaConsultorios.length; i++) {
-                if (inicioM.isBetween(this.agenda.horaInicio, this.agenda.horaFin, null, '[)') &&
-                    this.agenda.consultorio === this.listaConsultorios[i]) {
-                    if (this.agenda.rows > 1 && this.agenda.saltear === false) {
-                        lista.push(this.agenda);
-                        this.agenda.saltear = true;
-                    }
-                } else {
-                    lista.push('');
+            this.agendas.forEach((agenda, index) => {
+                this.agenda = agenda;
+                if (!this.agenda.rows) {
+                    this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
                 }
-            }
-            let elemento = {
-                hora: inicioM.format('hh:mm'),
-                lista: lista
-            };
-            this.horarios.push(elemento);
-            inicioM.add(this.unidad, 'm');
+                this.agenda.saltear = false;
+                let lista = [];
+                for (let i = 0; i < this.espacios.length; i++) {
+                    if (inicioM.isBetween(this.agenda.horaInicio, this.agenda.horaFin, null, '[)') &&
+                        this.agenda.espacioFisico._id === this.espacios[i].id) {
+                        if (this.agenda.rows > 1 && this.agenda.saltear === false) {
+                            lista.push(this.agenda);
+                            this.agenda.saltear = true;
+                        }
+                    } else {
+                        lista.push('');
+                    }
+                }
+                let elemento = {
+                    hora: inicioM.format('HH:mm'),
+                    lista: lista
+                };
+                this.horarios.push(elemento);
+                inicioM.add(this.unidad, 'm');
+            });
+
         }
+
         console.log('lista', this.horarios);
     }
 
