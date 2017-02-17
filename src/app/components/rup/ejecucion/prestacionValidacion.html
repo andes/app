@@ -30,7 +30,7 @@
                                 <h5 class="msg-title">Prestaciones Ejecutadas</h5>
                                 <div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">
                                     <div class="col-md-10">
-                                        <rup #rup [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente">
+                                        <rup #rup [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="datoPrestacion.ejecucion.evoluciones[0].valores[0]">
                                         </rup>
                                     </div>
                                     <!--<br> {{problema.id }} <br> {{datoPrestacion.ejecucion.evoluciones[0].valores | json }}-->

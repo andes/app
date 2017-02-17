@@ -25,6 +25,11 @@
     </div>
 </div>-->
 <div class="row">
+    <div class="col-md-12">
+        <h4> <strong>{{tipoPrestacion.nombre}}</strong></h4>
+    </div>
+</div>
+<div class="row">
     <div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
         <div *ngFor="let tp of tipoPrestacion.ejecucion">
             <div class="col-md-12">
@@ -34,6 +39,3 @@
         </div>
     </div>
 </div>
-<p>
-    {{data | json}}
-</p>
