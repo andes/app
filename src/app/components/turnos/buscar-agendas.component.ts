@@ -32,20 +32,23 @@ export class BuscarAgendasComponent implements OnInit {
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
-            fechaDesde: [new Date()],
-            fechaHasta: [new Date()],
+            fechaDesde: new Date(),
+            fechaHasta: new Date(),
             prestaciones: [''],
             profesionales: [''],
             espacioFisico: [''],
         });
 
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+            value.fechaHasta.setHours(23);
+            value.fechaHasta.setMinutes(59);
+            value.fechaHasta.setSeconds(59);
             this.serviceAgenda.get({
                 fechaDesde: value.fechaDesde,
                 fechaHasta: value.fechaHasta,
                 idPrestacion: value.prestaciones.id,
                 idProfesional: value.profesionales.id,
-                idEspacioFisico : value.espacioFisico.id
+                idEspacioFisico: value.espacioFisico.id
             }).subscribe(
                 agendas => { this.agendas = agendas; },
                 err => {
