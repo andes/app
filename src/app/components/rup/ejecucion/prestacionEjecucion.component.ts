@@ -81,6 +81,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nombre: problema.tipoProblema.nombre
             };
         });
+
         console.log(this.prestacion);
 
         // agregamos los ids de las prestaciones al array de prestaciones en ejecucion 
@@ -252,9 +253,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Evolucionar prestacion 
 
-    // agregarPrestacion(){
-        
-    // }
+    onReturnComponent(datos, tipoPrestacionActual) {
+        console.log("dato del componente", datos);
+        this.data[tipoPrestacionActual.key] = datos;
+    }
 
     evolucionarPrestacion(tipoPrestacionActual) {
         // console.log("en confirmacion", this.data[tipoPrestacionActual.key]);
