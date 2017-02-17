@@ -108,12 +108,7 @@ export class PanelEspacioComponent implements OnInit {
     }
 
     llenarConsultorios() {
-        console.log('Agendas ', this.agendas);
-        // this.agenda = this.agendas[0];
-        // if (!this.agenda.rows) {
-        //     this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
-        // }
-        // this.agenda.saltear = false;
+        this.horarios = [];
         this.inicio = new Date(this.fecha.setHours(8, 0, 0, 0));
         let inicioM = moment(this.inicio);
         this.fin = new Date(this.fecha.setHours(20, 0, 0, 0));
@@ -126,12 +121,12 @@ export class PanelEspacioComponent implements OnInit {
             let lista = [];
             for (let i = 0; i < this.espacios.length; i++) {
                 let bandera = false;
+                // this.agenda.saltear = false;
                 for (let k = 0; k < this.agendas.length; k++) {
                     this.agenda = this.agendas[k];
                     if (!this.agenda.rows) {
                         this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
                     }
-                    this.agenda.saltear = false;
                     if (inicioM.isBetween(this.agenda.horaInicio, this.agenda.horaFin, null, '[)') &&
                         this.agenda.espacioFisico._id === this.espacios[i].id) {
                         bandera = true;
@@ -144,7 +139,7 @@ export class PanelEspacioComponent implements OnInit {
                     // }
                 };
                 if (bandera) {
-                    if (this.agenda.rows > 1 && this.agenda.saltear === false) {
+                    if (this.agenda.rows > 1 && !this.agenda.saltear) {
                         lista.push(this.agenda);
                         this.agenda.saltear = true;
                     }
