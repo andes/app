@@ -21,7 +21,7 @@ export class SignosVitalesComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') tipoPrestacion: ITipoPrestacion;
+    @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: any;
     // paciente: any; // será un IPaciente
 
@@ -58,37 +58,40 @@ export class SignosVitalesComponent implements OnInit {
     ngOnInit() {
         debugger;
         console.log('Signos Vitales Input: ', this.tipoPrestacion);
+        this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
+            this.tipoPrestacion = tipoPrestacion;
+        });
+
+
         if (this.datosIngreso) {
-            if (this.datosIngreso.frecuenciaCardiaca) {
-                this.valor.frecuenciaCardiaca = this.datosIngreso.frecuenciaCardiaca;
+            if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca) {
+                this.valor.frecuenciaCardiaca = this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca;
             }
-            if (this.datosIngreso.frecuenciaRespiratoria) {
-                this.valor.frecuenciaRespiratoria = this.datosIngreso.frecuenciaRespiratoria;
+            if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria) {
+                this.valor.frecuenciaRespiratoria = this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria;
             }
 
-            if (this.datosIngreso.peso) {
-                this.valor.peso = this.datosIngreso.peso;
+            if (this.datosIngreso[this.tipoPrestacion.key].peso) {
+                this.valor.peso = this.datosIngreso[this.tipoPrestacion.key].peso;
             }
-            if (this.datosIngreso.saturacionOxigeno) {
-                this.valor.saturacionOxigeno = this.datosIngreso.saturacionOxigeno;
+            if (this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno) {
+                this.valor.saturacionOxigeno = this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno;
             }
-            if (this.datosIngreso.temperatura) {
-                this.valor.temperatura = this.datosIngreso.temperatura;
+            if (this.datosIngreso[this.tipoPrestacion.key].temperatura) {
+                this.valor.temperatura = this.datosIngreso[this.tipoPrestacion.key].temperatura;
             }
-            if (this.datosIngreso.tensionArterial) {
-                this.valor.tensionArterial = this.datosIngreso.tensionArterial;
+            if (this.datosIngreso[this.tipoPrestacion.key].tensionArterial) {
+                this.valor.tensionArterial = this.datosIngreso[this.tipoPrestacion.key].tensionArterial;
             }
-            if (this.datosIngreso.observacion) {
-                this.valor.observacion = this.datosIngreso.observacion;
+            if (this.datosIngreso[this.tipoPrestacion.key].observacion) {
+                this.valor.observacion = this.datosIngreso[this.tipoPrestacion.key].observacion;
             }
 
 
 
         }
 
-        this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
-            this.tipoPrestacion = tipoPrestacion;
-        });
+
 
 
         /*
