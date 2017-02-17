@@ -92,7 +92,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarDatosPrestacion() {
-        debugger;
         this.listaProblemas = this.prestacion.solicitud.listaProblemas;
         this.paciente = this.prestacion.paciente;
 
@@ -103,7 +102,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nombre: problema.tipoProblema.nombre
             };
         });
-        console.log(this.prestacion);
+        console.log("Prestacion a ejecutar", this.prestacion);
     }
 
     buscarTipoPrestacion(event) {
@@ -259,8 +258,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // }
     }
 
-    onReturnComponente(datos, tipoPrestacionActual) {
-
+    onReturnComponent(datos, tipoPrestacionActual) {
         console.log("dato del componente", datos);
         this.data[tipoPrestacionActual.key] = datos;
     }

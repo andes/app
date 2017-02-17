@@ -113,10 +113,11 @@
                     </div>
                 </div>
             </fieldset>-->
-                <fieldset *ngIf="prestacion.paciente">
-                    <!--<legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>-->
+
+                <fieldset *ngIf="prestacion.solicitud">
+                    <legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>
                     <div *ngFor="let tipoPrestacion of prestacion.solicitud.tipoPrestacion.ejecucion">
-                        <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
+                        <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponent($event,tipoPrestacion)">
                         </rup>
                         <div class="row">
                             <div class="col-md-12">
@@ -126,6 +127,7 @@
                         <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(tipoPrestacion)" class="pull-right"></plex-button>
                     </div>
                 </fieldset>
+
             </plex-box>
             <plex-box type="primary" title="Planes">
                 <div class="row">
