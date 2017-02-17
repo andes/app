@@ -43,10 +43,10 @@
             <div class="col-md-6 pull-left">
                 <plex-button title="Evolucionar los Problemas" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
             </div>
-            <div class="col-lg-6 pull-right">
+            <div class="col-lg-6">
 
 
-                <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
+                <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" class="pull-right"></plex-button>
 
                 <plex-button title="Iniciar prestación" label="Iniciar" type="success"  (click)="iniciarPrestacion()"
                     *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
