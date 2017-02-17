@@ -42,16 +42,9 @@
         <rup-frecuencia-respiratoria [paciente]="paciente" [tipoPrestacion]="prestacionFrecuenciaRespiratoria" (evtData)="onReturn($event, 'prestacionFrecuenciaRespiratoria')"></rup-frecuencia-respiratoria>
     </div>
 </div>
-<div class="row panel">
+<div class="row ">
     <div class="col-md-12">
         <rup-tension-arterial [paciente]="paciente" [tipoPrestacion]="prestacionTensionArterial" (evtData)="onReturn($event, 'prestacionTensionArterial')"></rup-tension-arterial>
 
     </div>
 </div>
-{{data | json }}
-<!--<div class="row">
-    <div class="col-md-12">
-      <rup-observaciones [paciente]="paciente" [tipoPrestacion]="prestacionObservacion" (evtData)="onReturn($event, 'prestacionObservacion')"></rup-observaciones>
-    </div>
-  </div>
-  -->
