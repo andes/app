@@ -50,6 +50,8 @@ export class PacienteSearchComponent implements OnInit {
   pacienteScaneado: any = {};
   pacientesLista: Array < any > = new Array < any > ();
   fechaActual: Date = new Date();
+  cantPacientesValidados:number = 0;
+  cantPacientesFallecidos: number = 0;
 
 
   constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
@@ -63,7 +65,9 @@ export class PacienteSearchComponent implements OnInit {
     this.modeloSlide = {
       activo: false
     };
-
+    
+    this.inicializaPanelInformacion();
+    
     this.resultados$ = this.searchText
       .valueChanges
       .map((value: any) => value ? value.trim() : '') // ignore spaces
@@ -159,6 +163,7 @@ export class PacienteSearchComponent implements OnInit {
     return parse;
   }
 
+
   parseDocument(datosDni) {
 
     this.pacientesScan = true;
@@ -217,6 +222,22 @@ export class PacienteSearchComponent implements OnInit {
       this.nuevoPaciente = false;
 
     this.selectedPaciente = paciente;
+  }
+
+  inicializaPanelInformacion(){
+    
+    /*todas las queries que irian en el panel */
+
+     this.pacienteService.getConsultas("validados")
+       .subscribe(resultado => {
+                  this.cantPacientesValidados = resultado
+                });
+
+    this.pacienteService.getConsultas("fallecidos")
+      .subscribe(resultado => {
+        this.cantPacientesFallecidos = resultado
+      })
+
   }
 
 }
