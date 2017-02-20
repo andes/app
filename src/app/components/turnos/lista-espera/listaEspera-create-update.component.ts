@@ -32,8 +32,8 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
     };
     createForm: FormGroup;
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
-    paciente: any = {
-        id: '57f66f2076e97c2d18f1808b',
+    paciente: IPaciente;
+        /*= { id: '57f66f2076e97c2d18f1808b',
         documento: '20567899',
         apellido: 'García',
         nombre: 'Pablo',
@@ -43,8 +43,9 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
             ranking: 1,
             activo: true
         }]
-    };
+    };*/
     pacientesSearch: boolean = false;
+    checkout: boolean = false;
 
     constructor(
         public formBuilder: FormBuilder,
@@ -104,5 +105,11 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
         operacion = this.listaEsperaService.post(listaEspera);
         operacion.subscribe(resultado => this.data.emit(resultado));
         return false;
+    }
+
+    onReturn(objPaciente: IPaciente): void {
+        this.paciente = objPaciente;
+        this.pacientesSearch = false;
+        this.checkout = true;
     }
 }
