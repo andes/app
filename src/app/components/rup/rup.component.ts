@@ -1,7 +1,7 @@
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from './../../interfaces/IPaciente';
-import { TipoPrestacionService } from './../../services/rup/tipoPrestacion.service';
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { PacienteService } from './../../services/paciente.service';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
@@ -25,12 +25,18 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() paciente: IPaciente;
     @Input() tipoPrestacion: ITipoPrestacion;
+    @Input() datosIngreso: Object;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     pacientePrestacion: any = {};
     // resultados a devolver
     //ejecucion: Object[] = [];
-    data: Object = {};
+    data: any = {
+        valor: {},
+        mensaje: {
+            texto: "",
+        },
+    };
 
     // Componente a cargar
     private componentContainer: any;
@@ -114,7 +120,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // tslint:disable-next-line:no-console
-        console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
+        // console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
 
         // Buscamos la prestación con key de "Signos Vitales"
         // this.tipoPrestacionService.get({ key: key }).subscribe(resultado => {
@@ -125,32 +131,47 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
             p = prestacion;
             return p.nombre === this.tipoPrestacion.componente.nombre;
         });
-
+        console.log("this.componentContainer: ", this.componentContainer);
         // Cargamos el componente
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
 
         // Creamos el componente
         this.componentReference = this.viewContainerRef.createComponent(componentFactory);
-
+        console.log("this.componentReference: ", this.componentReference);
         // Activamos la detección de cambios
-        this.componentReference.changeDetectorRef.detectChanges();
+
 
         // Agarramos la instancia
         let datosComponente = this.componentReference.instance;
 
         // tslint:disable-next-line:no-console
-        console.info('datosComponente: ', datosComponente);
+        // console.info('datosComponente: ', datosComponente);
 
         // Generamos valores de la ejecución
         // TODO: debe ser un array
-        let valores = {};
+        this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
+        this.componentReference.instance.paciente = this.paciente;
+        this.componentReference.instance.datosIngreso = this.datosIngreso;
+
+        this.componentReference.changeDetectorRef.detectChanges();
+
         let key = String(this.tipoPrestacion.key);
-        valores[key] = this.componentReference.instance.data;
+        //{ "valor": {}, "mensaje": { "texto": "" } }
+        // let valores = { valor: {}, mensaje: { "texto": "" } }
+        // valores = this.componentReference.instance.data;
+        // let salida = {};
+        // salida[key] = valores.valor;
+
+        console.info('datosComponente: ', datosComponente);
+
+        // this.data.mensaje = this.componentReference.instance.data.mensaje;
 
         datosComponente.evtData.subscribe(e => {
             // console.log("CAMBIOS");
             // console.log(e);
-            this.evtData.emit(valores);
+            this.evtData.emit(this.componentReference.instance.data);
+            //this.evtData.emit(valores);
+
         });
     }
 

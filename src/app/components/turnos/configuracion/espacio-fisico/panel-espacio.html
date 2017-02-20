@@ -1,14 +1,20 @@
-<table class="table table-striped">
-  <tr>
-    <th>#</th>
-    <th *ngFor="let consultorio of listaConsultorios; let i=index">{{consultorio}}</th>
-  </tr>
-  <tr *ngFor="let horario of horarios">
-    <td>{{horario.hora}}</td>
-    <td *ngFor="let agenda of horario.lista" [attr.rowspan] ="agenda.rows" [ngClass]="{'bg-success success': agenda.rows > 1}">
-      <div  *ngIf="agenda.rows>0">{{agenda.medico}}</div>
-    </td>
-  </tr>
-</table>
+<plex-box>
+  <plex-datetime type="date" [(ngModel)]="fecha" (change)="buscarAgendas()" name="fecha" label="Fecha">
+  </plex-datetime>
+  <table class="table table-borderer">
+    <tr>
+      <th>#</th>
+      <th *ngFor="let consultorio of espacios; let i=index">{{consultorio.nombre}}</th>
+    </tr>
+    <tr *ngFor="let horario of horarios">
+      <td>{{horario.hora}}</td>
+      <td *ngFor="let agenda of horario.lista" [attr.rowspan]="agenda.rows" style="vertical-align:middle;" [ngClass]="{'bg-success success': agenda.rows > 1}">
+        <div *ngIf="agenda.rows>0">
+          <div *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}}</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</plex-box>
 <!--<td [attr.rowspan] ="filas">pepe</td>
  *ngIf="!medico.saltear"-->

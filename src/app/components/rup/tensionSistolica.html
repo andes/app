@@ -1,11 +1,2 @@
-<plex-int placeholder="..." [(ngModel)]="tensionSistolica" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300"
-(change)="devolverValores()"
->
+<plex-int placeholder="..." [(ngModel)]="tensionSistolica" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (change)="devolverValores()">
 </plex-int>
-
-<p *ngIf="mensaje">
-    {{mensaje}}
-</p>
-<pre>
-{{data | json}}
-</pre> 

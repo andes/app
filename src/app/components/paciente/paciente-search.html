@@ -1,174 +1,177 @@
-<div class="col-sm-12" *ngIf="!showcreate">
-  <div class="row">
-    <div class="col-md-7">
-      <plex-box type="info" title="Búsqueda de Pacientes">
-        <div class="col-sm-11">
-          <div class="row">
-            <div class="col-md-11" *ngIf="!pacientesSearch">
-              <div class="form-group">
-                <!--<input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">-->
-                <input [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
+<div class="row">
+  <div class="col-sm-12" *ngIf="!showcreate">
+    <div class="row">
+      <div class="col-md-7">
+        <plex-box type="info" title="Búsqueda de Pacientes">
+          <div class="col-sm-11">
+            <div class="row">
+              <div class="col-md-11" *ngIf="!pacientesSearch">
+                <div class="form-group">
+                  <!--<input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">-->
+                  <input [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
+                </div>
+              </div>
+              <div class="col-md-11" *ngIf="pacientesSearch">
+                <form [formGroup]="searchForm">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <plex-int label="DNI" formControlName="documento" placeholder="Ingresar DNI...">
+                      </plex-int>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
+                      </plex-text>
+                    </div>
+                    <div class="col-md-4">
+                      <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
+                      </plex-text>
+                    </div>
+                    <br>
+                    <div class="col-md-4">
+                      <plex-button icon="account-search" title="buscar" label="Buscar" type="default" (click)="findPacientes()"></plex-button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-sm-1">
+                <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
               </div>
             </div>
-            <div class="col-md-11" *ngIf="pacientesSearch">
-              <form [formGroup]="searchForm">
-                <div class="row">
-                  <div class="col-md-4">
-                    <plex-int label="DNI" formControlName="documento" placeholder="Ingresar DNI...">
-                    </plex-int>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
-                    </plex-text>
-                  </div>
-                  <div class="col-md-4">
-                    <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
-                    </plex-text>
-                  </div>
-                  <br>
-                  <div class="col-md-4">
-                    <plex-button icon="account-search" title="buscar" label="Buscar" type="default" (click)="findPacientes()"></plex-button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="col-sm-1">
-              <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
-            </div>
           </div>
-        </div>
-        <div>
-          <plex-button icon="account-plus" type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
-        </div>
-      </plex-box>
-      <div>
-      </div>
-      <div class="row">
-        <plex-loader *ngIf="active"></plex-loader>
-      </div>
-      <plex-box type="info" title="Pacientes Encontrados">
-        <!-- Search results -->
-        <div class="hover" *ngIf="!pacientesSearch">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Documento</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Fecha de Nacimiento</th>
-                  <th>Sexo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let paciente of resultados$ | async" (click)="mostrarPaciente(paciente)">
-                  <td>{{paciente.documento}}</td>
-                  <td>{{paciente.nombre| uppercase}}</td>
-                  <td>{{paciente.apellido| uppercase}}</td>
-                  <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                  <td>{{paciente.sexo}}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div>
+            <plex-button icon="account-plus" type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
           </div>
-        </div>
-        <div class="hover" *ngIf="pacientesSearch">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Documento</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Fecha de Nacimiento</th>
-                  <th>Sexo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let paciente of pacientesLista">
-                  <td>{{paciente.documento}}</td>
-                  <td>{{paciente.nombre| uppercase}}</td>
-                  <td>{{paciente.apellido| uppercase}}</td>
-                  <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                  <td>{{paciente.sexo}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </plex-box>
-      <div class="row">
-        <plex-box type="danger" *ngIf="!!mensaje">
-          {{mensaje}}
         </plex-box>
-      </div>
-    </div>
-    <!--fin de col-md-8 -->
-    <div class="col-md-5">
-      <plex-box type="info" title="Panel de Eventos">
-        <div class="panel panel-success" *ngIf="(pacientesScan || selectedPaciente)">
-          <plex-box type="info" title="Paciente Seleccionado">
-            <div class="row">
-              <div class="col-md-12">
-                  <h4><strong>{{selectedPaciente.nombre}} {{selectedPaciente.apellido}}</strong></h4>
-             </div>
+        <div>
+        </div>
+        <div class="row">
+          <plex-loader *ngIf="active"></plex-loader>
+        </div>
+        <plex-box type="info" title="Pacientes Encontrados">
+          <!-- Search results -->
+          <div class="hover" *ngIf="!pacientesSearch">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Sexo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let paciente of resultados$ | async" (click)="mostrarPaciente(paciente)">
+                    <td>{{paciente.documento}}</td>
+                    <td>{{paciente.nombre| uppercase}}</td>
+                    <td>{{paciente.apellido| uppercase}}</td>
+                    <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                    <td>{{paciente.sexo}}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <h4>D.N.I. {{selectedPaciente.documento}} </h4>
-              </div>
+          </div>
+          <div class="hover" *ngIf="pacientesSearch">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Sexo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let paciente of pacientesLista">
+                    <td>{{paciente.documento}}</td>
+                    <td>{{paciente.nombre| uppercase}}</td>
+                    <td>{{paciente.apellido| uppercase}}</td>
+                    <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                    <td>{{paciente.sexo}}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Fecha de Nacimiento</label>
-                <div class="row">
-                  <div class="col-md-4">{{selectedPaciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Sexo</label>
-                <div class="row">
-                  <div class="col-md-4">{{selectedPaciente.sexo}}</div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <label>Estado</label>
-                <div class="row">
-                  <div class="col-md-4">{{selectedPaciente.estado}}</div>
-                </div>
-              </div>
-            </div>
-            <br>
-            <div *ngIf="pacientesScan && mensaje">
-              <div class="alert alert-warning" role="alert">
-                    {{mensaje}}
-              </div>
-            </div>
-            <div class="row">
-               <div class="col-md-12" *ngIf="selectedPaciente && !mensaje">
-                <plex-button icon="account-edit" type="primary" label="Seleccionar" (click)="onSelect(selectedPaciente)"></plex-button>     
-               </div>
-            </div>
+          </div>
+        </plex-box>
+        <div class="row">
+          <plex-box type="danger" *ngIf="!!mensaje">
+            {{mensaje}}
           </plex-box>
         </div>
-        <div class="panel panel-warning" *ngIf="!(pacientesScan || selectedPaciente)">
-          <div class="panel-heading">Recordatorios</div>
-          <div class="panel-body">
-            <ul>
-              <li>
-                <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI
-              </li>
-              <li>
-                <p>Recuerde actualizar la información de contacto.
-              </li>
-            </ul>
+      </div>
+      <!--fin de col-md-8 -->
+      <div class="col-md-5">
+        <plex-box type="info" title="Panel de Eventos">
+          <div class="panel panel-success" *ngIf="(pacientesScan || selectedPaciente)">
+            <plex-box type="info" title="Paciente Seleccionado">
+              <div class="row">
+                <div class="col-md-12">
+                  <h4><strong>{{selectedPaciente.nombre}} {{selectedPaciente.apellido}}</strong></h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>D.N.I. {{selectedPaciente.documento}} </h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Fecha de Nacimiento</label>
+                  <div class="row">
+                    <div class="col-md-4">{{selectedPaciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Sexo</label>
+                  <div class="row">
+                    <div class="col-md-4">{{selectedPaciente.sexo}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Estado</label>
+                  <div class="row">
+                    <div class="col-md-4">{{selectedPaciente.estado}}</div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div *ngIf="pacientesScan && mensaje">
+                <div class="alert alert-warning" role="alert">
+                  {{mensaje}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12" *ngIf="selectedPaciente && !mensaje">
+                  <plex-button icon="account-edit" type="primary" label="Seleccionar" (click)="onSelect(selectedPaciente)"></plex-button>
+                </div>
+              </div>
+            </plex-box>
           </div>
+          <div class="panel panel-warning" *ngIf="!(pacientesScan || selectedPaciente)">
+            <div class="panel-heading">Recordatorios</div>
+            <div class="panel-body">
+              <ul>
+                <li>
+                  <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI
+                </li>
+                <li>
+                  <p>Recuerde actualizar la información de contacto.
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </div>
         <div class="panel panel-success">
           <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
@@ -176,20 +179,20 @@
             <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
             <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span></p>
           </div>
-        </div>
-      </plex-box>
+        </plex-box>
+      </div>
     </div>
   </div>
-</div>
-<div class="col-md-12" *ngIf="showcreate && !pacientesScan">
-  <div class="panel panel-default">
-    <div class="clear"></div>
-    <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
+  <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
+    <div class="panel panel-default">
+      <div class="clear"></div>
+      <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
+    </div>
   </div>
-</div>
-<div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
-  <div class="panel panel-default">
-    <div class="clear"></div>
-    <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
+  <div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
+    <div class="panel panel-default">
+      <div class="clear"></div>
+      <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
+    </div>
   </div>
 </div>
