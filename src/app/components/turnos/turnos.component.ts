@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { ITurno } from './../../interfaces/turnos/ITurno';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PacienteService } from './../../services/paciente.service';
 import { SmsService } from './../../services/turnos/sms.service';
@@ -11,28 +12,62 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
     templateUrl: 'turnos.html'
 })
 
-export class TurnosComponent {
+export class TurnosComponent implements OnInit {
 
     @Input() ag: IAgenda;
 
     showTurnos: boolean = true;
 
-    numero: String = '';
     smsEnviado: boolean = false;
     smsLoader: boolean = false;
     resultado: any;
 
     listaEspera: any;
 
-    public estadoAsistencia: boolean;
     public pacientesSeleccionados: any[] = [];
 
-    agregarPaciente(paciente) {
-        if (this.pacientesSeleccionados.find(x => x === paciente)) {
-            this.pacientesSeleccionados.splice(this.pacientesSeleccionados.indexOf(paciente), 1)
+    public turnos = [];
+    private _selectAll;
+
+    ngOnInit() {
+        this.turnos = this.ag.bloques[0].turnos;
+    }
+
+    @Input()
+    public get selectAll() {
+        return this._selectAll;
+    }
+    public set selectAll(value) {
+        if (!this.turnos) {
+            return;
         }
-        else {
-            this.pacientesSeleccionados.push(paciente);
+
+        this.pacientesSeleccionados = [];
+
+        this.turnos = this.turnos.filter(
+            pac => pac.paciente != null);
+
+        this.turnos.forEach(turno => {
+            turno.checked = value;
+
+            if (value) {
+                this.pacientesSeleccionados.push(turno);
+            }
+        });
+
+        this._selectAll = value;
+    }
+
+    agregarPaciente(turno) {
+
+        this._selectAll = false;
+
+        if (this.pacientesSeleccionados.find(x => x.paciente === turno.paciente)) {
+            this.pacientesSeleccionados.splice(this.pacientesSeleccionados.indexOf(turno), 1);
+            turno.checked = false;
+        } else {
+            this.pacientesSeleccionados.push(turno);
+            turno.checked = true;
         }
     }
 
