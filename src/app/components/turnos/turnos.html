@@ -11,7 +11,7 @@
                                 <div class="col-md-5" *ngIf="ag.estado == 'Suspendida'">
                                     <a class="hover" (click)="enviarSMS(bloque.turnos)"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a>
                                     <a class="hover" (click)="agregarPacienteListaEspera(ag)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
-                                    <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>                                    
+                                    <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>
                                 </div>
                                 <table class="table table-hover">
                                     <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
@@ -49,8 +49,9 @@
                                             <plex-loader *ngIf="smsLoader" type="ball-pulse"></plex-loader>
                                         </td>
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)">
-                                            <!--<plex-bool [ngModel]="turno.checked" (click)="ver(turno)" checked ></plex-bool>-->
-                                             <input type="checkbox"  [ngModel]="turno.checked" [checked]=false  (change)="agregarPaciente(turno)">
+                                            <!--<plex-bool [ngModel]="turno.checked" (click)="agregarPaciente(turno)" ></plex-bool>-->
+                                            <!--<plex-bool type="slide" [(ngModel)]="turno.checked" (click)="agregarPaciente(turno)"></plex-bool>-->
+                                            <input type="checkbox" [ngModel]="turno.checked" [checked]=false (change)="agregarPaciente(turno)">
                                         </td>
                                     </tr>
                                 </table>
