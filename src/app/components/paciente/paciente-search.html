@@ -171,12 +171,13 @@
               </ul>
             </div>
           </div>
-          <div class="panel panel-success">
-            <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
-            <div class="panel-body">
-              <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">698.632</span></p>
-              <p> Cantidad de pacientes fallecidos registrados <span class="badge">23.564</span></p>
-            </div>
+
+        </div>
+        <div class="panel panel-success">
+          <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
+          <div class="panel-body">
+            <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
+            <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span></p>
           </div>
         </plex-box>
       </div>

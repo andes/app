@@ -60,7 +60,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) {
 
     this.createForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
+      nombre: ['',  Validators.required],
       apellido: ['', Validators.required],
       alias: [''],
       documento: ['', Validators.minLength(5)],
@@ -86,9 +86,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    // TODO: No permitir edición de los campos principales cuando el estado es validado
-
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
     // Se cargan los enumerados
@@ -101,8 +98,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.relacionTutores = enumerados.getObjRelacionTutor();
 
     // Se cargan los países, provincias y localidades
-
+    debugger;
     if (this.seleccion) {
+
+    // TODO: No permitir edición de los campos principales cuando el estado es validado
+    if (this.seleccion.estado === 'validado') {
+      let test = this.createForm.get('nombre')
+      test.disabled;
+      //this.createForm.get('nombre').disabled;
+    }
+
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;

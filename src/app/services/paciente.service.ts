@@ -25,6 +25,12 @@ export class PacienteService {
     return this.server.get(this.pacienteUrl, { params: params, showError: true }); //...errors if any*/
   }
 
+  getConsultas(filtro: String): Observable<number> {
+    return this.server.get(this.pacienteUrl + '/counts?consulta=' + filtro, null);
+  }
+
+
+
   /**
    * Metodo getById. Trae un objeto paciente por su Id.
    * @param {String} id Busca por Id
