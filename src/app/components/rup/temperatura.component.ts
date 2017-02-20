@@ -14,7 +14,6 @@ export class TemperaturaComponent {
                                     @Input('paciente') paciente: IPaciente;
                                     @Input('tipoPrestacion') prestacion: any;
                                     @Input('required') required: Boolean;
-
                                     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
                                     temperatura: Number = null;
@@ -24,7 +23,7 @@ export class TemperaturaComponent {
 
                                     ngOnInit() {
                                                     if (this.datosIngreso) {this.temperatura = this.datosIngreso;}
-                                            }
+                                               }
 
 
                                     devolverValores() { // agregar validaciones
@@ -32,9 +31,7 @@ export class TemperaturaComponent {
                                                         if (this.temperatura > 38 ) { this.mensaje = 'Fiebre' }
                                                         else{this.mensaje = 'Normal' }
 
-
                                                         this.evtData.emit(this.temperatura);    
                                                         this.data.mensaje.texto = this.mensaje;   
-
-                                                     }
+                                                      }
                                 }
