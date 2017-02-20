@@ -1,5 +1,5 @@
-import { AppSettings } from './../../appSettings';
-import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
+import { AppSettings } from './../appSettings';
+import { ITipoPrestacion } from './../interfaces/ITipoPrestacion';
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
@@ -13,7 +13,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 @Injectable()
 export class TipoPrestacionService {
 
-    private tipoPrestacionUrl = AppSettings.API_ENDPOINT + '/modules/rup/tiposPrestaciones';  // URL to web api
+    private tipoPrestacionUrl = AppSettings.API_ENDPOINT + '/core/tm/tiposPrestaciones';  // URL to web api
 
     constructor(private server: Server) { }
 
