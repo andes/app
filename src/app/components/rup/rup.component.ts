@@ -120,7 +120,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // tslint:disable-next-line:no-console
-        console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
+        // console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
 
         // Buscamos la prestación con key de "Signos Vitales"
         // this.tipoPrestacionService.get({ key: key }).subscribe(resultado => {
@@ -145,7 +145,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         let datosComponente = this.componentReference.instance;
 
         // tslint:disable-next-line:no-console
-        console.info('datosComponente: ', datosComponente);
+        // console.info('datosComponente: ', datosComponente);
 
         // Generamos valores de la ejecución
         // TODO: debe ser un array
