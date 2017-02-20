@@ -1,11 +1,11 @@
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
     selector: 'rup-tension-diastolica',
     templateUrl: 'tensionDiastolica.html'
 })
-export class TensionDiastolicaComponent {
+export class TensionDiastolicaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') prestacion: any;

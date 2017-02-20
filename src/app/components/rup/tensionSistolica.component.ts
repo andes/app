@@ -1,12 +1,12 @@
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 
 @Component({
     selector: 'rup-tension-sistolica',
     templateUrl: 'tensionSistolica.html'
 })
-export class TensionSistolicaComponent {
+export class TensionSistolicaComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;

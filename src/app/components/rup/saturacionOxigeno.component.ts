@@ -1,11 +1,11 @@
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
     selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
 })
-export class SaturacionOxigenoComponent {
+export class SaturacionOxigenoComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;

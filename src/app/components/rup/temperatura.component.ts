@@ -1,14 +1,14 @@
 // 000 - Leandro Lambertucci - LL - 20/02/2017
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
     selector: 'rup-temperatura',
     templateUrl: 'temperatura.html'
 })
 
-export class TemperaturaComponent {
+export class TemperaturaComponent implements OnInit {
 
                                     @Input('datosIngreso') datosIngreso: any;
                                     @Input('paciente') paciente: IPaciente;

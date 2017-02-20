@@ -1,13 +1,13 @@
 
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 
 @Component({
     selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
-export class TallaComponent {
+export class TallaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') tipoPrestacion: any;
