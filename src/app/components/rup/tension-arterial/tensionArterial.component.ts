@@ -1,4 +1,4 @@
-import { TipoPrestacionService } from './../../../services/rup/tipoPrestacion.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TensionSistolicaComponent } from './../tensionSistolica.component';
 import { TensionDiastolicaComponent } from './../tensionDiastolica.component';
 import { IPaciente } from './../../../interfaces/IPaciente';

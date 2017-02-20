@@ -42,7 +42,7 @@ import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta
 import { ObservacionesComponent } from './components/rup/observaciones.component';
 
 // Servicios RUP //
-import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
