@@ -4,7 +4,7 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 // import { Plex } from 'andes-plex/src/lib/core/service';
 // import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
 import { IPaciente } from './../../../interfaces/IPaciente';
-import { TipoPrestacionService } from './../../../services/rup/tipoPrestacion.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 
 import { FrecuenciaRespiratoriaComponent } from './../frecuenciaRespiratoria.component';
 import { PesoComponent } from './../peso.component';

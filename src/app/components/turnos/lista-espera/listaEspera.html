@@ -67,13 +67,7 @@
 
         </plex-box>
     </div>
-
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <listaEspera-create-update (data)='onReturn($event)'></listaEspera-create-update>
-        </div>
-        <div class="row">&nbsp;</div>
-    </div>
-
+</div>
+<div *ngIf="showcreate">
+    <listaEspera-create-update (data)='onReturn($event)'></listaEspera-create-update>
 </div>
