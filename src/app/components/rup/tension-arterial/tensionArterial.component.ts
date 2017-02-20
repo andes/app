@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TensionSistolicaComponent } from './../tensionSistolica.component';
 import { TensionDiastolicaComponent } from './../tensionDiastolica.component';
 import { IPaciente } from './../../../interfaces/IPaciente';
@@ -18,62 +19,39 @@ export class TensionArterialComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+    constructor(private servicioTipoPrestacion: TipoPrestacionService) {
+    }
+
     // resultados a devolver
-    data: Object = {};
+    data: any = {
+        valor: {},
+        mensaje: {
+            texto: "",
+        },
+    };
 
     // tipos de prestaciones a utilizar
-    prestacionDiastolica: any;
-    prestacionSistolica: any;
+    tensionDiastolica: any;
+    tensionSistolica: any;
     valor = {
         tensionDiastolica: null,
         tensionSistolica: null,
     };
 
     ngOnInit() {
-        if (this.datosIngreso){
-            if(this.datosIngreso.tensionDiastolica){
-            this.valor.tensionDiastolica = this.datosIngreso.tensionDiastolica;
-        }
-          if(this.datosIngreso.tensionSistolica){
-            this.valor.tensionSistolica = this.datosIngreso.tensionSistolica;
-            }
+        if (this.datosIngreso) {
+            this.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
+            this.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
         }
 
-        // debugger;
-        // this.paciente = {
-        //     'id': '588257bce70a44138c44a002',
-        //     'documento': '93155329',
-        //     'estado': 'validado',
-        //     'nombre': 'SERGIO ECIO JUAN',
-        //     'apellido': 'GIORGIS',
-        //     'sexo': 'masculino',
-        //     'genero': 'masculino',
-        //     'fechaNacimiento': '02/11/1993',
-        //     'estadoCivil': '',
-        //     'activo': true
-        // }
-
-        this.prestacionDiastolica = {
-            '_id': '5890730a0c4eccd05d2a7a43',
-            'key': 'tensionDiastolica',
-            'nombre': 'Tension diastólica',
-            'autonoma': false,
-            'activo': true,
-            'componente': 'rup/tensionDiastolica.component.ts'
-        };
-
-        this.prestacionSistolica = {
-            '_id': '589072ee0c4eccd05d2a7a42',
-            'key': 'tensionSistolica',
-            'nombre': 'Tension sistólica',
-            'autonoma': false,
-            'activo': true,
-            'componente': 'rup/tensionSistolica.component.ts'
-        };
+        this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
+            this.tipoPrestacion = tipoPrestacion;
+        });
     }
 
-    onReturn(valor: Number, tipoPrestacion: any) {
-        this.data[tipoPrestacion] = valor;
+    onReturnComponent(valor: any, tipoPrestacion: any) {
+        this.data.valor[tipoPrestacion.key] = valor.valor;
+        // this.data.mensaje.texto = this.data.mensaje.texto + " -" + valor.mensaje.texto;
         this.evtData.emit(this.data);
     }
 

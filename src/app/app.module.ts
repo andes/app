@@ -74,9 +74,6 @@ import { PlexModule } from 'andes-plex/src/lib/module';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { Server } from 'andes-shared/src/lib/server/server.service';
 
-import {CalendarComponent} from 'angular2-fullcalendar/src/calendar/calendar';
-
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -92,7 +89,6 @@ import {CalendarComponent} from 'angular2-fullcalendar/src/calendar/calendar';
   ],
 
   declarations: [
-     CalendarComponent,
     AppComponent, InicioComponent,
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalComponent, ProfesionalCreateUpdateComponent,

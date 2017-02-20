@@ -15,6 +15,7 @@ export class TensionDiastolicaComponent {
 
     tensionDiastolica: Number = null;
     mensaje: String;
+    class: String;
     Edad: any = null;
     BajaTensionDiastolica: Number = null;
     percentiloTalla: Number = null;
@@ -22,7 +23,8 @@ export class TensionDiastolicaComponent {
     data: any = {
         valor: Number,
         mensaje: {
-            texto: String,
+            class: "",
+            texto: ""
         },
     };
     ngOnInit() {
@@ -31,6 +33,8 @@ export class TensionDiastolicaComponent {
         }
     }
     devolverValores() {
+        this.mensaje = '';
+        this.class = 'default';
         //this.evtData.emit(this.tensionDiastolica);
         this.Edad = this.paciente.edad;
         this.percentiloTalla = 5; //Falta tomar valor del percentilo
@@ -56,6 +60,7 @@ export class TensionDiastolicaComponent {
             }
             if (this.tensionDiastolica >= 110) {
                 //rango hipertension arterial grado 3 
+                this.class = "danger";
                 this.mensaje = 'Hipertensión arterial grado 3';
             }
             if (this.tensionDiastolica <= 40 && this.tensionDiastolica >= 60) {
@@ -73,7 +78,7 @@ export class TensionDiastolicaComponent {
             let mensajeTensionBaja = 'Baja tension Sistolica';
             let mensajeTensionAlta = 'Alta tension Sistolica';
 
-            this.BajaTensionDiastolica = 70 + ( 2 * this.Edad);//Calcula el parametro que por debajo es baja tension
+            this.BajaTensionDiastolica = 70 + (2 * this.Edad);//Calcula el parametro que por debajo es baja tension
             if (this.percentiloTalla == 5) { //Mira la altura
                 if (this.Edad == 1) { // Mira la edad
                     if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 64) {//Mira si esta fuera de los rangos normales
@@ -1283,7 +1288,7 @@ export class TensionDiastolicaComponent {
         }
 
 
-
+        this.data.mensaje.class = this.class;
         this.data.mensaje.texto = this.mensaje;
         this.data.valor = this.tensionDiastolica;
         this.evtData.emit(this.data);
