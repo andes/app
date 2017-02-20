@@ -1,11 +1,11 @@
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
     selector: 'rup-frecuencia-cardiaca',
     templateUrl: 'frecuenciaCardiaca.html'
 })
-export class FrecuenciaCardiacaComponent {
+export class FrecuenciaCardiacaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;
