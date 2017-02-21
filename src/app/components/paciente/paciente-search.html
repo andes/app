@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12" *ngIf="!showcreate">
-    <div class="row">
+    <div class="row">      
       <div class="col-md-7">
         <plex-box type="info" title="Búsqueda de Pacientes">
           <div class="col-sm-11">
@@ -11,6 +11,7 @@
                   <input [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
                 </div>
               </div>
+
               <div class="col-md-11" *ngIf="pacientesSearch">
                 <form [formGroup]="searchForm">
                   <div class="row">
@@ -34,21 +35,26 @@
                     </div>
                   </div>
                 </form>
-              </div>
+              </div> <!--*ngIf="pacientesSearch">-->
+
               <div class="col-sm-1">
                 <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
               </div>
             </div>
-          </div>
+
+          </div>  <!--class="col-sm-11"-->
           <div>
             <plex-button icon="account-plus" type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
           </div>
-        </plex-box>
+        </plex-box>  <!--"Búsqueda de Pacientes"-->
+
         <div>
         </div>
+
         <div class="row">
           <plex-loader *ngIf="active"></plex-loader>
         </div>
+
         <plex-box type="info" title="Pacientes Encontrados">
           <!-- Search results -->
           <div class="hover" *ngIf="!pacientesSearch">
@@ -74,7 +80,7 @@
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>          
           <div class="hover" *ngIf="pacientesSearch">
             <div class="table-responsive">
               <table class="table table-hover">
@@ -100,15 +106,18 @@
             </div>
           </div>
         </plex-box>
+
         <div class="row">
           <plex-box type="danger" *ngIf="!!mensaje">
             {{mensaje}}
           </plex-box>
         </div>
-      </div>
+      </div> <!--col-md-7 -->
+
       <!--fin de col-md-8 -->
       <div class="col-md-5">
         <plex-box type="info" title="Panel de Eventos">
+
           <div class="panel panel-success" *ngIf="(pacientesScan || selectedPaciente)">
             <plex-box type="info" title="Paciente Seleccionado">
               <div class="row">
@@ -156,8 +165,10 @@
                   <plex-button icon="account-edit" type="primary" label="Seleccionar" (click)="onSelect(selectedPaciente)"></plex-button>
                 </div>
               </div>
-            </plex-box>
-          </div>
+            </plex-box> <!--Paciente Seleccionado-->
+          </div> <!--panel panel-success-->
+
+
           <div class="panel panel-warning" *ngIf="!(pacientesScan || selectedPaciente)">
             <div class="panel-heading">Recordatorios</div>
             <div class="panel-body">
@@ -171,22 +182,45 @@
               </ul>
             </div>
           </div>
+<<<<<<< HEAD
           <div class="panel panel-success">
             <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
             <div class="panel-body">
               <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
               <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span> </p>
             </div>
+=======
+            </plex-box> <!--Panel de Eventos-->
+        </div> <!--col-md-5"-->
+
+
+        <div class="panel panel-success">
+          <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
+          <div class="panel-body">
+            <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
+            <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span></p>
+>>>>>>> d0f2ada03b400978e5a79d47deaed855a9b0e83c
           </div>
-        </plex-box>
+        <!--</plex-box>-->
       </div>
+
     </div>
+<<<<<<< HEAD
   </div>
 </div>
 <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
   <div class="panel panel-default">
     <div class="clear"></div>
     <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
+=======
+  </div> <!--*ngIf="!showcreate"-->
+
+  <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
+    <div class="panel panel-default">
+      <div class="clear"></div>
+      <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
+    </div>
+>>>>>>> d0f2ada03b400978e5a79d47deaed855a9b0e83c
   </div>
 </div>
 <div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
@@ -194,4 +228,9 @@
     <div class="clear"></div>
     <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
   </div>
+<<<<<<< HEAD
 </div>
+=======
+  
+</div>
+>>>>>>> d0f2ada03b400978e5a79d47deaed855a9b0e83c

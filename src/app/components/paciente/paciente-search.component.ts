@@ -50,7 +50,7 @@ export class PacienteSearchComponent implements OnInit {
   pacienteScaneado: any = {};
   pacientesLista: Array < any > = new Array < any > ();
   fechaActual: Date = new Date();
-  cantPacientesValidados:number = 0;
+  cantPacientesValidados: number = 0;
   cantPacientesFallecidos: number = 0;
 
 
@@ -83,7 +83,7 @@ export class PacienteSearchComponent implements OnInit {
             this.verificarInput(searchString);
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
-                  //Tengo que limpiar la variable
+                  // Tengo que limpiar la variable
                  
                   let results: Array < any > = resultados;
                   this.active = false;
@@ -104,7 +104,7 @@ export class PacienteSearchComponent implements OnInit {
       }) // request switchable
       .map((esResult: any) => {
         // extract results
-        //debugger;
+        // debugger;
         this.nuevoPaciente = true;
        
         if (esResult.length > 0) {
@@ -217,7 +217,7 @@ export class PacienteSearchComponent implements OnInit {
   }
 
   mostrarPaciente(paciente: any) {
-    //Si el paciente está validado no debería permitir generar uno nuevo
+    // Si el paciente está validado no debería permitir generar uno nuevo
     if (paciente.estado === 'validado')
       this.nuevoPaciente = false;
 
@@ -227,17 +227,16 @@ export class PacienteSearchComponent implements OnInit {
   inicializaPanelInformacion(){
     
     /*todas las queries que irian en el panel */
-    this.cantPacientesValidados = 6;
-    this.cantPacientesFallecidos = 2;
-    //  this.pacienteService.getConsultas("validados")
-    //    .subscribe(resultado => {
-    //               this.cantPacientesValidados = resultado
-    //             });
 
-    // this.pacienteService.getConsultas("fallecidos")
-    //   .subscribe(resultado => {
-    //     this.cantPacientesFallecidos = resultado
-    //   })
+     this.pacienteService.getConsultas('validados')
+       .subscribe(resultado => {
+                  this.cantPacientesValidados = resultado
+                });
+
+    this.pacienteService.getConsultas('fallecidos')
+      .subscribe(resultado => {
+        this.cantPacientesFallecidos = resultado
+      });
 
   }
 

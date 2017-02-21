@@ -59,7 +59,7 @@ export class PacienteService {
    * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
    * @param {any} cambios Recibe any
    */
-  patch(id: number, cambios: any): Observable<IPaciente> {
+  patch(id: String, cambios: any): Observable<IPaciente> {
     console.log(cambios);
     return this.server.patch(this.pacienteUrl + '/' + id, cambios);
   }

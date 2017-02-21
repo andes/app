@@ -39,7 +39,7 @@
   </div>
   <div type="info" class="col-md-4">
     <plex-tabs>
-      <plex-tab icon="account">
+      <plex-tab icon="history">
         <div class="row">
           <div *ngIf="estadoT=='seleccionada'" class="col-md-12">
             <div class="row">
@@ -238,10 +238,52 @@
           </div>
         </div>
       </plex-tab>
-      <plex-tab icon="history">
-        <plex-box>
-          TODO: INFO DEL PACIENTE
-        </plex-box>
+      <plex-tab icon="account">
+        <div *ngIf="infoPaciente">
+          <plex-box type="info" title="Paciente Seleccionado">
+            <div class="row">
+              <div class="col-md-12">
+                <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h4>D.N.I. {{paciente.documento}} </h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Fecha de Nacimiento</label>
+                <div class="row">
+                  <div class="col-md-4">{{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Sexo</label>
+                <div class="row">
+                  <div class="col-md-4">{{paciente.sexo}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Estado</label>
+                <div class="row">
+                  <div class="col-md-4">{{paciente.estado}}</div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div *ngIf="pacientesScan && mensaje">
+              <div class="alert alert-warning" role="alert">
+                {{mensaje}}
+              </div>
+            </div>
+          </plex-box>
+        </div>
+
       </plex-tab>
       <plex-tab icon="pencil">
         <plex-box>
