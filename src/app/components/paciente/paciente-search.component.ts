@@ -227,16 +227,17 @@ export class PacienteSearchComponent implements OnInit {
   inicializaPanelInformacion(){
     
     /*todas las queries que irian en el panel */
+    this.cantPacientesValidados = 6;
+    this.cantPacientesFallecidos = 2;
+    //  this.pacienteService.getConsultas("validados")
+    //    .subscribe(resultado => {
+    //               this.cantPacientesValidados = resultado
+    //             });
 
-     this.pacienteService.getConsultas("validados")
-       .subscribe(resultado => {
-                  this.cantPacientesValidados = resultado
-                });
-
-    this.pacienteService.getConsultas("fallecidos")
-      .subscribe(resultado => {
-        this.cantPacientesFallecidos = resultado
-      })
+    // this.pacienteService.getConsultas("fallecidos")
+    //   .subscribe(resultado => {
+    //     this.cantPacientesFallecidos = resultado
+    //   })
 
   }
 

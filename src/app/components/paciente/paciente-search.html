@@ -171,28 +171,27 @@
               </ul>
             </div>
           </div>
-
-        </div>
-        <div class="panel panel-success">
-          <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
-          <div class="panel-body">
-            <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
-            <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span></p>
+          <div class="panel panel-success">
+            <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
+            <div class="panel-body">
+              <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
+              <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span> </p>
+            </div>
           </div>
         </plex-box>
       </div>
     </div>
   </div>
-  <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
-    <div class="panel panel-default">
-      <div class="clear"></div>
-      <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
-    </div>
+</div>
+<div class="col-md-12" *ngIf="showcreate && !pacientesScan">
+  <div class="panel panel-default">
+    <div class="clear"></div>
+    <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
   </div>
-  <div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
-    <div class="panel panel-default">
-      <div class="clear"></div>
-      <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
-    </div>
+</div>
+<div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
+  <div class="panel panel-default">
+    <div class="clear"></div>
+    <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
   </div>
 </div>

@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { SidebarItem } from 'andes-plex/src/lib/app/sidebar-item.class';
+import { MenuItem } from 'andes-plex/src/lib/app/menu-item.class';
+
 
 @Component({
     selector: 'my-app',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
+       
     constructor(public plex: Plex) { }
     ngOnInit() {
         //Cargo el listado de componentes
@@ -16,19 +20,21 @@ export class AppComponent {
 
     loadSideBar() {
         let items = [
-            new SidebarItem('Inicio', 'creation', '/inicio'),
-            new SidebarItem('Organizacion', 'hospital-building', '/organizacion'),
-            new SidebarItem('Profesional', 'human-male', '/profesional'),
-            new SidebarItem('Especialidad', 'certificate', '/especialidad'),
-            new SidebarItem('Paciente', 'seat-recline-normal', '/paciente'),
-            new SidebarItem('Espacio Físico', 'view-agenda', '/espacio_fisico'),
-            new SidebarItem('Prestacion', 'blur', '/prestacion'),
-            new SidebarItem('Agendas', 'calendar', '/agenda'),
-            new SidebarItem('Turnos', 'calendar-check', '/turnos'),
-            new SidebarItem('Lista de Espera', 'calendar-check', '/listaEspera'),
-            new SidebarItem('Gestor Agendas', 'calendar-check', '/gestor_agendas'),
-            new SidebarItem('rup Prestaciones', 'calendar-check', '/rup')
+            
+            new MenuItem({label:'Inicio', icon:'creation', route:'/inicio'}),
+            new MenuItem({label:'Organizacion', icon: 'hospital-building', route:'/organizacion'}),
+            new MenuItem({label:'Profesional', icon: 'hospital-building', route:'/organizacion'}),
+            new MenuItem({label:'Especialidad', icon: 'certificate', route:'/especialidad'}),
+            new MenuItem({label:'Paciente', icon: 'seat-recline-normal', route:'/paciente'}),
+            new MenuItem({label:'Espacio Físico', icon: 'view-agenda', route:'/espacio_fisico'}),
+            new MenuItem({label:'Prestacion', icon: 'blur', route:'/prestacion'}),
+            new MenuItem({label:'Agendas', icon: 'calendar', route:'/agenda'}),
+            new MenuItem({label:'Turnos', icon: 'calendar-check', route:'/turnos'}),
+            new MenuItem({label:'Lista de Espera', icon: 'calendar-check', route:'/listaEspera'}),
+            new MenuItem({label:'Gestor Agendas', icon: 'calendar-check', route:'/gestor_agendas'}),
+            new MenuItem({label:'rup Prestaciones', icon: 'calendar-check', route:'/rup'}),
         ];
+
         this.plex.initStaticItems(items);
     }
 }

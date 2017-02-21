@@ -42,7 +42,7 @@ const appRoutes: Routes = [
   { path: 'rup/dashboard/:id', component: ResumenComponent },
   // { path: 'rup/:id?*/', component: DashboardComponent },
   { path: '**', redirectTo: 'inicio' }
-];
+]
 
 export const appRoutingProviders: any[] = [];
 export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
