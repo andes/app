@@ -36,6 +36,10 @@ export class TurnosComponent implements OnInit {
 
     ngOnInit() {
         this.turnos = this.ag.bloques[0].turnos;
+
+        this.turnos.forEach(turno => {
+            turno.smsEnviado = false;
+        });
     }
 
     @Input()
@@ -125,7 +129,7 @@ export class TurnosComponent implements OnInit {
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => agenda = resultado);
     }
 
-    enviarSMS() {
+    enviarSMS(turno) {
         this.smsLoader = true;
 
         for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
@@ -134,13 +138,12 @@ export class TurnosComponent implements OnInit {
                 this.smsService.enviarSms(this.pacientesSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {
                         this.resultado = resultado;
+                        this.smsLoader = false;
 
                         if (resultado === '0') {
-                            this.smsLoader = false;
-                            this.smsEnviado = true;
+                            this.pacientesSeleccionados[x].smsEnviado = true;
                         } else {
-                            this.smsLoader = false;
-                            this.smsEnviado = false;
+                            this.pacientesSeleccionados[x].smsEnviado = false;
                         }
                     },
                     err => {
