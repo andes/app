@@ -55,7 +55,6 @@
         </div>
     </div>
 
-
     <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
         <div class="clear"></div>
         <vista-agenda [vistaAgenda]="vistaAgenda" (clonar)="clonar($event)"></vista-agenda>
@@ -63,10 +62,14 @@
 
     <div type="info" class="col-sm-4" *ngIf="showTurnos">
         <div class="clear"></div>
-        <turnos [ag]="ag"></turnos>
+        <turnos [ag]="ag" (reasignaTurno)="reasignaTurno($event)"></turnos>
     </div>
 </div>
 
 <div class="col-sm-12" *ngIf="showClonar">
     <clonar-agenda [agenda]="modelo" (cancelaClonar)="cancelaClonar($event)"></clonar-agenda>
+</div>
+
+<div class="col-sm-12" *ngIf="showDarTurnos">
+    <dar-turnos [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
 </div>

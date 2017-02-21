@@ -8,7 +8,7 @@ import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
 moment.locale('en');
 
@@ -21,10 +21,21 @@ import { ListaEsperaService } from '../../../services/turnos/listaEspera.service
 const size = 4;
 
 @Component({
+    selector: 'dar-turnos',
     templateUrl: 'dar-turnos.html'
 })
 
-export class DarTurnosComponent implements AfterViewInit {
+export class DarTurnosComponent implements OnInit {
+    private _reasignaTurnos: any;
+
+    @Input('reasignar')
+    set reasignar(value: any) {
+        this._reasignaTurnos = value;
+    }
+    get reasignar(): any {
+        return this._reasignaTurnos;
+    }
+
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public opciones = {
@@ -46,36 +57,21 @@ export class DarTurnosComponent implements AfterViewInit {
     private prestaciones: String = '';
     private turnoPrestacion: any = {};
     indice: number = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
-    // Este paciente hay que reemplazarlo por el que viene de la búsqueda
-    paciente: any = {
-        id: '57f66f2076e97c2d18f1808b',
-        documento: '30403872',
-        apellido: 'Lopez',
-        nombre: 'Diego',
-        contacto: [{
-            tipo: 'Teléfono Fijo',
-            valor: '2995573273',
-            ranking: 1,
-            activo: true
-        }]
-    };
+    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];   
+
+    paciente: any = {};
+    debugger;
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
     cambioTelefono: boolean = false;
 
-    constructor(public servicioPrestacion: PrestacionService,
-        public serviceProfesional: ProfesionalService,
-        public serviceAgenda: AgendaService,
-        public serviceListaEspera: ListaEsperaService,
-        public serviceTurno: TurnoService,
-        public servicePaciente: PacienteService,
-        public plex: Plex) { }
+    ngOnInit() {
+        if (this._reasignaTurnos) {
+            this.paciente = this._reasignaTurnos.paciente;
+            this.telefono = this.paciente.telefono;
+        }
 
-    ngAfterViewInit() {
         this.actualizar('sinFiltro');
-        let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
-        this.telefono = contacto[0].valor;
     }
 
     loadPrestaciones(event) {
@@ -144,7 +140,7 @@ export class DarTurnosComponent implements AfterViewInit {
         );
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
-            debugger
+            
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
             if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
@@ -195,7 +191,6 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     verAgenda(suma: boolean) {
-        debugger;
         if (this.agendas) {
             let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (condiciones) {
@@ -237,7 +232,7 @@ export class DarTurnosComponent implements AfterViewInit {
             documento: this.paciente.documento,
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
-            telefono: this.telefono
+            telefono: this.paciente.telefono
         };
         this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         let datosTurno = {
@@ -255,19 +250,30 @@ export class DarTurnosComponent implements AfterViewInit {
             this.estadoT = 'noSeleccionada';
             this.agenda = null;
             this.actualizar('sinFiltro');
+            this.borrarTurnoAnterior();
             this.plex.alert('El turno se asignó correctamente');
         });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
             let mpi: Observable<any>;
             let cambios = {
-                telefono: this.telefono
+                telefono: this.paciente.telefono
             };
             mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
             mpi.subscribe(resultado => {
                 this.plex.alert('Se actualizó el numero de telefono');
             });
         }
+    }
+
+    borrarTurnoAnterior() {
+        let patch = {
+            'op': 'reasignarTurno',
+            'idAgenda': this._reasignaTurnos.idAgenda,
+            'idTurno': this._reasignaTurnos.idTurno
+        };
+
+        this.serviceAgenda.patch(this._reasignaTurnos.idAgenda, patch).subscribe();
     }
 
     buscarPaciente() {
@@ -318,4 +324,13 @@ export class DarTurnosComponent implements AfterViewInit {
         operacion = this.serviceListaEspera.post(listaEspera);
         operacion.subscribe();
     }
+
+    constructor(public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService,
+        public serviceAgenda: AgendaService,
+        public serviceListaEspera: ListaEsperaService,
+        public serviceTurno: TurnoService,
+        public servicePaciente: PacienteService,
+        public plex: Plex) { }
+
 }

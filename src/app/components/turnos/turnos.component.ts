@@ -15,6 +15,9 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 export class TurnosComponent implements OnInit {
 
     @Input() ag: IAgenda;
+    @Input() reasturnos: IAgenda;
+
+    @Output() reasignaTurno = new EventEmitter<boolean>();
 
     showTurnos: boolean = true;
 
@@ -28,6 +31,8 @@ export class TurnosComponent implements OnInit {
 
     public turnos = [];
     private _selectAll;
+
+    public reasignar: any = {};
 
     ngOnInit() {
         this.turnos = this.ag.bloques[0].turnos;
@@ -100,6 +105,12 @@ export class TurnosComponent implements OnInit {
                     console.log(err);
                 }
             });
+    }
+
+    reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
+        this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
+
+        this.reasignaTurno.emit(this.reasignar);
     }
 
     agregarPacienteListaEspera(agenda: any) {

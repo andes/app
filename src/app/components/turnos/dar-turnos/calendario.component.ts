@@ -20,6 +20,7 @@ export class CalendarioComponent {
     @Input('fecha') fecha: Date;
     @Input('agenda')
     set agenda(value: IAgenda) {
+        debugger;
         this._agenda = value;
         if (value) {
             this.actualizar();
@@ -31,6 +32,7 @@ export class CalendarioComponent {
 
     @Input('agendas')
     set agendas(value: Array<IAgenda>) {
+        debugger;
         this._agendas = value;
         this.actualizar();
     }

@@ -25,13 +25,14 @@ export class GestorAgendasComponent implements OnInit {
     public showVistaAgendas: boolean = false;
     public showDatosAgenda: boolean = false;
     public showClonar: boolean = false;
-
+    public showDarTurnos: boolean = false;
     public modelo: any = {};
 
     searchForm: FormGroup;
 
     ag: IAgenda;
     vistaAgenda: IAgenda;
+    reasignar: IAgenda;
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
@@ -78,9 +79,15 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     cancelaClonar() {
-        debugger;
         this.showGestorAgendas = true;
         this.showClonar = false;
+    }
+
+    reasignaTurno(reasTurno) {
+        this.reasignar = reasTurno;
+
+        this.showGestorAgendas = false;
+        this.showDarTurnos = true;
     }
 
     loadAgendas() {

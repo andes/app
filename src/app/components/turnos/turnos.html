@@ -41,7 +41,12 @@
                                             [ngClass]="(turno.estado == 'bloqueado') ? 'text-success success mdi mdi-block-helper':'text-success success mdi mdi-brightness-1'" ></i></a>
                                         </td>
 
-                                        <td *ngIf="ag.estado != 'Suspendida'"><a class="hover"><i title="Reasignar Turno" class="text-success success mdi mdi-backup-restore"></i></a></td>
+                                        <td *ngIf="ag.estado != 'Suspendida'">
+                                            <a *ngIf="turno.estado != 'disponible'" class="hover"><i title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)"
+                                                    class="text-success success mdi mdi-backup-restore"></i>
+                                            </a>
+                                            <i *ngIf="turno.estado == 'disponible'" title="No es posible reasignar Turno" class="text-success success mdi mdi-blur-radial"></i>
+                                        </td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
                                             <i *ngIf="(!smsEnviado) && (!smsLoader)" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
