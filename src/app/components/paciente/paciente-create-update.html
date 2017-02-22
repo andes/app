@@ -7,11 +7,12 @@
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" [required]="true" placeholder="Ingrese nombre..." >
+                  <plex-text label="Nombre" formControlName="nombre" [disabled]="estado === 'validado'"  placeholder="Ingrese nombre..." >
                   </plex-text>
+                  
                 </div>
                 <div class="col-sm-4">
-                  <plex-text label="Apellido" formControlName="apellido" [required]="true" placeholder="Ingrese apellido...">
+                  <plex-text label="Apellido" formControlName="apellido" [disabled]="estado === 'validado'"  placeholder="Ingrese apellido...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -21,15 +22,15 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <plex-int label="Número de Documento" formControlName="documento" placeholder="Ingresar DNI...">
+                  <plex-int label="Número de Documento" formControlName="documento" [disabled]="estado === 'validado'" placeholder="Ingresar DNI...">
                   </plex-int>
                 </div>
                 <div class="col-md-4">
-                  <plex-datetime label="Fecha de Nacimiento" type="date" formControlName="fechaNacimiento">
+                  <plex-datetime label="Fecha de Nacimiento" type="date" formControlName="fechaNacimiento" [disabled]="estado === validado">
                   </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." label="Sexo:">
+                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="estado === 'validado'" label="Sexo:">
                   </plex-select>
                 </div>
               </div>
@@ -41,6 +42,10 @@
                 <div class="col-md-4">
                   <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
                   </plex-select>
+                </div>
+                <div class="col-md-4">
+                   <plex-text [disabled]="true" label="Estado:" formControlName="estado">
+                      </plex-text>
                 </div>
               </div>
             </plex-box>
@@ -75,7 +80,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <plex-button label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                  <plex-button label="Agregar Contacto" icon="account-card-details" (click)="addContacto()"></plex-button>
                 </div>
               </div>
             </plex-box>
@@ -126,7 +131,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <plex-button label="Agregar Dirección" icon="add circle outline" (click)="addDireccion()"></plex-button>
+                  <plex-button label="Agregar Dirección" icon="apple-safari" (click)="addDireccion()"></plex-button>
                 </div>
               </div>
             </plex-box>
@@ -164,7 +169,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <plex-button label="Agregar Obra Social" icon="add circle outline" (click)="addFinanciador()"></plex-button>
+                  <plex-button label="Agregar Obra Social" icon="pulse" (click)="addFinanciador()"></plex-button>
                 </div>
               </div>
             </plex-box>
@@ -208,7 +213,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <plex-button label="Agregar Relación" icon="add circle outline" (click)="addRelacion()"></plex-button>
+                  <plex-button label="Agregar Relación" icon="account-switch" (click)="addRelacion()"></plex-button>
 
                 </div>
               </div>
@@ -223,7 +228,7 @@
     </div>
 
     <div class="col-md-4">
-      <plex-box type="info" title="Checkout">
+      <plex-box type="info" title="Datos Paciente">
         <div class="row">
           <div class="col-md-4">
               <div class="col-md-4"><h4>{{createForm.value.nombre}}</h4></div>
@@ -260,9 +265,9 @@
       <plex-box>
         <div class="row">
           <div class="col-sm-12">
-            <plex-button title="Guardar" label="Confirmar Información" type="primary" (click)="onSave(createForm.value, createForm.valid)">
+            <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" (click)="onSave(createForm.value)">
             </plex-button>
-            <plex-button title="Cancelar" label="Cancelar" type="danger" (click)="onCancel()">
+            <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>
           </div>
         </div>

@@ -98,6 +98,7 @@ export class PacienteUpdateComponent implements OnInit {
 
     ngOnInit() {
 
+
         //CArga de combos
         this.PaisService.get().subscribe(resultado => this.paises = resultado);
         this.ProvinciaService.get("").subscribe(resultado => this.todasProvincias = resultado);
@@ -112,6 +113,7 @@ export class PacienteUpdateComponent implements OnInit {
         this.estados = enumerados.getEstados();
         this.relacionTutores = enumerados.getRelacionTutor();
 
+       
         this.updateForm = this.formBuilder.group({
             id: [this.pacienteHijo.id],
             nombre: [this.pacienteHijo.nombre],

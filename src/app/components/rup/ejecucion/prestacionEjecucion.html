@@ -16,6 +16,7 @@
             <header-paciente [paciente]="prestacion.paciente"></header-paciente>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="box box-primary">
@@ -79,54 +80,80 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-6">
-            <plex-box type="primary" title="Prestaciones">
-                <!--<rup-consulta-general-clinica-medica [tipoPrestacion]="prestacion.solicitud.tipoPrestacion"></rup-consulta-general-clinica-medica>-->
-                <!--<fieldset>
-                <legend>Consulta de medicina general</legend>
-
+            <plex-box type="primary" title="Prestaciones" *ngIf="prestacion.paciente">
                 <fieldset>
-                    <legend>Signos vitales</legend>
+                    <legend>Nueva prestación</legend>
                     <div class="row">
-                        <div class="col-md-12">
-                            <rup-signos-vitales [paciente]="paciente" [tipoPrestacion]="prestacionSignosVitales" (evtData)="onReturnValores($event, prestacionSignosVitales)"></rup-signos-vitales>
+                        <div class="col-md-10">
+                            <plex-select [(ngModel)]="prestacionAEjecutar" name="ejecutarPrestacion" label="Ejecutar nueva prestacion" (getData)="posiblesPrestaciones($event)" placeholder="Seleccione prestación">
+                            </plex-select>
+                        </div>
+                        <div class="col-md-2">
+                            <br />
+                            <plex-button title="Agregar" label="Agregar" type="success" (click)="agregarPrestacion(prestacionAEjecutar)" class="pull-right"></plex-button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <plex-select [(ngModel)]="listaProbPrestacion.signosVitales" label="Vincular a problemas" name="signosVitalesListaProblemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
-                        </div>
-                    </div>
-                    <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(prestacionSignosVitales)" class="pull-right"></plex-button>
                 </fieldset>
-
-                <legend>Talla</legend>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <rup-talla [paciente]="paciente" [tipoPrestacion]="prestacionTalla" (evtData)="onReturnValores($event, prestacionTalla)"></rup-talla>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <plex-select [(ngModel)]="listaProbPrestacion.talla" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
-                    </div>
-                </div>
-            </fieldset>-->
-                <fieldset *ngIf="prestacion.paciente">
-                    <!--<legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>-->
-                    <div *ngFor="let tipoPrestacion of prestacion.solicitud.tipoPrestacion.ejecucion">
-                        <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
-                        </rup>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <plex-select [(ngModel)]="listaProblemaPrestacion[tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
-                            </div>
+                <fieldset>
+                    <legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>
+                    <!--
+                <div *ngFor="let tipoPrestacion of prestacion.solicitud.tipoPrestacion.ejecucion">
+                    <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
+                    </rup>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <plex-select [(ngModel)]="listaProblemaPrestacion[tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
                         </div>
-                        <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(tipoPrestacion)" class="pull-right"></plex-button>
+                    
+                        <div class="col-md-2">
+                            <br />
+                            <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(tipoPrestacion)" class="pull-right"></plex-button>
+                        </div>
                     </div>
+                </div>-->
+
+                    <!-- nuevas prestaciones ejecutadas en la consulta -->
+                    <plex-accordion>
+                        <div *ngFor="let tipoPrestacion of prestacion.solicitud.tipoPrestacion.ejecucion">
+                            <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
+                                <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
+                                </rup>
+
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br />
+                                        <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(tipoPrestacion)" class="pull-right"></plex-button>
+                                    </div>
+                                </div>
+                            </plex-panel>
+                        </div>
+                        <div *ngFor="let tipoPrestacion of nuevasPrestaciones">
+                            <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
+                                <rup #rup [tipoPrestacion]="tipoPrestacion" [paciente]="prestacion.paciente" (evtData)="onReturnComponente($event,tipoPrestacion)">
+                                </rup>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" [data]="problemasPrestaciones" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <br />
+                                        <plex-button title="Confirmar" label="Confirmar" type="success" (click)="evolucionarPrestacion(tipoPrestacion)" class="pull-right"></plex-button>
+                                    </div>
+                                </div>
+                            </plex-panel>
+                        </div>
+                    </plex-accordion>
+                    <!-- nuevas prestaciones ejecutadas en la consulta -->
                 </fieldset>
             </plex-box>
+
             <plex-box type="primary" title="Planes">
                 <div class="row">
                     <div class="col-md-5">
@@ -150,7 +177,7 @@
                             <plex-button title="Eliminar " label=" " icon="close " type="danger " (click)="borrarPrestacionFutura(i)"></plex-button>
                         </div>
                     </div>
-                    <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
+                    <div *ngIf="prestacionFutura && prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
                         <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
                             <div class="row ">
                                 <div class="col-md-12">

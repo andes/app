@@ -1,9 +1,7 @@
-<plex-box type="success" title="Agregar Paciente a Lista de Espera">
-
-    <div class="row">
-        <div class="col-sm-12" *ngIf="!showcreate && !pacientesSearch">
+<div class="row" *ngIf="!showcreate && !pacientesSearch">
+    <div class="col-md-7">
+        <plex-box type="info" title="Búsqueda de Pacientes">
             <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
-
             <div class="row">
                 <div class="col-md-4">
                     <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones">
@@ -22,16 +20,16 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-12">
-                    <plex-text [(ngModel)]="opciones.observaciones"  label="Observaciones" placeholder="Ingrese observaciones..."></plex-text>
+                <div class="col-md-12">
+                    <plex-text [(ngModel)]="opciones.observaciones" label="Observaciones" placeholder="Ingrese observaciones..."></plex-text>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-md-4">
                     <plex-phone [(ngModel)]="opciones.telefono" label="Teléfono" placeholder="Ingrese un teléfono..."></plex-phone>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-md-12">
                     <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave()" title="Guardar">
                     </plex-button>
                     <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel()" title="Cancelar">
@@ -39,16 +37,63 @@
                     <div class="row">&nbsp;</div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="col-sm-12" *ngIf="pacientesSearch">
-            <div class="panel panel-default">
-                <div class="clear"></div>
-                <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
-            </div>
-        </div>
-        <div class="row">&nbsp;</div>
-
+        </plex-box>
     </div>
-</plex-box>
+
+    <!--panel lateral con detalles paciente-->
+    <div class="col-md-5">
+        <div *ngIf="!showcreate && !pacientesSearch && checkout">
+            <plex-box type="info" title="Paciente Seleccionado">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>D.N.I. {{paciente.documento}} </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Fecha de Nacimiento</label>
+                        <div class="row">
+                            <div class="col-md-4">{{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Sexo</label>
+                        <div class="row">
+                            <div class="col-md-4">{{paciente.sexo}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Estado</label>
+                        <div class="row">
+                            <div class="col-md-4">{{paciente.estado}}</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div *ngIf="pacientesScan && mensaje">
+                    <div class="alert alert-warning" role="alert">
+                        {{mensaje}}
+                    </div>
+                </div>
+            </plex-box>
+
+        </div>
+    </div>
+    <!--FIN panel lateral con detalles paciente-->
+</div>
+
+<div class="col-md-12" *ngIf="pacientesSearch">
+    <div class="panel panel-default">
+        <div class="clear"></div>
+        <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
+    </div>
+</div>

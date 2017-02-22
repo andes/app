@@ -122,32 +122,43 @@ export class PanelEspacioComponent implements OnInit {
 
 
         for (let j = 0; j < cantidadBloques; j++) {
-            this.agendas.forEach((agenda, index) => {
-                this.agenda = agenda;
-                if (!this.agenda.rows) {
-                    this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
-                }
-                this.agenda.saltear = false;
-                let lista = [];
-                for (let i = 0; i < this.espacios.length; i++) {
+
+            let lista = [];
+            for (let i = 0; i < this.espacios.length; i++) {
+                let bandera = false;
+                for (let k = 0; k < this.agendas.length; k++) {
+                    this.agenda = this.agendas[k];
+                    if (!this.agenda.rows) {
+                        this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
+                    }
+                    this.agenda.saltear = false;
                     if (inicioM.isBetween(this.agenda.horaInicio, this.agenda.horaFin, null, '[)') &&
                         this.agenda.espacioFisico._id === this.espacios[i].id) {
-                        if (this.agenda.rows > 1 && this.agenda.saltear === false) {
-                            lista.push(this.agenda);
-                            this.agenda.saltear = true;
-                        }
-                    } else {
-                        lista.push('');
-                    }
-                }
-                let elemento = {
-                    hora: inicioM.format('HH:mm'),
-                    lista: lista
-                };
-                this.horarios.push(elemento);
-                inicioM.add(this.unidad, 'm');
-            });
+                        bandera = true;
 
+                        break;
+                    }
+
+                    //  else {
+                    //     lista.push('');
+                    // }
+                };
+                if (bandera) {
+                    if (this.agenda.rows > 1 && this.agenda.saltear === false) {
+                        lista.push(this.agenda);
+                        this.agenda.saltear = true;
+                    }
+                } else {
+                    lista.push('');
+                }
+
+            }
+            let elemento = {
+                hora: inicioM.format('HH:mm'),
+                lista: lista
+            };
+            this.horarios.push(elemento);
+            inicioM.add(this.unidad, 'm');
         }
 
         console.log('lista', this.horarios);

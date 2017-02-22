@@ -20,16 +20,18 @@
     "url": "https://github.com/andes/app/issues"
   },
   "dependencies": {
-    "@angular/common": "2.1.0",
-    "@angular/compiler": "2.1.0",
-    "@angular/core": "2.1.0",
-    "@angular/forms": "2.1.0",
-    "@angular/http": "2.1.0",
-    "@angular/platform-browser": "2.1.0",
-    "@angular/platform-browser-dynamic": "2.1.0",
-    "@angular/router": "3.1.0",
-    "andes-plex": "^0.2.18",
-    "andes-shared": "^0.0.6",
+    "@angular/cli": "1.0.0-beta.32.3",
+    "@angular/common": "2.4.8",
+    "@angular/compiler": "2.4.8",
+    "@angular/core": "2.4.8",
+    "@angular/forms": "2.4.8",
+    "@angular/http": "2.4.8",
+    "@angular/material": "^2.0.0-beta.2",
+    "@angular/platform-browser": "2.4.8",
+    "@angular/platform-browser-dynamic": "2.4.8",
+    "@angular/router": "3.4.8",
+    "andes-plex": "^0.3.0",
+    "andes-shared": "0.1.1",
     "angular2-time-select": "^0.9.3",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
@@ -37,16 +39,15 @@
     "jquery": "^3.1.1",
     "ng2-dnd": "^2.2.2",
     "primeng": "^1.0.0-beta.15",
-    "rxjs": "5.0.0-beta.12",
+    "rxjs": "5.1.1",
     "systemjs": "0.19.27",
     "ts-helpers": "^1.1.1",
-    "zone.js": "^0.6.23"
+    "typescript": "^2.1.6",
+    "zone.js": "0.6.26"
   },
   "devDependencies": {
-    "@angular/material": "^2.0.0-alpha.9-3",
     "@types/jasmine": "^2.2.30",
     "@types/node": "^6.0.42",
-    "angular-cli": "1.0.0-beta.17",
     "bootstrap": "^3.3.7",
     "codelyzer": "~0.0.26",
     "jasmine-core": "2.4.1",
@@ -58,7 +59,6 @@
     "karma-remap-istanbul": "^0.2.1",
     "protractor": "4.0.9",
     "ts-node": "1.2.1",
-    "tslint": "3.13.0",
-    "typescript": "2.0.2"
+    "tslint": "3.13.0"
   }
 }

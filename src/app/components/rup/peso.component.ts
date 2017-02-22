@@ -1,11 +1,11 @@
 import { IPaciente } from '../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
-export class PesoComponent {
+export class PesoComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;

@@ -60,12 +60,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) {
 
     this.createForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
+      nombre: ['',  Validators.required],
       apellido: ['', Validators.required],
       alias: [''],
       documento: ['', Validators.minLength(5)],
       fechaNacimiento: [new Date(), Validators.required],
-      estado: [''],
+      estado: ['temporal'],
       sexo: ['', Validators.required],
       genero: [''],
       estadoCivil: [''],
@@ -86,9 +86,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    // TODO: No permitir edición de los campos principales cuando el estado es validado
-
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
     // Se cargan los enumerados
@@ -101,8 +98,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.relacionTutores = enumerados.getObjRelacionTutor();
 
     // Se cargan los países, provincias y localidades
-
+    debugger;
     if (this.seleccion) {
+
+    // TODO: No permitir edición de los campos principales cuando el estado es validado
+    if (this.seleccion.estado === 'validado') {
+      let test = this.createForm.get('nombre')
+      test.disabled;
+      //this.createForm.get('nombre').disabled;
+    }
+
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;
@@ -130,10 +135,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
               this.pacienteService.searchMatch('documento', dtoBusqueda)
                 .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
             }
-
-
           }
-
         })
       });
 
@@ -271,7 +273,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSave(model: any, isvalid: boolean) {
     let listaPacientes = [];
-    if (isvalid) {
+    //El if lleva un (isValid), está porque no valida nunca
+    if (true) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
       model.sexo = (typeof model.sexo == 'string') ? model.sexo : model.sexo.id;
@@ -298,13 +301,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.searchMatch('documento', dtoBusqueda)
           .subscribe(value => { listaPacientes = value; });
       }
-
+      
       if (listaPacientes.length > 0) {
         this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
 
       } else {
         this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
           if (resultado) {
+            debugger
             operacionPac = this.pacienteService.save(model);
             operacionPac.subscribe(result => {
               this.data.emit(result)
@@ -315,9 +319,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
       }
 
 
-    } else {
+    } /*else {
       this.plex.alert('Debe completar los datos obligatorios');
-    }
+    }*/
   }
 
   onCancel() {

@@ -1,4 +1,4 @@
-import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -21,7 +21,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
-
+import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
 import { TallaComponent } from './components/rup/talla.component';
@@ -32,17 +32,17 @@ import { TensionSistolicaComponent } from './components/rup/tensionSistolica.com
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
-import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
-// tslint:disable-next-line:max-line-length
+ import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
+ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
+ import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
+ import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
+ import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+// NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
 
 // Servicios RUP //
-import { TipoPrestacionService } from './services/rup/tipoPrestacion.service';
+import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
@@ -62,14 +62,14 @@ export const RUP_COMPONENTS = [
     TensionDiastolicaComponent,
     ObservacionesComponent,
     ConsultaGeneralClinicaMedicaComponent,
-    EvolucionProblemaComponent,
-    EvolucionTodosProblemasComponent,
-    PuntoInicioComponent,
-    PrestacionEjecucionComponent,
-    ResumenComponent,
-    HeaderPacienteComponent,
-    PrestacionValidacionComponent
-    // PacienteComponent
+     EvolucionProblemaComponent,
+     EvolucionTodosProblemasComponent,
+     PuntoInicioComponent,
+     PrestacionEjecucionComponent,
+     ResumenComponent,
+     HeaderPacienteComponent,
+     PrestacionValidacionComponent
+    // NO VAPacienteComponent
 ];
 
 @NgModule({
@@ -87,23 +87,20 @@ export const RUP_COMPONENTS = [
     exports: RUP_COMPONENTS,
     // [Andrrr] 2017-02-07: Requerido para poder crear componentes dinámicamente (Angular RC5-7)
     entryComponents: RUP_COMPONENTS,
-    bootstrap: [
-        PuntoInicioComponent
-    ],
+    // bootstrap: [
+    //     PuntoInicioComponent
+    // ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es-AR' },
-        PacienteService,
-        TipoPrestacionService,
-        appRoutingProviders,
-        Plex,
-        Server,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
-        TipoProblemaService,
-        TipoPrestacionService,
-        PacienteService,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
+        // PacienteService,
+        // appRoutingProviders,
+        // Plex,
+        // Server,
+        // PrestacionPacienteService,
+        // ProblemaPacienteService,
+        // TipoProblemaService,
+        // TipoPrestacionService,
+        
     ]
 })
-export class RupModule { }
+export class RupModule {debugger; }

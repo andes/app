@@ -36,14 +36,14 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let listaEspera of datos">
-                            <td>{{listaEspera.paciente.documento}}</td>
+                            <td nowrap >{{listaEspera.paciente.documento}}</td>
                             <td>{{listaEspera.paciente.nombre}} {{listaEspera.paciente.apellido}}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
                             <td>
                                 <span *ngIf="listaEspera.profesional">{{listaEspera.profesional.nombre}} {{listaEspera.profesional.apellido}} </span>
                             </td>
                             <td>{{listaEspera.estado}}</td>
-                            <td>{{listaEspera.fecha | date:"d-MM-yy" }}</td>
+                            <td nowrap >{{listaEspera.fecha | date:"dd-MM-yy" }}</td>
                             <td>
                                 <plex-button type="primary" icon="magnify" label="Ver más"></plex-button>
                             </td>
@@ -67,13 +67,7 @@
 
         </plex-box>
     </div>
-
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <listaEspera-create-update (data)='onReturn($event)'></listaEspera-create-update>
-        </div>
-        <div class="row">&nbsp;</div>
-    </div>
-
+</div>
+<div *ngIf="showcreate">
+    <listaEspera-create-update (data)='onReturn($event)'></listaEspera-create-update>
 </div>

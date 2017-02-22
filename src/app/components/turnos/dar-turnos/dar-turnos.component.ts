@@ -48,7 +48,8 @@ export class DarTurnosComponent implements AfterViewInit {
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
-    paciente: any = {
+    paciente: IPaciente;
+    /* = {
         id: '57f66f2076e97c2d18f1808b',
         documento: '30403872',
         apellido: 'Lopez',
@@ -59,10 +60,11 @@ export class DarTurnosComponent implements AfterViewInit {
             ranking: 1,
             activo: true
         }]
-    };
+    };*/
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
     cambioTelefono: boolean = false;
+    infoPaciente: boolean = false;
 
     constructor(public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService,
@@ -74,8 +76,8 @@ export class DarTurnosComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.actualizar('sinFiltro');
-        let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
-        this.telefono = contacto[0].valor;
+        // let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
+        //this.telefono = contacto[0].valor;
     }
 
     loadPrestaciones(event) {
@@ -174,14 +176,18 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
-        this.bloque = bloque;
-        this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
-        this.indiceTurno = indice;
-        this.turno = bloque.turnos[indice];
-        if (this.bloque.prestaciones.length === 1) {
-            this.turno.prestacion = this.bloque.prestaciones[0];
+        if (this.paciente) {
+            this.bloque = bloque;
+            this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
+            this.indiceTurno = indice;
+            this.turno = bloque.turnos[indice];
+            if (this.bloque.prestaciones.length === 1) {
+                this.turno.prestacion = this.bloque.prestaciones[0];
+            }
+            this.estadoT = 'confirmacion';
+        } else {
+            this.plex.alert('Seleccione un paciente');
         }
-        this.estadoT = 'confirmacion';
     }
 
     seleccionarBusqueda(indice: number) {
@@ -285,17 +291,18 @@ export class DarTurnosComponent implements AfterViewInit {
     }
 
     onReturn(pacientes: IPaciente): void {
-        this.showDarTurnos = true;
-        window.setTimeout(() => this.pacientesSearch = false, 100);
         this.paciente = pacientes;
+        this.showDarTurnos = true;
+        this.infoPaciente = true;
+        window.setTimeout(() => this.pacientesSearch = false, 100);
     }
 
     onCancel() {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
         let datosPrestacion = {
-            id: '581792ad3d52685d1ecdaa05', // this.opciones.prestacion.id,
-            nombre: 'Cardiología adultos'// this.opciones.prestacion.nombre
+            id: this.opciones.prestacion.id,
+            nombre: this.opciones.prestacion.nombre
         };
         let datosProfesional = !this.opciones.profesional ? null : {
             id: this.opciones.profesional.id,

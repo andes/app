@@ -25,6 +25,12 @@ export class PacienteService {
     return this.server.get(this.pacienteUrl, { params: params, showError: true }); //...errors if any*/
   }
 
+  getConsultas(filtro: String): Observable<number> {
+    return this.server.get(this.pacienteUrl + '/counts?consulta=' + filtro, null);
+  }
+
+
+
   /**
    * Metodo getById. Trae un objeto paciente por su Id.
    * @param {String} id Busca por Id
@@ -53,7 +59,7 @@ export class PacienteService {
    * Metodo patch. Modifica solo algunos campos del paciente. (por ejemplo telefono)
    * @param {any} cambios Recibe any
    */
-  patch(id: number, cambios: any): Observable<IPaciente> {
+  patch(id: String, cambios: any): Observable<IPaciente> {
     console.log(cambios);
     return this.server.patch(this.pacienteUrl + '/' + id, cambios);
   }
@@ -101,6 +107,7 @@ export class PacienteService {
   }
 
   save(paciente: IPaciente): Observable<IPaciente> {
+    debugger
       if (paciente.id) {
           return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
       } else {

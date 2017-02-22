@@ -50,6 +50,8 @@ export class PacienteSearchComponent implements OnInit {
   pacienteScaneado: any = {};
   pacientesLista: Array < any > = new Array < any > ();
   fechaActual: Date = new Date();
+  cantPacientesValidados: number = 0;
+  cantPacientesFallecidos: number = 0;
 
 
   constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
@@ -63,7 +65,9 @@ export class PacienteSearchComponent implements OnInit {
     this.modeloSlide = {
       activo: false
     };
-
+    
+    this.inicializaPanelInformacion();
+    
     this.resultados$ = this.searchText
       .valueChanges
       .map((value: any) => value ? value.trim() : '') // ignore spaces
@@ -79,7 +83,7 @@ export class PacienteSearchComponent implements OnInit {
             this.verificarInput(searchString);
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
-                  //Tengo que limpiar la variable
+                  // Tengo que limpiar la variable
                  
                   let results: Array < any > = resultados;
                   this.active = false;
@@ -100,7 +104,7 @@ export class PacienteSearchComponent implements OnInit {
       }) // request switchable
       .map((esResult: any) => {
         // extract results
-        //debugger;
+        // debugger;
         this.nuevoPaciente = true;
        
         if (esResult.length > 0) {
@@ -141,6 +145,7 @@ export class PacienteSearchComponent implements OnInit {
   }
 
   private verificarInput(cadena) {
+    debugger
     // let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
     let parse = [];
     let datosDni = cadena.split('"');
@@ -148,16 +153,17 @@ export class PacienteSearchComponent implements OnInit {
     // la búsqueda se realiza por nombre, apellido, documento, sexo, fecha de nacimiento
     if (datosDni.length >= 8) {
       this.parseDocument(datosDni);
-
     } else {
       this.pacientesScan = false;
       this.pacienteScaneado.documento = '';
       this.pacienteScaneado.apellido = '';
       this.pacienteScaneado.nombre = '';
+      this.pacienteScaneado.estado = 'temporal';
     }
 
     return parse;
   }
+
 
   parseDocument(datosDni) {
 
@@ -212,11 +218,27 @@ export class PacienteSearchComponent implements OnInit {
   }
 
   mostrarPaciente(paciente: any) {
-    //Si el paciente está validado no debería permitir generar uno nuevo
+    // Si el paciente está validado no debería permitir generar uno nuevo
     if (paciente.estado === 'validado')
       this.nuevoPaciente = false;
 
     this.selectedPaciente = paciente;
+  }
+
+  inicializaPanelInformacion(){
+    
+    /*todas las queries que irian en el panel */
+
+     this.pacienteService.getConsultas('validados')
+       .subscribe(resultado => {
+                  this.cantPacientesValidados = resultado
+                });
+
+    this.pacienteService.getConsultas('fallecidos')
+      .subscribe(resultado => {
+        this.cantPacientesFallecidos = resultado
+      });
+
   }
 
 }

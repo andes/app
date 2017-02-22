@@ -1,11 +1,11 @@
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'rup-observaciones',
     templateUrl: 'observaciones.html'
 })
-export class ObservacionesComponent {
+export class ObservacionesComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') prestacion: any;
     @Input('paciente') paciente: IPaciente;

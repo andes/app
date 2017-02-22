@@ -1,3 +1,4 @@
+import { AgendaService } from './../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
@@ -16,61 +17,70 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 })
 export class PuntoInicioComponent implements OnInit {
 
-    //@Input() profesional: any;
+    //Input del profesiona logueado.
+    //@Input() profesionalLog: any;
+    public profesionalLog: any;
+    public listaPrestaciones: IPrestacionPaciente[] = [];
+    public prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
 
-    //@Input() tipoPrestacione: any;
-    tipoPrestacion: ITipoPrestacion; // será un IPaciente
+    public showPendientes = true;
+    public showDashboard = false;
+    public enEjecucion = false;
 
-    // resultados a devolver
-    data: Object = {};
-    listaPrestaciones: IPrestacionPaciente[] = [];
-    prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
-
-    showPendientes = true;
-    showDashboard = false;
-
-    enEjecucion = false;
+    public agendas: any = [];
+    public fechaActual = new Date();
+    public bloqueSeleccionado: any;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
+        public servicioAgenda: AgendaService,
         private router: Router) {
 
     }
 
 
     ngOnInit() {
-        // debugger;
-        this.tipoPrestacion = {
-            id: "5894657e7358af394f6d52e2",
-            key: "consultaGeneralClinicaMedica",
-            nombre: "Consulta de medicina general",
-            descripcion: "Consulta de medicina general",
-            codigo: null,
-            autonoma: true,
-            solicitud: null,
-            ejecucion: null,
-            activo: true,
-            componente: {
-                nombre: "",
-                ruta: ""
-            }
-        }
 
-        this.loadPrestaciones();
+        this.profesionalLog = {
+            'id': '57fe1dafe46ceaf8317c7ddf',
+            'nombre': 'Jorge',
+            'apellido': 'Perez',
+            'activo': true,
+        }
+        this.loadAgendasXDia();
 
     }
 
-    loadPrestaciones() {
-        // this.servicioPrestacion.get({ estado: 'pendiente', idTipoPrestacion: this.tipoPrestacion.id }).subscribe(resultado => {
-        this.servicioPrestacion.get({ idTipoPrestacion: this.tipoPrestacion.id }).subscribe(resultado => {
+    loadAgendasXDia() {
+
+        var fechaDesde = this.fechaActual.setHours(0, 0, 0, 0)
+        var fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
+        this.servicioAgenda.get({
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
+            idProfesional: this.profesionalLog.id
+        }).subscribe(
+            agendas => { this.agendas = agendas; },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    listadoTurnos(bloque) {
+        this.bloqueSeleccionado = bloque;
+        var turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id })
+        this.servicioPrestacion.get({ turnos: turnos }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
-        });
+        })
+
     }
 
     elegirPrestacion(prestacion: IPrestacionPaciente) {
+        debugger;
         this.prestacionSeleccionada = prestacion;
         this.showPendientes = false;
-
         this.showDashboard = true;
     }
 
