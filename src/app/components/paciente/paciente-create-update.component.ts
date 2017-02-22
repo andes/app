@@ -273,6 +273,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSave(model: any, isvalid: boolean) {
     let listaPacientes = [];
+    //El if lleva un (isValid), está porque no valida nunca
     if (true) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
