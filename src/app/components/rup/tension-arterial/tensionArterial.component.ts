@@ -1,11 +1,7 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { TensionSistolicaComponent } from './../tensionSistolica.component';
-import { TensionDiastolicaComponent } from './../tensionDiastolica.component';
-import { IPaciente } from './../../../interfaces/IPaciente';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// import { Plex } from 'andes-plex/src/lib/core/service';
-// import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+
+import { IPaciente } from './../../../interfaces/IPaciente';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'rup-tension-arterial',
@@ -26,7 +22,7 @@ export class TensionArterialComponent implements OnInit {
     data: any = {
         valor: {},
         mensaje: {
-            texto: "",
+            texto: '',
         },
     };
 
@@ -40,8 +36,8 @@ export class TensionArterialComponent implements OnInit {
 
     ngOnInit() {
         if (this.datosIngreso) {
-            this.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
-            this.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
+            this.data.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
+            this.data.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
         }
 
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
@@ -49,8 +45,8 @@ export class TensionArterialComponent implements OnInit {
         });
     }
 
-    onReturnComponent(valor: any, tipoPrestacion: any) {
-        this.data.valor[tipoPrestacion.key] = valor.valor;
+    onReturnComponent(obj: any, tipoPrestacion: any) {
+        this.data.valor[tipoPrestacion.key] = obj.valor;
         // this.data.mensaje.texto = this.data.mensaje.texto + " -" + valor.mensaje.texto;
         this.evtData.emit(this.data);
     }
