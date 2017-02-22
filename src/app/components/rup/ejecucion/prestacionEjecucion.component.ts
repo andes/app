@@ -82,28 +82,28 @@ export class PrestacionEjecucionComponent implements OnInit {
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
         // console.log(this.prestacion);
-        this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
-        //     /******************************* 
-        //      *******************************
-        //      *******************************
+        // this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
+        // //     /******************************* 
+        // //      *******************************
+        // //      *******************************
 
-        //      1) Verificar si el tipo de prestacion no está dentro de las prestaciones 
-        //      que se han ejecutado, y de ser así las creo vacias 
-            let find = this.prestacion.prestacionesEjecutadas.find(p => {
-                return p.solicitud.tipoPrestacion.id === element.id
-            });
+        // //      1) Verificar si el tipo de prestacion no está dentro de las prestaciones 
+        // //      que se han ejecutado, y de ser así las creo vacias 
+        //     let find = this.prestacion.prestacionesEjecutadas.find(p => {
+        //         return p.solicitud.tipoPrestacion.id === element.id
+        //     });
 
-            console.info(find);
-            // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
-            if (!find) {
-                // asignamos valores a la nueva prestacion
-                let nuevaPrestacion = this.crearPrestacionVacia(element);
-            }else{
-                this.idPrestacionesEjecucion.push(element.id);
-                this.prestacionesEjecucion.push(find);
-            }
+        //     console.info(find);
+        //     // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
+        //     if (!find) {
+        //         // asignamos valores a la nueva prestacion
+        //         let nuevaPrestacion = this.crearPrestacionVacia(element);
+        //     }else{
+        //         this.idPrestacionesEjecucion.push(element.id);
+        //         this.prestacionesEjecucion.push(find);
+        //     }
 
-        });
+        // });
 
         //      2) Si el tipo de prestacion se encuentra dentro de las prsetaciones ejecutadas
         //      en la prestacion actual, entonces la asigno y paso sus valroes
