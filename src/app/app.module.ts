@@ -325,6 +325,7 @@ import {
     RupComponent,
     ...RUP_COMPONENTS
   ],
+  entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
   providers: [{
       provide: LOCALE_ID,
