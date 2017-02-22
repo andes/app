@@ -53,9 +53,10 @@
 
                                         <td>
                                             <a *ngIf="(turno.estado != 'disponible')" class="hover">
-                                                <i *ngIf="(turno.paciente)" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)" class="text-success success mdi mdi-backup-restore"></i>
+                                                <i *ngIf="(turno.paciente) && (!turno.asistencia)" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)" class="text-success success mdi mdi-backup-restore"></i>
                                             </a>
                                             <i *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>
+                                            <i *ngIf="(turno.paciente) && (turno.asistencia)" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)" class="text-center">
