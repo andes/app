@@ -131,13 +131,13 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
             p = prestacion;
             return p.nombre === this.tipoPrestacion.componente.nombre;
         });
-        console.log("this.componentContainer: ", this.componentContainer);
+        // console.log("this.componentContainer: ", this.componentContainer);
         // Cargamos el componente
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
 
         // Creamos el componente
         this.componentReference = this.viewContainerRef.createComponent(componentFactory);
-        console.log("this.componentReference: ", this.componentReference);
+        // console.log("this.componentReference: ", this.componentReference);
         // Activamos la detección de cambios
 
 
@@ -162,7 +162,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         // let salida = {};
         // salida[key] = valores.valor;
 
-        console.info('datosComponente: ', datosComponente);
+        // console.info('datosComponente: ', datosComponente);
 
         // this.data.mensaje = this.componentReference.instance.data.mensaje;
 

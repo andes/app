@@ -60,7 +60,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) {
 
     this.createForm = this.formBuilder.group({
-      nombre: ['',  Validators.required],
+      nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       alias: [''],
       documento: ['', Validators.minLength(5)],
@@ -78,7 +78,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       financiador: this.formBuilder.array([
       ]),
       relaciones: this.formBuilder.array([
-        this.iniRelacion()
+        /*this.iniRelacion()*/
       ]),
       activo: [true]
     });
@@ -101,18 +101,24 @@ export class PacienteCreateUpdateComponent implements OnInit {
     debugger;
     if (this.seleccion) {
 
-    // TODO: No permitir edición de los campos principales cuando el estado es validado
-    if (this.seleccion.estado === 'validado') {
-      let test = this.createForm.get('nombre')
-      test.disabled;
-      //this.createForm.get('nombre').disabled;
-    }
+
+      // TODO: No permitir edición de los campos principales cuando el estado es validado
+      if (this.seleccion.estado === 'validado') {
+        let test = this.createForm.get('nombre')
+        test.disabled;
+        //this.createForm.get('nombre').disabled;
+      }
+
+      this.seleccion.relaciones.forEach(rel => {
+        this.addRelacion();
+      });
 
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;
           this.createForm.patchValue(this.seleccion);
         });
+
 
     }
 
@@ -271,14 +277,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
 
-  onSave(model: any, isvalid: boolean) {
+  onSave(model: any, valid: boolean) {
     let listaPacientes = [];
-    //El if lleva un (isValid), está porque no valida nunca
-    if (true) {
+
+    if (valid) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
       model.sexo = (typeof model.sexo == 'string') ? model.sexo : model.sexo.id;
       model.estadoCivil = (typeof model.estadoCivil == 'string') ? model.estadoCivil : model.estadoCivil.id;
+
       if (!model.genero) {
         model.genero = model.sexo;
       } else {
@@ -288,11 +295,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.seleccion) {
         model.id = this.seleccion.id;
       }
-
+      debugger
       if (model.relaciones) {
-          model.relaciones = model.relaciones.map(elem => { elem.relacion = ((typeof elem.relacion == 'string') ? elem.relacion : elem.relacion.id); return elem });
+        model.relaciones = model.relaciones.map(elem => { elem.relacion = ((typeof elem.relacion == 'string') ? elem.relacion : elem.relacion.id); return elem });
       }
 
+      //Si quitan las relaciones.referencia inexistentes
+      model.relaciones.forEach(rel => {
+        if (rel.referencia === "") {
+          rel.referencia = null;
+        }
+      });
       // Se controla si existe el paciente
       if (!model.id) {
         let dtoBusqueda = {
@@ -301,7 +314,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.searchMatch('documento', dtoBusqueda)
           .subscribe(value => { listaPacientes = value; });
       }
-      
+
       if (listaPacientes.length > 0) {
         this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
 
@@ -315,13 +328,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
             });
           }
         })
-
       }
-
-
-    } /*else {
+    } else {
       this.plex.alert('Debe completar los datos obligatorios');
-    }*/
+    }
   }
 
   onCancel() {

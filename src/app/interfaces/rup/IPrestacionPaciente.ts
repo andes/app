@@ -77,6 +77,8 @@ export interface IPrestacionPaciente {
 
     // a futuro que se ejecuta
     prestacionesSolicitadas: [String],
+    // prestaciones ejecutadas en el transcurso de la prestacion de origen
+    prestacionesEjecutadas: [IPrestacionPaciente],
 
     estado: [
         {
