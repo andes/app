@@ -57,9 +57,21 @@ export class DarTurnosComponent implements OnInit {
     private prestaciones: String = '';
     private turnoPrestacion: any = {};
     indice: number = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];   
+    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
 
-    paciente: any = {};
+    paciente: any = {
+        id: '57f66f2076e97c2d18f1808b',
+        documento: '30403872',
+        apellido: 'Diego',
+        nombre: 'Maradona',
+        contacto: [{
+            tipo: 'Teléfono Fijo',
+            valor: '2995573273',
+            ranking: 1,
+            activo: true
+        }]
+    };
+
     debugger;
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
@@ -140,7 +152,7 @@ export class DarTurnosComponent implements OnInit {
         );
         if (this.agenda) {
             this.indice = this.agendas.indexOf(this.agenda);
-            
+
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
             if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';

@@ -21,7 +21,7 @@ export class TurnosComponent implements OnInit {
 
     showTurnos: boolean = true;
 
-    smsEnviado: boolean = false;
+    // smsEnviado: boolean = false;
     smsLoader: boolean = false;
     resultado: any;
 
