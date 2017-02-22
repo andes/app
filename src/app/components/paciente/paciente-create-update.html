@@ -7,12 +7,12 @@
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" [disabled]="estado === validado" [required]="true" placeholder="Ingrese nombre..." >
+                  <plex-text label="Nombre" formControlName="nombre" [disabled]="estado === 'validado'"  placeholder="Ingrese nombre..." >
                   </plex-text>
                   
                 </div>
                 <div class="col-sm-4">
-                  <plex-text label="Apellido" formControlName="apellido" [disabled]="estado === validado" [required]="true" placeholder="Ingrese apellido...">
+                  <plex-text label="Apellido" formControlName="apellido" [disabled]="estado === 'validado'"  placeholder="Ingrese apellido...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -22,7 +22,7 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <plex-int label="Número de Documento" formControlName="documento" [disabled]="estado === validado" placeholder="Ingresar DNI...">
+                  <plex-int label="Número de Documento" formControlName="documento" [disabled]="estado === 'validado'" placeholder="Ingresar DNI...">
                   </plex-int>
                 </div>
                 <div class="col-md-4">
@@ -30,7 +30,7 @@
                   </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="estado === validado" label="Sexo:">
+                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="estado === 'validado'" label="Sexo:">
                   </plex-select>
                 </div>
               </div>
@@ -42,6 +42,10 @@
                 <div class="col-md-4">
                   <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
                   </plex-select>
+                </div>
+                <div class="col-md-4">
+                   <plex-text [disabled]="true" label="Estado:" formControlName="estado">
+                      </plex-text>
                 </div>
               </div>
             </plex-box>
@@ -261,7 +265,7 @@
       <plex-box>
         <div class="row">
           <div class="col-sm-12">
-            <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)">
+            <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" (click)="onSave(createForm.value)">
             </plex-button>
             <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>

@@ -145,6 +145,7 @@ export class PacienteSearchComponent implements OnInit {
   }
 
   private verificarInput(cadena) {
+    debugger
     // let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
     let parse = [];
     let datosDni = cadena.split('"');
@@ -152,12 +153,12 @@ export class PacienteSearchComponent implements OnInit {
     // la búsqueda se realiza por nombre, apellido, documento, sexo, fecha de nacimiento
     if (datosDni.length >= 8) {
       this.parseDocument(datosDni);
-
     } else {
       this.pacientesScan = false;
       this.pacienteScaneado.documento = '';
       this.pacienteScaneado.apellido = '';
       this.pacienteScaneado.nombre = '';
+      this.pacienteScaneado.estado = 'temporal';
     }
 
     return parse;

@@ -23,7 +23,7 @@ export class AppComponent {
             
             new MenuItem({label:'Inicio', icon:'creation', route:'/inicio'}),
             new MenuItem({label:'Organizacion', icon: 'hospital-building', route:'/organizacion'}),
-            new MenuItem({label:'Profesional', icon: 'hospital-building', route:'/organizacion'}),
+            new MenuItem({label:'Profesional', icon: 'account-circle', route:'/profesional'}),
             new MenuItem({label:'Especialidad', icon: 'certificate', route:'/especialidad'}),
             new MenuItem({label:'Paciente', icon: 'seat-recline-normal', route:'/paciente'}),
             new MenuItem({label:'Espacio Físico', icon: 'view-agenda', route:'/espacio_fisico'}),

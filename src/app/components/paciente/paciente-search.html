@@ -205,12 +205,12 @@
     </div>
     <!--*ngIf="!showcreate"-->
 
-    <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
+   <!-- <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
       <div class="panel panel-default">
         <div class="clear"></div>
         <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
       </div>
-    </div>
+    </div>-->
   </div>
   <div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
     <div class="panel panel-default">
