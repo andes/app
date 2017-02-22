@@ -23,6 +23,7 @@ export interface IPaciente {
     genero: Genero;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
+    edadReal: {valor: Number, unidad: String};
     fechaFallecimiento: Date;
     direccion: [{
         valor: String;
@@ -42,7 +43,7 @@ export interface IPaciente {
         apellido: String;
         documento: String
     }];
-    financiador: [{ //obrasocial; plan sumar 
+    financiador: [{ // obrasocial; plan sumar 
         entidad: {
             id: String;
             nombre: String

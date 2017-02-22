@@ -30,77 +30,50 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
   }
 
   devolverValores() {
+                    // Ver validaciones - Falta definición para lograr identidicarlos                                                                   
+                    if(this.paciente.edadReal.unidad === 'Días' || this.paciente.edadReal.unidad === 'Meses' || this.paciente.edadReal.unidad === 'Horas'){ 
 
-    //   // agregar validaciones
+                        //Prematuro -ver el peso del paciente   
+                        if (this.frecuenciaRespiratoria >=40 && this.frecuenciaRespiratoria <=90 ) {this.mensaje = 'Paciente Prematuro: Dentro de los parámetros normales'}             
+                        else {this.mensaje = 'Paciente Prematuro: Fuera de los parámetros normales'}                                      
 
-    // Ver validacines para NEO - Ver unidad de la edad 
+                        // Recien Nacido a término     
+                        if (this.frecuenciaRespiratoria >=30 && this.frecuenciaRespiratoria <=80 ) {this.mensaje = 'Paciente Recien Nacido a término: Dentro de los parámetros normales'}             
+                        else {this.mensaje = 'Paciente Recien Nacido a término: Fuera de los parámetros normales'}
+                    }
 
-    // if (this.paciente.edad < 1) {
-    //     if (this.frecuenciaRespiratoria >=40 && this.frecuenciaRespiratoria <=90 ) {this.mensaje = 'Prematuro: Dentro de los parámetros normales'}             
-    //     else {this.mensaje = 'Prematuro: Fuera de los parámetros normales'} } 
+                    // Pacientes Años
+                    if (this.paciente.edadReal.unidad === 'Años'){   
+                                           
+                    if (this.paciente.edadReal.valor === 1) {
+                        if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 40 ) {this.mensaje = 'Paciente de  1 año: Dentro de los parámetros normales'}             
+                        else {this.mensaje = '1 año: Fuera de los parámetros normales'}}                                                                
 
-    if (this.paciente.edad < 1) {
-      if (this.frecuenciaRespiratoria >= 30 && this.frecuenciaRespiratoria <= 80) {
-        this.mensaje = 'Recien Nacido a término: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = 'Recien Nacido a término: Fuera de los parámetros normales'
-      }
-    }
+                    if (this.paciente.edadReal.valor === 2) {
+                        if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 30 ) {this.mensaje = 'Paciente de  2 años: Dentro de los parámetros normales'}             
+                        else {this.mensaje = '2 años: Fuera de los parámetros normales'}}
+                                                
+                    if (this.paciente.edadReal.valor === 5) {
+                        if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 25 ) {this.mensaje = 'Paciente de  5 años: Dentro de los parámetros normales'}             
+                        else {this.mensaje = '5 años: Fuera de los parámetros normales'}}                                                                
 
-    if (this.paciente.edad === 1) {
-      if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 40) {
-        this.mensaje = '1 año: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = '1 año: Fuera de los parámetros normales'
-      }
-    }
+                    if (this.paciente.edadReal.valor === 10) {
+                        if (this.frecuenciaRespiratoria >= 17 && this.frecuenciaRespiratoria <= 22 ) {this.mensaje = 'Paciente de  10 años: Dentro de los parámetros normales'}             
+                        else {this.mensaje = '10 años: Fuera de los parámetros normales'}}                                                                  
 
-    if (this.paciente.edad === 2) {
-      if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 30) {
-        this.mensaje = '2 años: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = '2 años: Fuera de los parámetros normales'
-      }
-    }
-
-    if (this.paciente.edad === 5) {
-      if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 25) {
-        this.mensaje = '5 años: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = '5 años: Fuera de los parámetros normales'
-      }
-    }
-
-    if (this.paciente.edad === 10) {
-      if (this.frecuenciaRespiratoria >= 17 && this.frecuenciaRespiratoria <= 22) {
-        this.mensaje = '10 años: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = '10 años: Fuera de los parámetros normales'
-      }
-    }
-
-    if (this.paciente.edad === 15) {
-      if (this.frecuenciaRespiratoria >= 15 && this.frecuenciaRespiratoria <= 20) {
-        this.mensaje = '15 años: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = '15 años: Fuera de los parámetros normales'
-      }
-    }
-
-    if (this.paciente.edad > 17) {
-      if (this.frecuenciaRespiratoria >= 12 && this.frecuenciaRespiratoria <= 20) {
-        this.mensaje = 'Adulto: Dentro de los parámetros normales'
-      } else {
-        this.mensaje = 'Adulto: Fuera de los parámetros normales'
-      }
-    }
+                    if (this.paciente.edadReal.valor === 15) {
+                        if (this.frecuenciaRespiratoria >= 15 && this.frecuenciaRespiratoria <= 20 ) {this.mensaje = 'Paciente de 15 años: Dentro de los parámetros normales'}             
+                        else {this.mensaje = '15 años: Fuera de los parámetros normales'}}                                                                                                                                                                                                                                                                                         
+                        if (this.paciente.edadReal.valor > 17) {
+                            if (this.frecuenciaRespiratoria >= 12 && this.frecuenciaRespiratoria <= 20 ) {this.mensaje = 'Paciente Adulto: Dentro de los parámetros normales'}             
+                            else {this.mensaje = 'Adulto: Fuera de los parámetros normales'}}      
+                     } // If Pacientes Años
 
 
-    this.data.mensaje.texto = this.mensaje;
-    this.data.valor = this.frecuenciaRespiratoria;
-    this.evtData.emit(this.data);
+                    this.evtData.emit(this.frecuenciaRespiratoria);    
+                    this.data.mensaje.texto = this.mensaje;                                                           
+                    
+                    }                                                                                                                                     
+                                                                            
 
-  }
-
-
-}
+                            }
