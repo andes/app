@@ -1,3 +1,4 @@
+
 import { PacienteComponent } from './../paciente/paciente.component';
 import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
@@ -19,13 +20,8 @@ export class TallaComponent implements OnInit {
     mensaje: String = null;
     edadEnMeses: Number = null;
 
-<<<<<<< HEAD
     //sexo: any = this.paciente.sexo;
 
-
-
-=======
->>>>>>> f85c311adbbdceafc4e2a29a0ea24b8b003cfdce
     data: any = {
         valor: this.talla,
         mensaje: {
@@ -37,20 +33,25 @@ export class TallaComponent implements OnInit {
     ngOnInit() {
         if (this.datosIngreso) {
 
-<<<<<<< HEAD
             this.talla = this.datosIngreso;
 
 
             this.talla = this.datosIngreso[this.tipoPrestacion.key];
 
-=======
+
             this.talla = this.datosIngreso[this.tipoPrestacion.key];
->>>>>>> f85c311adbbdceafc4e2a29a0ea24b8b003cfdce
+
+            this.talla = this.datosIngreso;
+
+
+            this.talla = this.datosIngreso[this.tipoPrestacion.key];
+
+
         }
     }
 
     devolverValores() {
-<<<<<<< HEAD
+
 
 
 
@@ -182,12 +183,6 @@ export class TallaComponent implements OnInit {
         //M = S -> =SI($G5="si";BUSCARV($C5;acondropl!$A$5:$M$59;4+SI($F5="V";;3));BUSCARV($C5;garrahan!$A$5:$M$59;4+SI($F5="V";;3)))
 
 
-
-
-
-
-=======
->>>>>>> f85c311adbbdceafc4e2a29a0ea24b8b003cfdce
         if (this.edadEnMeses >= 3 && this.edadEnMeses <= 9) {
             //6 meses
             if (this.talla < 63, 34) { //p3
