@@ -75,17 +75,17 @@ export class PanelEspacioComponent implements OnInit {
         this.fin = new Date(this.fecha.setHours(22, 0, 0, 0));
         let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
         let cantidadBloques = diferencia / this.unidad;
-        console.log('espacios ', this.espacios);
+        this.sinConsultorio.forEach((unconsul, index) => {
+                unconsul.color = this.colores[index + this.agendas.length];
+            });
+
         for (let j = 0; j < cantidadBloques; j++) {
             let lista = [];
             for (let i = 0; i < this.espacios.length; i++) {
                 let bandera = false;
                 for (let k = 0; k < this.agendas.length; k++) {
                     this.agenda = this.agendas[k];
-                    if (j == 0 && this.agenda.id === "589ca484296da85f0bcb6b67"){
-                        console.log('agenda ', this.agenda);
-                        debugger
-                    }
+                    this.agenda.color = this.colores[k];
                     if (!this.agenda.rows) {
                         this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
                     }

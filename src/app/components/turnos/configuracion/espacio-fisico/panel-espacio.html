@@ -16,7 +16,8 @@
         </tr>
         <tr *ngFor="let horario of horarios">
           <td [ngStyle]="{'width': ancho}">{{horario.hora}}</td>
-          <td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? colores[j]:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">
+          <!--<td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? colores[j]:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">-->
+            <td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? hr.agenda.color:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">
             <div *ngIf="hr.agenda.rows>0" [ngStyle]="{'text-align': 'right'}">
                 <i class="mdi mdi-close-box hover" (click)="eliminar(hr.agenda, horario, j)"></i>
             </div>
