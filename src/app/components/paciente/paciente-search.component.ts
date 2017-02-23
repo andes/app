@@ -22,7 +22,7 @@ import {
 import {
   PacienteCreateUpdateComponent
 } from './paciente-create-update.component';
-import {} from '@angular/common';
+import { } from '@angular/common';
 
 
 @Component({
@@ -32,7 +32,9 @@ import {} from '@angular/common';
 
 export class PacienteSearchComponent implements OnInit {
   @Output()
-  selected: EventEmitter < any > = new EventEmitter < any > ();
+  selected: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  scanned: EventEmitter<any> = new EventEmitter<any>();
   showcreate: boolean = false;
   // showupdate: boolean = false;
   error: boolean = false;
@@ -41,20 +43,20 @@ export class PacienteSearchComponent implements OnInit {
   selectedPaciente: IPaciente = null;
   searchTextModel: string;
   pacientesSearch: boolean = false;
-  resultados$: Observable < any > ;
+  resultados$: Observable<any>;
   modeloSlide: any;
   active: boolean = false;
   searchText: FormControl = new FormControl('');
   nuevoPaciente: boolean = false;
   pacientesScan: boolean = false;
   pacienteScaneado: any = {};
-  pacientesLista: Array < any > = new Array < any > ();
+  pacientesLista: Array<any> = new Array<any>();
   fechaActual: Date = new Date();
   cantPacientesValidados: number = 0;
   cantPacientesFallecidos: number = 0;
 
 
-  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) {}
+  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
@@ -65,9 +67,9 @@ export class PacienteSearchComponent implements OnInit {
     this.modeloSlide = {
       activo: false
     };
-    
+
     this.inicializaPanelInformacion();
-    
+
     this.resultados$ = this.searchText
       .valueChanges
       .map((value: any) => value ? value.trim() : '') // ignore spaces
@@ -76,23 +78,23 @@ export class PacienteSearchComponent implements OnInit {
       .debounceTime(700) // wait when input completed
       .distinctUntilChanged()
       .switchMap(searchString => {
-        return new Promise < Array < any >> ((resolve, reject) => {
+        return new Promise<Array<any>>((resolve, reject) => {
           if (searchString) {
             // Se verifica mediante expresiones regulares el string recibido
             // para controlar si se realizó un escaneo de DNI
             this.verificarInput(searchString);
             this.pacienteService.search(searchString, this.pacienteScaneado)
               .subscribe(resultados => {
-                  // Tengo que limpiar la variable
-                 
-                  let results: Array < any > = resultados;
-                  this.active = false;
-                  resolve(results);
-                },
-                err => {
-                  reject(err);
+                // Tengo que limpiar la variable
 
-                });
+                let results: Array<any> = resultados;
+                this.active = false;
+                resolve(results);
+              },
+              err => {
+                reject(err);
+
+              });
           } else {
             this.mensaje = 'Ingrese los datos del paciente';
             this.selectedPaciente = null;
@@ -106,7 +108,7 @@ export class PacienteSearchComponent implements OnInit {
         // extract results
         // debugger;
         this.nuevoPaciente = true;
-       
+
         if (esResult.length > 0) {
           this.mensaje = '';
           return esResult;
@@ -211,10 +213,11 @@ export class PacienteSearchComponent implements OnInit {
 
 
   onSelect(objPaciente: IPaciente) {
-   
+
     this.showcreate = false;
     this.selectedPaciente = objPaciente;
     this.selected.emit(objPaciente);
+    this.scanned.emit(this.pacientesScan);
   }
 
   mostrarPaciente(paciente: any) {
@@ -225,14 +228,14 @@ export class PacienteSearchComponent implements OnInit {
     this.selectedPaciente = paciente;
   }
 
-  inicializaPanelInformacion(){
-    
+  inicializaPanelInformacion() {
+
     /*todas las queries que irian en el panel */
 
-     this.pacienteService.getConsultas('validados')
-       .subscribe(resultado => {
-                  this.cantPacientesValidados = resultado
-                });
+    this.pacienteService.getConsultas('validados')
+      .subscribe(resultado => {
+        this.cantPacientesValidados = resultado
+      });
 
     this.pacienteService.getConsultas('fallecidos')
       .subscribe(resultado => {

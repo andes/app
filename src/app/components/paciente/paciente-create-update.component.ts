@@ -27,6 +27,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 })
 export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
+  @Input('isScan') isScan: IPaciente;
   @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
   matchingItems: Array<any>;
@@ -70,7 +71,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       genero: [''],
       estadoCivil: [''],
       contacto: this.formBuilder.array([
-        this.iniContacto(1)
+       /* this.iniContacto(1)*/
       ]),
       direccion: this.formBuilder.array([
         this.iniDireccion(1)
@@ -112,10 +113,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
       this.seleccion.relaciones.forEach(rel => {
         this.addRelacion();
       });
+       this.seleccion.contacto.forEach(rel => {
+        this.addContacto();
+      });
 
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;
+          if (this.isScan) { this.seleccion.estado = 'validado' }
           this.createForm.patchValue(this.seleccion);
         });
 
