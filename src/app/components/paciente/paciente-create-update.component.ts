@@ -51,6 +51,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
   familiaresPacientes = [];
+  validado: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -71,7 +72,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       genero: [''],
       estadoCivil: [''],
       contacto: this.formBuilder.array([
-       /* this.iniContacto(1)*/
+        /* this.iniContacto(1)*/
       ]),
       direccion: this.formBuilder.array([
         this.iniDireccion(1)
@@ -101,32 +102,28 @@ export class PacienteCreateUpdateComponent implements OnInit {
     // Se cargan los países, provincias y localidades
     debugger;
     if (this.seleccion) {
-
-
-      // TODO: No permitir edición de los campos principales cuando el estado es validado
+    
       if (this.seleccion.estado === 'validado') {
-        let test = this.createForm.get('nombre')
-        test.disabled;
-        //this.createForm.get('nombre').disabled;
+         this.validado = true;
       }
 
       this.seleccion.relaciones.forEach(rel => {
         this.addRelacion();
       });
-       this.seleccion.contacto.forEach(rel => {
+      this.seleccion.contacto.forEach(rel => {
         this.addContacto();
       });
 
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;
-          if (this.isScan) { this.seleccion.estado = 'validado' }
+          if (this.isScan) {
+            this.seleccion.estado = 'validado';
+            this.validado = true;
+          }
           this.createForm.patchValue(this.seleccion);
         });
-
-
     }
-
 
     // this.detectarRelaciones();
     this.createForm.controls['relaciones'].valueChanges
@@ -149,10 +146,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
           }
         })
       });
-
-
-
-
   }
 
   iniContacto(rank: Number) {
@@ -316,6 +309,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         let dtoBusqueda = {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
         };
+        debugger
         this.pacienteService.searchMatch('documento', dtoBusqueda)
           .subscribe(value => { listaPacientes = value; });
       }
