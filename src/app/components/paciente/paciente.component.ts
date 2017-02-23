@@ -14,7 +14,7 @@ import {
 export class PacienteComponent {
   selectedPaciente: any;
   showcreateupdate: boolean = false;
-
+  isScan: boolean;
   constructor() {
   }
 
@@ -22,6 +22,10 @@ export class PacienteComponent {
   seleccionar(objPaciente: IPaciente) {
       this.showcreateupdate = true;
       this.selectedPaciente = objPaciente;
+  }
+
+  setScan(band:boolean){
+    this.isScan=band;
   }
 
   onReturn(objPaciente: IPaciente): void {

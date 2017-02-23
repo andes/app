@@ -7,12 +7,12 @@
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" [disabled]="estado === 'validado'" [required]="true"  placeholder="Ingrese nombre..." >
+                  <plex-text label="Nombre" formControlName="nombre" [disabled]="estado === validado" [required]="true"  placeholder="Ingrese nombre..." >
                   </plex-text>
                   
                 </div>
                 <div class="col-sm-4">
-                  <plex-text label="Apellido" formControlName="apellido" [disabled]="estado === 'validado'"  [required]="true" placeholder="Ingrese apellido...">
+                  <plex-text label="Apellido" formControlName="apellido" [disabled]="estado === validado"  [required]="true" placeholder="Ingrese apellido...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -22,7 +22,7 @@
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <plex-int label="Número de Documento" formControlName="documento" [disabled]="estado === 'validado'" [required]="true" placeholder="Ingresar DNI...">
+                  <plex-int label="Número de Documento" formControlName="documento" [disabled]="estado === validado" [required]="true" placeholder="Ingresar DNI...">
                   </plex-int>
                 </div>
                 <div class="col-md-4">
@@ -30,7 +30,7 @@
                   </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="estado === 'validado'" [required]="true" label="Sexo:">
+                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="estado ===   validado" [required]="true" label="Sexo:">
                   </plex-select>
                 </div>
               </div>
