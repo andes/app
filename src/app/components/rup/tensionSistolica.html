@@ -1,2 +1,7 @@
+<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
+</p>
 <plex-int placeholder="..." [(ngModel)]="tensionSistolica" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (change)="devolverValores()">
 </plex-int>

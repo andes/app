@@ -14,10 +14,12 @@ export class FrecuenciaCardiacaComponent implements OnInit {
     frecuenciaCardiaca: Number = null;
     sexo: any = null;
     mensaje: String = null;
+    class: String = "";
     data: any = {
         valor: this.frecuenciaCardiaca,
         mensaje: {
-            texto: String,
+            class: "",
+            texto: ""
         },
     };
     ngOnInit() {
@@ -28,7 +30,9 @@ export class FrecuenciaCardiacaComponent implements OnInit {
     }
 
     devolverValores() {
+        this.class = 'outline-danger';
         this.sexo = this.paciente.sexo
+        this.paciente.edad = 23; //Solo es para probar!! 
         if (this.sexo == 'masculino') {
             if (this.paciente.edad >= 20 && this.paciente.edad <= 29) {
                 if (this.frecuenciaCardiaca < 86) {
@@ -110,6 +114,7 @@ export class FrecuenciaCardiacaComponent implements OnInit {
                 }
             }
         }
+        this.data.mensaje.class = this.class;
         this.data.mensaje.texto = this.mensaje;
         this.data.valor = this.frecuenciaCardiaca;
         this.evtData.emit(this.data);

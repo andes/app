@@ -19,13 +19,14 @@ export class TallaComponent implements OnInit {
     talla: any = null;
     mensaje: String = null;
     edadEnMeses: Number = null;
-
+    class: String = "";
     //sexo: any = this.paciente.sexo;
 
     data: any = {
         valor: this.talla,
         mensaje: {
-            texto: String,
+            class: "",
+            texto: ""
         },
     };
 
@@ -52,11 +53,11 @@ export class TallaComponent implements OnInit {
 
     devolverValores() {
 
+        this.edadEnMeses = 8; //Falta la edad en meses!! 
+        this.class = 'outline-danger';
 
-
-
-//NO BORRAR.
-//Funciones para calcular percentilo.. Falta calcular el percentilo VER EL EXCEL DE EJEMPLO (Tablas de crecimiento)
+        //NO BORRAR.
+        //Funciones para calcular percentilo.. Falta calcular el percentilo VER EL EXCEL DE EJEMPLO (Tablas de crecimiento)
         // var tablasExcel = [
         //     tablasExcel['ScolumnaAcondroplasia'] = [
         //         0.05050, 0.04950, 0.04860, 0.04770, 0.04670, 0.04585, 0.04500, 0.04420, 0.04340, 0.04270, 0.04200, 0.04140, 0.04082, 0.04031, 0.03990,
@@ -157,7 +158,7 @@ export class TallaComponent implements OnInit {
         // var $valorZcore = 0; //Formula tabla Zcore
         // var $sdMenos3 = $columnaM*(1+$columnaL* $columnaS*-3)^(1/$columnaL); //formula tabla P
         // var $sdMenos23 = $columnaM*(1+$columnaL* $columnaS*-2)^(1/$columnaL)-$sdMenos3; //Formula tabla R
-        
+
         // //Calculo valorzcore
         // if ($valorAbsoluto <= 3) {
         //     if ($zind > 3) {
@@ -436,7 +437,7 @@ export class TallaComponent implements OnInit {
             }
         }
 
-
+        this.data.mensaje.class = this.class;
         this.data.mensaje.texto = this.mensaje;
         this.data.valor = this.talla;
         this.evtData.emit(this.data);

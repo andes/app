@@ -15,6 +15,7 @@ export class TensionSistolicaComponent implements OnInit {
 
     tensionSistolica: Number = null;
     mensaje: String = "";
+    class: String = "";
     percentiloTalla: Number = null;
     BajaTensionSistolica: Number = null;
     Edad: any = null;
@@ -22,7 +23,8 @@ export class TensionSistolicaComponent implements OnInit {
     data: any = {
         valor: this.tensionSistolica,
         mensaje: {
-            texto: String,
+            class: "",
+            texto: ""
         },
     };
 
@@ -32,7 +34,8 @@ export class TensionSistolicaComponent implements OnInit {
         }
     }
     devolverValores() {
-        this.Edad = this.paciente.edad;
+        this.class = 'outline-danger';
+        this.Edad = 7//this.paciente.edad;
         this.percentiloTalla = 5; //Falta tomar valor del percentilo
         //console.log(this.paciente);
         // agregar validaciones aca en base al paciente y el tipo de prestacion
@@ -1285,6 +1288,7 @@ export class TensionSistolicaComponent implements OnInit {
                 }
             }
         }
+        this.data.mensaje.class = this.class;
         this.data.mensaje.texto = this.mensaje;
         this.data.valor = this.tensionSistolica;
         this.evtData.emit(this.data);

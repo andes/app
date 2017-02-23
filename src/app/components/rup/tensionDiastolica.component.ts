@@ -34,9 +34,9 @@ export class TensionDiastolicaComponent implements OnInit {
     }
     devolverValores() {
         this.mensaje = '';
-        this.class = 'default';
+        this.class = 'outline-danger';   //Queda agregar las clases para cada caso.-Warning-Succes-Danger-
         //this.evtData.emit(this.tensionDiastolica);
-        this.Edad = this.paciente.edad;
+        this.Edad = 16 //this.paciente.edad;
         this.percentiloTalla = 5; //Falta tomar valor del percentilo
         // agregar validaciones aca en base al paciente y el tipo de prestacion
         //Rango de edad del paciente ADULTOS
@@ -75,8 +75,8 @@ export class TensionDiastolicaComponent implements OnInit {
         }
 
         if (this.Edad > 0 && this.Edad <= 17) {//Parametros para la edad del niño
-            let mensajeTensionBaja = 'Baja tension Sistolica';
-            let mensajeTensionAlta = 'Alta tension Sistolica';
+            let mensajeTensionBaja = 'Baja tension Diastolica';
+            let mensajeTensionAlta = 'Alta tension Diastolica';
 
             this.BajaTensionDiastolica = 70 + (2 * this.Edad);//Calcula el parametro que por debajo es baja tension
             if (this.percentiloTalla == 5) { //Mira la altura

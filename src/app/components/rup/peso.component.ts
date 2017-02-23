@@ -15,12 +15,13 @@ export class PesoComponent implements OnInit {
     peso: Number = null;
     mensaje: String = null;
     edadEnMeses: Number = null;
-    
+    class: String = "";
 
     data: any = {
         valor: this.peso,
         mensaje: {
-            texto: String,
+            class: "",
+            texto: ""
         },
     };
 
@@ -31,7 +32,8 @@ export class PesoComponent implements OnInit {
     }
 
     devolverValores() {
-
+        this.edadEnMeses = 8; //Falta la edad en meses esta asi para probar.. 
+        this.class = 'outline-danger';
         if (this.edadEnMeses >= 3 && this.edadEnMeses <= 9) {
             //6 meses
             if(this.peso < 6,27){ //p3
@@ -285,7 +287,7 @@ export class PesoComponent implements OnInit {
             }
         }
 
-
+        this.data.mensaje.class = this.class;
         this.data.mensaje.texto = this.mensaje;
         this.data.valor = this.peso;
         this.evtData.emit(this.data);

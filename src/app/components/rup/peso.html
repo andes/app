@@ -1,8 +1,7 @@
-<plex-int placeholder="..." [(ngModel)]="peso" name="peso" label="Peso" suffix=" Kg " min="0" max="400"
-(change)="devolverValores()"
->
-</plex-int>
-
-<p *ngIf="mensaje">
-    {{mensaje}}
+<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
 </p>
+<plex-int placeholder="..." [(ngModel)]="peso" name="peso" label="Peso" suffix=" Kg " min="0" max="400" (change)="devolverValores()">
+</plex-int>

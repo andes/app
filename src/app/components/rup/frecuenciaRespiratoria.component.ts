@@ -11,28 +11,31 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
   @Input('tipoPrestacion') prestacion: any;
   @Input('paciente') paciente: IPaciente;
 
-  @Output() evtData: EventEmitter < any > = new EventEmitter < any > ();
+  @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
   frecuenciaRespiratoria: Number = null;
+  class: String = "";
   mensaje: String = null;
   data: any = {
     valor: this.frecuenciaRespiratoria,
     mensaje: {
-      texto: String
-    }
+      class: "",
+      texto: ""
+    },
   };
 
 
   ngOnInit() {
+
     if (this.datosIngreso) {
       this.frecuenciaRespiratoria = this.datosIngreso;
     }
   }
 
   devolverValores() {
-
+    this.class = 'outline-danger';
+    this.paciente.edad = 1; //Solo prueba.. Borrar dsp! 
     //   // agregar validaciones
-
     // Ver validacines para NEO - Ver unidad de la edad 
 
     // if (this.paciente.edad < 1) {
@@ -47,7 +50,8 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-    if (this.paciente.edad === 1) {
+    if (this.paciente.edad == 1) {
+
       if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 40) {
         this.mensaje = '1 año: Dentro de los parámetros normales'
       } else {
@@ -55,7 +59,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-    if (this.paciente.edad === 2) {
+    if (this.paciente.edad == 2) {
       if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 30) {
         this.mensaje = '2 años: Dentro de los parámetros normales'
       } else {
@@ -63,7 +67,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-    if (this.paciente.edad === 5) {
+    if (this.paciente.edad == 5) {
       if (this.frecuenciaRespiratoria >= 20 && this.frecuenciaRespiratoria <= 25) {
         this.mensaje = '5 años: Dentro de los parámetros normales'
       } else {
@@ -71,7 +75,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-    if (this.paciente.edad === 10) {
+    if (this.paciente.edad == 10) {
       if (this.frecuenciaRespiratoria >= 17 && this.frecuenciaRespiratoria <= 22) {
         this.mensaje = '10 años: Dentro de los parámetros normales'
       } else {
@@ -79,7 +83,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-    if (this.paciente.edad === 15) {
+    if (this.paciente.edad == 15) {
       if (this.frecuenciaRespiratoria >= 15 && this.frecuenciaRespiratoria <= 20) {
         this.mensaje = '15 años: Dentro de los parámetros normales'
       } else {
@@ -95,7 +99,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
       }
     }
 
-
+    this.data.mensaje.class = this.class;
     this.data.mensaje.texto = this.mensaje;
     this.data.valor = this.frecuenciaRespiratoria;
     this.evtData.emit(this.data);

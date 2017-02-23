@@ -26,11 +26,13 @@ export class TemperaturaComponent implements OnInit {
 
   temperatura: Number = null;
   mensaje: String = null;
+  class: String = "";
   data: any = {
     valor: this.temperatura,
-    mensaje: {
-      texto: String
-    }
+   mensaje: {
+            class: "",
+            texto: ""
+        },
   };
 
 
@@ -41,13 +43,13 @@ export class TemperaturaComponent implements OnInit {
   }
 
   devolverValores() { // agregar validaciones
-
+    this.class = 'outline-danger';
     if (this.temperatura > 38) {
       this.mensaje = 'Fiebre';
     } else {
       this.mensaje = 'Normal';
     }
-
+    this.data.mensaje.class = this.class;
     this.data.mensaje.texto = this.mensaje;
     this.data.valor = this.temperatura;
     this.evtData.emit(this.data);
