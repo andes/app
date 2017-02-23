@@ -277,6 +277,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSave(model: any, valid: boolean) {
     var lista = [];
+    debugger
     if (valid) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
@@ -329,6 +330,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
           });
       }
+      
+      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+                if (resultado) {
+                  debugger
+                  operacionPac = this.pacienteService.save(model);
+                  operacionPac.subscribe(result => {
+                    this.data.emit(result)
+                  });
+                }
+              })
 
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
