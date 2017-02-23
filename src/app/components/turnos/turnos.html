@@ -32,19 +32,19 @@
                                         </td>
 
                                         <td *ngIf="ag.estado != 'Suspendida'">
-                                            <a *ngIf="(turno.paciente) && (!turno.asistencia)" class="hover"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a>
+                                            <a id="suspenderTurno" *ngIf="(turno.paciente) && (!turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a>
                                             <i *ngIf="(turno.asistencia)" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                             <i *ngIf="(!turno.paciente) && (!turno.asistencia)" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                         </td>
 
                                         <td *ngIf="(ag.estado != 'Suspendida')">
-                                            <a *ngIf="(!turno.asistencia) && (turno.paciente)" id="cancelarTurno" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
+                                            <a id="cancelarTurno" *ngIf="(!turno.asistencia) && (turno.paciente)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
                                             <i *ngIf="(turno.asistencia) && (turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
                                             <i *ngIf="(!turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
                                         <td *ngIf="ag.estado != 'Suspendida'">
-                                            <a *ngIf="!turno.paciente" id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)">
+                                            <a id="bloquearTurno" *ngIf="!turno.paciente" class="hover" (click)="eventosTurno(ag, turno, $event)">
                                                 <i title="Bloquear Turno" [ngClass]="(turno.estado == 'bloqueado') ? 'text-success success mdi mdi-block-helper':'text-success success mdi mdi-brightness-1'">
                                                 </i>
                                             </a>

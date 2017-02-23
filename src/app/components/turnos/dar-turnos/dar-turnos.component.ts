@@ -279,13 +279,15 @@ export class DarTurnosComponent implements OnInit {
     }
 
     borrarTurnoAnterior() {
-        let patch = {
-            'op': 'reasignarTurno',
-            'idAgenda': this._reasignaTurnos.idAgenda,
-            'idTurno': this._reasignaTurnos.idTurno
-        };
+        if (this._reasignaTurnos) {
+            let patch = {
+                'op': 'reasignarTurno',
+                'idAgenda': this._reasignaTurnos.idAgenda,
+                'idTurno': this._reasignaTurnos.idTurno
+            };
 
-        this.serviceAgenda.patch(this._reasignaTurnos.idAgenda, patch).subscribe();
+            this.serviceAgenda.patch(this._reasignaTurnos.idAgenda, patch).subscribe();
+        }
     }
 
     buscarPaciente() {

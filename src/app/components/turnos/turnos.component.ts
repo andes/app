@@ -99,6 +99,11 @@ export class TurnosComponent implements OnInit {
                 'op': 'bloquearTurno',
                 'idTurno': turno.id
             };
+        } else if (btnClicked === 'suspenderTurno') {
+            patch = {
+                'op': 'suspenderTurno',
+                'idTurno': turno.id
+            };
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
