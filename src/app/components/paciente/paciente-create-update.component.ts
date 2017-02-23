@@ -102,9 +102,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
     // Se cargan los países, provincias y localidades
     debugger;
     if (this.seleccion) {
-    
+
       if (this.seleccion.estado === 'validado') {
-         this.validado = true;
+        this.validado = true;
       }
 
       this.seleccion.relaciones.forEach(rel => {
@@ -276,8 +276,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   onSave(model: any, valid: boolean) {
-    let listaPacientes = [];
-
+    var lista = [];
     if (valid) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
@@ -293,7 +292,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.seleccion) {
         model.id = this.seleccion.id;
       }
-      debugger
+
       if (model.relaciones) {
         model.relaciones = model.relaciones.map(elem => { elem.relacion = ((typeof elem.relacion == 'string') ? elem.relacion : elem.relacion.id); return elem });
       }
@@ -308,26 +307,29 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (!model.id) {
         let dtoBusqueda = {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
+          'fechaNacimiento': model.fechaNacimiento
         };
         debugger
         this.pacienteService.searchMatch('documento', dtoBusqueda)
-          .subscribe(value => { listaPacientes = value; });
+          .subscribe(value => {
+            debugger; lista = value;
+            if (lista.length > 0) {
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
+
+            } else {
+              this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+                if (resultado) {
+                  debugger
+                  operacionPac = this.pacienteService.save(model);
+                  operacionPac.subscribe(result => {
+                    this.data.emit(result)
+                  });
+                }
+              })
+            }
+          });
       }
 
-      if (listaPacientes.length > 0) {
-        this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
-
-      } else {
-        this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-          if (resultado) {
-            debugger
-            operacionPac = this.pacienteService.save(model);
-            operacionPac.subscribe(result => {
-              this.data.emit(result)
-            });
-          }
-        })
-      }
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }
