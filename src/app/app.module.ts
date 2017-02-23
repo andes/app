@@ -326,6 +326,7 @@ import {
     ...RUP_COMPONENTS
   ],
   bootstrap: [AppComponent],
+  entryComponents: RUP_COMPONENTS,
   providers: [{
       provide: LOCALE_ID,
       useValue: 'es-AR'

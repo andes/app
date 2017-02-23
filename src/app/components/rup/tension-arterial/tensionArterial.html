@@ -2,7 +2,7 @@
     <div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
         <div *ngFor="let tp of tipoPrestacion.ejecucion">
             <div class="col-md-12">
-                <rup #rup [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="valor[tp.key]">
+                <rup #rup [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
                 </rup>
             </div>
         </div>

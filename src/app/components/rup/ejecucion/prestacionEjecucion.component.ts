@@ -51,7 +51,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     prestacionAEjecutar: any = null;
     // array de id prestaciones que se ejecutaron en la consulta para filtrar luego
     prestacionesEjecucion: any[] = [];
-    idPrestacionesEjecucion: any[] = [];
+    idTiposPrestacionesEjecucion: any[] = [];
 
     // PRESTACIONES FUTURAS
     // utilizado para el select
@@ -81,29 +81,45 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
-        // console.log(this.prestacion);
-        // this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
-        // //     /******************************* 
-        // //      *******************************
-        // //      *******************************
+        this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
+            // Verificamos si el tipo de prestacion no está dentro de las prestaciones 
+            //  que se han ejecutado, y de ser así las creo vacias 
+            let find = this.prestacion.prestacionesEjecutadas.find(p => {
+                return p.solicitud.tipoPrestacion.id === element.id
+            });
 
-        // //      1) Verificar si el tipo de prestacion no está dentro de las prestaciones 
-        // //      que se han ejecutado, y de ser así las creo vacias 
-        //     let find = this.prestacion.prestacionesEjecutadas.find(p => {
-        //         return p.solicitud.tipoPrestacion.id === element.id
-        //     });
+            // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
+            if (!find) {
+                // asignamos valores a la nueva prestacion
+                let nuevaPrestacion = this.crearPrestacionVacia(element);
+            }else{
+                this.idTiposPrestacionesEjecucion.push(element.id);
+                this.prestacionesEjecucion.push(find);
+            }
 
-        //     console.info(find);
-        //     // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
-        //     if (!find) {
-        //         // asignamos valores a la nueva prestacion
-        //         let nuevaPrestacion = this.crearPrestacionVacia(element);
-        //     }else{
-        //         this.idPrestacionesEjecucion.push(element.id);
-        //         this.prestacionesEjecucion.push(find);
-        //     }
+        });
 
-        // });
+        // recorremos todas las que se han ejecutado y si no esta 
+        // dentro de las que cargamos anteriormente las agregamos
+        this.prestacion.prestacionesEjecutadas.forEach(_prestacion => {
+
+            let find = this.idTiposPrestacionesEjecucion.find(idP => {
+                return _prestacion.solicitud.tipoPrestacion.id === idP
+            });
+
+            if (!find) {
+                this.idTiposPrestacionesEjecucion.push(_prestacion.solicitud.tipoPrestacion.id);
+                this.prestacionesEjecucion.push(_prestacion);
+            }
+        });
+
+
+        // por ultimo recorremos todas las que esten en ejecucion actualmente y asignamos 
+        // sus problemas que se cargaron en la solicitud
+        this.prestacionesEjecucion.forEach(_prestacion => {
+            this.listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key] = _prestacion.solicitud.listaProblemas;
+        });
+
 
         //      2) Si el tipo de prestacion se encuentra dentro de las prsetaciones ejecutadas
         //      en la prestacion actual, entonces la asigno y paso sus valroes
@@ -155,7 +171,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // asignamos valores a la nueva prestacion
         let nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
-            paciente: this.prestacion.paciente.id,
+            paciente: this.prestacion.paciente,
             solicitud: {
                 tipoPrestacion: tipoPrestacion,
                 fecha: new Date(),
@@ -164,6 +180,9 @@ export class PrestacionEjecucionComponent implements OnInit {
             estado: {
                 timestamp: new Date(),
                 tipo: 'ejecucion'
+            },
+            ejecucion: {
+                evoluciones: []
             }
         };
 
@@ -207,7 +226,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             // }
 
             // asignamos la prestacion nueva al array de prestaciones futuras
-            this.prestacion.prestacionesEjecutadas.push(prestacionEjecutada);
+            let id; id = prestacionEjecutada.id;
+            this.prestacion.prestacionesEjecutadas.push(id);
 
             this.updatePrestacion();
 
@@ -274,17 +294,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
     posiblesPrestaciones(event) {
-        this.serviceTipoPrestacion.get({ excluir: this.idPrestacionesEjecucion }).subscribe(event.callback);
+        this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
     }
-
-
-    // agregarPrestacion(tipoPrestacion) {
-    //     // array de nuevas prestaciones solicitadas y ejecutadas
-    //     this.nuevasPrestaciones.push(tipoPrestacion);
-    //     // almacenamos los ids de las prestaciones en ejecucion para luego quitar de las posibles prestaciones
-    //     this.prestacionesEjecucion.push(tipoPrestacion.id);
-    //     this.prestacionAEjecutar = null;
-    // }
 
     // Prestaciones futuras / Plan
     // Busca los tipos de prestaciones que pueda pedir a futuro como plan
@@ -303,7 +314,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // asignamos valores a la nueva prestacion
             this.nuevaPrestacion = {
                 idPrestacionOrigen: this.prestacion.id,
-                paciente: this.prestacion.paciente.id,
+                paciente: this.prestacion.paciente,
                 solicitud: {
                     tipoPrestacion: this.nuevoTipoPrestacion,
                     fecha: new Date(),
@@ -370,10 +381,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     guardarProblema(nuevoProblema) {
-        //debugger;
-        //console.log(this.listaProblemas);
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
-            //debugger;
             if (resultado) {
                 this.listaProblemas.push(resultado);
 
@@ -387,7 +395,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarProblema() {
-        //debugger;
         if (!this.existeProblema(this.tipoProblema)) {
             let nuevoProblema = {
                 id: null,
@@ -408,7 +415,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     eliminarProblema(problema: IProblemaPaciente) {
         this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
-            //debugger;
+
             if (resultado) {
 
             }

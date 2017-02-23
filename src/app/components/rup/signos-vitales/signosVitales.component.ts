@@ -43,28 +43,31 @@ export class SignosVitalesComponent implements OnInit {
 
         // si vienen datos por input, los asignamos a nuestro objeto data
         if (this.datosIngreso) {
-            if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca) {
-                this.valor.frecuenciaCardiaca = this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca;
-            }
-            if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria) {
-                this.valor.frecuenciaRespiratoria = this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria;
-            }
+            // console.log("SIGNOS VITALES");
+            // console.log(this.datosIngreso);
+            // if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca) {
+            //     this.valor.frecuenciaCardiaca = this.datosIngreso[this.tipoPrestacion.key].frecuenciaCardiaca;
+            // }
+            // if (this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria) {
+            //     this.valor.frecuenciaRespiratoria = this.datosIngreso[this.tipoPrestacion.key].frecuenciaRespiratoria;
+            // }
 
-            if (this.datosIngreso[this.tipoPrestacion.key].peso) {
-                this.valor.peso = this.datosIngreso[this.tipoPrestacion.key].peso;
-            }
-            if (this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno) {
-                this.valor.saturacionOxigeno = this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno;
-            }
-            if (this.datosIngreso[this.tipoPrestacion.key].temperatura) {
-                this.valor.temperatura = this.datosIngreso[this.tipoPrestacion.key].temperatura;
-            }
-            if (this.datosIngreso[this.tipoPrestacion.key].tensionArterial) {
-                this.valor.tensionArterial = this.datosIngreso[this.tipoPrestacion.key].tensionArterial;
-            }
-            if (this.datosIngreso[this.tipoPrestacion.key].observacion) {
-                this.valor.observacion = this.datosIngreso[this.tipoPrestacion.key].observacion;
-            }
+            // if (this.datosIngreso[this.tipoPrestacion.key].peso) {
+            //     this.valor.peso = this.datosIngreso[this.tipoPrestacion.key].peso;
+            // }
+            // if (this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno) {
+            //     this.valor.saturacionOxigeno = this.datosIngreso[this.tipoPrestacion.key].saturacionOxigeno;
+            // }
+            // if (this.datosIngreso[this.tipoPrestacion.key].temperatura) {
+            //     this.valor.temperatura = this.datosIngreso[this.tipoPrestacion.key].temperatura;
+            // }
+            // if (this.datosIngreso[this.tipoPrestacion.key].tensionArterial) {
+            //     this.valor.tensionArterial = this.datosIngreso[this.tipoPrestacion.key].tensionArterial;
+            // }
+            // if (this.datosIngreso[this.tipoPrestacion.key].observacion) {
+            //     this.valor.observacion = this.datosIngreso[this.tipoPrestacion.key].observacion;
+            // }
+            // console.log("VALOR", this.valor);
         }
 
     }
@@ -77,7 +80,7 @@ export class SignosVitalesComponent implements OnInit {
 
         this.data[this.tipoPrestacion.key][unaPrestacion.key] = obj.valor;
         // this.data.mensaje.texto = this.mensaje;
-
+        // console.log(this.data);
         this.evtData.emit(this.data);
     }
 

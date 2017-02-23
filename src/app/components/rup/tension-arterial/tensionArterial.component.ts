@@ -36,8 +36,10 @@ export class TensionArterialComponent implements OnInit {
 
     ngOnInit() {
         if (this.datosIngreso) {
-            this.data.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
-            this.data.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
+            console.log("TENSION ARTERIAL");
+            console.log(this.datosIngreso);
+            // this.data.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
+            // this.data.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
         }
 
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
