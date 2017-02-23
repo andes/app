@@ -23,6 +23,7 @@ export interface IPaciente {
     genero: Genero;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
+    edadReal: {valor: Number, unidad: String};
     fechaFallecimiento: Date;
     direccion: [{
         valor: String;
