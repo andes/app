@@ -1,6 +1,19 @@
+<style>
+    .celeste {
+        color: #00A8E0;
+        font-weight: bold;
+    }
+    
+    p.celeste {
+        border-bottom: 1px solid #cccccc;
+    }
+    
+    .gris {
+        color: #b1b1b1;
+    }
+</style>
 <div *ngIf="!showEjecucion">
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>
-
     <plex-box>
         <div class="row">
             <div class="col-md-6">
@@ -16,26 +29,60 @@
     <plex-box>
         <div class="row">
             <div class="col-md-4">
-                <h4>Problemas</h4>
+                <p class="celeste">Ultimas Solicitudes Pendientes</p>
+                <ul class="list-group">
+                    <li class="list-group-item clearfix" *ngFor="let pendiente of prestacionesPendientes">
+                        <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>
+                        <br />
+                        <small class="gris">
+                                Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}
+                        </small>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <p class="celeste">Problemas</p>
                 <ul class="list-group">
                     <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                        <div >
+                        <div>
                             {{problema.tipoProblema.nombre}}
                             <br />
                             <small class="gris">
-                                {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
+                                Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
                             </small>
-                            <span class="label label-success pull-right" *ngIf="problema.evoluciones && problema.evoluciones[problema.evoluciones.length-1] && problema.evoluciones[problema.evoluciones.length-1].activo">
+                            <span class="label label-success pull-right" *ngIf="problema.activo">
                                 Activo
                             </span>
-                            <span class="label label-danger pull-right" 
-                                *ngIf="problema.evoluciones && problema.evoluciones[problema.evoluciones.length-1] && !problema.evoluciones[problema.evoluciones.length-1].activo">
+                            <span class="label label-danger pull-right" *ngIf="!problema.activo">
                                 Inactivo
                             </span>
                         </div>
                     </li>
                 </ul>
             </div>
+            <div class="col-md-4">
+                <p class="celeste">Indicadores</p>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl *ngIf="prestacionPeso">
+                            <dt>Peso</dt>
+                            <dd>{{prestacionPeso.ejecucion.evoluciones[0].valores[0].signosVitales.peso}} Kg<br><small class="gris">
+                                Fecha: {{prestacionPeso.ejecucion.fecha | date: 'dd/MM/yyyy'}}
+                        </small></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl *ngIf="prestacionTalla">
+                            <dt>Talla</dt>
+                            <dd>{{prestacionTalla.ejecucion.evoluciones[0].valores[0].talla}} cm<br><small class="gris">
+                                Fecha: {{prestacionTalla.ejecucion.fecha | date: 'dd/MM/yyyy'}}
+                        </small></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </plex-box>
     <plex-box>
@@ -48,12 +95,11 @@
 
                 <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" class="pull-right"></plex-button>
 
-                <plex-button title="Iniciar prestación" label="Iniciar" type="success"  (click)="iniciarPrestacion()"
-                    *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
+                <plex-button title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
             </div>
         </div>
-    
-     </plex-box>
+
+    </plex-box>
 </div>
 
 <div *ngIf="showEjecucion">

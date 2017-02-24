@@ -35,6 +35,15 @@ export class PrestacionPacienteService {
     }
 
     /**
+     * Metodo getById. Trae el objeto tipoPrestacion por su Id.
+     * @param {String} id Busca por Id
+     */
+    getByKey(key: String): Observable<IPrestacionPaciente[]> {
+        var url = this.prestacionesUrl + "/forKey/" + key;
+        return this.server.get(url, null)
+    }
+
+    /**
      * Metodo post. Inserta un objeto prestacionPaciente nuevo.
      * @param {IPrestacionPaciente} prestacion Recibe IPrestacionPaciente
      */
