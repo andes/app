@@ -1,31 +1,8 @@
-<!--CSS En line solo para prueba-->
-<style type="text/css">
-    .badge {
-        text-transform: uppercase;
-        font-size: 0.7em;
-        font-weight: 600;
-    }
-    
-    .outline-danger {
-        border: 1.5px solid #dd4b39;
-        border-radius: 0px;
-        background: transparent;
-        color: #dd4b39;
-        margin: 0px 10px 10px 0px;
-    }
-</style>
+<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="20" max="300" (change)="devolverValores()">
+</plex-int>
 
 <p *ngIf="data.mensaje.texto">
     <span class="badge {{data.mensaje.class}}">
     {{data.mensaje.texto}}
     </span>
 </p>
-<plex-int placeholder="..." [(ngModel)]="tensionDiastolica" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG "
-    min="20" max="300" (change)="devolverValores()">
-    </plex-int>
-
-    <!--
-<pre>
-    {{data | json}}
-     {{data.mensaje.texto}}
-</pre> -->

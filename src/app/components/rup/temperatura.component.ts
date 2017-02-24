@@ -1,57 +1,63 @@
 // 000 - Leandro Lambertucci - LL - 20/02/2017
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 import {
-  IPaciente
+	IPaciente
 } from '../../interfaces/IPaciente';
 import {
-  Component,
-  Output,
-  Input,
-  EventEmitter,
-  OnInit
+	Component,
+	Output,
+	Input,
+	EventEmitter,
+	OnInit
 } from '@angular/core';
 
 @Component({
-  selector: 'rup-temperatura',
-  templateUrl: 'temperatura.html'
+	selector: 'rup-temperatura',
+	templateUrl: 'temperatura.html'
 })
 
 export class TemperaturaComponent implements OnInit {
 
-  @Input('datosIngreso') datosIngreso: any;
-  @Input('paciente') paciente: IPaciente;
-  @Input('tipoPrestacion') tipoPrestacion: any;
-  @Input('required') required: Boolean;
-  @Output() evtData: EventEmitter < Number > = new EventEmitter < Number > ();
+	@Input('datosIngreso') datosIngreso: any;
+	@Input('paciente') paciente: IPaciente;
+	@Input('tipoPrestacion') tipoPrestacion: any;
+	@Input('required') required: Boolean;
+	@Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
-  temperatura: Number = null;
-  mensaje: String = null;
-  class: String = "";
-  data: any = {
-    valor: this.temperatura,
-   mensaje: {
-            class: "",
-            texto: ""
-        },
-  };
+	data: any = {
+		mensaje: {
+			class: "",
+			texto: ""
+		},
+	};
 
 
-  ngOnInit() {
-    if (this.datosIngreso) {
-      this.temperatura = this.datosIngreso;
-    }
-  }
+	ngOnInit() {
+		this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+	}
 
-  devolverValores() { // agregar validaciones
-    this.class = 'outline-danger';
-    if (this.temperatura > 38) {
-      this.mensaje = 'Fiebre';
-    } else {
-      this.mensaje = 'Normal';
-    }
-    this.data.mensaje.class = this.class;
-    this.data.mensaje.texto = this.mensaje;
-    this.data.valor = this.temperatura;
-    this.evtData.emit(this.data);
-  }
+	devolverValores() {
+		this.data.mensaje = this.getMensajes();
+		this.evtData.emit(this.data);
+	}
+
+	getMensajes() {
+		let temperatura = this.data[this.tipoPrestacion.key];
+		let mensaje: any = {
+			texto: '',
+			class: 'outline-danger'
+		};
+
+		// agregar validaciones
+
+		if (temperatura) {
+			if (temperatura > 38) {
+				mensaje.texto = 'Fiebre';
+			} else {
+				mensaje.texto = 'Normal';
+			}
+		}
+
+		return mensaje;
+	}
 }

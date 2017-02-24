@@ -20,37 +20,37 @@ export class TensionArterialComponent implements OnInit {
 
     // resultados a devolver
     data: any = {
-        valor: {},
         mensaje: {
             texto: '',
         },
     };
 
-    // tipos de prestaciones a utilizar
-    tensionDiastolica: any;
-    tensionSistolica: any;
-    valor = {
-        tensionDiastolica: null,
-        tensionSistolica: null,
-    };
-
     ngOnInit() {
-        if (this.datosIngreso) {
-            console.log("TENSION ARTERIAL");
-            console.log(this.datosIngreso);
-            // this.data.valor.tensionDiastolica = (this.datosIngreso.tensionDiastolica) ? this.datosIngreso.tensionDiastolica : null;
-            // this.data.valor.tensionSistolica = (this.datosIngreso.tensionSistolica) ? this.datosIngreso.tensionSistolica : null;
-        }
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
 
+        // como es una molécula buscamos sus atomos
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
             this.tipoPrestacion = tipoPrestacion;
         });
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
-        this.data.valor[tipoPrestacion.key] = obj.valor;
-        // this.data.mensaje.texto = this.data.mensaje.texto + " -" + valor.mensaje.texto;
+        this.data.mensaje = this.getMensajes();
+        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+
         this.evtData.emit(this.data);
+    }
+
+    getMensajes() {
+
+        let mensaje : any = {
+            texto: '',
+            class: 'outline-danger'
+        };
+
+        
+        return mensaje;
+
     }
 
 }

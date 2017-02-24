@@ -8,44 +8,50 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 export class SaturacionOxigenoComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') prestacion: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    saturacionOxigeno: Number = null;
-    mensaje: String = null;
-    class: String = "";
-
     data: any = {
-        valor: Number,
         mensaje: {
             class: "",
             texto: ""
         },
     };
     ngOnInit() {
-        if (this.datosIngreso) {
-            this.saturacionOxigeno = this.datosIngreso;
-        }
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
     devolverValores() {
-        this.class = 'outline-danger';
-        this.data.valor = this.saturacionOxigeno;
+		this.data.mensaje = this.getMensajes();
+		this.evtData.emit(this.data);
+	}
 
-        // agregar validaciones aca en base al paciente y el tipo de prestacion
-        if (this.saturacionOxigeno >= 90 && this.saturacionOxigeno <= 94) {
+	getMensajes() {
+        let saturacionOxigeno = this.data[this.tipoPrestacion.key];
+        let edadEnMeses;
+        edadEnMeses = 8; //Falta la edad en meses esta asi para probar.. 
+        
+        let mensaje: any = {
+			texto: '',
+			class: 'outline-danger'
+		};
 
-            this.mensaje = 'Hipoxemia';
+        if (saturacionOxigeno) {
+
+            // agregar validaciones aca en base al paciente y el tipo de prestacion
+            if (saturacionOxigeno >= 90 && saturacionOxigeno <= 94) {
+
+                mensaje.texto = 'Hipoxemia';
+            }
+            if (saturacionOxigeno <= 94) {
+
+                mensaje.texto = 'Hipoxemia Severa';
+            }
+
         }
-        if (this.saturacionOxigeno <= 94) {
 
-            this.mensaje = 'Hipoxemia Severa';
-        }
-        this.data.valor = this.saturacionOxigeno;
-        this.data.mensaje.class = this.class;
-        this.data.mensaje.texto = this.mensaje;
-        this.evtData.emit(this.data);
+        return mensaje;
     }
 
 }

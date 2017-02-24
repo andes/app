@@ -117,7 +117,11 @@
                                         <!--<div *ngFor="let prob of _prestacion.solicitud.listaProblemas">
                                             {{prob.tipoProblema.nombre}}
                                         </div>-->
-                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" [data]="_prestacion.solicitud.listaProblemas" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" [data]="_prestacion.solicitud.listaProblemas" [multiple]="true" placeholder="Seleccione problema(s)"
+                                            *ngIf="_prestacion.solicitud.listaProblemas"></plex-select>
+
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" [data]="prestacion.solicitud.listaProblemas" [multiple]="true" placeholder="Seleccione problema(s)"
+                                            *ngIf="!_prestacion.solicitud.listaProblemas"></plex-select>
                                     </div>
 
                                     <div class="col-md-2">

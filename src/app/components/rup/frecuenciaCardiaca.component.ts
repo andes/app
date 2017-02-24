@@ -7,117 +7,126 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 })
 export class FrecuenciaCardiacaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') prestacion: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;
+
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    frecuenciaCardiaca: Number = null;
-    sexo: any = null;
-    mensaje: String = null;
-    class: String = "";
     data: any = {
-        valor: this.frecuenciaCardiaca,
         mensaje: {
             class: "",
             texto: ""
         },
     };
-    ngOnInit() {
-         if (this.datosIngreso) {
 
-            this.frecuenciaCardiaca = this.datosIngreso;
-        }
+    ngOnInit() {
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
     devolverValores() {
-        this.class = 'outline-danger';
-        this.sexo = this.paciente.sexo
-        this.paciente.edad = 23; //Solo es para probar!! 
-        if (this.sexo == 'masculino') {
-            if (this.paciente.edad >= 20 && this.paciente.edad <= 29) {
-                if (this.frecuenciaCardiaca < 86) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 62 && this.frecuenciaCardiaca >= 68) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 60) {
-                    this.mensaje = 'exelente'
-                }
-            }
-            if (this.paciente.edad >= 30 && this.paciente.edad <= 39) {
-                if (this.frecuenciaCardiaca < 86) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 64 && this.frecuenciaCardiaca >= 70) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 62) {
-                    this.mensaje = 'exelente'
-                }
-            }
-            if (this.paciente.edad >= 50) {
-                if (this.frecuenciaCardiaca < 90) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 68 && this.frecuenciaCardiaca >= 74) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 66) {
-                    this.mensaje = 'exelente'
-                }
-            }
-        }
-        if (this.sexo == 'femenino') {
-            if (this.paciente.edad >= 20 && this.paciente.edad <= 29) {
-                if (this.frecuenciaCardiaca < 96) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 72 && this.frecuenciaCardiaca >= 76) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 70) {
-                    this.mensaje = 'exelente'
-                }
-            }
-            if (this.paciente.edad >= 30 && this.paciente.edad <= 39) {
-                if (this.frecuenciaCardiaca < 98) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 72 && this.frecuenciaCardiaca >= 78) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 70) {
-                    this.mensaje = 'exelente'
-                }
-            }
-            if (this.paciente.edad >= 40 && this.paciente.edad <= 49) {
-                if (this.frecuenciaCardiaca < 100) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 74 && this.frecuenciaCardiaca >= 78) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 72) {
-                    this.mensaje = 'exelente'
-                }
-            }
-            if (this.paciente.edad >= 50) {
-                if (this.frecuenciaCardiaca < 104) {
-                    this.mensaje = 'Inadecuado'
-                }
-                if (this.frecuenciaCardiaca <= 76 && this.frecuenciaCardiaca >= 78) {
-                    this.mensaje = 'Buena'
-                }
-                if (this.frecuenciaCardiaca >= 74) {
-                    this.mensaje = 'exelente'
-                }
-            }
-        }
-        this.data.mensaje.class = this.class;
-        this.data.mensaje.texto = this.mensaje;
-        this.data.valor = this.frecuenciaCardiaca;
+        this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
+    }
+
+    getMensajes() {
+        let Edad;
+        let Sexo;
+        let frecuenciaCardiaca;
+        let mensaje : any = {
+            texto: '',
+            class: 'outline-danger'
+        };
+
+        Sexo = this.paciente.sexo
+        Edad = this.paciente.edad; //Solo es para probar!! 
+        frecuenciaCardiaca = this.data[this.tipoPrestacion.key];
+
+        if (frecuenciaCardiaca) {
+            if (Sexo == 'masculino') {
+                if (Edad >= 20 && Edad <= 29) {
+                    if (frecuenciaCardiaca < 86) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 62 && frecuenciaCardiaca >= 68) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 60) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+                if (Edad >= 30 && Edad <= 39) {
+                    if (frecuenciaCardiaca < 86) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 64 && frecuenciaCardiaca >= 70) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 62) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+                if (Edad >= 50) {
+                    if (frecuenciaCardiaca < 90) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 68 && frecuenciaCardiaca >= 74) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 66) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+            }
+            if (Sexo == 'femenino') {
+                if (Edad >= 20 && Edad <= 29) {
+                    if (frecuenciaCardiaca < 96) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 72 && frecuenciaCardiaca >= 76) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 70) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+                if (Edad >= 30 && Edad <= 39) {
+                    if (frecuenciaCardiaca < 98) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 72 && frecuenciaCardiaca >= 78) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 70) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+                if (Edad >= 40 && Edad <= 49) {
+                    if (frecuenciaCardiaca < 100) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 74 && frecuenciaCardiaca >= 78) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 72) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+                if (Edad >= 50) {
+                    if (frecuenciaCardiaca < 104) {
+                        mensaje.texto = 'Inadecuado'
+                    }
+                    if (frecuenciaCardiaca <= 76 && frecuenciaCardiaca >= 78) {
+                        mensaje.texto = 'Buena'
+                    }
+                    if (frecuenciaCardiaca >= 74) {
+                        mensaje.texto = 'exelente'
+                    }
+                }
+            }
+        }
+ 
+ 
+        return mensaje;
     }
 
 }

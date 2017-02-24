@@ -14,23 +14,29 @@ export class ObservacionesComponent implements OnInit {
     observaciones: Number = null;
     mensaje: String = null;
 
-     data: any = {
-        valor: this.observaciones,
+    data: any = {
         mensaje: {
             texto: String,
         },
     };
 
     ngOnInit() {
-        // if (this.datosIngreso) {
-        //     this.observaciones = this.datosIngreso;
-        // }
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
     devolverValores() {
-        this.data.mensaje.texto = this.mensaje;
-        this.data.valor = this.observaciones;
-        this.evtData.emit(this.data);
-    }
+		this.data.mensaje = this.getMensajes();
+		this.evtData.emit(this.data);
+	}
+
+	getMensajes() {
+
+		let mensaje: any = {
+			texto: '',
+			class: 'outline-danger'
+		};
+
+		return mensaje;
+	}
 
 }
