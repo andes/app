@@ -27,6 +27,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 })
 export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
+  @Input('isScan') isScan: IPaciente;
   @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
   matchingItems: Array<any>;
@@ -50,6 +51,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
   familiaresPacientes = [];
+  validado: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -70,7 +72,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       genero: [''],
       estadoCivil: [''],
       contacto: this.formBuilder.array([
-        this.iniContacto(1)
+        /* this.iniContacto(1)*/
       ]),
       direccion: this.formBuilder.array([
         this.iniDireccion(1)
@@ -101,27 +103,27 @@ export class PacienteCreateUpdateComponent implements OnInit {
     debugger;
     if (this.seleccion) {
 
-
-      // TODO: No permitir edición de los campos principales cuando el estado es validado
       if (this.seleccion.estado === 'validado') {
-        let test = this.createForm.get('nombre')
-        test.disabled;
-        //this.createForm.get('nombre').disabled;
+        this.validado = true;
       }
 
       this.seleccion.relaciones.forEach(rel => {
         this.addRelacion();
       });
+      this.seleccion.contacto.forEach(rel => {
+        this.addContacto();
+      });
 
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
           this.seleccion = resultado;
+          if (this.isScan) {
+            this.seleccion.estado = 'validado';
+            this.validado = true;
+          }
           this.createForm.patchValue(this.seleccion);
         });
-
-
     }
-
 
     // this.detectarRelaciones();
     this.createForm.controls['relaciones'].valueChanges
@@ -144,10 +146,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
           }
         })
       });
-
-
-
-
   }
 
   iniContacto(rank: Number) {
@@ -278,8 +276,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   onSave(model: any, valid: boolean) {
-    let listaPacientes = [];
-
+    var lista = [];
+    debugger
     if (valid) {
       let operacionPac: Observable<IPaciente>;
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
@@ -295,7 +293,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.seleccion) {
         model.id = this.seleccion.id;
       }
-      debugger
+
       if (model.relaciones) {
         model.relaciones = model.relaciones.map(elem => { elem.relacion = ((typeof elem.relacion == 'string') ? elem.relacion : elem.relacion.id); return elem });
       }
@@ -310,25 +308,39 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (!model.id) {
         let dtoBusqueda = {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
+          'fechaNacimiento': model.fechaNacimiento
         };
+        debugger
         this.pacienteService.searchMatch('documento', dtoBusqueda)
-          .subscribe(value => { listaPacientes = value; });
-      }
+          .subscribe(value => {
+            debugger; lista = value;
+            if (lista.length > 0) {
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
 
-      if (listaPacientes.length > 0) {
-        this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
-
-      } else {
-        this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-          if (resultado) {
-            debugger
-            operacionPac = this.pacienteService.save(model);
-            operacionPac.subscribe(result => {
-              this.data.emit(result)
-            });
-          }
-        })
+            } else {
+              this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+                if (resultado) {
+                  debugger
+                  operacionPac = this.pacienteService.save(model);
+                  operacionPac.subscribe(result => {
+                    this.data.emit(result)
+                  });
+                }
+              })
+            }
+          });
       }
+      
+      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+                if (resultado) {
+                  debugger
+                  operacionPac = this.pacienteService.save(model);
+                  operacionPac.subscribe(result => {
+                    this.data.emit(result)
+                  });
+                }
+              })
+
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }

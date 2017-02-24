@@ -19,7 +19,8 @@ export class VistaAgendaComponent {
 
     @Input() vistaAgenda: IAgenda;
 
-    @Output() clonar = new EventEmitter<boolean>();
+    @Output() clonarEmit = new EventEmitter<boolean>();
+    @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
 
     public modelo: any = {};
 
@@ -28,25 +29,45 @@ export class VistaAgendaComponent {
 
     suspenderAgenda(agenda) {
         let patch: any = {};
+        debugger;
 
-        patch = {
-            'op': 'suspenderAgenda',
-            'estado': 'Suspendida'
-        };
+        let pacientes = {};
 
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            agenda.estado = resultado.estado;
+        for (let i = 0; i < agenda.bloques.length; i++) {
+            let turnos = agenda.bloques[i];
+            for (let j = 0; j < turnos.turnos.length; j++) {
+                pacientes = turnos.turnos[j].paciente;
+            }
+        }
 
-            this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
-        });
+        if (pacientes) {
+            patch = {
+                'op': 'suspenderAgenda',
+                'estado': 'Suspendida'
+            };
+
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                agenda.estado = resultado.estado;
+
+                this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
+            });
+        } else {
+            this.plex.alert('La agenda no se puede suspender porque tiene pacientes');
+        }
     }
 
     editarAgenda(agenda) {
-        this.modelo.profesionales = agenda.profesionales;
-        this.modelo.espacioFisico = agenda.espacioFisico;
+        debugger;
 
-        this.showDatosAgenda = false;
-        this.showEditarAgenda = true;
+        if (agenda.estado === 'Disponible') {
+            this.modelo.profesionales = agenda.profesionales;
+            this.modelo.espacioFisico = agenda.espacioFisico;
+
+            this.showDatosAgenda = false;
+            this.showEditarAgenda = true;
+        } else if (agenda.estado === 'Planificada') {
+            this.editarAgendaEmit.emit(agenda);
+        }
     }
 
     guardarAgenda(agenda: IAgenda) {
@@ -91,7 +112,7 @@ export class VistaAgendaComponent {
     clonarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
 
-        this.clonar.emit(this.modelo);
+        this.clonarEmit.emit(this.modelo);
     }
 
     loadProfesionales(event) {

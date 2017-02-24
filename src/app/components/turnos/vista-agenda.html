@@ -4,12 +4,17 @@
             <div class="col-md-12">
                 <table class="table">
                     <tr>
+                        <td colspan="5">
+                            <span><b>Estado de la Agenda: {{vistaAgenda.estado}}</b></span>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
                             </plex-button>
                         </td>
                         <td>
-                            <plex-button icon="mdi mdi-power" (click)="suspenderAgenda(vistaAgenda)" title="Suspender Agenda">
+                            <plex-button *ngIf="(vistaAgenda.estado == 'Disponible') || (vistaAgenda.estado == 'Publicada')" icon="mdi mdi-power" (click)="suspenderAgenda(vistaAgenda)" title="Suspender Agenda">
                             </plex-button>
                         </td>
                         <td>
@@ -76,4 +81,3 @@
         </div>
     </plex-box>
 </div>
-

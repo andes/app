@@ -15,10 +15,13 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 export class TurnosComponent implements OnInit {
 
     @Input() ag: IAgenda;
+    @Input() reasturnos: IAgenda;
+
+    @Output() reasignaTurno = new EventEmitter<boolean>();
 
     showTurnos: boolean = true;
 
-    smsEnviado: boolean = false;
+    // smsEnviado: boolean = false;
     smsLoader: boolean = false;
     resultado: any;
 
@@ -29,8 +32,14 @@ export class TurnosComponent implements OnInit {
     public turnos = [];
     private _selectAll;
 
+    public reasignar: any = {};
+
     ngOnInit() {
         this.turnos = this.ag.bloques[0].turnos;
+
+        this.turnos.forEach(turno => {
+            turno.smsEnviado = false;
+        });
     }
 
     @Input()
@@ -90,6 +99,11 @@ export class TurnosComponent implements OnInit {
                 'op': 'bloquearTurno',
                 'idTurno': turno.id
             };
+        } else if (btnClicked === 'suspenderTurno') {
+            patch = {
+                'op': 'suspenderTurno',
+                'idTurno': turno.id
+            };
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
@@ -100,6 +114,12 @@ export class TurnosComponent implements OnInit {
                     console.log(err);
                 }
             });
+    }
+
+    reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
+        this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
+
+        this.reasignaTurno.emit(this.reasignar);
     }
 
     agregarPacienteListaEspera(agenda: any) {
@@ -114,7 +134,7 @@ export class TurnosComponent implements OnInit {
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => agenda = resultado);
     }
 
-    enviarSMS() {
+    enviarSMS(turno) {
         this.smsLoader = true;
 
         for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
@@ -123,13 +143,12 @@ export class TurnosComponent implements OnInit {
                 this.smsService.enviarSms(this.pacientesSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {
                         this.resultado = resultado;
+                        this.smsLoader = false;
 
                         if (resultado === '0') {
-                            this.smsLoader = false;
-                            this.smsEnviado = true;
+                            this.pacientesSeleccionados[x].smsEnviado = true;
                         } else {
-                            this.smsLoader = false;
-                            this.smsEnviado = false;
+                            this.pacientesSeleccionados[x].smsEnviado = false;
                         }
                     },
                     err => {

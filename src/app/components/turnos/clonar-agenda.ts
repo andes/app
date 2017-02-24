@@ -38,11 +38,6 @@ export class ClonarAgendaComponent implements OnInit {
     constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 
     ngOnInit() {
-        // Cableado
-        // this.serviceAgenda.getById('583dbcf713593558cca963aa').subscribe(agenda => {
-        //     this.agenda = agenda;
-        //     this.actualizar();
-        // });
         this.inicioAgenda = new Date(this.agenda.horaInicio);
         this.inicioAgenda.setHours(0, 0, 0, 0);
         this.hoy.setHours(0, 0, 0, 0);
