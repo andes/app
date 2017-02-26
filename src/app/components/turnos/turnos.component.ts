@@ -36,9 +36,10 @@ export class TurnosComponent implements OnInit {
 
     ngOnInit() {
         this.turnos = this.ag.bloques[0].turnos;
-
+        debugger;
         this.turnos.forEach(turno => {
             turno.smsEnviado = false;
+            turno.verNota = true;
         });
     }
 
@@ -158,6 +159,38 @@ export class TurnosComponent implements OnInit {
                     });
             }
         }
+    }
+
+    agregarNota(turno: any) {
+        debugger;
+        if (!turno.hidden) {
+            turno.hidden = true;
+            turno.verNota = false;
+        } else {
+            turno.hidden = false;
+            turno.verNota = true;
+        }
+    }
+
+    guardarNota(agenda: any, turno: any) {
+        let patch: any = {};
+        
+        patch = {
+            'op': 'guardarNotaTurno',
+            'idAgenda': agenda.id,
+            'idTurno': turno.id,
+            'textoNota': turno.nota
+        };
+
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            turno.hidden = false;
+            turno.verNota = true;
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
