@@ -22,7 +22,7 @@
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span>
                                         </td>
 
-                                        <td *ngIf="turno.paciente">
+                                        <td *ngIf="turno.paciente" [hidden]="turno.hidden">
                                             <a id="darAsistencia" *ngIf="(ag.estado != 'Suspendida') && (!turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-blank-outline"></i></a>
                                             <a id="sacarAsistencia" *ngIf="(ag.estado != 'Suspendida') && (turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Sacar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
                                         </td>
