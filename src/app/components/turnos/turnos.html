@@ -53,7 +53,8 @@
 
                                         <td>
                                             <a *ngIf="(turno.estado != 'disponible')" class="hover">
-                                                <i *ngIf="(turno.paciente) && (!turno.asistencia)" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)" class="text-success success mdi mdi-backup-restore"></i>
+                                                <i *ngIf="(turno.paciente) && (!turno.asistencia)" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)"
+                                                    class="text-success success mdi mdi-backup-restore"></i>
                                             </a>
                                             <i *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>
                                             <i *ngIf="(turno.paciente) && (turno.asistencia)" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>
@@ -63,6 +64,9 @@
                                             <i *ngIf="(!turno.smsEnviado) && (!smsLoader)" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
                                             <i *ngIf="turno.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
                                             <plex-loader *ngIf="smsLoader" type="ball-pulse"></plex-loader>
+                                        </td>
+                                        <td>
+                                            <a class="hover" (click)="agregarNota(turno)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
                                         </td>
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)">
                                             <!--<plex-bool [ngModel]="turno.checked" (click)="agregarPaciente(turno)" ></plex-bool>-->

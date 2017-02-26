@@ -29,18 +29,18 @@ export class VistaAgendaComponent {
 
     suspenderAgenda(agenda) {
         let patch: any = {};
-        debugger;
+        // debugger;
 
-        let pacientes = {};
+        // let pacientes = {};
 
-        for (let i = 0; i < agenda.bloques.length; i++) {
-            let turnos = agenda.bloques[i];
-            for (let j = 0; j < turnos.turnos.length; j++) {
-                pacientes = turnos.turnos[j].paciente;
-            }
-        }
+        // for (let i = 0; i < agenda.bloques.length; i++) {
+        //     let turnos = agenda.bloques[i];
+        //     for (let j = 0; j < turnos.turnos.length; j++) {
+        //         pacientes = turnos.turnos[j].paciente;
+        //     }
+        // }
 
-        if (pacientes) {
+        // if (pacientes) {
             patch = {
                 'op': 'suspenderAgenda',
                 'estado': 'Suspendida'
@@ -51,9 +51,9 @@ export class VistaAgendaComponent {
 
                 this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
             });
-        } else {
-            this.plex.alert('La agenda no se puede suspender porque tiene pacientes');
-        }
+        // } else {
+        //     this.plex.alert('La agenda no se puede suspender');
+        // }
     }
 
     editarAgenda(agenda) {
