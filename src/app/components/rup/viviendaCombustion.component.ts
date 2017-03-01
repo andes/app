@@ -28,7 +28,7 @@ export class ViviendaCombustionComponent implements OnInit {
                                                 {id:'Otro ',nombre:'Otro '},                                         
                                               ]; //SelectCombustion:Array  
 
-    ngOnInit() {                   
+    ngOnInit() {            
                   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : [];
                }//ngOnInit()
 

@@ -30,7 +30,7 @@ export class ViviendaContaminantesComponent implements OnInit {
                                                     {id:'Petroquímica',nombre:'Petroquímica'},                                       
                                                   ]; //SelectContaminantes:Array
                                
-    ngOnInit() {
+    ngOnInit() {                     
                   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : [];
                }//ngOnInit()
 
