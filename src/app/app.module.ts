@@ -193,6 +193,12 @@ import {
 import {
   PuntoInicioComponent
 } from './components/rup/ejecucion/puntoInicio.component';
+import {
+  EdadGestacionalComponent
+} from './components/rup/edadGestacional.component';
+import {
+  ScoreApgarComponent
+} from './components/rup/scoreApgar.component';
 
 const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -213,7 +219,9 @@ const RUP_COMPONENTS = [
   PrestacionEjecucionComponent,
   ResumenComponent,
   HeaderPacienteComponent,
-  PrestacionValidacionComponent
+  PrestacionValidacionComponent,
+  EdadGestacionalComponent,
+  ScoreApgarComponent
   // NO VAPacienteComponent
 ];
 
@@ -328,9 +336,9 @@ import {
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
   providers: [{
-      provide: LOCALE_ID,
-      useValue: 'es-AR'
-    },
+    provide: LOCALE_ID,
+    useValue: 'es-AR'
+  },
     Plex,
     OrganizacionService,
     ProvinciaService,
@@ -363,4 +371,4 @@ import {
 
 })
 
-export class AppModule {}
+export class AppModule { }
