@@ -1,3 +1,4 @@
+
 //import { RUP_COMPONENTS } from './rup.module';
 // RUP
 import {
@@ -199,8 +200,11 @@ import {
 import {
   ScoreApgarComponent
 } from './components/rup/scoreApgar.component';
+import { 
+  NacimientoComponent 
+} from './components/rup/nacimiento/nacimiento.component';
 
-const RUP_COMPONENTS = [
+export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
   FrecuenciaCardiacaComponent,
@@ -221,7 +225,8 @@ const RUP_COMPONENTS = [
   HeaderPacienteComponent,
   PrestacionValidacionComponent,
   EdadGestacionalComponent,
-  ScoreApgarComponent
+  ScoreApgarComponent,
+  NacimientoComponent
   // NO VAPacienteComponent
 ];
 

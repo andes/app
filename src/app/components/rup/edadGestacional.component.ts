@@ -7,10 +7,10 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     templateUrl: 'edadGestacional.html'
 })
 export class EdadGestacionalComponent implements OnInit {
-    //@Input('paciente') paciente: any;
-    paciente: any; // será un IPaciente
-    //@Input('tipoPrestacion') tipoPrestacion: any;
-    tipoPrestacion: any;
+    @Input('paciente') paciente: any;
+    //paciente: any; // será un IPaciente
+    @Input('tipoPrestacion') tipoPrestacion: any;
+    //tipoPrestacion: any;
     @Input('required') required: Boolean;
     @Input('datosIngreso') datosIngreso: any;
 
@@ -25,30 +25,30 @@ export class EdadGestacionalComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.paciente = {
-            "id": "57ebacce69fe79a598e6281d",
-            "documento": "29410428",
-            "activo": true,
-            "estado": "validado",
-            "nombre": "Carolina",
-            "apellido": "Celeste",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": "02/11/1993",
-            "estadoCivil": "soltera"
-        };
-        this.tipoPrestacion = {
-            "_id": "58b6b6b2b64acd0989b9f536",
-            "key": "edadGestacional",
-            "nombre": "Edad gestacional",
-            "autonoma": true,
-            "activo": true,
-            "componente": {
-                "ruta": "rup/edadGestacional.component.ts",
-                "nombre": "edadGestacionalComponent"
-            },
-            "turneable": false
-        };
+        // this.paciente = {
+        //     "id": "57ebacce69fe79a598e6281d",
+        //     "documento": "29410428",
+        //     "activo": true,
+        //     "estado": "validado",
+        //     "nombre": "Carolina",
+        //     "apellido": "Celeste",
+        //     "sexo": "femenino",
+        //     "genero": "femenino",
+        //     "fechaNacimiento": "02/11/1993",
+        //     "estadoCivil": "soltera"
+        // };
+        // this.tipoPrestacion = {
+        //     "_id": "58b6b6b2b64acd0989b9f536",
+        //     "key": "edadGestacional",
+        //     "nombre": "Edad gestacional",
+        //     "autonoma": true,
+        //     "activo": true,
+        //     "componente": {
+        //         "ruta": "rup/edadGestacional.component.ts",
+        //         "nombre": "edadGestacionalComponent"
+        //     },
+        //     "turneable": false
+        // };
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
 
     }
