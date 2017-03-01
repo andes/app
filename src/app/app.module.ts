@@ -295,7 +295,6 @@ import {
   Server
 } from 'andes-shared/src/lib/server/server.service';
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -306,7 +305,7 @@ import {
     SharedModule,
     ToggleButtonModule,
     PlexModule,
-    routing,
+    routing,    
     //RupModule
   ],
 

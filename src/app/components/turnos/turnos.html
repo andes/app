@@ -14,7 +14,7 @@
                                     <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>
                                     <!--<a class="hover" (click)="reasignarTurnosMasivo()"><i title="Reasignar Turno Masivo" class="mdi mdi-rotate-right"></i></a>-->
                                 </div>
-                                <table class="table table-hover">
+                                <table class="table table-hover" >
                                     <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')"><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')">
@@ -22,28 +22,28 @@
                                             <span *ngIf="(!turno.paciente) && (ag.estado != 'Suspendida')">Disponible</span>
                                         </td>
 
-                                        <td *ngIf="turno.paciente" [hidden]="turno.hidden">
+                                        <td *ngIf="turno.paciente" [hidden]="turno.asistenciaVisible">
                                             <a id="darAsistencia" *ngIf="(ag.estado != 'Suspendida') && (!turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-blank-outline"></i></a>
                                             <a id="sacarAsistencia" *ngIf="(ag.estado != 'Suspendida') && (turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Sacar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
                                         </td>
 
-                                        <td *ngIf="(ag.estado != 'Suspendida') && (!turno.paciente)" [hidden]="turno.hidden">
+                                        <td *ngIf="(ag.estado != 'Suspendida') && (!turno.paciente)" [hidden]="turno.disponibleVisible">
                                             <i title="Turno Disponible" class="text-info info mdi mdi-select"></i>
                                         </td>
 
-                                        <td *ngIf="ag.estado != 'Suspendida'" [hidden]="turno.hidden">
+                                        <td *ngIf="ag.estado != 'Suspendida'" [hidden]="turno.suspenderVisible">
                                             <a id="suspenderTurno" *ngIf="(turno.paciente) && (!turno.asistencia)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Suspender Turno" class="text-success success mdi mdi-power"></i></a>
                                             <i *ngIf="(turno.asistencia)" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                             <i *ngIf="(!turno.paciente) && (!turno.asistencia)" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                         </td>
 
-                                        <td *ngIf="(ag.estado != 'Suspendida')" [hidden]="turno.hidden">
+                                        <td *ngIf="(ag.estado != 'Suspendida')" [hidden]="turno.cancelarVisible">
                                             <a id="cancelarTurno" *ngIf="(!turno.asistencia) && (turno.paciente)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
                                             <i *ngIf="(turno.asistencia) && (turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
                                             <i *ngIf="(!turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
-                                        <td *ngIf="ag.estado != 'Suspendida'" [hidden]="turno.hidden">
+                                        <td *ngIf="ag.estado != 'Suspendida'" [hidden]="turno.bloquearVisible">
                                             <a id="bloquearTurno" *ngIf="!turno.paciente" class="hover" (click)="eventosTurno(ag, turno, $event)">
                                                 <i title="Bloquear Turno" [ngClass]="(turno.estado == 'bloqueado') ? 'text-success success mdi mdi-block-helper':'text-success success mdi mdi-brightness-1'">
                                                 </i>
@@ -51,7 +51,7 @@
                                             <i *ngIf="(turno.paciente)" title="No es posible bloquear el Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
-                                        <td [hidden]="turno.hidden">
+                                        <td [hidden]="turno.reasignarVisible">
                                             <a *ngIf="(turno.estado != 'disponible')" class="hover">
                                                 <i *ngIf="(turno.paciente) && (!turno.asistencia)" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)"
                                                     class="text-success success mdi mdi-backup-restore"></i>
@@ -79,6 +79,10 @@
                                         <td>
                                             <a class="hover" (click)="agregarNota(turno)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
                                         </td>
+
+                                        <td [hidden]="turno.listaEspera">
+                                            <a class="hover" (click)="agregarPacienteListaEspera(ag, turno)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
+                                        </td>
                                         <td *ngIf="(ag.estado == 'Suspendida') && (turno.paciente)">
                                             <!--<plex-bool [ngModel]="turno.checked" (click)="agregarPaciente(turno)" ></plex-bool>-->
                                             <!--<plex-bool type="slide" [(ngModel)]="turno.checked" (click)="agregarPaciente(turno)"></plex-bool>-->
@@ -87,7 +91,25 @@
 
 
                                     </tr>
+                                    <!--<div>
+
+                                        <label for="name">El turno del paciente {{pacienteCancelado}} va a ser cancelado</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" [(ngModel)]="ag.estado" name="listaEspera" value="listaEspera">Lista
+                                        de Espera
+                                        <br>
+                                        <input type="radio" [(ngModel)]="ag.estado" name="reprogramaTurno" value="reporgramarTurno">Reprogramar<br>
+
+
+                                        <plex-button icon="delete" title="Aceptar" label="Aceptar" type="success" (click)="aceptar(i)">
+                                        </plex-button>
+                                        <plex-button icon="delete" title="Cancelar" label="Cancelar" type="default" (click)="cancelar(i)">
+                                        </plex-button>
+                                    </div>-->
                                 </table>
+
+
                             </div>
                         </div>
                     </div>

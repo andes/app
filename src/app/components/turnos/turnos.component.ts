@@ -26,6 +26,8 @@ export class TurnosComponent implements OnInit {
     resultado: any;
 
     listaEspera: any;
+    tablaTurnos: boolean = false;
+    pacienteCancelado: String;
 
     public pacientesSeleccionados: any[] = [];
 
@@ -39,6 +41,8 @@ export class TurnosComponent implements OnInit {
         debugger;
         this.turnos.forEach(turno => {
             turno.smsEnviado = false;
+
+            turno.listaEspera = true;
             turno.verNota = true;
         });
     }
@@ -90,6 +94,17 @@ export class TurnosComponent implements OnInit {
                 'op': 'cancelarTurno',
                 'idTurno': turno.id
             };
+
+            turno.asistenciaVisible = true;
+            turno.disponibleVisible = true;
+            turno.suspenderVisible = true;
+            turno.cancelarVisible = true;
+            turno.bloquearVisible = true;
+            turno.verNota = true;
+
+            turno.reasignarVisible = false;
+            turno.listaEspera = false;
+
         } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
             patch = {
                 'op': 'asistenciaTurno',
@@ -108,7 +123,7 @@ export class TurnosComponent implements OnInit {
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.ag = resultado;
+            // this.ag = resultado;
         },
             err => {
                 if (err) {
@@ -123,13 +138,21 @@ export class TurnosComponent implements OnInit {
         this.reasignaTurno.emit(this.reasignar);
     }
 
-    agregarPacienteListaEspera(agenda: any) {
+    agregarPacienteListaEspera(agenda: any, paciente: any) {
         let patch: any = {};
-
+        let pacienteListaEspera = {};
+        
+        if (paciente) {
+            pacienteListaEspera = paciente;
+        } else {
+            pacienteListaEspera = this.pacientesSeleccionados;
+        }
+debugger;
         patch = {
             'op': 'listaEsperaSuspensionAgenda',
             'idAgenda': agenda.id,
-            'pacientes': this.pacientesSeleccionados
+            // 'pacientes': this.pacientesSeleccionados
+            'pacientes': pacienteListaEspera
         };
 
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => agenda = resultado);
@@ -164,17 +187,31 @@ export class TurnosComponent implements OnInit {
     agregarNota(turno: any) {
         debugger;
         if (!turno.hidden) {
-            turno.hidden = true;
+            // turno.hidden = true;
+            turno.asistenciaVisible = true;
+            turno.disponibleVisible = true;
+            turno.suspenderVisible = true;
+            turno.cancelarVisible = true;
+            turno.bloquearVisible = true;
+            turno.reasignarVisible = true;
+
             turno.verNota = false;
         } else {
-            turno.hidden = false;
+            // turno.hidden = false;
+            turno.asistenciaVisible = false;
+            turno.disponibleVisible = false;
+            turno.suspenderVisible = false;
+            turno.cancelarVisible = false;
+            turno.bloquearVisible = false;
+            turno.reasignarVisible = false;
+
             turno.verNota = true;
         }
     }
 
     guardarNota(agenda: any, turno: any) {
         let patch: any = {};
-        
+
         patch = {
             'op': 'guardarNotaTurno',
             'idAgenda': agenda.id,
