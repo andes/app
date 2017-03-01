@@ -109,7 +109,7 @@ export class TurnosComponent implements OnInit {
             patch = {
                 'op': 'asistenciaTurno',
                 'idTurno': turno.id
-            };
+            };          
         } else if (btnClicked === 'bloquearTurno') {
             patch = {
                 'op': 'bloquearTurno',
@@ -123,7 +123,9 @@ export class TurnosComponent implements OnInit {
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            // this.ag = resultado;
+             this.ag = resultado;    
+             turno.verNota = true;   
+             debugger;     
         },
             err => {
                 if (err) {
@@ -141,21 +143,25 @@ export class TurnosComponent implements OnInit {
     agregarPacienteListaEspera(agenda: any, paciente: any) {
         let patch: any = {};
         let pacienteListaEspera = {};
-        
+
         if (paciente) {
             pacienteListaEspera = paciente;
         } else {
             pacienteListaEspera = this.pacientesSeleccionados;
         }
-debugger;
+
         patch = {
             'op': 'listaEsperaSuspensionAgenda',
             'idAgenda': agenda.id,
-            // 'pacientes': this.pacientesSeleccionados
             'pacientes': pacienteListaEspera
         };
 
-        this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => agenda = resultado);
+        this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
+            agenda = resultado;
+            // this.ag.bloques = agenda.bloques;     
+            this.plex.alert('El paciente paso a Lista de Espera');
+            debugger;
+        });
     }
 
     enviarSMS(turno) {
@@ -186,7 +192,7 @@ debugger;
 
     agregarNota(turno: any) {
         debugger;
-        if (!turno.hidden) {
+        if (turno.verNota) {
             // turno.hidden = true;
             turno.asistenciaVisible = true;
             turno.disponibleVisible = true;
