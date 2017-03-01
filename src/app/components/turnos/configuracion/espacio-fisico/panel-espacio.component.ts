@@ -14,92 +14,53 @@ moment.locale('en');
 export class PanelEspacioComponent implements OnInit {
     // private _agenda: any;
     public unidad = 60; // unidad horaria minima (en minutos)
-    public fechaActual = new Date();
     public fecha: Date;
     public inicio: any;
     public fin: any;
     public horarios: any[] = [];
-    public consultorios: any[] = [];
-    public listaAgenda: any[] = [];
-    public listaConsultorios: any[] = ['consultorio 1 ', 'consultorio 2', 'consultorio 3', 'consultorio 4', 'consultorio 5'];
     public agendas: any[];
-    private espacios: IEspacioFisico[];
+    public sinConsultorio: any[];
+    public colores: any[];
+    private espacios: any[] = [];
+    private espacioSeleccionados: any[];
     public agenda: any;
-    // public agenda = {
-    //     inicio: moment(new Date(this.fechaActual.setHours(9, 0, 0, 0))),
-    //     fin: moment(new Date(this.fechaActual.setHours(12, 0, 0, 0))),
-    //     medico: 'Murakami',
-    //     consultorio: 'consultorio 2',
-    //     rows: 0,
-    //     saltear: false
-    // };
-
+    public agendaSel: any = null;
+    private ancho: String = '';
+    public agendasModificar: any[] = [];
     constructor(private serviceAgenda: AgendaService, private serviceEspacio: EspacioFisicoService, public plex: Plex) { }
 
     ngOnInit() {
+        this.colores = ['#FF9999', '#FFCC99', '#FFFF99', '#CCFF99', '#99FF99', '#99FFFF', '#99CCFF', '#9999FF', '#CC99FF',
+            '#FF99FF', '#FF99CC', '#E0E0E0', '#CCCC00'];
         this.loadEspacios();
-        // if (this.agenda.rows === 0) {
-        //     this.agenda.rows = this.agenda.fin.diff(this.agenda.inicio, 'm') / this.unidad;
-        // }
-
-        // this.inicio = new Date(this.fechaActual.setHours(8, 0, 0, 0));
-        // let inicioM = moment(this.inicio);
-        // this.fin = new Date(this.fechaActual.setHours(13, 0, 0, 0));
-        // let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
-        // let cantidadBloques = diferencia / this.unidad;
-
-        // for (let j = 0; j < cantidadBloques; j++) {
-        //     let lista = [];
-        //     for (let i = 0; i < this.listaConsultorios.length; i++) {
-        //         if (inicioM.isBetween(this.agenda.inicio, this.agenda.fin, null, '[)') &&
-        //             this.agenda.consultorio === this.listaConsultorios[i]) {
-        //             if (this.agenda.rows > 1 && this.agenda.saltear === false) {
-        //                 lista.push(this.agenda);
-        //                 this.agenda.saltear = true;
-        //             }
-        //         } else {
-        //             lista.push('');
-        //         }
-        //     }
-        //     let elemento = {
-        //         hora: inicioM.format('hh:mm'),
-        //         lista: lista
-        //     };
-        //     this.horarios.push(elemento);
-        //     inicioM.add(this.unidad, 'm');
-        // }
-        // console.log('lista', this.horarios);
+        this.espacioSeleccionados = [];
     }
 
     loadEspacios() {
-        this.serviceEspacio.get({}).subscribe(espacios => { this.espacios = espacios; console.log('espacios ', this.espacios); });
-    }
-
-    combinarFechas(fecha1, fecha2) {
-        if (fecha1 && fecha2) {
-            let horas: number;
-            let minutes: number;
-            let auxiliar: Date;
-
-            auxiliar = new Date(fecha1);
-            horas = fecha2.getHours();
-            minutes = fecha2.getMinutes();
-            // Date.setHours(hour, min, sec, millisec)
-            auxiliar.setHours(horas, minutes, 0, 0);
-            return auxiliar;
-        } else {
-            return null;
-        }
+        this.serviceEspacio.get({}).subscribe(espacios => {
+            this.espacios = espacios.map(function (obj) {
+                return { id: obj.id, nombre: obj.nombre };
+            });
+            this.ancho = String(this.espacios.length + 1) + '%';
+        });
     }
 
     buscarAgendas() {
-        console.log(this.fecha);
         let params = {
             fechaDesde: this.fecha.setHours(0, 0, 0, 0),
             fechaHasta: this.fecha.setHours(23, 59, 0, 0),
         };
         this.serviceAgenda.get(params).subscribe(
-            agendas => { this.agendas = agendas; this.llenarConsultorios(); },
+            agendas => {
+                this.agendas = agendas.filter(function (value) {
+                    return (value.espacioFisico);
+                });
+                this.sinConsultorio = agendas.filter(function (value) {
+                    return (!value.espacioFisico);
+                });
+                console.log('sin consultorios ', this.sinConsultorio);
+                this.llenarConsultorios();
+            },
             err => {
                 if (err) {
                     console.log(err);
@@ -108,60 +69,174 @@ export class PanelEspacioComponent implements OnInit {
     }
 
     llenarConsultorios() {
-        console.log('Agendas ', this.agendas);
-        // this.agenda = this.agendas[0];
-        // if (!this.agenda.rows) {
-        //     this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
-        // }
-        // this.agenda.saltear = false;
+        this.horarios = [];
         this.inicio = new Date(this.fecha.setHours(8, 0, 0, 0));
         let inicioM = moment(this.inicio);
-        this.fin = new Date(this.fecha.setHours(20, 0, 0, 0));
+        this.fin = new Date(this.fecha.setHours(22, 0, 0, 0));
         let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
         let cantidadBloques = diferencia / this.unidad;
-
+        this.sinConsultorio.forEach((unconsul, index) => {
+                unconsul.color = this.colores[index + this.agendas.length];
+            });
 
         for (let j = 0; j < cantidadBloques; j++) {
-
             let lista = [];
             for (let i = 0; i < this.espacios.length; i++) {
                 let bandera = false;
                 for (let k = 0; k < this.agendas.length; k++) {
                     this.agenda = this.agendas[k];
+                    this.agenda.color = this.colores[k];
                     if (!this.agenda.rows) {
                         this.agenda.rows = moment(this.agenda.horaFin).diff(this.agenda.horaInicio, 'm') / this.unidad;
                     }
-                    this.agenda.saltear = false;
                     if (inicioM.isBetween(this.agenda.horaInicio, this.agenda.horaFin, null, '[)') &&
                         this.agenda.espacioFisico._id === this.espacios[i].id) {
                         bandera = true;
-
                         break;
                     }
-
-                    //  else {
-                    //     lista.push('');
-                    // }
                 };
                 if (bandera) {
-                    if (this.agenda.rows > 1 && this.agenda.saltear === false) {
-                        lista.push(this.agenda);
+                    let elto = {
+                        agenda: this.agenda,
+                        espacio: this.espacios[i]
+                    };
+                    if (this.agenda.rows > 1 && !this.agenda.saltear) {
+                        lista.push(elto);
                         this.agenda.saltear = true;
                     }
                 } else {
-                    lista.push('');
+                    let elto = {
+                        agenda: '',
+                        espacio: this.espacios[i]
+                    };
+                    lista.push(elto);
                 }
-
             }
             let elemento = {
                 hora: inicioM.format('HH:mm'),
-                lista: lista
+                lista: lista.sort(
+                    function (a, b) {
+                        return a.espacio.nombre - b.espacio.nombre;
+                    }
+                ), // aca tendria q ordenar la lista
             };
             this.horarios.push(elemento);
             inicioM.add(this.unidad, 'm');
         }
-
-        console.log('lista', this.horarios);
+        console.log('horarios ', this.horarios);
     }
 
+    public seleccionarAgenda(agenda) {
+        if (this.agendaSel) {
+            this.agendaSel = null;
+            this.sinConsultorio.forEach((unconsul) => {
+                unconsul.seleccionada = false;
+            });
+        }
+        if (this.espacioSeleccionados[0]) {
+            this.espacioSeleccionados[0].seleccionado = false;
+        }
+
+        this.espacioSeleccionados = [];
+        agenda.seleccionada = !agenda.seleccionada;
+        this.agendaSel = agenda;
+    }
+
+    public seleccionarEspacio(espacio) {
+        let arrayTemp = this.horarios.map(elem => { return elem.hora; });
+        let i1Horarios: number;
+        let i2Horarios: number;
+        let bandera = true;
+        let rows = 0;
+        if (!espacio.seleccionado) {
+            if (this.espacioSeleccionados.length === 0) {
+                espacio.seleccionado = true;
+                this.espacioSeleccionados.push(espacio);
+                i1Horarios = arrayTemp.indexOf(moment(this.agendaSel.horaInicio).format('HH:mm'));
+                i2Horarios = arrayTemp.indexOf(moment(this.agendaSel.horaFin).format('HH:mm'));
+                for (let i = i1Horarios; i < i2Horarios; i++) {
+                    let ind = this.horarios[i].lista.map(function (obj) {
+                        return obj.espacio.id;
+                    }).indexOf(espacio.id);
+                    bandera = bandera && (this.horarios[i].lista[ind].agenda === '');
+                    rows++;
+                }
+                // Si el consultorio tiene el intervalo de la agenda libre
+                if (bandera) {
+                    this.sinConsultorio.splice(this.sinConsultorio.indexOf(this.agendaSel), 1);
+                    this.agendaSel.rows = rows;
+                    // espacio.seleccionado = false;
+                    this.agendaSel.espacioFisico = espacio;
+                    this.agendasModificar.push({id: this.agendaSel.id, espacioFisico: espacio});
+                    for (let i = i1Horarios; i < i2Horarios; i++) {
+                        let ind = this.horarios[i].lista.map(function (obj) {
+                            return obj.espacio.id;
+                        }).indexOf(espacio.id);
+                        if (this.agendaSel.rows > 1 && !this.agendaSel.saltear) {
+                            this.horarios[i].lista[ind].agenda = this.agendaSel;
+                            this.agendaSel.saltear = true;
+                        } else {
+                            if (this.agendaSel.rows > 1 && this.agendaSel.saltear) {
+                                let lista = this.horarios[i].lista;
+                                lista.splice(ind, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            this.espacioSeleccionados.splice(this.espacioSeleccionados.indexOf(espacio));
+            espacio.seleccionado = false;
+        }
+    }
+
+    eliminar(agenda, horario, indiceConsultorio) {
+        let filas = agenda.rows;
+        let ef = agenda.espacioFisico;
+        agenda.saltear = false;
+        agenda.espacioFisico = null;
+        agenda.rows = 0;
+        agenda.seleccionada = null;
+        this.sinConsultorio.push(agenda);
+        this.agendasModificar.push({id: agenda.id, espacioFisico: null});
+        debugger
+        let indiceHorarios = this.horarios.indexOf(horario);
+        let ii = this.horarios[indiceHorarios].lista.map(function (obj) {
+            return obj.espacio.id;
+        }).indexOf(ef.id);
+        ef.seleccionado = false;
+        this.horarios[indiceHorarios].lista[ii].agenda = '';
+        for (let i = 1; i < filas; i++) { //
+            this.horarios[indiceHorarios + i].lista.push({
+                agenda: '',
+                espacio: ef
+            });
+            this.horarios[indiceHorarios + i].lista = this.horarios[indiceHorarios + i].lista.sort(function (a, b) {
+                { return (a.espacio.nombre > b.espacio.nombre) ? 1 : ((b.espacio.nombre > a.espacio.nombre) ? -1 : 0); }
+            });
+        }
+        console.log('Después de eliminar ', this.horarios[6].lista[8].espacio.nombre);
+    }
+
+    confirmar() { // TODO: verificar mensaje de ok
+        let band = true;
+        for (let i = 0; i < this.agendasModificar.length; i++) {
+            let patch = {
+                'op': 'editarAgenda',
+                'espacioFisico': this.agendasModificar[i].espacioFisico? 
+                { _id: this.agendasModificar[i].espacioFisico.id, nombre: this.agendasModificar[i].espacioFisico.nombre}: null
+            };
+            console.log('patch ', patch);
+            this.serviceAgenda.patch(this.agendasModificar[i].id, patch).subscribe(resultado => {
+                band = true;
+            }, err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+        if (band) {
+            this.plex.alert('Los cambios se guardaron correctamente');
+        }
+    }
 }

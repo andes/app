@@ -1,9 +1,2 @@
-<!--<p *ngIf="data.mensaje.texto">
-    <span class="badge {{data.mensaje.class}}">
-    {{data.mensaje.texto}}
-    </span>
-</p>-->
-<plex-text placeholder="..." [(ngModel)]="observaciones" name="observaciones" label="Observaciones" (change)="devolverValores()"
->
+<plex-text placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="observaciones" label="Observaciones" (change)="devolverValores()">
 </plex-text>
-

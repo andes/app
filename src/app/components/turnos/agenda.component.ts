@@ -6,16 +6,28 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { FormBuilder } from '@angular/forms';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
 import * as operaciones from './../../utils/operacionesJSON';
 
 @Component({
+    selector: 'agenda',
     templateUrl: 'agenda.html',
 })
 export class AgendaComponent implements OnInit {
+    private _editarAgenda: any;
+    @Input('editaAgenda')
+    set editaAgenda(value: any) {
+        debugger;
+        this._editarAgenda = value;
+    }
+    get editaAgenda(): any {
+        return this._editarAgenda;
+    }
+
     @Output() data: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
+
     public agenda: any = {};
     public modelo: any = {};
     public prestaciones: any = [];
@@ -34,8 +46,15 @@ export class AgendaComponent implements OnInit {
         public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
 
     ngOnInit() {
+        debugger;
+
+        if (this.editaAgenda) {
+            this.cargarAgenda(this._editarAgenda);
+        } else {
+            this.bloqueActivo = -1;
+        }
+
         this.modelo.bloques = [];
-        this.bloqueActivo = -1;
     }
 
     cargarAgenda(agenda: IAgenda) {
@@ -514,14 +533,15 @@ export class AgendaComponent implements OnInit {
         }
     }
 
-    onCancel() {
+    onCancel(agenda) {
         this.router.navigate(['/inicio']);
         return false;
     }
 
     onReturn(agenda: IAgenda): void {
         this.showAgenda = true;
-        window.setTimeout(() => this.showBuscarAgendas = false, 100);
+        this.showBuscarAgendas = false;
+
         this.cargarAgenda(agenda);
     }
 }

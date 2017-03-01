@@ -8,1292 +8,1294 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 export class TensionDiastolicaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('paciente') paciente: IPaciente;
-    @Input('tipoPrestacion') prestacion: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('required') required: Boolean;
 
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
-    tensionDiastolica: Number = null;
-    mensaje: String;
-    class: String;
-    Edad: any = null;
-    BajaTensionDiastolica: Number = null;
-    percentiloTalla: Number = null;
-
     data: any = {
-        valor: Number,
         mensaje: {
             class: "",
             texto: ""
         },
     };
+
     ngOnInit() {
-        if (this.datosIngreso) {
-            this.tensionDiastolica = this.datosIngreso;
-        }
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
+
     devolverValores() {
-        this.mensaje = '';
-        this.class = 'outline-danger';   //Queda agregar las clases para cada caso.-Warning-Succes-Danger-
-        //this.evtData.emit(this.tensionDiastolica);
-        this.Edad = 16 //this.paciente.edad;
-        this.percentiloTalla = 5; //Falta tomar valor del percentilo
-        // agregar validaciones aca en base al paciente y el tipo de prestacion
-        //Rango de edad del paciente ADULTOS
-        if (this.Edad > 17 && this.Edad < 110) {
-            //Rengo de tension sistolica
-            if (this.tensionDiastolica > 80 && this.tensionDiastolica <= 84) {
-                //rango normal
-                this.mensaje = 'normal';
-            }
-            if (this.tensionDiastolica >= 85 && this.tensionDiastolica <= 89) {
-                //rango normal-alta
-                this.mensaje = 'Normal-alta';
-            }
-            if (this.tensionDiastolica >= 90 && this.tensionDiastolica <= 99) {
-                //rango hipertension arterial grado 1 
-                this.mensaje = 'Hipertensión arterial grado 1';
-            }
-            if (this.tensionDiastolica >= 100 && this.tensionDiastolica <= 109) {
-                //rango hipertension arterial grado 2 
-                this.mensaje = 'Hipertensión arterial grado 2';
-            }
-            if (this.tensionDiastolica >= 110) {
-                //rango hipertension arterial grado 3 
-                this.class = "danger";
-                this.mensaje = 'Hipertensión arterial grado 3';
-            }
-            if (this.tensionDiastolica <= 40 && this.tensionDiastolica >= 60) {
-                //rango hipotension
-                this.mensaje = 'hipotensión';
-            }
-            if (this.tensionDiastolica <= 35) {
-                //rango coma
-                this.mensaje = 'Coma';
-            }
-
-        }
-
-        if (this.Edad > 0 && this.Edad <= 17) {//Parametros para la edad del niño
-            let mensajeTensionBaja = 'Baja tension Diastolica';
-            let mensajeTensionAlta = 'Alta tension Diastolica';
-
-            this.BajaTensionDiastolica = 70 + (2 * this.Edad);//Calcula el parametro que por debajo es baja tension
-            if (this.percentiloTalla == 5) { //Mira la altura
-                if (this.Edad == 1) { // Mira la edad
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 64) {//Mira si esta fuera de los rangos normales
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {// Mira si es baja tension
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {// caso contrario es Alta tension
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 69) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 73) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 76) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 78) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 80) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 81) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 82) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 85) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-
-
-            }
-            if (this.percentiloTalla == 10) { // altura 10
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 64) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 69) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 73) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 76) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 78) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 80) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 81) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 82) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 85) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-            if (this.percentiloTalla == 25) {//altura 25
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 65) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 70) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 74) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 76) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 79) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 80) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 82) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 85) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-            if (this.percentiloTalla == 50) {// altura 50
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 65) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 70) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 74) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 77) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 79) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 81) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 82) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-            if (this.percentiloTalla == 75) { //Altura 75
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 66) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 71) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 75) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 78) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 80) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 82) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 85) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 92) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 92) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-            if (this.percentiloTalla == 90) { //ALtura 90
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 67) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 72) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 76) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 79) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 81) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 85) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 92) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 93) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 93) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-            if (this.percentiloTalla == 95) { //altura 95
-                if (this.Edad == 1) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 67) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 2) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 72) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 3) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 76) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 4) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 79) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 5) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 81) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 6) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 83) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 7) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 84) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 8) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 86) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 9) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 87) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 10) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 88) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 11) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 89) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 12) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 90) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 13) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 91) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 14) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 92) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 15) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 93) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 16) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 93) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-                if (this.Edad == 17) {
-                    if (this.tensionDiastolica < this.BajaTensionDiastolica || this.tensionDiastolica > 93) {
-                        if (this.tensionDiastolica < this.BajaTensionDiastolica) {
-                            this.mensaje = mensajeTensionBaja;
-                        }
-                        else {
-                            this.mensaje = mensajeTensionAlta;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        this.data.mensaje.class = this.class;
-        this.data.mensaje.texto = this.mensaje;
-        this.data.valor = this.tensionDiastolica;
+        this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
-
     }
 
+    getMensajes() {
+        let Edad;
+        let percentiloTalla;
+        let BajaTensionDiastolica;
+        let tensionSistolica = this.data[this.tipoPrestacion.key];
+
+        let mensaje : any = {
+            texto: '',
+            class: 'outline-danger'
+        };
+
+        Edad = this.paciente.edad;
+        percentiloTalla = 5; //Falta tomar valor del percentilo
+
+        if (tensionSistolica) {
+            // agregar validaciones aca en base al paciente y el tipo de prestacion
+            //Rango de edad del paciente ADULTOS
+            if (Edad > 17 && Edad < 110) {
+                //Rengo de tension sistolica
+                if (tensionSistolica > 80 && tensionSistolica <= 84) {
+                    //rango normal
+                    mensaje.texto = 'normal';
+                }
+                if (tensionSistolica >= 85 && tensionSistolica <= 89) {
+                    //rango normal-alta
+                    mensaje.texto = 'Normal-alta';
+                }
+                if (tensionSistolica >= 90 && tensionSistolica <= 99) {
+                    //rango hipertension arterial grado 1 
+                    mensaje.texto = 'Hipertensión arterial grado 1';
+                }
+                if (tensionSistolica >= 100 && tensionSistolica <= 109) {
+                    //rango hipertension arterial grado 2 
+                    mensaje.texto = 'Hipertensión arterial grado 2';
+                }
+                if (tensionSistolica >= 110) {
+                    //rango hipertension arterial grado 3 
+                    mensaje.class = "danger";
+                    mensaje.texto = 'Hipertensión arterial grado 3';
+                }
+                if (tensionSistolica <= 40 && tensionSistolica >= 60) {
+                    //rango hipotension
+                    mensaje.texto = 'hipotensión';
+                }
+                if (tensionSistolica <= 35) {
+                    //rango coma
+                    mensaje.texto = 'Coma';
+                }
+
+            }
+
+            if (Edad > 0 && Edad <= 17) {//Parametros para la edad del niño
+                let mensajeTensionBaja = 'Baja tension Diastolica';
+                let mensajeTensionAlta = 'Alta tension Diastolica';
+
+                BajaTensionDiastolica = 70 + (2 * Edad);//Calcula el parametro que por debajo es baja tension
+                if (percentiloTalla == 5) { //Mira la altura
+                    if (Edad == 1) { // Mira la edad
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 64) {//Mira si esta fuera de los rangos normales
+                            if (tensionSistolica < BajaTensionDiastolica) {// Mira si es baja tension
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {// caso contrario es Alta tension
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 69) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 73) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 76) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 78) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 80) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 81) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 82) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 85) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+
+
+                }
+                if (percentiloTalla == 10) { // altura 10
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 64) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 69) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 73) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 76) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 78) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 80) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 81) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 82) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 85) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+                if (percentiloTalla == 25) {//altura 25
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 65) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 70) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 74) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 76) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 79) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 80) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 82) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 85) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+                if (percentiloTalla == 50) {// altura 50
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 65) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 70) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 74) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 77) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 79) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 81) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 82) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+                if (percentiloTalla == 75) { //Altura 75
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 66) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 71) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 75) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 78) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 80) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 82) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 85) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 92) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 92) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+                if (percentiloTalla == 90) { //ALtura 90
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 67) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 72) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 76) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 79) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 81) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 85) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 92) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 93) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 93) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+                if (percentiloTalla == 95) { //altura 95
+                    if (Edad == 1) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 67) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 2) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 72) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 3) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 76) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 4) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 79) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 5) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 81) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 6) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 83) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 7) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 84) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 8) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 86) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 9) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 87) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 10) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 88) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 11) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 89) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 12) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 90) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 13) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 91) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 14) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 92) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 15) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 93) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 16) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 93) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                    if (Edad == 17) {
+                        if (tensionSistolica < BajaTensionDiastolica || tensionSistolica > 93) {
+                            if (tensionSistolica < BajaTensionDiastolica) {
+                                mensaje.texto = mensajeTensionBaja;
+                            }
+                            else {
+                                mensaje.texto = mensajeTensionAlta;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return mensaje;
+
+    }
 
 }

@@ -7,21 +7,36 @@ import { IPaciente } from '../../interfaces/IPaciente';
 })
 export class ObservacionesComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') prestacion: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     observaciones: Number = null;
     mensaje: String = null;
 
-  ngOnInit() {
-        if (this.datosIngreso) {
-            this.observaciones = this.datosIngreso;
-        }
+    data: any = {
+        mensaje: {
+            texto: String,
+        },
+    };
+
+    ngOnInit() {
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
     devolverValores() {
-        this.evtData.emit(this.observaciones);
-    }
+		this.data.mensaje = this.getMensajes();
+		this.evtData.emit(this.data);
+	}
+
+	getMensajes() {
+
+		let mensaje: any = {
+			texto: '',
+			class: 'outline-danger'
+		};
+
+		return mensaje;
+	}
 
 }

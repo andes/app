@@ -30,7 +30,6 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     pacientePrestacion: any = {};
     // resultados a devolver
-    //ejecucion: Object[] = [];
     data: any = {
         valor: {},
         mensaje: {
@@ -54,39 +53,12 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private pacienteService: PacienteService,
         private tipoPrestacionService: TipoPrestacionService) {
-
-        // Objeto que se rellena con todos los datos del Schema prestacionPaciente
-        // TODO: Agregar datos faltantes (estado, solicitud, prestacionesSolicitadas)
-        // this.pacientePrestacion = {
-        //     estado: [],
-        //     paciente: {},
-        //     solicitud: {
-        //         prioridad: null,
-        //         procedencia: null,
-        //         proposito: [],
-        //         listaProblemas: [],
-        //         organizacion: {},
-        //         profesional: {}
-
-        //     },
-        //     ejecucion: {
-        //         evoluciones: []
-        //     },
-        //     prestacionesSolicitadas: []
-        // };
-
     }
 
     ngOnInit() {
 
         // El View ya está inicializado
         this.isViewInitialized = true;
-
-        // Datos del paciente
-        // this.pacienteService.getById('588650849b85192d94fb9c0b').subscribe(paciente => {
-        //     console.log(paciente);
-        //     this.pacientePrestacion.paciente = paciente;
-        // });
 
         // Inicializamos la lista de Componentes RUP
         for (let comp of RUP_COMPONENTS) {
@@ -103,8 +75,6 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     // TODO: revisar si hace falta
     ngOnChanges() {
-        // this.loadComponent('ConsultaGeneralClinicaMedica');
-        //this.evtData.emit(this.pacientePrestacion);
     }
 
     ngOnDestroy() {
@@ -122,16 +92,13 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         // tslint:disable-next-line:no-console
         // console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
 
-        // Buscamos la prestación con key de "Signos Vitales"
-        // this.tipoPrestacionService.get({ key: key }).subscribe(resultado => {
-
         // No se puede cargar un componente pasando un string, buscamos en el "diccionario" de tipos de prestaciones
         this.componentContainer = this.tiposPrestaciones.find(prestacion => {
             let p;
             p = prestacion;
             return p.nombre === this.tipoPrestacion.componente.nombre;
         });
-        // console.log("this.componentContainer: ", this.componentContainer);
+
         // Cargamos el componente
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
 
@@ -139,7 +106,6 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         this.componentReference = this.viewContainerRef.createComponent(componentFactory);
         // console.log("this.componentReference: ", this.componentReference);
         // Activamos la detección de cambios
-
 
         // Agarramos la instancia
         let datosComponente = this.componentReference.instance;
@@ -167,11 +133,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         // this.data.mensaje = this.componentReference.instance.data.mensaje;
 
         datosComponente.evtData.subscribe(e => {
-            // console.log("CAMBIOS");
-            // console.log(e);
             this.evtData.emit(this.componentReference.instance.data);
-            //this.evtData.emit(valores);
-
         });
     }
 

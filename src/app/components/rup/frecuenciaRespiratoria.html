@@ -1,10 +1,8 @@
+<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="frecuenciaRespiratoria" label="Frecuencia respiratoria" suffix="RPM" min="10" max="100" (change)="devolverValores()">
+</plex-int>
+
 <p *ngIf="data.mensaje.texto">
     <span class="badge {{data.mensaje.class}}">
     {{data.mensaje.texto}}
     </span>
 </p>
-<plex-int placeholder="..." [(ngModel)]="frecuenciaRespiratoria" name="frecuenciaRespiratoria" label="Frecuencia respiratoria" suffix="RPM" min="10" max="100"
-(change)="devolverValores()"
->
-</plex-int>
-
