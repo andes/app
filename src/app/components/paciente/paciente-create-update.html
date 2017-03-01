@@ -257,6 +257,8 @@
           <div class="col-md-6">
             <label>Sexo</label>
             <div class="row">
+               <!--Al traer sexo desde la base es string, y cuando lo toma desde el plex-select es un objeto. 
+                  Por eso la alternativa-->
               <div *ngIf="createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo.id}}</div>
               <div *ngIf="!createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo}}</div>
             </div>
