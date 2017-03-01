@@ -30,17 +30,17 @@
                   </plex-datetime>
                 </div>
                 <div class="col-md-4">
-                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="validado" [required]="true" label="Sexo:">
+                  <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." [disabled]="validado" [required]="true" label="Sexo">
                   </plex-select>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4">
-                  <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Género:">
+                  <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Género">
                   </plex-select>
                 </div>
                 <div class="col-md-4">
-                  <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
+                  <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil">
                   </plex-select>
                 </div>
                 <div class="col-md-4">
@@ -257,7 +257,8 @@
           <div class="col-md-6">
             <label>Sexo</label>
             <div class="row">
-              <div class="col-md-4">{{createForm.value.sexo}}</div>
+              <div *ngIf="createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo.id}}</div>
+              <div *ngIf="!createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo}}</div>
             </div>
           </div>
         </div>

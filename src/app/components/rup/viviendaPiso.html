@@ -1,0 +1,16 @@
+<div class="row">
+        <div class="col-md-12">
+          <plex-select [(ngModel)]="data[tipoPrestacion.Key]" name="Piso" [data]="SelectPisos" label="Tipos de pisos de la vivienda" (change)="devolverValores()"
+            placeholder="Seleccionar piso">
+            </plex-select>
+        </div>
+</div>
+
+
+<!--<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
+</p>-->   
+
+<p>{{data| json}}</p>

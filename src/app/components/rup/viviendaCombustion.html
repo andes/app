@@ -1,0 +1,13 @@
+<div class="row">
+        <div class="col-md-12">
+          <plex-select [(ngModel)]="data[tipoPrestacion.key]" name="Combustion" [data]="SelectCombustion" label="Fuente de combustión"  
+                       placeholder="Seleccion de fuente de combustión"   [multiple]="true" (change)="devolverValores()" >
+          </plex-select>
+        </div>
+</div>
+
+<!--<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
+</p>-->

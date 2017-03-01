@@ -1,3 +1,7 @@
+import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
+import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.components';
+import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 
 //import { RUP_COMPONENTS } from './rup.module';
 // RUP
@@ -226,7 +230,12 @@ export const RUP_COMPONENTS = [
   PrestacionValidacionComponent,
   EdadGestacionalComponent,
   ScoreApgarComponent,
-  NacimientoComponent
+  NacimientoComponent,
+  ViviendaCombustionComponent,
+  ViviendaContaminantesComponent,
+  ViviendaResiduosComponent,
+  ViviendaPisoComponent
+
   // NO VAPacienteComponent
 ];
 
