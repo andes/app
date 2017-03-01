@@ -37,10 +37,10 @@
                                             <i *ngIf="(!turno.paciente) && (!turno.asistencia)" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                         </td>
 
-                                        <td *ngIf="(ag.estado != 'Suspendida')" [hidden]="turno.cancelarVisible">
-                                            <a id="cancelarTurno" *ngIf="(!turno.asistencia) && (turno.paciente)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Cancelar Turno" class="text-success success mdi mdi-stop"></i></a>
-                                            <i *ngIf="(turno.asistencia) && (turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
-                                            <i *ngIf="(!turno.paciente)" title="No es posible cancelar el Turno" class="text-success success mdi mdi-select"></i>
+                                        <td *ngIf="(ag.estado != 'Suspendida')" [hidden]="turno.liberarVisible">
+                                            <a id="liberarTurno" *ngIf="(!turno.asistencia) && (turno.paciente)" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Liberar Turno" class="text-success success mdi mdi-stop"></i></a>
+                                            <i *ngIf="(turno.asistencia) && (turno.paciente)" title="No es posible Liberar el Turno" class="text-success success mdi mdi-select"></i>
+                                            <i *ngIf="(!turno.paciente)" title="No es posible Liberar el Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
                                         <td *ngIf="ag.estado != 'Suspendida'" [hidden]="turno.bloquearVisible">
@@ -72,7 +72,7 @@
                                             </plex-text>
                                         </td>
 
-                                        <td [hidden]="turno.verNota">*** {{turno.verNota}} ***
+                                        <td [hidden]="turno.verNota">
                                             <a class="hover" (click)="guardarNota(ag, turno)"><i title="Agregar Nota" class="text-success success mdi mdi-content-save"></i></a>
                                         </td>
 

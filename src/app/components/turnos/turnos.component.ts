@@ -89,16 +89,16 @@ export class TurnosComponent implements OnInit {
         let btnClicked = event.currentTarget.id;
         let patch: any = {};
 
-        if (btnClicked === 'cancelarTurno') {
+        if (btnClicked === 'liberarTurno') {
             patch = {
-                'op': 'cancelarTurno',
+                'op': 'liberarTurno',
                 'idTurno': turno.id
             };
 
             turno.asistenciaVisible = true;
             turno.disponibleVisible = true;
             turno.suspenderVisible = true;
-            turno.cancelarVisible = true;
+            turno.liberarVisible = true;
             turno.bloquearVisible = true;
             turno.verNota = true;
 
@@ -109,7 +109,7 @@ export class TurnosComponent implements OnInit {
             patch = {
                 'op': 'asistenciaTurno',
                 'idTurno': turno.id
-            };          
+            };
         } else if (btnClicked === 'bloquearTurno') {
             patch = {
                 'op': 'bloquearTurno',
@@ -123,9 +123,15 @@ export class TurnosComponent implements OnInit {
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-             this.ag = resultado;    
-             turno.verNota = true;   
-             debugger;     
+            // this.ag = resultado;
+            // this.turnos = this.ag.bloques;
+
+            // this.turnos.forEach(turno => {
+            //     turno.turnos.forEach(turno => {
+            //         turno.verNota = true;
+            //         turno.listaEspera = true;
+            //     });
+            // });
         },
             err => {
                 if (err) {
@@ -197,7 +203,7 @@ export class TurnosComponent implements OnInit {
             turno.asistenciaVisible = true;
             turno.disponibleVisible = true;
             turno.suspenderVisible = true;
-            turno.cancelarVisible = true;
+            turno.liberarVisible = true;
             turno.bloquearVisible = true;
             turno.reasignarVisible = true;
 
@@ -207,7 +213,7 @@ export class TurnosComponent implements OnInit {
             turno.asistenciaVisible = false;
             turno.disponibleVisible = false;
             turno.suspenderVisible = false;
-            turno.cancelarVisible = false;
+            turno.liberarVisible = false;
             turno.bloquearVisible = false;
             turno.reasignarVisible = false;
 
@@ -226,8 +232,7 @@ export class TurnosComponent implements OnInit {
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            turno.hidden = false;
-            turno.verNota = true;
+            this.agregarNota(turno);
         },
             err => {
                 if (err) {
