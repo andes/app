@@ -9,7 +9,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 
 export class ViviendaCombustionComponent implements OnInit { 
      
-      @Input('datosIngreso') datosIngreso: any        
+      @Input('datosIngreso') datosIngreso: any;        
       @Input('tipoPrestacion') tipoPrestacion: any;
       @Input('paciente') paciente: IPaciente;
       @Output() evtData: EventEmitter<any> = new EventEmitter<any>();      
@@ -29,21 +29,20 @@ export class ViviendaCombustionComponent implements OnInit {
                                               ]; //SelectCombustion:Array  
 
     ngOnInit() {                   
-
                   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : [];
                }//ngOnInit()
 
 
     devolverValores() { //Hacer las validaciones
                         if (this.data[this.tipoPrestacion.key]) {
-                                                                  this.data[this.tipoPrestacion.key] = this.data[this.tipoPrestacion.key].map(elemento=>{return elemento.id});                                                         
-                                                                } //if (this.ViviendaCombustion)               
+                            this.data[this.tipoPrestacion.key] = this.data[this.tipoPrestacion.key].map(elemento=>{return elemento.id});                                                         
+                        } //if (this.ViviendaCombustion)               
                         else this.data[this.tipoPrestacion.key] = [];
                         
                         this.data.mensaje = this.getMensajes();
                         this.evtData.emit(this.data);
                       }//devolverValores()
 
-   getMensajes(){ } 
+   getMensajes(){ } //getMensajes()
 
        }//export class ViviendaCombustionComponent
