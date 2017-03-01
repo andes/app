@@ -133,12 +133,18 @@ export class DarTurnosComponent implements OnInit {
         }
         this.serviceAgenda.get(params).subscribe(agendas => {
             this.agendas = agendas; this.indice = -1;
-            this.agendas.sort(
+            this.agendas = this.agendas.sort(
                 function (a, b) {
-                    return a.horaInicio.getTime() - b.horaInicio.getTime()
-                        || b.turnosDisponibles - a.turnosDisponibles;
+                    let inia = a.horaInicio? new Date(a.horaInicio.setHours(0, 0, 0, 0)): null;
+                    let inib = b.horaInicio? new Date(b.horaInicio.setHours(0, 0, 0, 0)): null;
+                    {
+                        return inia? (inia.getTime()-inib.getTime() || b.turnosDisponibles-a.turnosDisponibles): b.turnosDisponibles-a.turnosDisponibles;
+                    }
                 }
             );
+            // console.log("agendas ", this.agendas.map(function (obj) {
+            //     return { inicio: obj.horaInicio, disponibles: obj.turnosDisponibles }
+            // }))
         });
     }
 
