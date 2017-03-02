@@ -27,22 +27,8 @@ export class ViviendaResiduosComponent implements OnInit {
                                               {id:'Otra',nombre:'Otra'},                                                                                               
                                             ]; //SelectResiduos:Array  
 
-    ngOnInit() { 
-
-                 this.tipoPrestacion= {
-                        "_id" : "58b6fd01b64acd0989b9f53b",
-                        "key" : "viviendaResiduos",
-                        "nombre" : "Recolección de Residuos",
-                        "autonoma" : false,
-                        "activo" : true,
-                        "componente" : {
-                            "ruta" : "rup/viviendaResiduos.component.ts",
-                            "nombre" : "ViviendaResiduosComponent"
-                        },
-                        "turneable" : false
-                    }
-
-                  this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : [];
+    ngOnInit() {       
+                  this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso:[];
     }//ngOnInit()
 
     devolverValores() { //Hacer las validaciones
