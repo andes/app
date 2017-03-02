@@ -88,7 +88,7 @@
     <plex-box>
         <div class="row">
             <div class="col-md-6 pull-left">
-                <plex-button title="Evolucionar los Problemas" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
+                <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
             </div>
             <div class="col-lg-6">
 
@@ -103,5 +103,5 @@
 </div>
 
 <div *ngIf="showEjecucion">
-    <rup-prestacionEjecucion [prestacion]="prestacion"></rup-prestacionEjecucion>
+    <rup-prestacionEjecucion [prestacion]="prestacion" (evtData)="onReturn(prestacion)"></rup-prestacionEjecucion>
 </div>
