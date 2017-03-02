@@ -1,8 +1,8 @@
-import { IPrestacion } from './IPrestacion';
+import { ITipoPrestacion } from './../ITipoPrestacion';
 export interface ITurno {
     horaInicio: Date;
     estado: String;
-    asistencia: Boolean,
+    asistencia: Boolean;
     paciente: {
         id: String,
         nombre: String,
@@ -16,5 +16,6 @@ export interface ITurno {
         apellido: String,
         documento: String
     }];
-    prestacion: IPrestacion;
+    tipoPrestacion: ITipoPrestacion;
+    idPrestacionPaciente: String;
 }

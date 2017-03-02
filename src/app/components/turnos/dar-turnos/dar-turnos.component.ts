@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos'
 
 import { Plex } from 'andes-plex/src/lib/core/service';
@@ -40,7 +41,7 @@ export class DarTurnosComponent implements OnInit {
     public agendas: IAgenda[];
     public opciones = {
         fecha: new Date(),
-        prestacion: null,
+        tipoPrestacion: null,
         profesional: null,
     };
 
@@ -54,8 +55,8 @@ export class DarTurnosComponent implements OnInit {
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
     private reqfiltros: boolean = false;
-    private prestaciones: String = '';
-    private turnoPrestacion: any = {};
+    private tipoPrestaciones: String = '';
+    private turnoTipoPrestacion: any = {};
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
 
@@ -97,8 +98,9 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(event.callback);
+    loadTipoPrestaciones(event) {
+        // this.servicioPrestacion.get({}).subscribe(event.callback);
+        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -107,11 +109,11 @@ export class DarTurnosComponent implements OnInit {
 
     filtrar() {
         let search = {
-            'prestacion': this.opciones.prestacion ? this.opciones.prestacion : null,
+            'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
         };
         if (this.busquedas.length === size) {
-            this.busquedas.pop();
+            this.busquedas.shift();
         }
         this.busquedas.push(search);
         localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
@@ -124,11 +126,11 @@ export class DarTurnosComponent implements OnInit {
         this.agenda = null;
         if (etiqueta !== 'sinFiltro') {
             params = {
-                'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : '',
+                'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '',
                 'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : ''
             };
         } else {
-            this.opciones.prestacion = null;
+            this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
         }
         this.serviceAgenda.get(params).subscribe(agendas => {
@@ -153,15 +155,15 @@ export class DarTurnosComponent implements OnInit {
         this.agenda = agenda;
         this.bloques = this.agenda.bloques;
         this.alternativas = [];
-        let prestacion: String = this.opciones.prestacion ? this.opciones.prestacion.id : '';
-        /*Filtra los bloques segun el filtro prestacion*/
+        let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+        /*Filtra los bloques segun el filtro tipoPrestacion*/
         this.bloques = this.agenda.bloques.filter(
             function (value) {
-                let prestacionesBlq = value.prestaciones.map(function (obj) {
+                let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
                     return obj.id;
                 });
-                if (prestacion) {
-                    return (prestacionesBlq.indexOf(prestacion) >= 0);
+                if (tipoPrestacion) {
+                    return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
                 } else {
                     return true;
                 }
@@ -173,22 +175,22 @@ export class DarTurnosComponent implements OnInit {
             /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
             if (this.agenda.turnosDisponibles > 0) {
                 this.estadoT = 'seleccionada';
-                this.prestaciones = '';
-                if (this.agenda.prestaciones.length > 1) {
-                    this.agenda.prestaciones.forEach((cadaprestacion, ind) => {
-                        this.prestaciones = this.prestaciones ? this.prestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
+                this.tipoPrestaciones = '';
+                if (this.agenda.tipoPrestaciones.length > 1) {
+                    this.agenda.tipoPrestaciones.forEach((cadaprestacion, ind) => {
+                        this.tipoPrestaciones = this.tipoPrestaciones ? this.tipoPrestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
                     });
                 } else {
-                    this.prestaciones = this.agenda.prestaciones[0].nombre;
-                    this.turnoPrestacion = this.agenda.prestaciones[0];
+                    this.tipoPrestaciones = this.agenda.tipoPrestaciones[0].nombre;
+                    this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
                 }
             } else {
                 /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                 this.estadoT = 'noTurnos';
-                if (this.opciones.prestacion || this.opciones.profesional) {
+                if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                     this.serviceAgenda.get({
                         'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
-                        'idPrestacion': this.opciones.prestacion ? this.opciones.prestacion.id : null,
+                        'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
                         'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
                     }).subscribe(alternativas => { this.alternativas = alternativas; this.reqfiltros = false; });
                 } else {
@@ -204,8 +206,8 @@ export class DarTurnosComponent implements OnInit {
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
             this.indiceTurno = indice;
             this.turno = bloque.turnos[indice];
-            if (this.bloque.prestaciones.length === 1) {
-                this.turno.prestacion = this.bloque.prestaciones[0];
+            if (this.bloque.tipoPrestaciones.length === 1) {
+                this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
             }
             this.estadoT = 'confirmacion';
         } else {
@@ -214,7 +216,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarBusqueda(indice: number) {
-        this.opciones.prestacion = this.busquedas[indice].prestacion;
+        this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         this.opciones.profesional = this.busquedas[indice].profesional;
         this.actualizar('');
     }
@@ -274,7 +276,7 @@ export class DarTurnosComponent implements OnInit {
             indiceTurno: this.indiceTurno,
             estado: estado,
             paciente: pacienteSave,
-            prestacion: this.turnoPrestacion
+            tipoPrestacion: this.turnoTipoPrestacion
 
         };
         let operacion: Observable<any>;
@@ -336,8 +338,8 @@ export class DarTurnosComponent implements OnInit {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
         let datosPrestacion = {
-            id: this.opciones.prestacion.id,
-            nombre: this.opciones.prestacion.nombre
+            id: this.opciones.tipoPrestacion.id,
+            nombre: this.opciones.tipoPrestacion.nombre
         };
         let datosProfesional = !this.opciones.profesional ? null : {
             id: this.opciones.profesional.id,
@@ -353,7 +355,7 @@ export class DarTurnosComponent implements OnInit {
         listaEspera = {
             fecha: this.agenda.horaInicio,
             estado: 'Demanda Rechazada',
-            prestacion: datosPrestacion,
+            tipoPrestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
         };
@@ -367,6 +369,7 @@ export class DarTurnosComponent implements OnInit {
         public serviceListaEspera: ListaEsperaService,
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
+        public servicioTipoPrestacion: TipoPrestacionService,
         public plex: Plex) { }
 
 }
