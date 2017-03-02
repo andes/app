@@ -1,3 +1,4 @@
+import { ViviendaAsistenciaEcComponent } from './components/rup/viviendaAsistenciaEc.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.components';
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
@@ -234,7 +235,8 @@ export const RUP_COMPONENTS = [
   ViviendaCombustionComponent,
   ViviendaContaminantesComponent,
   ViviendaResiduosComponent,
-  ViviendaPisoComponent
+  ViviendaPisoComponent,
+  ViviendaAsistenciaEcComponent
 
   // NO VAPacienteComponent
 ];
