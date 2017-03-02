@@ -38,9 +38,9 @@ export class PrestacionPacienteService {
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
-    getByKey(key: String): Observable<IPrestacionPaciente[]> {
-        var url = this.prestacionesUrl + "/forKey/" + key;
-        return this.server.get(url, null)
+    getByKey(params: any): Observable<IPrestacionPaciente[]> {
+        var url = this.prestacionesUrl + "/forKey/";
+        return this.server.get(url, { params: params, showError: true })
     }
 
     /**

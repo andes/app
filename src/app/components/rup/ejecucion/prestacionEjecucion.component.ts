@@ -92,7 +92,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (!find) {
                 // asignamos valores a la nueva prestacion
                 let nuevaPrestacion = this.crearPrestacionVacia(element);
-            }else{
+            } else {
                 this.idTiposPrestacionesEjecucion.push(element.id);
                 this.prestacionesEjecucion.push(find);
             }
@@ -187,7 +187,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         };
 
         this.prestacionesEjecucion.push(nuevaPrestacion);
-
+        this.listaProblemaPrestacion[tipoPrestacion.key] = [];
         return nuevaPrestacion;
     }
 
@@ -213,7 +213,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 prestacion.solicitud.listaProblemas.push(problema.id);
             }
 
-        }else {
+        } else {
             // si no agrego ningun problema, entonces por defecto se le agregan todos
             prestacion.solicitud.listaProblemas = this.listaProblemas;
         }
@@ -236,60 +236,60 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
         console.log("en confirmacion", prestacion);
-    //     // asignamos valores a la nueva prestacion
-    //     this.nuevaPrestacion = {
-    //         idPrestacionOrigen: this.prestacion.id,
-    //         paciente: this.prestacion.paciente.id,
-    //         solicitud: {
-    //             tipoPrestacion: tipoPrestacionActual,
-    //             fecha: new Date(),
-    //             listaProblemas: []
-    //         },
-    //         estado: {
-    //             timestamp: new Date(),
-    //             tipo: 'ejecucion'
-    //         },
-    //         ejecucion: {
-    //             fecha: new Date(),
-    //             evoluciones: [{
-    //                 valores: this.data[tipoPrestacionActual.key],
-    //                 estado: [{
-    //                     timestamp: new Date(),
-    //                     tipo: 'ejecucion'
-    //                 }]
-    //             }]
-    //         }
-    //     };
+        //     // asignamos valores a la nueva prestacion
+        //     this.nuevaPrestacion = {
+        //         idPrestacionOrigen: this.prestacion.id,
+        //         paciente: this.prestacion.paciente.id,
+        //         solicitud: {
+        //             tipoPrestacion: tipoPrestacionActual,
+        //             fecha: new Date(),
+        //             listaProblemas: []
+        //         },
+        //         estado: {
+        //             timestamp: new Date(),
+        //             tipo: 'ejecucion'
+        //         },
+        //         ejecucion: {
+        //             fecha: new Date(),
+        //             evoluciones: [{
+        //                 valores: this.data[tipoPrestacionActual.key],
+        //                 estado: [{
+        //                     timestamp: new Date(),
+        //                     tipo: 'ejecucion'
+        //                 }]
+        //             }]
+        //         }
+        //     };
 
-    //     // si he agregado algun problema a la nueva prestacion
-    //     // entonces asigno su id a la prestacion a guardar
-    //     if (this.listaProblemaPrestacion[tipoPrestacionActual.key] && this.listaProblemaPrestacion[tipoPrestacionActual.key].length) {
-    //         // inicializamos el array en caso de que haga falta
-    //         // if (typeof this.nuevaPrestacion.solicitud.listaProblemas === 'undefined') {
-    //         //     this.nuevaPrestacion.solicitud.listaProblemas = [];
-    //         // }
-    //         // recorremos array de problemas y asignamos a la nueva prestacion
-    //         for (let problema of this.listaProblemaPrestacion[tipoPrestacionActual.key]) {
-    //             this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
-    //         }
+        //     // si he agregado algun problema a la nueva prestacion
+        //     // entonces asigno su id a la prestacion a guardar
+        //     if (this.listaProblemaPrestacion[tipoPrestacionActual.key] && this.listaProblemaPrestacion[tipoPrestacionActual.key].length) {
+        //         // inicializamos el array en caso de que haga falta
+        //         // if (typeof this.nuevaPrestacion.solicitud.listaProblemas === 'undefined') {
+        //         //     this.nuevaPrestacion.solicitud.listaProblemas = [];
+        //         // }
+        //         // recorremos array de problemas y asignamos a la nueva prestacion
+        //         for (let problema of this.listaProblemaPrestacion[tipoPrestacionActual.key]) {
+        //             this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
+        //         }
 
-    //     }else {
-    //         // si no agrego ningun problema, entonces por defecto se le agregan todos
-    //         this.nuevaPrestacion.solicitud.listaProblemas = this.listaProblemas;
-    //     }
+        //     }else {
+        //         // si no agrego ningun problema, entonces por defecto se le agregan todos
+        //         this.nuevaPrestacion.solicitud.listaProblemas = this.listaProblemas;
+        //     }
 
-    //     console.log(this.nuevaPrestacion);
+        //     console.log(this.nuevaPrestacion);
 
-    //     // guardamos la nueva prestacion 
-    //     this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+        //     // guardamos la nueva prestacion 
+        //     this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
 
-    //         // asignamos la prestacion nueva al array de prestaciones futuras
-    //         this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+        //         // asignamos la prestacion nueva al array de prestaciones futuras
+        //         this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
 
-    //         // this.prestacionesFuturas.push(prestacionFutura);
-    //         this.plex.alert('Prestacion confirmada');
+        //         // this.prestacionesFuturas.push(prestacionFutura);
+        //         this.plex.alert('Prestacion confirmada');
 
-    //     });
+        //     });
     }
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
@@ -523,5 +523,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     onReturnComponente(datos, tipoPrestacionActual) {
         console.log("dato del componente", datos);
         this.data[tipoPrestacionActual.key] = datos;
+    }
+
+
+    volver() {
+        this.evtData.emit(this.prestacion);
     }
 }

@@ -51,13 +51,13 @@ export class ResumenComponent implements OnInit {
     }
 
     cargarIndicadores() {
-        this.servicioPrestacionPaciente.getByKey("signosVitales.peso")
+        this.servicioPrestacionPaciente.getByKey({ key: "signosVitales.peso", idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
                 if (prestacion)
                     this.prestacionPeso = prestacion[0];
             });
 
-        this.servicioPrestacionPaciente.getByKey("talla")
+        this.servicioPrestacionPaciente.getByKey({ key: "talla", idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
                 if (prestacion)
                     this.prestacionTalla = prestacion[0];
@@ -85,4 +85,12 @@ export class ResumenComponent implements OnInit {
         this.showEjecucion = false;
         this.evtData.emit(null);
     }
+
+    onReturn(prestacion) {
+        this.showEjecucion = false;
+        this.loadProblemas();
+        this.loadPrestacionesPendientes();
+        this.cargarIndicadores();
+    }
+
 }
