@@ -325,7 +325,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let elem of pacientesSimilares" (click)="mostrarPaciente(paciente)">
+              <tr *ngFor="let elem of pacientesSimilares" >
                 <td>{{elem.paciente.documento}}</td>
                 <td>{{elem.paciente.nombre| uppercase}}</td>
                 <td>{{elem.paciente.apellido| uppercase}}</td>
