@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
@@ -15,7 +16,7 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 export class BuscarAgendasComponent implements OnInit {
 
     public modelo: any = {};
-    public prestaciones: any = [];
+    public tipoPrestaciones: any = [];
     public agendas: any = [];
 
     showBuscarAgendas: boolean = true;
@@ -28,13 +29,14 @@ export class BuscarAgendasComponent implements OnInit {
     searchForm: FormGroup;
 
     constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder) { }
+        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder,
+        public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
             fechaDesde: new Date(),
             fechaHasta: new Date(),
-            prestaciones: [''],
+            tipoPrestaciones: [''],
             profesionales: [''],
             espacioFisico: [''],
         });
@@ -46,7 +48,7 @@ export class BuscarAgendasComponent implements OnInit {
             this.serviceAgenda.get({
                 fechaDesde: value.fechaDesde,
                 fechaHasta: value.fechaHasta,
-                idPrestacion: value.prestaciones.id,
+                idTipoPrestacion: value.tipoPrestaciones.id,
                 idProfesional: value.profesionales.id,
                 idEspacioFisico: value.espacioFisico.id
             }).subscribe(
@@ -66,8 +68,9 @@ export class BuscarAgendasComponent implements OnInit {
         };
     }
 
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(event.callback);
+    loadTipoPrestaciones(event) {
+        // this.servicioPrestacion.get({}).subscribe(event.callback);
+        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -92,7 +95,7 @@ export class BuscarAgendasComponent implements OnInit {
             horaInicio: fecha.getHours() + ':' + (fecha.getMinutes() < 10 ? '0' : '') + fecha.getMinutes(),
             horaFin: horaFin.getHours() + ':' + (horaFin.getMinutes() < 10 ? '0' : '') + horaFin.getMinutes(),
             profesionales: agenda.profesionales,
-            prestaciones: agenda.prestaciones,
+            tipoPrestaciones: agenda.tipoPrestaciones,
             espacioFisico: agenda.espacioFisico.nombre,
             bloques: agenda.bloques
         };
