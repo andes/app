@@ -1,0 +1,35 @@
+<plex-box title="Nivel de Instrucción">
+    <div class="row" >
+        <div class="col-md-6">
+            <form [formGroup]="form1">
+                <plex-bool  formControlName="activo" label="Primario Completo" 
+                                  type="slide" (change)="devolverValores()" >
+                </plex-bool>
+            </form>
+        </div>               
+       
+        <div class="col-md-4">
+            <form [formGroup]="form2">
+                <plex-bool  formControlName="activo" label="Secundario Completo" 
+                                  type="slide" (change)="devolverValores()" >
+                </plex-bool>
+            </form>
+        </div>  
+
+
+        <div class="col-md-6">
+            <form [formGroup]="form3">
+                <plex-bool  formControlName="activo" label="Terciario/Universitario" 
+                                  type="slide" (change)="devolverValores()" >
+                </plex-bool>
+            </form>
+        </div>          
+
+
+
+
+
+    </div>
+</plex-box>
+
+<p> {{data|json}}</p>    

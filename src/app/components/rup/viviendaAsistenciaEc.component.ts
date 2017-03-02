@@ -22,7 +22,6 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
                   };  
 
     public form: FormGroup;
-    public requiereAsistencia: any;
     constructor(private formBuilder: FormBuilder) { }
 
 
@@ -42,4 +41,4 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
 
     getMensajes(){};
                       
-    }//export class ViviendaResiduosComponent
+    }//export class ViviendaAsistenciaEcComponent
