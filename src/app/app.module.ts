@@ -1,6 +1,6 @@
+import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaAsistenciaEcComponent } from './components/rup/viviendaAsistenciaEc.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
-import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.components';
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 
