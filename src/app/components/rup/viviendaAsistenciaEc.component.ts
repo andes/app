@@ -15,6 +15,7 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
       @Input('paciente') paciente: IPaciente;
       @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+      data1: any;
       data: any = { mensaje: {
                               class: "",
                               texto: "",
@@ -26,13 +27,8 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
 
 
     ngOnInit() { 
-                 this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;                    
-               
-                 this.data[this.tipoPrestacion.key] = { activo: false };
-                 this.form = this.formBuilder.group({activo: [''],});
-                 this.form.valueChanges.subscribe((value) => {this.data[this.tipoPrestacion.key] = value;});    
+                 this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;                                     
                } //ngOnInit()
-
 
     devolverValores() { //Hacer las validaciones                                                
                          this.data.mensaje = this.getMensajes();
