@@ -1,0 +1,13 @@
+<plex-box title="Asistencia Económica">
+    <div class="row">
+        <div class="col-md-6">
+            <form [formGroup]="form">
+                <plex-bool  formControlName="activo" label="Recibe Asistencia" 
+                                  type="slide" (change)="devolverValores()" >
+                </plex-bool>
+            </form>
+        </div>               
+    </div>
+</plex-box>
+
+<p>{{data| json}}</p>
