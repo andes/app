@@ -51,7 +51,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
   familiaresPacientes = [];
+  pacientesSimilares = [];
   validado: boolean = false;
+  disableGuardar: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -140,13 +142,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
               let dtoBusqueda = {
                 'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
               };
-              this.pacienteService.searchMatch('documento', dtoBusqueda)
+              this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest",false)
                 .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
             }
           }
         })
       });
+
+
   }
+
 
   iniContacto(rank: Number) {
     // Inicializa los datos del contacto
@@ -279,7 +284,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     var lista = [];
     debugger
     if (valid) {
-      let operacionPac: Observable<IPaciente>;
+      
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
       model.sexo = (typeof model.sexo == 'string') ? model.sexo : model.sexo.id;
       model.estadoCivil = (typeof model.estadoCivil == 'string') ? model.estadoCivil : model.estadoCivil.id;
@@ -306,44 +311,42 @@ export class PacienteCreateUpdateComponent implements OnInit {
       });
       // Se controla si existe el paciente
       if (!model.id) {
+
         let dtoBusqueda = {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
           'fechaNacimiento': model.fechaNacimiento
         };
-        debugger
-        this.pacienteService.searchMatch('documento', dtoBusqueda)
-          .subscribe(value => {
-            debugger; lista = value;
-            if (lista.length > 0) {
-              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
+        this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch',true)
+          .subscribe(valor => {
 
+            this.pacientesSimilares = valor; console.log(valor)
+            if (this.pacientesSimilares.length > 0) {
+              this.disableGuardar = true;
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
             } else {
-              this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-                if (resultado) {
-                  debugger
-                  operacionPac = this.pacienteService.save(model);
-                  operacionPac.subscribe(result => {
-                    this.data.emit(result)
-                  });
-                }
-              })
+                this.save(model);
             }
           });
+      } else {
+        this.save(model);
       }
-      
-      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-                if (resultado) {
-                  debugger
-                  operacionPac = this.pacienteService.save(model);
-                  operacionPac.subscribe(result => {
-                    this.data.emit(result)
-                  });
-                }
-              })
 
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }
+  }
+
+  save(model: any) {
+    let operacionPac: Observable<IPaciente>;
+    this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+      if (resultado) {
+        debugger
+        operacionPac = this.pacienteService.save(model);
+        operacionPac.subscribe(result => {
+          this.data.emit(result)
+        });
+      }
+    })
   }
 
   onCancel() {

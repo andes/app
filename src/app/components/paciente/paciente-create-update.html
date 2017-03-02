@@ -1,18 +1,19 @@
 <div class="row">
-  <form [formGroup]="createForm">
-    <div class="col-md-8">
-      <plex-box type="sucess" title="Alta de Pacientes">
+
+  <div class="col-md-8">
+    <plex-box type="info" title="Alta de Pacientes">
+      <form [formGroup]="createForm">
         <plex-tabs>
           <plex-tab icon="account" id="datosBasicos">
             <plex-box type="warning" title="Datos básicos">
               <div class="row">
                 <div class="col-sm-4">
-                  <plex-text label="Nombre" formControlName="nombre" [disabled]="validado" [required]="true"  placeholder="Ingrese nombre..." >
+                  <plex-text label="Nombre" formControlName="nombre" [disabled]="validado" [required]="true" placeholder="Ingrese nombre...">
                   </plex-text>
-                  
+
                 </div>
                 <div class="col-sm-4">
-                  <plex-text label="Apellido" formControlName="apellido" [disabled]="validado"  [required]="true" placeholder="Ingrese apellido...">
+                  <plex-text label="Apellido" formControlName="apellido" [disabled]="validado" [required]="true" placeholder="Ingrese apellido...">
                   </plex-text>
                 </div>
                 <div class="col-sm-4">
@@ -44,15 +45,23 @@
                   </plex-select>
                 </div>
                 <div class="col-md-4">
-                   <plex-text [disabled]="true" label="Estado:" formControlName="estado">
-                      </plex-text>
+                  <plex-text [disabled]="true" label="Estado:" formControlName="estado">
+                  </plex-text>
                 </div>
               </div>
+              <div *ngIf="familiaresPacientes.length > 0" class="alert alert-warning" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">info</span> Quiza quiso decir
+              </div>
+              <div *ngFor="let familiar of familiaresPacientes" (click)="addFamiliar(familiar,i)">
+                {{ familiar.documento }} {{ familiar.nombre }} {{ familiar.apellido }}
+              </div>
+
             </plex-box>
           </plex-tab>
           <plex-tab icon="contact-mail" title="Datos de contacto" id="contacto">
             <plex-box type="warning" title="Contacto" formArrayName="contacto">
-              <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
+              <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel -default">
                 <div class="panel-heading">
                   <div align="right" *ngIf="createForm.controls.contacto.controls.length > 0" (click)="removeContacto(i)">
                     <i class="glyphicon glyphicon-remove-circle"></i>
@@ -112,11 +121,13 @@
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais) " label="Provincia:" labelField="nombre">
+                          <plex-select formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais) " label="Provincia:"
+                            labelField="nombre">
                           </plex-select>
                         </div>
                         <div class="col-md-4">
-                          <plex-select formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:" labelField="nombre">
+                          <plex-select formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:"
+                            labelField="nombre">
                           </plex-select>
                         </div>
                       </div>
@@ -206,74 +217,127 @@
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">info</span> Quiza quiso decir
                   </div>
-                  <div *ngFor="let familiar of familiaresPacientes" (click)="addFamiliar(familiar,i)" >
-                    {{ familiar.documento }}   {{ familiar.nombre }}   {{ familiar.apellido }}
+                  <div *ngFor="let familiar of familiaresPacientes" (click)="addFamiliar(familiar,i)">
+                    {{ familiar.documento }} {{ familiar.nombre }} {{ familiar.apellido }}
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <plex-button label="Agregar Relación" icon="account-switch" (click)="addRelacion()"></plex-button>
-
                 </div>
               </div>
             </plex-box>
-
           </plex-tab>
-
-
         </plex-tabs>
+      </form>
+    </plex-box>
+  </div>
 
-      </plex-box>
-    </div>
+  <div class="col-md-4">
+    <plex-box type="info" title="Datos Paciente">
+      <div class="row">
+        <div class="col-md-12">
 
-    <div class="col-md-4">
-      <plex-box type="info" title="Datos Paciente">
-        <div class="row">
-          <div class="col-md-4">
-              <div class="col-md-4"><h4>{{createForm.value.nombre}}</h4></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-              <div class="col-md-4"><h4><strong>{{createForm.value.apellido}}</strong></h4></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <h4>D.N.I. {{createForm.value.documento}} </h4>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <label>Fecha de Nacimiento</label>
-            <div class="row">
-              <div class="col-md-4">{{createForm.value.fechaNacimiento | date: 'dd/MM/yyyy'}}</div>
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-md-6">
-            <label>Sexo</label>
-            <div class="row">
-              <div *ngIf="createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo.id}}</div>
-              <div *ngIf="!createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo}}</div>
-            </div>
-          </div>
-        </div>
-      </plex-box>
-      <plex-box>
-        <div class="row">
-          <div class="col-sm-12">
-            <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)">
-            </plex-button>
-            <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
-            </plex-button>
-          </div>
-        </div>
-      </plex-box>
+          <h4>{{createForm.value.nombre}}</h4>
 
-    </div>
-  </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+
+          <h4><strong>{{createForm.value.apellido}}</strong></h4>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h4>D.N.I. {{createForm.value.documento}} </h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Fecha de Nacimiento</label>
+          <div class="row">
+            <div class="col-md-4">{{createForm.value.fechaNacimiento | date: 'dd/MM/yyyy'}}</div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Sexo</label>
+          <div class="row">
+            <!--Al traer sexo desde la base es string, y cuando lo toma desde el plex-select es un objeto. 
+                  Por eso la alternativa-->
+            <div *ngIf="createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo.id}}</div>
+            <div *ngIf="!createForm.value.sexo.id" class="col-md-4">{{createForm.value.sexo}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">&nbsp;</div>
+      <div class="row">
+        <div class="col-md-4" *ngIf="!disableGuardar">
+          <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" 
+            [disabled]="!createForm.valid" (click)="onSave(createForm.value, createForm.valid)">
+          </plex-button>
+        </div>
+        <div class="col-md-6" *ngIf="disableGuardar">
+          <plex-button title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" type="primary" [disabled]="!createForm.valid"  (click)="save(createForm.value)">
+          </plex-button>
+        </div>
+        <div class="col-md-4">
+          <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+          </plex-button>
+        </div>
+      </div>
+    </plex-box>
+    <!--<plex-box>
+      <div class="row">
+        <div class="col-sm-12">
+          <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)">
+          </plex-button>
+          <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+          </plex-button>
+        </div>
+      </div>
+    </plex-box>-->
+
+  </div>
+
+</div>
+
+<div class="row" *ngIf="disableGuardar">
+  <div class="col-md-12">
+    <plex-box type="info" title="Pacientes Encontrados">
+      <!-- Search results -->
+      <div class="hover" *ngIf="!pacientesSearch">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Sexo</th>
+                 <th>% similitud</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let elem of pacientesSimilares" (click)="mostrarPaciente(paciente)">
+                <td>{{elem.paciente.documento}}</td>
+                <td>{{elem.paciente.nombre| uppercase}}</td>
+                <td>{{elem.paciente.apellido| uppercase}}</td>
+                <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                <td>{{elem.paciente.sexo}}</td>
+                <td>{{elem.match * 100}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </plex-box>
+  </div>
 </div>
