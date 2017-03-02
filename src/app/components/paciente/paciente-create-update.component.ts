@@ -54,6 +54,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   pacientesSimilares = [];
   validado: boolean = false;
   disableGuardar: boolean = false;
+  sugerenciaAceptada: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -323,7 +324,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           .subscribe(valor => {
 
             this.pacientesSimilares = valor; console.log(valor)
-            if (this.pacientesSimilares.length > 0) {
+            if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
               this.disableGuardar = true;
               this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
             } else {
@@ -341,21 +342,38 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   save(model: any) {
     let operacionPac: Observable<IPaciente>;
-    this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-      if (resultado) {
-        debugger
-        operacionPac = this.pacienteService.save(model);
-        operacionPac.subscribe(result => {
-          this.data.emit(result)
-        });
-      }
-    })
+    if (this.sugerenciaAceptada) {
+       this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
+        if (resultado) {
+          debugger
+          operacionPac = this.pacienteService.save(model);
+          operacionPac.subscribe(result => {
+            this.data.emit(result)
+          });
+        }
+      })
+    } else {
+      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+        if (resultado) {
+          debugger
+          operacionPac = this.pacienteService.save(model);
+          operacionPac.subscribe(result => {
+            this.data.emit(result)
+          });
+        }
+      })
+    }
   }
 
   onCancel() {
     this.data.emit(null)
   }
 
-
+  onSelect(paciente: IPaciente) {
+    this.seleccion = paciente;
+    this.createForm.patchValue(this.seleccion);
+    this.disableGuardar = false;
+    this.sugerenciaAceptada = true;
+  }
 
 }
