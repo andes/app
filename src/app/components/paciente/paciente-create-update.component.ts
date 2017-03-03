@@ -371,6 +371,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSelect(paciente: IPaciente) {
     this.seleccion = paciente;
+     if (this.seleccion.estado === 'validado') {
+        this.validado = true;
+      }
     this.createForm.patchValue(this.seleccion);
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;
