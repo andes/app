@@ -21,29 +21,11 @@ export class ViviendaNivelInstruccionComponent implements OnInit {
     };
 
     ngOnInit() {
-
-        this.tipoPrestacion = {
-            "_id": "58b8278bb64acd0989b9f53e",
-            "key": "viviendaNivelInstruccion",
-            "nombre": "Nivel de Instrucción",
-            "autonoma": false,
-            "activo": true,
-            "componente": {
-                "ruta": "rup/viviendaNivelInstruccion.component.ts",
-                "nombre": "ViviendaNivelInstruccionComponent"
-            },
-            "turneable": false
-        }
-
-
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso :{primario:false, secundario:false, terciario:false};
-
-
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : { primario: false, secundario: false, terciario: false };
     } //ngOnInit()
 
 
-    devolverValores(event,texto) { //Hacer las validaciones  
-        debugger;                                              
+    devolverValores($event,Texto) { //Hacer las validaciones  
         this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
     }//devolverValores()

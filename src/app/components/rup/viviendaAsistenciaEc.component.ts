@@ -22,29 +22,10 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
 
 
   ngOnInit() {
-
-
-
-this.tipoPrestacion = {
-    "_id" : "58b8183bb64acd0989b9f53d",
-    "key" : "viviendaAsistenciaEc",
-    "nombre" : "Asistencia Económica",
-    "autonoma" : false,
-    "activo" : true,
-    "componente" : {
-        "ruta" : "rup/viviendaAsistenciaEc.component.ts",
-        "nombre" : "ViviendaAsistenciaEcComponent"
-    },
-    "turneable" : false
-}
-
-
-
     this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
   } //ngOnInit()
 
-  devolverValores() { //Hacer las validaciones  
-    debugger;                                             
+  devolverValores() { //Hacer las validaciones                                              
     this.data.mensaje = this.getMensajes();
     this.evtData.emit(this.data);
   }//devolverValores()
