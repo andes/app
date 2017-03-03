@@ -2,7 +2,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'rup-viviendaNivelInstruccion',
+    selector: 'rup-ViviendaNivelInstruccion',
     templateUrl: 'viviendaNivelInstruccion.html'
 })//@Component
 
@@ -19,17 +19,22 @@ export class ViviendaNivelInstruccionComponent implements OnInit {
             texto: "",
         },
     };
+    // Esta lista se deberá cargar en algún schema...(Ver más adelante)                           
+    public SelectNivel: Array<Object> = [{ id: 'Primario Completo', nombre: 'Primario Completo' },
+    { id: 'Secundario Completo', nombre: 'Secundario Completo' },
+    { id: 'Terciario/Universitario', nombre: 'Terciario/Universitario' },
+    ]; //SelectNivel 
 
     ngOnInit() {
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : { primario: false, secundario: false, terciario: false };
-    } //ngOnInit()
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+    }//ngOnInit()
 
 
-    devolverValores($event,Texto) { //Hacer las validaciones  
+    devolverValores() { //Hacer las validaciones       
         this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
     }//devolverValores()
 
-    getMensajes() { };
+    getMensajes() { } //getMensajes()
 
 }//export class ViviendaNivelInstruccionComponent
