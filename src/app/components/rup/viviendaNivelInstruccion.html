@@ -1,12 +1,5 @@
-
-<plex-bool [(ngModel)]="data[tipoPrestacion.key].primario" label="Primario Completo" type="slide" (click)="devolverValores($event,'Primario Completo')">
-</plex-bool>
-
-<plex-bool [(ngModel)]="data[tipoPrestacion.key].secundario" label="Secundario Completo" type="slide" (click)="devolverValores($event,'Secundario Completo')">
-</plex-bool>
-
-<plex-bool [(ngModel)]="data[tipoPrestacion.key].terciario" label="Terciario/Universitario" type="slide" (click)="devolverValores($event,'Terciario/Universitario')">
-</plex-bool>
+<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="Nivel" [data]="SelectNivel" label="Nivel de Instrucción"
+  placeholder="Seleccion del nivel de instrucción"  (change)="devolverValores()">
+</plex-select>
 
 
-<p> {{data|json}}</p>
