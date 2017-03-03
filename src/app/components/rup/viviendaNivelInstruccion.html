@@ -1,26 +1,12 @@
-<!--<plex-box title="Nivel de Instrucción">-->
-<!--<div class="row" >
-        <div class="col-md-6">
-            <form [formGroup]="form1">-->
+
 <plex-bool [(ngModel)]="data[tipoPrestacion.key].primario" label="Primario Completo" type="slide" (click)="devolverValores($event,'Primario Completo')">
 </plex-bool>
-<!--</form>
-        </div>               -->
-<!--<div class="col-md-4">
-            <form [formGroup]="form2">-->
+
 <plex-bool [(ngModel)]="data[tipoPrestacion.key].secundario" label="Secundario Completo" type="slide" (click)="devolverValores($event,'Secundario Completo')">
 </plex-bool>
-<!--</form>
-        </div>  -->
 
-<!--<div class="col-md-6">
-            <form [formGroup]="form3">-->
 <plex-bool [(ngModel)]="data[tipoPrestacion.key].terciario" label="Terciario/Universitario" type="slide" (click)="devolverValores($event,'Terciario/Universitario')">
 </plex-bool>
-<!--</form>
-        </div>          -->
-<!--</div>-->
 
-<!--</plex-box>-->
 
 <p> {{data|json}}</p>
