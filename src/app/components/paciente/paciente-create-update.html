@@ -278,12 +278,12 @@
       <div class="row">&nbsp;</div>
       <div class="row">
         <div class="col-md-4" *ngIf="!disableGuardar">
-          <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" 
-            [disabled]="!createForm.valid" (click)="onSave(createForm.value, createForm.valid)">
+          <plex-button title="Guardar" icon="content-save" label="Guardar" type="primary" [disabled]="!createForm.valid" (click)="onSave(createForm.value, createForm.valid)">
           </plex-button>
         </div>
         <div class="col-md-6" *ngIf="disableGuardar">
-          <plex-button title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" type="primary" [disabled]="!createForm.valid"  (click)="save(createForm.value)">
+          <plex-button title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" type="primary" [disabled]="!createForm.valid"
+            (click)="save(createForm.value)">
           </plex-button>
         </div>
         <div class="col-md-4">
@@ -309,7 +309,7 @@
 
 <div class="row" *ngIf="disableGuardar">
   <div class="col-md-12">
-    <plex-box type="info" title="Pacientes Encontrados">
+    <plex-box type="info" title="Pacientes Candidatos">
       <!-- Search results -->
       <div class="hover" *ngIf="!pacientesSearch">
         <div class="table-responsive">
@@ -321,17 +321,21 @@
                 <th>Apellido</th>
                 <th>Fecha de Nacimiento</th>
                 <th>Sexo</th>
-                 <th>% similitud</th>
+                <th>% similitud</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let elem of pacientesSimilares" (click)="mostrarPaciente(paciente)">
+              <tr *ngFor="let elem of pacientesSimilares">
                 <td>{{elem.paciente.documento}}</td>
                 <td>{{elem.paciente.nombre| uppercase}}</td>
                 <td>{{elem.paciente.apellido| uppercase}}</td>
                 <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                 <td>{{elem.paciente.sexo}}</td>
                 <td>{{elem.match * 100}}</td>
+                <td>
+                  <plex-button type="primary" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
+                </td>
               </tr>
             </tbody>
           </table>
