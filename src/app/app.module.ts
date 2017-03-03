@@ -295,6 +295,9 @@ import {
   Server
 } from 'andes-shared/src/lib/server/server.service';
 
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -305,7 +308,10 @@ import {
     SharedModule,
     ToggleButtonModule,
     PlexModule,
-    routing,    
+    routing,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger' // set defaults here
+    })
     //RupModule
   ],
 
@@ -327,9 +333,9 @@ import {
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
   providers: [{
-      provide: LOCALE_ID,
-      useValue: 'es-AR'
-    },
+    provide: LOCALE_ID,
+    useValue: 'es-AR'
+  },
     Plex,
     OrganizacionService,
     ProvinciaService,
@@ -362,4 +368,4 @@ import {
 
 })
 
-export class AppModule {}
+export class AppModule { }

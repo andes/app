@@ -11,7 +11,7 @@ export class AgendaService {
 
     constructor(private server: Server, private http: Http) { }
 
-    get(params: any): Observable<IAgenda[]> {
+    get(params: any): Observable<IAgenda[]> {        
         return this.server.get(this.agendaUrl, { params: params, showError: true });
     }
 

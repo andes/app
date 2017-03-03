@@ -13,6 +13,11 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 })
 
 export class TurnosComponent implements OnInit {
+    public title: string = 'Liberar Turno';
+    public message: string = 'Está seguro que desea Liberar el Turno? </br> Un SMS se enviará automáticamente al paciente.';
+    public confirmaLiberarTurno: boolean = false;
+    public confirmaSuspenderTurno: boolean = false;
+    public cancelClicked: boolean = false;
 
     @Input() ag: IAgenda;
     @Input() reasturnos: IAgenda;
@@ -85,11 +90,22 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    @Input()
+    public confirm(agenda: IAgenda, turno: any, event) {
+        debugger;
+        alert("Confirma");
+    }
+
     eventosTurno(agenda: IAgenda, turno: any, event) {
-        let btnClicked = event.currentTarget.id;
+        debugger;
+        let btnClicked;
+
+        if (event.currentTarget)
+            btnClicked = event.currentTarget.id;
+
         let patch: any = {};
 
-        if (btnClicked === 'liberarTurno') {
+        if (this.confirmaLiberarTurno) {
             patch = {
                 'op': 'liberarTurno',
                 'idTurno': turno.id
@@ -102,9 +118,14 @@ export class TurnosComponent implements OnInit {
             turno.bloquearVisible = true;
             turno.verNota = true;
 
+            this.smsLoader = true;
             turno.reasignarVisible = false;
             turno.listaEspera = false;
 
+            this.confirmaLiberarTurno = false;
+
+            this.pacientesSeleccionados.push(turno);
+            this.enviarSMS();
         } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
             patch = {
                 'op': 'asistenciaTurno',
@@ -115,21 +136,32 @@ export class TurnosComponent implements OnInit {
                 'op': 'bloquearTurno',
                 'idTurno': turno.id
             };
-        } else if (btnClicked === 'suspenderTurno') {
+        } else if (this.confirmaSuspenderTurno) {
             patch = {
                 'op': 'suspenderTurno',
                 'idTurno': turno.id
             };
+
+            this.confirmaSuspenderTurno = false;
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            // this.ag = resultado;
+            this.ag = resultado;
             // this.turnos = this.ag.bloques;
 
             // this.turnos.forEach(turno => {
             //     turno.turnos.forEach(turno => {
+            //         turno.asistenciaVisible = true;
+            //         turno.disponibleVisible = true;
+            //         turno.suspenderVisible = true;
+            //         turno.liberarVisible = true;
+            //         turno.bloquearVisible = true;
             //         turno.verNota = true;
-            //         turno.listaEspera = true;
+
+            //         turno.reasignarVisible = false;
+            //         turno.listaEspera = false;
+            //         // turno.reasignarVisible = false;
+            //         // turno.listaEspera = false;
             //     });
             // });
         },
@@ -164,13 +196,13 @@ export class TurnosComponent implements OnInit {
 
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             agenda = resultado;
-            // this.ag.bloques = agenda.bloques;     
+            //this.ag.bloques = agenda.bloques;
             this.plex.alert('El paciente paso a Lista de Espera');
             debugger;
         });
     }
 
-    enviarSMS(turno) {
+    enviarSMS() {
         this.smsLoader = true;
 
         for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
@@ -180,7 +212,7 @@ export class TurnosComponent implements OnInit {
                     resultado => {
                         this.resultado = resultado;
                         this.smsLoader = false;
-
+                        debugger;
                         if (resultado === '0') {
                             this.pacientesSeleccionados[x].smsEnviado = true;
                         } else {
