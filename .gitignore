@@ -4,7 +4,8 @@
 /dist
 /tmp
 /build
-*.js
+/src/**/*.js
+/src/**/*.map
 
 # dependencies
 /node_modules
