@@ -1,14 +1,10 @@
 ## Aplicación para ANDES
 
-CLI for Angular applications based on the [ember-cli](http://www.ember-cli.com/) project.
+Aplicación web Angular2 para ANDES
 
 ## Notas
 
 Como Angular2 y Angular-CLI son proyectos que están en constante actualización, recomendamos utilizar las versiones específicas detalladas en este documento
-
-## Prerequisitos
-
-Este proyecto es una aplicación Angular2 basada en [angular-cli](https://cli.angular.io/)
 
 ## Instalación
 
@@ -24,7 +20,7 @@ rd node_modules /s
 npm install -g @angular/cli@1.0.0-beta.32.3
 ```
 
-### Correr npm install en la carpeta del proyecto
+### Instalar dependencias
 
 ```bash
 cd app
