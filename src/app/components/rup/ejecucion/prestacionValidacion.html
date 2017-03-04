@@ -1,0 +1,82 @@
+<style>
+    .msg-title {
+        color: #00a8e0;
+        padding-bottom: 3px;
+    }
+    
+    .titulo {
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .gris {
+        color: #333;
+    }
+</style>
+<header-paciente [paciente]="prestacion.paciente">
+</header-paciente>
+<plex-box type="primary" title="Validar Prestación">
+    <div class="row">
+        <div class="col-md-12">
+            <plex-box *ngFor="let problema of prestacion.solicitud.listaProblemas">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="titulo"><strong>{{problema.tipoProblema.nombre}}</strong></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row" *ngIf="prestacion.prestacionesEjecutadas">
+                            <div class="col-md-12">
+                                <h5 class="msg-title">Prestaciones Ejecutadas</h5>
+                                <div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">
+                                    <div class="col-md-10">
+                                        <rup #rup [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key]">
+                                        </rup>
+                                    </div>
+                                    <!--<br> {{problema.id }} <br> {{datoPrestacion.ejecucion.evoluciones[0].valores | json }}-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="prestacionesSolicitadas">
+                            <div class="col-md-12">
+                                <h5 class="msg-title">Planes</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item" *ngFor="let datoPrestacion of buscarPlanesPorProblema(problema)">{{datoPrestacion.solicitud.tipoPrestacion.nombre}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                            <div class="col-md-12">
+                                <h5 class="msg-title"> Última evolución</h5>
+                                <textarea class="form-control" rows="8" [(ngModel)]="problema.evoluciones[problema.evoluciones.length - 1].observacion"></textarea>
+                                <p>
+                                    <small class="gris"> Fecha: 
+                                                {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}  
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].profesional"> - Profesional: </span>
+                                        <small class="text-right">
+                                            <plex-button label="ver mas..." type="link"></plex-button>
+                                        </small>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </plex-box>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <plex-button title="Validar Prestación" label="Validar Prestación" type="success" (click)="validarPrestacion()" *ngIf="showEjecucion"></plex-button>
+        </div>
+    </div>
+    <div class="row" *ngIf="!showEjecucion">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                {{mensaje}}
+            </div>
+        </div>
+    </div>
+</plex-box>

@@ -1,0 +1,73 @@
+<plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+<div class="row">
+    <div class="col-sm-12" *ngIf="!showcreate">
+        <plex-box type="success" title="Lista de Espera">
+            <form [formGroup]="searchForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <plex-int formControlName="documento" label="Documento" placeholder="Filtrar por documento..."></plex-int>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre..."></plex-text>
+                    </div>
+                </div>
+            </form>
+            <plex-button type="primary" label="Agregar Paciente" title="Agregar Paciente" (click)="showcreate = !showcreate"></plex-button>
+        </plex-box>
+
+        <plex-box type="success">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Paciente</th>
+                            <th>Prestación</th>
+                            <th>Profesional</th>
+                            <th>Origen</th>
+                            <th>Fecha</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let listaEspera of datos">
+                            <td nowrap >{{listaEspera.paciente.documento}}</td>
+                            <td>{{listaEspera.paciente.nombre}} {{listaEspera.paciente.apellido}}</td>
+                            <td>{{listaEspera.prestacion.nombre}}</td>
+                            <td>
+                                <span *ngIf="listaEspera.profesional">{{listaEspera.profesional.nombre}} {{listaEspera.profesional.apellido}} </span>
+                            </td>
+                            <td>{{listaEspera.estado}}</td>
+                            <td nowrap >{{listaEspera.fecha | date:"dd-MM-yy" }}</td>
+                            <td>
+                                <plex-button type="primary" icon="magnify" label="Ver más"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button type="primary" icon="account-card-details" label="Datos Paciente"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button type="success" icon="calendar-clock" label="Asignar Turno"></plex-button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <plex-loader *ngIf="loader"></plex-loader>
+
+            <div *ngIf="finScroll" class="alert alert-warning">
+                <p style="text-align: center;"> No se encontraron más resultados </p>
+                <!-- pasar a un componente de plex -->
+            </div>
+
+        </plex-box>
+    </div>
+</div>
+<div *ngIf="showcreate">
+    <listaEspera-create-update (data)='onReturn($event)'></listaEspera-create-update>
+</div>

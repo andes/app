@@ -1,0 +1,191 @@
+<form [formGroup]="createForm">
+    <plex-box type="success" title="Alta de Profesionales">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <plex-text label="Nombre" formControlName="nombre">
+                    </plex-text>
+                </div>
+                <div class="col-md-6">
+                    <plex-text label="Apellido" formControlName="apellido">
+                    </plex-text>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <plex-select formControlName="sexo" [data]="sexos" placeholder="Seleccione..." label="Sexo:">
+                    </plex-select>
+                </div>
+                <div class="col-md-4">
+                    <plex-select formControlName="genero" [data]="generos" placeholder="Seleccione..." label="Genero:">
+                    </plex-select>
+                </div>
+                <div class="col-md-4">
+                    <plex-select formControlName="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil:">
+                    </plex-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <plex-int label="Número de Documento" formControlName="documento">
+                    </plex-int>
+                </div>
+                <div class="col-md-4">
+                    <plex-datetime label="Fecha Nacimiento" type="date" [(ngModel)]="fechaNacimiento">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-4">
+                    <plex-datetime label="Fecha de Fallecimiento" type="date" [(ngModel)]="fechaFallecimiento">
+                    </plex-datetime>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-text label="Rol a desempeñar" formControlName="rol" placeholder="Ej: Médico, Enfermero, Jefe de servicio, etc...">
+                    </plex-text>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-select formControlName="especialidad" (getData)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:"
+                        placeholder="Seleccione las especialidades del profesional">
+                        </plex-select>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <plex-box type="warning" title="Matrículas" formArrayName="matriculas">
+                        <table *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="table table-striped">
+                            <tr [formGroupName]="i">
+                                <td>
+                                    <plex-text label="Número Matrícula" formControlName="numero">
+                                    </plex-text>
+                                </td>
+                                <td>
+                                    <plex-datetime label="Fecha Inicio" type="date" formControlName="fechaInicio">
+                                    </plex-datetime>
+                                </td>
+                                <td>
+                                    <plex-datetime label="Fecha Vencimiento" type="date" formControlName="fechaVencimiento">
+                                    </plex-datetime>
+                                </td>
+                                <td>
+                                    <plex-text label="Descripción" formControlName="descripcion">
+                                    </plex-text>
+                                </td>
+                                <td>
+                                    <label>Vigente</label>
+                                    <plex-bool type="slide" formControlName="activo"></plex-bool>
+                                </td>
+                                <td *ngIf="createForm.controls.matriculas.controls.length > 1">
+                                    <label>Borrar</label>
+                                    <plex-button class="warning" icon="delete" (click)="removeMatricula(i)">
+                                    </plex-button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="margin-20">
+                                    <plex-button type="primary" label="Agregar Matrícula" icon="add circle outline" (click)="addMatricula()"></plex-button>
+                                </div>
+                            </div>
+                        </div>
+                    </plex-box>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <plex-box type="warning" title="Contacto" formArrayName="contacto">
+                        <table *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default table table-striped">
+                            <tr [formGroupName]="i">
+                                <td>
+                                    <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo">
+                                    </plex-select>
+                                </td>
+                                <td>
+                                    <plex-text label="Dato" formControlName="valor">
+                                    </plex-text>
+                                </td>
+                                <td>
+                                    <plex-int label="Orden" formControlName="ranking">
+                                    </plex-int>
+                                </td>
+                                <td>
+                                    <label>Activo</label><br>
+                                    <plex-bool type="slide" formControlName="activo"></plex-bool>
+                                </td>
+                                <td *ngIf="createForm.controls.contacto.controls.length > 1">
+                                    <label>Borrar</label><br>
+                                    <plex-button icon="delete" (click)="removeContacto(i)">
+                                    </plex-button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <plex-button type="primary" label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                            </div>
+                        </div>
+                    </plex-box>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <plex-box type="warning" title="Dirección" formArrayName="direccion">
+                <table *ngFor="let dir of createForm.controls.direccion.controls; let i=index" class="panel panel-default table table-striped">
+                    <tr [formGroupName]="i">
+                        <td>
+                            <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
+                            </plex-text>
+                        </td>
+                        <td>
+                            <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ej: Q8302IOO">
+                            </plex-text>
+                        </td>
+
+                        <div formGroupName="ubicacion">
+
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Pais" formControlName="pais" (getData)="loadPaises($event)" label="País:">
+                                </plex-select>
+                            </td>
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)"
+                                    label="Provincia:">
+                                    </plex-select>
+                            </td>
+                            <td class="col-md-4">
+                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
+                                    label="Localidad:">
+                                    </plex-select>
+                            </td>
+                        </div>
+                        <td>
+                            <label>Activo</label>
+                            <plex-bool type="slide" formControlName="activo"></plex-bool>
+                        </td>
+                        <td *ngIf="createForm.controls.direccion.controls.length > 1">
+                            <label>Borrar</label><br>
+                            <plex-button icon="delete" (click)="removeDireccion(i)">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </table>
+                <plex-button type="primary" label="Agregar Dirección" icon="add circle outline" (click)="addDireccion()"></plex-button>
+            </plex-box>
+            <div class="row">&nbsp;</div>
+            <div align="right" class="row">
+                <div class="col-md-12">
+                    <plex-button title="Guardar" label="Guardar" type="primary" icon="save" (click)="onSave(createForm.value, createForm.valid)">
+                    </plex-button>
+                    <plex-button title="Cancelar" label="Cancelar" type="danger" icon="clear" (click)="onCancel()">
+                    </plex-button>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</form>
