@@ -2,11 +2,11 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'rup-ViviendaAsistenciaEc',
-  templateUrl: 'viviendaAsistenciaEc.html'
+  selector: 'rup-ViviendaAsistenciaEconomica',
+  templateUrl: 'viviendaAsistenciaEconomica.html'
 })//@Component
 
-export class ViviendaAsistenciaEcComponent implements OnInit {
+export class ViviendaAsistenciaEconomicaComponent implements OnInit {
 
   @Input('datosIngreso') datosIngreso: any;
   @Input('tipoPrestacion') tipoPrestacion: any;
@@ -20,7 +20,6 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
     },
   };
 
-
   ngOnInit() {
     this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
   } //ngOnInit()
@@ -32,4 +31,4 @@ export class ViviendaAsistenciaEcComponent implements OnInit {
 
   getMensajes() { };
 
-}//export class ViviendaAsistenciaEcComponent
+}//export class ViviendaAsistenciaEconomicaComponent
