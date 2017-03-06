@@ -1,3 +1,5 @@
+import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -140,7 +142,8 @@ export const RUP_COMPONENTS = [
   ViviendaContaminantesComponent,
   ViviendaResiduosComponent,
   ViviendaPisoComponent,
-  ViviendaAsistenciaEcComponent,
+  ViviendaAsistenciaEconomicaComponent,
+  ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent
 ];
 
