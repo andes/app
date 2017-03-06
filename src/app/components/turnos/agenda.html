@@ -3,7 +3,7 @@
     <plex-box type="success" title="Agenda">
       <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Tipos de Prestación" (getData)="loadPrestaciones($event)"
+          <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
             placeholder="Seleccione las prestaciones" [multiple]="true" (change)="cambioPrestaciones()">
             </plex-select>
         </div>
@@ -118,7 +118,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="row" *ngFor="let unaPrestacion of elementoActivo.prestaciones; let i=index">
+            <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
               <div class="col-md-12">
                 <plex-bool [(ngModel)]="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
                 </plex-bool>

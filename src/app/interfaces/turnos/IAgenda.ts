@@ -1,10 +1,9 @@
-import { IProfesional } from '../IProfesional';
-import { IPrestacion } from './IPrestacion';
+import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IBloque } from './IBloque';
 
 export interface IAgenda {
     id: String;
-    prestaciones: IPrestacion[];
+    tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [
         {

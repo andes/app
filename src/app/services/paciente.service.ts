@@ -99,10 +99,10 @@ export class PacienteService {
     }
   }
 
-  searchMatch(field: String, dto: any): any {
-
+  searchMatch(field: String, dto: any, modo: String, porcentaje: boolean): any {
+    debugger
     let bodyString = { 'objetoBusqueda': dto };
-    return this.server.post(this.pacienteUrlSearch + '/match/' + field, bodyString);
+    return this.server.post(this.pacienteUrlSearch + '/match/' + field + '/'+ modo + '/'+ porcentaje , bodyString);
 
   }
 

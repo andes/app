@@ -12,7 +12,7 @@
                         </plex-datetime>
                     </div>
                     <div class="col-md-4">
-                        <plex-select formControlName="prestaciones" (getData)="loadPrestaciones($event)" label="Seleccione una prestación">
+                        <plex-select formControlName="tipoPrestaciones" (getData)="loadTipoPrestaciones($event)" label="Seleccione un tipo de prestación">
                         </plex-select>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
-                                        <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+                                        <br /><b>Tipos de Prestación: </b><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span>
                                         <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
                                     </div>
                                 </div>
@@ -108,11 +108,11 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Prestaciones</label>
+                        <label>Tipos de Prestación</label>
                         <div class="list-group">
-                            <a *ngFor="let prestacion of modelo.prestaciones; let i=index" class="list-group-item">
+                            <a *ngFor="let tipoPrestacion of modelo.tipoPrestaciones; let i=index" class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-4">{{prestacion.nombre}}</div>
+                                    <div class="col-md-4">{{tipoPrestacion.nombre}}</div>
                                 </div>
                             </a>
                         </div>

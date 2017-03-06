@@ -2,11 +2,11 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'rup-ViviendaCombustion',
-    templateUrl: 'viviendaCombustion.html'
+    selector: 'rup-ViviendaResiduos',
+    templateUrl: 'viviendaResiduos.html'
 })//@Component
 
-export class ViviendaCombustionComponent implements OnInit {
+export class ViviendaResiduosComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
@@ -19,17 +19,16 @@ export class ViviendaCombustionComponent implements OnInit {
             texto: "",
         },
     };
-    // Esta lista se deberá cargar en algún schema...(Ver más adelante)                           
-    public SelectCombustion: Array<Object> = [{ id: 'Gas Natural', nombre: 'Gas Natural' },
-    { id: 'Garrafa', nombre: 'Garrafa' },
-    { id: 'Leña/Carbon', nombre: 'Leña/Carbon' },
-    { id: 'Kerosén', nombre: 'Kerosén' },
-    { id: 'Electricidad', nombre: 'Electricidad' },
-    { id: 'Otro ', nombre: 'Otro ' },
-    ]; //SelectCombustion:Array  
+
+    // Esta lista se deberá cargar en algún schema...(Ver más adelante)                          
+    public SelectResiduos: Array<Object> = [{ id: 'Recolección', nombre: 'Recolección' },
+    { id: 'Entierran', nombre: 'Entierran' },
+    { id: 'Queman', nombre: 'Queman' },
+    { id: 'Otra', nombre: 'Otra' },
+    ]; //SelectResiduos:Array  
+
 
     ngOnInit() {
-
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : [];
     }//ngOnInit()
 
@@ -37,13 +36,13 @@ export class ViviendaCombustionComponent implements OnInit {
     devolverValores() { //Hacer las validaciones
         if (this.data[this.tipoPrestacion.key]) {
             this.data[this.tipoPrestacion.key] = this.data[this.tipoPrestacion.key].map(elemento => { return elemento.id });
-        } //if (this.ViviendaCombustion)               
-        else this.data[this.tipoPrestacion.key] = [];
+        } //if (this.ViviendaResiduos)               
+        else this.data.valor = [];
 
         this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
     }//devolverValores()
 
-    getMensajes() { } //getMensajes()
+    getMensajes() { };
 
-}//export class ViviendaCombustionComponent
+}//export class ViviendaResiduosComponent

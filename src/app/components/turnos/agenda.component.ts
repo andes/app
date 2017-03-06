@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { Router } from '@angular/router';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
@@ -30,7 +31,7 @@ export class AgendaComponent implements OnInit {
 
     public agenda: any = {};
     public modelo: any = {};
-    public prestaciones: any = [];
+    public tipoPrestaciones: any = [];
     public espaciosFisicos: any = [];
     public bloques: any = [];
     public bloqueActivo: Number = 0;
@@ -43,7 +44,8 @@ export class AgendaComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private router: Router,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService) { }
+        public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService,
+        public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
         debugger;
@@ -70,8 +72,9 @@ export class AgendaComponent implements OnInit {
         this.showAgenda = false;
     }
 
-    loadPrestaciones(event) {
-        this.servicioPrestacion.get({}).subscribe(event.callback);
+    loadTipoPrestaciones(event) {
+        // this.servicioPrestacion.get({}).subscribe(event.callback);
+        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -83,21 +86,21 @@ export class AgendaComponent implements OnInit {
     }
 
     inicializarPrestacionesBloques(bloque) {
-        if (this.modelo.prestaciones) {
-            this.modelo.prestaciones.forEach((prestacion, index) => {
+        if (this.modelo.tipoPrestaciones) {
+            this.modelo.tipoPrestaciones.forEach((prestacion, index) => {
                 let copiaPrestacion = operaciones.clonarObjeto(prestacion);
-                if (bloque.prestaciones) {
-                    let i = bloque.prestaciones.map(function (e) { return e.nombre; }).
+                if (bloque.tipoPrestaciones) {
+                    let i = bloque.tipoPrestaciones.map(function (e) { return e.nombre; }).
                         indexOf(copiaPrestacion.nombre);
                     if (i >= 0) {
-                        bloque.prestaciones[i].activo = true;
+                        bloque.tipoPrestaciones[i].activo = true;
                     } else {
-                        bloque.prestaciones.push(copiaPrestacion);
-                        bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
+                        bloque.tipoPrestaciones.push(copiaPrestacion);
+                        bloque.tipoPrestaciones[bloque.tipoPrestaciones.length - 1].activo = false;
                     }
                 } else {
-                    bloque.prestaciones.push(copiaPrestacion);
-                    bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
+                    bloque.tipoPrestaciones.push(copiaPrestacion);
+                    bloque.tipoPrestaciones[bloque.tipoPrestaciones.length - 1].activo = false;
                 }
             });
         }
@@ -165,7 +168,7 @@ export class AgendaComponent implements OnInit {
             'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
             'reservadoGestion': 0, 'reservadoGestionPorc': 0,
             'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-            'prestaciones': []
+            'tipoPrestaciones': []
         });
         this.activarBloque(longitud);
         this.inicializarPrestacionesBloques(this.elementoActivo);
@@ -210,11 +213,11 @@ export class AgendaComponent implements OnInit {
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque) => {
             // Si se elimino una prestación, la saco de los bloques
-            let bloquePrestaciones = bloque.prestaciones;
+            let bloquePrestaciones = bloque.tipoPrestaciones;
             if (bloquePrestaciones) {
                 bloquePrestaciones.forEach((bloquePrestacion, index) => {
-                    if (this.modelo.prestaciones) {
-                        let i = this.modelo.prestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
+                    if (this.modelo.tipoPrestaciones) {
+                        let i = this.modelo.tipoPrestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
                         if (i < 0) {
                             bloquePrestaciones.splice(index, 1);
                         }
@@ -223,13 +226,13 @@ export class AgendaComponent implements OnInit {
             }
 
             // Si se agrego una prestacion, la agrego a los bloques
-            if (this.modelo.prestaciones) {
-                this.modelo.prestaciones.forEach((prestacion) => {
+            if (this.modelo.tipoPrestaciones) {
+                this.modelo.tipoPrestaciones.forEach((prestacion) => {
                     let copiaPrestacion = operaciones.clonarObjeto(prestacion);
-                    let i = bloque.prestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
+                    let i = bloque.tipoPrestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
                     if (i < 0) {
-                        bloque.prestaciones.push(copiaPrestacion);
-                        bloque.prestaciones[bloque.prestaciones.length - 1].activo = false;
+                        bloque.tipoPrestaciones.push(copiaPrestacion);
+                        bloque.tipoPrestaciones[bloque.tipoPrestaciones.length - 1].activo = false;
                     }
                 });
             }
@@ -466,6 +469,7 @@ export class AgendaComponent implements OnInit {
 
     onSave(isvalid: boolean, clonar: boolean) {
         if (Object.keys(this.modelo).length > 0) {
+            debugger
             if (isvalid) {
                 let espOperation: Observable<IAgenda>;
                 this.fecha = new Date(this.modelo.fecha);
@@ -504,7 +508,7 @@ export class AgendaComponent implements OnInit {
 
                     bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                     bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
-                    bloque.prestaciones = bloque.prestaciones.filter(function (el) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
                         return el.activo === true;
                     });
                 });

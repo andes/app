@@ -1,11 +1,7 @@
-<div class="row">
-  <div class="col-sm-12" *ngIf="!showcreateupdate">
-    <pacientesSearch (selected)="seleccionar($event)" (scanned)="setScan($event)"></pacientesSearch>
-  </div>
+<div *ngIf="!showcreateupdate">
+  <pacientesSearch (selected)="seleccionar($event)" (scanned)="setScan($event)"></pacientesSearch>
 </div>
-<div class="col-md-12" *ngIf="showcreateupdate">
-  <div class="panel panel-default">
-    <div class="clear"></div>
-    <paciente-create-update [seleccion]="selectedPaciente" [isScan]="isScan" (data)='onReturn($event)'></paciente-create-update>
-  </div>
+
+<div *ngIf="showcreateupdate">
+  <paciente-create-update [seleccion]="selectedPaciente" [isScan]="isScan" (data)='onReturn($event)'></paciente-create-update>
 </div>
