@@ -1,0 +1,13 @@
+<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="EdadGestacionalFetal" [data]="selectMetodoEdadGestacionalFetal"
+    label="Edad Gestacional Fetal" (change)="devolverValores()" placeholder="Seleccionar método">
+</plex-select>
+
+
+
+<!--<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
+</p>-->
+
+<p>{{data| json}}</p>
