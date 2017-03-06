@@ -1,4 +1,5 @@
 
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -47,6 +48,7 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
@@ -89,6 +91,7 @@ export const RUP_COMPONENTS = [
      ViviendaResiduosComponent,
      ViviendaSituacionSocioEconomicaComponent,
      ViviendaSostenEconomicoComponent,
+     PerinatalesEmbarazoNormalComponent
      
     // NO VAPacienteComponent
 ];

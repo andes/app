@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -119,6 +120,8 @@ import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component'
 
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
+
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -152,6 +155,7 @@ export const RUP_COMPONENTS = [
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
   EdadGestacionalFetalComponent,
+  PerinatalesEmbarazoNormalComponent
 
 ];
 
