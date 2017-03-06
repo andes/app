@@ -1,3 +1,4 @@
+import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 /*
@@ -143,7 +144,8 @@ export const RUP_COMPONENTS = [
   ViviendaPisoComponent,
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
-  ViviendaAsistenciaEconomicaComponent
+  ViviendaAsistenciaEconomicaComponent,
+  EdadGestacionalFetalComponent
 ];
 
 // Locales

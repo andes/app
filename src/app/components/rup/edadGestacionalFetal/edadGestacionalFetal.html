@@ -2,12 +2,7 @@
     label="Edad Gestacional Fetal" (change)="devolverValores()" placeholder="Seleccionar método">
 </plex-select>
 
+<plex-datetime *ngIf="showCampoFecha" type="date" [(ngModel)]="data[tipoPrestacion.key].fecha" (change)="devolverValores()"
+    name="fechaUltimaMenstruacion" label="Fecha ultima menstruacion">
+</plex-datetime>
 
-
-<!--<p *ngIf="data.mensaje.texto">
-    <span class="badge {{data.mensaje.class}}">
-    {{data.mensaje.texto}}
-    </span>
-</p>-->
-
-<p>{{data| json}}</p>

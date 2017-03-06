@@ -1,3 +1,4 @@
+import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
@@ -68,7 +69,8 @@ export const RUP_COMPONENTS = [
      PrestacionEjecucionComponent,
      ResumenComponent,
      HeaderPacienteComponent,
-     PrestacionValidacionComponent
+     PrestacionValidacionComponent,
+     EdadGestacionalFetalComponent
     // NO VAPacienteComponent
 ];
 
