@@ -2,11 +2,11 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'rup-ViviendaSostenEco',
-    templateUrl: 'viviendaSostenEco.html'
+    selector: 'rup-ViviendaSostenEconomico',
+    templateUrl: 'viviendaSostenEconomico.html'
 })//@Component
 
-export class ViviendaSostenEcoComponent implements OnInit {
+export class ViviendaSostenEconomicoComponent implements OnInit {
 
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
@@ -22,21 +22,18 @@ export class ViviendaSostenEcoComponent implements OnInit {
 
 
     ngOnInit() {
-
-        this.tipoPrestacion = {
-            "_id": "58b6d618b64acd0989b9f538",
-            "key": "viviendaSostenEco",
-            "nombre": "Sostén Económico",
-            "autonoma": false,
-            "activo": true,
-            "componente": {
-                "ruta": "rup/viviendaSostenEco.component.ts",
-                "nombre": "ViviendaSostenEcoComponent"
-            },
-            "turneable": false
-        }
-
-
+this.tipoPrestacion = {
+    "_id" : "58b6d618b64acd0989b9f538",
+    "key" : "viviendaSostenEconomico",
+    "nombre" : "Sostén Económico",
+    "autonoma" : false,
+    "activo" : true,
+    "componente" : {
+        "ruta" : "rup/viviendaSostenEconomico.component.ts",
+        "nombre" : "ViviendaSostenEconomicoComponent"
+    },
+    "turneable" : false
+}
 
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : { trabaja: false, horas: null };
     } //ngOnInit()
@@ -49,4 +46,4 @@ export class ViviendaSostenEcoComponent implements OnInit {
     getMensajes() {
     };
 
-}//export class ViviendaSostenEcoComponent
+}//export class ViviendaSostenEconomicoComponent
