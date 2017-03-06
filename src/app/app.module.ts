@@ -90,7 +90,6 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { RupComponent } from './components/rup/rup.component';
 import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
-import { ViviendaAsistenciaEcComponent } from './components/rup/viviendaAsistenciaEc.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
@@ -142,9 +141,9 @@ export const RUP_COMPONENTS = [
   ViviendaContaminantesComponent,
   ViviendaResiduosComponent,
   ViviendaPisoComponent,
-  ViviendaAsistenciaEconomicaComponent,
   ViviendaSostenEconomicoComponent,
-  ViviendaNivelInstruccionComponent
+  ViviendaNivelInstruccionComponent,
+  ViviendaAsistenciaEconomicaComponent
 ];
 
 // Locales
