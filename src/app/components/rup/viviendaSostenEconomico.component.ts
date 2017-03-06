@@ -22,19 +22,7 @@ export class ViviendaSostenEconomicoComponent implements OnInit {
 
 
     ngOnInit() {
-this.tipoPrestacion = {
-    "_id" : "58b6d618b64acd0989b9f538",
-    "key" : "viviendaSostenEconomico",
-    "nombre" : "Sostén Económico",
-    "autonoma" : false,
-    "activo" : true,
-    "componente" : {
-        "ruta" : "rup/viviendaSostenEconomico.component.ts",
-        "nombre" : "ViviendaSostenEconomicoComponent"
-    },
-    "turneable" : false
-}
-
+        console.log(this.datosIngreso);
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : { trabaja: false, horas: null };
     } //ngOnInit()
 
