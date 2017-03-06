@@ -1,4 +1,12 @@
-import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
+
+
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 /*
@@ -89,11 +97,6 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
-import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
-import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
@@ -115,6 +118,8 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
 import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/nacimiento/nacimiento.component';
+import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
+
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -138,14 +143,20 @@ export const RUP_COMPONENTS = [
   EdadGestacionalComponent,
   ScoreApgarComponent,
   NacimientoComponent,
+  ViviendaAsistenciaEconomicaComponent,
   ViviendaCombustionComponent,
   ViviendaContaminantesComponent,
-  ViviendaResiduosComponent,
+  ViviendaFamiliaComponent,
+  ViviendaNivelInstruccionComponent,
   ViviendaPisoComponent,
+  ViviendaResiduosComponent,
+  ViviendaSituacionSocioEconomicaComponent,
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
   ViviendaAsistenciaEconomicaComponent,
-  EdadGestacionalFetalComponent
+  EdadGestacionalFetalComponent,
+  ViviendaAsistenciaEconomicaComponent
+
 ];
 
 // Locales

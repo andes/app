@@ -1,3 +1,5 @@
-<plex-bool [(ngModel)]="data[tipoPrestacion.key]" label="Recibe asistencia económica ?" type="slide" (click)="devolverValores()">
-</plex-bool>
+<!--<plex-bool [(ngModel)]="data[tipoPrestacion.key]" label="Recibe asistencia económica ?" type="checkbox" (change)="devolverValores()">
+</plex-bool>-->
 
+<input id="asistencia-economica" type="checkbox" [(ngModel)]="data[tipoPrestacion.key]"  type="checkbox" (change)="devolverValores()" />
+<label for="asistencia-economica">Recibe asistencia económica ?</label>
