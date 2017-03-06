@@ -26,7 +26,27 @@ export class ViviendaSituacionSocioEconomicaComponent implements OnInit {
     };
 
 
-    ngOnInit() {          
+    ngOnInit() {
+
+            this.tipoPrestacion={
+    "id" : "58b986feb64acd0989b9f53f",
+    "key" : "viviendaSituacionSocioEconomica",
+    "nombre" : "Situación Socioeconómica del Familiar",
+    "autonoma" : false,
+    "activo" : true,
+    "ejecucion" : [ 
+        "58bd644ea99b5e0646e8f42e", 
+        "58b8278bb64acd0989b9f53e", 
+        "58b6d618b64acd0989b9f538", 
+        "58b8183bb64acd0989b9f53d"
+    ],
+    "componente" : {
+        "ruta" : "rup/viviendaSituacionSocioEconomica.component.ts",
+        "nombre" : "ViviendaSituacionSocioEconomicaComponent"
+    },
+    "turneable" : false
+}
+
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
             this.tipoPrestacion = tipoPrestacion;
         });
