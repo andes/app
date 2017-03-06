@@ -22,7 +22,6 @@ export class ViviendaSostenEconomicoComponent implements OnInit {
 
 
     ngOnInit() {
-        console.log(this.datosIngreso);
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : { trabaja: false, horas: null };
     } //ngOnInit()
 

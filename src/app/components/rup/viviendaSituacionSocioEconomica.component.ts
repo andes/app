@@ -26,8 +26,7 @@ export class ViviendaSituacionSocioEconomicaComponent implements OnInit {
     };
 
 
-    ngOnInit() {
-      
+    ngOnInit() {          
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
             this.tipoPrestacion = tipoPrestacion;
         });
