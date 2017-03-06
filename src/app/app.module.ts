@@ -1,14 +1,3 @@
-
-
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
-import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
-import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.component';
-import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
-import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -120,6 +109,16 @@ import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/nacimiento/nacimiento.component';
 import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component'
+
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -146,16 +145,13 @@ export const RUP_COMPONENTS = [
   ViviendaAsistenciaEconomicaComponent,
   ViviendaCombustionComponent,
   ViviendaContaminantesComponent,
-  ViviendaFamiliaComponent,
-  ViviendaNivelInstruccionComponent,
+  ViviendaFamiliaComponent,  
   ViviendaPisoComponent,
   ViviendaResiduosComponent,
   ViviendaSituacionSocioEconomicaComponent,
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
-  ViviendaAsistenciaEconomicaComponent,
   EdadGestacionalFetalComponent,
-  ViviendaAsistenciaEconomicaComponent
 
 ];
 
