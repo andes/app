@@ -1,3 +1,4 @@
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -20,6 +21,7 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
+import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
@@ -77,6 +79,7 @@ export const RUP_COMPONENTS = [
      ResumenComponent,
      HeaderPacienteComponent,
      PrestacionValidacionComponent,
+     EdadGestacionalFetalComponent,
      ViviendaAsistenciaEconomicaComponent,
      ViviendaCombustionComponent,
      ViviendaContaminantesComponent,

@@ -1,3 +1,5 @@
+
+
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
@@ -116,6 +118,7 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
 import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/nacimiento/nacimiento.component';
+import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -149,7 +152,11 @@ export const RUP_COMPONENTS = [
   ViviendaResiduosComponent,
   ViviendaSituacionSocioEconomicaComponent,
   ViviendaSostenEconomicoComponent,
+  ViviendaNivelInstruccionComponent,
+  ViviendaAsistenciaEconomicaComponent,
+  EdadGestacionalFetalComponent,
   ViviendaAsistenciaEconomicaComponent
+
 ];
 
 // Locales
