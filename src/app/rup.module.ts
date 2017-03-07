@@ -20,6 +20,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
+import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
@@ -37,6 +39,7 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+
 
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
@@ -91,7 +94,10 @@ export const RUP_COMPONENTS = [
     ViviendaResiduosComponent,
     ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
-    PerinatalesEmbarazoNormalComponent
+    PerinatalesEmbarazoNormalComponent,
+    ScoreApgarComponent,
+    EdadGestacionalComponent
+
 
     // NO VAPacienteComponent
 ];
