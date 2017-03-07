@@ -1,5 +1,3 @@
-
-
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -34,13 +32,13 @@ import { TensionSistolicaComponent } from './components/rup/tensionSistolica.com
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
- import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
- import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
- import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
- import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
- import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
- import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
+import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
+import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
+import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
+import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
+import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+
+import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
 import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
@@ -48,6 +46,8 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situación-Socioeconómica-Familiar/viviendaSituacionSocioEconomica.component';
+
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -74,25 +74,25 @@ export const RUP_COMPONENTS = [
     TensionDiastolicaComponent,
     ObservacionesComponent,
     ConsultaGeneralClinicaMedicaComponent,
-     EvolucionProblemaComponent,
-     EvolucionTodosProblemasComponent,
-     PuntoInicioComponent,
-     PrestacionEjecucionComponent,
-     ResumenComponent,
-     HeaderPacienteComponent,
-     PrestacionValidacionComponent,
-     EdadGestacionalFetalComponent,
-     ViviendaAsistenciaEconomicaComponent,
-     ViviendaCombustionComponent,
-     ViviendaContaminantesComponent,
-     ViviendaFamiliaComponent,
-     ViviendaNivelInstruccionComponent,
-     ViviendaPisoComponent,
-     ViviendaResiduosComponent,
-     ViviendaSituacionSocioEconomicaComponent,
-     ViviendaSostenEconomicoComponent,
-     PerinatalesEmbarazoNormalComponent
-     
+    EvolucionProblemaComponent,
+    EvolucionTodosProblemasComponent,
+    PuntoInicioComponent,
+    PrestacionEjecucionComponent,
+    ResumenComponent,
+    HeaderPacienteComponent,
+    PrestacionValidacionComponent,
+    EdadGestacionalFetalComponent,
+    ViviendaAsistenciaEconomicaComponent,
+    ViviendaCombustionComponent,
+    ViviendaContaminantesComponent,
+    ViviendaFamiliaComponent,
+    ViviendaNivelInstruccionComponent,
+    ViviendaPisoComponent,
+    ViviendaResiduosComponent,
+    ViviendaSituacionSocioEconomicaComponent,
+    ViviendaSostenEconomicoComponent,
+    PerinatalesEmbarazoNormalComponent
+
     // NO VAPacienteComponent
 ];
 
@@ -124,7 +124,7 @@ export const RUP_COMPONENTS = [
         // ProblemaPacienteService,
         // TipoProblemaService,
         // TipoPrestacionService,
-        
+
     ]
 })
-export class RupModule {debugger; }
+export class RupModule { debugger; }
