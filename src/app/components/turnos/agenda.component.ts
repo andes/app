@@ -544,8 +544,7 @@ export class AgendaComponent implements OnInit {
 
     onReturn(agenda: IAgenda): void {
         this.showAgenda = true;
-        this.showBuscarAgendas = false;
-
+        this.showBuscarAgendas = false; 
         this.cargarAgenda(agenda);
     }
 }
