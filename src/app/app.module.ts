@@ -110,7 +110,7 @@ import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/nacimiento/nacimiento.component';
 import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 //ATOMO SOCIOECONOMICO
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situación-Socioeconómica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
 import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';

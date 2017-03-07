@@ -46,7 +46,7 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situación-Socioeconómica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
 
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 // NO VA tslint:disable-next-line:max-line-length
