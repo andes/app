@@ -50,16 +50,17 @@ export class NacimientoComponent implements OnInit {
         //        "5890c93f7358af394f6d52d9",
         //         "5890c94d7358af394f6d52da",
         //         "58b6cd6eb64acd0989b9f537",
-        //         "58b6b6b2b64acd0989b9f536"
+        //         "58b6b6b2b64acd0989b9f536",
+        //         "58be954fa99b5e0646e8f430"
         //     ],
         //     "componente": {
-        //         "ruta": "rup/signos-vitales/nacimiento.component.ts",
+        //         "ruta": "rup/nacimiento/nacimiento.component.ts",
         //         "nombre": "NacimientoComponent"
         //     },
         //     "turneable": false
         // }
         // como es una molécula buscamos sus atomos
-        
+        //this.tipoPrestacion.id
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
            
             this.tipoPrestacion = tipoPrestacion;

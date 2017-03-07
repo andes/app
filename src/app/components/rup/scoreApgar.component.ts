@@ -7,7 +7,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 })
 export class ScoreApgarComponent implements OnInit {
     @Input('paciente') paciente: any;
-    //paciente: any; // será un IPaciente
+    // paciente: any; // será un IPaciente
     @Input('tipoPrestacion') tipoPrestacion: any;
     //tipoPrestacion: any;
     @Input('required') required: Boolean;
@@ -37,7 +37,7 @@ export class ScoreApgarComponent implements OnInit {
         //     "estadoCivil": "soltera"
         // };
         // this.tipoPrestacion = {
-        //     "_id": "58b6cd6eb64acd0989b9f537",
+        //     "id": "58b6cd6eb64acd0989b9f537",
         //     "key": "scoreApgar",
         //     "nombre": "Score Apgar",
         //     "autonoma": true,
@@ -68,15 +68,15 @@ export class ScoreApgarComponent implements OnInit {
 
         if (this.data[this.tipoPrestacion.key]) {
             //Validaciones con los mensajes.
-            if (this.data[this.tipoPrestacion.key] >= 7 && this.data[this.tipoPrestacion.key] <= 10) {
+            if (this.data[this.tipoPrestacion.key].valor >= 7 && this.data[this.tipoPrestacion.key].valor <= 10) {
                 mensaje.texto = "Excelente";
                 mensaje.class = "outline-succes";
             }
-            if (this.data[this.tipoPrestacion.key] >= 4 && this.data[this.tipoPrestacion.key] <= 6) {
+            if (this.data[this.tipoPrestacion.key].valor >= 4 && this.data[this.tipoPrestacion.key].valor <= 6) {
                 mensaje.texto = "Moderadamente Deprimido";
                 mensaje.class = "outline-warning";
             }
-            if (this.data[this.tipoPrestacion.key] >= 0 && this.data[this.tipoPrestacion.key] <= 3) {
+            if (this.data[this.tipoPrestacion.key].valor >= 0 && this.data[this.tipoPrestacion.key].valor <= 3) {
                 mensaje.texto = "Severamente Deprimido";
                 mensaje.class = "outline-danger";
             }
