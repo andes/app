@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -123,6 +124,13 @@ import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivien
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
 import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
+//Perinatales Parto
+import { PartoViaVaginalComponent } from './components/rup/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
+
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -160,7 +168,12 @@ export const RUP_COMPONENTS = [
   ViviendaCondicionesAlojamientoComponent,
   PerinatalesEmbarazoNormalComponent,
   PerinatalesEmbarazoAnormalComponent,
-  PerinatalesNumeroGestaComponent
+  PerinatalesNumeroGestaComponent,
+  HallazgoRelacionadoPartoComponent,
+  PartoCesareaComponent,
+  PartoVaginalAsistidoExtractorVacioComponent,
+  PartoViaVaginalForcepsComponent,
+  PartoViaVaginalComponent
 
 ];
 
