@@ -3,7 +3,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
   selector: 'rup-PerinatalesEmbarazoNormal',
-  templateUrl: 'PerinatalesEmbarazoNormal.html'
+  templateUrl: 'perinatalesEmbarazoNormal.html'
 })//@Component
 
 export class PerinatalesEmbarazoNormalComponent implements OnInit {
