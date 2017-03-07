@@ -1,4 +1,3 @@
-
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -38,8 +37,8 @@ import { TensionArterialComponent } from './components/rup/tension-arterial/tens
  import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
  import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
  import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+
  import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
 import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
@@ -47,6 +46,7 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situación-Socioeconómica-Familiar/viviendaSituacionSocioEconomica.component';
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
