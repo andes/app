@@ -119,7 +119,9 @@ import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
+//PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -155,7 +157,8 @@ export const RUP_COMPONENTS = [
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
   ViviendaCondicionesAlojamientoComponent,
-  PerinatalesEmbarazoNormalComponent
+  PerinatalesEmbarazoNormalComponent,
+  PerinatalesEmbarazoAnormalComponent
 
 ];
 

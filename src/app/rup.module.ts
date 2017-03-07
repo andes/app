@@ -1,3 +1,4 @@
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -40,7 +41,7 @@ import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
 
-
+//ATOMO SOCIOECONOMICO
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
@@ -52,7 +53,10 @@ import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaA
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
 
+//PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
+
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
@@ -97,6 +101,7 @@ export const RUP_COMPONENTS = [
     ViviendaSostenEconomicoComponent,
     ViviendaCondicionesAlojamientoComponent,
     PerinatalesEmbarazoNormalComponent,
+    PerinatalesEmbarazoAnormalComponent,
     ScoreApgarComponent,
     EdadGestacionalComponent
 
