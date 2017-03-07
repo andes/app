@@ -1,65 +1,49 @@
-// import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-// import { IPaciente } from '../../../interfaces/IPaciente';
-// import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { IPaciente } from '../../../interfaces/IPaciente';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 
-// @Component({
-//     selector: 'rup-viviendaCondicionesAlojamiento',
-//     templateUrl: 'viviendaCondicionesAlojamiento.html'
-// })//@Component
+@Component({
+    selector: 'rup-ViviendaCondicionesAlojamiento',
+    templateUrl: 'viviendaCondicionesAlojamiento.html'
+})//@Component
 
-// export class ViviendaCondicionesAlojamientoComponent implements OnInit {
+export class ViviendaCondicionesAlojamientoComponent implements OnInit {
 
-//     @Input('datosIngreso') datosIngreso: any;
-//     @Input('tipoPrestacion') tipoPrestacion: any;
-//     @Input('paciente') paciente: IPaciente;
-//     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    @Input('datosIngreso') datosIngreso: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
+    @Input('paciente') paciente: IPaciente;
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-//     constructor(private servicioTipoPrestacion: TipoPrestacionService) {
-//     }
+    constructor(private servicioTipoPrestacion: TipoPrestacionService) {
+    }
 
-//     data: any = {
-//         mensaje: {
-//             class: "",
-//             texto: "",
-//         },
-//     };
+    data: any = {
+        mensaje: {
+            class: "",
+            texto: "",
+        },
+    };
 
 
-//     ngOnInit() {
+    ngOnInit() {
+        this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
+            this.tipoPrestacion = tipoPrestacion;
+        });
 
-//         this.tipoPrestacion = {
-//     "_id" : "58beacc9a99b5e0646e8f431",
-//     "key" : "viviendaCondicionesAlojamiento",
-//     "nombre" : "Condiciones de Vivienda y Alojamiento",
-//     "autonoma" : true,
-//     "activo" : true,
-//     "ejecucion" : [],
-//     "componente" : {
-//         "ruta" : "rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component.ts",
-//         "nombre" : "ViviendaCondicionesAlojamiento"
-//     },
-//     "turneable" : false
-// }    
+        // si vienen datos por input, los asignamos a nuestro objeto data
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
+    } //ngOnInit()
 
 
 
-//         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
-//             this.tipoPrestacion = tipoPrestacion;
-//         });
-
-//         // si vienen datos por input, los asignamos a nuestro objeto data
-//         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
-//     } //ngOnInit()
+    onReturnComponent(obj: any, tipoPrestacion: any) {
+        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+        this.evtData.emit(this.data);
+    } // onReturnComponent
 
 
+    getMensajes() {
+    };
 
-//     onReturnComponent(obj: any, tipoPrestacion: any) {        
-//         this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
-//         this.evtData.emit(this.data);
-//     } // onReturnComponent
-
-//     getMensajes() {
-//     };
-
-// }//export class ViviendaSituacionSocioEconomicaComponent
+}//export class ViviendaCondicionesAlojamientoComponent

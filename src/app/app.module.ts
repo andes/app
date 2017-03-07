@@ -118,9 +118,19 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component'
-
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
+//PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
+//Perinatales Parto
+import { PartoViaVaginalComponent } from './components/rup/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
+
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -155,8 +165,15 @@ export const RUP_COMPONENTS = [
   ViviendaSituacionSocioEconomicaComponent,
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
-  
-  PerinatalesEmbarazoNormalComponent
+  ViviendaCondicionesAlojamientoComponent,
+  PerinatalesEmbarazoNormalComponent,
+  PerinatalesEmbarazoAnormalComponent,
+  PerinatalesNumeroGestaComponent,
+  HallazgoRelacionadoPartoComponent,
+  PartoCesareaComponent,
+  PartoVaginalAsistidoExtractorVacioComponent,
+  PartoViaVaginalForcepsComponent,
+  PartoViaVaginalComponent
 
 ];
 

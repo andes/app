@@ -1,13 +1,15 @@
+import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Plex } from 'andes-plex/src/lib/core/service';
 
 @Component({
-    selector: 'rup-scoreApgar',
-    templateUrl: 'scoreApgar.html'
+    selector: 'rup-partoViaVaginal',
+    templateUrl: 'partoViaVaginal.html'
 })
-export class ScoreApgarComponent implements OnInit {
+export class PartoViaVaginalComponent implements OnInit {
     @Input('paciente') paciente: any;
-    // paciente: any; // será un IPaciente
+    //paciente: any; // será un IPaciente
     @Input('tipoPrestacion') tipoPrestacion: any;
     //tipoPrestacion: any;
     @Input('required') required: Boolean;
@@ -16,13 +18,16 @@ export class ScoreApgarComponent implements OnInit {
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
     data: any = {
-        //valor: '',
         mensaje: {
             class: "",
             texto: ""
         },
     };
 
+    public selectPartoViaVaginal: Array<Object> = [
+        { id: 'Parto vaginal asistido con extractor de vacio', nombre: 'Parto vaginal asistido con extractor de vacio' },
+        { id: 'Parto Vaginal con fórceps y cuidados postparto', nombre: 'Parto Vaginal con fórceps y cuidados postparto' },
+    ];
     ngOnInit() {
         // this.paciente = {
         //     "id": "57ebacce69fe79a598e6281d",
@@ -37,50 +42,32 @@ export class ScoreApgarComponent implements OnInit {
         //     "estadoCivil": "soltera"
         // };
         // this.tipoPrestacion = {
-        //     "id": "58b6cd6eb64acd0989b9f537",
-        //     "key": "scoreApgar",
-        //     "nombre": "Score Apgar",
+        //     "id": "58b6b6b2b64acd0989b9f536",
+        //     "key": "partoViaVaginal",
+        //     "nombre": "parto via vaginal",
         //     "autonoma": true,
         //     "activo": true,
         //     "componente": {
-        //         "ruta": "rup/scoreApgar.component.ts",
-        //         "nombre": "scoreApgarComponent"
+        //         "ruta": "rup/partoViaVaginal.component.ts",
+        //         "nombre": "PartoViaVaginalComponent"
         //     },
         //     "turneable": false
         // };
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {
             valor: null,
-            minutos: null
+            detalle: ""
         };
 
     }
+
     devolverValores() {
         this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
     }
 
+
     getMensajes() {
 
-        let mensaje: any = {
-            texto: '',
-            class: 'outline-danger'
-        };
 
-        if (this.data[this.tipoPrestacion.key]) {
-            //Validaciones con los mensajes.
-            if (this.data[this.tipoPrestacion.key].valor >= 7 && this.data[this.tipoPrestacion.key].valor <= 10) {
-                mensaje.texto = "Excelente";
-                mensaje.class = "outline-succes";
-            }
-            if (this.data[this.tipoPrestacion.key].valor >= 4 && this.data[this.tipoPrestacion.key].valor <= 6) {
-                mensaje.texto = "Moderadamente Deprimido";
-                mensaje.class = "outline-warning";
-            }
-            if (this.data[this.tipoPrestacion.key].valor >= 0 && this.data[this.tipoPrestacion.key].valor <= 3) {
-                mensaje.texto = "Severamente Deprimido";
-                mensaje.class = "outline-danger";
-            }
-        }
-        return mensaje;
     }
 }

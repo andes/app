@@ -1,3 +1,7 @@
+
+
+
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -20,6 +24,8 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
+import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
 import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
@@ -38,6 +44,7 @@ import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
 
+//ATOMO SOCIOECONOMICO
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
 import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
@@ -47,8 +54,20 @@ import { ViviendaContaminantesComponent } from './components/rup/viviendaContami
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
 
+//PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
+
+//Perinatales Parto
+import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
+import { PartoCesareaComponent } from './components/rup/partoCesarea.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/partoVaginalAsistidoExtractorVacio.component';
+import { PartoViaVaginalComponent } from './components/rup/partoViaVaginal.component';
+
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
@@ -91,7 +110,18 @@ export const RUP_COMPONENTS = [
     ViviendaResiduosComponent,
     ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
-    PerinatalesEmbarazoNormalComponent
+    ViviendaCondicionesAlojamientoComponent,
+    PerinatalesEmbarazoNormalComponent,
+    PerinatalesEmbarazoAnormalComponent,
+    PerinatalesNumeroGestaComponent,
+    ScoreApgarComponent,
+    EdadGestacionalComponent,
+    PartoViaVaginalComponent,
+    PartoVaginalAsistidoExtractorVacioComponent,
+    PartoViaVaginalForcepsComponent,
+    PartoCesareaComponent,
+    HallazgoRelacionadoPartoComponent
+
 
     // NO VAPacienteComponent
 ];
