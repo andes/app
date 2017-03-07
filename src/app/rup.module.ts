@@ -50,6 +50,7 @@ import { ViviendaContaminantesComponent } from './components/rup/viviendaContami
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
 
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 // NO VA tslint:disable-next-line:max-line-length
@@ -94,6 +95,7 @@ export const RUP_COMPONENTS = [
     ViviendaResiduosComponent,
     ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
+    ViviendaCondicionesAlojamientoComponent,
     PerinatalesEmbarazoNormalComponent,
     ScoreApgarComponent,
     EdadGestacionalComponent

@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -118,8 +117,8 @@ import { ViviendaFamiliaComponent } from './components/rup/viviendaFamilia.compo
 import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
 import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { ViviendaSostenEconomicoComponent } from './components/rup/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component'
-
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 
 export const RUP_COMPONENTS = [
@@ -155,7 +154,7 @@ export const RUP_COMPONENTS = [
   ViviendaSituacionSocioEconomicaComponent,
   ViviendaSostenEconomicoComponent,
   ViviendaNivelInstruccionComponent,
-  
+  ViviendaCondicionesAlojamientoComponent,
   PerinatalesEmbarazoNormalComponent
 
 ];
