@@ -122,6 +122,7 @@ import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivien
 //PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -158,7 +159,8 @@ export const RUP_COMPONENTS = [
   ViviendaNivelInstruccionComponent,
   ViviendaCondicionesAlojamientoComponent,
   PerinatalesEmbarazoNormalComponent,
-  PerinatalesEmbarazoAnormalComponent
+  PerinatalesEmbarazoAnormalComponent,
+  PerinatalesNumeroGestaComponent
 
 ];
 
