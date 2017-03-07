@@ -1,4 +1,5 @@
 
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -56,6 +57,7 @@ import { ViviendaCondicionesAlojamientoComponent } from './components/rup/vivien
 //PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
 
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -102,6 +104,7 @@ export const RUP_COMPONENTS = [
     ViviendaCondicionesAlojamientoComponent,
     PerinatalesEmbarazoNormalComponent,
     PerinatalesEmbarazoAnormalComponent,
+    PerinatalesNumeroGestaComponent,
     ScoreApgarComponent,
     EdadGestacionalComponent
 
