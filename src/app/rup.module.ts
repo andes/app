@@ -1,5 +1,7 @@
 
 
+
+
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
 import { PacienteComponent } from './components/paciente/paciente.component';
@@ -59,6 +61,13 @@ import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatales
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazoAnormal.component';
 import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesNumeroGesta.component';
 
+//Perinatales Parto
+import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
+import { PartoCesareaComponent } from './components/rup/partoCesarea.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/partoVaginalAsistidoExtractorVacio.component';
+import { PartoViaVaginalComponent } from './components/rup/partoViaVaginal.component';
+
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
@@ -106,7 +115,12 @@ export const RUP_COMPONENTS = [
     PerinatalesEmbarazoAnormalComponent,
     PerinatalesNumeroGestaComponent,
     ScoreApgarComponent,
-    EdadGestacionalComponent
+    EdadGestacionalComponent,
+    PartoViaVaginalComponent,
+    PartoVaginalAsistidoExtractorVacioComponent,
+    PartoViaVaginalForcepsComponent,
+    PartoCesareaComponent,
+    HallazgoRelacionadoPartoComponent
 
 
     // NO VAPacienteComponent
