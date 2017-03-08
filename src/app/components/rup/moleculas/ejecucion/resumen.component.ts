@@ -1,11 +1,11 @@
-import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
-import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
-import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
+import { IPrestacion } from './../../../../interfaces/turnos/IPrestacion';
+import { IProblemaPaciente } from '../../../../interfaces/rup/IProblemaPaciente';
+import { PrestacionPacienteService } from '../../../../services/rup/prestacionPaciente.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
-import { IPrestacionPaciente } from '../../../interfaces/rup/IPrestacionPaciente';
-import { IPaciente } from '../../../interfaces/IPaciente';
-import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
+import { IPrestacionPaciente } from '../../../../interfaces/rup/IPrestacionPaciente';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { ProblemaPacienteService } from '../../../../services/rup/problemaPaciente.service';
 
 @Component({
     selector: 'rup-resumen',

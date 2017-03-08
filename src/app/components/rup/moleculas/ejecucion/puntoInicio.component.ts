@@ -1,15 +1,15 @@
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
+import { PrestacionPacienteService } from './../../../../services/rup/prestacionPaciente.service';
+import { IPrestacionPaciente } from './../../../../interfaces/rup/IPrestacionPaciente';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
+import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
 
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
+import { IPaciente } from './../../../../interfaces/IPaciente';
+import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
 
 @Component({
     selector: 'rup-puntoInicio',

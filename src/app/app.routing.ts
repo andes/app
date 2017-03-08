@@ -36,9 +36,9 @@ import { PanelEspacioComponent } from './components/turnos/configuracion/espacio
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 
 // ... RUP
-import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ResumenComponent } from './components/rup/moleculas/ejecucion/resumen.component';
+import { PuntoInicioComponent } from './components/rup/moleculas/ejecucion/puntoInicio.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 

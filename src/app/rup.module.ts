@@ -21,10 +21,10 @@ import { Server } from 'andes-shared/src/lib/server/server.service';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
-import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
-import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
-import { EdadGestacionalFetalComponent } from './components/rup/edadGestacionalFetal/edadGestacionalFetal.component';
-import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
+import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNacimiento/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
+import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
+import { PrestacionValidacionComponent } from './components/rup/moleculas/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
 import { TallaComponent } from './components/rup/talla.component';
@@ -33,13 +33,13 @@ import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca
 import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
-import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
+import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
+import { PrestacionEjecucionComponent } from './components/rup/moleculas/ejecucion/prestacionEjecucion.component';
+import { PuntoInicioComponent } from './components/rup/moleculas/ejecucion/puntoInicio.component';
+import { ResumenComponent } from './components/rup/moleculas/ejecucion/resumen.component';
+import { EvolucionTodosProblemasComponent } from './components/rup/moleculas/ejecucion/evolucionTodosProblemas.component';
+import { EvolucionProblemaComponent } from './components/rup/moleculas/ejecucion/evolucionProblema.component';
 //ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
@@ -57,14 +57,14 @@ import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/per
 import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
 import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
 //Perinatales Parto
-import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
-import { PartoCesareaComponent } from './components/rup/partoCesarea.component';
-import { PartoViaVaginalForcepsComponent } from './components/rup/partoViaVaginalForceps.component';
-import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/partoVaginalAsistidoExtractorVacio.component';
-import { PartoViaVaginalComponent } from './components/rup/partoViaVaginal.component';
+import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/atomos/perinatalesParto/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatalesParto/hallazgoRelacionadoParto.component';
 
 // NO VA tslint:disable-next-line:max-line-length
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/observaciones.component';
 
 // Servicios RUP //

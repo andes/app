@@ -1,17 +1,17 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 // import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
+import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
+import { TipoProblemaService } from './../../../../services/rup/tipoProblema.service';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { PrestacionPacienteService } from './../../../../services/rup/prestacionPaciente.service';
 
-import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
+import { ITipoProblema } from './../../../../interfaces/rup/ITipoProblema';
+import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 
-import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
+import { IPrestacionPaciente } from './../../../../interfaces/rup/IPrestacionPaciente';
 // import { IPaciente } from './../../../interfaces/IPaciente';
-import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
+import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
 
 import { Plex } from 'andes-plex/src/lib/core/service';
 // import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';

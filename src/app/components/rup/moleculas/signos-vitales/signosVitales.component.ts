@@ -2,7 +2,7 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 
 // import { IPaciente } from './../../../interfaces/IPaciente';
 // import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'rup-signos-vitales',

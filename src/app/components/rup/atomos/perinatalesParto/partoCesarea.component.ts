@@ -1,12 +1,12 @@
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'rup-PartoViaVaginalForceps',
-  templateUrl: 'partoViaVaginalForceps.html'
+  selector: 'rup-PartoCesarea',
+  templateUrl: 'partoCesarea.html'
 })
 
-export class PartoViaVaginalForcepsComponent implements OnInit {
+export class PartoCesareaComponent implements OnInit {
 
 
   @Input('paciente') paciente: any;

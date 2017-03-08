@@ -1,13 +1,13 @@
-import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
+import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { Plex } from 'andes-plex/src/lib/core/service';
 
 @Component({
-    selector: 'rup-partoViaVaginal',
-    templateUrl: 'partoViaVaginal.html'
+    selector: 'rup-edadGestacionalFetal',
+    templateUrl: 'edadGestacionalFetal.html'
 })
-export class PartoViaVaginalComponent implements OnInit {
+export class EdadGestacionalFetalComponent implements OnInit {
     @Input('paciente') paciente: any;
     //paciente: any; // será un IPaciente
     @Input('tipoPrestacion') tipoPrestacion: any;
@@ -18,15 +18,18 @@ export class PartoViaVaginalComponent implements OnInit {
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
     data: any = {
+        //valor: '',
         mensaje: {
             class: "",
             texto: ""
         },
     };
 
-    public selectPartoViaVaginal: Array<Object> = [
-        { id: 'Parto vaginal asistido con extractor de vacio', nombre: 'Parto vaginal asistido con extractor de vacio' },
-        { id: 'Parto Vaginal con fórceps y cuidados postparto', nombre: 'Parto Vaginal con fórceps y cuidados postparto' },
+    showCampoFecha: Boolean = false;
+
+    public selectMetodoEdadGestacionalFetal: Array<Object> = [
+        { id: 'Examen físico', nombre: 'Examen físico' },
+        { id: 'Fecha ultima menstruación', nombre: 'Fecha ultima menstruación' },
     ];
     ngOnInit() {
         // this.paciente = {
@@ -43,25 +46,32 @@ export class PartoViaVaginalComponent implements OnInit {
         // };
         // this.tipoPrestacion = {
         //     "id": "58b6b6b2b64acd0989b9f536",
-        //     "key": "partoViaVaginal",
-        //     "nombre": "parto via vaginal",
+        //     "key": "edadGestacionalFetal",
+        //     "nombre": "Edad gestacional Fetal",
         //     "autonoma": true,
         //     "activo": true,
         //     "componente": {
-        //         "ruta": "rup/partoViaVaginal.component.ts",
-        //         "nombre": "PartoViaVaginalComponent"
+        //         "ruta": "rup/edadGestacionalFetal/edadGestacionalFetal.component.ts",
+        //         "nombre": "edadGestacionalFetalComponent"
         //     },
         //     "turneable": false
         // };
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {
             valor: null,
-            detalle: ""
+            fecha: null
         };
 
     }
 
     devolverValores() {
         this.data.mensaje = this.getMensajes();
+        if (this.data[this.tipoPrestacion.key].nombre == 'Fecha ultima menstruación') {
+            this.showCampoFecha = true;
+        }
+        else {
+            this.showCampoFecha = false;
+            this.data[this.tipoPrestacion.key].fecha = null;
+        }
         this.evtData.emit(this.data);
     }
 

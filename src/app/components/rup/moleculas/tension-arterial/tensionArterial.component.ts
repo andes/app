@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { IPaciente } from './../../../../interfaces/IPaciente';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'rup-tension-arterial',
