@@ -21,21 +21,6 @@ export class PerinatalesEmbarazoAnormalComponent implements OnInit {
   };
 
   ngOnInit() {
-
-this.tipoPrestacion={
-    "id" : "58bece04a99b5e0646e8f432",
-    "key" : "perinatalesEmbarazoAnormal",
-    "nombre" : "Perinatales - Embarazo Anormal",
-    "autonoma" : false,
-    "activo" : true,
-    "componente" : {
-        "ruta" : "rup/perinatalesEmbarazoAnormal.component.ts",
-        "nombre" : "PerinatalesEmbarazoAnormalComponent"
-    },
-    "turneable" : false
-}
-
-
     this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
   } //ngOnInit()
 

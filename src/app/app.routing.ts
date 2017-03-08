@@ -1,3 +1,4 @@
+import { PerinatalesGestacionMultipleComponent } from './components/rup/perinatalesGestacionMultiple.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -41,7 +42,7 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
-//import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/vivienda-Situación-Socioeconómica-Familiar/viviendaSituacionSocioEconomica.component';
+
 
 const appRoutes: Routes = [
   { path: 'organizacion', component: OrganizacionComponent },
@@ -63,7 +64,7 @@ const appRoutes: Routes = [
     // { path: 'espacio_fisico', component: EspacioFisicoComponent },
   // { path: 'prestacion', component: PrestacionComponent },
 
-  //{ path: 'atomos', component: ViviendaSituacionSocioEconomicaComponent },
+  { path: 'atomos', component: PerinatalesGestacionMultipleComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 
