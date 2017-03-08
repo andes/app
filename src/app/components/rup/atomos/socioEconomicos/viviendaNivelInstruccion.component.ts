@@ -34,6 +34,7 @@ export class ViviendaNivelInstruccionComponent implements OnInit {
 
     devolverValores() { //Hacer las validaciones       
         this.data.mensaje = this.getMensajes();
+        this.data[this.tipoPrestacion.key] = this.data[this.tipoPrestacion.key].id
         this.evtData.emit(this.data);
     }//devolverValores()
 

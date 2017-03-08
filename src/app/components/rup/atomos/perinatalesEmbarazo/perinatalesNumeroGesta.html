@@ -1,4 +1,4 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="NroGesta" label="Número de Gesta"  min="0" max="30" (change)="devolverValores()">
+<plex-int [(ngModel)]="data[tipoPrestacion.key]" name="nroGesta" label="Número de Gesta" placeholder="Ingrese numero de gesta"   min="0" max="30" (change)="devolverValores()">
 </plex-int>
 
 <p *ngIf="data.mensaje.texto">

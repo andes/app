@@ -38,6 +38,8 @@ export class ViviendaFamiliaComponent implements OnInit {
 
     devolverValores() { //Hacer las validaciones                   
         this.data.mensaje = this.getMensajes();
+        //Me quedo solo con el id    
+        this.data[this.tipoPrestacion.key] = this.data[this.tipoPrestacion.key].id
         this.evtData.emit(this.data);
     }//devolverValores()
 
