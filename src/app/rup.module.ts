@@ -40,25 +40,22 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
-
 //ATOMO SOCIOECONOMICO
-import { ViviendaSostenEconomicoComponent } from './components/rup/socioEconomicos/viviendaSostenEconomico.component';
-import { ViviendaResiduosComponent } from './components/rup/socioEconomicos/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/socioEconomicos/viviendaPiso.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/socioEconomicos/viviendaNivelInstruccion.component';
-import { ViviendaFamiliaComponent } from './components/rup/socioEconomicos/viviendaFamilia.component';
-import { ViviendaContaminantesComponent } from './components/rup/socioEconomicos/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/socioEconomicos/viviendaCombustion.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/socioEconomicos/viviendaAsistenciaEconomica.component';
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/socioEconomicos/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
-import { ViviendaCondicionesAlojamientoComponent } from './components/rup/socioEconomicos/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
-
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socioEconomicos/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/atomos/socioEconomicos/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/atomos/socioEconomicos/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconomicos/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
 //PERINATALES EMBARAZO
-import { PerinatalesEmbarazoNormalComponent } from './components/rup/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
-import { PerinatalesEmbarazoAnormalComponent } from './components/rup/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
-import { PerinatalesNumeroGestaComponent } from './components/rup/perinatalesEmbarazo/perinatalesNumeroGesta.component';
-import { PerinatalesGestacionMultipleComponent } from './components/rup/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
-
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
+import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
 //Perinatales Parto
 import { HallazgoRelacionadoPartoComponent } from './components/rup/hallazgoRelacionadoParto.component';
 import { PartoCesareaComponent } from './components/rup/partoCesarea.component';

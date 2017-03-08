@@ -1,12 +1,13 @@
-import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { IPaciente } from "../../../../interfaces/IPaciente";
+
 
 @Component({
-  selector: 'rup-PerinatalesEmbarazoAnormal',
-  templateUrl: 'perinatalesEmbarazoAnormal.html'
+  selector: 'rup-ViviendaAsistenciaEconomica',
+  templateUrl: 'viviendaAsistenciaEconomica.html'
 })//@Component
 
-export class PerinatalesEmbarazoAnormalComponent implements OnInit {
+export class ViviendaAsistenciaEconomicaComponent implements OnInit {
 
   @Input('datosIngreso') datosIngreso: any;
   @Input('tipoPrestacion') tipoPrestacion: any;
@@ -31,4 +32,4 @@ export class PerinatalesEmbarazoAnormalComponent implements OnInit {
 
   getMensajes() { };
 
-}//export class PerinatalesEmbarazoAnormalComponent
+}//export class ViviendaAsistenciaEconomicaComponent

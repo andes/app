@@ -1,4 +1,3 @@
-import { PerinatalesGestacionMultipleComponent } from './components/rup/perinatalesGestacionMultiple.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -64,7 +63,7 @@ const appRoutes: Routes = [
     // { path: 'espacio_fisico', component: EspacioFisicoComponent },
   // { path: 'prestacion', component: PrestacionComponent },
 
-  { path: 'atomos', component: PerinatalesGestacionMultipleComponent },
+  //{ path: 'atomos', component: PerinatalesGestacionMultipleComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

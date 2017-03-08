@@ -1,6 +1,7 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { IPaciente } from '../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { IPaciente } from "../../../../interfaces/IPaciente";
+import { TipoPrestacionService } from "../../../../services/tipoPrestacion.service";
+
 
 
 @Component({
