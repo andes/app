@@ -110,6 +110,8 @@ import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNac
 import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
 import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
+import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
+import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 
 
 //ATOMO SOCIOECONOMICO
@@ -181,6 +183,8 @@ export const RUP_COMPONENTS = [
   PartoViaVaginalComponent,
   EvolucionProblemaComponent,
   TransformarProblemaComponent,
+  PruebaOtoemisionesAcusticasComponent,
+  PesquisaNeonatalComponent
 
 ];
 
