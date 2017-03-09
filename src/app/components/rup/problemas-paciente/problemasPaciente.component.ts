@@ -1,9 +1,9 @@
-import { ProblemaPacienteService } from './../../../../services/rup/ProblemaPaciente.service';
+import { ProblemaPacienteService } from './../../../services/rup/ProblemaPaciente.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { IPaciente } from './../../../../interfaces/IPaciente';
-import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
+import { IPaciente } from './../../../interfaces/IPaciente';
+import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 
 @Component({

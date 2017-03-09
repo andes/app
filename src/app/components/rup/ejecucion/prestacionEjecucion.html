@@ -6,6 +6,10 @@
         padding: 10px;
     }
     
+    .linea-sup {
+        border-top: 1px solid #ccc;
+    }
+    
     .msg-problema i {
         color: #ff9900;
     }
@@ -19,27 +23,80 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="box box-primary">
+            <plex-box type="primary" title="Problemas">
+                <div *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div>
+                                <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" (change)="agregarProblema()" placeholder="Agregar Problema">
+                                </plex-select>
+                            </div>
+                            <!-- /input-group -->
+                        </div>
+                        <div class="col-md-4">
+                            <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="list-group" *ngIf="prestacion.solicitud && prestacion.solicitud.listaProblemas">
+                                <li class="list-group-item clearfix" *ngFor="let problema of prestacion.solicitud.listaProblemas">
+                                    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                        <div class="col-md-12">
+                                            <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                                Activo
+                                            </span>
+                                            <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                            </span>&nbsp;&nbsp;&nbsp;
+                                            <span class="label label-warning">
+                                               {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            {{problema.tipoProblema.nombre}}
+                                            <!--<plex-dropdown label="Opciones de usuario" icon="account" [items]="items">
+                                            </plex-dropdown>-->
+                                        </div>
+                                        <div class="col-md-4">
+                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)"></plex-button>
+                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)"></plex-button>
+                                            <plex-button label="Enmendar Problema" type="link"></plex-button>
+                                            <plex-button label="Ver Detalles" type="link"></plex-button>
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="showEvolucionar && !showEvolTodo">
+                            <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
+                        </div>
+                        <div *ngIf="showTransformar">
+                            <rup-transformarProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!showEvolucionar && showEvolTodo">
+                    <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
+                </div>
+            </plex-box>
+
+
+            <!--<div class="box box-primary">
                 <div class="box-header with-border clearfix">
                     <h3 class="box-title">Problemas</h3>
-                    <div class="col-md-6 pull-right">
-                        <div>
-                            <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" (change)="agregarProblema()" placeholder="Agregar Problema">
-                            </plex-select>
-                        </div>
-                        <!-- /input-group -->
-                    </div>
-                    <div class="col-md-3 pull-right text-right">
-                        <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
-                    </div>
+
                 </div>
                 <div class="box-body">
                     <div *ngIf="!showEvolucionar && !showEvolTodo">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4>Asociados a la consulta</h4>
-                            </div>
-                        </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <ul class="list-group">
@@ -59,7 +116,7 @@
                                                 <br />
                                                 <small class="gris">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} - Profesional: 
-                                            </small>
+                                                </small>
                                             </div>
                                         </div>
                                     </li>
@@ -78,7 +135,7 @@
                         <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <div class="col-md-6">

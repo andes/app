@@ -1,4 +1,4 @@
-import { PrestacionEjecucionComponent } from './moleculas/ejecucion/prestacionEjecucion.component';
+import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';

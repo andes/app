@@ -2,13 +2,13 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../../services/rup/tipoProblema.service';
+import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
+import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 
-import { ITipoProblema } from './../../../../interfaces/rup/ITipoProblema';
-import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
+import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
+import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 
-import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
+import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 @Component({
     selector: 'rup-evolucionaProblemasTodos',
@@ -31,16 +31,16 @@ export class EvolucionTodosProblemasComponent implements OnInit {
 
     evolucionar() {
         let cant = this.problemas.length;
-        for (let i = 0; i < cant; i++) {
-            var dato = {
-                fecha: new Date(),
-                activo: this.problemas[i].activo,
-                observacion: this.textoEvolucion,
-                profesional: null, //TODO: traer profesional login
-                organizacion: null //TODO: traer organizacion login
-            }
-            this.problemas[i].evoluciones.push(dato);
-        }
+        // for (let i = 0; i < cant; i++) {
+        //     var dato = {
+        //         // fecha: new Date(),
+        //         // activo: this.problemas[i].activo,
+        //         // observacion: this.textoEvolucion,
+        //         // profesional: null, //TODO: traer profesional login
+        //         // organizacion: null //TODO: traer organizacion login
+        //     }
+        //     this.problemas[i].evoluciones.push(dato);
+        // }
 
         this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
             if (resultado) {

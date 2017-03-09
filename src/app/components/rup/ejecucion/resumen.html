@@ -44,17 +44,17 @@
                 <p class="celeste">Problemas</p>
                 <ul class="list-group">
                     <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                        <div>
+                        <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             {{problema.tipoProblema.nombre}}
                             <br />
                             <small class="gris">
                                 Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
                             </small>
-                            <span class="label label-success pull-right" *ngIf="problema.activo">
+                            <span class="label label-success pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                 Activo
                             </span>
-                            <span class="label label-danger pull-right" *ngIf="!problema.activo">
-                                Inactivo
+                            <span class="label label-danger pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
                         </div>
                     </li>
