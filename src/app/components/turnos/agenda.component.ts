@@ -402,14 +402,17 @@ export class AgendaComponent implements OnInit {
         let totalBloques = 0;
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
+            console.log(this.modelo.profesionales);
             this.modelo.profesionales.forEach((profesional, index) => {
+                this.alertas = [];
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                     subscribe(agendas => {
-                        agendas = agendas.filter(agenda => {
+                        let agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
                         });
-                        cantidad = agendas.length;
+                        cantidad = agds.length;
                         if (cantidad > 0) {
+                            this.alertas = [];
                             this.alertas.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
                         }
                     });
