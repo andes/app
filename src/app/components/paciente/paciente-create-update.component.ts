@@ -16,7 +16,7 @@ import * as enumerados from './../../utils/enumerados';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 
 
 

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 
 // Interfaces

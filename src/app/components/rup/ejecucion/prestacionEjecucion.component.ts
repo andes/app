@@ -14,9 +14,8 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 // import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
-import { MenuItem } from 'andes-plex/src/lib/app/menu-item.class';
-import { Plex } from 'andes-plex/src/lib/core/service';
-// import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+import { Plex } from '@andes/plex';
+import { MenuItem } from '@andes/plex/src/lib/app/menu-item.class';
 
 @Component({
     selector: 'rup-prestacionEjecucion',

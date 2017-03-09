@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { FormBuilder } from '@angular/forms';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
@@ -382,7 +382,7 @@ export class AgendaComponent implements OnInit {
         let iniAgenda = null;
         let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
-        if (this.modelo.horaInicio && this.modelo.horaFin){
+        if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
         }
@@ -392,7 +392,7 @@ export class AgendaComponent implements OnInit {
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango' : true, 'desde': iniAgenda, 'hasta': finAgenda}).
+                this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                     subscribe(agendas => {
                         cantidad = agendas.length;
                         if (cantidad > 0) {

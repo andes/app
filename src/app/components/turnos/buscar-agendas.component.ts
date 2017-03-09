@@ -1,6 +1,6 @@
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';

@@ -9,9 +9,15 @@ Como Angular2 y Angular-CLI son proyectos que están en constante actualización
 ## Instalación
 
 **NOTA DE ACTUALIZACION:** Si ya se cuenta con una versión anterior de la aplicación, se recomienda borrar la carpeta node_modules para evitar conflictos de versiones de angular y angular-cli
+
 ```bash
+# Windows
 cd app
 rd node_modules /s
+
+# Linux
+cd app
+rm -r node_modules
 ```
 
 ### Instalar angular-cli en forma global

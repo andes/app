@@ -1,7 +1,7 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos'
 
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { Observable } from 'rxjs/Rx';
 import { IBloque } from './../../../interfaces/turnos/IBloque';

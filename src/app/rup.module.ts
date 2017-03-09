@@ -11,11 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 // Plex
-import { PlexModule } from 'andes-plex/src/lib/module';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { PlexModule } from '@andes/plex/src/lib/module';
+import { Plex } from '@andes/plex';
 
 // Server
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 
 // Routing
 import { routing, appRoutingProviders } from './app.routing';
