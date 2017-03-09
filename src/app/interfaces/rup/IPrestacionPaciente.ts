@@ -65,7 +65,7 @@ export interface IPrestacionPaciente {
 
 
     ejecucion: {
-        // listaProblemas: [problemaSchema],
+        listaProblemas: IProblemaPaciente[],
         fecha: Date,
         organizacion: IOrganizacion,
         profesional: IProfesional,
