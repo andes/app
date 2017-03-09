@@ -1,7 +1,7 @@
 import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'rup-edadGestacionalFetal',
