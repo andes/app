@@ -77,7 +77,7 @@ export class PrestacionValidacionComponent implements OnInit {
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
             var listaFinal = [];
-            
+
             if (resultado) {
                 this.prestacionesEjecutadas.forEach(prestacion => {
                     prestacion.estado.push({

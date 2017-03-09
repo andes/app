@@ -25,6 +25,7 @@ export class ClonarAgendaComponent implements OnInit {
     private original: boolean = true;
     private inicioAgenda: Date;
     public danger = 'list-group-item-danger';
+    
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -32,10 +33,7 @@ export class ClonarAgendaComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
-
     @Output() cancelaClonar = new EventEmitter<boolean>();
-
-    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 
     ngOnInit() {
         this.inicioAgenda = new Date(this.agenda.horaInicio);
@@ -58,7 +56,6 @@ export class ClonarAgendaComponent implements OnInit {
             fechaHasta: this.finMesDate,
             espacioFisico: this.agenda.espacioFisico.id
         };
-        // params['prestaciones'] = JSON.stringify(this.agenda.prestaciones.map(elem => { elem.id; return elem; }));
         params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         this.cargarCalendario();
@@ -152,10 +149,7 @@ export class ClonarAgendaComponent implements OnInit {
                 (v => {return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                     agenda.conflictoProfesional = 1;
                 }
-                // if (agenda.prestaciones.map(elem => { return elem.id; }).some
-                // (v => {return this.agenda.prestaciones.map(elem => { return elem.id; }).includes(v); })) {
-                //     agenda.conflictoPrestacion = 1;
-                // }
+               
                 if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                     agenda.conflictoEF = 1;
                 }
@@ -201,6 +195,12 @@ export class ClonarAgendaComponent implements OnInit {
                     bloque.turnos.forEach((turno, index1) => {
                         newIniTurno = this.combinarFechas(seleccionada, turno.horaInicio);
                         turno.horaInicio = newIniTurno;
+                        turno.estado = 'disponible';
+                        turno.asistencia = false;
+                        turno.paciente = null;
+                        turno.tipoPrestacion = null;
+                        turno.idPrestacionPaciente = null;
+
                     });
                 });
                 delete this.agenda._id;
@@ -229,4 +229,6 @@ export class ClonarAgendaComponent implements OnInit {
         debugger;
         this.cancelaClonar.emit(true);
     }
+
+    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 }

@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -86,33 +87,55 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/viviendaNivelInstruccion.component';
-import { ViviendaResiduosComponent } from './components/rup/viviendaResiduos.component';
-import { ViviendaAsistenciaEcComponent } from './components/rup/viviendaAsistenciaEc.component';
-import { ViviendaPisoComponent } from './components/rup/viviendaPiso.component';
-import { ViviendaContaminantesComponent } from './components/rup/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/viviendaCombustion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
-import { PesoComponent } from './components/rup/peso.component';
-import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
-import { TallaComponent } from './components/rup/talla.component';
-import { TemperaturaComponent } from './components/rup/temperatura.component';
-import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca.component';
-import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
-import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
-import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
+import { PesoComponent } from './components/rup/atomos/peso.component';
+import { SaturacionOxigenoComponent } from './components/rup/atomos/saturacionOxigeno.component';
+import { TallaComponent } from './components/rup/atomos/talla.component';
+import { TemperaturaComponent } from './components/rup/atomos/temperatura.component';
+import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaCardiaca.component';
+import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
+import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
+import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
+import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-import { EvolucionTodosProblemasComponent } from './components/rup/ejecucion/evolucionTodosProblemas.component';
-import { EvolucionProblemaComponent } from './components/rup/ejecucion/evolucionProblema.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
-import { ObservacionesComponent } from './components/rup/observaciones.component';
+import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
+import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
+import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
+import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { EdadGestacionalComponent } from './components/rup/edadGestacional.component';
-import { ScoreApgarComponent } from './components/rup/scoreApgar.component';
-import { NacimientoComponent } from './components/rup/nacimiento/nacimiento.component';
+import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNacimiento/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
+import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
+import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
+
+
+//ATOMO SOCIOECONOMICO
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socioEconomicos/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/atomos/socioEconomicos/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/atomos/socioEconomicos/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconomicos/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
+//PERINATALES EMBARAZO
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
+import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
+//Perinatales Parto
+import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/atomos/perinatalesParto/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatalesParto/hallazgoRelacionadoParto.component';
+
+
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -136,12 +159,29 @@ export const RUP_COMPONENTS = [
   EdadGestacionalComponent,
   ScoreApgarComponent,
   NacimientoComponent,
+  EdadGestacionalFetalComponent,
+  ViviendaAsistenciaEconomicaComponent,
   ViviendaCombustionComponent,
   ViviendaContaminantesComponent,
-  ViviendaResiduosComponent,
+  ViviendaFamiliaComponent,
   ViviendaPisoComponent,
-  ViviendaAsistenciaEcComponent,
-  ViviendaNivelInstruccionComponent
+  ViviendaResiduosComponent,
+  ViviendaSituacionSocioEconomicaComponent,
+  ViviendaSostenEconomicoComponent,
+  ViviendaNivelInstruccionComponent,
+  ViviendaCondicionesAlojamientoComponent,
+  PerinatalesEmbarazoNormalComponent,
+  PerinatalesEmbarazoAnormalComponent,
+  PerinatalesNumeroGestaComponent,
+  PerinatalesGestacionMultipleComponent,
+  HallazgoRelacionadoPartoComponent,
+  PartoCesareaComponent,
+  PartoVaginalAsistidoExtractorVacioComponent,
+  PartoViaVaginalForcepsComponent,
+  PartoViaVaginalComponent,
+  EvolucionProblemaComponent,
+  TransformarProblemaComponent,
+
 ];
 
 // Locales

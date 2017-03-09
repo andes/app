@@ -20,7 +20,6 @@ export class AgendaComponent implements OnInit {
     private _editarAgenda: any;
     @Input('editaAgenda')
     set editaAgenda(value: any) {
-        debugger;
         this._editarAgenda = value;
     }
     get editaAgenda(): any {
@@ -38,9 +37,9 @@ export class AgendaComponent implements OnInit {
     public elementoActivo: any = { descripcion: null };
     public alertas: String[] = [];
     public fecha: Date;
-    showBuscarAgendas: boolean = false;
-    showClonar: boolean = false;
-    showAgenda: boolean = true;
+    showBuscarAgendas = false;
+    showClonar = false;
+    showAgenda = true;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private router: Router,
         public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
@@ -48,14 +47,11 @@ export class AgendaComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
-        debugger;
-
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
         } else {
             this.bloqueActivo = -1;
         }
-
         this.modelo.bloques = [];
     }
 
@@ -73,8 +69,6 @@ export class AgendaComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        // this.servicioPrestacion.get({}).subscribe(event.callback);
-        debugger;
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
@@ -89,7 +83,7 @@ export class AgendaComponent implements OnInit {
     inicializarPrestacionesBloques(bloque) {
         if (this.modelo.tipoPrestaciones) {
             this.modelo.tipoPrestaciones.forEach((prestacion, index) => {
-                let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                const copiaPrestacion = operaciones.clonarObjeto(prestacion);
                 if (bloque.tipoPrestaciones) {
                     let i = bloque.tipoPrestaciones.map(function (e) { return e.nombre; }).
                         indexOf(copiaPrestacion.nombre);
@@ -130,7 +124,7 @@ export class AgendaComponent implements OnInit {
                 bloque.reservadoProfesional ? bloque.reservadoProfesionalPorc = Math.floor
                     ((bloque.reservadoProfesional * 100) / bloque.cantidadTurnos) : bloque.reservadoProfesionalPorc = 0;
                 if (!this.modelo.intercalar) {
-                    let duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
+                    const duracion = this.calcularDuracion(bloque.horaInicio, bloque.horaFin, bloque.cantidadTurnos);
                     bloque.duracionTurno = Math.floor(duracion);
                 }
             } else {
@@ -143,8 +137,6 @@ export class AgendaComponent implements OnInit {
         });
         this.validarTodo();
         this.activarBloque(0);
-        // this.bloqueActivo = 0;
-        // this.elementoActivo = this.modelo.bloques[0];
     }
 
     activarBloque(indice: number) {
@@ -154,7 +146,7 @@ export class AgendaComponent implements OnInit {
     }
 
     addBloque() {
-        let longitud = this.modelo.bloques.length;
+        const longitud = this.modelo.bloques.length;
         this.modelo.bloques.push({
             indice: longitud,
             'descripcion': 'Nuevo Bloque',
@@ -386,12 +378,29 @@ export class AgendaComponent implements OnInit {
     validarTodo() {
         let alerta: string;
         let indice: number;
+        let cantidad: number;
+        let iniAgenda = null;
+        let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
-        let iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-        let finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+        if (this.modelo.horaInicio && this.modelo.horaFin) {
+            iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+        }
         let bloques = this.modelo.bloques;
         this.alertas = [];
         let totalBloques = 0;
+        // Verifico que ningún profesional esté asignado a otra agenda en ese horario
+        if (iniAgenda && finAgenda && this.modelo.profesionales) {
+            this.modelo.profesionales.forEach((profesional, index) => {
+                this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
+                    subscribe(agendas => {
+                        cantidad = agendas.length;
+                        if (cantidad > 0) {
+                            this.alertas.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
+                        }
+                    });
+            });
+        }
         bloques.forEach((bloque, index) => {
             let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
             let fin = this.combinarFechas(this.fecha, bloque.horaFin);
@@ -546,7 +555,6 @@ export class AgendaComponent implements OnInit {
     onReturn(agenda: IAgenda): void {
         this.showAgenda = true;
         this.showBuscarAgendas = false;
-
         this.cargarAgenda(agenda);
     }
 }

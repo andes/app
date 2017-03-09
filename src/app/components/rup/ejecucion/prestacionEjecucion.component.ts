@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 // import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -14,6 +15,7 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 import { Plex } from '@andes/plex';
+import { MenuItem } from '@andes/plex/src/lib/app/menu-item.class';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -22,16 +24,25 @@ import { Plex } from '@andes/plex';
 export class PrestacionEjecucionComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
     @Input() prestacion: IPrestacionPaciente;
     listaProblemas: IProblemaPaciente[] = [];
     problemaBuscar: String = '';
 
     tiposProblemas = [];
     tipoProblema = null;
-    problemaEvolucionar: any;
+    problemaTratar: any;
+
+    items = [
+        new MenuItem({ label: 'Ir a inicio', icon: 'dna', route: '/incio' }),
+        new MenuItem({ label: 'Ir a ruta inexistente', icon: 'flag', route: '/ruta-rota' }),
+        new MenuItem({ divider: true }),
+        new MenuItem({ label: 'Item con handler', icon: 'wrench', handler: (() => { alert('Funciona!'); return false; }) })
+    ];
+
 
     showEvolucionar = false;
+    showTransformar = false;
+    showEnmendar = false;
     showEvolTodo = false;
     showValidar = false;
     data: Object = {};
@@ -68,11 +79,104 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.cargarDatosPrestacion();
     }
 
     loadTiposProblemas(event) {
         this.servicioTipoProblema.get({}).subscribe(event.callback);
+    }
+
+    updatePrestacion() {
+        // actualizamos la prestacion de origen
+        this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
+            // this.prestacion = prestacionActualizada;
+            // buscamos la prestacion actualizada con los datos populados
+            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+            });
+        });
+    }
+
+    // lista de problemas
+    existeProblema(tipoProblema: ITipoProblema) {
+        return this.listaProblemas.find(elem => elem.tipoProblema.nombre == tipoProblema.nombre)
+    }
+
+    guardarProblema(nuevoProblema) {
+        this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
+            if (resultado) {
+                this.listaProblemas.push(resultado);
+
+                // asignamos el problema a la prestacion de origen
+                // this.prestacion.solicitud.listaProblemas.push(resultado);
+                this.updatePrestacion();
+            } else {
+                this.plex.alert('Error al intentar asociar el problema a la consulta');
+            }
+        });
+    }
+
+    agregarProblema() {
+        if (!this.existeProblema(this.tipoProblema)) {
+            let nuevoProblema = {
+                id: null,
+                tipoProblema: this.tipoProblema,
+                idProblemaOrigen: null,
+                paciente: this.prestacion.paciente.id,
+                fechaInicio: new Date(),
+                activo: true,
+                evoluciones: []
+            };
+
+            this.guardarProblema(nuevoProblema);
+
+        } else {
+            this.plex.alert('EL problema ya existe para esta consulta');
+        }
+    }
+
+    eliminarProblema(problema: IProblemaPaciente) {
+        this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
+
+            if (resultado) {
+
+            }
+        });
+    }
+
+    evolucionarProblema(problema) {
+        this.showEvolucionar = true;
+        this.problemaTratar = problema;
+
+    }
+
+    transformarProblema(problema) {
+        this.showTransformar = true;
+        this.problemaTratar = problema;
+    }
+
+    evolucionarTodo() {
+        this.showEvolucionar = false;
+        this.showEvolTodo = true;
+    }
+    // Fin lista de problemas 
+
+    onReturn(dato: IProblemaPaciente) {
+        this.showEvolucionar = false;
+    }
+
+    onReturnTransformar(dato: IProblemaPaciente) {
+        this.showTransformar = false;
+        this.listaProblemas.push(dato);
+        // asignamos el problema a la prestacion de origen
+        // this.prestacion.solicitud.listaProblemas.push(resultado);
+        this.updatePrestacion();
+    }
+
+    onReturnTodos(dato: IProblemaPaciente[]) {
+        this.showEvolucionar = false;
+        this.showEvolTodo = false;
     }
 
     cargarDatosPrestacion() {
@@ -361,86 +465,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     // Fin prestaciones futuras / Plan
 
-    updatePrestacion() {
-        // actualizamos la prestacion de origen
-        this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
-            // this.prestacion = prestacionActualizada;
-            // buscamos la prestacion actualizada con los datos populados
-            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-            });
-        });
-    }
 
-
-    // lista de problemas
-    existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.nombre == tipoProblema.nombre)
-    }
-
-
-    guardarProblema(nuevoProblema) {
-        this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
-            if (resultado) {
-                this.listaProblemas.push(resultado);
-
-                // asignamos el problema a la prestacion de origen
-                // this.prestacion.solicitud.listaProblemas.push(resultado);
-                this.updatePrestacion();
-            } else {
-                this.plex.alert('Error al intentar asociar el problema a la consulta');
-            }
-        });
-    }
-
-    agregarProblema() {
-        if (!this.existeProblema(this.tipoProblema)) {
-            let nuevoProblema = {
-                id: null,
-                tipoProblema: this.tipoProblema,
-                idProblemaOrigen: null,
-                paciente: this.prestacion.paciente,
-                fechaInicio: new Date(),
-                activo: true,
-                evoluciones: []
-            };
-
-            this.guardarProblema(nuevoProblema);
-
-        } else {
-            this.plex.alert('EL problema ya existe para esta consulta');
-        }
-    }
-
-    eliminarProblema(problema: IProblemaPaciente) {
-        this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
-
-            if (resultado) {
-
-            }
-        });
-    }
-
-    evolucionarProblema(problema) {
-        this.showEvolucionar = true;
-        this.problemaEvolucionar = problema;
-
-    }
-
-    evolucionarTodo() {
-        this.showEvolucionar = false;
-        this.showEvolTodo = true;
-    }
-    // Fin lista de problemas 
-
-    onReturn(dato: IProblemaPaciente) {
-        this.showEvolucionar = false;
-    }
-
-    onReturnTodos(dato: IProblemaPaciente[]) {
-        this.showEvolucionar = false;
-        this.showEvolTodo = false;
-    }
 
 
     // onReturnValores(valor: Number, tipoPrestacion: any) {

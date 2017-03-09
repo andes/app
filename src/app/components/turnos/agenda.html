@@ -18,7 +18,7 @@
       <div class="row">
         <div class="col-md-12">
           <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido">
+            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
             </plex-select>
         </div>
       </div>
@@ -70,7 +70,9 @@
       <div class="row">&nbsp;</div>
       <div class="row">
         <div class="col-sm-12">
-          <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          </plex-button>
+          <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
           </plex-button>
           <plex-button icon="mdi mdi-content-copy" label="Clonar" (click)="onClon()" title="Clonar">
           </plex-button>
