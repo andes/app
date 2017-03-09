@@ -1,7 +1,7 @@
 
-import { PacienteComponent } from './../paciente/paciente.component';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { PacienteComponent } from './../../paciente/paciente.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { IPaciente } from "../../../interfaces/IPaciente";
 
 
 @Component({

@@ -1,5 +1,6 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from '../../interfaces/IPaciente';
+import { IPaciente } from "../../../interfaces/IPaciente";
+
 
 @Component({
     selector: 'rup-observaciones',

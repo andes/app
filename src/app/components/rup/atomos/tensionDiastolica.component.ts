@@ -1,5 +1,5 @@
-import { IPaciente } from '../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { IPaciente } from "../../../interfaces/IPaciente";
 
 @Component({
     selector: 'rup-tension-diastolica',
@@ -35,7 +35,7 @@ export class TensionDiastolicaComponent implements OnInit {
         let BajaTensionDiastolica;
         let tensionSistolica = this.data[this.tipoPrestacion.key];
 
-        let mensaje : any = {
+        let mensaje: any = {
             texto: '',
             class: 'outline-danger'
         };
