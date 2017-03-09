@@ -25,14 +25,14 @@ import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNac
 import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
 import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
-import { PesoComponent } from './components/rup/peso.component';
-import { SaturacionOxigenoComponent } from './components/rup/saturacionOxigeno.component';
-import { TallaComponent } from './components/rup/talla.component';
-import { TemperaturaComponent } from './components/rup/temperatura.component';
-import { FrecuenciaCardiacaComponent } from './components/rup/frecuenciaCardiaca.component';
-import { FrecuenciaRespiratoriaComponent } from './components/rup/frecuenciaRespiratoria.component';
-import { TensionSistolicaComponent } from './components/rup/tensionSistolica.component';
-import { TensionDiastolicaComponent } from './components/rup/tensionDiastolica.component';
+import { PesoComponent } from './components/rup/atomos/peso.component';
+import { SaturacionOxigenoComponent } from './components/rup/atomos/saturacionOxigeno.component';
+import { TallaComponent } from './components/rup/atomos/talla.component';
+import { TemperaturaComponent } from './components/rup/atomos/temperatura.component';
+import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaCardiaca.component';
+import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
+import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
+import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
@@ -66,7 +66,7 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
-import { ObservacionesComponent } from './components/rup/observaciones.component';
+import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 
 // Servicios RUP //
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
