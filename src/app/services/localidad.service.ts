@@ -2,7 +2,7 @@ import { AppSettings } from './../appSettings';
 import { ILocalidad } from './../interfaces/ILocalidad';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';

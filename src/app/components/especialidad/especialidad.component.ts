@@ -4,8 +4,8 @@ import { EspecialidadService } from './../../services/especialidad.service';
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+import { Plex } from '@andes/plex';
+
 
 const limit = 25;
 

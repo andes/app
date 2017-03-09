@@ -2,7 +2,7 @@ import { AppSettings } from './../../appSettings';
 import { IListaEspera } from './../../interfaces/turnos/IListaEspera';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';

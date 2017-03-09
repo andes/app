@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { FormBuilder } from '@angular/forms';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
@@ -74,7 +74,8 @@ export class AgendaComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         // this.servicioPrestacion.get({}).subscribe(event.callback);
-        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
+        debugger;
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
     loadProfesionales(event) {

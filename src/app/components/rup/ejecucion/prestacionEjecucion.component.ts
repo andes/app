@@ -13,8 +13,7 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 // import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
-import { Plex } from 'andes-plex/src/lib/core/service';
-// import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'rup-prestacionEjecucion',

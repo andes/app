@@ -20,9 +20,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 // Globales
-import { PlexModule } from 'andes-plex/src/lib/module';
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { PlexModule } from '@andes/plex';
+import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
 
 // Servicios
 // ... Tablas Maestras

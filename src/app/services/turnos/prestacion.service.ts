@@ -1,4 +1,4 @@
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 import { AppSettings } from './../../appSettings';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Observable } from 'rxjs/Rx';

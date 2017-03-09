@@ -1,5 +1,5 @@
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { Component, OnInit, Input } from '@angular/core';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
