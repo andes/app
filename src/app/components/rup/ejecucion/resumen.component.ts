@@ -70,6 +70,7 @@ export class ResumenComponent implements OnInit {
             tipo: 'ejecucion'
         });
 
+        this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
         this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
             //this.prestacion = prestacion;
             this.showEjecucion = true;
