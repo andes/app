@@ -7,8 +7,9 @@
             <div class="col-md-12">
               <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
             </div>
+            <br>
             <div class="col-md-4">
-              <plex-select [(ngModel)]="opciones.prestacion" (getData)="loadPrestaciones($event)" label="Prestaciones" (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col-md-4">
@@ -45,7 +46,7 @@
             <div class="row">
               <div class="col-md-8" align="center">
                 <div class="box">
-                  <div class="box-content" align="center" title="{{prestaciones}}">
+                  <div class="box-content" align="center" title="{{tipoPrestaciones}}">
                     <h1>
                       <small> 
                           <div *ngFor="let profesional of agenda.profesionales let i=index">
@@ -123,7 +124,7 @@
               <div class="list-group">
                 <a *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
-                    <div class="col-md-6" *ngIf="busqueda.prestacion"><label>Prestacion: &nbsp;</label> <span>{{busqueda.prestacion.nombre}} </span><br></div>
+                    <div class="col-md-6" *ngIf="busqueda.tipoPrestacion"><label>Tipo de Prestación: &nbsp;</label> <span>{{busqueda.tipoPrestacion.nombre}} </span><br></div>
                     <div class="col-md-6" *ngIf="busqueda.profesional"><label>Profesional: &nbsp;</label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
                   </div>
                 </a>
@@ -170,8 +171,8 @@
                     <div class="col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: &nbsp;</label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12" *ngIf="alternativa.prestaciones"><label>Prestacion: &nbsp;</label>
-                      <span *ngFor="let prestacion of alternativa.prestaciones">{{prestacion.nombre}} - </span><br></div>
+                    <div class="col-md-12" *ngIf="alternativa.tipoPrestaciones"><label>Tipo de Prestación: &nbsp;</label>
+                      <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span><br></div>
                   </div>
                   <div class="row">
                     <div class="col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: &nbsp;</label>
@@ -217,9 +218,9 @@
                   <div class="col-md-12">
                     <br>
                     <label>Prestación: </label>
-                    <div *ngIf="turno.prestacion">{{turno.prestacion.nombre}}</div>
-                    <div *ngIf="!turno.prestacion">
-                      <plex-select [(ngModel)]="turnoPrestacion" [data]="bloque.prestaciones">
+                    <div *ngIf="turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</div>
+                    <div *ngIf="!turno.tipoPrestacion">
+                      <plex-select [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones">
                       </plex-select>
                     </div>
                   </div>

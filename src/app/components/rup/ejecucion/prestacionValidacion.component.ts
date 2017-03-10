@@ -13,8 +13,7 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
-import { Plex } from 'andes-plex/src/lib/core/service';
-import { PlexValidator } from 'andes-plex/src/lib/core/validator.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -46,9 +45,9 @@ export class PrestacionValidacionComponent implements OnInit {
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
         });
-        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
-            this.prestacionesSolicitadas = resultado;
-        });
+        // this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
+        //     this.prestacionesSolicitadas = resultado;
+        // });
     }
 
     filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
@@ -61,7 +60,8 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
-        return this.prestacionesEjecutadas.filter(data => {
+        // return this.prestacionesEjecutadas.filter(data => {
+        return this.prestacion.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
                 return data;
         });
@@ -77,7 +77,7 @@ export class PrestacionValidacionComponent implements OnInit {
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
             var listaFinal = [];
-            debugger;
+
             if (resultado) {
                 this.prestacionesEjecutadas.forEach(prestacion => {
                     prestacion.estado.push({
@@ -101,16 +101,9 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         }
                     });
-
-
-
                 })
             }
         });
-
-
-
-
     }
 
 }

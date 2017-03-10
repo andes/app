@@ -2,8 +2,22 @@
   <div class="col-md-5">
     <plex-box type="success" title="Agenda">
       <div class="row">
+        <div class="col-md-4">
+          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
+          </plex-datetime>
+        </div>
+        <div *ngIf="modelo.fecha" class="col-md-4">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
+          </plex-datetime>
+        </div>
+        <div *ngIf="modelo.fecha" class="col-md-4">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
+          </plex-datetime>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.prestaciones" name="prestaciones" label="Tipos de Prestación" (getData)="loadPrestaciones($event)"
+          <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
             placeholder="Seleccione las prestaciones" [multiple]="true" (change)="cambioPrestaciones()">
             </plex-select>
         </div>
@@ -18,22 +32,8 @@
       <div class="row">
         <div class="col-md-12">
           <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido">
+            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
             </plex-select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
-          </plex-datetime>
         </div>
       </div>
       <div class="row">&nbsp;</div>
@@ -54,11 +54,11 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!--<div class="row">
         <div class="col-md-6">
           <plex-bool [(ngModel)]="modelo.intercalar" label="Permitir intercalar bloques" name="modelo.intercalar" (click)="intercalar()"></plex-bool>
         </div>
-      </div>
+      </div>-->
       <br>
       <div class="row">
         <div class="col-md-12">
@@ -70,7 +70,9 @@
       <div class="row">&nbsp;</div>
       <div class="row">
         <div class="col-sm-12">
-          <plex-button icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          </plex-button>
+          <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
           </plex-button>
           <plex-button icon="mdi mdi-content-copy" label="Clonar" (click)="onClon()" title="Clonar">
           </plex-button>
@@ -118,7 +120,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="row" *ngFor="let unaPrestacion of elementoActivo.prestaciones; let i=index">
+            <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
               <div class="col-md-12">
                 <plex-bool [(ngModel)]="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
                 </plex-bool>

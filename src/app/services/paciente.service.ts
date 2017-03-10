@@ -2,7 +2,7 @@ import { AppSettings } from './../appSettings';
 import { IPaciente } from './../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';
@@ -99,10 +99,10 @@ export class PacienteService {
     }
   }
 
-  searchMatch(field: String, dto: any): any {
-
+  searchMatch(field: String, dto: any, modo: String, porcentaje: boolean): any {
+    debugger
     let bodyString = { 'objetoBusqueda': dto };
-    return this.server.post(this.pacienteUrlSearch + '/match/' + field, bodyString);
+    return this.server.post(this.pacienteUrlSearch + '/match/' + field + '/'+ modo + '/'+ porcentaje , bodyString);
 
   }
 

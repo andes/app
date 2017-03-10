@@ -16,7 +16,7 @@ import * as enumerados from './../../utils/enumerados';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 
 
 
@@ -51,7 +51,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
   familiaresPacientes = [];
+  pacientesSimilares = [];
   validado: boolean = false;
+  disableGuardar: boolean = false;
+  sugerenciaAceptada: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -106,13 +109,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.seleccion.estado === 'validado') {
         this.validado = true;
       }
-
-      this.seleccion.relaciones.forEach(rel => {
-        this.addRelacion();
-      });
-      this.seleccion.contacto.forEach(rel => {
-        this.addContacto();
-      });
+      if (this.seleccion.relaciones) {
+        this.seleccion.relaciones.forEach(rel => {
+          this.addRelacion();
+        });
+      }
+      if (this.seleccion.contacto) {
+        this.seleccion.contacto.forEach(rel => {
+          this.addContacto();
+        });
+      }
 
       this.pacienteService.getById(this.seleccion.id)
         .subscribe(resultado => {
@@ -140,13 +146,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
               let dtoBusqueda = {
                 'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
               };
-              this.pacienteService.searchMatch('documento', dtoBusqueda)
+              this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest", false)
                 .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
             }
           }
         })
       });
+
+
   }
+
 
   iniContacto(rank: Number) {
     // Inicializa los datos del contacto
@@ -279,7 +288,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     var lista = [];
     debugger
     if (valid) {
-      let operacionPac: Observable<IPaciente>;
+
       // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
       model.sexo = (typeof model.sexo == 'string') ? model.sexo : model.sexo.id;
       model.estadoCivil = (typeof model.estadoCivil == 'string') ? model.estadoCivil : model.estadoCivil.id;
@@ -306,43 +315,53 @@ export class PacienteCreateUpdateComponent implements OnInit {
       });
       // Se controla si existe el paciente
       if (!model.id) {
+
         let dtoBusqueda = {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
           'fechaNacimiento': model.fechaNacimiento
         };
-        debugger
-        this.pacienteService.searchMatch('documento', dtoBusqueda)
-          .subscribe(value => {
-            debugger; lista = value;
-            if (lista.length > 0) {
-              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique los datos');
+        this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
+          .subscribe(valor => {
 
+            this.pacientesSimilares = valor; console.log(valor)
+            if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+              this.disableGuardar = true;
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
             } else {
-              this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-                if (resultado) {
-                  debugger
-                  operacionPac = this.pacienteService.save(model);
-                  operacionPac.subscribe(result => {
-                    this.data.emit(result)
-                  });
-                }
-              })
+              this.save(model);
             }
           });
+      } else {
+        this.save(model);
       }
-      
-      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-                if (resultado) {
-                  debugger
-                  operacionPac = this.pacienteService.save(model);
-                  operacionPac.subscribe(result => {
-                    this.data.emit(result)
-                  });
-                }
-              })
 
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
+    }
+  }
+
+  save(model: any) {
+    let operacionPac: Observable<IPaciente>;
+    if (this.sugerenciaAceptada) {
+       this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
+        if (resultado) {
+          debugger
+          operacionPac = this.pacienteService.save(model);
+          operacionPac.subscribe(result => {
+            this.data.emit(result)
+          });
+        }
+      })
+    } else {
+      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+        if (resultado) {
+          debugger
+          operacionPac = this.pacienteService.save(model);
+          operacionPac.subscribe(result => {
+            this.data.emit(result)
+          });
+        }
+      })
     }
   }
 
@@ -350,6 +369,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.data.emit(null)
   }
 
-
+  onSelect(paciente: IPaciente) {
+    this.seleccion = paciente;
+     if (this.seleccion.estado === 'validado') {
+        this.validado = true;
+      }
+    this.createForm.patchValue(this.seleccion);
+    this.disableGuardar = false;
+    this.sugerenciaAceptada = true;
+  }
 
 }

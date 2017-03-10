@@ -1,4 +1,4 @@
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';

@@ -9,7 +9,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 
 @Injectable()
 export class TipoProblemaService {

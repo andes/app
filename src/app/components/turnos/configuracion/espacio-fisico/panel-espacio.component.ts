@@ -1,5 +1,5 @@
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { Component, OnInit, Input } from '@angular/core';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
@@ -58,7 +58,6 @@ export class PanelEspacioComponent implements OnInit {
                 this.sinConsultorio = agendas.filter(function (value) {
                     return (!value.espacioFisico);
                 });
-                console.log('sin consultorios ', this.sinConsultorio);
                 this.llenarConsultorios();
             },
             err => {
@@ -76,8 +75,8 @@ export class PanelEspacioComponent implements OnInit {
         let diferencia = (this.fin.getTime() - this.inicio.getTime()) / 60000;
         let cantidadBloques = diferencia / this.unidad;
         this.sinConsultorio.forEach((unconsul, index) => {
-                unconsul.color = this.colores[index + this.agendas.length];
-            });
+            unconsul.color = this.colores[index + this.agendas.length];
+        });
 
         for (let j = 0; j < cantidadBloques; j++) {
             let lista = [];
@@ -118,12 +117,12 @@ export class PanelEspacioComponent implements OnInit {
                     function (a, b) {
                         return a.espacio.nombre - b.espacio.nombre;
                     }
-                ), // aca tendria q ordenar la lista
+                )
             };
             this.horarios.push(elemento);
             inicioM.add(this.unidad, 'm');
         }
-        console.log('horarios ', this.horarios);
+        // console.log('horarios ', this.horarios);
     }
 
     public seleccionarAgenda(agenda) {
@@ -167,7 +166,17 @@ export class PanelEspacioComponent implements OnInit {
                     this.agendaSel.rows = rows;
                     // espacio.seleccionado = false;
                     this.agendaSel.espacioFisico = espacio;
-                    this.agendasModificar.push({id: this.agendaSel.id, espacioFisico: espacio});
+                    let indice = this.agendasModificar.map(
+                        function (obj) {
+                            return obj.id;
+                        }
+                    ).indexOf(this.agendaSel.id);
+                    if (indice >= 0) {
+                        this.agendasModificar[indice].espacioFisico = espacio;
+                    } else {
+                        this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
+                    }
+                    //this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
                     for (let i = i1Horarios; i < i2Horarios; i++) {
                         let ind = this.horarios[i].lista.map(function (obj) {
                             return obj.espacio.id;
@@ -198,8 +207,16 @@ export class PanelEspacioComponent implements OnInit {
         agenda.rows = 0;
         agenda.seleccionada = null;
         this.sinConsultorio.push(agenda);
-        this.agendasModificar.push({id: agenda.id, espacioFisico: null});
-        debugger
+        let indice = this.agendasModificar.map(
+            function (obj) {
+                return obj.id;
+            }
+        ).indexOf(agenda.id);
+        if (indice >= 0) {
+            this.agendasModificar[indice].espacioFisico = null;
+        } else {
+            this.agendasModificar.push({ id: agenda.id, espacioFisico: null });
+        }
         let indiceHorarios = this.horarios.indexOf(horario);
         let ii = this.horarios[indiceHorarios].lista.map(function (obj) {
             return obj.espacio.id;
@@ -215,18 +232,19 @@ export class PanelEspacioComponent implements OnInit {
                 { return (a.espacio.nombre > b.espacio.nombre) ? 1 : ((b.espacio.nombre > a.espacio.nombre) ? -1 : 0); }
             });
         }
-        console.log('Después de eliminar ', this.horarios[6].lista[8].espacio.nombre);
     }
 
     confirmar() { // TODO: verificar mensaje de ok
         let band = true;
         for (let i = 0; i < this.agendasModificar.length; i++) {
+            let espacio = this.agendasModificar[i].espacioFisico ?
+                { _id: this.agendasModificar[i].espacioFisico.id, nombre: this.agendasModificar[i].espacioFisico.nombre } : null;
             let patch = {
                 'op': 'editarAgenda',
-                'espacioFisico': this.agendasModificar[i].espacioFisico? 
-                { _id: this.agendasModificar[i].espacioFisico.id, nombre: this.agendasModificar[i].espacioFisico.nombre}: null
+                'espacioFisico': espacio
             };
             console.log('patch ', patch);
+            console.log('idAgenda ', this.agendasModificar[i].id);
             this.serviceAgenda.patch(this.agendasModificar[i].id, patch).subscribe(resultado => {
                 band = true;
             }, err => {

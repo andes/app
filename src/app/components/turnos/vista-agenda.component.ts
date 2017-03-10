@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';

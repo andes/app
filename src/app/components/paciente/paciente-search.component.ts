@@ -194,7 +194,7 @@ export class PacienteSearchComponent implements OnInit {
       'documento': dto.documento.toString(),
     }
 
-    this.pacienteService.searchMatch('documento', dtoBusqueda)
+    this.pacienteService.searchMatch('documento', dtoBusqueda, 'suggest',false)
       .subscribe(value => {
         this.pacientesLista = value
       });

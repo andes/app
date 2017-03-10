@@ -8,7 +8,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 
 @Injectable()
 export class ProblemaPacienteService {
@@ -22,7 +22,7 @@ export class ProblemaPacienteService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IProblemaPaciente[]> {
-        let url = this.problemaUrl + '/pacientes/' + params.idPaciente + '/problemas';
+        let url = this.problemaUrl + '/problemas';
         return this.server.get(url, { params: params, showError: true });
     }
 
@@ -32,8 +32,8 @@ export class ProblemaPacienteService {
      * @param {String} idPaciente Busca por Id de paciente
      * @param {String} idProblema Busca por Id del problema
      */
-    getById(idPaciente: String, idProblema: String): Observable<IProblemaPaciente> {
-        let url = this.problemaUrl + '/pacientes/' + idPaciente + '/problemas/' + idProblema;
+    getById(idProblema: String): Observable<IProblemaPaciente> {
+        let url = this.problemaUrl + '/problemas/' + idProblema;
         return this.server.get(url, null);
     }
 
@@ -61,6 +61,7 @@ export class ProblemaPacienteService {
     putAll(problemas: IProblemaPaciente[]) {
         return this.server.put(this.problemaUrl + '/problemas/', problemas);
     }
+
 
 
 }

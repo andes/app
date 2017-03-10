@@ -9,7 +9,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { Server } from 'andes-shared/src/lib/server/server.service';
+import { Server } from '@andes/shared';
 
 @Injectable()
 export class PrestacionPacienteService {
@@ -32,6 +32,15 @@ export class PrestacionPacienteService {
     getById(id: String): Observable<IPrestacionPaciente> {
         var url = this.prestacionesUrl + "/" + id;
         return this.server.get(url, null)
+    }
+
+    /**
+     * Metodo getById. Trae el objeto tipoPrestacion por su Id.
+     * @param {String} id Busca por Id
+     */
+    getByKey(params: any): Observable<IPrestacionPaciente[]> {
+        var url = this.prestacionesUrl + "/forKey/";
+        return this.server.get(url, { params: params, showError: true })
     }
 
     /**

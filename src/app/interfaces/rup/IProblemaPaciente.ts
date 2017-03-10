@@ -7,16 +7,19 @@ import { IPaciente } from './../IPaciente';
 export interface IProblemaPaciente {
     id: String,
     tipoProblema: ITipoProblema,
-    idProblemaOrigen: [String],
-    paciente: IPaciente,
+    idProblemaOrigen: String[],
+    paciente: String,
     fechaInicio: Date,
-    activo: Boolean,
     evoluciones: [{
         fecha: Date,
-        activo: Boolean,
         observacion: String,
-        profesional: [IProfesional],
+        profesional: IProfesional[],
         organizacion: IOrganizacion,
+        //ambito: // TODO
+        duracion: String,
+        vigencia: String,
+        // campo destinado a segundas opiniones o auditorias de las prestaciones
+        segundaOpinion: String[]
         //ambito: // TODO
     }]
 }

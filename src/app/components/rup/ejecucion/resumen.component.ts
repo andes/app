@@ -1,3 +1,4 @@
+import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
 import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
@@ -19,6 +20,9 @@ export class ResumenComponent implements OnInit {
     // prestacion: IPrestacionPaciente;
     idPrestacion: String;
     listaProblemas: IProblemaPaciente[] = [];
+    prestacionesPendientes: IPrestacionPaciente[] = [];
+    prestacionPeso: IPrestacionPaciente = null;
+    prestacionTalla: IPrestacionPaciente = null;
 
     showEjecucion = false;
 
@@ -29,6 +33,8 @@ export class ResumenComponent implements OnInit {
 
     ngOnInit() {
         this.loadProblemas();
+        this.loadPrestacionesPendientes();
+        this.cargarIndicadores();
     }
 
     loadProblemas() {
@@ -37,6 +43,26 @@ export class ResumenComponent implements OnInit {
         });
     }
 
+    loadPrestacionesPendientes() {
+        this.servicioPrestacionPaciente.get({ estado: "pendiente", idPaciente: this.prestacion.paciente.id, limit: 10 })
+            .subscribe(prestaciones => {
+                this.prestacionesPendientes = prestaciones;
+            });
+    }
+
+    cargarIndicadores() {
+        this.servicioPrestacionPaciente.getByKey({ key: "signosVitales.peso", idPaciente: this.prestacion.paciente.id })
+            .subscribe(prestacion => {
+                if (prestacion)
+                    this.prestacionPeso = prestacion[0];
+            });
+
+        this.servicioPrestacionPaciente.getByKey({ key: "talla", idPaciente: this.prestacion.paciente.id })
+            .subscribe(prestacion => {
+                if (prestacion)
+                    this.prestacionTalla = prestacion[0];
+            });
+    }
 
     iniciarPrestacion() {
         this.prestacion.estado.push({
@@ -59,4 +85,12 @@ export class ResumenComponent implements OnInit {
         this.showEjecucion = false;
         this.evtData.emit(null);
     }
+
+    onReturn(prestacion) {
+        this.showEjecucion = false;
+        this.loadProblemas();
+        this.loadPrestacionesPendientes();
+        this.cargarIndicadores();
+    }
+
 }

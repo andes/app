@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Plex } from 'andes-plex/src/lib/core/service';
+import { Plex } from '@andes/plex';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';

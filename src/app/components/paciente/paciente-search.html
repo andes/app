@@ -198,24 +198,10 @@
       <!--col-md-5"-->
     </div>
   </div>
-  <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
-    <div class="panel panel-default">
-      <div class="clear"></div>
-      <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
-    </div>
-    <!--*ngIf="!showcreate"-->
-
-   <!-- <div class="col-md-12" *ngIf="showcreate && !pacientesScan">
-      <div class="panel panel-default">
-        <div class="clear"></div>
-        <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
-      </div>
-    </div>-->
-  </div>
-  <div class="col-md-12" *ngIf="(showcreate && pacientesScan)">
-    <div class="panel panel-default">
-      <div class="clear"></div>
-      <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
-    </div>
-  </div>
+</div>
+<div *ngIf="showcreate && !pacientesScan">
+  <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
+</div>
+<div *ngIf="(showcreate && pacientesScan)">
+  <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
 </div>

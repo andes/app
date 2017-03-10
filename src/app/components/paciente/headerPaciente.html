@@ -1,10 +1,19 @@
 <style>
-.celeste {color: #00A8E0;}
-.gris {color: #b1b1b1;}
-
-.bl{border-left: 1px solid #cccccc;}
-
-.capitalize{text-transform: capitalize;}
+    .celeste {
+        color: #00A8E0;
+    }
+    
+    .gris {
+        color: #b1b1b1;
+    }
+    
+    .bl {
+        border-left: 1px solid #cccccc;
+    }
+    
+    .capitalize {
+        text-transform: capitalize;
+    }
 </style>
 
 <plex-box type="primary">
@@ -20,14 +29,12 @@
 
         <div class="col-md-2 bl capitalize">
             <b>Estado</b>
-            <br />
-            {{paciente.estado}}
+            <br /> {{paciente.estado}}
         </div>
-        
+
         <div class="col-md-2 bl" *ngIf="paciente.financiador[0]">
             <b>Obra social</b>
-            <br />
-            {{paciente.financiador[0].entidad.nombre}}
+            <br /> {{paciente.financiador[0].entidad.nombre}}
         </div>
     </div>
 </plex-box>
