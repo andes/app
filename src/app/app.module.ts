@@ -49,6 +49,9 @@ import {
   TurnosComponent
 } from './components/turnos/turnos.component';
 import {
+  LiberarTurnoComponent
+} from './components/turnos/liberar-turno.component';
+import {
   VistaAgendaComponent
 } from './components/turnos/vista-agenda.component';
 import {
@@ -327,7 +330,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    RupComponent,
+    RupComponent, LiberarTurnoComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

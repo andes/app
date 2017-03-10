@@ -26,6 +26,7 @@ export class TurnosComponent implements OnInit {
     @Output() reasignaTurno = new EventEmitter<boolean>();
 
     showTurnos: boolean = true;
+    public showLiberarTurno: boolean = false;
 
     // smsEnviado: boolean = false;
     // smsLoader: boolean = false;
@@ -35,17 +36,11 @@ export class TurnosComponent implements OnInit {
     tablaTurnos: boolean = false;
     pacienteCancelado: String;
 
-    verNota: boolean = false;
-
-    // accionesTurnosAsignado: any = {};
-    // accionesTurnosDisponibles: any = {};
-    // accionesDarAsistencia: any = {};
-
+    agenda: IAgenda;
+    turno: ITurno;
 
     public pacientesSeleccionados: any[] = [];
-
     public turnos = [];
-
     public bloques = [];
 
     private _selectAll;
@@ -57,6 +52,7 @@ export class TurnosComponent implements OnInit {
 
         for (let x = 0; x < this.turnos.length; x++) {
             this.actualizarBotonesTurnos(this.turnos[x]);
+            this.turnos[x].turnoLiberado = false;
         }
     }
 
@@ -92,9 +88,7 @@ export class TurnosComponent implements OnInit {
             smsEnviado: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado),
             smsLoader: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado) && (turno.smsLoader),
 
-            verNota: true,
-
-            listaEspera: (turno.estado === 'disponible') && (turno.estado === 'bloqueado') && (!turno.paciente)
+            verNota: true
         };
 
     }
@@ -137,6 +131,16 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    liberarTurno(agenda: any, turno: any) {
+        this.agenda = agenda;
+        this.turno = turno;
+
+        this.confirmaLiberarTurno = false;
+
+        this.showTurnos = false;
+        this.showLiberarTurno = true;
+    }
+
     eventosTurno(agenda: IAgenda, turno: any, event) {
         debugger;
         let btnClicked;
@@ -154,16 +158,15 @@ export class TurnosComponent implements OnInit {
 
             this.confirmaLiberarTurno = false;
 
-            this.pacientesSeleccionados.push(turno);
-            this.enviarSMS();
+            /*Se comenta para que no se rompa la API*/
+            // this.pacientesSeleccionados.push(turno);
+            // this.enviarSMS();
         } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
 
             patch = {
                 'op': 'asistenciaTurno',
                 'idTurno': turno.id
             };
-
-            this.actualizarBotonesTurnos(turno);
 
         } else if (btnClicked === 'bloquearTurno') {
             patch = {
@@ -185,9 +188,8 @@ export class TurnosComponent implements OnInit {
             this.turnos = this.ag.bloques[0].turnos;
 
             for (let x = 0; x < this.turnos.length; x++) {
-                debugger;
                 this.actualizarBotonesTurnos(this.turnos[x]);
-            }            
+            }
         },
             err => {
                 if (err) {
@@ -220,7 +222,7 @@ export class TurnosComponent implements OnInit {
 
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             agenda = resultado;
-            //this.ag.bloques = agenda.bloques;
+
             this.plex.alert('El paciente paso a Lista de Espera');
             debugger;
         });
@@ -271,39 +273,6 @@ export class TurnosComponent implements OnInit {
                 }
             });
     }
-
-
-    /* Muestra Botonesss */
-
-
-
-
-
-    // agregarNota(turno: any) {
-
-    //     if (!turno.verNotaVisible) {
-    //         this.accionesTurnosVsible(turno);
-
-    //         if (turno.paciente) {
-    //             this.turnoAsignado(turno);
-    //         } else {
-    //             this.turnoDisponible(turno);
-    //         }
-    //     } else {
-    //         this.accionesTurnosVsible(turno);
-
-    //         if (turno.paciente)
-    //             turno.nombrePacienteVisible = false;
-    //         else
-    //             turno.estadoDisponibleVisible = false;
-
-    //         turno.verNotaVisible = false;
-    //         turno.txtNotaVisible = false;
-    //         turno.btnGuardarNotaVisible = false;
-    //     }
-
-    //     turno.verNota = false;
-    // }
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
         public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
