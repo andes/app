@@ -1,0 +1,375 @@
+<!-- js pestañas -->
+<script type="javascript">
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+</script>
+
+<div class="wrapper">
+    <!-- Cablezal -->
+    <header class="main-header">
+
+        <!-- /.Cabezal -->
+        <nav class="">
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Modal fondo blanco -->
+            <div class="box">
+              <div class="row">
+              <!-- Botones y etiquetas -->
+                <div class="col-md-12">
+                    <h3 class="box-title-principal">Botones y etiquetas</h3>
+                        <!-- Botones -->
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="box-title-secundario-with-border">Botones</div>
+                                <button type="button" class="d-inline btn flat btn-info">Evolucionar todos los problemas</button>
+                                <button type="button" class="d-inline btn flat btn-success">Confirmar </button>
+                                <button type="button" class="d-inline btn flat btn-danger">Cancelar</button>
+                                <button type="button" class="d-inline btn flat btn-inactivo">Inactvo</button>
+                             </div>
+                        <!-- /.Botones -->
+                        <!-- Etiquetas -->
+                              <div class="col-md-6">
+                                <div class="box-title-secundario-with-border">Etiquetas</div>
+                                <button type="button" class="d-inline btn-md badge outline-success">Resultados disponibles</button>
+                                <button type="button" class="d-inline btn-md badge outline-warning"> Tiene prestaciones sin asignar</button>
+                                <button type="button" class="d-inline btn-md badge outline-danger">Crónico</button>
+                             </div>
+                        <!-- /.Etiquetas -->
+                            </div>
+                        </div>
+                    <div class="col-md-12">
+                        <!-- Botones con iconos-->
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="dropdown-divider"></div>
+                                <div class="box-title-secundario-with-border">Botones con elementos icónicos</div>
+                                <button type="button" class="d-inline btn flat btn-info"><i ng-reflect-class-name="mdi mdi-link mdi-md" class="mdi mdi-link mdi-md"></i> Asignar a problema</button>
+                                <button type="button" class="d-inline btn flat btn-success"><i ng-reflect-class-name="mdi mdi-arrow-right mdi-md" class="mdi mdi-arrow-right mdi-md"></i> Seguir</button>
+                                <button type="button" class="d-inline btn flat btn-warning"><i ng-reflect-class-name="mdi mdi-border-color mdi-md" class="mdi mdi-border-color mdi-md"></i> Editar</button>
+                                <button type="button" class="d-inline btn flat btn-danger"><i ng-reflect-class-name="mdi mdi-arrow-left mdi-md" class="mdi mdi-arrow-left mdi-md"></i> Volver</button>
+                             </div>
+                        <!-- /.Botones con iconos-->
+                        <!-- Etiquetas con iconos -->
+                              <div class="col-md-6">
+                                <div class="dropdown-divider"></div>
+                                <div class="box-title-secundario-with-border">Etiquetas con elementos icónicos</div>
+                                <button type="button" class="d-inline btn-md badge outline-success"><i ng-reflect-class-name="mdi mdi-link mdi-md" class="mdi mdi-link mdi-md"></i> La prestación ha sido asignada exitosamente</button>
+                                <button type="button" class="d-inline btn-md badge outline-warning"><i ng-reflect-class-name="mdi mdi-link-off mdi-md" class="mdi mdi-alert-outline mdi-md"></i> Prestación desvinculada</button>
+                                <button type="button" class="d-inline btn-md badge outline-danger"><i ng-reflect-class-name="mdi mdi-delete-forever mdi-md" class="mdi mdi-delete-forever mdi-md"></i> Prestación eliminada</button>
+                             </div>
+                        <!-- /.Etiquetas con iconos-->
+                            </div>
+                        </div>
+                <!-- /.Botones y etiquetas -->
+              </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+            <!-- Modal fondo blanco -->
+            <div class="box">
+              <div class="row">
+                <div class="col-md-12">
+                    <h3 class="box-title-principal">Inputs:<span class="text-muted"> Variaciones</span></h3>
+                    <!-- Input con botón icónico -->
+                    <div class="row">
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Inputs con botón icónico</div>
+                        <div class="input-group input-group-sm">
+                        <input type="text" name="table_search" class="form-control" placeholder="Agregar problema">
+                        <div class="input-group-btn">
+                        <button type="button" class="btn flat btn-info btn-sm"><i class="mdi mdi-plus mdi-md"></i></button>
+                        </div>
+                        </div>                        
+                    </div>
+                <!-- /.Input con botón icónico-->
+                <!-- Input con icono -->
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Inputs con elementos icónicos</div>
+                                    <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-addon">kg.</span>
+                                    </div>             
+                        </div>
+                <!-- /.Input con icono -->
+                <!-- Input con alerta -->
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Inputs con alertas</div>
+                                    <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-addon">cm.</span>
+                                    </div>
+                                    <button type="button" class="badge alert"><i ng-reflect-class-name="mdi mdi-alert mdi-md" class="mdi mdi-alert mdi-md"></i> Debe ingresar un valor</button>                 
+                        </div>
+                <!-- /.Input con alerta -->
+                <!-- Input con botón textual -->
+                    <div class="col-md-8">
+                        <div class="box-title-secundario-with-border">Inputs con botón textual</div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control">
+                                <button type="button" class="d-inline btn flat btn-info"><i ng-reflect-class-name="mdi mdi-account-plus mdi-md" class="mdi mdi-account-plus mdi-md"></i> Agregar paciente</button>                                
+                            </div>
+                        </div>
+                <!-- /.Input con botón textual -->
+                <!-- Input con popover -->
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Inputs con popover</div>
+                            <div class="input-group input-group-md">
+                            <input type="text" class="form-control">
+                            <button type="button" class="d-inline btn flat btn-info"> Buscar</button>                                
+                            </div>
+                        </div>
+                <!-- /.Input con popover -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+        <!-- Listados -->
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+            <!-- Modal fondo blanco -->
+            <div class="box">
+              <div class="row">
+                <div class="col-md-12">
+                    <h3 class="box-title-principal">Listados</h3>
+                    <!-- Listado standard -->
+                    <div class="row">
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Listado standard</div>
+                        <!-- Elemento Problema -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                  <ul class="list-group">
+                                    <li class="list-group-item justify-content-between">
+                                      <h4 class="box-title-elemento">Hiperuricemia
+                                      <br>
+                                      <small>Descripción del problema</small>
+                                      </h4>
+                                  <!-- Menu Elemento -->
+                                      <button type="button" class="btn-contextual" data-widget="" data-toggle="tooltip" title="Eliminar problema" data-original-title="">
+                                        <i ng-reflect-class-name="mdi mdi-dots-horizontal" class="mdi mdi-dots-horizontal"></i>
+                                      </button>
+
+                                  </li>
+                                </ul>
+                                  <!-- /.Menu Elemento -->
+                          </div>
+                        </div>
+                      <!-- /.Elemento Problema -->
+                      <!-- Elemento Problema -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                  <ul class="list-group">
+                                    <li class="list-group-item justify-content-between">
+                                      <h4>
+                                      <span class="badge btn-md badge outline-info" data-dismiss="">Resuelto</span>
+                                      <span class="badge btn-md badge outline-danger" data-dismiss="">Crónico</span>
+                                      <br>
+                                      Hipertensión esencial
+                                      <br>
+                                      <small>Debido a una hiperuricemia</small>
+                                      </h4>
+                                  <!-- Menu Elemento -->
+                                  <span class="dropdown">
+                                      <button type="button" class="btn-contextual" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i ng-reflect-class-name="mdi mdi-dots-horizontal" class="mdi mdi-dots-horizontal"></i></button>
+                                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                        <button class="dropdown-item" type="button">Evolucionar</button>
+
+                                        <button class="dropdown-item" type="button">Antecedentes</button>
+                                        <button class="dropdown-item destacar" type="button">Destacar</button>
+                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item eliminar" type="button">Eliminar</button>
+                                      </div>
+                                  </span>
+                                  </li>
+                                </ul>
+                                  <!-- /.Menu Elemento -->
+                          </div>
+                        </div>
+                      <!-- /.Elemento Problema -->                  
+                    </div>
+                <!-- /.Listado standard -->
+                <!-- /.Listado scrolleable -->
+                    <div class="col-md-4">
+                        <div class="box-title-secundario-with-border">Listado scrolleable</div>
+                         <div class="box-secundario">
+                        <!-- Elemento Problema -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                  <ul class="list-group">
+                                    <li class="list-group-item justify-content-between">
+                                      <h4>
+                                      <span class="badge btn-md badge outline-danger" data-dismiss="">Crónico</span>
+                                      <br>
+                                      Diabetes tipo 2
+                                      <br>
+                                      <small>Debido a una hiperuricemia</small>
+                                      </h4>
+                                  <!-- Menu Elemento -->
+                                  <span class="dropdown">
+                                      <button type="button" class="btn-contextual" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i ng-reflect-class-name="mdi mdi-dots-horizontal" class="mdi mdi-dots-horizontal"></i>
+                                      </button>
+                                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                        <button class="dropdown-item" type="button">Evolucionar</button>
+
+                                        <button class="dropdown-item" type="button">Antecedentes</button>
+                                        <button class="dropdown-item destacar" type="button">Destacar</button>
+                                        <div class="dropdown-divider"></div>
+                                        <button class="dropdown-item eliminar" type="button">Eliminar</button>
+                                      </div>
+                                  </span>
+                                  </li>
+                                </ul>
+                                  <!-- /.Menu Elemento -->
+                          </div>
+                        </div>
+                      <!-- /.Elemento Problema -->                
+                    </div>
+                <!-- /.Listado scrolleable -->
+                    </div>
+                <!-- Sistema de pestañas -->
+                    <div class="col-md-4">
+                                <!-- Modal fondo blanco lateral derecho-->
+                                    <div class="box-lateral">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                        <h5 class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="false">Lista de problemas</h5>
+                                        </li>
+                                        <li class="nav-item">
+                                        <h5 class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-expanded="true">Prestaciones futuras</h5>
+                                        </li>
+                                        <li class="nav-item">
+                                        <h5 class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-expanded="true">Antecedentes clínicos</h5>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content" id="myTabContent">
+                                        <div role="tabpanel" class="tab-pane fade" id="home" aria-labelledby="home-tab" aria-expanded="false">
+
+                                        <!-- Lista de problemas -->
+                                            <div class="box-secundario">
+                                            <ul class="list-group">
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Hipertensión
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Mamografía
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4>
+                                                    <span class="badge btn-md outline-success" data-dismiss="">Resultados disponibles</span>
+                                                    <br>
+                                                    Laboratorio
+                                                    <br>
+                                                    <small>Descripción expandible de la prestación</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Actividad física
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Plan de hidratación
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Hidroclortizid
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    <!-- /.Problemas asociados -->
+                                </div>
+                                        <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab" aria-expanded="true">
+                                        <!-- Prestaciones futuras -->
+                                            <div class="box-secundario">
+                                            <ul class="list-group">
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Dieta
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Mamografía
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4>
+                                                    <span class="badge btn-md outline-success" data-dismiss="">Resultados disponibles</span>
+                                                    <br>
+                                                    Laboratorio
+                                                    <br>
+                                                    <small>Descripción expandible de la prestación</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Actividad física
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Plan de hidratación
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                                <li class="list-group-item justify-content-between">
+                                                <h4 class="box-title-elemento">Hidroclortizid
+                                                    <br>
+                                                    <small>Descripción expandible del problema</small>
+                                                </h4>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    <!-- /.Prestaciones futuras -->
+                                    </div>
+                                    </div>
+                                    <!-- /.Lista de problemas -->
+                                <!-- /.Modal fondo blanco lateral derecho-->
+                                </div>
+                            </div>
+                <!-- /. Sistema de pestañas-->
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
