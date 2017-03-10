@@ -1,20 +1,20 @@
-<div class="row" *ngIf="showTurnos">
+<div class="row container-fluid" *ngIf="showTurnos">
     <plex-box>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col col-md-12">
                 <label>Turnos: {{ag.horaInicio | date: 'dd/MM/yyyy'}}</label>
                 <div class="list-group">
                     <div *ngFor="let bloque of ag.bloques; let i=index">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-7"><span><b>Bloque: </b>{{bloque.descripcion}}</span></div>
-                                <div class="col-md-5" *ngIf="ag.estado == 'Suspendida'">
+                            <div class="col col-md-12">
+                                <div class="col col-md-7"><span><b>Bloque: </b>{{bloque.descripcion}}</span></div>
+                                <div class="col col-md-5" *ngIf="ag.estado == 'Suspendida'">
                                     <a class="hover" (click)="enviarSMS(bloque.turnos)"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a>
                                     <a class="hover" (click)="agregarPacienteListaEspera(ag)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
                                     <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>
                                     <!--<a class="hover" (click)="reasignarTurnosMasivo()"><i title="Reasignar Turno Masivo" class="mdi mdi-rotate-right"></i></a>-->
                                 </div>
-                                <table class="table table-hover">
+                                <table class="table table-hover responsive-table table-reflow">
                                     <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')"><span>{{turno.horaInicio | date: 'HH:mm'}}</span> </td>
                                         <td *ngIf="(turno.paciente) || (ag.estado != 'Suspendida')">
