@@ -123,5 +123,5 @@
 
 <div type="info" class="col-md-12" *ngIf="showLiberarTurno">
     <div class="clear"></div>
-    <liberar-turno [agenda]="agenda" [turno]="turno" ></liberar-turno>
+    <liberar-turno [agenda]="agenda" [turno]="turno" (saveLiberarTurno)="saveLiberarTurno($event)"></liberar-turno>
 </div>

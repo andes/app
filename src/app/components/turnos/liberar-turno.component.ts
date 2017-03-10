@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Plex } from 'andes-plex/src/lib/core/service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../interfaces/turnos/ITurno';
@@ -10,18 +10,14 @@ import { AgendaService } from '../../services/turnos/agenda.service';
     templateUrl: 'liberar-turno.html'
 })
 
-export class LiberarTurnoComponent implements OnInit {
+export class LiberarTurnoComponent {
 
     @Input() agenda: IAgenda;
     @Input() turno: ITurno;
 
-    @Output() liberarTurnoEmit = new EventEmitter<ITurno>();
+    @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
 
-    showLiberarTurno: boolean = true;
-
-    ngOnInit() {
-
-    }
+    showLiberarTurno: boolean = true;        
 
     liberarTurno(turno: any) {
         let patch = {
@@ -30,14 +26,13 @@ export class LiberarTurnoComponent implements OnInit {
         };
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            
+
         },
             err => {
                 if (err) {
                     console.log(err);
                 }
             });
-
     }
 
     agregarPacienteListaEspera(turno: any) {
@@ -52,8 +47,13 @@ export class LiberarTurnoComponent implements OnInit {
 
         this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
 
-            this.plex.alert('El paciente paso a Lista de Espera');
-            debugger;
+            this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
+
+                this.saveLiberarTurno.emit(resulAgenda);
+
+                this.plex.alert('El paciente '+ turno.paciente.apellido + ' ' + turno.paciente.nombre + ' paso a Lista de Espera');
+            })
+
         });
     }
 

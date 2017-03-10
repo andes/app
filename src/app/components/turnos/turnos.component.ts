@@ -274,6 +274,20 @@ export class TurnosComponent implements OnInit {
             });
     }
 
+    saveLiberarTurno(agenda: any) {
+        this.showTurnos = true;
+        this.showLiberarTurno = false;
+
+        debugger;
+        this.ag = agenda;
+        this.turnos = this.ag.bloques[0].turnos;
+
+        for (let x = 0; x < this.turnos.length; x++) {
+            this.actualizarBotonesTurnos(this.turnos[x]);
+        }
+        // this.actualizarBotonesTurnos(turno);
+    }
+
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
         public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
 }
