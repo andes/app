@@ -14,7 +14,8 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 
 export class TurnosComponent implements OnInit {
     /*Propiedades del PopOver para confirmar acciones en Turnos*/
-    public title: string = 'Liberar Turno';
+    public titleLiberarTurno: string = 'Liberar Turno';
+    public titleSuspenderTurno: string = 'Suspender Turno';
     public messageLiberarTurno: string = 'Está seguro que desea Liberar el Turno? </br> Un SMS se enviará automáticamente al paciente.';
     public messageSuspenderTurno: string = 'Está seguro que desea Suspender el Turno? </br> Un SMS se enviará automáticamente al paciente.';
     public confirmaLiberarTurno: boolean = false;
@@ -35,8 +36,8 @@ export class TurnosComponent implements OnInit {
     resultado: any;
 
     listaEspera: any;
-    tablaTurnos: boolean = false;
-    pacienteCancelado: String;
+    // tablaTurnos: boolean = false;
+    // pacienteCancelado: String;
 
     agenda: IAgenda;
     turno: ITurno;
@@ -54,7 +55,6 @@ export class TurnosComponent implements OnInit {
 
         for (let x = 0; x < this.turnos.length; x++) {
             this.actualizarBotonesTurnos(this.turnos[x]);
-            this.turnos[x].turnoLiberado = false;
         }
     }
 
@@ -155,7 +155,7 @@ export class TurnosComponent implements OnInit {
     }
 
     eventosTurno(agenda: IAgenda, turno: any, event) {
-        debugger;
+
         let btnClicked;
 
         if (event.currentTarget)
@@ -163,18 +163,7 @@ export class TurnosComponent implements OnInit {
 
         let patch: any = {};
 
-        if (this.confirmaLiberarTurno) {
-            patch = {
-                'op': 'liberarTurno',
-                'idTurno': turno.id
-            };
-
-            this.confirmaLiberarTurno = false;
-
-            /*Se comenta para que no se rompa la API*/
-            // this.pacientesSeleccionados.push(turno);
-            // this.enviarSMS();
-        } else if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
+        if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
 
             patch = {
                 'op': 'asistenciaTurno',
@@ -187,13 +176,6 @@ export class TurnosComponent implements OnInit {
                 'idTurno': turno.id
             };
 
-        } else if (this.confirmaSuspenderTurno) {
-            patch = {
-                'op': 'suspenderTurno',
-                'idTurno': turno.id
-            };
-
-            this.confirmaSuspenderTurno = false;
         }
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {

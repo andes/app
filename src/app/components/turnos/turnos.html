@@ -37,22 +37,22 @@
                                         </td>
 
                                         <td *ngIf="turno.botones.tdSuspenderTurno">
-                                            <a id="suspenderTurno" *ngIf="turno.botones.suspenderTurno" class="hover" mwlConfirmationPopover [title]="title" [message]="messageSuspenderTurno"
-                                                placement="top" (confirm)="suspenderTurno(ag, turno, confirmaSuspenderTurno = true)"
+                                            <a id="suspenderTurno" *ngIf="turno.botones.suspenderTurno" class="hover" mwlConfirmationPopover [title]="titleSuspenderTurno"
+                                                [message]="messageSuspenderTurno" placement="top" (confirm)="suspenderTurno(ag, turno, confirmaSuspenderTurno = true)"
                                                 (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                                                 <i title="Suspender Turno" class="text-success success mdi mdi-power"></i>
                                             </a>
-                                            <!--placement="top" (confirm)="eventosTurno(ag, turno, confirmaSuspenderTurno = true)"-->
+
                                             <i *ngIf="turno.botones.suspenderTurnoDeshabilitado" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
                                         </td>
 
                                         <td *ngIf="turno.botones.tdLiberarTurno">
-                                            <a id="liberarTurno" *ngIf="turno.botones.liberarTurno" class="hover" mwlConfirmationPopover [title]="title" [message]="messageLiberarTurno"
-                                                placement="top" (confirm)="liberarTurno(ag, turno, confirmaLiberarTurno = true)"
+                                            <a id="liberarTurno" *ngIf="turno.botones.liberarTurno" class="hover" mwlConfirmationPopover [title]="titleLiberarTurno"
+                                                [message]="messageLiberarTurno" placement="top" (confirm)="liberarTurno(ag, turno, confirmaLiberarTurno = true)"
                                                 (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                                                 <i title="Liberar Turno" class="text-success success mdi mdi-stop"></i>
                                             </a>
-                                            <!--placement="top" (confirm)="eventosTurno(ag, turno, confirmaLiberarTurno = true)"-->
+
                                             <i *ngIf="turno.botones.liberarTurnoDeshabilitado" title="No es posible Liberar el Turno" class="text-success success mdi mdi-select"></i>
                                         </td>
 
@@ -100,11 +100,6 @@
                                             <a class="hover" (click)="guardarNota(ag, turno)"><i title="Agregar Nota" class="text-success success mdi mdi-content-save"></i></a>
                                         </td>-->
 
-
-
-                                        <!--<td *ngIf="turno.botones.turnoLiberado">
-                                            <a class="hover" (click)="agregarPacienteListaEspera(ag, turno)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
-                                        </td>-->
                                         <!--<td [hidden]="turno.chkVisible">
                                             <!--<plex-bool [ngModel]="turno.checked" (click)="agregarPaciente(turno)" ></plex-bool>-->
                                         <!--<plex-bool type="slide" [(ngModel)]="turno.checked" (click)="agregarPaciente(turno)"></plex-bool>
