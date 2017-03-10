@@ -16,8 +16,11 @@ export class LiberarTurnoComponent {
     @Input() turno: ITurno;
 
     @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
+    @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
 
-    showLiberarTurno: boolean = true;        
+    showLiberarTurno: boolean = true;
+
+    public reasignar: any = {};
 
     liberarTurno(turno: any) {
         let patch = {
@@ -51,10 +54,17 @@ export class LiberarTurnoComponent {
 
                 this.saveLiberarTurno.emit(resulAgenda);
 
-                this.plex.alert('El paciente '+ turno.paciente.apellido + ' ' + turno.paciente.nombre + ' paso a Lista de Espera');
+                this.plex.alert('El paciente ' + turno.paciente.apellido + ' ' + turno.paciente.nombre + ' paso a Lista de Espera');
             })
 
         });
+    }
+
+    reasignarTurno(paciente: any) {
+        debugger;
+        this.reasignar = { 'paciente': paciente, 'idTurno': this.turno.id, 'idAgenda': this.agenda.id };
+
+        this.reasignarTurnoLiberado.emit(this.reasignar);
     }
 
     constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }

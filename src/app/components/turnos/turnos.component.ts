@@ -199,7 +199,15 @@ export class TurnosComponent implements OnInit {
     }
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
+        debugger;
         this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
+
+        this.reasignaTurno.emit(this.reasignar);
+    }
+
+    reasignarTurnoLiberado(turnoLiberado) {
+        debugger;
+        this.reasignar = { 'paciente': turnoLiberado.paciente, 'idTurno': turnoLiberado.idTurno, 'idAgenda': turnoLiberado.idAgenda };
 
         this.reasignaTurno.emit(this.reasignar);
     }
@@ -285,7 +293,6 @@ export class TurnosComponent implements OnInit {
         for (let x = 0; x < this.turnos.length; x++) {
             this.actualizarBotonesTurnos(this.turnos[x]);
         }
-        // this.actualizarBotonesTurnos(turno);
     }
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
