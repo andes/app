@@ -78,6 +78,8 @@ import { VistaAgendaComponent } from './components/turnos/vista-agenda.component
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
+import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
+import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
 // Estos componentes utilizan ng-prime y deben ser actualizados
 // import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 // import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
@@ -192,6 +194,9 @@ export const RUP_COMPONENTS = [
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
+//Ver donde poner
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+
 // Main module
 @NgModule({
   imports: [
@@ -200,7 +205,10 @@ import { routing, appRoutingProviders } from './app.routing';
     FormsModule,
     HttpModule,
     PlexModule,
-    routing
+    routing,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger' // set defaults here
+    })    
   ],
 
   declarations: [
@@ -215,7 +223,7 @@ import { routing, appRoutingProviders } from './app.routing';
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    RupComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,
