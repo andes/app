@@ -3,6 +3,7 @@ import { Plex } from 'andes-plex/src/lib/core/service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
+import { AgendaService } from '../../services/turnos/agenda.service';
 
 @Component({
     selector: 'liberar-turno',
@@ -17,29 +18,38 @@ export class LiberarTurnoComponent implements OnInit {
     @Output() liberarTurnoEmit = new EventEmitter<ITurno>();
 
     showLiberarTurno: boolean = true;
-    
+
     ngOnInit() {
-        debugger;
-        this.turno;   
-    
+
     }
 
-    agregarPacienteListaEspera(paciente: any) {
-        let patch: any = {};
-        // let pacienteListaEspera = {};
+    liberarTurno(turno: any) {
+        let patch = {
+            'op': 'liberarTurno',
+            'idTurno': turno.id
+        };
 
-        // if (paciente) {
-        //     pacienteListaEspera = paciente;
-        // } else {
-        //     pacienteListaEspera = this.pacientesSeleccionados;
-        // }
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
 
-        patch = {
+    }
+
+    agregarPacienteListaEspera(turno: any) {
+
+        let patch = {
             'op': 'listaEsperaSuspensionAgenda',
             'idAgenda': this.agenda.id,
-            'pacientes': paciente
+            'pacientes': turno
         };
         debugger;
+        this.liberarTurno(turno);
+
         this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
 
             this.plex.alert('El paciente paso a Lista de Espera');
@@ -47,6 +57,6 @@ export class LiberarTurnoComponent implements OnInit {
         });
     }
 
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService) { }
+    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
 
 }
