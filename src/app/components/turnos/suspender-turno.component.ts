@@ -23,7 +23,7 @@ export class SuspenderTurnoComponent implements OnInit {
     public reasignar: any = {};
 
     public motivoSuspension: any[];
-    public modelo1 = { select: null };
+    public motivoSuspensionSelect = { select: null };
 
     ngOnInit() {
         this.motivoSuspension = [{
@@ -38,13 +38,14 @@ export class SuspenderTurnoComponent implements OnInit {
             nombre: 'Organizacion'
         }];
 
-        this.modelo1.select = this.motivoSuspension[1];
+        this.motivoSuspensionSelect.select = this.motivoSuspension[1];
     }
 
     suspenderTurno(turno: any) {
         let patch = {
             'op': 'suspenderTurno',
-            'idTurno': turno.id
+            'idTurno': turno.id,
+            'motivoSuspension': this.motivoSuspensionSelect.select.nombre
         };
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
@@ -82,6 +83,8 @@ export class SuspenderTurnoComponent implements OnInit {
     reasignarTurno(paciente: any) {
         debugger;
         this.reasignar = { 'paciente': paciente, 'idTurno': this.turno.id, 'idAgenda': this.agenda.id };
+
+        this.suspenderTurno(this.turno);
 
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
