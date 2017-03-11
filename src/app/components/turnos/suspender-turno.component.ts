@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../interfaces/turnos/ITurno';
@@ -10,7 +10,7 @@ import { AgendaService } from '../../services/turnos/agenda.service';
     templateUrl: 'suspender-turno.html'
 })
 
-export class SuspenderTurnoComponent {
+export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
     @Input() turno: ITurno;
@@ -21,6 +21,25 @@ export class SuspenderTurnoComponent {
     showSuspenderTurno: boolean = true;
 
     public reasignar: any = {};
+
+    public motivoSuspension: any[];
+    public modelo1 = { select: null };
+
+    ngOnInit() {
+        this.motivoSuspension = [{
+            id: 1,
+            nombre: 'Edilicia'
+        }, {
+            id: 2,
+            nombre: 'Profesional'
+        },
+        {
+            id: 3,
+            nombre: 'Organizacion'
+        }];
+
+        this.modelo1.select = this.motivoSuspension[1];
+    }
 
     suspenderTurno(turno: any) {
         let patch = {
