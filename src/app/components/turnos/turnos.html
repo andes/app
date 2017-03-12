@@ -129,5 +129,5 @@
 
 <div type="info" class="col-md-12" *ngIf="showAgregarNotaTurno">
     <div class="clear"></div>
-    <agregar-nota-turno [agenda]="agenda" [turno]="turno" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"></agregar-nota-turno>
+    <agregar-nota-turno [agenda]="agenda" [turno]="turno" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
 </div>

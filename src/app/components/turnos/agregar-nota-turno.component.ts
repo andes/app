@@ -15,6 +15,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
     @Input() turno: ITurno;
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
+    @Output() cancelaAgregarNota = new EventEmitter<boolean>();
 
     showAgregarNotaTurno: boolean = true;
     public modelo: any;
@@ -30,7 +31,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
             'op': 'guardarNotaTurno',
             'idAgenda': agenda.id,
             'idTurno': turno.id,
-            'textoNota': this.modelo.nota            
+            'textoNota': this.modelo.nota
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
@@ -43,6 +44,10 @@ export class AgregarNotaTurnoComponent implements OnInit {
             });
     }
 
+    cancelar() {
+        debugger;
+        this.cancelaAgregarNota.emit(true);
+    }
     constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
 }

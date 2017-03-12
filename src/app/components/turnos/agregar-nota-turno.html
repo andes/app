@@ -9,14 +9,16 @@
                     <div class="col-md-8">
                         <label>Agregar Nota</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <plex-text label="Ingrese Nota" name="nota" [(ngModel)]="modelo.nota">
                         </plex-text>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <plex-button icon="mdi mdi-key" (click)="guardarNota(agenda, turno)" title="Agregar Nota">
+                        <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarNota(agenda, turno)" title="Agregar Nota">
+                        </plex-button>
+                        <plex-button icon="mdi mdi-close-circle-outline" label="Cancelar" (click)="cancelar()" title="Cancelar">
                         </plex-button>
                     </div>
                 </div>

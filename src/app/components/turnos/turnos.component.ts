@@ -332,6 +332,11 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    cancelaAgregarNota() {
+        this.showTurnos = true;
+        this.showAgregarNotaTurno = false;
+    }
+
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
         public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
 }
