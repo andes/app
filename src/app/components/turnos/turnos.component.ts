@@ -30,6 +30,7 @@ export class TurnosComponent implements OnInit {
     showTurnos: boolean = true;
     public showLiberarTurno: boolean = false;
     public showSuspenderTurno: boolean = false;
+    public showAgregarNotaTurno: boolean = false;
 
     // smsEnviado: boolean = false;
     // smsLoader: boolean = false;
@@ -152,6 +153,14 @@ export class TurnosComponent implements OnInit {
 
         this.showTurnos = false;
         this.showSuspenderTurno = true;
+    }
+
+    agregarNotaTurno(agenda: any, turno: any) {
+        this.agenda = agenda;
+        this.turno = turno;
+
+        this.showTurnos = false;
+        this.showAgregarNotaTurno = true;
     }
 
     eventosTurno(agenda: IAgenda, turno: any, event) {
@@ -300,6 +309,19 @@ export class TurnosComponent implements OnInit {
     saveSuspenderTurno(agenda: any) {
         this.showTurnos = true;
         this.showSuspenderTurno = false;
+
+        debugger;
+        this.ag = agenda;
+        this.turnos = this.ag.bloques[0].turnos;
+
+        for (let x = 0; x < this.turnos.length; x++) {
+            this.actualizarBotonesTurnos(this.turnos[x]);
+        }
+    }
+
+    saveAgregarNotaTurno(agenda: any) {
+        this.showTurnos = true;
+        this.showAgregarNotaTurno = false;
 
         debugger;
         this.ag = agenda;

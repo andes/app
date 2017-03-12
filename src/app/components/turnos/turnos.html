@@ -88,7 +88,7 @@
                                         </td>
 
                                         <td *ngIf="turno.botones.verNota">
-                                            <a class="hover" (click)="agregarNota(turno)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
+                                            <a class="hover" (click)="agregarNotaTurno(ag, turno)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
                                         </td>
 
                                         <!--<td *ngIf="turno.botones.verNota">
@@ -125,4 +125,9 @@
 <div type="info" class="col-md-12" *ngIf="showSuspenderTurno">
     <div class="clear"></div>
     <suspender-turno [agenda]="agenda" [turno]="turno" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"></suspender-turno>
+</div>
+
+<div type="info" class="col-md-12" *ngIf="showAgregarNotaTurno">
+    <div class="clear"></div>
+    <agregar-nota-turno [agenda]="agenda" [turno]="turno" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"></agregar-nota-turno>
 </div>

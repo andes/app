@@ -80,6 +80,7 @@ import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espe
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
 // Estos componentes utilizan ng-prime y deben ser actualizados
 // import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 // import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
@@ -208,7 +209,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     routing,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
-    })    
+    })
   ],
 
   declarations: [
@@ -223,7 +224,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

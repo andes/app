@@ -1,0 +1,26 @@
+<div class="row" *ngIf="showAgregarNotaTurno">
+    <plex-box>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Agregar notas en el paciente: {{turno.paciente.apellido}} {{turno.paciente.nombre}}</label>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label>Agregar Nota</label>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-text label="Ingrese Nota" name="nota" [(ngModel)]="modelo.nota">
+                        </plex-text>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <plex-button icon="mdi mdi-key" (click)="guardarNota(agenda, turno)" title="Agregar Nota">
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</div>
