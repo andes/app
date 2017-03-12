@@ -4,6 +4,7 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
+import { SmsService } from './../../services/turnos/sms.service';
 
 @Component({
     selector: 'suspender-turno',
@@ -19,6 +20,7 @@ export class SuspenderTurnoComponent implements OnInit {
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
 
     showSuspenderTurno: boolean = true;
+    resultado: any;
 
     public reasignar: any = {};
 
@@ -65,7 +67,7 @@ export class SuspenderTurnoComponent implements OnInit {
             'idAgenda': this.agenda.id,
             'pacientes': turno
         };
-        debugger;
+
         this.suspenderTurno(turno);
 
         this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
@@ -86,8 +88,31 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.suspenderTurno(this.turno);
 
+        this.enviarSMS(paciente);
+
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
+    enviarSMS(paciente: any) {
+        // this.smsLoader = true;
+
+        this.smsService.enviarSms(paciente.telefono).subscribe(
+            resultado => {
+                this.resultado = resultado;
+                // this.smsLoader = false;
+                debugger;
+                // if (resultado === '0') {
+                //     this.pacientesSeleccionados[x].smsEnviado = true;
+                // } else {
+                //     this.pacientesSeleccionados[x].smsEnviado = false;
+                // }
+            },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+    }
+
+    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
 }
