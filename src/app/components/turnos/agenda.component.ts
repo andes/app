@@ -201,29 +201,25 @@ export class AgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
-        let bloques = this.modelo.bloques;
-        if (bloques.length === 0) {
+        if (this.modelo.bloques.length === 0) {
             this.addBloque();
             this.bloqueActivo = 0;
             this.elementoActivo.horaInicio = this.modelo.horaInicio;
             this.elementoActivo.horaFin = this.modelo.horaFin;
-
         } else {
-            bloques.forEach((bloque) => {
+            this.modelo.bloques.forEach((bloque) => {
                 // Si se elimino una prestación, la saco de los bloques
-                let bloquePrestaciones = bloque.tipoPrestaciones;
-                if (bloquePrestaciones) {
-                    bloquePrestaciones.forEach((bloquePrestacion, index) => {
+                if (bloque.tipoPrestaciones) {
+                    bloque.tipoPrestaciones.forEach((bloquePrestacion, index) => {
                         if (this.modelo.tipoPrestaciones) {
                             const i = this.modelo.tipoPrestaciones.map(function (e) { return e.nombre; }).indexOf(bloquePrestacion.nombre);
                             if (i < 0) {
-                                bloquePrestaciones.splice(index, 1);
-                                if (bloquePrestaciones.length === 1) {
-                                    bloquePrestaciones[0].activo = true;
+                                bloque.tipoPrestaciones.splice(index, 1);
+                                if (bloque.tipoPrestaciones.length === 1) {
+                                    bloque.tipoPrestaciones[0].activo = true;
                                 }
                             }
                         } else {
-                            console.log('aca');
                             bloque.tipoPrestaciones = [];
                         }
                     });
@@ -232,15 +228,25 @@ export class AgendaComponent implements OnInit {
                 if (this.modelo.tipoPrestaciones) {
                     this.modelo.tipoPrestaciones.forEach((prestacion) => {
                         let copiaPrestacion = operaciones.clonarObjeto(prestacion);
+                        copiaPrestacion.activo = false;
                         let i = bloque.tipoPrestaciones.map(function (e) { return e.nombre; }).indexOf(copiaPrestacion.nombre);
                         if (i < 0) {
                             bloque.tipoPrestaciones.push(copiaPrestacion);
-                            bloque.tipoPrestaciones[bloque.tipoPrestaciones.length - 1].activo = false;
+                            // if (bloque.tipoPrestaciones.length === 1) {
+                            //     bloque.tipoPrestaciones[0].activo = true;
+                            // }
+                            // bloque.tipoPrestaciones[bloque.tipoPrestaciones.length - 1].activo = false;
                         }
                     });
                 }
+                // debugger
+                if (bloque.tipoPrestaciones.length === 1) {
+                    bloque.tipoPrestaciones[0].activo = true;
+                }
             });
         }
+        console.log('modelo ', this.modelo);
+        console.log('elementoActivo ', this.elementoActivo);
     }
 
     cambioHoraBloques(texto: String) {
@@ -495,72 +501,64 @@ export class AgendaComponent implements OnInit {
         }
     }
 
-    onSave(isvalid: boolean, clonar: boolean) {
-        if (Object.keys(this.modelo).length > 0) {
-            if (isvalid) {
-                let espOperation: Observable<IAgenda>;
-                this.fecha = new Date(this.modelo.fecha);
-                this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
-                this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-                this.modelo.estado = 'Planificada';
-                let bloques = this.modelo.bloques;
-                bloques.forEach((bloque, index) => {
-                    bloque.turnos = [];
-                    for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                        let turno = {
-                            horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
-                            estado: 'disponible'
-                        };
-                        if (bloque.pacienteSimultaneos) {
-                            // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
-                            for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
-                                bloque.turnos.push(turno);
+    onSave($event, clonar) {
+        if ($event.formValid) {
+            let espOperation: Observable<IAgenda>;
+            this.fecha = new Date(this.modelo.fecha);
+            this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
+            this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            this.modelo.estado = 'Planificada';
+            let bloques = this.modelo.bloques;
+            bloques.forEach((bloque, index) => {
+                bloque.turnos = [];
+                for (let i = 0; i < bloque.cantidadTurnos; i++) {
+                    let turno = {
+                        horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
+                        estado: 'disponible'
+                    };
+                    if (bloque.pacienteSimultaneos) {
+                        // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
+                        for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                            bloque.turnos.push(turno);
+                        }
+                    } else {
+                        if (bloque.citarPorBloque) {
+                            // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
+                            for (let j = 0; j < bloque.cantidadBloque; j++) {
+                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
+                                    bloque.cantidadBloque * 60000);
+                                if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
+                                    bloque.turnos.push(turno);
+                                }
                             }
                         } else {
-                            if (bloque.citarPorBloque) {
-                                // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
-                                for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                    turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
-                                        bloque.cantidadBloque * 60000);
-                                    if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                        bloque.turnos.push(turno);
-                                    }
-                                }
-                            } else {
-                                // Bloque sin simultaneos ni Citación por bloque
-                                bloque.turnos.push(turno);
-                            }
+                            // Bloque sin simultaneos ni Citación por bloque
+                            bloque.turnos.push(turno);
                         }
                     }
+                }
 
-                    bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                    bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
-                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                        return el.activo === true;
+                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
+                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                    return el.activo === true;
+                });
+            });
+            espOperation = this.ServicioAgenda.save(this.modelo);
+            espOperation.subscribe(resultado => {
+                if (clonar) {
+                    this.showClonar = true;
+                    this.showBuscarAgendas = false;
+                    this.showAgenda = false;
+                } else {
+                    this.plex.alert('La agenda se guardo correctamente').then(guardo => {
+                        this.modelo = {};
+                        this.bloqueActivo = -1;
                     });
-                });
-                espOperation = this.ServicioAgenda.save(this.modelo);
-                espOperation.subscribe(resultado => {
-                    if (clonar) {
-                        this.showClonar = true;
-                        this.showBuscarAgendas = false;
-                        this.showAgenda = false;
-                    } else {
-                        this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                            this.modelo = {};
-                            this.bloqueActivo = -1;
-                        });
-                    }
-                });
-            } else {
-                alert('Complete datos obligatorios');
-            }
-        }
-    }
-
-    onClon() {
-        if (Object.keys(this.modelo).length > 0) {
-            this.onSave(true, true);
+                }
+            });
+        } else {
+            this.plex.alert('Debe completar los datos requeridos');
         }
     }
 
