@@ -22,8 +22,8 @@ export class TransformarProblemaComponent implements OnInit {
 
     @Input() problema: IProblemaPaciente;
     @Input() paciente: IPaciente;
-    vigencia = { id: '', nombre: '...' };
-    duracion = { id: '', nombre: '...' };
+    vigencia = null;
+    duracion = null;
     tipoProblema = null;
     nuevoProblemaPaciente: IProblemaPaciente;
     observacion = "";
@@ -80,30 +80,30 @@ export class TransformarProblemaComponent implements OnInit {
 
     transformarProblema(event) {
         debugger;
-        /*  if (event.formValid) {*/
-        //Primero cargamos la evolucion en el problema actual y ponemos vigencia = transformado
-        var unaEvolucion: any = {
-            fecha: new Date(),
-            observacion: 'Problema Transformado',
-            profesional: null,
-            organizacion: null,
-            duracion: this.problema.evoluciones[this.problema.evoluciones.length - 1].duracion,
-            vigencia: 'transformado',
-            segundaOpinion: null
-        };
-        this.problema.evoluciones.push(unaEvolucion);
-        this.servicioProblemaPac.put(this.problema).subscribe(resultado => {
-            if (resultado) {
-                //Aqui vamos a cargar el nuevo problema del paciente
-                this.agregarProblema();
-            } else {
-                this.plex.alert('Ha ocurrido un error al transformar el problema');
-            }
+        if (event.formValid) {
+            //Primero cargamos la evolucion en el problema actual y ponemos vigencia = transformado
+            var unaEvolucion: any = {
+                fecha: new Date(),
+                observacion: 'Problema Transformado',
+                profesional: null,
+                organizacion: null,
+                duracion: this.problema.evoluciones[this.problema.evoluciones.length - 1].duracion,
+                vigencia: 'transformado',
+                segundaOpinion: null
+            };
+            this.problema.evoluciones.push(unaEvolucion);
+            this.servicioProblemaPac.put(this.problema).subscribe(resultado => {
+                if (resultado) {
+                    //Aqui vamos a cargar el nuevo problema del paciente
+                    this.agregarProblema();
+                } else {
+                    this.plex.alert('Ha ocurrido un error al transformar el problema');
+                }
 
-        });
-        /*} else {
-        this.plex.alert('Completar datos requeridos');
-    }*/
+            });
+        } else {
+            this.plex.alert('Completar datos requeridos');
+        }
     }
 
 
