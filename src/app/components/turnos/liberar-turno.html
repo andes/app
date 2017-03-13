@@ -1,0 +1,29 @@
+<div class="row" *ngIf="showLiberarTurno">
+    <plex-box>
+        <div class="row">
+            <div class="col-md-12">
+                <label>El turno de {{turno.paciente.apellido}} {{turno.paciente.nombre}} va a ser liberado!</label>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label>Enviar paciente a Lista de Espera</label>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-button icon="mdi mdi-key" (click)="agregarPacienteListaEspera(turno)" title="Enviar a Lista de Espera">
+                        </plex-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label>Reprogramar Turno</label>
+                    </div>
+                    <div class="col-md-4">
+                        <plex-button icon="mdi mdi-backup-restore" (click)="reasignarTurno(turno.paciente)" title="Reprogramar Turno">
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</div>
