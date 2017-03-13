@@ -1,5 +1,6 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 export interface ITurno {
+    id: String;
     horaInicio: Date;
     estado: String;
     asistencia: Boolean;
