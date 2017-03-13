@@ -43,6 +43,9 @@ import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/
 import { TransformarProblemaComponent } from "./components/rup/problemas-paciente/transformarProblema.component";
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
+import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
+import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
+
 
 //ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
@@ -124,7 +127,9 @@ export const RUP_COMPONENTS = [
     HallazgoRelacionadoPartoComponent,
     TransformarProblemaComponent,
     PesquisaNeonatalComponent,
-    PruebaOtoemisionesAcusticasComponent
+    PruebaOtoemisionesAcusticasComponent,
+    PercentiloTallaComponent,
+    PercentiloCircunferenciaCefalicaNinoComponent
 
     // NO VAPacienteComponent
 ];
