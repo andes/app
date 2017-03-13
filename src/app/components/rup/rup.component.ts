@@ -132,6 +132,11 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
         // this.data.mensaje = this.componentReference.instance.data.mensaje;
 
+        // MORE MAGIG
+        if (this.datosIngreso){
+            this.evtData.emit(this.componentReference.instance.data);
+        }
+
         datosComponente.evtData.subscribe(e => {
             this.evtData.emit(this.componentReference.instance.data);
         });
