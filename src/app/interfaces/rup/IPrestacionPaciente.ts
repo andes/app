@@ -65,6 +65,8 @@ export interface IPrestacionPaciente {
 
 
     ejecucion: {
+        // prestaciones ejecutadas en el transcurso de la prestacion de origen
+        prestaciones: [IPrestacionPaciente],
         listaProblemas: IProblemaPaciente[],
         fecha: Date,
         organizacion: IOrganizacion,
@@ -77,8 +79,6 @@ export interface IPrestacionPaciente {
 
     // a futuro que se ejecuta
     prestacionesSolicitadas: [String],
-    // prestaciones ejecutadas en el transcurso de la prestacion de origen
-    prestacionesEjecutadas: [IPrestacionPaciente],
 
     estado: [
         {

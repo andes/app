@@ -61,7 +61,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
-        return this.prestacion.prestacionesEjecutadas.filter(data => {
+        return this.prestacion.ejecucion.prestaciones.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
                 return data;
         });
