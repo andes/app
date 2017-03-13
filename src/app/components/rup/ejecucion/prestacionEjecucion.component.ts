@@ -48,29 +48,30 @@ export class PrestacionEjecucionComponent implements OnInit {
     showValidar = false;
     data: Object = {};
 
-    prestacionesEjecutar: any[] = [];
-    // nuevas prestaciones a ejecutar en la consulta 
-    nuevasPrestaciones: ITipoPrestacion[] = [];
+    // PRESTACIONES EN EJECUCION
+    // tipos de prestaciones posibles a ejecutar durante la prestacion
+    // este tipo de prestaciones se le van quitando opciones a medida que ejecuto una nueva
+    tiposPrestacionesPosibles: ITipoPrestacion[] = [];
 
+    // prestaciones que se ejecutan por defecto con la prestacion de origen
+    // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
+    prestacionesEjecucion: IPrestacionPaciente[] = [];
 
-    // AGREGAR PRESTACION
-    // objeto para crear una nueva prestacion e inicializar
-    nuevaPrestacion: any;
-    // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
+    // // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
     listaProblemaPrestacion = [];
-    // prestacion seleccionada para ejecutar en el transcurso de la prestacion original
-    prestacionAEjecutar: any = null;
-    // array de id prestaciones que se ejecutaron en la consulta para filtrar luego
-    prestacionesEjecucion: any[] = [];
-    idTiposPrestacionesEjecucion: any[] = [];
+
+    // id que se van ejecutando
+    idPrestacionesEjecutadas = [];
 
     // PRESTACIONES FUTURAS
-    // utilizado para el select
+    // utilizado para el select de tipos de prestaciones a ejecutar en un plan
     nuevoTipoPrestacion: ITipoPrestacion;
+    // prestacion a pedir a futuro
+    nuevaPrestacion: any;
     // array de opcioens seleccionadas
-    nuevaPrestacionListaProblemas: any = [];
-    // listado de prestaciones futuras a pedir en el plan
-    prestacionesFuturas: IPrestacionPaciente[] = [];
+    listaProblemasPlan: any = [];
+    // // listado de prestaciones futuras a pedir en el plan
+    // prestacionesFuturas: IPrestacionPaciente[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -80,23 +81,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.cargarDatosPrestacion();
+
+        // obtenemos tipos de prestaciones posibles a ejecutarse
+        this.serviceTipoPrestacion.get({}).subscribe(tiposPrestaciones => {
+            this.tiposPrestacionesPosibles = tiposPrestaciones;
+        });
     }
 
     loadTiposProblemas(event) {
         this.servicioTipoProblema.get({}).subscribe(event.callback);
-    }
-
-    updatePrestacion() {
-        // actualizamos la prestacion de origen
-        this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
-            // this.prestacion = prestacionActualizada;
-            // buscamos la prestacion actualizada con los datos populados
-            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-            });
-        });
     }
 
     // lista de problemas
@@ -192,7 +186,260 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+
+        // loopeamos las prestaciones que se deben cargar por defecto
+        // y las inicializamos como una prestacion nueva a ejecutarse
+        if (this.prestacion.solicitud) {
+            this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
+                // Verificamos si el tipo de prestacion no está dentro de las prestaciones 
+                // que se han ejecutado, y de ser así las creo vacias 
+                let find;
+
+                if (this.prestacion.ejecucion && this.prestacion.ejecucion.prestaciones.length) {
+                    find = this.prestacion.ejecucion.prestaciones.find(p => {
+                        return p.solicitud.tipoPrestacion.id === element.id
+                    });
+                }
+
+            console.log(find);
+
+                // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
+                if (!find) {
+                    // asignamos valores a la nueva prestacion
+                    find = this.crearPrestacionVacia(element);
+
+                    this.prestacionesEjecucion.push(find);
+                }else {
+                    this.prestacionesEjecucion.push(find);
+
+                    let key; key = element.key;
+
+                    this.listaProblemaPrestacion[key] = find.ejecucion.listaProblemas;
+
+                    let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length-1].valores[key];
+
+                }
+
+            });
+
+            console.log(this.prestacionesEjecucion);
+        }
+
+        // recorremos todas las que se han ejecutado y si no esta 
+        // dentro de las que cargamos anteriormente las agregamos
+        this.prestacion.ejecucion.prestaciones.forEach(_prestacion => {
+            let find = this.prestacionesEjecucion.find(pe => {
+                return _prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id
+            });
+
+            if (!find) {
+                // this.idTiposPrestacionesEjecucion.push(_prestacion.solicitud.tipoPrestacion.id);
+                this.prestacionesEjecucion.push(_prestacion);
+
+                let key; key = _prestacion.solicitud.tipoPrestacion.key;
+
+                this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+
+                // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length-1].valores[key];
+            }
+        });
     }
+
+    crearPrestacionVacia(tipoPrestacion) {
+        // asignamos valores a la nueva prestacion
+        let nuevaPrestacion = {
+            idPrestacionOrigen: this.prestacion.id,
+            paciente: this.prestacion.paciente,
+            solicitud: {
+                tipoPrestacion: tipoPrestacion,
+                fecha: new Date(),
+                listaProblemas: []
+            },
+            estado: {
+                timestamp: new Date(),
+                tipo: 'ejecucion'
+            },
+            ejecucion: {
+                evoluciones: []
+            }
+        };
+
+        this.listaProblemaPrestacion[tipoPrestacion.key] = [];
+
+        return nuevaPrestacion;
+    }
+
+    agregarPrestacionEjecucion(tipoPrestacion) {
+        let nuevaPrestacion;
+        nuevaPrestacion = this.crearPrestacionVacia(tipoPrestacion);
+
+        // buscamos la posicion del array de la prestacion que acabamos
+        // de agregar para luego quitarla / deshabilitarla del array de opciones
+        let posicion = this.tiposPrestacionesPosibles.findIndex(tp => {
+            return tipoPrestacion.id == tp.id
+        });
+
+        // quitamos del array de opciones
+        this.tiposPrestacionesPosibles.splice(posicion, 1);
+
+        this.prestacionesEjecucion.push(nuevaPrestacion);
+    }
+
+    evolucionarPrestacion() {
+        let i = 1;
+        // recorremos todas las prestaciones que hemos ejecutado
+        this.prestacionesEjecucion.forEach(_prestacion => {
+            // console.log(_prestacion);
+            // this.listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key] = _prestacion.solicitud.listaProblemas;
+            let prestacion; prestacion = _prestacion;
+
+            let tp; tp = _prestacion.solicitud.tipoPrestacion;
+
+
+            prestacion.ejecucion = {
+                fecha: new Date(),
+                evoluciones: [{
+                    valores: this.data[tp.key],
+                    estado: [{
+                        timestamp: new Date(),
+                        tipo: 'ejecucion'
+                    }]
+                }]
+            };
+
+            // si he agregado algun problema a la nueva prestacion
+            // entonces asigno su id a la prestacion a guardar
+            if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
+                // recorremos array de problemas y asignamos a la nueva prestacion
+                // for (let problema of this.listaProblemaPrestacion[tp.key]) {
+                this.listaProblemaPrestacion[tp.key].forEach(problema => {
+                    prestacion.solicitud.listaProblemas.push(problema.id);
+                });
+            } else {
+                // si no agrego ningun problema, entonces por defecto se le agregan todos
+                prestacion.solicitud.listaProblemas = this.listaProblemas;
+            }
+
+            let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
+
+            // guardamos la nueva prestacion 
+            method.subscribe(prestacionEjecutada => {
+                // inicializamos el array en caso de que haga falta
+                // if (typeof this.prestacion.prestacionesEjecutadas === 'undefined') {
+                //     this.prestacion.prestacionesEjecutadas = [];
+                // }
+
+                // asignamos la prestacion nueva al array de prestaciones ejecutadas
+                let find;
+                if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
+                    find = this.prestacion.ejecucion.prestaciones.find(p => {
+                        return p.id === prestacionEjecutada.id
+                    });
+                }
+
+                if (!find) {
+                    let id; id = prestacionEjecutada.id;
+                    this.prestacion.ejecucion.prestaciones.push(id);
+                }
+
+                // actualizamos la prestacion que estamos loopeando con los datos recien guardados
+                _prestacion = prestacionEjecutada;
+
+                // this.prestacionesFuturas.push(prestacionFutura);
+                if (i == this.prestacionesEjecucion.length) {
+                    this.plex.alert('Prestacion confirmada');
+
+                    this.updatePrestacion();
+                    this.validarPrestacion();
+                }
+
+                i++;
+            });
+        });
+    }
+
+    // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
+    getPosiblesPrestaciones() {
+    //     this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
+    }
+
+    // Prestaciones futuras / Plan
+    // Busca los tipos de prestaciones que pueda pedir a futuro como plan
+    buscarTipoPrestacion(event) {
+        let query = {
+            query: event.query,
+            turneable: true
+        }
+        this.serviceTipoPrestacion.get(query).subscribe(event.callback);
+    }
+
+    // agregamos la prestacion al plan
+    agregarPrestacionFutura() {
+        if (this.nuevoTipoPrestacion) {
+
+            // asignamos valores a la nueva prestacion
+            this.nuevaPrestacion = {
+                idPrestacionOrigen: this.prestacion.id,
+                paciente: this.prestacion.paciente,
+                solicitud: {
+                    tipoPrestacion: this.nuevoTipoPrestacion,
+                    fecha: new Date(),
+                    listaProblemas: []
+                },
+                estado: {
+                    timestamp: Date(),
+                    tipo: 'pendiente'
+                }
+            };
+
+            // si he agregado algun problema a la nueva prestacion
+            // entonces asigno su id a la prestacion a guardar
+            if (this.listaProblemasPlan && this.listaProblemasPlan.length > 0) {
+                // recorremos array de problemas y asignamos a la nueva prestacion
+                // for (let problema of this.listaProblemaPrestacion[tp.key]) {
+                this.listaProblemasPlan.forEach(problema => {
+                    this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
+                });
+            } else {
+                // si no agrego ningun problema, entonces por defecto se le agregan todos
+                this.nuevaPrestacion.solicitud.listaProblemas = this.listaProblemas;
+            }
+
+            // guardamos la nueva prestacion 
+            this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+                //this.prestacionesFuturas.push(prestacionFutura);
+
+                // asignamos la prestacion nueva al array de prestaciones futuras
+                this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+
+                this.updatePrestacion();
+            });
+
+            this.nuevoTipoPrestacion = null;
+            this.listaProblemasPlan = [];
+        } else {
+            this.plex.alert('Debe seleccionar una prestación');
+        }
+    }
+
+    // borramos la prestacion del plan
+    borrarPrestacionFutura(index) {
+        alert("Implementar");
+        // this.prestacionesFuturas.splice(index, 1);
+    }
+    // Fin prestaciones futuras / Plan
+
+    updatePrestacion() {
+        // actualizamos la prestacion de origen
+        this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
+            // this.prestacion = prestacionActualizada;
+            // buscamos la prestacion actualizada con los datos populados
+            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+            });
+        });
+    }
+
     validarPrestacion() {
         this.showValidar = true;
     }
