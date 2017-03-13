@@ -45,20 +45,24 @@ export class EvolucionProblemaComponent implements OnInit {
         let evols = this.problema.evoluciones;
     }
 
-    evolucionarProblema() {
+    evolucionarProblema(event) {
+        if (event.formValid) {
+            this.unaEvolucion.duracion = this.duracion.id;
+            this.unaEvolucion.vigencia = this.vigencia.id;
+            this.problema.evoluciones.push(this.unaEvolucion);
+            console.log(this.problema);
+            this.servProbPaciente.put(this.problema).subscribe(resultado => {
+                if (resultado) {
+                    this.evtData.emit(this.problema);
+                } else {
+                    this.plex.alert('Ha ocurrido un error al almacenar la evolución');
+                }
 
-        this.unaEvolucion.duracion = this.duracion.id;
-        this.unaEvolucion.vigencia = this.vigencia.id;
-        this.problema.evoluciones.push(this.unaEvolucion);
-        console.log(this.problema);
-        this.servProbPaciente.put(this.problema).subscribe(resultado => {
-            if (resultado) {
-                this.evtData.emit(this.problema);
-            } else {
-                this.plex.alert('Ha ocurrido un error al almacenar la evolución');
-            }
+            });
 
-        });
+        } else {
+            this.plex.alert('Completar datos requeridos');
+        }
 
 
     }

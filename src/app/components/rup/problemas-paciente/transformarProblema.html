@@ -21,25 +21,21 @@
     <form>
         <div class="row">
             <div class="col-md-12">
-                <plex-select [(ngModel)]="tipoProblema" name="tipoProblema" label="Transformar a:" (getData)="loadTiposProblemas($event)" placeholder="Seleccionar Problema">
+                <plex-select [(ngModel)]="tipoProblema" name="tipoProblema" [required]="true" label="Transformar a:" (getData)="loadTiposProblemas($event)" placeholder="Seleccionar Problema">
                 </plex-select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <plex-text [(ngModel)]="observacion" name="observacion" label="Observaciones">
+                <plex-text [(ngModel)]="observacion" name="observacion" [required]="true" label="Observaciones">
                 </plex-text>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" label="Duración" placeholder="Ingrese duración">
+                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" label="Duración" [required]="true" placeholder="Ingrese duración">
                 </plex-select>
             </div>
-            <!--<div class="col-md-6">
-                <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" label="Vigencia" placeholder="Ingrese vigencia">
-                </plex-select>
-            </div>-->
         </div>
         <div class="row">
             <div class="col-md-12 text-right">
