@@ -115,6 +115,7 @@ import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacim
 import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
+import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 
 
 //ATOMO SOCIOECONOMICO
@@ -187,7 +188,8 @@ export const RUP_COMPONENTS = [
   EvolucionProblemaComponent,
   TransformarProblemaComponent,
   PruebaOtoemisionesAcusticasComponent,
-  PesquisaNeonatalComponent
+  PesquisaNeonatalComponent,
+  PercentiloTallaComponent
 
 ];
 
