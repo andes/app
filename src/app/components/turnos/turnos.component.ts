@@ -92,7 +92,8 @@ export class TurnosComponent implements OnInit {
             smsEnviado: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado),
             smsLoader: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado) && (turno.smsLoader),
 
-            verNota: true
+            verNota: true,
+            nota: turno.nota
         };
 
     }
@@ -242,8 +243,7 @@ export class TurnosComponent implements OnInit {
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             agenda = resultado;
 
-            this.plex.alert('El paciente paso a Lista de Espera');
-            debugger;
+            this.plex.alert('El paciente paso a Lista de Espera');            
         });
     }
 
@@ -273,25 +273,25 @@ export class TurnosComponent implements OnInit {
         }
     }
 
-    guardarNota(agenda: any, turno: any) {
-        let patch: any = {};
+    // guardarNota(agenda: any, turno: any) {
+    //     let patch: any = {};
 
-        patch = {
-            'op': 'guardarNotaTurno',
-            'idAgenda': agenda.id,
-            'idTurno': turno.id,
-            'textoNota': turno.nota
-        };
+    //     patch = {
+    //         'op': 'guardarNotaTurno',
+    //         'idAgenda': agenda.id,
+    //         'idTurno': turno.id,
+    //         'textoNota': turno.nota
+    //     };
 
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+    //     this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
 
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
+    //     },
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    // }
 
     saveLiberarTurno(agenda: any) {
         this.showTurnos = true;

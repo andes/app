@@ -19,9 +19,13 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     showAgregarNotaTurno: boolean = true;
     public modelo: any;
+    public resultado: any;
 
     ngOnInit() {
-        this.modelo = { nota: null };
+        if (this.turno.nota)
+            this.modelo = { nota: this.turno.nota };
+        else
+            this.modelo = { nota: null };
     }
 
     guardarNota(agenda: any, turno: any) {
@@ -35,7 +39,11 @@ export class AgregarNotaTurnoComponent implements OnInit {
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.plex.alert('La Nota se guardó correctamente');
 
+            this.resultado = resultado;
+
+            this.saveAgregarNotaTurno.emit(this.resultado);
         },
             err => {
                 if (err) {
@@ -45,9 +53,8 @@ export class AgregarNotaTurnoComponent implements OnInit {
     }
 
     cancelar() {
-        debugger;
         this.cancelaAgregarNota.emit(true);
     }
-    constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
+    constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 }

@@ -22,9 +22,15 @@
                                         </td>
 
                                         <td>
-                                            <span *ngIf="turno.botones.nombrePaciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
-                                            <span *ngIf="turno.botones.lblTurnoDisponible">Disponible</span>
-                                            <span *ngIf="turno.botones.lblTurnoNoDisponible">No Disponible</span>
+                                            <span *ngIf="turno.botones.nombrePaciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}
+                                                <i *ngIf="turno.botones.nota" title={{turno.nota}} class="text-warning warning mdi mdi-ribbon"></i>
+                                            </span>
+                                            <span *ngIf="turno.botones.lblTurnoDisponible">Disponible
+                                                <i *ngIf="turno.botones.nota" title={{turno.nota}} class="text-warning warning mdi mdi-ribbon"></i>
+                                            </span>
+                                            <span *ngIf="turno.botones.lblTurnoNoDisponible">No Disponible
+                                                <i *ngIf="turno.botones.nota" title={{turno.nota}} class="text-warning warning mdi mdi-ribbon"></i>
+                                            </span>
                                         </td>
 
                                         <td *ngIf="turno.botones.asistencias">
