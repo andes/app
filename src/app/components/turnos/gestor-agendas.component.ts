@@ -87,6 +87,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     reasignaTurno(reasTurno) {
+        debugger;
         this.reasignar = reasTurno;
 
         this.showGestorAgendas = false;

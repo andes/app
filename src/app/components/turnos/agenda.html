@@ -1,10 +1,25 @@
+<form>
 <div class="row" *ngIf="showAgenda">
   <div class="col-md-5">
     <plex-box type="success" title="Agenda">
       <div class="row">
+        <div class="col-md-4">
+          <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
+          </plex-datetime>
+        </div>
+        <div *ngIf="modelo.fecha" class="col-md-4">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" [required]="true" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
+          </plex-datetime>
+        </div>
+        <div *ngIf="modelo.fecha" class="col-md-4">
+          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" [required]="true" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
+          </plex-datetime>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
-            placeholder="Seleccione las prestaciones" [multiple]="true" (change)="cambioPrestaciones()">
+          <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
+            placeholder="Seleccione las prestaciones" [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
             </plex-select>
         </div>
       </div>
@@ -20,20 +35,6 @@
           <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
             placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
             </plex-select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
-          </plex-datetime>
         </div>
       </div>
       <div class="row">&nbsp;</div>
@@ -54,11 +55,11 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!--<div class="row">
         <div class="col-md-6">
           <plex-bool [(ngModel)]="modelo.intercalar" label="Permitir intercalar bloques" name="modelo.intercalar" (click)="intercalar()"></plex-bool>
         </div>
-      </div>
+      </div>-->
       <br>
       <div class="row">
         <div class="col-md-12">
@@ -70,11 +71,11 @@
       <div class="row">&nbsp;</div>
       <div class="row">
         <div class="col-sm-12">
-          <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)" title="Guardar">
           </plex-button>
-          <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
+          <plex-button *ngIf="alertas.length<=0" icon="content-save" validateForm="true" label="Guardar" type="primary" (click)="onSave($event, false)" title="Guardar">
           </plex-button>
-          <plex-button icon="mdi mdi-content-copy" label="Clonar" (click)="onClon()" title="Clonar">
+          <plex-button icon="mdi mdi-content-copy" label="Clonar" validateForm="true" (click)="onSave($event, true)" title="Clonar">
           </plex-button>
           <plex-button icon="magnify" label="Buscar" (click)="cargar()" title="Buscar">
           </plex-button>
@@ -109,12 +110,12 @@
             <div class="row">
               <div class="col-md-6">
                 <plex-int [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" (keyup)="cambiaTurnos('cantidad')" label="Cantidad de Turnos"
-                  placeholder="Cantidad">
+                  placeholder="Cantidad" [required]="true">
                   </plex-int>
               </div>
               <div class="col-md-6">
                 <plex-int [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" (keyup)="cambiaTurnos('duracion')" label="Duración del Turno"
-                  suffix="minutos" placeholder="Duración">
+                  suffix="minutos" placeholder="Duración" [required]="true" >
                   </plex-int>
               </div>
             </div>
@@ -122,7 +123,8 @@
           <div class="col-md-6">
             <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
               <div class="col-md-12">
-                <plex-bool [(ngModel)]="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
+                <!--{{unaPrestacion | json}}-->
+                <plex-bool [(ngModel)]="unaPrestacion.activo" name="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
                 </plex-bool>
               </div>
             </div>
@@ -240,3 +242,4 @@
 <div class="col-sm-12" *ngIf="showClonar">
   <clonar-agenda [agenda]="modelo"></clonar-agenda>
 </div>
+</form>
