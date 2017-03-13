@@ -24,6 +24,7 @@ import { HttpModule } from '@angular/http';
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
+import { Auth } from '@andes/auth';
 
 // Servicios
 // ... Tablas Maestras
@@ -221,6 +222,7 @@ import { routing, appRoutingProviders } from './app.routing';
     useValue: 'es-AR'
   },
     Plex,
+    Auth,
     OrganizacionService,
     ProvinciaService,
     TipoEstablecimientoService,
