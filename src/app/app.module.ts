@@ -116,6 +116,7 @@ import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGe
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
+import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 
 
 //ATOMO SOCIOECONOMICO
@@ -189,7 +190,8 @@ export const RUP_COMPONENTS = [
   TransformarProblemaComponent,
   PruebaOtoemisionesAcusticasComponent,
   PesquisaNeonatalComponent,
-  PercentiloTallaComponent
+  PercentiloTallaComponent,
+  PercentiloCircunferenciaCefalicaNinoComponent
 
 ];
 
