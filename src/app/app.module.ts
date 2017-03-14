@@ -104,6 +104,7 @@ import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestac
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
+import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
@@ -184,6 +185,7 @@ export const RUP_COMPONENTS = [
   PartoViaVaginalForcepsComponent,
   PartoViaVaginalComponent,
   EvolucionProblemaComponent,
+  EnmendarProblemaComponent,
   TransformarProblemaComponent,
   PruebaOtoemisionesAcusticasComponent,
   PesquisaNeonatalComponent
@@ -208,7 +210,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     routing,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
-    })    
+    })
   ],
 
   declarations: [

@@ -1,4 +1,4 @@
-<plex-box title="Evolucionar">
+<plex-box title="Enmendar">
     <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
         <div class="col-md-12">
             <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
@@ -15,7 +15,7 @@
     <form>
         <div class="row">
             <div class="col-md-12">
-                <h3> {{problema.tipoProblema.nombre}}</h3>
+                <h3> {{problema.tipoProblema.nombre}} </h3>
             </div>
         </div>
         <div class="row">
@@ -25,18 +25,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración">
-                </plex-select>
-            </div>
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" placeholder="Ingrese Vigencia">
-                </plex-select>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-12 text-right">
-                <plex-button title="Evolucionar Problema " label="Evolucionar " validateForm="true" (click)="evolucionarProblema($event)" type="success"></plex-button>
+                <plex-button title="Enmendar Problema " label="Enmendar " validateForm="true" (click)="enmendarProblema($event)" type="success"></plex-button>
                 <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
             </div>
         </div>

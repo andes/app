@@ -18,7 +18,20 @@ export class EvolucionTodosProblemasComponent implements OnInit {
 
     @Output() evtData: EventEmitter<IProblemaPaciente[]> = new EventEmitter<IProblemaPaciente[]>();
     @Input() problemas: IProblemaPaciente[];
-    textoEvolucion: String = "";
+    vigencia = { id: '', nombre: '...' };
+    duracion = { id: '', nombre: '...' };
+    unaEvolucion: any = {
+        fecha: new Date(),
+        observacion: '',
+        profesional: null,
+        organizacion: null,
+        duracion: '',
+        vigencia: '',
+        segundaOpinion: null
+    };
+
+    opcionesDuracion = [{ id: 'Crónico', nombre: 'Crónico' }, { id: 'agudo', nombre: 'Agudo' }];
+    opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'Inactivo', nombre: 'Inactivo' }, { id: 'Resuelto', nombre: 'Resuelto' }];
 
 
     constructor(private servProbPaciente: ProblemaPacienteService,
@@ -29,32 +42,27 @@ export class EvolucionTodosProblemasComponent implements OnInit {
         debugger;
     }
 
-    evolucionar() {
-        let cant = this.problemas.length;
-        // for (let i = 0; i < cant; i++) {
-        //     var dato = {
-        //         // fecha: new Date(),
-        //         // activo: this.problemas[i].activo,
-        //         // observacion: this.textoEvolucion,
-        //         // profesional: null, //TODO: traer profesional login
-        //         // organizacion: null //TODO: traer organizacion login
-        //     }
-        //     this.problemas[i].evoluciones.push(dato);
-        // }
-
-        this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
-            if (resultado) {
-                debugger;
-                this.evtData.emit(this.problemas);
-            } else {
-                this.plex.alert('Ha ocurrido un error al almacenar la evolución de los problemas');
+    evolucionar(event) {
+        if (event.formValid) {
+            this.unaEvolucion.duracion = this.duracion.id;
+            this.unaEvolucion.vigencia = this.vigencia.id;
+            let cant = this.problemas.length;
+            for (let i = 0; i < cant; i++) {
+                this.problemas[i].evoluciones.push(this.unaEvolucion);
             }
 
-        });
+            this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
+                if (resultado) {
+                    this.plex.alert('Los datos se han modificado correctamente');
+                    this.evtData.emit(this.problemas);
+                } else {
+                    this.plex.alert('Ha ocurrido un error al almacenar la evolución de los problemas');
+                }
+            });
 
-
-
-
+        } else {
+            this.plex.alert('Completar datos requeridos');
+        }
     }
 
     cerrar() {
