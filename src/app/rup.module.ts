@@ -47,6 +47,7 @@ import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
 import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 
 
 //ATOMO SOCIOECONOMICO
@@ -133,7 +134,8 @@ export const RUP_COMPONENTS = [
     PercentiloTallaComponent,
     PercentiloCircunferenciaCefalicaNinoComponent,
     DesarrolloMotorComponent,
-    actitudAnteLosCuidadosComponent
+    actitudAnteLosCuidadosComponent,
+    ControlDeEsfinteresComponent
 
     // NO VAPacienteComponent
 ];
