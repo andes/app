@@ -45,6 +45,7 @@ import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pr
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
+import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
 
 
 //ATOMO SOCIOECONOMICO
@@ -129,7 +130,8 @@ export const RUP_COMPONENTS = [
     PesquisaNeonatalComponent,
     PruebaOtoemisionesAcusticasComponent,
     PercentiloTallaComponent,
-    PercentiloCircunferenciaCefalicaNinoComponent
+    PercentiloCircunferenciaCefalicaNinoComponent,
+    DesarrolloMotorComponent
 
     // NO VAPacienteComponent
 ];
