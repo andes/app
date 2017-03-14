@@ -39,8 +39,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <ul class="list-group" *ngIf="prestacion.solicitud && prestacion.solicitud.listaProblemas">
-                                <li class="list-group-item clearfix" *ngFor="let problema of prestacion.solicitud.listaProblemas">
+                            <ul class="list-group" *ngIf="prestacion.solicitud && prestacion.ejecucion.listaProblemas">
+                                <li class="list-group-item clearfix" *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                                     <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                                         <div class="col-md-12">
                                             <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
@@ -59,16 +59,15 @@
                                             {{problema.tipoProblema.nombre}}
 
                                             <!--<span class="pull-right">
-                                                <plex-button label="..." *ngIf="!mostrarMenu" (click)="verMenu(problema)"></plex-button>
-                                                <plex-dropdown label="..." *ngIf="mostrarMenu" [items]="items">
+                                                <plex-dropdown label="..." [items]="items">
                                                 </plex-dropdown>
                                             </span>-->
 
                                         </div>
                                         <div class="col-md-4">
-                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)"></plex-button>
-                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)"></plex-button>
-                                            <plex-button label="Enmendar Problema" type="link"></plex-button>
+                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
+                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
+                                            <plex-button label="Enmendar Problema" type="link" (click)="enmendarProblema(problema)"></plex-button>
                                             <plex-button label="Ver Detalles" type="link"></plex-button>
                                         </div>
                                     </div>
@@ -84,7 +83,10 @@
                             <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
                         </div>
                         <div *ngIf="showTransformar">
-                            <rup-transformarProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                            <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                        </div>
+                        <div *ngIf="showEnmendar">
+                            <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnemndar($event)"></rup-enmendarProblema>
                         </div>
                     </div>
                 </div>
@@ -177,7 +179,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" [data]="listaProblemas" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" (getData)="$event.callback(listaProblemas)" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
                                     </div>
                                 </div>
                             </plex-panel>
@@ -194,7 +196,7 @@
                         <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (getData)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>
                     </div>
                     <div class="col-md-5">
-                        <plex-select [(ngModel)]="listaProblemasPlan" name="nuevaPrestacionProblemas" [data]="listaProblemas" labelField="tipoProblema.nombre" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                        <plex-select [(ngModel)]="listaProblemasPlan" name="nuevaPrestacionProblemas" (getData)="$event.callback(listaProblemas)" labelField="tipoProblema.nombre" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
                     </div>
                     <div class="col-md-2">
                         <plex-button title="Agregar al plan" label="" icon="mdi mdi-plus" type="primary " (click)="agregarPrestacionFutura()"></plex-button>

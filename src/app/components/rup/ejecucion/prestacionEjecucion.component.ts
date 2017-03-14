@@ -32,18 +32,17 @@ export class PrestacionEjecucionComponent implements OnInit {
     tipoProblema = null;
     problemaTratar: any;
     mostrarMenu: Boolean = false;
-
     items = [
-        new MenuItem({ label: 'Ir a inicio', icon: 'dna', route: '/incio' }),
-        new MenuItem({ label: 'Ir a ruta inexistente', icon: 'flag', route: '/ruta-rota' }),
-        new MenuItem({ divider: true }),
         new MenuItem({ label: 'Item con handler', icon: 'wrench', handler: (() => { alert('Funciona!'); return false; }) })
     ];
+
+
 
 
     showEvolucionar = false;
     showTransformar = false;
     showEnmendar = false;
+    showDetalles = false;
     showEvolTodo = false;
     showValidar = false;
     data: Object = {};
@@ -120,8 +119,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                 idProblemaOrigen: null,
                 paciente: this.prestacion.paciente.id,
                 fechaInicio: new Date(),
-                activo: true,
-                evoluciones: []
+                evoluciones: [
+                    {
+                        fecha: new Date(),
+                        observacion: 'Inicio del Problema',
+                        profesional: null,
+                        organizacion: null,
+                        duracion: 'agudo',
+                        vigencia: 'activo',
+                        segundaOpinion: null
+                    }
+                ]
             };
 
             this.guardarProblema(nuevoProblema);
@@ -153,6 +161,16 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+    enmendarProblema(problema) {
+        this.showEnmendar = true;
+        this.problemaTratar = problema;
+    }
+
+    verDetalles(problema) {
+        this.showDetalles = true;
+        this.problemaTratar = problema;
+    }
+
     evolucionarTodo() {
         this.showEvolucionar = false;
         this.showEvolTodo = true;
@@ -163,12 +181,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showEvolucionar = false;
     }
 
-    onReturnTransformar(dato: IProblemaPaciente) {
+    onReturnTransformar(datos: IProblemaPaciente[]) {
         this.showTransformar = false;
-        this.listaProblemas.push(dato);
+        this.listaProblemas = datos;
+        this.prestacion.ejecucion.listaProblemas = datos;
         // asignamos el problema a la prestacion de origen
         // this.prestacion.solicitud.listaProblemas.push(resultado);
         this.updatePrestacion();
+    }
+
+    onReturnEnmendar(datos: IProblemaPaciente[]) {
+        this.showEnmendar = false;
     }
 
     onReturnTodos(dato: IProblemaPaciente[]) {
@@ -201,7 +224,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     });
                 }
 
-            console.log(find);
+                console.log(find);
 
                 // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
                 if (!find) {
@@ -209,14 +232,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                     find = this.crearPrestacionVacia(element);
 
                     this.prestacionesEjecucion.push(find);
-                }else {
+                } else {
                     this.prestacionesEjecucion.push(find);
 
                     let key; key = element.key;
 
                     this.listaProblemaPrestacion[key] = find.ejecucion.listaProblemas;
 
-                    let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length-1].valores[key];
+                    let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
 
                 }
 
@@ -360,7 +383,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
     getPosiblesPrestaciones() {
-    //     this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
+        //     this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
     }
 
     // Prestaciones futuras / Plan
@@ -445,7 +468,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponente(datos, tipoPrestacionActual) {
-        console.log("dato del componente", datos);
         this.data[tipoPrestacionActual.key] = datos;
     }
 
