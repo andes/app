@@ -21,7 +21,25 @@
             <plex-box *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 class="titulo"><strong>{{problema.tipoProblema.nombre}}</strong></h4>
+                        <h4 class="titulo">
+                            <strong>{{problema.tipoProblema.nombre}}</strong>
+
+                            <span class="pull-right text-right">
+                                <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                    Activo
+                                </span>
+                            <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span>&nbsp;&nbsp;&nbsp;
+                            <span class="label label-warning">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                                </span>
+
+                            <span class="label label-success" *ngIf="prestaciones[problema.id]">
+                                    {{prestaciones[problema.id].length}} 
+                                </span>
+                            </span>
+                        </h4>
                     </div>
                 </div>
                 <div class="row">
@@ -29,9 +47,10 @@
                         <div class="row" *ngIf="prestacionesEjecutadas">
                             <div class="col-md-12">
                                 <h5 class="msg-title">Registros y cálculos</h5>
-                                <div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">
+                                <!--<div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">-->
+                                <div *ngFor="let datoPrestacion of prestaciones[problema.id]">
                                     <div class="col-md-12" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key]">
-                                        <rup #rup [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0]) ? datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key] : null">
+                                        <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0]) ? datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key] : null">
                                         </rup>
                                     </div>
                                     <!--<br> {{problema.id }} <br> {{datoPrestacion.ejecucion.evoluciones[0].valores | json }}-->
@@ -44,7 +63,8 @@
                             <div class="col-md-12">
                                 <h5 class="msg-title">Planes</h5>
                                 <ul class="list-group">
-                                    <li class="list-group-item" *ngFor="let datoPrestacion of buscarPlanesPorProblema(problema)">{{datoPrestacion.solicitud.tipoPrestacion.nombre}}</li>
+                                    <!--<li class="list-group-item" *ngFor="let datoPrestacion of buscarPlanesPorProblema(problema)">{{datoPrestacion.solicitud.tipoPrestacion.nombre}}</li>-->
+                                    <li class="list-group-item" *ngFor="let datoPrestacion of prestacionesPlan[problema.id]">{{datoPrestacion.solicitud.tipoPrestacion.nombre}}</li>
                                 </ul>
                             </div>
                         </div>
