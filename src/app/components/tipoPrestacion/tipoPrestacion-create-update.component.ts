@@ -18,6 +18,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         id: '',
         nombre: ''
     };
+    public titulo: String = '';
     // Parámetros In/Out
     @Input('seleccion') seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
@@ -29,6 +30,9 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
         Object.assign(this.modelo, this.seleccion);
         if (!this.seleccion) {
+
+            this.titulo = 'Alta tipo de prestación';
+
             this.modelo = {
                 key: '',
                 nombre: '',
@@ -46,6 +50,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
             }; // this.modelo
         } else{
             this.granularidad.id = this.modelo.granularidad;
+            this.titulo = 'Modificación tipo de prestación';
          }
     } // ngOnInit
 
