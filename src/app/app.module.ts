@@ -112,8 +112,8 @@ import { TransformarProblemaComponent } from './components/rup/problemas-pacient
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNacimiento/edadGestacional.component';
-import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
+import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
 import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
@@ -126,26 +126,26 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
-import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socioEconomicos/viviendaNivelInstruccion.component';
-import { ViviendaFamiliaComponent } from './components/rup/atomos/socioEconomicos/viviendaFamilia.component';
-import { ViviendaContaminantesComponent } from './components/rup/atomos/socioEconomicos/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconomicos/viviendaCombustion.component';
-import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/atomos/socio-economicos/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socio-economicos/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/atomos/socio-economicos/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/atomos/socio-economicos/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/atomos/socio-economicos/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socio-economicos/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socio-economicos/viviendaAsistenciaEconomica.component';
 import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
 // PERINATALES EMBARAZO
-import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
-import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
-import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
-import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesNumeroGesta.component';
+import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesGestacionMultiple.component';
 // PERINATALES PARTO
-import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
-import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
-import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
-import { PartoCesareaComponent } from './components/rup/atomos/perinatalesParto/partoCesarea.component';
-import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatalesParto/hallazgoRelacionadoParto.component';
+import { PartoViaVaginalComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
 
 
 export const RUP_COMPONENTS = [
