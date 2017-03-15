@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -124,6 +125,8 @@ import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMoto
 import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
+
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
@@ -201,7 +204,8 @@ export const RUP_COMPONENTS = [
   DesarrolloMotorComponent,
   actitudAnteLosCuidadosComponent,
   ControlDeEsfinteresComponent,
-  DesarrolloIntelectualyJuegosComponent
+  DesarrolloIntelectualyJuegosComponent,
+  EscalaDeDesarrolloComponent
 
 ];
 

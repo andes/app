@@ -49,6 +49,7 @@ import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMoto
 import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 
 
 // ATOMO SOCIOECONOMICO
@@ -137,7 +138,8 @@ export const RUP_COMPONENTS = [
     DesarrolloMotorComponent,
     actitudAnteLosCuidadosComponent,
     ControlDeEsfinteresComponent,
-    DesarrolloIntelectualyJuegosComponent
+    DesarrolloIntelectualyJuegosComponent,
+    EscalaDeDesarrolloComponent
 
     // NO VAPacienteComponent
 ];
