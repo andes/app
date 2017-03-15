@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -24,6 +25,7 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 // import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 
@@ -62,8 +64,9 @@ const appRoutes: Routes = [
   // { path: 'rup/:id?*/', component: DashboardComponent },
   // { path: 'espacio_fisico', component: EspacioFisicoComponent },
   // { path: 'prestacion', component: PrestacionComponent },
+  { path: 'tipoprestaciones', component: TipoPrestacionComponent },
 
-  //{ path: 'atomos', component: PerinatalesGestacionMultipleComponent },
+  // { path: 'atomos', component: PerinatalesGestacionMultipleComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 

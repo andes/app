@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -38,6 +37,7 @@ import { TipoEstablecimientoService } from './services/tipoEstablecimiento.servi
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
+
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -61,6 +61,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
+import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
@@ -116,7 +118,7 @@ import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeona
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 
 
-//ATOMO SOCIOECONOMICO
+// ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
@@ -127,12 +129,12 @@ import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconom
 import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
 import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
-//PERINATALES EMBARAZO
+// PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
 import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
 import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
-//Perinatales Parto
+// Perinatales Parto
 import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
 import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
@@ -194,7 +196,7 @@ export const RUP_COMPONENTS = [
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
-//Ver donde poner
+// Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 // Main module
@@ -208,7 +210,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     routing,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
-    })    
+    })
   ],
 
   declarations: [
@@ -220,6 +222,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
     AgendaComponent, PanelEspacioComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,

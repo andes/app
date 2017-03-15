@@ -16,5 +16,7 @@ export interface ITipoPrestacion {
     componente: {
         nombre: String,
         ruta: String
-    }
+    },
+    granularidad:String;
+    };
 }
