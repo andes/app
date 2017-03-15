@@ -37,8 +37,6 @@ export class TurnosComponent implements OnInit {
     resultado: any;
 
     listaEspera: any;
-    // tablaTurnos: boolean = false;
-    // pacienteCancelado: String;
 
     agenda: IAgenda;
     turno: ITurno;
@@ -51,11 +49,95 @@ export class TurnosComponent implements OnInit {
 
     public reasignar: any = {};
 
+    public botones: any = {};
+
+    public estadoTurno: String;
+    public estadoAsistencia: boolean;
+
     ngOnInit() {
         this.turnos = this.ag.bloques[0].turnos;
 
         for (let x = 0; x < this.turnos.length; x++) {
             this.actualizarBotonesTurnos(this.turnos[x]);
+        }
+
+        for (let x = 0; x < this.turnos.length; x++) {
+            //     this.setBotones(this.pacientesSeleccionados);
+            debugger;
+            this.actualizarBotones(this.turnos[x]);
+        }
+    }
+
+    agregarPaciente(turno) {
+
+        this._selectAll = false;
+        debugger;
+        if (this.pacientesSeleccionados.find(x => x.paciente === turno.paciente)) {
+            this.pacientesSeleccionados.splice(this.pacientesSeleccionados.indexOf(turno), 1);
+            turno.checked = false;
+        } else {
+            this.pacientesSeleccionados.push(turno);
+            turno.checked = true;
+        }
+
+        this.setBotones(this.pacientesSeleccionados);
+
+        this.actualizarBotones(turno);
+
+    }
+
+    sonIguales(arr) {
+        var x = arr[0];
+        return arr.every(function (item) {
+            return item === x
+        });
+    }
+
+    setBotones(pacientesSeleccionados: any[]) {
+        debugger;
+        let estado = [];
+        let asistencia = [];
+
+        if (pacientesSeleccionados.length > 0) {
+            pacientesSeleccionados.forEach(pac => { estado.push(pac.estado) })
+            this.estadoTurno = this.sonIguales(estado);
+
+            if (this.estadoTurno)
+                this.estadoTurno = pacientesSeleccionados[0].estado;
+
+            pacientesSeleccionados.forEach(pac => { asistencia.push(pac.asistencia) })
+            this.estadoAsistencia = this.sonIguales(asistencia);
+
+            if (this.estadoAsistencia)
+                this.estadoAsistencia = pacientesSeleccionados[0].asistencia;
+            else
+                this.estadoTurno = '';
+
+        } else {
+            this.estadoTurno = '';
+        }
+    }
+
+    actualizarBotones(turno: any) {
+        debugger;
+        this.botones = {
+
+            asistencias: (this.ag.estado != 'suspendida') && (this.estadoTurno === 'asignado'),
+            darAsistencia: (!this.estadoAsistencia),
+            sacarAsistencia: (this.estadoAsistencia),
+
+            // lblTieneAsistencia: (this.ag.estado != 'suspendida') && (turno.paciente) && (turno.asistencia),
+            // lblNoTieneAsistencia: (this.ag.estado != 'suspendida') && (turno.paciente) && (!turno.asistencia),
+
+            tdSuspenderTurno: (this.ag.estado != 'suspendida') && (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
+
+            tdLiberarTurno: (this.ag.estado != 'suspendida') && (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
+
+            tdBloquearTurno: (this.ag.estado != 'suspendida') && (this.estadoTurno === 'disponible') || (this.estadoTurno === 'bloqueado'),
+            bloquearTurno: (this.estadoTurno === 'disponible'),
+            desbloquearTurno: (this.estadoTurno === 'bloqueado'),
+
+            tdReasignarTurno: (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
         }
     }
 
@@ -65,9 +147,14 @@ export class TurnosComponent implements OnInit {
             nombrePaciente: (this.ag.estado != 'suspendida') && (turno.paciente),
             lblTurnoDisponible: (this.ag.estado != 'suspendida') && (!turno.paciente) && (turno.estado != 'bloqueado'),
             lblTurnoNoDisponible: (this.ag.estado != 'suspendida') && (!turno.paciente) && (turno.estado === 'bloqueado'),
+
             asistencias: (this.ag.estado != 'suspendida') && (turno.paciente),
             darAsistencia: (this.ag.estado != 'suspendida') && (!turno.asistencia),
             sacarAsistencia: (this.ag.estado != 'suspendida') && (turno.asistencia === true),
+
+            lblTieneAsistencia: (this.ag.estado != 'suspendida') && (turno.paciente) && (turno.asistencia),
+            lblNoTieneAsistencia: (this.ag.estado != 'suspendida') && (turno.paciente) && (!turno.asistencia),
+
             turnoDisponible: (this.ag.estado != 'suspendida') && (!turno.paciente),
 
             tdSuspenderTurno: (this.ag.estado != 'suspendida'),
@@ -123,19 +210,6 @@ export class TurnosComponent implements OnInit {
         this._selectAll = value;
     }
 
-    agregarPaciente(turno) {
-
-        this._selectAll = false;
-
-        if (this.pacientesSeleccionados.find(x => x.paciente === turno.paciente)) {
-            this.pacientesSeleccionados.splice(this.pacientesSeleccionados.indexOf(turno), 1);
-            turno.checked = false;
-        } else {
-            this.pacientesSeleccionados.push(turno);
-            turno.checked = true;
-        }
-    }
-
     liberarTurno(agenda: any, turno: any) {
         this.agenda = agenda;
         this.turno = turno;
@@ -164,12 +238,46 @@ export class TurnosComponent implements OnInit {
         this.showAgregarNotaTurno = true;
     }
 
+    darAsistencia(agenda: any, index) {
+        debugger;
+
+        for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
+            let patch = {
+                'op': 'asistenciaTurno',
+                'idTurno': this.pacientesSeleccionados[x].id //bloque[index].turnos[x].id
+            };
+
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                this.ag = resultado;
+                this.turnos = this.ag.bloques[index].turnos;
+
+                this.setBotones(this.pacientesSeleccionados);
+                for (let x = 0; x < this.turnos.length; x++) {
+                    this.actualizarBotones(this.turnos[x]);
+                }
+
+
+                // for (let x = 0; x < this.turnos.length; x++) {
+                //     this.actualizarBotones(this.turnos[x]);
+                // }
+
+                for (let x = 0; x < this.turnos.length; x++) {
+                    this.actualizarBotonesTurnos(this.turnos[x]);
+                }
+                debugger;
+                this.pacientesSeleccionados.length = 0;
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
+    }
+
     eventosTurno(agenda: IAgenda, turno: any, event) {
 
-        let btnClicked;
-
-        if (event.currentTarget)
-            btnClicked = event.currentTarget.id;
+        let btnClicked = event.currentTarget.id;
 
         let patch: any = {};
 
@@ -191,6 +299,14 @@ export class TurnosComponent implements OnInit {
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
             this.ag = resultado;
             this.turnos = this.ag.bloques[0].turnos;
+            debugger;
+            // this.verificarEstados(this.turnos);
+
+            // for (let x = 0; x < this.turnos.length; x++) {
+            //     this.actualizarBotones();
+            // }
+
+
 
             for (let x = 0; x < this.turnos.length; x++) {
                 this.actualizarBotonesTurnos(this.turnos[x]);
@@ -243,7 +359,7 @@ export class TurnosComponent implements OnInit {
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             agenda = resultado;
 
-            this.plex.alert('El paciente paso a Lista de Espera');            
+            this.plex.alert('El paciente paso a Lista de Espera');
         });
     }
 
@@ -272,26 +388,6 @@ export class TurnosComponent implements OnInit {
             }
         }
     }
-
-    // guardarNota(agenda: any, turno: any) {
-    //     let patch: any = {};
-
-    //     patch = {
-    //         'op': 'guardarNotaTurno',
-    //         'idAgenda': agenda.id,
-    //         'idTurno': turno.id,
-    //         'textoNota': turno.nota
-    //     };
-
-    //     this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-
-    //     },
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
 
     saveLiberarTurno(agenda: any) {
         this.showTurnos = true;
