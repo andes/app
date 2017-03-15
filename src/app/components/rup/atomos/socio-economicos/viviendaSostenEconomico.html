@@ -1,6 +1,6 @@
 <plex-bool [(ngModel)]="data[tipoPrestacion.key].trabaja" name="trabajaActualmente" label="Trabaja Actualmente" type="slide" (change)="devolverValores()">
 </plex-bool>
 
-<plex-int [(ngModel)]="data[tipoPrestacion.key].horas" placeholder="Ingrese cantidad de horas" name="cantidadHoras" suffix=" Hs/Día "
+<plex-int [(ngModel)]="data[tipoPrestacion.key].horas" placeholder="Ingrese un valor entre 0 y 24" name="cantidadHoras" suffix=" Hs/Día "
   min="0" max="24" (change)="devolverValores()" *ngIf="data[tipoPrestacion.key].trabaja">
 </plex-int>
