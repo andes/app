@@ -5,7 +5,7 @@ import { IPaciente } from "../../../interfaces/IPaciente";
     selector: 'rup-ActitudAnteLosCuidados',
     templateUrl: 'actitudAnteLosCuidados.html'
 })
-export class actitudAnteLosCuidadosComponent implements OnInit {
+export class ActitudAnteLosCuidadosComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;

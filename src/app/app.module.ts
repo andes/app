@@ -122,7 +122,7 @@ import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pr
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
-import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
@@ -202,7 +202,7 @@ export const RUP_COMPONENTS = [
   PercentiloTallaComponent,
   PercentiloCircunferenciaCefalicaNinoComponent,
   DesarrolloMotorComponent,
-  actitudAnteLosCuidadosComponent,
+  ActitudAnteLosCuidadosComponent,
   ControlDeEsfinteresComponent,
   DesarrolloIntelectualyJuegosComponent,
   EscalaDeDesarrolloComponent
