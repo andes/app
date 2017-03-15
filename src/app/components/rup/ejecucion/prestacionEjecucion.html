@@ -57,19 +57,19 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             {{problema.tipoProblema.nombre}}
-
-                                            <!--<span class="pull-right">
-                                                <plex-dropdown label="..." [items]="items">
-                                                </plex-dropdown>
-                                            </span>-->
-
                                         </div>
                                         <div class="col-md-4">
                                             <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
                                             <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
                                             <plex-button label="Enmendar Problema" type="link" (click)="enmendarProblema(problema)"></plex-button>
                                             <plex-button label="Ver Detalles" type="link"></plex-button>
+
+                                            <!--<span class="pull-right">
+                                                <plex-dropdown label="..." (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
+                                            </span>-->
+
                                         </div>
+
                                     </div>
 
                                 </li>

@@ -39,15 +39,17 @@ export class PrestacionValidacionComponent implements OnInit {
     ngOnInit() {
         debugger;
         this.loadPrestacionesEjacutadas();
+        console.log("PRESTACION:" , this.prestacion);
     }
 
     loadPrestacionesEjacutadas() {
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
         });
-        // this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
-        //     this.prestacionesSolicitadas = resultado;
-        // });
+        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
+            this.prestacionesSolicitadas = resultado;
+            console.log("solicidatdas: " , this.prestacionesSolicitadas);
+        });
     }
 
     filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
@@ -61,7 +63,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
-        return this.prestacion.ejecucion.prestaciones.filter(data => {
+        return this.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
                 return data;
         });

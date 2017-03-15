@@ -33,11 +33,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     problemaTratar: any;
     mostrarMenu: Boolean = false;
     items = [
-        new MenuItem({ label: 'Item con handler', icon: 'wrench', handler: (() => { alert('Funciona!'); return false; }) })
+        new MenuItem({ label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem) } }),
+        new MenuItem({ label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem) }) }),
+        new MenuItem({ label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem) }) }),
+        new MenuItem({ label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem) }) }),
     ];
+    problemaItem : any;
 
-
-
+    mostrarOpciones(problema) {
+        this.problemaItem = problema;
+    }
 
     showEvolucionar = false;
     showTransformar = false;
@@ -340,7 +345,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             } else {
                 // si no agrego ningun problema, entonces por defecto se le agregan todos
-                prestacion.solicitud.listaProblemas = this.listaProblemas;
+                 this.listaProblemas.forEach(idProblema => {
+                    prestacion.solicitud.listaProblemas.push(idProblema);
+                });
             }
 
             let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
