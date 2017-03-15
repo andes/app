@@ -34,12 +34,20 @@ export class PrestacionEjecucionComponent implements OnInit {
     mostrarMenu: Boolean = false;
 
     items = [
-        new MenuItem({ label: 'Ir a inicio', icon: 'dna', route: '/incio' }),
-        new MenuItem({ label: 'Ir a ruta inexistente', icon: 'flag', route: '/ruta-rota' }),
-        new MenuItem({ divider: true }),
-        new MenuItem({ label: 'Item con handler', icon: 'wrench', handler: (() => { alert('Funciona!'); return false; }) })
+        new MenuItem({ label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem) } }),
+        new MenuItem({ label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem) }) }),
+        new MenuItem({ label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem) }) }),
+        new MenuItem({ label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem) }) }),
+        new MenuItem({ label: 'Item con handler', icon: 'wrench', handler: (() => { alert(this.problemaItem.id); return false; }) })
     ];
+    problemaItem : any;
 
+    mostrarOpciones(problema) {
+        this.problemaItem = problema;
+    }
+
+    enmendarProblema(problema) {}
+    verDetalles(problema) {}
 
     showEvolucionar = false;
     showTransformar = false;
@@ -317,7 +325,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             } else {
                 // si no agrego ningun problema, entonces por defecto se le agregan todos
-                prestacion.solicitud.listaProblemas = this.listaProblemas;
+                 this.listaProblemas.forEach(idProblema => {
+                    prestacion.solicitud.listaProblemas.push(idProblema);
+                });
             }
 
             let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
@@ -360,7 +370,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
     getPosiblesPrestaciones() {
-    //     this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
+        //     this.serviceTipoPrestacion.get({ excluir: this.idTiposPrestacionesEjecucion }).subscribe(event.callback);
     }
 
     // Prestaciones futuras / Plan

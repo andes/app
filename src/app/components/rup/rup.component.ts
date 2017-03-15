@@ -121,7 +121,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
         this.componentReference.changeDetectorRef.detectChanges();
 
-        let key = String(this.tipoPrestacion.key);
+        // let key = String(this.tipoPrestacion.key);
         //{ "valor": {}, "mensaje": { "texto": "" } }
         // let valores = { valor: {}, mensaje: { "texto": "" } }
         // valores = this.componentReference.instance.data;
@@ -132,11 +132,14 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
         // this.data.mensaje = this.componentReference.instance.data.mensaje;
 
-        // MORE MAGIG
+        // En caso de haber valores cargados en los datos de ingreso
+        // ejecutamos el evento para devolverlos y armar los valores
+        // de cada atomo
         if (this.datosIngreso){
             this.evtData.emit(this.componentReference.instance.data);
         }
 
+        // devolvemos los datos 
         datosComponente.evtData.subscribe(e => {
             this.evtData.emit(this.componentReference.instance.data);
         });
