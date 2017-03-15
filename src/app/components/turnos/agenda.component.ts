@@ -1,16 +1,20 @@
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { Observable } from 'rxjs/Rx';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+
+import * as moment from 'moment';
+import * as operaciones from './../../utils/operacionesJSON';
+
+import { IAgenda } from './../../interfaces/turnos/IAgenda';
+
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { Plex } from '@andes/plex';
 import { PrestacionService } from './../../services/turnos/prestacion.service';
-import { FormBuilder } from '@angular/forms';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import * as moment from 'moment';
-import * as operaciones from './../../utils/operacionesJSON';
 
 @Component({
     selector: 'agenda',
@@ -33,16 +37,24 @@ export class AgendaComponent implements OnInit {
     public elementoActivo: any = { descripcion: null };
     public alertas: String[] = [];
     public fecha: Date;
+    public permisos = [];
+    public autorizado: boolean;
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
 
-    constructor(private formBuilder: FormBuilder, public plex: Plex, private router: Router,
-        public servicioPrestacion: PrestacionService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public ServicioAgenda: AgendaService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+    constructor(
+        public plex: Plex,
+        private router: Router,
+        public servicioProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public ServicioAgenda: AgendaService,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public auth: Auth) { }
 
     ngOnInit() {
+        console.log('auth', this.auth.organizacion);
+        this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
         } else {
@@ -65,7 +77,10 @@ export class AgendaComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
+        this.permisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+            let dataF = data.filter((x) => {return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF)
+        });
     }
 
     loadProfesionales(event) {
@@ -408,7 +423,6 @@ export class AgendaComponent implements OnInit {
         let totalBloques = 0;
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
-            console.log(this.modelo.profesionales);
             this.modelo.profesionales.forEach((profesional, index) => {
                 this.alertas = [];
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
@@ -441,6 +455,13 @@ export class AgendaComponent implements OnInit {
             if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
                 > bloque.cantidadTurnos) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
+                this.alertas.push(alerta);
+            }
+
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
+                < bloque.cantidadTurnos) {
+                const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
+                alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
                 this.alertas.push(alerta);
             }
 
@@ -507,7 +528,8 @@ export class AgendaComponent implements OnInit {
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            this.modelo.estado = 'Planificada';
+            this.modelo.estado = 'Planificacion';
+            this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
             bloques.forEach((bloque, index) => {
                 bloque.turnos = [];
