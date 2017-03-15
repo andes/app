@@ -10,6 +10,10 @@
         border-top: 1px solid #ccc;
     }
     
+    .gris {
+        color: #999999;
+    }
+    
     .msg-problema i {
         color: #ff9900;
     }
@@ -29,9 +33,8 @@
                         <div class="col-md-8">
                             <div class="input-group">
                                 <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" placeholder="Agregar Problema">
-                                </plex-select>
-                                <span class="input-group-btn">
-                                    <plex-button title="Cargar Problema" label="" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary btn-sm"></plex-button>
+                                </plex-select><span class="input-group-btn">
+                                    <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary btn-sm"></plex-button>
                                 </span>
                             </div>
                         </div>
@@ -61,17 +64,19 @@
                                             {{problema.tipoProblema.nombre}}
                                         </div>
                                         <div class="col-md-4">
-                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
-                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
-                                            <plex-button label="Enmendar Problema" type="link" (click)="enmendarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
-                                            <plex-button label="Ver Detalles" type="link"></plex-button>
-
-                                            <!--<span class="pull-right">
+                                            <span class="pull-right">
                                                 <plex-dropdown label="..." (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
-                                            </span>-->
-
+                                            </span>
                                         </div>
-
+                                    </div>
+                                    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                        <div class="col-md-12 gris">
+                                            <strong> Última evolución: </strong> {{problema.evoluciones[problema.evoluciones.length - 1].observacion}}
+                                            <br />
+                                            <small class="gris">
+                                                {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} - Profesional: 
+                                                </small>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -95,55 +100,6 @@
                     <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
                 </div>
             </plex-box>
-
-
-            <!--<div class="box box-primary">
-                <div class="box-header with-border clearfix">
-                    <h3 class="box-title">Problemas</h3>
-
-                </div>
-                <div class="box-body">
-                    <div *ngIf="!showEvolucionar && !showEvolTodo">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ul class="list-group">
-                                    <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                {{problema.tipoProblema.nombre}}
-                                                <span class="pull-right">
-                                            <plex-button title="Evolucionar Problema " label="Evolucionar " (click)="evolucionarProblema(problema)" type="primary btn-sm"></plex-button>
-                                            <plex-button title="Eliminar " label=" " icon="close " (click)="eliminarProblema(problema)" type="danger btn-sm"></plex-button>
-                                        </span>
-                                            </div>
-                                        </div>
-                                        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                            <div class="col-md-12">
-                                                <strong> Última evolución: </strong> {{problema.evoluciones[problema.evoluciones.length - 1].observacion}}
-                                                <br />
-                                                <small class="gris">
-                                                {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} - Profesional: 
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div *ngIf="showEvolucionar && !showEvolTodo">
-                                <rup-evolucionaProblema [problema]="problemaEvolucionar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="!showEvolucionar && showEvolTodo">
-                        <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div class="col-md-6">
             <!--<pre>
@@ -151,7 +107,6 @@
             </pre>-->
             <plex-box type="primary" title="Prestaciones" *ngIf="prestacion.paciente">
                 <fieldset>
-                    <legend>Nueva prestación</legend>
                     <div class="row">
                         <div class="col-md-10">
                             <plex-select [(ngModel)]="prestacionAEjecutar" name="ejecutarPrestacion" label="Ejecutar nueva prestacion" (getData)="$event.callback(tiposPrestacionesPosibles)" placeholder="Seleccione prestación">

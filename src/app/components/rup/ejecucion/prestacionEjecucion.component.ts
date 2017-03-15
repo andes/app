@@ -25,20 +25,19 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     @Input() prestacion: IPrestacionPaciente;
-    listaProblemas: IProblemaPaciente[] = [];
-    problemaBuscar: String = '';
+    public listaProblemas: IProblemaPaciente[] = [];
+    public problemaBuscar: String = '';
 
-    tiposProblemas = [];
-    tipoProblema = null;
-    problemaTratar: any;
-    mostrarMenu: Boolean = false;
+    public tiposProblemas = [];
+    public tipoProblema = null;
+    public problemaTratar: any;
     items = [
-        new MenuItem({ label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem) } }),
-        new MenuItem({ label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem) }) }),
-        new MenuItem({ label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem) }) }),
-        new MenuItem({ label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem) }) }),
+        new MenuItem({ label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } }),
+        new MenuItem({ label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) }),
+        new MenuItem({ label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) }),
+        new MenuItem({ label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) }),
     ];
-    problemaItem : any;
+    problemaItem: any;
 
     mostrarOpciones(problema) {
         this.problemaItem = problema;
@@ -217,14 +216,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showEvolTodo = false;
     }
 
-    verMenu(problema) {
-        this.items = [
-            new MenuItem({ label: 'Evolucionar Problema', handler: (() => { this.evolucionarProblema(problema) }) }),
-            new MenuItem({ label: 'Transformar Problema', handler: (() => { this.evolucionarProblema(problema) }) })
-        ];
-        this.mostrarMenu = true;
-    }
-
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
 
@@ -255,7 +246,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                     let key; key = element.key;
 
-                    this.listaProblemaPrestacion[key] = find.ejecucion.listaProblemas;
+                    this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
                     let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
 
@@ -358,7 +349,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             } else {
                 // si no agrego ningun problema, entonces por defecto se le agregan todos
-                 this.listaProblemas.forEach(idProblema => {
+                this.listaProblemas.forEach(idProblema => {
                     prestacion.solicitud.listaProblemas.push(idProblema);
                 });
             }
@@ -418,8 +409,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // agregamos la prestacion al plan
     agregarPrestacionFutura() {
+        debugger;
         if (this.nuevoTipoPrestacion) {
-
             // asignamos valores a la nueva prestacion
             this.nuevaPrestacion = {
                 idPrestacionOrigen: this.prestacion.id,
@@ -432,6 +423,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 estado: {
                     timestamp: Date(),
                     tipo: 'pendiente'
+                },
+                ejecucion: {
+                    evoluciones: []
                 }
             };
 
@@ -450,12 +444,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // guardamos la nueva prestacion 
             this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
-                //this.prestacionesFuturas.push(prestacionFutura);
+                if (prestacionFutura) {
+                    //this.prestacionesFuturas.push(prestacionFutura);
+                    debugger;
+                    // asignamos la prestacion nueva al array de prestaciones futuras
+                    this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
 
-                // asignamos la prestacion nueva al array de prestaciones futuras
-                this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
-
-                this.updatePrestacion();
+                    this.updatePrestacion();
+                }
             });
 
             this.nuevoTipoPrestacion = null;
