@@ -46,8 +46,8 @@ export class SignosVitalesComponent implements OnInit {
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
-        console.log(obj);
-        console.log(tipoPrestacion);
+        // console.log(obj);
+        // console.log(tipoPrestacion);
         // inicializamos el array donde vamos a guardar todos los datos del form
         // if (this.data[this.tipoPrestacion.key] === undefined) {
         //     this.data[this.tipoPrestacion.key] = {};
