@@ -13,16 +13,14 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
 @Component({
-    selector: 'rup-evolucionaProblema',
-    templateUrl: 'evolucionProblema.html'
+    selector: 'rup-enmendarProblema',
+    templateUrl: 'enmendarProblema.html'
 })
-export class EvolucionProblemaComponent implements OnInit {
+export class EnmendarProblemaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<IProblemaPaciente> = new EventEmitter<IProblemaPaciente>();
 
     @Input() problema: IProblemaPaciente;
-    vigencia = { id: '', nombre: '...' };
-    duracion = { id: '', nombre: '...' };
     unaEvolucion: any = {
         fecha: new Date(),
         observacion: '',
@@ -33,9 +31,6 @@ export class EvolucionProblemaComponent implements OnInit {
         segundaOpinion: null
     };
 
-    opcionesDuracion = [{ id: 'Crónico', nombre: 'Crónico' }, { id: 'agudo', nombre: 'Agudo' }];
-    opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'Inactivo', nombre: 'Inactivo' }, { id: 'Resuelto', nombre: 'Resuelto' }];
-
     constructor(private servProbPaciente: ProblemaPacienteService,
         public plex: Plex) { }
 
@@ -45,14 +40,15 @@ export class EvolucionProblemaComponent implements OnInit {
         let evols = this.problema.evoluciones;
     }
 
-    evolucionarProblema(event) {
+    enmendarProblema(event) {
         if (event.formValid) {
-            this.unaEvolucion.duracion = this.duracion.id;
-            this.unaEvolucion.vigencia = this.vigencia.id;
+            this.unaEvolucion.duracion = this.problema.evoluciones[this.problema.evoluciones.length - 1].duracion;
+            this.unaEvolucion.vigencia = 'enmendado';
             this.problema.evoluciones.push(this.unaEvolucion);
             console.log(this.problema);
             this.servProbPaciente.put(this.problema).subscribe(resultado => {
                 if (resultado) {
+                    this.plex.alert('Los datos se cargaron correctamente');
                     this.evtData.emit(this.problema);
                 } else {
                     this.plex.alert('Ha ocurrido un error al almacenar la evolución');

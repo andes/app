@@ -1,3 +1,9 @@
 <plex-select [(ngModel)]="data[tipoPrestacion.key]" name="pruebaOtoemisionesAcusticas" [data]="selectPruebaOtoemisionesAcusticas"
     label="Prueba de otoemisiones acusticas" (change)="devolverValores()" placeholder="Seleccionar método">
 </plex-select>
+
+<p *ngIf="data.mensaje.texto">
+    <span class="badge {{data.mensaje.class}}">
+    {{data.mensaje.texto}}
+    </span>
+</p>
