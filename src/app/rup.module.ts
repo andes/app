@@ -40,7 +40,7 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
-import { TransformarProblemaComponent } from "./components/rup/problemas-paciente/transformarProblema.component";
+import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
@@ -51,7 +51,7 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 
 
-//ATOMO SOCIOECONOMICO
+// ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/atomos/socio-economicos/viviendaPiso.component';
@@ -62,12 +62,12 @@ import { ViviendaCombustionComponent } from './components/rup/atomos/socio-econo
 import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socio-economicos/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socio-economicos/viviendaAsistenciaEconomica.component';
 import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
-//PERINATALES EMBARAZO
+// PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
 import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesNumeroGesta.component';
 import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesGestacionMultiple.component';
-//Perinatales Parto
+// Perinatales Parto
 import { PartoViaVaginalComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginal.component';
 import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginalForceps.component';
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
