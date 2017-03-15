@@ -26,6 +26,11 @@ export class PrestacionValidacionComponent implements OnInit {
 
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
+
+    // arreglo de prestaciones a mostrar por cada problema
+    prestaciones: any[] = [];
+    prestacionesPlan: any[] = [];
+
     showEjecucion = true;
     mensaje = "";
 
@@ -37,18 +42,31 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
-        debugger;
         this.loadPrestacionesEjacutadas();
-        console.log("PRESTACION:" , this.prestacion);
+
     }
 
     loadPrestacionesEjacutadas() {
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
+
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+
+            });
         });
+
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
             this.prestacionesSolicitadas = resultado;
-            console.log("solicidatdas: " , this.prestacionesSolicitadas);
+
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestacionesPlan[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+
+            });
         });
     }
 
