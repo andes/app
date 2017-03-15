@@ -52,7 +52,7 @@ import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/d
 
 
 // ATOMO SOCIOECONOMICO
-// import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
 import { ViviendaPisoComponent } from './components/rup/atomos/socio-economicos/viviendaPiso.component';
 import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socio-economicos/viviendaNivelInstruccion.component';
@@ -61,7 +61,7 @@ import { ViviendaContaminantesComponent } from './components/rup/atomos/socio-ec
 import { ViviendaCombustionComponent } from './components/rup/atomos/socio-economicos/viviendaCombustion.component';
 import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socio-economicos/viviendaSostenEconomico.component';
 import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socio-economicos/viviendaAsistenciaEconomica.component';
-// import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
 // PERINATALES EMBARAZO
 import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoNormal.component';
 import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
@@ -115,9 +115,9 @@ export const RUP_COMPONENTS = [
     ViviendaNivelInstruccionComponent,
     ViviendaPisoComponent,
     ViviendaResiduosComponent,
-    // ViviendaSituacionSocioEconomicaComponent,
+    ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
-    // ViviendaCondicionesAlojamientoComponent,
+    ViviendaCondicionesAlojamientoComponent,
     PerinatalesEmbarazoNormalComponent,
     PerinatalesEmbarazoAnormalComponent,
     PerinatalesNumeroGestaComponent,
