@@ -1,4 +1,3 @@
-import { EscalaDeDesarrolloComponent } from './escalaDeDesarrollo.component';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -42,27 +41,30 @@ export class EscalaDeDesarrolloComponent implements OnInit {
             "estadoCivil": "soltera"
         };
         this.tipoPrestacion = {
-            "id": "58b70110b64acd0989b9f53c",
-            "key": "EscalaDeDesarrollo",
-            "nombre": "Escala de desarrollo",
-            "autonoma": false,
-            "activo": true,
-            "ejecucion": [
-               "5890c93f7358af394f6d52d9",
-                "5890c94d7358af394f6d52da",
-                "58b6cd6eb64acd0989b9f537",
-                "58b6b6b2b64acd0989b9f536",
-                "58be954fa99b5e0646e8f430"
-            ],
-            "componente": {
-                "ruta": "rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component.ts",
-                "nombre": "EscalaDeDesarrolloComponent"
-            },
-            "turneable": false
+              "_id" : "58c95603fa1a9819e86e68b0",
+    "key" : "escalaDeDesarrollo",
+    "nombre" : "Escala De Desarrollo",
+    "autonoma" : false,
+    "activo" : true,
+    "granularidad" : "moleculas",
+    "turneable" : false,
+    "componente" : {
+        "ruta" : "rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component.ts",
+        "nombre" : "EscalaDeDesarrolloComponent"
+    },
+    "ejecucion" : [ 
+        "58c9492afa1a9819e86e68ac", 
+        "58c94ac7fa1a9819e86e68ae", 
+        "58c94b03fa1a9819e86e68af", 
+        "58c94aa6fa1a9819e86e68ad"
+    ],
+    "solicitud" : [],
+    "codigo" : [],
+    "__v" : 0
         }
         // como es una molécula buscamos sus atomos
         // this.tipoPrestacion.id
-        this.servicioTipoPrestacion.getById("58b70110b64acd0989b9f53c").subscribe(tipoPrestacion => {
+        this.servicioTipoPrestacion.getById("58c95603fa1a9819e86e68b0").subscribe(tipoPrestacion => {
            
             this.tipoPrestacion = tipoPrestacion;
         });
