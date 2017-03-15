@@ -62,54 +62,72 @@ export class TransformarProblemaComponent implements OnInit {
             vigencia: 'activo',
             segundaOpinion: null
         };
-        if (problemaActivo = this.existeProblema(this.tipoProblema)) {
+        // Chequeamos si ya existe el problema en la lista en ejecucion.
+        /*if (problemaActivo = this.existeProblema(this.tipoProblema)) {
 
+            // Si exite le cargamos una nueva evolucion y lo agregamos en la lista de problemas a ejecutar
             if (problemaActivo.idProblemaOrigen) {
                 problemaActivo.idProblemaOrigen.push(this.problema.id);
             } else {
                 problemaActivo.idProblemaOrigen = [this.problema.id]
             }
             problemaActivo.evoluciones.push(unaEvolucion);
-            this.listaProblemas.push(problemaActivo);
-            this.evtData.emit(this.listaProblemas);
-        } else {
-            this.servicioProblemaPac.get({ idPaciente: this.paciente.id, idTipoProblema: this.tipoProblema.id })
-                .subscribe(resultado => {
-                    debugger;
-                    if (resultado && resultado.length > 0) {
-                        problemaActivo = resultado[0];
-                        if (problemaActivo.idProblemaOrigen) {
-                            problemaActivo.idProblemaOrigen.push(this.problema.id);
-                        } else {
-                            problemaActivo.idProblemaOrigen = [this.problema.id]
-                        }
-                        problemaActivo.evoluciones.push(unaEvolucion)
-                        this.listaProblemas.push(problemaActivo);
-                        this.evtData.emit(this.listaProblemas);
-                    } else {
-                        let problemasOrigen: String[] = Array();
-                        problemasOrigen.push(this.problema.id);
-                        let nuevoProblema: IProblemaPaciente = {
-                            id: null,
-                            tipoProblema: this.tipoProblema.id,
-                            idProblemaOrigen: problemasOrigen,
-                            paciente: this.paciente.id,
-                            fechaInicio: new Date(),
-                            evoluciones: [unaEvolucion]
-                        };
+            this.servicioProblemaPac.put(problemaActivo).subscribe(resultado => {
+                if (resultado) {
+                    this.listaProblemas.push(resultado);
+                    this.evtData.emit(this.listaProblemas);
+                } else {
+                    this.plex.alert('Ha ocurrido un error al transformar el problema');
+                }
 
-                        this.servicioProblemaPac.post(nuevoProblema).subscribe(unProblema => {
-                            if (unProblema) {
-                                this.nuevoProblemaPaciente = unProblema;
-                                this.listaProblemas.push(this.nuevoProblemaPaciente);
-                                this.evtData.emit(this.listaProblemas);
-                            } else {
-                                this.plex.alert('Error al intentar asociar el problema a la consulta');
-                            }
-                        });
+            });
+
+        } else {*/
+        // Chequeamos si ya existe el problema en la lista completa del paciente.
+        this.servicioProblemaPac.get({ idPaciente: this.paciente.id, idTipoProblema: this.tipoProblema.id })
+            .subscribe(resultado => {
+                debugger;
+                if (resultado && resultado.length > 0) {
+                    problemaActivo = resultado[0];
+                    if (problemaActivo.idProblemaOrigen) {
+                        problemaActivo.idProblemaOrigen.push(this.problema.id);
+                    } else {
+                        problemaActivo.idProblemaOrigen = [this.problema.id]
                     }
-                });
-        }
+                    problemaActivo.evoluciones.push(unaEvolucion);
+                    this.servicioProblemaPac.put(problemaActivo).subscribe(problema => {
+                        if (problema) {
+                            this.listaProblemas.push(problema);
+                            this.evtData.emit(this.listaProblemas);
+                        } else {
+                            this.plex.alert('Ha ocurrido un error al transformar el problema');
+                        }
+
+                    });
+                } else {
+                    let problemasOrigen: String[] = Array();
+                    problemasOrigen.push(this.problema.id);
+                    let nuevoProblema: IProblemaPaciente = {
+                        id: null,
+                        tipoProblema: this.tipoProblema.id,
+                        idProblemaOrigen: problemasOrigen,
+                        paciente: this.paciente.id,
+                        fechaInicio: new Date(),
+                        evoluciones: [unaEvolucion]
+                    };
+
+                    this.servicioProblemaPac.post(nuevoProblema).subscribe(unProblema => {
+                        if (unProblema) {
+                            this.nuevoProblemaPaciente = unProblema;
+                            this.listaProblemas.push(this.nuevoProblemaPaciente);
+                            this.evtData.emit(this.listaProblemas);
+                        } else {
+                            this.plex.alert('Error al intentar asociar el problema a la consulta');
+                        }
+                    });
+                }
+            });
+        //}
 
     }
 
