@@ -122,9 +122,9 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         // Modo Update
         if (this.seleccion) {
             this.tipoPrestacionService.put(this.modelo).subscribe(tipoPrestacion => {
-                // if (tipoPrestacion) {
-                //     this.data.emit(tipoPrestacion);
-                // } // if (tipoPrestacion)
+                 if (tipoPrestacion) {
+                 this.data.emit(tipoPrestacion);
+                 } // if (tipoPrestacion)
             }); // post
         
 
