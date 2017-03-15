@@ -27,11 +27,13 @@
                 <div *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar">
                     <div class="row">
                         <div class="col-md-8">
-                            <div>
-                                <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" (change)="agregarProblema()" placeholder="Agregar Problema">
+                            <div class="input-group">
+                                <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" placeholder="Agregar Problema">
                                 </plex-select>
+                                <span class="input-group-btn">
+                                    <plex-button title="Cargar Problema" label="" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary btn-sm"></plex-button>
+                                </span>
                             </div>
-                            <!-- /input-group -->
                         </div>
                         <div class="col-md-4">
                             <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary btn-sm"></plex-button>
@@ -65,13 +67,12 @@
 
                                         </div>
                                         <div class="col-md-4">
-                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
-                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"></plex-button>
-                                            <plex-button label="Enmendar Problema" type="link" (click)="enmendarProblema(problema)"></plex-button>
+                                            <plex-button label="Evolucionar Problema" type="link" (click)="evolucionarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
+                                            <plex-button label="Transformar Problema" type="link" (click)="transformarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
+                                            <plex-button label="Enmendar Problema" type="link" (click)="enmendarProblema(problema)" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto' && problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'enmendado'"></plex-button>
                                             <plex-button label="Ver Detalles" type="link"></plex-button>
                                         </div>
                                     </div>
-
                                 </li>
                             </ul>
                         </div>
@@ -86,7 +87,7 @@
                             <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
                         </div>
                         <div *ngIf="showEnmendar">
-                            <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnemndar($event)"></rup-enmendarProblema>
+                            <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
                         </div>
                     </div>
                 </div>

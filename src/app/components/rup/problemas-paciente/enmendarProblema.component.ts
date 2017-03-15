@@ -19,7 +19,6 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 export class EnmendarProblemaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<IProblemaPaciente> = new EventEmitter<IProblemaPaciente>();
-
     @Input() problema: IProblemaPaciente;
     unaEvolucion: any = {
         fecha: new Date(),
@@ -36,7 +35,6 @@ export class EnmendarProblemaComponent implements OnInit {
 
 
     ngOnInit() {
-        debugger;
         let evols = this.problema.evoluciones;
     }
 
@@ -64,7 +62,7 @@ export class EnmendarProblemaComponent implements OnInit {
     }
 
     cerrar() {
-        this.evtData.emit(this.problema);
+        this.evtData.emit(null);
     }
 
 }

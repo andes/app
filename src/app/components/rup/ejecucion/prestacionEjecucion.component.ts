@@ -99,11 +99,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     guardarProblema(nuevoProblema) {
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
+            debugger;
             if (resultado) {
-                this.listaProblemas.push(resultado);
-
                 // asignamos el problema a la prestacion de origen
-                // this.prestacion.solicitud.listaProblemas.push(resultado);
+                this.listaProblemas.push(resultado);
+                // this.prestacion.ejecucion.listaProblemas.push(resultado);
                 this.updatePrestacion();
             } else {
                 this.plex.alert('Error al intentar asociar el problema a la consulta');
@@ -177,21 +177,34 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     // Fin lista de problemas 
 
+
     onReturn(dato: IProblemaPaciente) {
         this.showEvolucionar = false;
+        this.showEnmendar = false;
     }
 
     onReturnTransformar(datos: IProblemaPaciente[]) {
         this.showTransformar = false;
-        this.listaProblemas = datos;
-        this.prestacion.ejecucion.listaProblemas = datos;
-        // asignamos el problema a la prestacion de origen
-        // this.prestacion.solicitud.listaProblemas.push(resultado);
-        this.updatePrestacion();
+        if (datos) {
+            // asignamos el problema a la prestacion de origen
+            this.listaProblemas = datos;
+            this.prestacion.ejecucion.listaProblemas = datos;
+            this.updatePrestacion();
+        }
     }
 
-    onReturnEnmendar(datos: IProblemaPaciente[]) {
+    onReturnEnmendar(datos: IProblemaPaciente) {
+        debugger;
         this.showEnmendar = false;
+        if (datos) {
+            this.listaProblemas = this.listaProblemas.filter(p => {
+                return p.id !== datos.id;
+            });
+            this.prestacion.ejecucion.listaProblemas = this.listaProblemas;
+            this.updatePrestacion();
+        }
+
+
     }
 
     onReturnTodos(dato: IProblemaPaciente[]) {
@@ -455,10 +468,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     updatePrestacion() {
         // actualizamos la prestacion de origen
         this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
+            debugger;
             // this.prestacion = prestacionActualizada;
             // buscamos la prestacion actualizada con los datos populados
             this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                debugger;
                 this.prestacion = prestacion;
+                this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
             });
         });
     }

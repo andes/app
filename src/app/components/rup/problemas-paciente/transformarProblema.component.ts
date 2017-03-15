@@ -143,7 +143,7 @@ export class TransformarProblemaComponent implements OnInit {
     }
 
     cerrar() {
-        this.evtData.emit(this.listaProblemas);
+        this.evtData.emit(null);
     }
 
 }
