@@ -11,7 +11,8 @@ export class TurnoService {
     constructor(private server: Server, private http: Http) { }
     save(turno: any): Observable<any> {
         if (turno.idAgenda) {
-            return this.server.put(this.turnoUrl + '/' + turno.idAgenda, turno);
+            // return this.server.put(this.turnoUrl + '/' + turno.idAgenda, turno);
+            return this.server.patch(this.turnoUrl + '/' + turno.idAgenda, turno);
         }
     }
 }

@@ -1,6 +1,7 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { ITurno } from './ITurno';
 export interface IBloque {
+    id: String;
     horaInicio: Date;
     horaFin: Date;
     cantidadTurnos: Number;
