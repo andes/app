@@ -21,8 +21,8 @@ export class EvolucionProblemaComponent implements OnInit {
     @Output() evtData: EventEmitter<IProblemaPaciente> = new EventEmitter<IProblemaPaciente>();
 
     @Input() problema: IProblemaPaciente;
-    vigencia = { id: '', nombre: '...' };
-    duracion = { id: '', nombre: '...' };
+    vigencia = null;
+    duracion = null;
     unaEvolucion: any = {
         fecha: new Date(),
         observacion: '',
@@ -41,24 +41,28 @@ export class EvolucionProblemaComponent implements OnInit {
 
 
     ngOnInit() {
-        debugger;
         let evols = this.problema.evoluciones;
     }
 
-    evolucionarProblema() {
+    evolucionarProblema(event) {
+        debugger;
+        if (event.formValid) {
+            this.unaEvolucion.duracion = this.duracion.id;
+            this.unaEvolucion.vigencia = this.vigencia.id;
+            this.problema.evoluciones.push(this.unaEvolucion);
+            console.log(this.problema);
+            this.servProbPaciente.put(this.problema).subscribe(resultado => {
+                if (resultado) {
+                    this.evtData.emit(this.problema);
+                } else {
+                    this.plex.alert('Ha ocurrido un error al almacenar la evolución');
+                }
 
-        this.unaEvolucion.duracion = this.duracion.id;
-        this.unaEvolucion.vigencia = this.vigencia.id;
-        this.problema.evoluciones.push(this.unaEvolucion);
-        console.log(this.problema);
-        this.servProbPaciente.put(this.problema).subscribe(resultado => {
-            if (resultado) {
-                this.evtData.emit(this.problema);
-            } else {
-                this.plex.alert('Ha ocurrido un error al almacenar la evolución');
-            }
+            });
 
-        });
+        } else {
+            this.plex.alert('Completar datos requeridos');
+        }
 
 
     }

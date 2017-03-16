@@ -1,0 +1,30 @@
+<div *ngIf="!auth.loggedIn()">
+    <form>
+        <h1>Inicio de sesión con OneLogin</h1>
+        <div class="row">
+            <div class="col-xs-6">
+                <plex-int label="Ingrese su documento" [(ngModel)]="usuario" name="usuario" [required]="true"></plex-int>
+            </div>
+            <div class="col-xs-6">
+                <plex-text label="Ingrese su contraseña" [(ngModel)]="password" name="password" [password]="true" [required]="true"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <plex-select label="Seleccione el efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
+                </plex-select>
+                <plex-button label="Iniciar sesión" type="primary" [validateForm]="true" (click)="login($event)"></plex-button>
+            </div>
+        </div>
+    </form>
+</div>
+<div *ngIf="auth.loggedIn()">
+    <h3>Datos de la sesión</h3>
+    <h4>Usuario</h4>
+    <pre>{{ auth.usuario | json }}</pre>
+    <h4>Organización</h4>
+    <pre>{{ auth.organizacion | json }}</pre>
+    <h4>Permisos</h4>
+    <pre>{{ auth.permisos | json }}</pre>
+    <plex-button label="Cerrar sesión" type="danger" (click)="auth.logout()"></plex-button>
+</div>

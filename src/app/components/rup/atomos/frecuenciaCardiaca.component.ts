@@ -9,6 +9,7 @@ export class FrecuenciaCardiacaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;
+    @Input('soloValores') soloValores: Boolean;
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
@@ -21,6 +22,11 @@ export class FrecuenciaCardiacaComponent implements OnInit {
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+
+        // si tengo valores cargados entonces devuelvo los resultados y mensajes
+		if (this.datosIngreso) {
+            this.devolverValores();
+        }
     }
 
     devolverValores() {

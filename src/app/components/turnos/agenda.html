@@ -1,242 +1,250 @@
-<div class="row" *ngIf="showAgenda">
-  <div class="col-md-5">
-    <plex-box type="success" title="Agenda">
-      <div class="row">
-        <div class="col-md-4">
-          <plex-datetime type="date" [(ngModel)]="modelo.fecha" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" (change)="validarTodo()" name="modelo.horaInicio" label="Inicio">
-          </plex-datetime>
-        </div>
-        <div *ngIf="modelo.fecha" class="col-md-4">
-          <plex-datetime type="time" [(ngModel)]="modelo.horaFin" (change)="validarTodo()" name="modelo.horaFin" label="Fin">
-          </plex-datetime>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
-            placeholder="Seleccione las prestaciones" [multiple]="true" (change)="cambioPrestaciones()">
-            </plex-select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-            placeholder="Seleccione un espacio">
-            </plex-select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
-            </plex-select>
-        </div>
-      </div>
-      <div class="row">&nbsp;</div>
-      <div class="row">
-        <div class="col-md-12">
-          <label>Bloques</label>
-          <div class="list-group">
-            <a *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
-              <div class="row">
-                <div class="col-md-5">{{unBloque.descripcion}}</div>
-                <div class="col-md-5">{{unBloque.titulo}}</div>
-                <div class="col-md-2" align="right">
-                  <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
-                  </plex-button>
-                </div>
-              </div>
-            </a>
+<form *ngIf="autorizado">
+  <div class="row" *ngIf="showAgenda">
+    <div class="col-md-5">
+      <plex-box type="success" title="Agenda">
+        <div class="row">
+          <div class="col-md-4">
+            <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
+            </plex-datetime>
+          </div>
+          <div *ngIf="modelo.fecha" class="col-md-4">
+            <plex-datetime type="time" [(ngModel)]="modelo.horaInicio" [required]="true" (change)="validarTodo()" name="modelo.horaInicio"
+              label="Inicio">
+              </plex-datetime>
+          </div>
+          <div *ngIf="modelo.fecha" class="col-md-4">
+            <plex-datetime type="time" [(ngModel)]="modelo.horaFin" [required]="true" (change)="validarTodo()" name="modelo.horaFin"
+              label="Fin">
+              </plex-datetime>
           </div>
         </div>
-      </div>
-      <!--<div class="row">
+        <div class="row">
+          <div class="col-md-12">
+            <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
+              placeholder="Seleccione las prestaciones" [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
+              </plex-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+              placeholder="Seleccione un espacio">
+              </plex-select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
+              placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
+              </plex-select>
+          </div>
+        </div>
+        <div *ngIf="modelo.bloques && modelo.bloques.length>0" class="row">&nbsp;</div>
+        <div *ngIf="modelo.bloques && modelo.bloques.length>0" class="row">
+          <div class="col-md-12">
+            <label>Bloques</label>
+            <div class="list-group">
+              <a *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item" [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
+                <div class="row">
+                  <div class="col-md-5">{{unBloque.descripcion}}</div>
+                  <div class="col-md-5">{{unBloque.titulo}}</div>
+                  <div class="col-md-2" align="right">
+                    <plex-button icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
+                    </plex-button>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!--<div class="row">
         <div class="col-md-6">
           <plex-bool [(ngModel)]="modelo.intercalar" label="Permitir intercalar bloques" name="modelo.intercalar" (click)="intercalar()"></plex-bool>
         </div>
       </div>-->
-      <br>
-      <div class="row">
-        <div class="col-md-12">
-          <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" (click)="addBloque()">
-          </plex-button>
-        </div>
-      </div>
-      <div class="row">&nbsp;</div>
-      <div class="row">&nbsp;</div>
-      <div class="row">
-        <div class="col-sm-12">
-          <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
-          </plex-button>
-          <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" type="primary" (click)="onSave(true, false)" title="Guardar">
-          </plex-button>
-          <plex-button icon="mdi mdi-content-copy" label="Clonar" (click)="onClon()" title="Clonar">
-          </plex-button>
-          <plex-button icon="magnify" label="Buscar" (click)="cargar()" title="Buscar">
-          </plex-button>
-          <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel(modelo)" title="Cancelar">
-          </plex-button>
-        </div>
-      </div>
-    </plex-box>
-  </div>
-  <div class="col-md-7">
-    <div *ngIf="elementoActivo && bloqueActivo >= 0">
-      <plex-box type="success" title="Bloque: {{elementoActivo.descripcion}}">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-md-12">
-                <plex-text [(ngModel)]="elementoActivo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
-                </plex-text>
-              </div>
-            </div>
-            <div class="row" *ngIf="!modelo.intercalar">
-              <div class="col-md-6">
-                <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')"
-                  label="Hora Inicio">
-                  </plex-datetime>
-              </div>
-              <div class="col-md-6">
-                <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques('fin')" label="Hora Fin">
-                </plex-datetime>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <plex-int [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" (keyup)="cambiaTurnos('cantidad')" label="Cantidad de Turnos"
-                  placeholder="Cantidad">
-                  </plex-int>
-              </div>
-              <div class="col-md-6">
-                <plex-int [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" (keyup)="cambiaTurnos('duracion')" label="Duración del Turno"
-                  suffix="minutos" placeholder="Duración">
-                  </plex-int>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
-              <div class="col-md-12">
-                <plex-bool [(ngModel)]="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
-                </plex-bool>
-              </div>
-            </div>
-          </div>
-        </div>
         <br>
-        <div class="row">
-          <div class="col-md-6">
-            <plex-box type="warning" title="Acceso Directo">
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Del día</label>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" (keyup)="cambiaCantTipo('accesoDirectoDelDia')" name="accesoDirectoDelDia"
-                    placeholder="Cant">
-                    </plex-int>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" (keyup)="cambiaPorcentajeTipo('accesoDirectoDelDia')" name="accesoDirectoDelDiaPorc"
-                    suffix="%" placeholder="%">
-                    </plex-int>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Programados</label>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" (keyup)="cambiaCantTipo('accesoDirectoProgramado')" name="accesoDirectoProgramado"
-                    placeholder="Cant">
-                    </plex-int>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" (keyup)="cambiaPorcentajeTipo('accesoDirectoProgramado')"
-                    name="accesoDirectoProgramadoPorc" suffix="%" placeholder="%">
-                    </plex-int>
-                </div>
-              </div>
-            </plex-box>
-          </div>
-          <div class="col-md-6">
-            <plex-box type="warning" title="Reservados">
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Para gestión de pacientes</label>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.reservadoGestion" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion"
-                    placeholder="Cant">
-                    </plex-int>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" (keyup)="cambiaPorcentajeTipo('reservadoGestion')" name="reservadoGestionporc"
-                    suffix="%" placeholder="%">
-                    </plex-int>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Para el Profesional</label>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional"
-                    placeholder="Cant">
-                    </plex-int>
-                </div>
-                <div class="col-md-4">
-                  <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" (keyup)="cambiaPorcentajeTipo('reservadoProfesional')" name="progReservadoPorc"
-                    suffix="%" placeholder="%">
-                    </plex-int>
-                </div>
-              </div>
-            </plex-box>
+        <div *ngIf="modelo.fecha && modelo.horaInicio && modelo.horaFin && modelo.tipoPrestaciones && modelo.tipoPrestaciones.length>0" class="row">
+          <div class="col-md-12">
+            <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" (click)="addBloque()">
+            </plex-button>
           </div>
         </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
         <div class="row">
-          <div *ngIf="!elementoActivo.citarPorBloque" class="col-md-4">
-            <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="pacienteSimultaneos"></plex-bool>
-          </div>
-          <div *ngIf="elementoActivo.pacienteSimultaneos" class="col-md-4">
-            <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="Cantidad Simultaneos" required>
-            </plex-int>
+          <div class="col-sm-12">
+            <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)"
+              title="Guardar">
+              </plex-button>
+              <plex-button *ngIf="alertas.length<=0" icon="content-save" validateForm="true" label="Guardar" type="primary" (click)="onSave($event, false)"
+                title="Guardar">
+                </plex-button>
+                <plex-button icon="mdi mdi-content-copy" label="Clonar" validateForm="true" (click)="onSave($event, true)" title="Clonar">
+                </plex-button>
+                <plex-button icon="magnify" label="Buscar" (click)="cargar()" title="Buscar">
+                </plex-button>
+                <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel(modelo)" title="Cancelar">
+                </plex-button>
           </div>
         </div>
-        <div class="row">
-          <div *ngIf="!elementoActivo.pacienteSimultaneos" class="col-md-4">
-            <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
-          </div>
-          <div *ngIf="elementoActivo.citarPorBloque" class="col-md-4">
-            <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
-            </plex-int>
-          </div>
-        </div>
-        <br>
       </plex-box>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div *ngIf="alertas.length>0" class="alert alert-warning" role="alert">
-          <li *ngFor="let unAlerta of alertas; let i=index">
-            {{unAlerta}}
-          </li>
+    <div class="col-md-7">
+      <div *ngIf="elementoActivo && bloqueActivo >= 0">
+        <plex-box type="success" title="Bloque: {{elementoActivo.descripcion}}">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-12">
+                  <plex-text [(ngModel)]="elementoActivo.descripcion" name="descripcion" label="Descripcion" placeholder="ingrese una descripcion">
+                  </plex-text>
+                </div>
+              </div>
+              <div class="row" *ngIf="!modelo.intercalar">
+                <div class="col-md-6">
+                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques('inicio')"
+                    label="Hora Inicio">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-6">
+                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques('fin')" label="Hora Fin">
+                  </plex-datetime>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <plex-int [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" (keyup)="cambiaTurnos('cantidad')" label="Cantidad de Turnos"
+                    placeholder="Cantidad" [required]="true">
+                    </plex-int>
+                </div>
+                <div class="col-md-6">
+                  <plex-int [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" (keyup)="cambiaTurnos('duracion')" label="Duración del Turno"
+                    suffix="minutos" placeholder="Duración" [required]="true">
+                    </plex-int>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
+                <div class="col-md-12">
+                  <!--{{unaPrestacion | json}}-->
+                  <plex-bool [(ngModel)]="unaPrestacion.activo" name="unaPrestacion.activo" label="{{unaPrestacion.nombre}}" type="slide">
+                  </plex-bool>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-6">
+              <plex-box type="warning" title="Acceso Directo">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Del día</label>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" (keyup)="cambiaCantTipo('accesoDirectoDelDia')" name="accesoDirectoDelDia"
+                      placeholder="Cant">
+                      </plex-int>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" (keyup)="cambiaPorcentajeTipo('accesoDirectoDelDia')" name="accesoDirectoDelDiaPorc"
+                      suffix="%" placeholder="%">
+                      </plex-int>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Programados</label>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" (keyup)="cambiaCantTipo('accesoDirectoProgramado')" name="accesoDirectoProgramado"
+                      placeholder="Cant">
+                      </plex-int>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" (keyup)="cambiaPorcentajeTipo('accesoDirectoProgramado')"
+                      name="accesoDirectoProgramadoPorc" suffix="%" placeholder="%">
+                      </plex-int>
+                  </div>
+                </div>
+              </plex-box>
+            </div>
+            <div class="col-md-6">
+              <plex-box type="warning" title="Reservados">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Para gestión de pacientes</label>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.reservadoGestion" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion"
+                      placeholder="Cant">
+                      </plex-int>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" (keyup)="cambiaPorcentajeTipo('reservadoGestion')" name="reservadoGestionporc"
+                      suffix="%" placeholder="%">
+                      </plex-int>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Para el Profesional</label>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional"
+                      placeholder="Cant">
+                      </plex-int>
+                  </div>
+                  <div class="col-md-4">
+                    <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" (keyup)="cambiaPorcentajeTipo('reservadoProfesional')" name="progReservadoPorc"
+                      suffix="%" placeholder="%">
+                      </plex-int>
+                  </div>
+                </div>
+              </plex-box>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="!elementoActivo.citarPorBloque" class="col-md-4">
+              <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos" label="Pacientes Simultaneos" name="pacienteSimultaneos"></plex-bool>
+            </div>
+            <div *ngIf="elementoActivo.pacienteSimultaneos" class="col-md-4">
+              <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" placeholder="Cantidad Simultaneos"
+                required>
+                </plex-int>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="!elementoActivo.pacienteSimultaneos" class="col-md-4">
+              <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
+            </div>
+            <div *ngIf="elementoActivo.citarPorBloque" class="col-md-4">
+              <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
+              </plex-int>
+            </div>
+          </div>
+          <br>
+        </plex-box>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div *ngIf="alertas.length>0" class="alert alert-warning" role="alert">
+            <li *ngFor="let unAlerta of alertas; let i=index">
+              {{unAlerta}}
+            </li>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="col-sm-12" *ngIf="showBuscarAgendas">
-  <div class="panel panel-default">
-    <div class="clear"></div>
-    <buscar-agendas (selected)='onReturn($event)'></buscar-agendas>
+  <div class="col-sm-12" *ngIf="showBuscarAgendas">
+    <div class="panel panel-default">
+      <div class="clear"></div>
+      <buscar-agendas (selected)='onReturn($event)'></buscar-agendas>
+    </div>
   </div>
-</div>
-<div class="col-sm-12" *ngIf="showClonar">
-  <clonar-agenda [agenda]="modelo"></clonar-agenda>
-</div>
+  <div class="col-sm-12" *ngIf="showClonar">
+    <clonar-agenda [agenda]="modelo"></clonar-agenda>
+  </div>
+</form>
