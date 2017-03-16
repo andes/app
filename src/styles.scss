@@ -1,11 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import '~mdi/scss/materialdesignicons.scss';
+@import '~bootstrap/dist/css/bootstrap.css';
 
 // @import 'less/montserrat/TypoPRO-Montserrat.css';
-@import '~bootstrap/dist/css/bootstrap.css';
 @import '~@angular/material/core/theming/all-theme';
 @import '~node-waves/dist/waves.css';
 @import '~loaders.css/loaders.min.css';
 
 @import '~@andes/plex/src/lib/styles.scss';
+
+.bloque-title {
+    position: relative;
+    top: -20px;
+    text-align: center;
+    border-bottom: 1px solid;
+    padding-bottom: 5px;
+}
+.bloque-subtitle {
+    position: relative;
+    left: -5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.contador-turnos {
+    position: relative;
+    left: -40px;
+    .text-sm {
+        font-family: 'Source Sans Pro';
+        white-space: nowrap;
+        text-align: center;
+    }
+}

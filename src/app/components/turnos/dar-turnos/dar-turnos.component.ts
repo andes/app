@@ -57,8 +57,12 @@ export class DarTurnosComponent implements OnInit {
     private reqfiltros: boolean = false;
     private tipoPrestaciones: String = '';
     private turnoTipoPrestacion: any = {};
+    countBloques: any[];
+    
+    countTurnos: any = {};
+
     indice: number = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'];
+    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     // paciente: IPaciente;
@@ -69,7 +73,7 @@ export class DarTurnosComponent implements OnInit {
         id: '57f66f2076e97c2d18f1808b',
         documento: '30403872',
         apellido: 'Diego',
-        nombre: 'Perez',
+        nombre: 'Pérez',
         contacto: [{
             tipo: 'Teléfono Fijo',
             valor: '2995573273',
@@ -78,14 +82,18 @@ export class DarTurnosComponent implements OnInit {
         }]
     };
 
-    debugger;
-
     pacientesSearch: boolean = false;
     showDarTurnos: boolean = true;
     cambioTelefono: boolean = false;
     infoPaciente: boolean = false;
 
+    tipoTurno: string;
+    tiposTurnosSelect: any[];
+
     ngOnInit() {
+
+        
+
         if (this._reasignaTurnos) {
             this.paciente = this._reasignaTurnos.paciente;
             this.telefono = this.paciente.telefono;
@@ -117,24 +125,48 @@ export class DarTurnosComponent implements OnInit {
         }
         this.busquedas.push(search);
         localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
-        this.actualizar('');
+        this.actualizar(null);
     }
 
     actualizar(etiqueta) {
+        
         let params: any = {};
         this.estadoT = 'noSeleccionada';
         this.agenda = null;
+
+
         if (etiqueta !== 'sinFiltro') {
             params = {
-                'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '',
-                'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : ''
-            };
+                idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
+                idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
+            };  
         } else {
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
+
+            // Mostrar sólo las agendas a partir de hoy en adelante
+            params = {
+                fechaDesde: new Date()
+            };
+
         }
+
         this.serviceAgenda.get(params).subscribe(agendas => {
-            this.agendas = agendas; this.indice = -1;
+            
+            this.agendas = agendas.filter((a) => {
+                return a.estado == 'Disponible' || a.estado == 'Publicada';
+            });
+
+            this.agendas.forEach((agenda, indexAgenda) => {
+                agenda.bloques.forEach((bloque, indexBloque) => {
+                    bloque.turnos.forEach((turno, indexTurno) => {
+                        // TODO LOOOOOOOOOOOOOOOOOOOOOOP
+                    });
+                });
+            });
+
+            this.indice = -1;
+            
             this.agendas = this.agendas.sort(
                 function (a, b) {
                     let inia = a.horaInicio? new Date(a.horaInicio.setHours(0, 0, 0, 0)): null;
@@ -150,59 +182,116 @@ export class DarTurnosComponent implements OnInit {
         });
     }
 
+    /**
+     * 
+     * @param agenda: objeto con una agenda completa
+     */
     seleccionarAgenda(agenda) {
-        console.log('agenda ', agenda);
-        this.agenda = agenda;
-        this.bloques = this.agenda.bloques;
-        this.alternativas = [];
-        let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
-        /*Filtra los bloques segun el filtro tipoPrestacion*/
-        this.bloques = this.agenda.bloques.filter(
-            function (value) {
-                let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
-                    return obj.id;
-                });
-                if (tipoPrestacion) {
-                    return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
-                } else {
-                    return true;
-                }
-            }
-        );
-        if (this.agenda) {
-            this.indice = this.agendas.indexOf(this.agenda);
 
-            /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
-            if (this.agenda.turnosDisponibles > 0) {
-                this.estadoT = 'seleccionada';
-                this.tipoPrestaciones = '';
-                if (this.agenda.tipoPrestaciones.length > 1) {
-                    this.agenda.tipoPrestaciones.forEach((cadaprestacion, ind) => {
-                        this.tipoPrestaciones = this.tipoPrestaciones ? this.tipoPrestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
-                    });
-                } else {
-                    this.tipoPrestaciones = this.agenda.tipoPrestaciones[0].nombre;
-                    this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
-                }
+        this.actualizar('sinFiltro');
+        this.agenda = agenda;
+
+        // Ver si cambió el estado de la agenda en otro lado
+        this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
+
+            if ( a.estado != 'Disponible' && a.estado != 'Publicada' ) {
+
+                this.plex.alert('Esta agenda ya no está disponible.' );
+                return false;
+
             } else {
-                /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
-                this.estadoT = 'noTurnos';
-                if (this.opciones.tipoPrestacion || this.opciones.profesional) {
-                    this.serviceAgenda.get({
-                        'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
-                        'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
-                        'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
-                    }).subscribe(alternativas => { this.alternativas = alternativas; this.reqfiltros = false; });
-                } else {
-                    this.reqfiltros = true;
+
+                this.bloques = this.agenda.bloques;
+                this.alternativas = [];
+                let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+
+                /*Filtra los bloques segun el filtro tipoPrestacion*/
+                this.bloques = this.agenda.bloques.filter(
+                    function (value) {
+                        let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
+                            return obj.id;
+                        });
+                        if (tipoPrestacion) {
+                            return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
+                        } else {
+                            return true;
+                        }
+                    }
+                );
+                if (this.agenda) {
+
+                    var myBloques = [];
+
+                    this.indice = this.agendas.indexOf(this.agenda);
+
+                    /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
+                    if (this.agenda.turnosDisponibles > 0) {
+
+                        var countBloques = [];
+                        var tiposTurnosSelect = [];
+                        // loopear turnos para sacar el tipo de turno!
+                        this.agenda.bloques.forEach((bloque, indexBloque) => {
+                            countBloques.push({
+                                delDia: 0,
+                                programado: 0,
+                                gestion: 0,
+                                profesional: 0
+                            });
+                            bloque.turnos.forEach((turno, indexTurno) => {
+                                if ( turno.estado != 'asignado' ) {
+                                    countBloques[indexBloque][String(turno.tipoTurno)]++;
+
+                                    tiposTurnosSelect.push({id: turno.tipoTurno, tipo: turno.tipoTurno});
+                                }
+                            });
+                        });
+
+                        // contador de turnos por Bloque
+                        this.countBloques = countBloques;
+
+                        this.tiposTurnosSelect = tiposTurnosSelect.filter(function(item, pos, self) {
+                            return self.indexOf(item) == pos;
+                        });
+                        // this.tiposTurnosSelect = tiposTurnosSelect;
+
+                        console.log(this.tiposTurnosSelect);
+                        
+
+                        this.estadoT = 'seleccionada';
+                        this.tipoPrestaciones = '';
+
+                        if (this.agenda.tipoPrestaciones.length > 1) {
+                            this.agenda.tipoPrestaciones.forEach((cadaprestacion, ind) => {
+                                this.tipoPrestaciones = this.tipoPrestaciones ? this.tipoPrestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
+                            });
+                        } else {
+                            this.tipoPrestaciones = this.agenda.tipoPrestaciones[0].nombre;
+                            this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
+                        }
+                    } else {
+                        /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
+                        this.estadoT = 'noTurnos';
+                        if (this.opciones.tipoPrestacion || this.opciones.profesional) {
+                            this.serviceAgenda.get({
+                                'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
+                                'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
+                                'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
+                            }).subscribe(alternativas => { this.alternativas = alternativas; this.reqfiltros = false; });
+                        } else {
+                            this.reqfiltros = true;
+                        }
+                    }
                 }
             }
-        }
+        });
     }
 
     seleccionarTurno(bloque: any, indice: number) {
         if (this.paciente) {
             this.bloque = bloque;
+
+            debugger;
+
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
             this.indiceTurno = indice;
             this.turno = bloque.turnos[indice];
@@ -260,45 +349,70 @@ export class DarTurnosComponent implements OnInit {
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
+    /**
+     * 
+     */
     onSave() {
-        let estado: String = 'asignado';
-        let pacienteSave = {
-            id: this.paciente.id,
-            documento: this.paciente.documento,
-            apellido: this.paciente.apellido,
-            nombre: this.paciente.nombre,
-            telefono: this.paciente.telefono
-        };
-        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-        let datosTurno = {
-            idAgenda: this.agenda.id,
-            indiceBloque: this.indiceBloque,
-            indiceTurno: this.indiceTurno,
-            estado: estado,
-            paciente: pacienteSave,
-            tipoPrestacion: this.turnoTipoPrestacion
 
-        };
-        let operacion: Observable<any>;
-        operacion = this.serviceTurno.save(datosTurno);
-        operacion.subscribe(resultado => {
-            this.estadoT = 'noSeleccionada';
-            this.agenda = null;
-            this.actualizar('sinFiltro');
-            this.borrarTurnoAnterior();
-            this.plex.alert('El turno se asignó correctamente');
+        // Ver si cambió el estado de la agenda desde otro lado
+        this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
+
+            if ( a.estado != 'Disponible' && a.estado != 'Publicada' ) {
+
+                this.plex.alert('Esta agenda ya no está disponible.' );
+                this.actualizar('sinFiltro');
+                return false;
+
+            } else {
+                
+                let estado: String = 'asignado';
+
+                let pacienteSave = {
+                    id: this.paciente.id,
+                    documento: this.paciente.documento,
+                    apellido: this.paciente.apellido,
+                    nombre: this.paciente.nombre,
+                    telefono: this.paciente.telefono
+                };
+
+                this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+                this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
+
+                // this.countBloques[this.indiceBloque][String()]
+
+                let datosTurno = {
+                    idAgenda: this.agenda.id,
+                    indiceBloque: this.indiceBloque,
+                    indiceTurno: this.indiceTurno,
+                    estado: estado,
+                    paciente: pacienteSave,
+                    tipoPrestacion: this.turnoTipoPrestacion,
+                    tipoTurno: 'delDia'
+                };
+
+                let operacion: Observable<any>;
+                operacion = this.serviceTurno.save(datosTurno);
+                operacion.subscribe(resultado => {
+                    this.estadoT = 'noSeleccionada';
+                    this.agenda = null;
+                    this.actualizar('sinFiltro');
+                    this.borrarTurnoAnterior();
+                    this.plex.alert('El turno se asignó correctamente');
+                });
+
+                // Si cambió el teléfono lo actualizo en el MPI
+                if (this.cambioTelefono) {
+                    let mpi: Observable<any>;
+                    let cambios = {
+                        telefono: this.paciente.telefono
+                    };
+                    mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
+                    mpi.subscribe(resultado => {
+                        this.plex.alert('Se actualizó el numero de telefono');
+                    });
+                }
+            }
         });
-        // Si cambió el teléfono lo actualizo en el MPI
-        if (this.cambioTelefono) {
-            let mpi: Observable<any>;
-            let cambios = {
-                telefono: this.paciente.telefono
-            };
-            mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-            mpi.subscribe(resultado => {
-                this.plex.alert('Se actualizó el numero de telefono');
-            });
-        }
     }
 
     borrarTurnoAnterior() {
