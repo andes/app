@@ -26,6 +26,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
     @Input() paciente: IPaciente;
     @Input() tipoPrestacion: ITipoPrestacion;
     @Input() datosIngreso: Object;
+    @Input() soloValores: Boolean = null;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     pacientePrestacion: any = {};
@@ -83,7 +84,6 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     // Método para cargar Components
     loadComponent() {
-
         // La creación dinámica de un Component tiene que darse después que se inicialize el View
         if (!this.isViewInitialized) {
             return;
@@ -115,6 +115,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
         // Generamos valores de la ejecución
         // TODO: debe ser un array
+        this.componentReference.instance.soloValores = this.soloValores;
         this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
