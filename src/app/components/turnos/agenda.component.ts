@@ -53,7 +53,6 @@ export class AgendaComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
-        console.log('auth', this.auth.organizacion);
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
@@ -79,7 +78,7 @@ export class AgendaComponent implements OnInit {
     loadTipoPrestaciones(event) {
         this.permisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => {return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF)
+            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
         });
     }
 
@@ -88,7 +87,7 @@ export class AgendaComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({}).subscribe(event.callback);
+        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
     inicializarPrestacionesBloques(bloque) {
