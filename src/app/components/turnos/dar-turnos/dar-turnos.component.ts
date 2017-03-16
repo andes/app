@@ -125,6 +125,10 @@ export class DarTurnosComponent implements OnInit {
         this.actualizar(null);
     }
 
+    /**
+     * 
+     * @param etiqueta: define qué filtros usar para traer todas las Agendas 
+     */
     actualizar(etiqueta) {
         
         let params: any = {};
@@ -133,11 +137,15 @@ export class DarTurnosComponent implements OnInit {
 
 
         if (etiqueta !== 'sinFiltro') {
+            
             params = {
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
             };  
+
         } else {
+
+            // Reseteat opciones
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
 
@@ -148,6 +156,7 @@ export class DarTurnosComponent implements OnInit {
 
         }
 
+        // Traer las agendas
         this.serviceAgenda.get(params).subscribe(agendas => {
             
             // Sólo traer agendas disponibles o publicadas
@@ -155,6 +164,7 @@ export class DarTurnosComponent implements OnInit {
                 return a.estado == 'Disponible' || a.estado == 'Publicada';
             });
 
+            // Loop agendas / bloques / turnos
             this.agendas.forEach((agenda, indexAgenda) => {
                 agenda.bloques.forEach((bloque, indexBloque) => {
                     bloque.turnos.forEach((turno, indexTurno) => {
@@ -180,16 +190,22 @@ export class DarTurnosComponent implements OnInit {
 
     /**
      * 
+     * Selecciona una Agenda (click en el calendario)
+     * 
      * @param agenda: objeto con una agenda completa
      */
     seleccionarAgenda(agenda) {
 
+        // Actualiza el calendario, para ver si no ho hubo cambios
         this.actualizar('sinFiltro');
+
+        // Asigno agenda
         this.agenda = agenda;
 
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
+            // Si cambió el estado y ya no está Disponible ni Publicada, mostrar un alerta y cancelar cualquier operación
             if ( a.estado != 'Disponible' && a.estado != 'Publicada' ) {
 
                 this.plex.alert('Esta agenda ya no está disponible.' );
@@ -197,8 +213,13 @@ export class DarTurnosComponent implements OnInit {
 
             } else {
 
+                // Asigno bloques
                 this.bloques = this.agenda.bloques;
+
+                // Iniciar alternativas (para cuando los turnos están completos)
                 this.alternativas = [];
+                
+                // Tipo de Prestación, para poder filtrar las agendas
                 let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
 
                 /*Filtra los bloques segun el filtro tipoPrestacion*/
@@ -214,6 +235,8 @@ export class DarTurnosComponent implements OnInit {
                         }
                     }
                 );
+
+                // 
                 if (this.agenda) {
 
                     var myBloques = [];
