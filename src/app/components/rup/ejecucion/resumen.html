@@ -12,7 +12,7 @@
         color: #b1b1b1;
     }
 </style>
-<div *ngIf="!showEjecucion">
+<div *ngIf="!showEjecucion && !showValidacion">
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>
     <plex-box>
         <div class="row">
@@ -93,6 +93,8 @@
             <div class="col-lg-6 text-right">
                 <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
                 <plex-button title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
+
+                <plex-button title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'"></plex-button>
             </div>
         </div>
 
@@ -101,4 +103,8 @@
 
 <div *ngIf="showEjecucion">
     <rup-prestacionEjecucion [prestacion]="prestacion" (evtData)="onReturn(prestacion)"></rup-prestacionEjecucion>
+</div>
+
+<div *ngIf="showValidacion">
+    <rup-prestacionValidacion [prestacion]="prestacion"></rup-prestacionValidacion>
 </div>
