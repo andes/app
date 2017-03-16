@@ -32,8 +32,10 @@ export class TurnosComponent implements OnInit {
     public showSuspenderTurno: boolean = false;
     public showAgregarNotaTurno: boolean = false;
 
-    // smsEnviado: boolean = false;
-    // smsLoader: boolean = false;
+    // smsVisible: boolean = false;
+    smsEnviado: boolean = false;
+    smsLoader: boolean = false;
+
     resultado: any;
 
     listaEspera: any;
@@ -174,10 +176,10 @@ export class TurnosComponent implements OnInit {
             reasignarTurno: (turno.paciente) && (!turno.asistencia),
             reasignarTurnoDeshabilitado: ((this.ag.estado != 'suspendida') && (turno.paciente) && (turno.asistencia)) || (!turno.paciente),
 
-            smsVisible: (this.ag.estado === 'suspendida') && (turno.paciente),
-            smsNoEnviado: (this.ag.estado === 'suspendida') && (turno.paciente) && (!turno.smsEnviado),
-            smsEnviado: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado),
-            smsLoader: (this.ag.estado === 'suspendida') && (turno.paciente) && (turno.smsEnviado) && (turno.smsLoader),
+            smsVisible: turno.smsVisible,
+            smsNoEnviado: turno.smsNoEnviado,
+            smsEnviado: turno.smsEnviado,
+            smsLoader: turno.smsLoader,
 
             verNota: true,
             nota: turno.nota
@@ -220,9 +222,8 @@ export class TurnosComponent implements OnInit {
         this.showLiberarTurno = true;
     }
 
-    suspenderTurno(agenda: any, turno: any) {
+    suspenderTurno(agenda: any) {
         this.agenda = agenda;
-        this.turno = turno;
 
         this.confirmaSuspenderTurno = false;
 
@@ -364,21 +365,40 @@ export class TurnosComponent implements OnInit {
     }
 
     enviarSMS() {
-        // this.smsLoader = true;
+
+        let turno;
 
         for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
-            if (this.pacientesSeleccionados[x].paciente != null) {
+
+            let idTurno = this.pacientesSeleccionados[x].id;
+
+            this.turnos.filter(function (el, index, arr) {
+                if (el.id === idTurno)
+                    turno = el;
+            });
+
+            turno.smsVisible = true;
+            turno.smsLoader = true;
+
+            this.actualizarBotonesTurnos(turno);
+
+            if (this.pacientesSeleccionados[x].paciente != null) {      
 
                 this.smsService.enviarSms(this.pacientesSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {
-                        this.resultado = resultado;
-                        // this.smsLoader = false;
-                        debugger;
+                        turno = this.pacientesSeleccionados[x];                        
+
                         if (resultado === '0') {
-                            this.pacientesSeleccionados[x].smsEnviado = true;
+                            turno.smsEnviado = true;
+                            turno.smsNoEnviado = false;
+                            turno.smsLoader = false;
                         } else {
-                            this.pacientesSeleccionados[x].smsEnviado = false;
+                            turno.smsEnviado = false;
+                            turno.smsNoEnviado = true;
+                            turno.smsLoader = false;
                         }
+
+                        this.actualizarBotonesTurnos(turno);
                     },
                     err => {
                         if (err) {

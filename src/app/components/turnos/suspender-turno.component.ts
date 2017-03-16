@@ -14,11 +14,12 @@ import { SmsService } from './../../services/turnos/sms.service';
 export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turno: ITurno;
+    @Input() pacientesSeleccionados: ITurno;
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
 
+    pacientes: any = [];
     showSuspenderTurno: boolean = true;
     resultado: any;
 
@@ -28,6 +29,8 @@ export class SuspenderTurnoComponent implements OnInit {
     public motivoSuspensionSelect = { select: null };
 
     ngOnInit() {
+        this.pacientes = this.pacientesSeleccionados;
+
         this.motivoSuspension = [{
             id: 1,
             nombre: 'Edilicia'
@@ -43,50 +46,55 @@ export class SuspenderTurnoComponent implements OnInit {
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
     }
 
-    suspenderTurno(turno: any) {
-        let patch = {
-            'op': 'suspenderTurno',
-            'idTurno': turno.id,
-            'motivoSuspension': this.motivoSuspensionSelect.select.nombre
-        };
+    suspenderTurno() {
 
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+        for (let x = 0; x < this.pacientes.length; x++) {
+            let patch = {
+                'op': 'suspenderTurno',
+                'idTurno': this.pacientes[x].id,
+                'motivoSuspension': this.motivoSuspensionSelect.select.nombre
+            };
 
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
     }
 
-    agregarPacienteListaEspera(turno: any) {
+    agregarPacienteListaEspera() {
 
-        let patch = {
-            'op': 'listaEsperaSuspensionAgenda',
-            'idAgenda': this.agenda.id,
-            'pacientes': turno
-        };
+        for (let x = 0; x < this.pacientes.length; x++) {
+            let patch = {
+                'op': 'listaEsperaSuspensionAgenda',
+                'idAgenda': this.agenda.id,
+                'pacientes': this.pacientes[x]
+            };
 
-        this.suspenderTurno(turno);
+            this.suspenderTurno();
 
-        this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
+            this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
 
-            this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
+                this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
 
-                this.saveSuspenderTurno.emit(resulAgenda);
+                    this.saveSuspenderTurno.emit(resulAgenda);
 
-                this.plex.alert('El paciente ' + turno.paciente.apellido + ' ' + turno.paciente.nombre + ' paso a Lista de Espera');
-            })
+                    this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+                })
 
-        });
+            });
+        }
     }
 
     reasignarTurno(paciente: any) {
         debugger;
-        this.reasignar = { 'paciente': paciente, 'idTurno': this.turno.id, 'idAgenda': this.agenda.id };
+         this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
 
-        this.suspenderTurno(this.turno);
+        this.suspenderTurno();
 
         this.enviarSMS(paciente);
 
@@ -96,7 +104,7 @@ export class SuspenderTurnoComponent implements OnInit {
     enviarSMS(paciente: any) {
         // this.smsLoader = true;
 
-        this.smsService.enviarSms(paciente.telefono).subscribe(
+        this.smsService.enviarSms(paciente.paciente.telefono).subscribe(
             resultado => {
                 this.resultado = resultado;
                 // this.smsLoader = false;
