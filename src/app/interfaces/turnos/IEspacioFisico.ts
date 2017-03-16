@@ -12,4 +12,8 @@ export interface IEspacioFisico {
     };
     detalle: String;
     activo: Boolean;
+    organizacion: {
+        id: String,
+        nombre: String
+    };
 }

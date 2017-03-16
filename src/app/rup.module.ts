@@ -46,9 +46,10 @@ import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeona
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
-import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 
 
 // ATOMO SOCIOECONOMICO
@@ -135,9 +136,10 @@ export const RUP_COMPONENTS = [
     PercentiloTallaComponent,
     PercentiloCircunferenciaCefalicaNinoComponent,
     DesarrolloMotorComponent,
-    actitudAnteLosCuidadosComponent,
+    ActitudAnteLosCuidadosComponent,
     ControlDeEsfinteresComponent,
-    DesarrolloIntelectualyJuegosComponent
+    DesarrolloIntelectualyJuegosComponent,
+    EscalaDeDesarrolloComponent
 
     // NO VAPacienteComponent
 ];

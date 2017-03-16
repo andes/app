@@ -23,15 +23,15 @@ export class SignosVitalesComponent implements OnInit {
     };
 
     // tipos de prestaciones a utilizar
-    valor = {
-        frecuenciaCardiaca: null,
-        frecuenciaRespiratoria: null,
-        peso: null,
-        saturacionOxigeno: null,
-        temperatura: null,
-        tensionArterial: null,
-        observacion: null,
-    };
+    // valor = {
+    //     frecuenciaCardiaca: null,
+    //     frecuenciaRespiratoria: null,
+    //     peso: null,
+    //     saturacionOxigeno: null,
+    //     temperatura: null,
+    //     tensionArterial: null,
+    //     observacion: null,
+    // };
 
     constructor(private servicioTipoPrestacion: TipoPrestacionService) {
     }

@@ -1,5 +1,10 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="peso" label="Peso" suffix=" Kg " min="0" max="400" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="peso" label="Peso" suffix=" Kg " min="0" max="400" (change)="devolverValores()">
 </plex-int>
+
+<p *ngIf="soloValores">
+    <label>Peso</label>
+    <br /> {{data[tipoPrestacion.key]}} Kg
+</p>
 
 <p *ngIf="data.mensaje.texto">
     <span class="badge {{data.mensaje.class}}">

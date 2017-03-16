@@ -15,6 +15,7 @@ export class EspacioFisicoService {
     constructor(private server: Server, private http: Http) { }
 
     get(params: any): Observable<IEspacioFisico[]> {
+        console.log('aca ', params);
         return this.server.get(this.espacioFisicoUrl, {params: params, showError: true});
     }
 
@@ -33,7 +34,7 @@ export class EspacioFisicoService {
 
     enable(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
         espacioFisico.activo = true;
-        return this.put(espacioFisico)
+        return this.put(espacioFisico);
     }
 
     handleError(error: any) {
