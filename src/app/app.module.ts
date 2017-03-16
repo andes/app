@@ -84,9 +84,9 @@ import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espe
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 // Estos componentes utilizan ng-prime y deben ser actualizados
-// import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-// import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 // import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 // import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
@@ -237,8 +237,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
-    AgendaComponent, PanelEspacioComponent,
-    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
