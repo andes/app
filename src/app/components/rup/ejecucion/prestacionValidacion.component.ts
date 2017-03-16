@@ -26,6 +26,11 @@ export class PrestacionValidacionComponent implements OnInit {
 
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
+
+    // arreglo de prestaciones a mostrar por cada problema
+    prestaciones: any[] = [];
+    prestacionesPlan: any[] = [];
+
     showEjecucion = true;
     mensaje = "";
 
@@ -37,17 +42,32 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
-        debugger;
         this.loadPrestacionesEjacutadas();
+
     }
 
     loadPrestacionesEjacutadas() {
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
+
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+
+            });
         });
-        // this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
-        //     this.prestacionesSolicitadas = resultado;
-        // });
+
+        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
+            this.prestacionesSolicitadas = resultado;
+
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestacionesPlan[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+
+            });
+        });
     }
 
     filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
@@ -61,7 +81,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
-        return this.prestacion.ejecucion.prestaciones.filter(data => {
+        return this.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
                 return data;
         });

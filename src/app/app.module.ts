@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -83,9 +84,9 @@ import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espe
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 // Estos componentes utilizan ng-prime y deben ser actualizados
-// import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-// import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 // import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 // import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
@@ -121,9 +122,11 @@ import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pr
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
-import { actitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
+
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
@@ -199,9 +202,10 @@ export const RUP_COMPONENTS = [
   PercentiloTallaComponent,
   PercentiloCircunferenciaCefalicaNinoComponent,
   DesarrolloMotorComponent,
-  actitudAnteLosCuidadosComponent,
+  ActitudAnteLosCuidadosComponent,
   ControlDeEsfinteresComponent,
-  DesarrolloIntelectualyJuegosComponent
+  DesarrolloIntelectualyJuegosComponent,
+  EscalaDeDesarrolloComponent
 
 ];
 
@@ -233,8 +237,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
-    AgendaComponent, PanelEspacioComponent,
-    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,

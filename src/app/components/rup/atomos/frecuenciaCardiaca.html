@@ -1,5 +1,10 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="frecuenciaCardiaca" label="Frecuencia cardíaca" suffix="PPM" min="30" max="100" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="frecuenciaCardiaca" label="Frecuencia cardíaca" suffix="PPM" min="30" max="100" (change)="devolverValores()">
 </plex-int>
+
+<p *ngIf="soloValores">
+    <label>Frecuencia cardíaca</label>
+    <br /> {{data[tipoPrestacion.key]}} PPM
+</p>
 
 <p *ngIf="data.mensaje.texto">
     <span class="badge {{data.mensaje.class}}">

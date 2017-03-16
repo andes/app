@@ -1,6 +1,6 @@
 <plex-bool [(ngModel)]="data[tipoPrestacion.key].gestacionMultiple" name="gestacionMultiple" label="Gestación Múltiple" type="slide" (change)="devolverValores()">
 </plex-bool>
 
-<plex-int [(ngModel)]="data[tipoPrestacion.key].cantidadFetos" placeholder="Ingrese cantidad de fetos presentes en el embarazo" name="cantidadFetos"
+<plex-int [(ngModel)]="data[tipoPrestacion.key].cantidadFetos" placeholder="Ingrese un valor entre 0 y 10" name="cantidadFetos"
   min="0" max="10" (change)="devolverValores()" *ngIf="data[tipoPrestacion.key].gestacionMultiple" >
 </plex-int>

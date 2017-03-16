@@ -9,6 +9,7 @@ export class TensionDiastolicaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') tipoPrestacion: any;
+    @Input('soloValores') soloValores: Boolean;
     @Input('required') required: Boolean;
 
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
@@ -22,6 +23,11 @@ export class TensionDiastolicaComponent implements OnInit {
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+
+        // si tengo valores cargados entonces devuelvo los resultados y mensajes
+		if (this.datosIngreso) {
+            this.devolverValores();
+        }
     }
 
     devolverValores() {
