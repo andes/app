@@ -56,6 +56,7 @@ export class DarTurnosComponent implements OnInit {
     private alternativas: any[] = [];
     private reqfiltros: boolean = false;
     private tipoPrestaciones: String = '';
+    private tipoPrestacionesArray: Object[];
     private turnoTipoPrestacion: any = {};
     countBloques: any[];
     
@@ -92,22 +93,18 @@ export class DarTurnosComponent implements OnInit {
 
     ngOnInit() {
 
-        
-
         if (this._reasignaTurnos) {
             this.paciente = this._reasignaTurnos.paciente;
             this.telefono = this.paciente.telefono;
         }
 
+        // Fresh start
+        // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
-
-        // let contacto = this.paciente.contacto.filter((c) => c.ranking === 1);
-        //this.telefono = contacto[0].valor;
 
     }
 
     loadTipoPrestaciones(event) {
-        // this.servicioPrestacion.get({}).subscribe(event.callback);
         this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
     }
 
@@ -146,13 +143,14 @@ export class DarTurnosComponent implements OnInit {
 
             // Mostrar sólo las agendas a partir de hoy en adelante
             params = {
-                fechaDesde: new Date()
+                fechaDesde: new Date().setHours(0,0,0,0)
             };
 
         }
 
         this.serviceAgenda.get(params).subscribe(agendas => {
             
+            // Sólo traer agendas disponibles o publicadas
             this.agendas = agendas.filter((a) => {
                 return a.estado == 'Disponible' || a.estado == 'Publicada';
             });
@@ -160,7 +158,7 @@ export class DarTurnosComponent implements OnInit {
             this.agendas.forEach((agenda, indexAgenda) => {
                 agenda.bloques.forEach((bloque, indexBloque) => {
                     bloque.turnos.forEach((turno, indexTurno) => {
-                        // TODO LOOOOOOOOOOOOOOOOOOOOOOP
+                        
                     });
                 });
             });
@@ -176,9 +174,7 @@ export class DarTurnosComponent implements OnInit {
                     }
                 }
             );
-            // console.log("agendas ", this.agendas.map(function (obj) {
-            //     return { inicio: obj.horaInicio, disponibles: obj.turnosDisponibles }
-            // }))
+
         });
     }
 
@@ -252,23 +248,25 @@ export class DarTurnosComponent implements OnInit {
                         this.tiposTurnosSelect = tiposTurnosSelect.filter(function(item, pos, self) {
                             return self.indexOf(item) == pos;
                         });
-                        // this.tiposTurnosSelect = tiposTurnosSelect;
-
-                        console.log(this.tiposTurnosSelect);
-                        
 
                         this.estadoT = 'seleccionada';
                         this.tipoPrestaciones = '';
+                        
+                        let tipoPrestacionesArray = [];
 
                         if (this.agenda.tipoPrestaciones.length > 1) {
                             this.agenda.tipoPrestaciones.forEach((cadaprestacion, ind) => {
                                 this.tipoPrestaciones = this.tipoPrestaciones ? this.tipoPrestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
+                                tipoPrestacionesArray.push({ nombre: cadaprestacion.nombre });
                             });
                         } else {
                             this.tipoPrestaciones = this.agenda.tipoPrestaciones[0].nombre;
                             this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
+                            tipoPrestacionesArray.push({ nombre: this.agenda.tipoPrestaciones[0].nombre });
                         }
+                            this.tipoPrestacionesArray = tipoPrestacionesArray;
                     } else {
+
                         /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
                         this.estadoT = 'noTurnos';
                         if (this.opciones.tipoPrestacion || this.opciones.profesional) {
@@ -289,8 +287,6 @@ export class DarTurnosComponent implements OnInit {
     seleccionarTurno(bloque: any, indice: number) {
         if (this.paciente) {
             this.bloque = bloque;
-
-            debugger;
 
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
             this.indiceTurno = indice;

@@ -585,7 +585,9 @@ export class AgendaComponent implements OnInit {
                     this.showAgenda = false;
                 } else {
                     this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                        this.modelo = {};
+                        this.modelo = {
+                            fecha: null
+                        };
                         this.bloqueActivo = -1;
                     });
                 }
