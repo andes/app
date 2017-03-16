@@ -16,8 +16,8 @@ export class PesoComponent implements OnInit {
 
     data: any = {
         mensaje: {
-            class: ' ',
-            texto: ' '
+            class: '',
+            texto: ''
         },
     };
 
@@ -342,7 +342,7 @@ export class PesoComponent implements OnInit {
                             };
                         break;
 
-                    default: mensaje.texto = ' ';
+                    default: mensaje.texto = '';
                 } // switch()
         } // if (peso)
         return mensaje;
