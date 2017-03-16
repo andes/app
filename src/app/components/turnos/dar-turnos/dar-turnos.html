@@ -48,16 +48,16 @@
                     <h1>
                       <small> 
                           <!--{{ tipoPrestacionesArray | json }}-->
-                          <table class="table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
+                          <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
                               <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <td><span class="badge btn-md badge outline-info">{{ tipoPrestacion.nombre }}</span></td>
+                                <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
                               </tr>
                           </table>
-                          <table class="table-condensed" *ngIf="tipoPrestacionesArray.length > 1">
+                          <plex-accordion *ngIf="tipoPrestacionesArray.length > 1">
                               <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <td><span class="badge btn-md badge outline-info">{{ tipoPrestacion.nombre }}</span></td>
+                                <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
                               </tr>
-                          </table>
+                          </plex-accordion>
                           <div *ngFor="let profesional of agenda.profesionales let i=index">
                               <div class="" *ngIf="i<agenda.profesionales.length-1">
                                   {{profesional.nombre}} {{profesional.apellido}},
@@ -68,9 +68,12 @@
                           </div>
                       </small>
                     </h1>
-                    <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                      {{semana[agenda.horaInicio.getDay()]}} - {{agenda.horaInicio | date: 'dd/MM'}}
-                    <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                    <h1 class="date-lg">
+                      <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                      {{agenda.horaInicio | date: 'dd/MM'}}
+                      <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                    </h1>
+                    <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
                     
                   </div>
                 </div>
