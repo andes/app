@@ -25,6 +25,7 @@ export class ResumenComponent implements OnInit {
     prestacionTalla: IPrestacionPaciente = null;
 
     showEjecucion = false;
+    showValidacion = false;
 
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService) {
@@ -80,6 +81,10 @@ export class ResumenComponent implements OnInit {
 
     verPrestacion() {
         this.showEjecucion = true;
+    }
+
+    verResumen() {
+        this.showValidacion = true;
     }
 
     volver() {

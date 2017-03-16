@@ -10,6 +10,7 @@ export class ObservacionesComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('tipoPrestacion') tipoPrestacion: any;
     @Input('paciente') paciente: IPaciente;
+    @Input('soloValores') soloValores: Boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     observaciones: Number = null;
