@@ -261,6 +261,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     onSave() {
+        debugger;
         let estado: String = 'asignado';
         let pacienteSave = {
             id: this.paciente.id,

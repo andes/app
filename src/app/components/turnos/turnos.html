@@ -31,7 +31,7 @@
 
                                                 <td *ngIf="botones.tdLiberarTurno">
                                                     <a id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
-                                                        placement="top" (confirm)="liberarTurno(ag, turno, confirmaLiberarTurno = true)"
+                                                        placement="top" (confirm)="liberarTurno(ag, confirmaLiberarTurno = true)"
                                                         (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                                                         <i title="Liberar Turno" class="text-success success mdi mdi-stop"></i>
                                                     </a>
@@ -57,7 +57,7 @@
                                                 </td>
 
                                                 <td>
-                                                    <a class="btn btn-default hover" (click)="agregarNotaTurno(ag, turno)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
+                                                    <a class="btn btn-default hover" (click)="agregarNotaTurno(ag)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
                                                 </td>
                                             </tr>
 
@@ -156,7 +156,7 @@
                                         <td>
                                             <!--<plex-bool [ngModel]="turno.checked" (click)="agregarPaciente(turno)" ></plex-bool>
                                         <!--<plex-bool type="slide" [(ngModel)]="turno.checked" (click)="agregarPaciente(turno)"></plex-bool>-->
-                                            <input type="checkbox" [ngModel]="turno.checked" [checked]=false (change)="agregarPaciente(turno)">
+                                            <input type="checkbox" [ngModel]="turno.checked" (click)="agregarPaciente(turno)">
                                         </td>
 
                                     </tr>
@@ -173,7 +173,7 @@
 
 <div type="info" class="col-md-12" *ngIf="showLiberarTurno">
     <div class="clear"></div>
-    <liberar-turno [agenda]="agenda" [turno]="turno" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"></liberar-turno>
+    <liberar-turno [agenda]="agenda" [pacientesSeleccionados]="pacientesSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"></liberar-turno>
 </div>
 
 <div type="info" class="col-md-12" *ngIf="showSuspenderTurno">
@@ -184,5 +184,5 @@
 
 <div type="info" class="col-md-12" *ngIf="showAgregarNotaTurno">
     <div class="clear"></div>
-    <agregar-nota-turno [agenda]="agenda" [turno]="turno" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
+    <agregar-nota-turno [agenda]="agenda" [pacientesSeleccionados]="pacientesSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
 </div>

@@ -74,7 +74,7 @@ export class TurnosComponent implements OnInit {
 
         this._selectAll = false;
         debugger;
-        if (this.pacientesSeleccionados.find(x => x.paciente === turno.paciente)) {
+        if (this.pacientesSeleccionados.find(x => x.id === turno._id)) {
             this.pacientesSeleccionados.splice(this.pacientesSeleccionados.indexOf(turno), 1);
             turno.checked = false;
         } else {
@@ -89,9 +89,9 @@ export class TurnosComponent implements OnInit {
     }
 
     sonIguales(arr) {
-        var x = arr[0];
+        let x = arr[0];
         return arr.every(function (item) {
-            return item === x
+            return item === x;
         });
     }
 
@@ -212,9 +212,9 @@ export class TurnosComponent implements OnInit {
         this._selectAll = value;
     }
 
-    liberarTurno(agenda: any, turno: any) {
+    liberarTurno(agenda: any) {
         this.agenda = agenda;
-        this.turno = turno;
+        // this.turno = turno;
 
         this.confirmaLiberarTurno = false;
 
@@ -231,10 +231,10 @@ export class TurnosComponent implements OnInit {
         this.showSuspenderTurno = true;
     }
 
-    agregarNotaTurno(agenda: any, turno: any) {
+    agregarNotaTurno(agenda: any) {
         this.agenda = agenda;
-        this.turno = turno;
-
+        // this.turno = turno;
+        debugger;
         this.showTurnos = false;
         this.showAgregarNotaTurno = true;
     }
@@ -373,8 +373,9 @@ export class TurnosComponent implements OnInit {
             let idTurno = this.pacientesSeleccionados[x].id;
 
             this.turnos.filter(function (el, index, arr) {
-                if (el.id === idTurno)
+                if (el.id === idTurno) {
                     turno = el;
+                }
             });
 
             turno.smsVisible = true;
@@ -382,11 +383,11 @@ export class TurnosComponent implements OnInit {
 
             this.actualizarBotonesTurnos(turno);
 
-            if (this.pacientesSeleccionados[x].paciente != null) {      
+            if (this.pacientesSeleccionados[x].paciente != null) {
 
                 this.smsService.enviarSms(this.pacientesSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {
-                        turno = this.pacientesSeleccionados[x];                        
+                        turno = this.pacientesSeleccionados[x];
 
                         if (resultado === '0') {
                             turno.smsEnviado = true;
