@@ -40,7 +40,7 @@
                                                 </td>
 
                                                 <td *ngIf="botones.tdBloquearTurno">
-                                                    <a id="bloquearTurno" class="btn btn-default hover" (click)="eventosTurno(ag, turno, $event)">
+                                                    <a id="bloquearTurno" class="btn btn-default hover" (click)="bloquearTurno(ag, i)">
                                                         <i *ngIf="botones.bloquearTurno" title="Bloquear Turno" class="text-success success mdi mdi-brightness-1"></i>
                                                         <i *ngIf="botones.desbloquearTurno" title="Desbloquear Turno" class="text-success success mdi mdi-block-helper"></i>
                                                     </a>

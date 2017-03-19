@@ -3,14 +3,11 @@
         <div class="row" *ngFor="let turno of pacientes; let i = index">
             <div class="col-md-12">
                 <label *ngIf="turno.paciente">Agregar notas en el paciente: {{turno.paciente.apellido}} {{turno.paciente.nombre}}</label>
-                <label *ngIf="!turno.paciente">Agregar nota en el turno: {{turno.paciente.horaInicio | date: 'dd/MM/yyyy'}}</label>
+                <label *ngIf="!turno.paciente">Agregar nota en el turno: {{turno.horaInicio | date: 'dd/MM/yyyy'}}</label>
             </div>
-            <div class="col-md-12" *ngIf="turno.nota">
+            <div class="col-md-12">
                 <div class="row">
-                    <!--<div class="col-md-8">
-                        <label>Agregar Nota</label>
-                    </div>-->
-                    <div class="col-md-12"> {{turno.nota}}*****
+                    <div class="col-md-12">
                         <plex-text label="Ingrese Nota" name="nota" [(ngModel)]="turno.nota">
                         </plex-text>
                     </div>

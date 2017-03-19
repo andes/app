@@ -12,7 +12,6 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 export class AgregarNotaTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    // @Input() turno: ITurno;
     @Input() pacientesSeleccionados: ITurno;
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
@@ -26,28 +25,13 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     ngOnInit() {
         this.pacientes = this.pacientesSeleccionados;
-        debugger;
-
-        for (let x = 0; x < this.pacientes.length; x++) {
-            if (this.pacientes[x].nota) {
-                this.modelo = { nota: this.pacientes[x].nota };
-            } else {
-                this.modelo = { nota: null };
-            }
-        }
-        // if (this.turno.nota) {
-        //     this.modelo = { nota: this.turno.nota };
-        // } else {
-        //     this.modelo = { nota: null };
-        // }
     }
 
     guardarNota(nota: any, idTurno) {
-        // for (let x = 0; x < this.pacientes.length; x++) {
             let patch = {
                 'op': 'guardarNotaTurno',
                 'idAgenda': this.agenda.id,
-                'idTurno': idTurno,//this.pacientes[x].id,
+                'idTurno': idTurno,
                 'textoNota': nota
             };
 
@@ -55,7 +39,9 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 this.plex.alert('La Nota se guardó correctamente');
 
                 this.resultado = resultado;
-
+                // this.pacientes.length = 0;
+                // debugger;
+                // this.pacientesSeleccionados;
                 this.saveAgregarNotaTurno.emit(this.resultado);
             },
                 err => {
@@ -63,7 +49,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
                         console.log(err);
                     }
                 });
-        // }
     }
 
     cancelar() {
