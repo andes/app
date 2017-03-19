@@ -306,6 +306,47 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    eventosTurno(agenda: IAgenda, index, event) {
+        debugger;
+        let btnClicked = event.currentTarget.id;
+
+        let patch: any = {};
+
+        for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
+            if (btnClicked === 'darAsistencia') {
+                patch = {
+                    'op': 'asistenciaTurno',
+                    'idTurno': this.pacientesSeleccionados[x].id
+                };
+            } else if (btnClicked === 'bloquearTurno') {
+                patch = {
+                    'op': 'bloquearTurno',
+                    'idTurno': this.pacientesSeleccionados[x].id
+                };
+            }
+
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                this.ag = resultado;
+                this.turnos = this.ag.bloques[index].turnos;
+
+                this.setBotones(this.pacientesSeleccionados);
+                for (let x = 0; x < this.turnos.length; x++) {
+                    this.actualizarBotones(this.turnos[x]);
+                }
+
+                for (let x = 0; x < this.turnos.length; x++) {
+                    this.actualizarBotonesTurnos(this.turnos[x]);
+                }
+                debugger;
+                this.pacientesSeleccionados.length = 0;
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
+    }
     // eventosTurno(agenda: IAgenda, turno: any, event) {
     //     debugger;
     //     let btnClicked = event.currentTarget.id;
