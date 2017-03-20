@@ -243,71 +243,8 @@ export class TurnosComponent implements OnInit {
         this.showAgregarNotaTurno = true;
     }
 
-    darAsistencia(agenda: any, index) {
-        debugger;
-
-        for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
-            let patch = {
-                'op': 'asistenciaTurno',
-                'idTurno': this.pacientesSeleccionados[x].id
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                this.ag = resultado;
-                this.turnos = this.ag.bloques[index].turnos;
-
-                this.setBotones(this.pacientesSeleccionados);
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotones(this.turnos[x]);
-                }
-
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotonesTurnos(this.turnos[x]);
-                }
-                debugger;
-                this.pacientesSeleccionados.length = 0;
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-        }
-    }
-
-    bloquearTurno(agenda: any, index) {
-        for (let x = 0; x < this.pacientesSeleccionados.length; x++) {
-
-            let patch = {
-                'op': 'bloquearTurno',
-                'idTurno': this.pacientesSeleccionados[x].id
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                this.ag = resultado;
-                this.turnos = this.ag.bloques[index].turnos;
-
-                this.setBotones(this.pacientesSeleccionados);
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotones(this.turnos[x]);
-                }
-
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotonesTurnos(this.turnos[x]);
-                }
-                debugger;
-                this.pacientesSeleccionados.length = 0;
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-        }
-    }
-
     eventosTurno(agenda: IAgenda, index, event) {
-        debugger;
+
         let btnClicked = event.currentTarget.id;
 
         let patch: any = {};
@@ -337,7 +274,7 @@ export class TurnosComponent implements OnInit {
                 for (let x = 0; x < this.turnos.length; x++) {
                     this.actualizarBotonesTurnos(this.turnos[x]);
                 }
-                debugger;
+
                 this.pacientesSeleccionados.length = 0;
             },
                 err => {
@@ -347,41 +284,6 @@ export class TurnosComponent implements OnInit {
                 });
         }
     }
-    // eventosTurno(agenda: IAgenda, turno: any, event) {
-    //     debugger;
-    //     let btnClicked = event.currentTarget.id;
-
-    //     let patch: any = {};
-
-    //     if ((btnClicked === 'darAsistencia') || (btnClicked === 'sacarAsistencia')) {
-
-    //         patch = {
-    //             'op': 'asistenciaTurno',
-    //             'idTurno': turno.id
-    //         };
-
-    //     } else if (btnClicked === 'bloquearTurno') {
-    //         patch = {
-    //             'op': 'bloquearTurno',
-    //             'idTurno': turno.id
-    //         };
-
-    //     }
-
-    //     this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-    //         this.ag = resultado;
-    //         this.turnos = this.ag.bloques[0].turnos;
-
-    //         for (let x = 0; x < this.turnos.length; x++) {
-    //             this.actualizarBotonesTurnos(this.turnos[x]);
-    //         }
-    //     },
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
         this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
@@ -474,7 +376,6 @@ export class TurnosComponent implements OnInit {
         this.showTurnos = true;
         this.showLiberarTurno = false;
 
-        debugger;
         this.ag = agenda;
         this.turnos = this.ag.bloques[0].turnos;
 
@@ -487,7 +388,6 @@ export class TurnosComponent implements OnInit {
         this.showTurnos = true;
         this.showSuspenderTurno = false;
 
-        debugger;
         this.ag = agenda;
         this.turnos = this.ag.bloques[0].turnos;
 

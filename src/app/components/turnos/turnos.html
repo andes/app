@@ -16,8 +16,8 @@
 
                                                 <td *ngIf="botones.asistencias">
                                                     <a id="darAsistencia" class="btn btn-default hover" (click)="eventosTurno(ag, i, $event)">
-                                                        <a *ngIf="botones.darAsistencia" id="darAsistencia" ><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-blank-outline"></i></a>
-                                                        <a *ngIf="botones.sacarAsistencia" id="sacarAsistencia" ><i title="Sacar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
+                                                        <a *ngIf="botones.darAsistencia" id="darAsistencia"><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-blank-outline"></i></a>
+                                                        <a *ngIf="botones.sacarAsistencia" id="sacarAsistencia"><i title="Sacar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
                                                     </a>
                                                 </td>
 
@@ -93,59 +93,10 @@
                                             </span>
                                         </td>
 
-                                        <!--<td *ngIf="turno.botones.asistencias">
-                                            <a *ngIf="turno.botones.darAsistencia" id="darAsistencia" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Dar Asistencia" class="text-success success mdi mdi-checkbox-multiple-blank-outline"></i></a>
-                                            <a *ngIf="turno.botones.sacarAsistencia" id="sacarAsistencia" class="hover" (click)="eventosTurno(ag, turno, $event)"><i title="Sacar Asistencia" class="text-success success mdi mdi-checkbox-multiple-marked-outline"></i></a>
-                                        </td>-->
-
-                                        <!--<td *ngIf="turno.botones.turnoDisponible">
-                                            <i title="Turno Disponible" class="text-info info mdi mdi-select"></i>
-                                        </td>-->
-
                                         <td>
                                             <label *ngIf="turno.botones.lblTieneAsistencia">Tiene Asistencia</label>
                                             <label *ngIf="turno.botones.lblNoTieneAsistencia">No Tiene Asistencia</label>
                                         </td>
-
-                                        <!--<td *ngIf="turno.botones.tdSuspenderTurno">
-                                            <a id="suspenderTurno" *ngIf="turno.botones.suspenderTurno" class="hover" mwlConfirmationPopover [title]="titleSuspenderTurno"
-                                                [message]="messageSuspenderTurno" placement="top" (confirm)="suspenderTurno(ag, turno, confirmaSuspenderTurno = true)"
-                                                (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
-                                                <i title="Suspender Turno" class="text-success success mdi mdi-power"></i>
-                                            </a>
-
-                                            <i *ngIf="turno.botones.suspenderTurnoDeshabilitado" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>
-                                        </td>
-
-                                        <td *ngIf="turno.botones.tdLiberarTurno">
-                                            <a id="liberarTurno" *ngIf="turno.botones.liberarTurno" class="hover" mwlConfirmationPopover [title]="titleLiberarTurno"
-                                                [message]="messageLiberarTurno" placement="top" (confirm)="liberarTurno(ag, turno, confirmaLiberarTurno = true)"
-                                                (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
-                                                <i title="Liberar Turno" class="text-success success mdi mdi-stop"></i>
-                                            </a>
-
-                                            <i *ngIf="turno.botones.liberarTurnoDeshabilitado" title="No es posible Liberar el Turno" class="text-success success mdi mdi-select"></i>
-                                        </td>
-
-                                        <td *ngIf="turno.botones.tdBloquearTurno">
-                                            <a id="bloquearTurno" class="hover" (click)="eventosTurno(ag, turno, $event)">
-                                                <i *ngIf="turno.botones.bloquearTurno" title="Bloquear Turno" class="text-success success mdi mdi-brightness-1">
-                                                </i>
-                                                <i *ngIf="turno.botones.desbloquearTurno" title="Desbloquear Turno" class="text-success success mdi mdi-block-helper">
-                                                </i>
-                                            </a>
-
-                                            <i *ngIf="turno.botones.bloquearTurnoDeshabilitado" title="No es posible bloquear el Turno" class="text-success success mdi mdi-select"></i>
-                                        </td>
-
-                                        <td *ngIf="true">
-                                            <a class="hover">
-                                                <i *ngIf="turno.botones.reasignarTurno" title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, ag.id)"
-                                                    class="text-success success mdi mdi-backup-restore"></i>
-                                            </a>
-
-                                            <i *ngIf="turno.botones.reasignarTurnoDeshabilitado" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>
-                                        </td>-->
 
                                         <td class="text-center" *ngIf="turno.botones.smsVisible">
                                             <i *ngIf="turno.botones.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
