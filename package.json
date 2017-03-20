@@ -20,7 +20,7 @@
         "url": "https://github.com/andes/app/issues"
     },
     "dependencies": {
-        "@andes/auth": "^0.0.3",
+        "@andes/auth": "^0.0.4",
         "@andes/plex": "^0.9.7",
         "@andes/shared": "^0.2.2",
         "@angular/common": "2.4.8",
