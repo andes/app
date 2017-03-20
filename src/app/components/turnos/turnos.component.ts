@@ -56,14 +56,17 @@ export class TurnosComponent implements OnInit {
     public estadoAsistencia: boolean;
 
     ngOnInit() {
-        this.turnos = this.ag.bloques[0].turnos;
+        debugger;
+        for (let i = 0; i < this.ag.bloques.length; i++) {
+            this.turnos = this.ag.bloques[i].turnos;
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotonesTurnos(this.turnos[x]);
-        }
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotonesTurnos(this.turnos[x]);
+            }
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotones(this.turnos[x]);
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotones(this.turnos[x]);
+            }
         }
     }
 
@@ -129,7 +132,7 @@ export class TurnosComponent implements OnInit {
         debugger;
         this.botones = {
 
-            asistencias: (this.ag.estado != 'suspendida') && (this.estadoTurno === 'asignado'),
+            asistencias: (this.ag.estado !== 'suspendida') && (this.estadoTurno === 'asignado'),
             darAsistencia: (!this.estadoAsistencia),
             sacarAsistencia: (this.estadoAsistencia),
 
@@ -377,10 +380,13 @@ export class TurnosComponent implements OnInit {
         this.showLiberarTurno = false;
 
         this.ag = agenda;
-        this.turnos = this.ag.bloques[0].turnos;
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotonesTurnos(this.turnos[x]);
+        for (let i = 0; i < this.ag.bloques.length; i++) {
+            this.turnos = this.ag.bloques[i].turnos;
+
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotonesTurnos(this.turnos[x]);
+            }
         }
     }
 
@@ -389,10 +395,13 @@ export class TurnosComponent implements OnInit {
         this.showSuspenderTurno = false;
 
         this.ag = agenda;
-        this.turnos = this.ag.bloques[0].turnos;
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotonesTurnos(this.turnos[x]);
+        for (let i = 0; i < this.ag.bloques.length; i++) {
+            this.turnos = this.ag.bloques[i].turnos;
+
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotonesTurnos(this.turnos[x]);
+            }
         }
     }
 
@@ -400,20 +409,22 @@ export class TurnosComponent implements OnInit {
         this.showTurnos = true;
         this.showAgregarNotaTurno = false;
 
-        debugger;
         this.pacientesSeleccionados.length = 0;
 
         this.ag = agenda;
-        this.turnos = this.ag.bloques[0].turnos;
 
-        this.unsetBotones();
+        for (let i = 0; i < this.ag.bloques.length; i++) {
+            this.turnos = this.ag.bloques[i].turnos;
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotonesTurnos(this.turnos[x]);
-        }
+            this.unsetBotones();
 
-        for (let x = 0; x < this.turnos.length; x++) {
-            this.actualizarBotones(this.turnos[x]);
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotonesTurnos(this.turnos[x]);
+            }
+
+            for (let x = 0; x < this.turnos.length; x++) {
+                this.actualizarBotones(this.turnos[x]);
+            }
         }
     }
 

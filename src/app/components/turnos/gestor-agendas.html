@@ -35,15 +35,23 @@
             </plex-box>
         </form>
 
+        <div type="info" class="col-sm-8" *ngIf="showVistaAgendas">
+            <div class="clear"></div>
+            <vista-agenda [vistaAgenda]="vistaAgenda" (clonarEmit)="clonar($event)" (editarAgendaEmit)="editarAgenda($event)"></vista-agenda>
+        </div>
+
         <div class="row">
-            <div class="col-md-4" *ngFor="let agenda of agendas; let i = index">
+            <div class="col-md-12" *ngFor="let agenda of agendas; let i = index">
                 <a (click)="verAgenda(agenda)" class="hover">
                     <plex-box type={{agenda.agendaSeleccionadaColor}}>
                         <div class="col-md-12">
                             <label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} HS.</label>
+                            <label> - {{agenda.espacioFisico.nombre}}</label>
+                            <label *ngFor="let tipoPrestacion of agenda.tipoPrestaciones"> - {{tipoPrestacion.nombre}}</label>
                         </div>
                         <div class="col-md-10">
-                            <label> {{agenda.profesionales[0].nombre}} {{agenda.profesionales[0].apellido}} </label>
+                            <label *ngFor="let profesional of agenda.profesionales"> {{profesional.nombre}} {{profesional.apellido}} <label *ngIf="agenda.profesionales"> - </label></label>
+
                         </div>
                         <div class="col-md-2">
                             <i *ngIf="(agenda.agendaSeleccionada == true) && (agenda.estado != 'Suspendida')" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
@@ -53,11 +61,6 @@
                 </a>
             </div>
         </div>
-    </div>
-
-    <div type="info" class="col-sm-4" *ngIf="showVistaAgendas">
-        <div class="clear"></div>
-        <vista-agenda [vistaAgenda]="vistaAgenda" (clonarEmit)="clonar($event)" (editarAgendaEmit)="editarAgenda($event)"></vista-agenda>
     </div>
 
     <div type="info" class="col-sm-4" *ngIf="showTurnos">

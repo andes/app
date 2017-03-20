@@ -39,9 +39,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 this.plex.alert('La Nota se guardó correctamente');
 
                 this.resultado = resultado;
-                // this.pacientes.length = 0;
-                // debugger;
-                // this.pacientesSeleccionados;
+
                 this.saveAgregarNotaTurno.emit(this.resultado);
             },
                 err => {

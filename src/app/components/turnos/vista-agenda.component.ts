@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
@@ -11,13 +11,12 @@ import { Router } from '@angular/router';
     templateUrl: 'vista-agenda.html'
 })
 
-export class VistaAgendaComponent {
+export class VistaAgendaComponent implements OnInit {
 
-    showVistaAgendas: boolean = true;
-    showDatosAgenda: boolean = true;
-    showEditarAgenda: boolean = false;
+    showVistaAgendas: Boolean = true;
+    showEditarAgenda: Boolean = false;
 
-    @Input() vistaAgenda: IAgenda;
+    @Input() vistaAgenda: any;
 
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
@@ -27,33 +26,59 @@ export class VistaAgendaComponent {
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public router: Router) { }
 
+    ngOnInit() {
+
+
+        // if (this.vistaAgenda) {
+        //     this.vistaAgenda;
+
+        //        this.actualizarBotones(this.vistaAgenda);
+        // }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        debugger;
+        if (changes['vistaAgenda']) {
+            this.actualizarBotones(this.vistaAgenda);
+        }
+    }
+
+    // private _reasignaTurnos: any;
+
+    // @Input('vistaAgenda')
+    // set vistaAgendas(value: any) {
+    //     debugger;
+    //     this._reasignaTurnos = value;
+    // }
+    // get vistaAgendas(): any {
+    //     debugger;
+    //     return this.actualizarBotones(this._reasignaTurnos);
+    // }
+
+    actualizarBotones(vistaAgenda: any) {
+        debugger;
+
+        vistaAgenda.botones = {
+            editarAgenda: (vistaAgenda.agendasSeleccionadas.length === 1) && (vistaAgenda.estado !== 'Suspendida'),
+            // suspenderAgenda: vistaAgenda.agendasSeleccionadas > 0,
+            // cerrarAgenda: vistaAgenda.agendasSeleccionadas === 1,
+            // publicarAgenda: 
+            // clonarAgenda
+        };
+    }
+
     suspenderAgenda(agenda) {
-        let patch: any = {};
-        // debugger;
 
-        // let pacientes = {};
+        let patch = {
+            'op': 'suspenderAgenda',
+            'estado': 'Suspendida'
+        };
 
-        // for (let i = 0; i < agenda.bloques.length; i++) {
-        //     let turnos = agenda.bloques[i];
-        //     for (let j = 0; j < turnos.turnos.length; j++) {
-        //         pacientes = turnos.turnos[j].paciente;
-        //     }
-        // }
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            agenda.estado = resultado.estado;
 
-        // if (pacientes) {
-            patch = {
-                'op': 'suspenderAgenda',
-                'estado': 'Suspendida'
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                agenda.estado = resultado.estado;
-
-                this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
-            });
-        // } else {
-        //     this.plex.alert('La agenda no se puede suspender');
-        // }
+            this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
+        });
     }
 
     editarAgenda(agenda) {
@@ -63,9 +88,8 @@ export class VistaAgendaComponent {
             this.modelo.profesionales = agenda.profesionales;
             this.modelo.espacioFisico = agenda.espacioFisico;
 
-            this.showDatosAgenda = false;
             this.showEditarAgenda = true;
-        } else if (agenda.estado === 'Planificada') {
+        } else if (agenda.estado === 'Planificacion') {
             this.editarAgendaEmit.emit(agenda);
         }
     }
@@ -84,7 +108,6 @@ export class VistaAgendaComponent {
             this.vistaAgenda = resultado;
             this.modelo = resultado;
 
-            this.showDatosAgenda = true;
             this.showEditarAgenda = false;
 
             this.plex.alert('La agenda se guardó correctamente ');
@@ -92,7 +115,6 @@ export class VistaAgendaComponent {
     }
 
     cancelar() {
-        this.showDatosAgenda = true;
         this.showEditarAgenda = false;
     }
 
