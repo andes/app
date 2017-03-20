@@ -372,6 +372,34 @@ export class DarTurnosComponent implements OnInit {
      * 
      */
     onSave() {
+<<<<<<< HEAD
+=======
+        debugger;
+        let estado: String = 'asignado';
+        let pacienteSave = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            telefono: this.paciente.telefono
+        };
+        // this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+        // let datosTurno = {
+        //     idAgenda: this.agenda.id,
+        //     indiceBloque: this.indiceBloque,
+        //     indiceTurno: this.indiceTurno,
+        //     estado: estado,
+        //     paciente: pacienteSave,
+        //     tipoPrestacion: this.turnoTipoPrestacion
+
+        // };
+        let datosTurno = {
+            idAgenda: this.agenda.id,
+            idTurno: this.turno.id,
+            idBloque: this.bloque.id,
+            paciente: pacienteSave,
+            tipoPrestacion: this.turnoTipoPrestacion
+>>>>>>> develop
 
         // Ver si cambió el estado de la agenda desde otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {

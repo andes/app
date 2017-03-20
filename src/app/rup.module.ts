@@ -21,9 +21,9 @@ import { Server } from '@andes/shared';
 import { routing, appRoutingProviders } from './app.routing';
 
 // RUP
-import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNacimiento/edadGestacional.component';
-import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
-import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
+import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
+import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 import { PesoComponent } from './components/rup/atomos/peso.component';
 import { SaturacionOxigenoComponent } from './components/rup/atomos/saturacionOxigeno.component';
@@ -40,35 +40,40 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
-import { TransformarProblemaComponent } from "./components/rup/problemas-paciente/transformarProblema.component";
+import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
+import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
+import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
+import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 
 
-//ATOMO SOCIOECONOMICO
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
-import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socioEconomicos/viviendaNivelInstruccion.component';
-import { ViviendaFamiliaComponent } from './components/rup/atomos/socioEconomicos/viviendaFamilia.component';
-import { ViviendaContaminantesComponent } from './components/rup/atomos/socioEconomicos/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconomicos/viviendaCombustion.component';
-import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
-import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
-//PERINATALES EMBARAZO
-import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
-import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
-import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
-import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
-//Perinatales Parto
-import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
-import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
-import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
-import { PartoCesareaComponent } from './components/rup/atomos/perinatalesParto/partoCesarea.component';
-import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatalesParto/hallazgoRelacionadoParto.component';
+// ATOMO SOCIOECONOMICO
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/atomos/socio-economicos/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socio-economicos/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/atomos/socio-economicos/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/atomos/socio-economicos/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/atomos/socio-economicos/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socio-economicos/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socio-economicos/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
+// PERINATALES EMBARAZO
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesNumeroGesta.component';
+import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesGestacionMultiple.component';
+// Perinatales Parto
+import { PartoViaVaginalComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
 
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -129,7 +134,12 @@ export const RUP_COMPONENTS = [
     PesquisaNeonatalComponent,
     PruebaOtoemisionesAcusticasComponent,
     PercentiloTallaComponent,
-    PercentiloCircunferenciaCefalicaNinoComponent
+    PercentiloCircunferenciaCefalicaNinoComponent,
+    DesarrolloMotorComponent,
+    ActitudAnteLosCuidadosComponent,
+    ControlDeEsfinteresComponent,
+    DesarrolloIntelectualyJuegosComponent,
+    EscalaDeDesarrolloComponent
 
     // NO VAPacienteComponent
 ];

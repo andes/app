@@ -21,8 +21,8 @@ export class EvolucionProblemaComponent implements OnInit {
     @Output() evtData: EventEmitter<IProblemaPaciente> = new EventEmitter<IProblemaPaciente>();
 
     @Input() problema: IProblemaPaciente;
-    vigencia = { id: '', nombre: '...' };
-    duracion = { id: '', nombre: '...' };
+    vigencia = null;
+    duracion = null;
     unaEvolucion: any = {
         fecha: new Date(),
         observacion: '',
@@ -41,11 +41,11 @@ export class EvolucionProblemaComponent implements OnInit {
 
 
     ngOnInit() {
-        debugger;
         let evols = this.problema.evoluciones;
     }
 
     evolucionarProblema(event) {
+        debugger;
         if (event.formValid) {
             this.unaEvolucion.duracion = this.duracion.id;
             this.unaEvolucion.vigencia = this.vigencia.id;

@@ -22,4 +22,5 @@ export interface ITurno {
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
     tipoTurno: String;
+    nota: String
 }

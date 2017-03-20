@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
             new MenuItem({ label: 'Lista de Espera', icon: 'calendar-check', route: '/listaEspera' }),
             new MenuItem({ label: 'Gestor Agendas', icon: 'calendar-check', route: '/gestor_agendas' }),
             new MenuItem({ label: 'rup Prestaciones', icon: 'calendar-check', route: '/rup' }),
+            new MenuItem({ label: 'Tipo de Prestaciones', icon: 'blur', route: '/tipoprestaciones' }),
         ];
         this.plex.initStaticItems(items);
     }

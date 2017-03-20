@@ -1,71 +1,86 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Router } from '@angular/router';
+import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'vista-agenda',
     templateUrl: 'vista-agenda.html'
 })
 
-export class VistaAgendaComponent {
+export class VistaAgendaComponent implements OnInit {
 
-    showVistaAgendas: boolean = true;
-    showDatosAgenda: boolean = true;
-    showEditarAgenda: boolean = false;
+    showVistaAgendas: Boolean = true;
+    showEditarAgenda: Boolean = false;
 
-    @Input() vistaAgenda: IAgenda;
+    @Input() vistaAgenda: any;
 
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
 
     public modelo: any = {};
 
+    subscription: Subscription;
+
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router) { }
+        public servicioEspacioFisico: EspacioFisicoService, public router: Router, private gestorAgendasService: GestorAgendasService) {
+
+        this.subscription = gestorAgendasService.agendas$.subscribe(
+            agendas => {
+                this.actualizarBotones(this.vistaAgenda);
+                this.vistaAgenda = agendas;
+            });
+    }
+
+    ngOnInit() {
+        if (this.vistaAgenda) {
+            this.actualizarBotones(this.vistaAgenda);
+        }
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
+    actualizarBotones(vistaAgenda: any) {
+        debugger;
+
+        vistaAgenda.botones = {
+            editarAgenda: (vistaAgenda.agendasSeleccionadas.length === 1) && (vistaAgenda.estado !== 'Suspendida'),
+            suspenderAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
+            cerrarAgenda: vistaAgenda.agendasSeleccionadas === 1,
+            publicarAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
+            clonarAgenda: (vistaAgenda.agendasSeleccionadas === 1) && (vistaAgenda.estado !== 'Suspendida'),
+        };
+    }
 
     suspenderAgenda(agenda) {
-        let patch: any = {};
-        // debugger;
 
-        // let pacientes = {};
+        let patch = {
+            'op': 'suspenderAgenda',
+            'estado': 'Suspendida'
+        };
 
-        // for (let i = 0; i < agenda.bloques.length; i++) {
-        //     let turnos = agenda.bloques[i];
-        //     for (let j = 0; j < turnos.turnos.length; j++) {
-        //         pacientes = turnos.turnos[j].paciente;
-        //     }
-        // }
+        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            agenda.estado = resultado.estado;
 
-        // if (pacientes) {
-            patch = {
-                'op': 'suspenderAgenda',
-                'estado': 'Suspendida'
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                agenda.estado = resultado.estado;
-
-                this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
-            });
-        // } else {
-        //     this.plex.alert('La agenda no se puede suspender');
-        // }
+            this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
+        });
     }
 
     editarAgenda(agenda) {
         debugger;
-
         if (agenda.estado === 'Disponible') {
             this.modelo.profesionales = agenda.profesionales;
             this.modelo.espacioFisico = agenda.espacioFisico;
 
-            this.showDatosAgenda = false;
             this.showEditarAgenda = true;
-        } else if (agenda.estado === 'Planificada') {
+        } else if (agenda.estado === 'Planificacion') {
             this.editarAgendaEmit.emit(agenda);
         }
     }
@@ -84,7 +99,6 @@ export class VistaAgendaComponent {
             this.vistaAgenda = resultado;
             this.modelo = resultado;
 
-            this.showDatosAgenda = true;
             this.showEditarAgenda = false;
 
             this.plex.alert('La agenda se guardó correctamente ');
@@ -92,7 +106,6 @@ export class VistaAgendaComponent {
     }
 
     cancelar() {
-        this.showDatosAgenda = true;
         this.showEditarAgenda = false;
     }
 

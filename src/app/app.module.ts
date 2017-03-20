@@ -1,4 +1,5 @@
 
+
 /*
 @jgabriel | 04-03-2017
 
@@ -39,6 +40,7 @@ import { TipoEstablecimientoService } from './services/tipoEstablecimiento.servi
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
+
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -62,6 +64,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
+import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
 import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
@@ -81,9 +85,12 @@ import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espe
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
+
+import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+
 // Estos componentes utilizan ng-prime y deben ser actualizados
-// import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
-// import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 // import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
 // import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
@@ -105,42 +112,48 @@ import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestac
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
+import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
+import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { EdadGestacionalComponent } from './components/rup/atomos/perinatalesNacimiento/edadGestacional.component';
-import { ScoreApgarComponent } from './components/rup/atomos/perinatalesNacimiento/scoreApgar.component';
+import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
+import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
-import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edadGestacionalFetal/edadGestacionalFetal.component';
+import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
 import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
+import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
+import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
+import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
+import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
+import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 
-
-//ATOMO SOCIOECONOMICO
-import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-Situacion-Socioeconomica-Familiar/viviendaSituacionSocioEconomica.component';
-import { ViviendaResiduosComponent } from './components/rup/atomos/socioEconomicos/viviendaResiduos.component';
-import { ViviendaPisoComponent } from './components/rup/atomos/socioEconomicos/viviendaPiso.component';
-import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socioEconomicos/viviendaNivelInstruccion.component';
-import { ViviendaFamiliaComponent } from './components/rup/atomos/socioEconomicos/viviendaFamilia.component';
-import { ViviendaContaminantesComponent } from './components/rup/atomos/socioEconomicos/viviendaContaminantes.component';
-import { ViviendaCombustionComponent } from './components/rup/atomos/socioEconomicos/viviendaCombustion.component';
-import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socioEconomicos/viviendaSostenEconomico.component';
-import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socioEconomicos/viviendaAsistenciaEconomica.component';
-import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-Condiciones-y-Alojamiento/viviendaCondicionesAlojamiento.component';
-//PERINATALES EMBARAZO
-import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoNormal.component';
-import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesEmbarazoAnormal.component';
-import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesNumeroGesta.component';
-import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatalesEmbarazo/perinatalesGestacionMultiple.component';
-//Perinatales Parto
-import { PartoViaVaginalComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginal.component';
-import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatalesParto/partoViaVaginalForceps.component';
-import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatalesParto/partoVaginalAsistidoExtractorVacio.component';
-import { PartoCesareaComponent } from './components/rup/atomos/perinatalesParto/partoCesarea.component';
-import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatalesParto/hallazgoRelacionadoParto.component';
+// ATOMO SOCIOECONOMICO
+import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
+import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
+import { ViviendaPisoComponent } from './components/rup/atomos/socio-economicos/viviendaPiso.component';
+import { ViviendaNivelInstruccionComponent } from './components/rup/atomos/socio-economicos/viviendaNivelInstruccion.component';
+import { ViviendaFamiliaComponent } from './components/rup/atomos/socio-economicos/viviendaFamilia.component';
+import { ViviendaContaminantesComponent } from './components/rup/atomos/socio-economicos/viviendaContaminantes.component';
+import { ViviendaCombustionComponent } from './components/rup/atomos/socio-economicos/viviendaCombustion.component';
+import { ViviendaSostenEconomicoComponent } from './components/rup/atomos/socio-economicos/viviendaSostenEconomico.component';
+import { ViviendaAsistenciaEconomicaComponent } from './components/rup/atomos/socio-economicos/viviendaAsistenciaEconomica.component';
+import { ViviendaCondicionesAlojamientoComponent } from './components/rup/moleculas/vivienda-condiciones-y-alojamiento/viviendaCondicionesAlojamiento.component';
+// PERINATALES EMBARAZO
+import { PerinatalesEmbarazoNormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoNormal.component';
+import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
+import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesNumeroGesta.component';
+import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesGestacionMultiple.component';
+// PERINATALES PARTO
+import { PartoViaVaginalComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginal.component';
+import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginalForceps.component';
+import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
+import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
+import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
 
 
 export const RUP_COMPONENTS = [
@@ -187,11 +200,18 @@ export const RUP_COMPONENTS = [
   PartoViaVaginalForcepsComponent,
   PartoViaVaginalComponent,
   EvolucionProblemaComponent,
+  EnmendarProblemaComponent,
   TransformarProblemaComponent,
+  verProblemaComponent,
   PruebaOtoemisionesAcusticasComponent,
   PesquisaNeonatalComponent,
   PercentiloTallaComponent,
-  PercentiloCircunferenciaCefalicaNinoComponent
+  PercentiloCircunferenciaCefalicaNinoComponent,
+  DesarrolloMotorComponent,
+  ActitudAnteLosCuidadosComponent,
+  ControlDeEsfinteresComponent,
+  DesarrolloIntelectualyJuegosComponent,
+  EscalaDeDesarrolloComponent
 
 ];
 
@@ -199,7 +219,7 @@ export const RUP_COMPONENTS = [
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
-//Ver donde poner
+// Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 // Main module
@@ -213,7 +233,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     routing,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
-    })    
+    })
   ],
 
   declarations: [
@@ -223,12 +243,13 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
-    AgendaComponent, PanelEspacioComponent,
-    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
+    TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

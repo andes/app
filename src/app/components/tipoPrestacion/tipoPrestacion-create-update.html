@@ -1,0 +1,57 @@
+<plex-box type=""  title={{titulo}}>
+  <div class="row">
+
+    <div class="col-sm-12">
+      <plex-text [(ngModel)]="modelo.nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre" (change)="camelcase()"></plex-text>
+    </div>
+
+    <div class="col-sm-12">
+      <plex-text [(ngModel)]="modelo.key" name="key" label="Key" [disabled]="true"></plex-text>
+    </div>
+
+    <div class="col-sm-10">
+      <plex-select [(ngModel)]="granularidad" name="tipo" [data]="SelectTipo" placeholder="Seleccionar granularidad" label="Granularidad"
+        (change)="ruta()">
+
+      </plex-select>
+    </div>
+
+    <div class="col-sm-10">
+      <plex-select [(ngModel)]="modelo.ejecucion" name="ejecucion" [multiple]="true" (getData)="utilizarTipoPrestaciones($event)" *ngIf="granularidad.id && granularidad.id === 'moleculas' "
+        placeholder="Seleccionar tipo/s de prestacion" label="Ejecución" >
+      </plex-select>
+    </div>
+
+
+    <div class="col-sm-12">
+      <plex-text [(ngModel)]="modelo.componente.nombre" name="componenteNombre" label="Componente" [disabled]="true"></plex-text>
+    </div>
+
+    <div class="col-sm-12">
+      <plex-text [(ngModel)]="modelo.componente.ruta" name="componenteRuta" label="Ruta" [disabled]="!seleccion"></plex-text>
+    </div>
+
+
+
+    <div class="col-sm-10">
+      <plex-bool [(ngModel)]="modelo.turneable" name="turneable" label="Turneable" type="slide"></plex-bool>
+    </div>
+
+
+    <div class="col-sm-10">
+      <plex-bool [(ngModel)]="modelo.autonoma" label="Autónoma" name="autonoma" type="slide"></plex-bool>
+    </div>
+
+    <div class="col-sm-10">
+      <plex-bool [(ngModel)]="modelo.activo" label="Activo" name="activo" type="slide"></plex-bool>
+    </div>
+
+  </div>
+
+  <div class="col-sm-10">
+    <plex-button label="Guardar" type="primary" (click)="onSave()"></plex-button>
+    <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
+  </div>
+
+</plex-box>
+
