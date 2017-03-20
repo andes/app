@@ -21,7 +21,7 @@
     },
     "dependencies": {
         "@andes/auth": "^0.0.3",
-        "@andes/plex": "^0.9.7",
+        "@andes/plex": "0.9.7",
         "@andes/shared": "^0.2.2",
         "@angular/common": "2.4.8",
         "@angular/compiler": "2.4.8",
