@@ -97,7 +97,9 @@ export class TransformarProblemaComponent implements OnInit {
                     problemaActivo.evoluciones.push(unaEvolucion);
                     this.servicioProblemaPac.put(problemaActivo).subscribe(problema => {
                         if (problema) {
-                            this.listaProblemas.push(problema);
+                            if (!this.existeProblema(this.tipoProblema)) {
+                                this.listaProblemas.push(problema);
+                            }
                             this.evtData.emit(this.listaProblemas);
                         } else {
                             this.plex.alert('Ha ocurrido un error al transformar el problema');
