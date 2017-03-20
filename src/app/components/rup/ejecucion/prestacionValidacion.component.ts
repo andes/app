@@ -26,6 +26,13 @@ export class PrestacionValidacionComponent implements OnInit {
 
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
+
+    // arreglo de prestaciones a mostrar por cada problema
+    prestaciones: any[] = [];
+    prestacionesPlan: any[] = [];
+
+    cantidadPrestaciones: any[];
+
     showEjecucion = true;
     mensaje = "";
 
@@ -37,17 +44,35 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
-        debugger;
         this.loadPrestacionesEjacutadas();
+        console.log("vcalidacion: ", this.prestacion);
     }
 
     loadPrestacionesEjacutadas() {
-        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
+        let estado = (this.prestacion.estado[this.prestacion.estado.length-1].tipo == 'ejecucion') ? 'ejecucion' : 'validada';
+        
+            this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
+
+            // asignamos las prestaciones por problemas asi luego loopeamos
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+
+            });
         });
-        // this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
-        //     this.prestacionesSolicitadas = resultado;
-        // });
+
+        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
+            this.prestacionesSolicitadas = resultado;
+
+            this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
+                let idProblema = _problema.id.toString();
+
+                this.prestacionesPlan[idProblema] = this.buscarPlanesPorProblema(_problema);
+
+            });
+        });
     }
 
     filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
@@ -61,7 +86,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
-        return this.prestacion.ejecucion.prestaciones.filter(data => {
+        return this.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
                 return data;
         });

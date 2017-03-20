@@ -6,11 +6,13 @@ import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
+import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import * as moment from 'moment';
 
 @Component({
-    templateUrl: 'gestor-agendas.html'
+    templateUrl: 'gestor-agendas.html',
+    providers: [GestorAgendasService]
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -20,13 +22,12 @@ export class GestorAgendasComponent implements OnInit {
 
     agendasSeleccionadas: any[] = [];
 
-    public showGestorAgendas: boolean = true;
-    public showTurnos: boolean = false;
-    public showVistaAgendas: boolean = false;
-    public showDatosAgenda: boolean = false;
-    public showClonar: boolean = false;
-    public showDarTurnos: boolean = false;
-    public showEditarAgenda: boolean = false;
+    public showGestorAgendas: Boolean = true;
+    public showTurnos: Boolean = false;
+    public showVistaAgendas: Boolean = false;
+    public showClonar: Boolean = false;
+    public showDarTurnos: Boolean = false;
+    public showEditarAgenda: Boolean = false;
 
     public modelo: any = {};
 
@@ -39,7 +40,7 @@ export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router) { }
+        public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService) { }
 
     ngOnInit() {
 
@@ -143,9 +144,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     verAgenda(agenda) {
-        this.ag = agenda;
-        this.vistaAgenda = agenda;
-
         let index;
 
         if (agenda.agendaSeleccionada) {
@@ -161,11 +159,17 @@ export class GestorAgendasComponent implements OnInit {
             this.agendasSeleccionadas.push(agenda);
         }
 
-        this.setColorEstadoAgenda(this.ag);
+        agenda.agendasSeleccionadas = this.agendasSeleccionadas;
+
+        this.setColorEstadoAgenda(agenda);
+
+        this.ag = agenda;
+        this.vistaAgenda = agenda;
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
-        this.showDatosAgenda = true;
+
+        this.gestorAgendasService.announceMission(this.vistaAgenda);
     }
 
     setColorEstadoAgenda(agenda) {
@@ -188,5 +192,6 @@ export class GestorAgendasComponent implements OnInit {
 
 class AgendaSeleccionada {
     public agendaSeleccionada: boolean;
+    public agendasSeleccionadas: any = [];
     public agendaSeleccionadaColor: String;
 }

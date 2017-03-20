@@ -1,5 +1,10 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (change)="devolverValores()">
 </plex-int>
+
+<p *ngIf="soloValores">
+    <label>Tensión Sistólica</label>
+    <br /> {{data[tipoPrestacion.key]}} mmHG
+</p>
 
 <p *ngIf="data.mensaje.texto">
     <span class="badge {{data.mensaje.class}}">

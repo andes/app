@@ -1,16 +1,24 @@
 <div class="box" *ngIf="problema">
     <div class="box-header clearfix">
-        <h2 class="box-title">{{problema.tipoProblema.nombre}}</h2>
+        <h2 class="box-title">Detalles de Problema: {{problema.tipoProblema.nombre}}</h2>
     </div>
     <div class="box-body">
-        <div class="row">
+        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
             <div class="col-md-12">
-                <plex-bool [(ngModel)]="problema.activo" label="¿Está activo?" name="activo" type="slide"></plex-bool>
+                <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                                Activo
+                                            </span>
+                <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                            </span>&nbsp;&nbsp;&nbsp;
+                <span class="label label-warning">
+                        {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                    </span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h4 class="box-title">Evoluciones</h4>
+                <h5 class="box-title">Evoluciones | última evolución {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</h5>
             </div>
         </div>
         <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
@@ -33,6 +41,58 @@
                 </ul>
             </div>
         </div>
+        <div class="row" *ngIf="problema.idProblemaOrigen && problema.idProblemaOrigen[0].id">
+            <div class="col-md-12">
+                <h5 class="box-title">Problemas Originarios</h5>
+            </div>
+        </div>
+        <div class="row" *ngIf="problema.idProblemaOrigen && problema.idProblemaOrigen[0].id">
+            <div class="col-md-12">
+                <ul class="list-group">
+                    <li class="list-group-item clearfix" *ngFor="let pro of problema.idProblemaOrigen">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    {{pro.tipoProblema.nombre}}
+                                    <br />
+                                    <small class="gris">
+                                        {{pro.fechaInicio | date: 'dd/MM/yyyy'}} 
+                                                                </small>
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
+            </div>
+        </div>
+
+        <!--<div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <br><span>&nbsp;</span>
+                        </a>
+                    </li>
+                    <li *ngFor="let ev of problema.evoluciones">
+                        <a href="#">{{ev.fecha | date: 'dd'}} <br> {{ev.fecha | date: 'MMM'}}</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span><br><span>&nbsp;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>-->
+
+
+
 
     </div>
 </div>

@@ -19,4 +19,5 @@ export interface ITurno {
     }];
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
+    nota: String
 }
