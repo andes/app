@@ -148,7 +148,8 @@ export class TurnosComponent implements OnInit {
             desbloquearTurno: (this.estadoTurno === 'bloqueado'),
 
             tdReasignarTurno: (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
-        }
+            tdNota: this.pacientesSeleccionados.length > 0
+        };
     }
 
     actualizarBotonesTurnos(turno: any) {

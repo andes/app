@@ -2,7 +2,7 @@
     <plex-box>
         <div class="row">
             <div class="col-md-12">
-                <table class="table" *ngIf="vistaAgenda">
+                <table  style="height: 100px" class="table" *ngIf="vistaAgenda">
                     <tr>
                         <td colspan="5">
                             <span><b>Estado de la Agenda: {{vistaAgenda.estado}}</b></span>
@@ -13,19 +13,19 @@
                             <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
                             </plex-button>
                         </td>
-                        <td <td *ngIf="vistaAgenda.botones.suspenderAgenda">>
+                        <td *ngIf="vistaAgenda.botones.suspenderAgenda">
                             <plex-button icon="mdi mdi-power" (click)="suspenderAgenda(vistaAgenda)" title="Suspender Agenda">
                             </plex-button>
                         </td>
-                        <td <td *ngIf="vistaAgenda.botones.cerrarAgenda">>
+                        <td *ngIf="vistaAgenda.botones.cerrarAgenda">
                             <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
                             </plex-button>
                         </td>
-                        <td <td *ngIf="vistaAgenda.botones.publicarAgenda">>
+                        <td *ngIf="vistaAgenda.botones.publicarAgenda">
                             <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="publicarAgenda(vistaAgenda)" title="Publicar Agenda">
                             </plex-button>
                         </td>
-                        <td <td *ngIf="vistaAgenda.botones.clonarAgenda">>
+                        <td *ngIf="vistaAgenda.botones.clonarAgenda">
                             <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda(vistaAgenda)" title="Clonar Agenda">
                             </plex-button>
                         </td>

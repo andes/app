@@ -36,8 +36,8 @@
         </form>
 
         <div type="info" class="col-sm-8" *ngIf="showVistaAgendas">
-            <div class="clear"></div>
-            <vista-agenda [vistaAgenda]="vistaAgenda" (clonarEmit)="clonar($event)" (editarAgendaEmit)="editarAgenda($event)"></vista-agenda>
+            <!--<div class="clear"></div>-->
+            <vista-agenda *ngIf="showVistaAgendas" [vistaAgenda]="vistaAgenda" (clonarEmit)="clonar($event)" (editarAgendaEmit)="editarAgenda($event)"></vista-agenda>
         </div>
 
         <div class="row">

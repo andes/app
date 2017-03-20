@@ -58,7 +58,7 @@
                                                     <!--<i *ngIf="turno.botones.reasignarTurnoDeshabilitado" title="No es posible reasignar Turno" class="text-success success mdi mdi-select"></i>-->
                                                 </td>
 
-                                                <td>
+                                                <td *ngIf="botones.tdNota">
                                                     <a class="btn btn-default hover" (click)="agregarNotaTurno(ag)"><i title="Agregar Nota" class="text-success success mdi mdi-message-text-outline"></i></a>
                                                 </td>
                                             </tr>

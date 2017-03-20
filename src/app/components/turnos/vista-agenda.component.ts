@@ -1,10 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Router } from '@angular/router';
+import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'vista-agenda',
@@ -23,47 +25,37 @@ export class VistaAgendaComponent implements OnInit {
 
     public modelo: any = {};
 
+    subscription: Subscription;
+
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router) { }
+        public servicioEspacioFisico: EspacioFisicoService, public router: Router, private gestorAgendasService: GestorAgendasService) {
 
-    ngOnInit() {
-
-
-        // if (this.vistaAgenda) {
-        //     this.vistaAgenda;
-
-        //        this.actualizarBotones(this.vistaAgenda);
-        // }
+        this.subscription = gestorAgendasService.agendas$.subscribe(
+            agendas => {
+                this.actualizarBotones(this.vistaAgenda);
+                this.vistaAgenda = agendas;
+            });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        debugger;
-        if (changes['vistaAgenda']) {
+    ngOnInit() {
+        if (this.vistaAgenda) {
             this.actualizarBotones(this.vistaAgenda);
         }
     }
 
-    // private _reasignaTurnos: any;
-
-    // @Input('vistaAgenda')
-    // set vistaAgendas(value: any) {
-    //     debugger;
-    //     this._reasignaTurnos = value;
-    // }
-    // get vistaAgendas(): any {
-    //     debugger;
-    //     return this.actualizarBotones(this._reasignaTurnos);
-    // }
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
 
     actualizarBotones(vistaAgenda: any) {
         debugger;
 
         vistaAgenda.botones = {
             editarAgenda: (vistaAgenda.agendasSeleccionadas.length === 1) && (vistaAgenda.estado !== 'Suspendida'),
-            // suspenderAgenda: vistaAgenda.agendasSeleccionadas > 0,
-            // cerrarAgenda: vistaAgenda.agendasSeleccionadas === 1,
-            // publicarAgenda: 
-            // clonarAgenda
+            suspenderAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
+            cerrarAgenda: vistaAgenda.agendasSeleccionadas === 1,
+            publicarAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
+            clonarAgenda: (vistaAgenda.agendasSeleccionadas === 1) && (vistaAgenda.estado !== 'Suspendida'),
         };
     }
 
@@ -83,7 +75,6 @@ export class VistaAgendaComponent implements OnInit {
 
     editarAgenda(agenda) {
         debugger;
-
         if (agenda.estado === 'Disponible') {
             this.modelo.profesionales = agenda.profesionales;
             this.modelo.espacioFisico = agenda.espacioFisico;

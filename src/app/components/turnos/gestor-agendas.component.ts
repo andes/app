@@ -6,11 +6,13 @@ import { PrestacionService } from './../../services/turnos/prestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
+import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import * as moment from 'moment';
 
 @Component({
-    templateUrl: 'gestor-agendas.html'
+    templateUrl: 'gestor-agendas.html',
+    providers: [GestorAgendasService]
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -38,7 +40,7 @@ export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router) { }
+        public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService) { }
 
     ngOnInit() {
 
@@ -166,6 +168,8 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showTurnos = true;
         this.showVistaAgendas = true;
+
+        this.gestorAgendasService.announceMission(this.vistaAgenda);
     }
 
     setColorEstadoAgenda(agenda) {
