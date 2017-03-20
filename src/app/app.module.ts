@@ -1,4 +1,5 @@
 
+
 /*
 @jgabriel | 04-03-2017
 
@@ -113,6 +114,7 @@ import { EvolucionTodosProblemasComponent } from './components/rup/problemas-pac
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
+import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
@@ -200,6 +202,7 @@ export const RUP_COMPONENTS = [
   EvolucionProblemaComponent,
   EnmendarProblemaComponent,
   TransformarProblemaComponent,
+  verProblemaComponent,
   PruebaOtoemisionesAcusticasComponent,
   PesquisaNeonatalComponent,
   PercentiloTallaComponent,

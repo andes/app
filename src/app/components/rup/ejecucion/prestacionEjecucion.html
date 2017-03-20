@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-md-6">
             <plex-box type="primary" title="Problemas">
-                <div *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar">
+                <div *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar && !showDetalles">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="input-group">
@@ -93,6 +93,9 @@
                         </div>
                         <div *ngIf="showEnmendar">
                             <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
+                        </div>
+                        <div *ngIf="showDetalles">
+                            <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
                         </div>
                     </div>
                 </div>

@@ -185,6 +185,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     onReturn(dato: IProblemaPaciente) {
         this.showEvolucionar = false;
         this.showEnmendar = false;
+        this.showDetalles = false;
     }
 
     onReturnTransformar(datos: IProblemaPaciente[]) {
