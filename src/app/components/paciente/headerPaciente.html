@@ -23,7 +23,7 @@
                 <strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}
             </h4>
             <small class="gris">
-                <span *ngIf="paciente.edad">{{paciente.edad}} años |</span> Documento: {{paciente.documento}}
+                <span *ngIf="paciente.edadReal">{{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} |</span> Documento: {{paciente.documento}}
             </small>
         </div>
 

@@ -31,6 +31,8 @@ export class PrestacionValidacionComponent implements OnInit {
     prestaciones: any[] = [];
     prestacionesPlan: any[] = [];
 
+    cantidadPrestaciones: any[];
+
     showEjecucion = true;
     mensaje = "";
 
@@ -43,13 +45,16 @@ export class PrestacionValidacionComponent implements OnInit {
 
     ngOnInit() {
         this.loadPrestacionesEjacutadas();
-
+        console.log("vcalidacion: ", this.prestacion);
     }
 
     loadPrestacionesEjacutadas() {
-        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'ejecucion' }).subscribe(resultado => {
+        let estado = (this.prestacion.estado[this.prestacion.estado.length-1].tipo == 'ejecucion') ? 'ejecucion' : 'validada';
+        
+            this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
 
+            // asignamos las prestaciones por problemas asi luego loopeamos
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
 
@@ -64,7 +69,7 @@ export class PrestacionValidacionComponent implements OnInit {
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
 
-                this.prestacionesPlan[idProblema] = this.buscarPrestacionesPorProblema(_problema);
+                this.prestacionesPlan[idProblema] = this.buscarPlanesPorProblema(_problema);
 
             });
         });
