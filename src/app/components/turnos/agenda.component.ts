@@ -38,7 +38,7 @@ export class AgendaComponent implements OnInit {
     public alertas: String[] = [];
     public fecha: Date;
     public permisos = [];
-    public autorizado: boolean;
+    public autorizado = false;
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
@@ -423,7 +423,8 @@ export class AgendaComponent implements OnInit {
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.alertas = [];
+                // this.alertas = [];
+                let alts = [];
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
@@ -431,11 +432,36 @@ export class AgendaComponent implements OnInit {
                         });
                         cantidad = agds.length;
                         if (cantidad > 0) {
-                            this.alertas = [];
-                            this.alertas.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
+                            alts = [];
+                            alts.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
+                            this.alertas = this.alertas.concat(alts);
                         }
                     });
             });
+        }
+        if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
+            // this.alertas = [];
+            let alts = [];
+            this.ServicioAgenda.get({ 'espacioFisico': this.modelo.espacioFisico.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
+                subscribe(agendas => {
+                    let agds = agendas.filter(agenda => {
+                        return agenda.id !== this.modelo.id || !this.modelo.id;
+                    });
+                    cantidad = agds.length;
+                    if (cantidad > 0) {
+                        alts = [];
+                        alts.push('El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese rango horario');
+                        this.alertas = this.alertas.concat(alts);
+                    }
+                });
+        }
+        if (iniAgenda && finAgenda) {
+            if (iniAgenda > finAgenda) {
+                this.alertas.push('La hora de inicio no puede ser mayor a la de fin');
+            }
+            if (iniAgenda === finAgenda) {
+                this.alertas.push('La hora de inicio no puede igual a la de fin');
+            }
         }
         // Verifico que los bloques no estén fuera de los límites de la agenda
         bloques.forEach((bloque, index) => {
@@ -495,7 +521,7 @@ export class AgendaComponent implements OnInit {
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;
-        if (iniAgenda && finAgenda) {
+        if (iniAgenda && finAgenda && iniAgenda <= finAgenda) {
             let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
             if (totalBloques > totalAgenda) {
                 alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';

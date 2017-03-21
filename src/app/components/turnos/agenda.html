@@ -27,8 +27,8 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-              placeholder="Seleccione un espacio">
+            <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" (change)="validarTodo()" 
+            label="Espacio Físico" placeholder="Seleccione un espacio">
               </plex-select>
           </div>
         </div>
