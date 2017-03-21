@@ -12,44 +12,41 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 export class AgregarNotaTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turno: ITurno;
+    @Input() pacientesSeleccionados: ITurno;
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
     @Output() cancelaAgregarNota = new EventEmitter<boolean>();
 
-    showAgregarNotaTurno: boolean = true;
+    showAgregarNotaTurno: Boolean = true;
+    pacientes: any = [];
+
     public modelo: any;
     public resultado: any;
 
     ngOnInit() {
-        if (this.turno.nota)
-            this.modelo = { nota: this.turno.nota };
-        else
-            this.modelo = { nota: null };
+        this.pacientes = this.pacientesSeleccionados;
     }
 
-    guardarNota(agenda: any, turno: any) {
-        let patch: any = {};
-        debugger;
-        patch = {
-            'op': 'guardarNotaTurno',
-            'idAgenda': agenda.id,
-            'idTurno': turno.id,
-            'textoNota': this.modelo.nota
-        };
+    guardarNota(nota: any, idTurno) {
+            let patch = {
+                'op': 'guardarNotaTurno',
+                'idAgenda': this.agenda.id,
+                'idTurno': idTurno,
+                'textoNota': nota
+            };
 
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.plex.alert('La Nota se guardó correctamente');
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                this.plex.alert('La Nota se guardó correctamente');
 
-            this.resultado = resultado;
+                this.resultado = resultado;
 
-            this.saveAgregarNotaTurno.emit(this.resultado);
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+                this.saveAgregarNotaTurno.emit(this.resultado);
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
     }
 
     cancelar() {

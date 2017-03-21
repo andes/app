@@ -73,7 +73,7 @@ export interface IPrestacionPaciente {
         profesional: IProfesional,
         // TODO: Definir evoluciones y prestacionesSolicitadas bajo
         // que objeto van a estar,... solicitud .. ejecucion .. ¿postEjecucion?
-        evoluciones: Object,
+        evoluciones: [Object],
         datosPropios: Object
     },
 

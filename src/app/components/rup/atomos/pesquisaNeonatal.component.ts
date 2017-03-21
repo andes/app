@@ -18,8 +18,8 @@ export class PesquisaNeonatalComponent implements OnInit {
 
   data: any = {
     mensaje: {
-      class: "",
-      texto: "",
+      class: '',
+      texto: '',
     },
   };
 
@@ -52,8 +52,10 @@ export class PesquisaNeonatalComponent implements OnInit {
   }
 
   devolverValores() {
-    this.data.mensaje = this.getMensajes();
-    this.evtData.emit(this.data);
+    if (this.data[this.tipoPrestacion.key]) {
+      this.data.mensaje = this.getMensajes();
+      this.evtData.emit(this.data);
+    }
   }
 
   getMensajes() {

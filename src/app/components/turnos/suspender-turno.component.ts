@@ -20,7 +20,7 @@ export class SuspenderTurnoComponent implements OnInit {
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
 
     pacientes: any = [];
-    showSuspenderTurno: boolean = true;
+    showSuspenderTurno: Boolean = true;
     resultado: any;
 
     public reasignar: any = {};
@@ -84,15 +84,13 @@ export class SuspenderTurnoComponent implements OnInit {
                     this.saveSuspenderTurno.emit(resulAgenda);
 
                     this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
-                })
-
+                });
             });
         }
     }
 
     reasignarTurno(paciente: any) {
-        debugger;
-         this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
+        this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
 
         this.suspenderTurno();
 

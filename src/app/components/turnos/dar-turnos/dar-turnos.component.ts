@@ -261,6 +261,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     onSave() {
+        debugger;
         let estado: String = 'asignado';
         let pacienteSave = {
             id: this.paciente.id,
@@ -269,12 +270,20 @@ export class DarTurnosComponent implements OnInit {
             nombre: this.paciente.nombre,
             telefono: this.paciente.telefono
         };
-        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+        // this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+        // let datosTurno = {
+        //     idAgenda: this.agenda.id,
+        //     indiceBloque: this.indiceBloque,
+        //     indiceTurno: this.indiceTurno,
+        //     estado: estado,
+        //     paciente: pacienteSave,
+        //     tipoPrestacion: this.turnoTipoPrestacion
+
+        // };
         let datosTurno = {
             idAgenda: this.agenda.id,
-            indiceBloque: this.indiceBloque,
-            indiceTurno: this.indiceTurno,
-            estado: estado,
+            idTurno: this.turno.id,
+            idBloque: this.bloque.id,
             paciente: pacienteSave,
             tipoPrestacion: this.turnoTipoPrestacion
 

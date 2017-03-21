@@ -16,22 +16,7 @@ export class SignosVitalesComponent implements OnInit {
     @Input('paciente') paciente: any;
 
     // resultados a devolver
-    data: any = {
-        mensaje: {
-            texto: '',
-        },
-    };
-
-    // tipos de prestaciones a utilizar
-    // valor = {
-    //     frecuenciaCardiaca: null,
-    //     frecuenciaRespiratoria: null,
-    //     peso: null,
-    //     saturacionOxigeno: null,
-    //     temperatura: null,
-    //     tensionArterial: null,
-    //     observacion: null,
-    // };
+    data: any = {};
 
     constructor(private servicioTipoPrestacion: TipoPrestacionService) {
     }
@@ -46,17 +31,14 @@ export class SignosVitalesComponent implements OnInit {
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
-        // console.log(obj);
-        // console.log(tipoPrestacion);
-        // inicializamos el array donde vamos a guardar todos los datos del form
-        // if (this.data[this.tipoPrestacion.key] === undefined) {
-        //     this.data[this.tipoPrestacion.key] = {};
-        // }
 
-        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
-        // this.data.mensaje.texto = this.mensaje;
-        // console.log(this.data);
-        this.evtData.emit(this.data);
+            if (obj[tipoPrestacion.key]) {
+            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+
+            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null ) {
+                delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+            }
+            this.evtData.emit(this.data);
     }
 
 }
