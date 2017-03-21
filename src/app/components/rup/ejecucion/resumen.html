@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-4">
                 <p class="celeste">Problemas</p>
-                <ul class="list-group">
+                <ul class="list-group" *ngIf="listaProblemas">
                     <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
                         <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             {{problema.tipoProblema.nombre}}

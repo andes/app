@@ -132,7 +132,7 @@
                             </pre>-->
                             <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">
 
-                                <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponente($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[0] && _prestacion.ejecucion.evoluciones[0].valores && _prestacion.ejecucion.evoluciones[0].valores[0]) ? _prestacion.ejecucion.evoluciones[0].valores[0][_prestacion.solicitud.tipoPrestacion.key] : null">
+                                <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[0] && _prestacion.ejecucion.evoluciones[0].valores && _prestacion.ejecucion.evoluciones[0].valores[0]) ? _prestacion.ejecucion.evoluciones[0].valores[0][_prestacion.solicitud.tipoPrestacion.key] : null">
                                 </rup>
 
 
