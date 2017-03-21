@@ -14,12 +14,8 @@ export class TensionSistolicaComponent implements OnInit {
     @Input('soloValores') soloValores: Boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    data: any = {
-        mensaje: {
-            class: "",
-            texto: ""
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
@@ -31,10 +27,8 @@ export class TensionSistolicaComponent implements OnInit {
     }
 
     devolverValores() {
-
-        this.data.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-        console.log(this.data[this.tipoPrestacion.key]);
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
     }
 
     getMensajes() {
@@ -51,45 +45,45 @@ export class TensionSistolicaComponent implements OnInit {
         Edad = this.paciente.edad;
         //percentiloTalla = 5; //Falta tomar valor del percentilo
 
-        
+
         //Rango de edad del paciente ADULTOS
         if (tensionSistolica) {
 
             if (Edad > 17 && Edad < 110) {
                 switch (true) {
-                //Rengo de tension sistolica
-                case (tensionSistolica == 120):
-                    //rango optima
-                    mensaje.texto = 'optima';
-                break;
-                case (tensionSistolica > 120 && tensionSistolica <= 129):
-                    //rango normal
-                    mensaje.texto = 'Normal';
-                break;
-                case (tensionSistolica >= 130 && tensionSistolica <= 139):
-                    //rango normal-alta
-                    mensaje.texto = 'Normal-alta';
-                break;
-                case (tensionSistolica >= 140 && tensionSistolica <= 159):
-                    //rango hipertension arterial grado 1 
-                    mensaje.texto = 'Hipertensión arterial grado 1';
-                break;
-                case (tensionSistolica >= 160 && tensionSistolica <= 179):
-                    //rango hipertension arterial grado 2 
-                    mensaje.texto = 'Hipertensión arterial grado 2';
-                break;
-                case (tensionSistolica >= 180):
-                    //rango hipertension arterial grado 3 
-                    mensaje.texto = 'Hipertensión arterial grado 3';
-                break;
-                case (tensionSistolica <= 60 && tensionSistolica >= 80) :
-                    //rango hipotension
-                    mensaje.texto = 'hipotensión';
-                break;
-                case (tensionSistolica <= 50):
-                    //rango coma
-                    mensaje.texto = 'Coma';
-                break;
+                    //Rengo de tension sistolica
+                    case (tensionSistolica == 120):
+                        //rango optima
+                        mensaje.texto = 'optima';
+                        break;
+                    case (tensionSistolica > 120 && tensionSistolica <= 129):
+                        //rango normal
+                        mensaje.texto = 'Normal';
+                        break;
+                    case (tensionSistolica >= 130 && tensionSistolica <= 139):
+                        //rango normal-alta
+                        mensaje.texto = 'Normal-alta';
+                        break;
+                    case (tensionSistolica >= 140 && tensionSistolica <= 159):
+                        //rango hipertension arterial grado 1 
+                        mensaje.texto = 'Hipertensión arterial grado 1';
+                        break;
+                    case (tensionSistolica >= 160 && tensionSistolica <= 179):
+                        //rango hipertension arterial grado 2 
+                        mensaje.texto = 'Hipertensión arterial grado 2';
+                        break;
+                    case (tensionSistolica >= 180):
+                        //rango hipertension arterial grado 3 
+                        mensaje.texto = 'Hipertensión arterial grado 3';
+                        break;
+                    case (tensionSistolica <= 60 && tensionSistolica >= 80):
+                        //rango hipotension
+                        mensaje.texto = 'hipotensión';
+                        break;
+                    case (tensionSistolica <= 50):
+                        //rango coma
+                        mensaje.texto = 'Coma';
+                        break;
                 }
             }
             // if (Edad > 0 && Edad <= 17) {//Parametros para la edad del niño

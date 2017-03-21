@@ -14,12 +14,9 @@ export class SaturacionOxigenoComponent implements OnInit {
     @Input('soloValores') soloValores: Boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    data: any = {
-        mensaje: {
-            class: "",
-            texto: ""
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
+
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
 
@@ -30,8 +27,8 @@ export class SaturacionOxigenoComponent implements OnInit {
     }
 
     devolverValores() {
-		this.data.mensaje = this.getMensajes();
-		this.evtData.emit(this.data);
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
 	}
 
 	getMensajes() {
