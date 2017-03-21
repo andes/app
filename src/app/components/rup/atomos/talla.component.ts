@@ -29,12 +29,9 @@ export class TallaComponent implements OnInit {
     }
 
     devolverValores() {
-        this.data.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-    }
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);
-	}
+    }
 
     getMensajes() {
         // Calculo Edad en Meses
