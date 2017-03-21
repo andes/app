@@ -315,7 +315,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacionesEjecucion.push(nuevaPrestacion);
     }
 
-    evolucionarPrestacion() {
+   evolucionarPrestacion() {
+        if (this.prestacion.ejecucion.listaProblemas.length > 0) {
         let i = 1;
 
         // obtenemos un array de la cantidad de prestaciones que se van a guardar
@@ -393,6 +394,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             // }
         });
     }
+
+    else{
+        this.Error= 'Debe seleccionar al menos un problema';
+    }
+}
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
     getPosiblesPrestaciones() {
