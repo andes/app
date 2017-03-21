@@ -189,12 +189,14 @@
     </div>
     <plex-box>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
             </div>
-            <div class="badge-danger"> {{Error}} 
+            <div class="col-md-6 text-center">
+                <div class="badge danger"> {{Error}} 
+                </div>    
             </div>    
-            <div class="col-md-6 text-right">
+            <div class="col-md-3 text-right">
                 <plex-button title="Guardar" label="GUARDAR" (click)="evolucionarPrestacion()" type="success btn-sm"></plex-button>
             </div>
         </div>
