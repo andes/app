@@ -1,3 +1,4 @@
+import { IContacto } from './../../interfaces/IContacto';
 import { FinanciadorService } from './../../services/financiador.service';
 import { IDireccion } from './../../interfaces/IDireccion';
 import { IBarrio } from './../../interfaces/IBarrio';
@@ -44,17 +45,27 @@ export class PacienteCreateUpdateComponent implements OnInit {
   localidades: ILocalidad[] = [];
   todasProvincias: IProvincia[] = [];
   todasLocalidades: ILocalidad[] = [];
-  showCargar: boolean;
-  error: boolean = false;
-  mensaje: string = '';
   barrios: IBarrio[] = [];
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
   familiaresPacientes = [];
   pacientesSimilares = [];
-  validado: boolean = false;
-  disableGuardar: boolean = false;
-  sugerenciaAceptada: boolean = false;
+
+  unSexo = null;
+  unEstadoCivil = null;
+  unGenero = null;
+
+  error = false;
+  mensaje = '';
+  validado = false;
+  disableGuardar = false;
+  sugerenciaAceptada = false;
+
+  showCargar: boolean;
+
+
+
+  pacienteModel: IPaciente;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -64,7 +75,58 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private pacienteService: PacienteService,
     private financiadorService: FinanciadorService, public plex: Plex) {
 
-    this.createForm = this.formBuilder.group({
+    let contacto: IContacto = {
+      tipo: '',
+      valor: '',
+      ranking: 0,
+      activo: true,
+      ultimaActualizacion: new Date()
+    };
+
+    let direccion: IDireccion = {
+      valor: '',
+      codigoPostal: '',
+      ubicacion: {
+        localidad: null,
+        provincia: null,
+        pais: null
+      },
+      ranking: 0,
+      geoReferencia: null,
+      ultimaActualizacion: new Date(),
+      activo: true
+    };
+
+    this.pacienteModel = {
+      id: null,
+      documento: '',
+      activo: true,
+      estado: 'temporal',
+      nombre: '',
+      apellido: '',
+      nombreCompleto: '',
+      alias: '',
+      contacto: [contacto],
+      sexo: null,
+      genero: null,
+      fechaNacimiento: new Date(), // Fecha Nacimiento
+      edad: null,
+      edadReal: null,
+      fechaFallecimiento: null,
+      direccion: [direccion],
+      estadoCivil: null,
+      foto: '',
+      relaciones: null,
+      financiador: null,
+      identificadores: null,
+      claveBlocking: null,
+      entidadesValidadoras: null,
+    }
+    // Se cargan los datos por defecto
+    debugger
+    //this.pacienteModel.contacto.push(this.contacto);
+
+    /*this.createForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       alias: [''],
@@ -75,7 +137,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
       genero: [''],
       estadoCivil: [''],
       contacto: this.formBuilder.array([
-        /* this.iniContacto(1)*/
       ]),
       direccion: this.formBuilder.array([
         this.iniDireccion(1)
@@ -83,16 +144,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
       financiador: this.formBuilder.array([
       ]),
       relaciones: this.formBuilder.array([
-        /*this.iniRelacion()*/
       ]),
       activo: [true]
-    });
+    });*/
 
   }
 
   ngOnInit() {
     // Se cargan los combos
-    this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado });
+    this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado; });
     // Se cargan los enumerados
     this.showCargar = false;
     this.sexos = enumerados.getObjSexos();
@@ -102,56 +162,61 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.estados = enumerados.getEstados();
     this.relacionTutores = enumerados.getObjRelacionTutor();
 
-    // Se cargan los países, provincias y localidades
+
+
+
     debugger;
     if (this.seleccion) {
+      this.pacienteModel = this.seleccion;
 
       if (this.seleccion.estado === 'validado') {
         this.validado = true;
       }
-      if (this.seleccion.relaciones) {
-        this.seleccion.relaciones.forEach(rel => {
-          this.addRelacion();
-        });
-      }
-      if (this.seleccion.contacto) {
-        this.seleccion.contacto.forEach(rel => {
-          this.addContacto();
-        });
-      }
 
-      this.pacienteService.getById(this.seleccion.id)
-        .subscribe(resultado => {
-          this.seleccion = resultado;
-          if (this.isScan) {
-            this.seleccion.estado = 'validado';
-            this.validado = true;
-          }
-          this.createForm.patchValue(this.seleccion);
-        });
+      // if (this.seleccion.relaciones) {
+      //   this.seleccion.relaciones.forEach(rel => {
+      //     this.addRelacion();
+      //   });
+      // }
+      // if (this.seleccion.contacto) {
+      //   this.seleccion.contacto.forEach(rel => {
+      //     this.addContacto();
+      //   });
+      // }
+
+      // this.pacienteService.getById(this.seleccion.id)
+      //   .subscribe(resultado => {
+      //     this.seleccion = resultado;
+      //     if (this.isScan) {
+      //       this.seleccion.estado = 'validado';
+      //       this.validado = true;
+      //     }
+      //     this.createForm.patchValue(this.seleccion);
+      //   });
     }
 
     // this.detectarRelaciones();
-    this.createForm.controls['relaciones'].valueChanges
-      .debounceTime(1000)
-      .subscribe((value) => {
-        console.log(value);
-        // Se busca el matcheo
+    // // this.createForm.controls['relaciones'].valueChanges
+    //   .debounceTime(1000)
+    //   .subscribe((value) => {
+    //     console.log(value);
+    //     // Se busca el matcheo
 
-        let relaciones = value;
-        relaciones.forEach(rel => {
-          let familiarPacientes;
-          if (!rel.referencia) {
-            if (rel.nombre && rel.documento && rel.apellido) {
-              let dtoBusqueda = {
-                'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
-              };
-              this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest", false)
-                .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
-            }
-          }
-        })
-      });
+    //     let relaciones = value;
+    //     relaciones.forEach(rel => {
+    //       let familiarPacientes;
+    //       if (!rel.referencia) {
+    //         if (rel.nombre && rel.documento && rel.apellido) {
+    //           let dtoBusqueda = {
+    //             'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
+    //           };
+    //           this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest", false)
+    //             .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
+    //         }
+    //       }
+    //     })
+    //   });
+
 
 
   }
@@ -209,9 +274,21 @@ export class PacienteCreateUpdateComponent implements OnInit {
     });
   }
 
-  addContacto() {
-    const control = <FormArray>this.createForm.controls['contacto'];
-    control.push(this.iniContacto(control.length));
+  addContacto(event) {
+    debugger;
+    // if (event.formValid) {
+    let cant = this.pacienteModel.contacto.length > 0 ? this.pacienteModel.contacto.length : 0;
+    let _unConct = {
+      tipo: '',
+      valor: '',
+      ranking: cant,
+      activo: true,
+      ultimaActualizacion: new Date()
+    };
+    this.pacienteModel.contacto.push(_unConct);
+    // } else {
+    //   this.plex.alert('Completar datos requeridos');
+    // }
   }
 
   removeContacto(i: number) {
@@ -343,7 +420,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   save(model: any) {
     let operacionPac: Observable<IPaciente>;
     if (this.sugerenciaAceptada) {
-       this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
+      this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
         if (resultado) {
           debugger
           operacionPac = this.pacienteService.save(model);
@@ -371,9 +448,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSelect(paciente: IPaciente) {
     this.seleccion = paciente;
-     if (this.seleccion.estado === 'validado') {
-        this.validado = true;
-      }
+    if (this.seleccion.estado === 'validado') {
+      this.validado = true;
+    }
     this.createForm.patchValue(this.seleccion);
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;
