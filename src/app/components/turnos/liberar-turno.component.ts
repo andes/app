@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../interfaces/turnos/ITurno';
@@ -10,63 +10,73 @@ import { AgendaService } from '../../services/turnos/agenda.service';
     templateUrl: 'liberar-turno.html'
 })
 
-export class LiberarTurnoComponent {
+export class LiberarTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turno: ITurno;
+    @Input() pacientesSeleccionados: ITurno;
 
     @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
 
-    showLiberarTurno: boolean = true;
+    pacientes: any = [];
+
+    showLiberarTurno: Boolean = true;
 
     public reasignar: any = {};
 
-    liberarTurno(turno: any) {
-        let patch = {
-            'op': 'liberarTurno',
-            'idTurno': turno.id
-        };
-
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+    ngOnInit() {
+        debugger;
+        this.pacientes = this.pacientesSeleccionados;
     }
 
-    agregarPacienteListaEspera(turno: any) {
+    liberarTurno() {
+        for (let x = 0; x < this.pacientes.length; x++) {
+            let patch = {
+                'op': 'liberarTurno',
+                'idTurno': this.pacientes[x].id
+            };
 
-        let patch = {
-            'op': 'listaEsperaSuspensionAgenda',
-            'idAgenda': this.agenda.id,
-            'pacientes': turno
-        };
-        debugger;
-        this.liberarTurno(turno);
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
 
-        this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
+    }
 
-            this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
+    agregarPacienteListaEspera() {
 
-                this.saveLiberarTurno.emit(resulAgenda);
+        for (let x = 0; x < this.pacientes.length; x++) {
+            let patch = {
+                'op': 'listaEsperaSuspensionAgenda',
+                'idAgenda': this.agenda.id,
+                'pacientes': this.pacientes[x]
+            };
 
-                this.plex.alert('El paciente ' + turno.paciente.apellido + ' ' + turno.paciente.nombre + ' paso a Lista de Espera');
-            })
+            this.liberarTurno();
 
-        });
+            this.listaEsperaService.postXIdAgenda(this.agenda.id, patch).subscribe(resultado => {
+
+                this.serviceAgenda.getById(this.agenda.id).subscribe(resulAgenda => {
+
+                    this.saveLiberarTurno.emit(resulAgenda);
+
+                    this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+                });
+            });
+        }
     }
 
     reasignarTurno(paciente: any) {
-        debugger;
-        this.reasignar = { 'paciente': paciente, 'idTurno': this.turno.id, 'idAgenda': this.agenda.id };
+        this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
+
+        this.liberarTurno();
 
         this.reasignarTurnoLiberado.emit(this.reasignar);
     }
 
     constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
-
 }
