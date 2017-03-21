@@ -1,6 +1,7 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos'
 
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { Observable } from 'rxjs/Rx';
@@ -64,10 +65,11 @@ export class DarTurnosComponent implements OnInit {
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
+    public permisos = [];
+    public autorizado = false;
+
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
     // paciente: IPaciente;
-
-
 
     paciente: any = {
         id: '57f66f2076e97c2d18f1808b',
@@ -90,7 +92,19 @@ export class DarTurnosComponent implements OnInit {
     tipoTurno: string;
     tiposTurnosSelect: any[];
 
+    constructor(public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService,
+        public serviceAgenda: AgendaService,
+        public serviceListaEspera: ListaEsperaService,
+        public serviceTurno: TurnoService,
+        public servicePaciente: PacienteService,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public plex: Plex,
+        public auth: Auth) { }
+
     ngOnInit() {
+
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
         if (this._reasignaTurnos) {
             this.paciente = this._reasignaTurnos.paciente;
@@ -104,7 +118,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -120,8 +134,10 @@ export class DarTurnosComponent implements OnInit {
             this.busquedas.shift();
         }
         this.busquedas.push(search);
+
         localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
-        this.actualizar(null);
+
+        this.actualizar('');
     }
 
     /**
@@ -130,6 +146,14 @@ export class DarTurnosComponent implements OnInit {
      */
     actualizar(etiqueta) {
 
+        // 1) Auth general (si puede ver esta pantalla)
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+
+        // 2) Permisos
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+
+        console.log(this.permisos);
+
         let params: any = {};
         this.estadoT = 'noSeleccionada';
         this.agenda = null;
@@ -137,6 +161,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (etiqueta !== 'sinFiltro') {
 
+            // Filtro búsqueda
             params = {
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
@@ -151,6 +176,7 @@ export class DarTurnosComponent implements OnInit {
             // Mostrar sólo las agendas a partir de hoy en adelante
             params = {
                 fechaDesde: new Date().setHours(0, 0, 0, 0)
+                // tipoPrestacion: this.permisos
             };
 
         }
@@ -159,8 +185,8 @@ export class DarTurnosComponent implements OnInit {
         this.serviceAgenda.get(params).subscribe(agendas => {
 
             // Sólo traer agendas disponibles o publicadas
-            this.agendas = agendas.filter((a) => {
-                return a.estado === 'Disponible' || a.estado === 'Publicada';
+            this.agendas = agendas.filter((data) => {
+                 return (data.estado === 'Disponible' || data.estado === 'Publicada');
             });
 
             // Loop agendas / bloques / turnos
@@ -372,34 +398,6 @@ export class DarTurnosComponent implements OnInit {
      * 
      */
     onSave() {
-<<<<<<< HEAD
-=======
-        debugger;
-        let estado: String = 'asignado';
-        let pacienteSave = {
-            id: this.paciente.id,
-            documento: this.paciente.documento,
-            apellido: this.paciente.apellido,
-            nombre: this.paciente.nombre,
-            telefono: this.paciente.telefono
-        };
-        // this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-        // let datosTurno = {
-        //     idAgenda: this.agenda.id,
-        //     indiceBloque: this.indiceBloque,
-        //     indiceTurno: this.indiceTurno,
-        //     estado: estado,
-        //     paciente: pacienteSave,
-        //     tipoPrestacion: this.turnoTipoPrestacion
-
-        // };
-        let datosTurno = {
-            idAgenda: this.agenda.id,
-            idTurno: this.turno.id,
-            idBloque: this.bloque.id,
-            paciente: pacienteSave,
-            tipoPrestacion: this.turnoTipoPrestacion
->>>>>>> develop
 
         // Ver si cambió el estado de la agenda desde otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
@@ -427,11 +425,10 @@ export class DarTurnosComponent implements OnInit {
 
                 // this.countBloques[this.indiceBloque][String()]
 
-                let datosTurno = {
+               let datosTurno = {
                     idAgenda: this.agenda.id,
-                    indiceBloque: this.indiceBloque,
-                    indiceTurno: this.indiceTurno,
-                    estado: estado,
+                    idTurno: this.turno.id,
+                    idBloque: this.bloque.id,
                     paciente: pacienteSave,
                     tipoPrestacion: this.turnoTipoPrestacion,
                     tipoTurno: 'delDia'
@@ -523,14 +520,5 @@ export class DarTurnosComponent implements OnInit {
         operacion = this.serviceListaEspera.post(listaEspera);
         operacion.subscribe();
     }
-
-    constructor(public servicioPrestacion: PrestacionService,
-        public serviceProfesional: ProfesionalService,
-        public serviceAgenda: AgendaService,
-        public serviceListaEspera: ListaEsperaService,
-        public serviceTurno: TurnoService,
-        public servicePaciente: PacienteService,
-        public servicioTipoPrestacion: TipoPrestacionService,
-        public plex: Plex) { }
 
 }

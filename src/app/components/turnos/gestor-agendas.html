@@ -2,12 +2,15 @@
     <div class="col-md-8">
         <form [formGroup]="searchForm">
             <plex-box type="info" title="Gestor de Agendas">
+            <plex-box type="info" title="Crear Agendas">
                 <div class="row">
                     <div class="col-md-4">
                         <plex-button icon="mdi mdi-plus-box" label="Crear Agenda" (click)="crearAgenda(agenda)" title="Crear Agenda">
                         </plex-button>
                     </div>
                 </div>
+            </plex-box>
+            <plex-box type="info" title="Buscar Agendas">
                 <div class="row">
                     <div class="col-md-4">
                         <plex-datetime type="date" formControlName="fechaDesde" label="Desde" title="Fecha Desde">
@@ -33,6 +36,8 @@
                     </div>
                 </div>
             </plex-box>
+            </plex-box>
+
         </form>
 
         <div type="info" class="col-sm-8" *ngIf="showVistaAgendas">

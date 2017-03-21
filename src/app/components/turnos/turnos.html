@@ -74,13 +74,8 @@
                                     <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>
                                     <!--<a class="hover" (click)="reasignarTurnosMasivo()"><i title="Reasignar Turno Masivo" class="mdi mdi-rotate-right"></i></a>-->
                                 </div>
-<<<<<<< HEAD
                                 <table class="table table-hover responsive-table table-reflow">
                                     <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
-=======
-                                <table class="table table-hover">
-                                    <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.checked}">
->>>>>>> develop
 
                                         <td>
                                             <span>{{turno.horaInicio | date: 'HH:mm'}}</span>
