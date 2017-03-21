@@ -27,9 +27,9 @@ export class TensionDiastolicaComponent implements OnInit {
         };
     }
 
-    devolverValores() {
+    devolverValores() {       
             this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
+            this.evtData.emit(this.data);        
     }
 
     getMensajes() {

@@ -20,11 +20,7 @@ export class TensionArterialComponent implements OnInit {
     }
 
     // resultados a devolver
-    data: any = {
-        mensaje: {
-            texto: '',
-        },
-    };
+    data: any = {};
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
@@ -46,23 +42,15 @@ export class TensionArterialComponent implements OnInit {
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
-        this.data.mensaje = this.getMensajes();
-        // this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
-        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
 
-        this.evtData.emit(this.data);
-    }
+            if (obj[tipoPrestacion.key]) {
+            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
 
-    getMensajes() {
+            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null ) {
+                delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+            }
+            this.evtData.emit(this.data);
+    } // onReturnComponent(obj: any, tipoPrestacion: any)
 
-        let mensaje : any = {
-            texto: '',
-            class: 'outline-danger'
-        };
-
-        
-        return mensaje;
 
     }
-
-}
