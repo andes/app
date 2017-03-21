@@ -7,10 +7,9 @@ import { IPaciente } from "../../../interfaces/IPaciente";
 })
 export class DesarrolloIntelectualyJuegosComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
-    // @Input('tipoPrestacion') tipoPrestacion: any;
-    // @Input('paciente') paciente: IPaciente;
-    paciente: any;
-    tipoPrestacion: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
+    @Input('paciente') paciente: IPaciente;
+    
   
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -23,30 +22,6 @@ export class DesarrolloIntelectualyJuegosComponent implements OnInit {
     };
 
     ngOnInit() {
-         this.paciente = {
-            "id": "57ebacce69fe79a598e6281d",
-            "documento": "29410428",
-            "activo": true,
-            "estado": "validado",
-            "nombre": "Carolina",
-            "apellido": "Celeste",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": "02/11/1993",
-            "estadoCivil": "soltera"
-        };
-        this.tipoPrestacion = {
-            "id": "58b6b6b2b64acd0989b9f536",
-            "key": "partoViaVaginal",
-            "nombre": "parto via vaginal",
-            "autonoma": true,
-            "activo": true,
-            "componente": {
-                "ruta": "rup/partoViaVaginal.component.ts",
-                "nombre": "PartoViaVaginalComponent"
-            },
-            "turneable": false
-        };
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
