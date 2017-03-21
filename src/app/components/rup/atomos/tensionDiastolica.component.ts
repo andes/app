@@ -76,7 +76,7 @@ export class TensionDiastolicaComponent implements OnInit {
                         mensaje.class = "danger";
                         mensaje.texto = 'Hipertensión arterial grado 3';
                         break;
-                    case (tensionSistolica <= 40 && tensionSistolica >= 60):
+                    case (tensionSistolica >= 40 && tensionSistolica <= 60):
                         //rango hipotension
                         mensaje.texto = 'hipotensión';
                         break;
