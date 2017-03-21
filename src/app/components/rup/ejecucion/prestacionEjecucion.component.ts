@@ -27,7 +27,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @Input() prestacion: IPrestacionPaciente;
     public listaProblemas: IProblemaPaciente[] = [];
     public problemaBuscar: String = '';
-
+    public Error: String = '';
     public tiposProblemas = [];
     public tipoProblema = null;
     public problemaTratar: any;
@@ -321,8 +321,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         // obtenemos un array de la cantidad de prestaciones que se van a guardar
         let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
             let tp; tp = _p.solicitud.tipoPrestacion;
-            return (typeof this.data[tp.key] !== 'undefined') ? _p : null;
+            return (typeof this.data[tp.key] !== 'undefined' && _p.ejecucion.evoluciones.length ) ? _p : null;
         });
+        //debugger;
+
+        if (prestacionesGuardar = [ ]) {
+            this.Error = 'Debe registrar al menos un dato observable.';
+        }
 
         // recorremos todas las prestaciones que hemos ejecutado
         prestacionesGuardar.forEach(_prestacion => {

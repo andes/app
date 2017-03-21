@@ -29,8 +29,14 @@ export class TallaComponent implements OnInit {
     }
 
     devolverValores() {
+
+        debugger;
+        if (!this.data[this.tipoPrestacion.key]){
+            this.data = {};
+        } else{
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);
+            }
     }
 
     getMensajes() {
