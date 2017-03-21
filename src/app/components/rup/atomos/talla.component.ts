@@ -16,12 +16,8 @@ export class TallaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
-    data: any = {
-        mensaje: {
-            class: "",
-            texto: ""
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
@@ -36,6 +32,9 @@ export class TallaComponent implements OnInit {
         this.data.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
     }
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
+	}
 
     getMensajes() {
         // Calculo Edad en Meses

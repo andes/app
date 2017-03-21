@@ -47,16 +47,32 @@ export class SignosVitalesComponent implements OnInit {
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
         // console.log(obj);
-        // console.log(tipoPrestacion);
+         console.log('Molecula Signos Vitales: this.data[this.tipoPrestacion.key][tipoPrestacion.key] -->');
+         console.log(this.data[this.tipoPrestacion.key][tipoPrestacion.key]);
+
         // inicializamos el array donde vamos a guardar todos los datos del form
         // if (this.data[this.tipoPrestacion.key] === undefined) {
         //     this.data[this.tipoPrestacion.key] = {};
         // }
 
-        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
-        // this.data.mensaje.texto = this.mensaje;
-        // console.log(this.data);
+            if (obj[tipoPrestacion.key]) {
+            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+            
+            
+        } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null ) {
+            delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+                console.log('SIGNOS VITALES: DELETE');
+                console.log(this.data[this.tipoPrestacion.key]);
+                //delete this.data;
+        }
+
         this.evtData.emit(this.data);
+
+
+
+
+        
+
     }
 
 }

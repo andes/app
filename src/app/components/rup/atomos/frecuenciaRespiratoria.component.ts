@@ -14,13 +14,8 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
 
 	@Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-	data: any = {
-		valor: '',
-		mensaje: {
-			class: "",
-			texto: ""
-		},
-	};
+	data: any = {};
+	mensaje: any= {};
 
 
 	ngOnInit() {
@@ -33,7 +28,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
 	}
 
 	devolverValores() {
-		this.data.mensaje = this.getMensajes();
+		this.mensaje = this.getMensajes();
 		this.evtData.emit(this.data);
 	}
 
