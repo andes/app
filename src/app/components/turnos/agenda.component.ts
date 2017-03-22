@@ -553,16 +553,49 @@ export class AgendaComponent implements OnInit {
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            this.modelo.estado = 'Planificacion';
+            // [andrrr]: TODO: debe setear "Planificacion"
+            this.modelo.estado = 'Disponible';
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
+
             bloques.forEach((bloque, index) => {
+                
+                var delDiaCount = bloque.accesoDirectoDelDia;
+                var programadoCount = bloque.accesoDirectoProgramado;
+                var profesionalCount = bloque.reservadoGestion;
+                var gestionCount = bloque.reservadoProfesional;
+
                 bloque.turnos = [];
+
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                    let turno = {
+
+                    var turno = {
+                        estado: 'disponible',
                         horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
-                        estado: 'disponible'
+                        tipoTurno: null
                     };
+
+
+                    if ( delDiaCount > 0 ) {
+                        turno.tipoTurno = 'delDia';
+                        delDiaCount--;
+                    } else 
+                    
+                    if ( programadoCount > 0 ) {
+                        turno.tipoTurno = 'programado';
+                        programadoCount--;
+                    } else 
+                    
+                    if ( profesionalCount > 0 ) {
+                        turno.tipoTurno = 'profesional';
+                        profesionalCount--;
+                    } else
+
+                    if ( gestionCount > 0 ) {
+                        turno.tipoTurno = 'gestion';
+                        gestionCount--;
+                    }
+
                     if (bloque.pacienteSimultaneos) {
                         // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
                         for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
@@ -572,8 +605,7 @@ export class AgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
-                                    bloque.cantidadBloque * 60000);
+                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
                                     bloque.turnos.push(turno);
                                 }
@@ -599,7 +631,9 @@ export class AgendaComponent implements OnInit {
                     this.showAgenda = false;
                 } else {
                     this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                        this.modelo = {};
+                        this.modelo = {
+                            fecha: null
+                        };
                         this.bloqueActivo = -1;
                     });
                 }
