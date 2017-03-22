@@ -220,6 +220,10 @@ export class AgendaComponent implements OnInit {
             this.bloqueActivo = 0;
             this.elementoActivo.horaInicio = this.modelo.horaInicio;
             this.elementoActivo.horaFin = this.modelo.horaFin;
+
+            this.elementoActivo.titulo = this.modelo.horaInicio.getHours() + ':' + (this.modelo.horaInicio.getMinutes() < 10 ? '0' : '') + this.modelo.horaInicio.getMinutes() + '-' +
+                this.modelo.horaFin.getHours() + ':' + (this.modelo.horaFin.getMinutes() < 10 ? '0' : '') + this.modelo.horaFin.getMinutes();
+
         } else {
             this.modelo.bloques.forEach((bloque) => {
                 // Si se elimino una prestación, la saco de los bloques
@@ -264,7 +268,7 @@ export class AgendaComponent implements OnInit {
     }
 
     cambioHoraBloques(texto: String) {
-        this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
+        this.fecha = new Date(this.modelo.fecha);
         let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
@@ -362,7 +366,7 @@ export class AgendaComponent implements OnInit {
         if (seleccion === 'simultaneos') {
             if (this.elementoActivo.citarPorBloque) {
                 console.log('acaa');
-                this.plex.alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
+                alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
@@ -553,25 +557,35 @@ export class AgendaComponent implements OnInit {
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
+
+            // Limpiar de bug selectize "$order", horrible todo esto :'(
+            this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
+                delete prestacion.$order;
+            });
+            this.modelo.profesionales.forEach(function(prestacion, key){
+                delete prestacion.$order;
+            });
+            delete this.modelo.espacioFisico.$order;
+
             // [andrrr]: TODO: debe setear "Planificacion"
             this.modelo.estado = 'Disponible';
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-                
-                var delDiaCount = bloque.accesoDirectoDelDia;
-                var programadoCount = bloque.accesoDirectoProgramado;
-                var profesionalCount = bloque.reservadoGestion;
-                var gestionCount = bloque.reservadoProfesional;
+
+                let delDiaCount = bloque.accesoDirectoDelDia;
+                let programadoCount = bloque.accesoDirectoProgramado;
+                let profesionalCount = bloque.reservadoGestion;
+                let gestionCount = bloque.reservadoProfesional;
 
                 bloque.turnos = [];
 
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
 
-                    var turno = {
+                    let turno = {
                         estado: 'disponible',
-                        horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
+                        horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
                         tipoTurno: null
                     };
 
@@ -579,19 +593,10 @@ export class AgendaComponent implements OnInit {
                     if ( delDiaCount > 0 ) {
                         turno.tipoTurno = 'delDia';
                         delDiaCount--;
-                    } else 
-                    
-                    if ( programadoCount > 0 ) {
+                    } else if ( programadoCount > 0 ) {
                         turno.tipoTurno = 'programado';
                         programadoCount--;
-                    } else 
-                    
-                    if ( profesionalCount > 0 ) {
-                        turno.tipoTurno = 'profesional';
-                        profesionalCount--;
-                    } else
-
-                    if ( gestionCount > 0 ) {
+                    } else if ( gestionCount > 0 ) {
                         turno.tipoTurno = 'gestion';
                         gestionCount--;
                     }
@@ -620,7 +625,7 @@ export class AgendaComponent implements OnInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true;
+                    return el.activo === true && delete el.$order;
                 });
             });
             espOperation = this.ServicioAgenda.save(this.modelo);
@@ -630,16 +635,18 @@ export class AgendaComponent implements OnInit {
                     this.showBuscarAgendas = false;
                     this.showAgenda = false;
                 } else {
-                    this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                        this.modelo = {
-                            fecha: null
-                        };
-                        this.bloqueActivo = -1;
-                    });
+                    alert('La agenda se guardo correctamente');
+                    // this.plex.alert('La agenda se guardo correctamente').then(guardo => {
+                    this.modelo = {
+                        fecha: null
+                    };
+                    this.bloqueActivo = -1;
+                    // });
                 }
             });
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            // TODO: Plex alert
+            alert('Debe completar los datos requeridos');
         }
     }
 
