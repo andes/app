@@ -15,7 +15,6 @@
         "mobile": false,
         "scripts": [],
         "styles": [
-            "styles.less",
             "styles.scss"
         ],
         "environmentSource": "environments/environment.ts",
