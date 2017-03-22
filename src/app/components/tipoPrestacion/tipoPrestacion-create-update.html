@@ -17,11 +17,11 @@
         </div>
 
         <div class="col-sm-4" *ngIf="granularidad.id == 'atomos'">
-            <plex-select [(ngModel)]="modelo.tipo" name="tipoAtomo" [data]="SelectTipoAtomo" placeholder="Seleccionar tipo de átomo" label="Tipo de átomo">
+            <plex-select [(ngModel)]="tipo" name="tipoAtomo" [data]="SelectTipoAtomo" placeholder="Seleccionar tipo de átomo" label="Tipo de átomo">
             </plex-select>
         </div>
 
-        <div class="col-sm-4" *ngIf="granularidad.id == 'atomos' && modelo.tipo == 'problema'">
+        <div class="col-sm-4" *ngIf="granularidad.id == 'atomos' && tipo.id == 'problema'">
             <plex-select [(ngModel)]="modelo.tipoProblemas" name="tipoProblemas" (getData)="getTiposProblemas($event)" [multiple]="true" placeholder="Selecciona los problemas" label="Tipos de problema">
             </plex-select>
         </div>

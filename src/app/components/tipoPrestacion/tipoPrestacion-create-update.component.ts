@@ -20,6 +20,10 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         id: '',
         nombre: ''
     };
+     public tipo = {
+        id: '',
+        nombre: ''
+    };
     public titulo: String = '';
     // Parámetros In/Out
     @Input('seleccion') seleccion: ITipoPrestacion;
@@ -53,6 +57,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
             }; // this.modelo
         } else {
             this.granularidad.id = this.modelo.granularidad;
+            this.tipo.id = this.modelo.tipo;
             this.titulo = 'Modificación tipo de prestación';
         }
     } // ngOnInit
@@ -126,7 +131,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         //debugger;
 
         this.modelo.granularidad = this.granularidad.id;
-        this.modelo.tipo = this.modelo.tipo.id;
+        this.modelo.tipo = this.tipo.id;
         // Modo Update
         let method = (this.seleccion) ? this.tipoPrestacionService.put(this.modelo) : this.tipoPrestacionService.post(this.modelo);
 
