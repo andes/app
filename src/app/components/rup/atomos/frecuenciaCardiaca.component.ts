@@ -13,38 +13,33 @@ export class FrecuenciaCardiacaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    data: any = {
-        mensaje: {
-            class: "",
-            texto: ""
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
-		if (this.datosIngreso) {
+        if (this.datosIngreso) {
             this.devolverValores();
         }
-    }
+    } // ngOnInit()
 
     devolverValores() {
-        this.data.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-    }
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
+    } // devolverValores()
 
     getMensajes() {
         let Edad;
         let Sexo;
         let frecuenciaCardiaca;
-        let mensaje : any = {
+        let mensaje: any = {
             texto: '',
             class: 'outline-danger'
         };
 
         Sexo = this.paciente.sexo
-        Edad = this.paciente.edad; //Solo es para probar!! 
+        Edad = 20 // this.paciente.edad; //Solo es para probar!! 
         frecuenciaCardiaca = this.data[this.tipoPrestacion.key];
 
         if (frecuenciaCardiaca) {
@@ -130,9 +125,6 @@ export class FrecuenciaCardiacaComponent implements OnInit {
                 }
             }
         }
- 
- 
         return mensaje;
     }
-
 }

@@ -28,8 +28,13 @@ export class BuscarAgendasComponent implements OnInit {
 
     searchForm: FormGroup;
 
-    constructor(public plex: Plex, public servicioPrestacion: PrestacionService, public serviceProfesional: ProfesionalService,
-        public serviceEspacioFisico: EspacioFisicoService, public serviceAgenda: AgendaService, private formBuilder: FormBuilder,
+    constructor(
+        public plex: Plex,
+        //  public servicioPrestacion: PrestacionService,
+        public serviceProfesional: ProfesionalService,
+        public serviceEspacioFisico: EspacioFisicoService,
+        public serviceAgenda: AgendaService,
+        private formBuilder: FormBuilder,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -70,7 +75,7 @@ export class BuscarAgendasComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         // this.servicioPrestacion.get({}).subscribe(event.callback);
-        this.servicioTipoPrestacion.get({turneable:1}).subscribe(event.callback);
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
     loadProfesionales(event) {

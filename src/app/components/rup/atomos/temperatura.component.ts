@@ -15,12 +15,8 @@ export class TemperaturaComponent implements OnInit {
 	@Input('required') required: Boolean;
 	@Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
-	data: any = {
-		mensaje: {
-			class: "",
-			texto: ""
-		},
-	};
+	data: any = {};
+	mensaje: any = {};
 
 
 	ngOnInit() {
@@ -33,8 +29,8 @@ export class TemperaturaComponent implements OnInit {
 	}
 
 	devolverValores() {
-		this.data.mensaje = this.getMensajes();
-		this.evtData.emit(this.data);
+			this.mensaje = this.getMensajes();
+			this.evtData.emit(this.data);
 	}
 
 	getMensajes() {
