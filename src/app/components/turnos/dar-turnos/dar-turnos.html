@@ -1,4 +1,5 @@
-<div class="row" *ngIf="autorizado && showDarTurnos"><!-- TODO: quitar showDarTurnos -->
+<div class="row" *ngIf="autorizado && showDarTurnos">
+  <!-- TODO: quitar showDarTurnos -->
   <div class="col col-md-8">
     <div class="row">
       <div class="col col-md-12">
@@ -17,7 +18,7 @@
             <div class="col col-md-6">
               <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" labelField="nombre + ' ' + apellido"
                 (change)="filtrar()">
-                </plex-select>
+              </plex-select>
             </div>
           </div>
         </plex-box>
@@ -25,9 +26,9 @@
     </div>
     <div class="row">
       <div class="col col-md-12 text-center">
-          <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
-          <strong>{{ opciones.fecha | date: "MMM yy" | uppercase}}</strong>
-          <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
+        <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
+        <strong>{{ opciones.fecha | date: "MMM yy" | uppercase}}</strong>
+        <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
       </div>
     </div>
     <div class="row">
@@ -74,7 +75,7 @@
                       <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
                     </h1>
                     <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
-                    
+
                   </div>
                 </div>
               </div>
@@ -86,7 +87,7 @@
                     <div *ngIf="tieneTurnos(bloque)" class="row">
                       <div class="col-md-12">
                         <h3 class="bloque-title">
-                            <span>{{bloque.descripcion}}</span> <span class="badge"> {{bloque.duracionTurno}} '</span><br>
+                          <span>{{bloque.descripcion}}</span> <span class="badge"> {{bloque.duracionTurno}} '</span><br>
                         </h3>
                       </div>
                     </div>
@@ -116,7 +117,8 @@
                           </div>
                           <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
                         </div>
-                      </div><!-- end ngFor turnos -->
+                      </div>
+                      <!-- end ngFor turnos -->
                     </div>
                     <br>
                     <div class="container">
@@ -128,20 +130,23 @@
                               <td class="text-sm">Del día</td>
                               <td class="text-sm">Programados</td>
                               <td class="text-sm">Gestión</td>
-                              <td class="text-sm">Profesional</td>
+                              <!--No se visualizan los turnos disponibles para profesionales-->
+                              <!--<td class="text-sm">Profesional</td>-->
                             </thead>
                             <tbody>
                               <td class="text-sm">{{countBloques[indiceBq].delDia}}</td>
                               <td class="text-sm">{{countBloques[indiceBq].programado}}</td>
                               <td class="text-sm">{{countBloques[indiceBq].gestion}}</td>
-                              <td class="text-sm">{{countBloques[indiceBq].profesional}}</td>
+                              <!--No se visualizan los turnos disponibles para profesionales-->
+                              <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
                             </tbody>
                           </table>
                         </div>
                       </div>
                     </div>
                     <hr>
-                  </div><!-- end ngFor bloques -->
+                  </div>
+                  <!-- end ngFor bloques -->
                 </plex-box>
               </div>
             </div>
