@@ -31,6 +31,8 @@ export class GestorAgendasComponent implements OnInit {
 
     public modelo: any = {};
 
+    public hoy = false;
+
     searchForm: FormGroup;
 
     ag: IAgenda;
@@ -38,12 +40,17 @@ export class GestorAgendasComponent implements OnInit {
     reasignar: IAgenda;
     editaAgenda: IAgenda;
 
+
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: PrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService) { }
 
     ngOnInit() {
 
+        // Por defecto cargar/mostrar agendas de hoy
+        this.loadAgendas();
+
+        // Reactive Form
         this.searchForm = this.formBuilder.group({
             fechaDesde: [new Date()],
             fechaHasta: [new Date()],
@@ -64,7 +71,10 @@ export class GestorAgendasComponent implements OnInit {
                 'idProfesional': value.profesionales.id,
                 'idEspacioFisico': value.espacioFisico.id
             }).subscribe(
-                agendas => { this.agendas = agendas; },
+                agendas => {
+                    this.hoy = false;
+                    this.agendas = agendas;
+                },
                 err => {
                     if (err) {
                         console.log(err);
@@ -72,7 +82,6 @@ export class GestorAgendasComponent implements OnInit {
                 });
         });
 
-        this.loadAgendas();
     }
 
     clonar(modelo) {
@@ -112,6 +121,8 @@ export class GestorAgendasComponent implements OnInit {
     loadAgendas() {
 
         let fecha = moment().format();
+
+        this.hoy = true;
 
         let fechaDesde = moment(fecha).startOf('day').format();
         let fechaHasta = moment(fecha).endOf('day').format();
