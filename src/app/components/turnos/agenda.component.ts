@@ -42,6 +42,7 @@ export class AgendaComponent implements OnInit {
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
+    public hoy = moment().startOf('day');
 
     constructor(
         public plex: Plex,
@@ -561,7 +562,7 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-
+        debugger;
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
@@ -569,13 +570,20 @@ export class AgendaComponent implements OnInit {
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Limpiar de bug selectize "$order", horrible todo esto :'(
-            this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
-                delete prestacion.$order;
-            });
-            this.modelo.profesionales.forEach(function(prestacion, key){
-                delete prestacion.$order;
-            });
-            delete this.modelo.espacioFisico.$order;
+            if ( this.modelo.tipoPrestaciones.length ) {
+                this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
+                    delete prestacion.$order;
+                });
+            }
+            if ( this.modelo.profesionales.length ) {
+                this.modelo.profesionales.forEach(function(prestacion, key){
+                    delete prestacion.$order;
+                });
+            }
+
+            if ( this.modelo.espacioFisico ) {
+                delete this.modelo.espacioFisico.$order;
+            }
 
             // [andrrr]: TODO: debe setear "Planificacion"
             this.modelo.estado = 'Disponible';
@@ -638,14 +646,17 @@ export class AgendaComponent implements OnInit {
                     return el.activo === true && delete el.$order;
                 });
             });
+
             espOperation = this.ServicioAgenda.save(this.modelo);
+            debugger;
             espOperation.subscribe(resultado => {
+                console.log(resultado);
+                alert('La agenda se guardo correctamente');
                 if (clonar) {
                     this.showClonar = true;
                     this.showBuscarAgendas = false;
                     this.showAgenda = false;
                 } else {
-                    alert('La agenda se guardo correctamente');
                     // this.plex.alert('La agenda se guardo correctamente').then(guardo => {
                     this.modelo = {
                         fecha: null
