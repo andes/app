@@ -180,16 +180,24 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
-            if (confirma) {
-                this.modelo.bloques.splice(indice, 1);
-                this.bloqueActivo = -1;
-                this.validarTodo();
-            }
-        }
-        ).catch(() => {
+        let confirma = confirm('Confirma que desea eliminar el bloque?');
+        if (confirma) {
+            this.modelo.bloques.splice(indice, 1);
+            this.bloqueActivo = -1;
+            this.validarTodo();
+        } else {
             alert('no borra');
-        });
+        }
+        // this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
+        //     if (confirma) {
+        //         this.modelo.bloques.splice(indice, 1);
+        //         this.bloqueActivo = -1;
+        //         this.validarTodo();
+        //     }
+        // }
+        // ).catch(() => {
+        //     alert('no borra');
+        // });
     }
 
     compararBloques(fecha1, fecha2): number {
@@ -411,6 +419,7 @@ export class AgendaComponent implements OnInit {
     }
 
     validarTodo() {
+
         let alerta: string;
         let indice: number;
         let cantidad: number;
@@ -552,6 +561,7 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
+
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
