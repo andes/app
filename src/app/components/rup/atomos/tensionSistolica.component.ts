@@ -27,6 +27,9 @@ export class TensionSistolicaComponent implements OnInit {
     }
 
     devolverValores() {
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        }         
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);        
     }

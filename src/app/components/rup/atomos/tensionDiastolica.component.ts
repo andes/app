@@ -27,7 +27,10 @@ export class TensionDiastolicaComponent implements OnInit {
         };
     }
 
-    devolverValores() {       
+    devolverValores() {      
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        } 
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);        
     }

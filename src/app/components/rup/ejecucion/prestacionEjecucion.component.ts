@@ -27,7 +27,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @Input() prestacion: IPrestacionPaciente;
     public listaProblemas: IProblemaPaciente[] = [];
     public problemaBuscar: String = '';
-    public Error: String = '';
+    public error: String = '';
     public tiposProblemas = [];
     public tipoProblema = null;
     public problemaTratar: any;
@@ -75,6 +75,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     listaProblemasPlan: any = [];
     // // listado de prestaciones futuras a pedir en el plan
     // prestacionesFuturas: IPrestacionPaciente[] = [];
+    valoresPrestaciones: {}[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -84,6 +85,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log('-------------ngOnInit: -----------------')
         this.cargarDatosPrestacion();
 
         // obtenemos tipos de prestaciones posibles a ejecutarse
@@ -98,7 +100,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // lista de problemas
     existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre)
+        return this.listaProblemas.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre);
     }
 
     guardarProblema(nuevoProblema) {
@@ -144,9 +146,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     eliminarProblema(problema: IProblemaPaciente) {
         this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
-
             if (resultado) {
-
             }
         });
     }
@@ -178,7 +178,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showEvolucionar = false;
         this.showEvolTodo = true;
     }
-    // Fin lista de problemas 
+    // Fin lista de problemas
 
 
     onReturn(dato: IProblemaPaciente) {
@@ -198,7 +198,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnEnmendar(datos: IProblemaPaciente) {
-        debugger;
         this.showEnmendar = false;
         if (datos) {
             this.listaProblemas = this.listaProblemas.filter(p => {
@@ -217,19 +216,20 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarDatosPrestacion() {
-        this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+        console.log('-------------------- cargarDatosPrestacion()--------------------');
+        debugger;
 
+        this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
         if (this.prestacion.solicitud) {
-            this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
-                // Verificamos si el tipo de prestacion no está dentro de las prestaciones 
-                // que se han ejecutado, y de ser así las creo vacias 
+                this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
+                // Verificamos si el tipo de prestacion no está dentro de las prestaciones
+                // que se han ejecutado, y de ser así las creo vacias
                 let find;
-
                 if (this.prestacion.ejecucion && this.prestacion.ejecucion.prestaciones.length) {
-                    find = this.prestacion.ejecucion.prestaciones.find(p => {
-                        return p.solicitud.tipoPrestacion.id === element.id
+                        find = this.prestacion.ejecucion.prestaciones.find(p => {
+                        return p.solicitud.tipoPrestacion.id === element.id;
                     });
                 }
 
@@ -237,45 +237,41 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (!find) {
                     // asignamos valores a la nueva prestacion
                     find = this.crearPrestacionVacia(element);
-
                     this.prestacionesEjecucion.push(find);
+                     this.valoresPrestaciones[element.key.toString()] = {};
                 } else {
+                    debugger;
                     this.prestacionesEjecucion.push(find);
-
                     let key; key = element.key;
-
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
-                    let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
-
+                    this.valoresPrestaciones[key] = {};
+                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                    // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
                 }
-
             });
-
-            console.info(this.prestacionesEjecucion);
         }
 
-        // recorremos todas las que se han ejecutado y si no esta 
+        // recorremos todas las que se han ejecutado y si no esta
         // dentro de las que cargamos anteriormente las agregamos
         this.prestacion.ejecucion.prestaciones.forEach(_prestacion => {
-            let find = this.prestacionesEjecucion.find(pe => {
-                return _prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id
+                let find = this.prestacionesEjecucion.find(pe => {
+                return _prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id;
             });
 
             if (!find) {
                 // this.idTiposPrestacionesEjecucion.push(_prestacion.solicitud.tipoPrestacion.id);
                 this.prestacionesEjecucion.push(_prestacion);
-
                 let key; key = _prestacion.solicitud.tipoPrestacion.key;
-
                 this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
-
                 // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length-1].valores[key];
             }
         });
     }
 
     crearPrestacionVacia(tipoPrestacion) {
+        console.log('------------------------crearPrestacionVacia(tipoPrestacion)------------------------')
+        debugger;
         // asignamos valores a la nueva prestacion
         let nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
@@ -290,6 +286,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 tipo: 'ejecucion'
             },
             ejecucion: {
+                fecha: new Date(),
                 evoluciones: []
             }
         };
@@ -300,6 +297,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarPrestacionEjecucion(tipoPrestacion) {
+        console.log('---------------------------agregarPrestacionEjecucion(tipoPrestacion)---------------------------------------')
+        debugger;
         let nuevaPrestacion;
         nuevaPrestacion = this.crearPrestacionVacia(tipoPrestacion);
 
@@ -316,88 +315,88 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
    evolucionarPrestacion() {
+    debugger;
         if (this.prestacion.ejecucion.listaProblemas.length > 0) {
-        let i = 1;
+            this.error = '';
+            let i = 1;
+            // obtenemos un array de la cantidad de prestaciones que se van a guardar
+            let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
+                let tp; tp = _p.solicitud.tipoPrestacion;
+                return (typeof this.data[tp.key] !== 'undefined' && Object.keys(this.data[tp.key]).length) ? _p : null;
+            });
 
-        // obtenemos un array de la cantidad de prestaciones que se van a guardar
-        let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
-            let tp; tp = _p.solicitud.tipoPrestacion;
-            return (typeof this.data[tp.key] !== 'undefined' && _p.ejecucion.evoluciones.length ) ? _p : null;
-        });
-        //debugger;
+         if (prestacionesGuardar.length === 0) {
+            this.error = 'Debe registrar al menos un dato observable.';
+         } else {
+                    this.error = '';
+                    console.log("PERSTAXCIONE ASJLAFJÑLDJ", prestacionesGuardar);
+                    // recorremos todas las prestaciones que hemos ejecutado
+                    prestacionesGuardar.forEach(_prestacion => {
 
-        if (prestacionesGuardar = [ ]) {
-            this.Error = 'Debe registrar al menos un dato observable.';
-        }
+                            let prestacion; prestacion = _prestacion;
+                            let tp; tp = _prestacion.solicitud.tipoPrestacion;
 
-        // recorremos todas las prestaciones que hemos ejecutado
-        prestacionesGuardar.forEach(_prestacion => {
-            let prestacion; prestacion = _prestacion;
+                            // prestacion.ejecucion = {
+                            //     fecha: new Date(),
+                            //     // evoluciones: [{
+                            //     //     valores: this.data[tp.key]
+                            //     // }]
+                            // };
+                            console.log("data: ", this.data);
+                            console.log("antes: ", prestacion.ejecucion.evoluciones);
 
-            let tp; tp = _prestacion.solicitud.tipoPrestacion;
+                            prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
 
-            // if (typeof this.data[tp.key] !== 'undefined') {
+                            console.log("despues: ", prestacion.ejecucion.evoluciones);
 
-                prestacion.ejecucion = {
-                    fecha: new Date(),
-                    evoluciones: [{
-                        valores: this.data[tp.key]
-                    }]
-                };
+                            // si he agregado algun problema a la nueva prestacion
+                            // entonces asigno su id a la prestacion a guardar
+                            if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
+                                // recorremos array de problemas y asignamos a la nueva prestacion
+                                this.listaProblemaPrestacion[tp.key].forEach(problema => {
+                                    prestacion.solicitud.listaProblemas.push(problema.id);
+                                });
+                            } else {
+                                // si no agrego ningun problema, entonces por defecto se le agregan todos
+                                    this.listaProblemas.forEach(idProblema => {
+                                        prestacion.solicitud.listaProblemas.push(idProblema);
+                                    });
+                                }
 
-                // si he agregado algun problema a la nueva prestacion
-                // entonces asigno su id a la prestacion a guardar
-                if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
-                    // recorremos array de problemas y asignamos a la nueva prestacion
-                    // for (let problema of this.listaProblemaPrestacion[tp.key]) {
-                    this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                        prestacion.solicitud.listaProblemas.push(problema.id);
-                    });
-                } else {
-                    // si no agrego ningun problema, entonces por defecto se le agregan todos
-                    this.listaProblemas.forEach(idProblema => {
-                        prestacion.solicitud.listaProblemas.push(idProblema);
-                    });
-                }
+                                let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
 
-                let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
+                                // guardamos la nueva prestacion
+                                method.subscribe(prestacionEjecutada => {
+                                    // asignamos la prestacion nueva al array de prestaciones ejecutadas
+                                    let find;
+                                    if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
+                                        find = this.prestacion.ejecucion.prestaciones.find(p => {
+                                            return p.id === prestacionEjecutada.id;
+                                        });
+                                    }
 
-                // guardamos la nueva prestacion 
-                method.subscribe(prestacionEjecutada => {
-                    // asignamos la prestacion nueva al array de prestaciones ejecutadas
-                    let find;
-                    if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
-                        find = this.prestacion.ejecucion.prestaciones.find(p => {
-                            return p.id === prestacionEjecutada.id
-                        });
-                    }
+                                    if (!find) {
+                                        let id; id = prestacionEjecutada.id;
+                                        this.prestacion.ejecucion.prestaciones.push(id);
+                                    }
 
-                    if (!find) {
-                        let id; id = prestacionEjecutada.id;
-                        this.prestacion.ejecucion.prestaciones.push(id);
-                    }
+                                    // actualizamos la prestacion que estamos loopeando con los datos recien guardados
+                                    _prestacion = prestacionEjecutada;
 
-                    // actualizamos la prestacion que estamos loopeando con los datos recien guardados
-                    _prestacion = prestacionEjecutada;
-
-                    // this.prestacionesFuturas.push(prestacionFutura);
-                    if (i === prestacionesGuardar.length) {
-                    // if (i === this.prestacionesEjecucion.length) {
-                        this.plex.alert('Prestacion confirmada');
-
-                        this.updatePrestacion();
-                        this.validarPrestacion();
-                    }
-
-                    i++;
-                });
-            // }
-        });
-    }
-
-    else{
-        this.Error= 'Debe seleccionar al menos un problema';
-    }
+                                    // this.prestacionesFuturas.push(prestacionFutura);
+                                    if (i === prestacionesGuardar.length) {
+                                    // if (i === this.prestacionesEjecucion.length) {
+                                        this.plex.alert('Prestacion confirmada');
+                                        this.updatePrestacion();
+                                        this.validarPrestacion();
+                                    }
+                                    i++;
+                                }); // guardamos la nueva prestacion
+                }); // prestacionesGuardar.forEach
+         } // else Datos observables
+    } else {
+        this.error = 'Debe seleccionar al menos un problema';
+    } // else problemas
 }
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
@@ -411,12 +410,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         let query = {
             query: event.query,
             turneable: true
-        }
+        };
         this.serviceTipoPrestacion.get(query).subscribe(event.callback);
     }
 
     // agregamos la prestacion al plan
     agregarPrestacionFutura() {
+
         debugger;
         if (this.nuevoTipoPrestacion) {
             // asignamos valores a la nueva prestacion
@@ -450,11 +450,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.nuevaPrestacion.solicitud.listaProblemas = this.listaProblemas;
             }
 
-            // guardamos la nueva prestacion 
+            // guardamos la nueva prestacion
             this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
                 if (prestacionFutura) {
-                    //this.prestacionesFuturas.push(prestacionFutura);
-                    debugger;
+                    // this.prestacionesFuturas.push(prestacionFutura);
+
                     // asignamos la prestacion nueva al array de prestaciones futuras
                     this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
 
@@ -471,19 +471,20 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // borramos la prestacion del plan
     borrarPrestacionFutura(index) {
-        alert("Implementar");
+        alert('Implementar');
         // this.prestacionesFuturas.splice(index, 1);
     }
     // Fin prestaciones futuras / Plan
 
     updatePrestacion() {
+        debugger;
         // actualizamos la prestacion de origen
         this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
-            debugger;
+
             // this.prestacion = prestacionActualizada;
             // buscamos la prestacion actualizada con los datos populados
             this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-                debugger;
+
                 this.prestacion = prestacion;
                 this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
             });
@@ -495,10 +496,20 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-        console.log(datos);
+        debugger;
 
-        this.data[tipoPrestacionActual.key] = datos;
+        if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
+            delete this.data[tipoPrestacionActual.key];
+        }else {
+            if (!this.data[tipoPrestacionActual.key]) {
+                this.data[tipoPrestacionActual.key] = {};
+            }
+            this.data[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
+        }
+
     }
+
+
 
     volver() {
         this.evtData.emit(this.prestacion);

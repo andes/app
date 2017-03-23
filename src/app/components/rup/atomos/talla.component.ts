@@ -14,7 +14,8 @@ export class TallaComponent implements OnInit {
     @Input('soloValores') soloValores: Boolean;
     @Input('required') required: Boolean;
 
-    @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
+    // @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     data: any = {};
     mensaje: any = {};
@@ -30,7 +31,7 @@ export class TallaComponent implements OnInit {
 
     devolverValores() {
 
-        if (this.data[this.tipoPrestacion.key] === '') {
+        if (this.data[this.tipoPrestacion.key] === null) {
             this.data = {};
         }
         this.mensaje = this.getMensajes();

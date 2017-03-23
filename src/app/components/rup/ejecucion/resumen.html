@@ -67,7 +67,7 @@
                     <div class="col-md-6">
                         <dl *ngIf="prestacionPeso">
                             <dt>Peso</dt>
-                            <dd>{{prestacionPeso.ejecucion.evoluciones[0].valores[0].signosVitales.peso}} Kg<br><small class="gris">
+                            <dd>{{prestacionPeso.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.signosVitales.peso}} Kg<br><small class="gris">
                                 Fecha: {{prestacionPeso.ejecucion.fecha | date: 'dd/MM/yyyy'}}
                         </small></dd>
                         </dl>
@@ -75,7 +75,7 @@
                     <div class="col-md-6">
                         <dl *ngIf="prestacionTalla">
                             <dt>Talla</dt>
-                            <dd>{{prestacionTalla.ejecucion.evoluciones[0].valores[0].talla}} cm<br><small class="gris">
+                            <dd>{{prestacionTalla.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.talla}} cm<br><small class="gris">
                                 Fecha: {{prestacionTalla.ejecucion.fecha | date: 'dd/MM/yyyy'}}
                         </small></dd>
                         </dl>
