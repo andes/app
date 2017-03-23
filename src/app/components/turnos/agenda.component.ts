@@ -570,12 +570,12 @@ export class AgendaComponent implements OnInit {
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Limpiar de bug selectize "$order", horrible todo esto :'(
-            if ( this.modelo.tipoPrestaciones.length ) {
+            if ( this.modelo.tipoPrestaciones ) {
                 this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
                     delete prestacion.$order;
                 });
             }
-            if ( this.modelo.profesionales.length ) {
+            if ( this.modelo.profesionales ) {
                 this.modelo.profesionales.forEach(function(prestacion, key){
                     delete prestacion.$order;
                 });
