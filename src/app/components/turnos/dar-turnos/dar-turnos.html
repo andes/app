@@ -240,9 +240,10 @@
                 <div class="col col-md-12">
                   <div class="col col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}}</div>
                   <div class="col col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
-                  <div class="col-md-12">
+                  <div class="col col-md-12"><label>Tipo de turno: &nbsp;</label>{{this.tiposTurnosSelect}}</div>
+                  <!--<div class="col-md-12">
                     <plex-select [(ngModel)]="tiposTurnosSelect" labelField="tipo" label="Tipos de Turnos"></plex-select>
-                  </div>
+                  </div>-->
                   <div class="col col-md-12">
                     <plex-phone label="Ingrese en número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono">
                     </plex-phone>
