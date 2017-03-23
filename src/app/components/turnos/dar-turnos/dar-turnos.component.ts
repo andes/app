@@ -1,5 +1,5 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos'
+type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -142,8 +142,8 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /**
-     * 
-     * @param etiqueta: define qué filtros usar para traer todas las Agendas 
+     *
+     * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
 
@@ -297,7 +297,6 @@ export class DarTurnosComponent implements OnInit {
                         if (this.agenda.estado === 'Publicada') {
                             this.tiposTurnosSelect = 'programado';
                         }
-
                         debugger;
                         let countBloques = [];
                         let programadosDisponibles = 0;
@@ -325,7 +324,6 @@ export class DarTurnosComponent implements OnInit {
 
                         } else {
                             // En caso contrario, se calculan  los contadores por separado
-
                             // loopear turnos para sacar el tipo de turno!
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
                                 debugger;
@@ -340,10 +338,6 @@ export class DarTurnosComponent implements OnInit {
                                 bloque.turnos.forEach((turno) => {
                                     if (turno.estado === 'asignado') {
                                         switch (this.tiposTurnosSelect) {
-                                            // este caso nunca se da
-                                            // case ('delDia'):
-                                            //     countBloques[indexBloque].delDia--;
-                                            //     break;
                                             case ('programado'):
                                                 countBloques[indexBloque].programado--;
                                                 break;
@@ -471,14 +465,14 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /**
-     * 
+     *
      */
     onSave() {
 
         // Ver si cambió el estado de la agenda desde otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
-            if (a.estado != 'Disponible' && a.estado != 'Publicada') {
+            if (a.estado !== 'Disponible' && a.estado !== 'Publicada') {
 
                 this.plex.alert('Esta agenda ya no está disponible.');
                 this.actualizar('sinFiltro');
