@@ -34,7 +34,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
     data: any = {
         valor: {},
         mensaje: {
-            texto: "",
+            texto: '',
         },
     };
 
@@ -92,7 +92,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         // tslint:disable-next-line:no-console
         // console.info('Cargando tipo de prestación: ', this.tipoPrestacion.key);
 
-        // No se puede cargar un componente pasando un string, buscamos en el "diccionario" de tipos de prestaciones
+        // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
         this.componentContainer = this.tiposPrestaciones.find(prestacion => {
             let p;
             p = prestacion;
@@ -104,7 +104,7 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
         // Creamos el componente
         this.componentReference = this.viewContainerRef.createComponent(componentFactory);
-        // console.log("this.componentReference: ", this.componentReference);
+        // console.log('this.componentReference: ', this.componentReference);
         // Activamos la detección de cambios
 
         // Agarramos la instancia
@@ -123,8 +123,8 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         this.componentReference.changeDetectorRef.detectChanges();
 
         // let key = String(this.tipoPrestacion.key);
-        //{ "valor": {}, "mensaje": { "texto": "" } }
-        // let valores = { valor: {}, mensaje: { "texto": "" } }
+        // { 'valor': {}, 'mensaje': { 'texto': '' } }
+        // let valores = { valor: {}, mensaje: { 'texto': '' } }
         // valores = this.componentReference.instance.data;
         // let salida = {};
         // salida[key] = valores.valor;
