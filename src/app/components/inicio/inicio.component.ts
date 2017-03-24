@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 
 @Component({
     templateUrl: 'inicio.html',
+    styleUrls: ['inicio.css']
 })
 export class InicioComponent {
     public usuario: number;
