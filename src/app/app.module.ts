@@ -1,5 +1,3 @@
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -21,11 +19,12 @@ import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-// Globales
+// Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
+import { RoutingGuard } from './app.routings-guard.class';
 
 // Servicios
 // ... Tablas Maestras
@@ -259,6 +258,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
   },
     Plex,
     Auth,
+    RoutingGuard,
     OrganizacionService,
     ProvinciaService,
     TipoEstablecimientoService,

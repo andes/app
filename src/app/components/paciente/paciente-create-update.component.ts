@@ -146,8 +146,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
               let dtoBusqueda = {
                 'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
               };
-              this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest", false)
-                .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
+
             }
           }
         })
@@ -320,17 +319,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
           'fechaNacimiento': model.fechaNacimiento
         };
-        this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
-          .subscribe(valor => {
 
-            this.pacientesSimilares = valor; console.log(valor)
-            if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-              this.disableGuardar = true;
-              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-            } else {
-              this.save(model);
-            }
-          });
       } else {
         this.save(model);
       }
@@ -343,7 +332,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   save(model: any) {
     let operacionPac: Observable<IPaciente>;
     if (this.sugerenciaAceptada) {
-       this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
+      this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
         if (resultado) {
           debugger
           operacionPac = this.pacienteService.save(model);
@@ -371,9 +360,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSelect(paciente: IPaciente) {
     this.seleccion = paciente;
-     if (this.seleccion.estado === 'validado') {
-        this.validado = true;
-      }
+    if (this.seleccion.estado === 'validado') {
+      this.validado = true;
+    }
     this.createForm.patchValue(this.seleccion);
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;

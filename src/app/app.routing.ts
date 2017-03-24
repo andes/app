@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -16,6 +15,9 @@ de la siguiente manera:
 // Angular
 import { Routes, RouterModule } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core';
+
+// Global
+import { RoutingGuard } from './app.routings-guard.class';
 
 // Componentes
 // ... Tablas Maestras
@@ -45,26 +47,32 @@ import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/molecula
 
 
 const appRoutes: Routes = [
+  // Tablas maestras
   { path: 'organizacion', component: OrganizacionComponent },
-  { path: 'inicio', component: InicioComponent },
   { path: 'profesional', component: ProfesionalComponent },
   { path: 'especialidad', component: EspecialidadComponent },
-  { path: 'paciente', component: PacienteSearchComponent },
+  { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'espacio_fisico', component: EspacioFisicoComponent },
+  { path: 'tipoprestaciones', component: TipoPrestacionComponent },
+
+  // Turnos
+  { path: 'clonarAgenda', component: ClonarAgendaComponent },
+  { path: 'gestor_agendas', component: GestorAgendasComponent },
+  { path: 'panelEspacio', component: PanelEspacioComponent },
   { path: 'agendas', component: AgendaComponent },
   { path: 'agenda', component: AgendaComponent },
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'listaEspera', component: ListaEsperaComponent },
-  { path: 'clonarAgenda', component: ClonarAgendaComponent },
-  { path: 'gestor_agendas', component: GestorAgendasComponent },
-  { path: 'panelEspacio', component: PanelEspacioComponent },
+
+  // RUP
   { path: 'rup', component: PuntoInicioComponent },
   { path: 'rup/dashboard/:id', component: ResumenComponent },
   // { path: 'rup/:id?*/', component: DashboardComponent },
-  { path: 'espacio_fisico', component: EspacioFisicoComponent },
   // { path: 'prestacion', component: PrestacionComponent },
-  { path: 'tipoprestaciones', component: TipoPrestacionComponent },
-
   // { path: 'atomos', component: PerinatalesGestacionMultipleComponent },
+
+  // Login, etc.
+  { path: 'inicio', component: InicioComponent },
   { path: '**', redirectTo: 'inicio' }
 ];
 
