@@ -5,18 +5,24 @@
     </p>
     <form>
         <div class="row">
-            <div class="col-6">
-                <plex-int label="Ingrese su documento" [(ngModel)]="usuario" name="usuario" [required]="true"></plex-int>
-            </div>
-            <div class="col-6">
-                <plex-text label="Ingrese su contraseña" [(ngModel)]="password" name="password" [password]="true" [required]="true"></plex-text>
+            <div class="col-3 offset-md-4">
+                <plex-int label="Ingrese su usuario" prefix="<i class='mdi mdi-account-key mdi-24px'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
+                </plex-int>
+                
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <plex-select label="Seleccione la organización donde se encuentra actualmente" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
+            <div class="col-3 offset-md-4">
+                <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-fingerprint mdi-24px'></i>" [(ngModel)]="password" name="password" [password]="true" [required]="true">
+                </plex-text>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5 offset-md-4">
+                <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
                 </plex-select>
-                <plex-button label="Iniciar sesión" type="primary" [validateForm]="true" (click)="login($event)"></plex-button>
+                <plex-button icon="lock-open" label="Iniciar sesión" type="primary" [validateForm]="true" (click)="login($event)"></plex-button>
             </div>
         </div>
     </form>
