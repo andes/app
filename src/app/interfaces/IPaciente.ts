@@ -13,14 +13,14 @@ export interface IPaciente {
     apellido: String;
     nombreCompleto: String;
     alias: String;
-    contacto: [IContacto];
-    sexo: Sexo;
-    genero: Genero;
+    contacto: IContacto[];
+    sexo: String;
+    genero: String;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
     edadReal: { valor: Number, unidad: String };
     fechaFallecimiento: Date;
-    direccion: [IDireccion];
+    direccion: IDireccion[];
     estadoCivil: EstadoCivil;
     foto: String;
     relaciones: [{

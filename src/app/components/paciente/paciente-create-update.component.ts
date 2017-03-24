@@ -29,6 +29,7 @@ import { Plex } from '@andes/plex';
 export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
+  @Input('escaneado') escaneado: Boolean;
   @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
   matchingItems: Array<any>;
@@ -61,11 +62,57 @@ export class PacienteCreateUpdateComponent implements OnInit {
   disableGuardar = false;
   sugerenciaAceptada = false;
 
+  contacto: IContacto = {
+    tipo: 'celular',
+    valor: '',
+    ranking: 0,
+    activo: true,
+    ultimaActualizacion: new Date()
+  };
+
+  direccion: IDireccion = {
+    valor: '',
+    codigoPostal: '',
+    ubicacion: {
+      pais: null,
+      provincia: null,
+      localidad: null
+    },
+    ranking: 0,
+    geoReferencia: null,
+    ultimaActualizacion: new Date(),
+    activo: true
+  };
+
+
   showCargar: boolean;
 
+  pacienteModel: IPaciente = {
+    id: null,
+    documento: '',
+    activo: true,
+    estado: 'temporal',
+    nombre: '',
+    apellido: '',
+    nombreCompleto: '',
+    alias: '',
+    contacto: [this.contacto],
+    sexo: undefined,
+    genero: undefined,
+    fechaNacimiento: null, // Fecha Nacimiento
+    edad: null,
+    edadReal: null,
+    fechaFallecimiento: null,
+    direccion: [this.direccion],
+    estadoCivil: undefined,
+    foto: '',
+    relaciones: null,
+    financiador: null,
+    identificadores: null,
+    claveBlocking: null,
+    entidadesValidadoras: null,
+  };
 
-
-  pacienteModel: IPaciente;
 
   constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
     private paisService: PaisService,
@@ -73,82 +120,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private BarrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) {
-
-    let contacto: IContacto = {
-      tipo: '',
-      valor: '',
-      ranking: 0,
-      activo: true,
-      ultimaActualizacion: new Date()
-    };
-
-    let direccion: IDireccion = {
-      valor: '',
-      codigoPostal: '',
-      ubicacion: {
-        localidad: null,
-        provincia: null,
-        pais: null
-      },
-      ranking: 0,
-      geoReferencia: null,
-      ultimaActualizacion: new Date(),
-      activo: true
-    };
-
-    this.pacienteModel = {
-      id: null,
-      documento: '',
-      activo: true,
-      estado: 'temporal',
-      nombre: '',
-      apellido: '',
-      nombreCompleto: '',
-      alias: '',
-      contacto: [contacto],
-      sexo: null,
-      genero: null,
-      fechaNacimiento: new Date(), // Fecha Nacimiento
-      edad: null,
-      edadReal: null,
-      fechaFallecimiento: null,
-      direccion: [direccion],
-      estadoCivil: null,
-      foto: '',
-      relaciones: null,
-      financiador: null,
-      identificadores: null,
-      claveBlocking: null,
-      entidadesValidadoras: null,
-    }
-    // Se cargan los datos por defecto
-    debugger
-    //this.pacienteModel.contacto.push(this.contacto);
-
-    /*this.createForm = this.formBuilder.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      alias: [''],
-      documento: ['', Validators.minLength(5)],
-      fechaNacimiento: [new Date(), Validators.required],
-      estado: ['temporal'],
-      sexo: ['', Validators.required],
-      genero: [''],
-      estadoCivil: [''],
-      contacto: this.formBuilder.array([
-      ]),
-      direccion: this.formBuilder.array([
-        this.iniDireccion(1)
-      ]),
-      financiador: this.formBuilder.array([
-      ]),
-      relaciones: this.formBuilder.array([
-      ]),
-      activo: [true]
-    });*/
-
-  }
+    private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
     // Se cargan los combos
@@ -161,38 +133,48 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.tipoComunicacion = enumerados.getObjTipoComunicacion();
     this.estados = enumerados.getEstados();
     this.relacionTutores = enumerados.getObjRelacionTutor();
-
-
-
-
     debugger;
     if (this.seleccion) {
-      this.pacienteModel = this.seleccion;
 
       if (this.seleccion.estado === 'validado') {
         this.validado = true;
       }
+      debugger;
+      if (this.seleccion.contacto) {
+        if (this.seleccion.contacto.length <= 0) {
+          this.seleccion.contacto.push(this.contacto);
+        }
+      } else {
+        this.seleccion.contacto = [this.contacto];
+      }
 
-      // if (this.seleccion.relaciones) {
-      //   this.seleccion.relaciones.forEach(rel => {
-      //     this.addRelacion();
-      //   });
-      // }
-      // if (this.seleccion.contacto) {
-      //   this.seleccion.contacto.forEach(rel => {
-      //     this.addContacto();
-      //   });
-      // }
+      if (this.seleccion.direccion) {
+        if (this.seleccion.direccion.length <= 0) {
+          this.seleccion.direccion.push(this.direccion);
+        }
+      } else {
+        this.seleccion.direccion = [this.direccion];
+      }
 
-      // this.pacienteService.getById(this.seleccion.id)
-      //   .subscribe(resultado => {
-      //     this.seleccion = resultado;
-      //     if (this.isScan) {
-      //       this.seleccion.estado = 'validado';
-      //       this.validado = true;
-      //     }
-      //     this.createForm.patchValue(this.seleccion);
-      //   });
+      if (this.seleccion.id) {
+        this.pacienteService.getById(this.seleccion.id)
+          .subscribe(resultado => {
+            this.seleccion = resultado;
+            if (this.isScan) {
+              this.seleccion.estado = 'validado';
+              this.validado = true;
+            }
+
+            this.pacienteModel = Object.assign({}, this.seleccion);
+            this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
+          });
+      } else {
+        this.pacienteModel = Object.assign({}, this.seleccion);
+        this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
+      }
+
     }
 
     // this.detectarRelaciones();
@@ -221,239 +203,266 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   }
 
-
-  iniContacto(rank: Number) {
-    // Inicializa los datos del contacto
-    let fecha = new Date();
-    return this.formBuilder.group({
-      tipo: [''],
-      valor: ['', Validators.required],
-      ranking: [rank],
-      ultimaActualizacion: [fecha],
-      activo: [true]
-    });
-  }
-
-  iniDireccion(rank: Number) {
-
-    return this.formBuilder.group({
-      valor: [''],
-      ubicacion: this.formBuilder.group({
-        pais: [''],
-        provincia: [''],
-        localidad: ['']
-      }),
-      ranking: [rank],
-      codigoPostal: [''],
-      ultimaActualizacion: [''],
-      activo: [true]
-    })
-
-  }
-
-  iniFinanciador(rank: Number) {
-    // form Financiador u obra Social
-    let fecha = new Date();
-    return this.formBuilder.group({
-      entidad: [''],
-      ranking: [rank],
-      fechaAlta: [fecha],
-      fechaBaja: [''],
-      activo: [true]
-    });
-  }
-
-  iniRelacion() {
-
-    return this.formBuilder.group({
-      relacion: [''],
-      referencia: [''],
-      apellido: ['', Validators.required],
-      nombre: ['', Validators.required],
-      documento: ['', Validators.required]
-    });
-  }
-
-  addContacto(event) {
-    debugger;
-    // if (event.formValid) {
-    let cant = this.pacienteModel.contacto.length > 0 ? this.pacienteModel.contacto.length : 0;
-    let _unConct = {
-      tipo: '',
-      valor: '',
-      ranking: cant,
-      activo: true,
-      ultimaActualizacion: new Date()
-    };
-    this.pacienteModel.contacto.push(_unConct);
-    // } else {
-    //   this.plex.alert('Completar datos requeridos');
-    // }
-  }
-
-  removeContacto(i: number) {
-    const control = <FormArray>this.createForm.controls['contacto'];
-    control.removeAt(i);
-  }
-
-  addDireccion(unaDireccion?) {
-    // agrega una Direccion al array de direcciones
-    const control = <FormArray>this.createForm.controls['direccion'];
-    control.push(this.iniDireccion(control.length));
-  }
-
-  removeDireccion(indice: number) {
-    const control = <FormArray>this.createForm.controls['direccion'];
-    control.removeAt(indice);
-  }
-
-
-  addFinanciador() {
-    // agrega form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['financiador'];
-    control.push(this.iniFinanciador(control.length));
-  }
-
-  removeFinanciador(i: number) {
-    // elimina form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['financiador'];
-    control.removeAt(i);
-  }
-
-  addRelacion() {
-    // agrega form de relaciones familiares
-    const control = <FormArray>this.createForm.controls['relaciones'];
-    control.push(this.iniRelacion());
-  }
-
-  removeRelacion(i: number) {
-    // elimina form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['relaciones'];
-    control.removeAt(i);
-  }
-
-  addFamiliar(familiar, i) {
-    // Se agrean los datos del familiar a relaciones
-    let relaciones = this.createForm.value.relaciones;
-    let relacionFamiliar = relaciones[i];
-    relacionFamiliar.referencia = familiar.id;
-    relacionFamiliar.documento = familiar.documento;
-    relacionFamiliar.nombre = familiar.nombre;
-    relacionFamiliar.apellido = familiar.apellido;
-    // relacionFamiliar.relacion = relacionFamiliar.relacion.id;
-    relaciones[i] = relacionFamiliar;
-    this.createForm.patchValue({ relaciones: relaciones });
-    this.familiaresPacientes = [];
-
-  }
-
   /*Código de filtrado de combos*/
   loadPaises(event) {
     this.paisService.get().subscribe(event.callback);
   }
 
   loadProvincias(event, pais) {
-    this.provinciaService.get({ 'pais': pais.value.id }).subscribe(event.callback);
+    debugger;
+    this.provinciaService.get({ 'pais': pais.id }).subscribe(event.callback);
   }
 
   loadLocalidades(event, provincia) {
-    this.localidadService.get({ 'provincia': provincia.value.id }).subscribe(event.callback);
+    this.localidadService.get({ 'provincia': provincia.id }).subscribe(event.callback);
   }
 
-
-  onSave(model: any, valid: boolean) {
-    var lista = [];
-    debugger
-    if (valid) {
-
-      // TODO se busca la relación de familiares, se crea dto con los datos en relaciones
-      model.sexo = (typeof model.sexo == 'string') ? model.sexo : model.sexo.id;
-      model.estadoCivil = (typeof model.estadoCivil == 'string') ? model.estadoCivil : model.estadoCivil.id;
-
-      if (!model.genero) {
-        model.genero = model.sexo;
-      } else {
-        model.genero = (typeof model.genero == 'string') ? model.genero : model.genero.id;
-      }
-      model.contacto = model.contacto.map(elem => { elem.tipo = ((typeof elem.tipo == 'string') ? elem.tipo : elem.tipo.id); return elem });
-      if (this.seleccion) {
-        model.id = this.seleccion.id;
-      }
-
-      if (model.relaciones) {
-        model.relaciones = model.relaciones.map(elem => { elem.relacion = ((typeof elem.relacion == 'string') ? elem.relacion : elem.relacion.id); return elem });
-      }
-
-      //Si quitan las relaciones.referencia inexistentes
-      model.relaciones.forEach(rel => {
-        if (rel.referencia === "") {
-          rel.referencia = null;
-        }
-      });
-      // Se controla si existe el paciente
-      if (!model.id) {
-
-        let dtoBusqueda = {
-          'apellido': model.apellido, 'nombre': model.nombre, 'documento': model.documento.toString(),
-          'fechaNacimiento': model.fechaNacimiento
-        };
-        this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
-          .subscribe(valor => {
-
-            this.pacientesSimilares = valor; console.log(valor)
-            if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-              this.disableGuardar = true;
-              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-            } else {
-              this.save(model);
-            }
-          });
-      } else {
-        this.save(model);
-      }
-
-    } else {
-      this.plex.alert('Debe completar los datos obligatorios');
+  completarGenero() {
+    if (!this.pacienteModel.genero) {
+      this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
     }
   }
 
-  save(model: any) {
-    let operacionPac: Observable<IPaciente>;
-    if (this.sugerenciaAceptada) {
-      this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
-        if (resultado) {
-          debugger
-          operacionPac = this.pacienteService.save(model);
-          operacionPac.subscribe(result => {
-            this.data.emit(result)
-          });
-        }
-      })
+  onSave(valid) {
+    let lista = [];
+    debugger;
+    if (valid.formValid) {
+
+      let pacienteGuardar = Object.assign({}, this.pacienteModel);
+
+      pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+      pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : undefined;
+      pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
+
+      pacienteGuardar.contacto.map(elem => {
+        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id)); return elem
+      });
+
+
+      // Si quitan las relaciones.referencia inexistentes
+      // this.pacienteModel.relaciones.forEach(rel => {
+      //   if (rel.referencia === "") {
+      //     rel.referencia = null;
+      //   }
+      // });
+      // Se controla si existe el paciente
+      if (!this.pacienteModel.id) {
+        let dto = {
+          type: 'suggest',
+          field: 'documento',
+          percentage: true,
+          apellido: pacienteGuardar.apellido,
+          nombre: pacienteGuardar.nombre,
+          documento: pacienteGuardar.documento,
+          sexo: pacienteGuardar.sexo,
+          fechaNacimiento: pacienteGuardar.fechaNacimiento
+        };
+        this.pacienteService.get(dto).subscribe(resultado => {
+          debugger;
+          this.pacientesSimilares = resultado; console.log(resultado)
+          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+            this.disableGuardar = true;
+            //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+            alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+          } else {
+            this.save(true);
+          }
+        });
+
+        // let dtoBusqueda = {
+        //   'apellido': this.pacienteModel.apellido, 'nombre': this.pacienteModel.nombre, 'documento': this.pacienteModel.documento.toString(),
+        //   'fechaNacimiento': this.pacienteModel.fechaNacimiento
+        // };
+        // this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
+        //   .subscribe(valor => {
+        //     this.pacientesSimilares = valor; console.log(valor)
+        //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+        //       this.disableGuardar = true;
+        //       //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+        //       alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+        //     } else {
+        //       this.save(true);
+        //     }
+        //   });
+      } else {
+        this.save(true);
+      }
+
     } else {
-      this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
-        if (resultado) {
-          debugger
-          operacionPac = this.pacienteService.save(model);
-          operacionPac.subscribe(result => {
-            this.data.emit(result)
-          });
-        }
-      })
+      // this.plex.alert('Debe completar los datos obligatorios');
+      alert('Debe completar los datos obligatorios');
+    }
+  }
+
+  save(valid) {
+    debugger;
+    if (valid) {
+
+      let pacienteGuardar = Object.assign({}, this.pacienteModel);
+
+      pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+      pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : undefined;
+      pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
+
+      pacienteGuardar.contacto.map(elem => {
+        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id)); return elem
+      });
+
+      let operacionPac: Observable<IPaciente>;
+      if (this.sugerenciaAceptada) {
+        /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
+          if (resultado) {*/
+        debugger;
+        operacionPac = this.pacienteService.save(pacienteGuardar);
+        operacionPac.subscribe(result => {
+          //this.plex.alert('Los datos se actualizaron correctamente');
+          alert('Los datos se actualizaron correctamente');
+          this.data.emit(result);
+        });
+        //   }
+        // });
+      } else {
+        /*this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
+          if (resultado) {*/
+        debugger
+        operacionPac = this.pacienteService.save(pacienteGuardar);
+        operacionPac.subscribe(result => {
+          if (result) {
+            //this.plex.alert('Los datos se actualizaron correctamente');
+            alert('Los datos se actualizaron correctamente');
+            this.data.emit(result);
+          } else {
+            alert('ERROR: Ocurrio un problema al actualizar los datos');
+          }
+        });
+        //   }
+        // })
+      }
+    } else {
+      //this.plex.alert('Debe completar los datos obligatorios');
+      alert('Debe completar los datos obligatorios');
     }
   }
 
   onCancel() {
-    this.data.emit(null)
+    this.data.emit(null);
   }
 
-  onSelect(paciente: IPaciente) {
-    this.seleccion = paciente;
+  onSelect(paciente: IPaciente, id: String) {
+    debugger;
+    this.seleccion = Object.assign({}, paciente);
+    this.seleccion.id = id;
     if (this.seleccion.estado === 'validado') {
       this.validado = true;
     }
-    this.createForm.patchValue(this.seleccion);
+
+    if (this.seleccion.contacto) {
+      if (this.seleccion.contacto.length <= 0) {
+        this.seleccion.contacto.push(this.contacto);
+      }
+    } else {
+      this.seleccion.contacto = [this.contacto];
+    }
+
+    if (this.seleccion.direccion) {
+      if (this.seleccion.direccion.length <= 0) {
+        this.seleccion.direccion.push(this.direccion);
+      }
+    } else {
+      this.seleccion.direccion = [this.direccion];
+    }
+
+    this.pacienteModel = Object.assign({}, this.seleccion);
+    this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;
   }
+
+
+  // addContacto(event) {
+  //   debugger;
+  //   // if (event.formValid) {
+  //   let cant = this.pacienteModel.contacto.length > 0 ? this.pacienteModel.contacto.length : 0;
+  //   let _unConct = {
+  //     tipo: '',
+  //     valor: '',
+  //     ranking: cant,
+  //     activo: true,
+  //     ultimaActualizacion: new Date()
+  //   };
+  //   this.pacienteModel.contacto.push(_unConct);
+  //   // } else {
+  //   //   this.plex.alert('Completar datos requeridos');
+  //   // }
+  // }
+
+  // removeContacto(i: number) {
+  //   const control = <FormArray>this.createForm.controls['contacto'];
+  //   control.removeAt(i);
+  // }
+
+  // addDireccion(unaDireccion?) {
+  //   // agrega una Direccion al array de direcciones
+  //   const control = <FormArray>this.createForm.controls['direccion'];
+  //   control.push(this.iniDireccion(control.length));
+  // }
+
+  // removeDireccion(indice: number) {
+  //   const control = <FormArray>this.createForm.controls['direccion'];
+  //   control.removeAt(indice);
+  // }
+
+
+  // addFinanciador() {
+  //   // agrega form Financiador u obra Social
+  //   const control = <FormArray>this.createForm.controls['financiador'];
+  //   control.push(this.iniFinanciador(control.length));
+  // }
+
+  // removeFinanciador(i: number) {
+  //   // elimina form Financiador u obra Social
+  //   const control = <FormArray>this.createForm.controls['financiador'];
+  //   control.removeAt(i);
+  // }
+
+  // addRelacion() {
+  //   // agrega form de relaciones familiares
+  //   const control = <FormArray>this.createForm.controls['relaciones'];
+  //   control.push(this.iniRelacion());
+  // }
+
+  // removeRelacion(i: number) {
+  //   // elimina form Financiador u obra Social
+  //   const control = <FormArray>this.createForm.controls['relaciones'];
+  //   control.removeAt(i);
+  // }
+
+  // addFamiliar(familiar, i) {
+  //   // Se agrean los datos del familiar a relaciones
+  //   let relaciones = this.createForm.value.relaciones;
+  //   let relacionFamiliar = relaciones[i];
+  //   relacionFamiliar.referencia = familiar.id;
+  //   relacionFamiliar.documento = familiar.documento;
+  //   relacionFamiliar.nombre = familiar.nombre;
+  //   relacionFamiliar.apellido = familiar.apellido;
+  //   // relacionFamiliar.relacion = relacionFamiliar.relacion.id;
+  //   relaciones[i] = relacionFamiliar;
+  //   this.createForm.patchValue({ relaciones: relaciones });
+  //   this.familiaresPacientes = [];
+
+  // }
+
+
+
+  // onSelect(paciente: IPaciente) {
+  //   this.seleccion = paciente;
+  //   if (this.seleccion.estado === 'validado') {
+  //     this.validado = true;
+  //   }
+  //   this.createForm.patchValue(this.seleccion);
+  //   this.disableGuardar = false;
+  //   this.sugerenciaAceptada = true;
+  // }
 
 }
