@@ -1,247 +1,161 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  OnInit
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
-  Subject,
-  Observable
-} from 'rxjs';
-import {
-  PacienteService
-} from './../../services/paciente.service';
-import {
-  IPaciente
-} from './../../interfaces/IPaciente';
-import {
-  PacienteCreateUpdateComponent
-} from './paciente-create-update.component';
-import { } from '@angular/common';
-
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { PacienteService } from './../../services/paciente.service';
+import { IPaciente } from './../../interfaces/IPaciente';
 
 @Component({
   selector: 'pacientesSearch',
-  templateUrl: 'paciente-search.html'
+  templateUrl: 'paciente-search.html',
+  styleUrls: ['paciente-search.css']
 })
+export class PacienteSearchComponent {
+  private timeoutHandle: number;
+  private regExs: RegExp[] = [
+    /[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}/
+  ];
 
-export class PacienteSearchComponent implements OnInit {
-  @Output()
-  selected: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
-  scanned: EventEmitter<any> = new EventEmitter<any>();
-  showcreate: boolean = false;
-  // showupdate: boolean = false;
-  error: boolean = false;
-  mensaje: string = '';
-  searchForm: FormGroup;
-  selectedPaciente: IPaciente = null;
-  searchTextModel: string;
-  pacientesSearch: boolean = false;
-  resultados$: Observable<any>;
-  modeloSlide: any;
-  active: boolean = false;
-  searchText: FormControl = new FormControl('');
-  nuevoPaciente: boolean = false;
-  pacientesScan: boolean = false;
-  pacienteScaneado: any = {};
-  pacientesLista: Array<any> = new Array<any>();
-  fechaActual: Date = new Date();
-  cantPacientesValidados: number = 0;
-  cantPacientesFallecidos: number = 0;
+  // Propiedades públicas
+  public busquedaAvanzada = false;
+  public textoLibre = null;
+  public resultado = null;
+  public seleccion = null;
+  public esEscaneado = false;
+  public loading = false;
+  public cantPacientesValidados: number;
+  public showCreateUpdate = false;
 
+  // Eventos
+  @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private formBuilder: FormBuilder, private pacienteService: PacienteService) { }
+  /**
+   * Selecciona un paciente y emite el evento 'selected'
+   *
+   * @private
+   * @param {*} paciente Paciente para seleccionar
+   */
+  private seleccionarPaciente(paciente: any) {
+    this.seleccion = paciente;
 
-  ngOnInit() {
-    this.searchForm = this.formBuilder.group({
-      documento: [''],
-      nombre: [''],
-      apellido: [''],
-    });
-    this.modeloSlide = {
-      activo: false
+    // Emite el evento sólo si el paciente está en la base de datos
+    if (paciente && paciente.id) {
+      this.selected.emit(paciente);
+    }
+  }
+
+  /**
+   * Actualiza los contadores de pacientes cada 1 minutos
+   *
+   * @private
+   */
+  private actualizarContadores() {
+    let actualizar = () => {
+      this.pacienteService.getConsultas('validados')
+        .subscribe(cantPacientesValidados => {
+          this.cantPacientesValidados = cantPacientesValidados;
+        });
     };
 
-    this.inicializaPanelInformacion();
-
-    this.resultados$ = this.searchText
-      .valueChanges
-      .map((value: any) => value ? value.trim() : '') // ignore spaces
-      .do(value => value ? this.active = true : this.active = false)
-      // .do(value => value ? this.mensaje = 'Buscando...' : this.mensaje = "")
-      .debounceTime(700) // wait when input completed
-      .distinctUntilChanged()
-      .switchMap(searchString => {
-        return new Promise<Array<any>>((resolve, reject) => {
-          if (searchString) {
-            // Se verifica mediante expresiones regulares el string recibido
-            // para controlar si se realizó un escaneo de DNI
-            this.verificarInput(searchString);
-            this.pacienteService.search(searchString, this.pacienteScaneado)
-              .subscribe(resultados => {
-                // Tengo que limpiar la variable
-
-                let results: Array<any> = resultados;
-                this.active = false;
-                resolve(results);
-              },
-              err => {
-                reject(err);
-
-              });
-          } else {
-            this.mensaje = 'Ingrese los datos del paciente';
-            this.selectedPaciente = null;
-            this.pacientesScan = false;
-            this.nuevoPaciente = false;
-            resolve([]);
-          }
-        })
-      }) // request switchable
-      .map((esResult: any) => {
-        // extract results
-        // debugger;
-        this.nuevoPaciente = true;
-
-        if (esResult.length > 0) {
-          this.mensaje = '';
-          return esResult;
-        } else {
-          if (this.searchTextModel && this.searchTextModel.trim()) {
-            if (this.pacientesScan) {
-              this.mensaje = 'Presione - Nuevo Paciente - para dar de alta al paciente';
-            } else {
-              this.mensaje = 'Sin resultados';
-            }
-
-          }
-
-          return [];
-        }
-      })
-      .catch(this.handleError);
+    actualizar();
+    window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  /*Activa la búsqueda por campos*/
-  activate(event: any) {
+  constructor(private pacienteService: PacienteService) {
+    this.actualizarContadores();
+  }
 
-    this.searchText.setValue('');
-    this.pacientesLista = [];
-    this.nuevoPaciente = false;
+  /**
+   * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
+   *
+   * @returns {RegExp} Devuelve la expresión regular encontrada
+   */
+  comprobarRegExs(): RegExp {
+    for (let i = 0; i < this.regExs.length; i++) {
+      if (this.regExs[i].test(this.textoLibre)) {
+        return this.regExs[i];
+      }
+    }
+    return null;
+  }
 
-    if (event) {
-      this.pacientesSearch = true;
-      this.modeloSlide.activo = true;
+  /**
+   * Parsea el texto libre en un objeto paciente
+   *
+   * @param {RegExp} regEx Expresión regular para analizar
+   * @returns {*} Datos del paciente
+   */
+  parseInput(regEx: RegExp): any {
+    let datos = this.textoLibre.split('"');
+    let sexo = (datos[3] === 'F') ? 'femenino' : 'masculino';
+    let fecha = datos[6].split('-');
+    return {
+      documento: datos[4],
+      apellido: datos[1],
+      nombre: datos[2],
+      sexo: sexo,
+      fechaNacimiento: new Date(parseInt(fecha[2], 10), parseInt(fecha[1], 10) - 1, parseInt(fecha[0], 10))
+    };
+  }
 
+  onReturn() {
+    this.showCreateUpdate = false;
+  }
+
+  /**
+   * Busca paciente cada vez que el campo de busca cambia su valor
+   */
+  public buscar() {
+    // Limpia los resultados de la búsqueda anterior
+    this.resultado = null;
+
+    // Si matchea una expresión regular, busca inmediatamente el paciente
+    let regEx = this.comprobarRegExs();
+    if (regEx) {
+      this.loading = true;
+      let pacienteEscaneado = this.parseInput(regEx);
+
+      // BUG DE PLEX????
+      window.setTimeout(() => {
+        this.textoLibre = null;
+      });
+
+      this.pacienteService.get({
+        type: 'simplequery',
+        apellido: pacienteEscaneado.apellido,
+        nombre: pacienteEscaneado.nombre,
+        documento: pacienteEscaneado.documento,
+        sexo: pacienteEscaneado.sexo,
+        fechaNacimiento: pacienteEscaneado.fechaNacimiento
+      }).subscribe(resultado => {
+        this.loading = false;
+        this.resultado = resultado;
+        this.esEscaneado = true;
+        this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
+        this.showCreateUpdate = true;
+      }, (err) => {
+        this.loading = false;
+      });
     } else {
-      this.pacientesSearch = false;
-      this.modeloSlide.activo = false;
+      // Si está tipeando texto, espera unos milisegundos antes de buscar
+      if (this.timeoutHandle) {
+        window.clearTimeout(this.timeoutHandle);
+      }
 
+      if (this.textoLibre && this.textoLibre.trim()) {
+        this.timeoutHandle = window.setTimeout(() => {
+          this.timeoutHandle = null;
+          this.loading = true;
+          this.pacienteService.get({
+            type: 'multimatch',
+            cadenaInput: this.textoLibre
+          }).subscribe(resultado => {
+            this.loading = false;
+            this.resultado = resultado;
+            this.esEscaneado = false;
+            this.seleccionarPaciente(resultado.length ? resultado[0] : null);
+          }, (err) => {
+            this.loading = false;
+          });
+        }, 300);
+      }
     }
   }
-
-  private verificarInput(cadena) {
-    debugger
-    // let du = new RegExp('[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}');
-    let parse = [];
-    let datosDni = cadena.split('"');
-    // Si la cadena, es la lectura del código del documento
-    // la búsqueda se realiza por nombre, apellido, documento, sexo, fecha de nacimiento
-    if (datosDni.length >= 8) {
-      this.parseDocument(datosDni);
-    } else {
-      this.pacientesScan = false;
-      this.pacienteScaneado.documento = '';
-      this.pacienteScaneado.apellido = '';
-      this.pacienteScaneado.nombre = '';
-      this.pacienteScaneado.estado = 'temporal';
-    }
-
-    return parse;
-  }
-
-
-  parseDocument(datosDni) {
-
-    this.pacientesScan = true;
-    // Los datos se ordenan de la siguiente forma documento, apellido, nombre, sexo, fechadenacimiento
-    let sexo = (datosDni[3] === 'F') ? 'femenino' : 'masculino';
-    let fecha = datosDni[6].split('-');
-    this.pacienteScaneado.documento = datosDni[4];
-    this.pacienteScaneado.apellido = datosDni[1];
-    this.pacienteScaneado.nombre = datosDni[2];
-    this.pacienteScaneado.sexo = sexo;
-    this.pacienteScaneado.estado = 'validado';
-    this.pacienteScaneado.fechaNacimiento = new Date(fecha[2], (parseInt(fecha[1]) - 1), fecha[0]);
-    this.selectedPaciente = this.pacienteScaneado;
-
-  }
-
-  findPacientes() {
-    let dto = this.searchForm.value;
-    let dtoBusqueda;
-
-
-    dtoBusqueda = {
-      'apellido': dto.apellido,
-      'nombre': dto.nombre,
-      'documento': dto.documento.toString(),
-    }
-
-    this.pacienteService.searchMatch('documento', dtoBusqueda, 'suggest',false)
-      .subscribe(value => {
-        this.pacientesLista = value
-      });
-
-  }
-
-
-  handleError(): any {
-    this.mensaje = 'Error al realizar las búsquedas';
-  }
-
-
-  onReturn(objPaciente: IPaciente): void {
-    this.showcreate = false;
-  }
-
-
-  onSelect(objPaciente: IPaciente) {
-
-    this.showcreate = false;
-    this.selectedPaciente = objPaciente;
-    this.selected.emit(objPaciente);
-    this.scanned.emit(this.pacientesScan);
-  }
-
-  mostrarPaciente(paciente: any) {
-    // Si el paciente está validado no debería permitir generar uno nuevo
-    if (paciente.estado === 'validado')
-      this.nuevoPaciente = false;
-
-    this.selectedPaciente = paciente;
-  }
-
-  inicializaPanelInformacion() {
-
-    /*todas las queries que irian en el panel */
-
-    this.pacienteService.getConsultas('validados')
-      .subscribe(resultado => {
-        this.cantPacientesValidados = resultado
-      });
-
-    this.pacienteService.getConsultas('fallecidos')
-      .subscribe(resultado => {
-        this.cantPacientesFallecidos = resultado
-      });
-
-  }
-
 }

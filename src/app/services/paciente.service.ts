@@ -1,3 +1,4 @@
+import { PacienteSearch } from './pacienteSearch.interface';
 import { AppSettings } from './../appSettings';
 import { IPaciente } from './../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
@@ -14,22 +15,11 @@ import 'rxjs/add/operator/catch';
 export class PacienteService {
 
   private pacienteUrl = AppSettings.API_ENDPOINT + '/core/mpi/pacientes';  // URL to web api
-  private pacienteUrlSearch = AppSettings.API_ENDPOINT + '/core/mpi/pacientes/search';  // URL to web api
   constructor(private server: Server, private http: Http) { }
-
-  /**
-   * Metodo get. Trae el objeto paciente.
-   * @param {any} params Opciones de busqueda
-   */
-  get(params: any): Observable<IPaciente[]> {
-    return this.server.get(this.pacienteUrl, { params: params, showError: true }); //...errors if any*/
-  }
 
   getConsultas(filtro: String): Observable<number> {
     return this.server.get(this.pacienteUrl + '/counts?consulta=' + filtro, null);
   }
-
-
 
   /**
    * Metodo getById. Trae un objeto paciente por su Id.
@@ -37,6 +27,10 @@ export class PacienteService {
    */
   getById(id: String): Observable<IPaciente> {
     return this.server.get(this.pacienteUrl + '/' + id, null)
+  }
+
+  get(params: PacienteSearch): Observable<IPaciente[]> {
+    return this.server.get(this.pacienteUrl, { params: params, showError: true });
   }
 
   /**
@@ -66,7 +60,7 @@ export class PacienteService {
 
   /**
    * Metodo disable. deshabilita un objeto paciente.
-   * @param {IPaciente} paciente Recibe IPaciente
+   * @param {IPaciente} paciente Recibe IPaciente{}
    */
   disable(paciente: IPaciente): Observable<IPaciente> {
     paciente.activo = false;
@@ -82,39 +76,11 @@ export class PacienteService {
     return this.put(paciente);
   }
 
-  postSearch(dto: any): Observable<IPaciente[]> {
-    let bodyString = { 'objetoBusqueda': dto }
-    // let pacientes;
-    return this.server.post(this.pacienteUrlSearch, bodyString);
-  }
-
-  search(value: String, dto: any): any {
-    if (dto.documento && dto.apellido) {
-      let bodyString = { 'objetoBusqueda': dto }
-      return this.server.post(this.pacienteUrlSearch + '/simplequery/', bodyString);
+  save(paciente: IPaciente): Observable<IPaciente> {
+    if (paciente.id) {
+      return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
     } else {
-      if (value) {
-        return this.server.post(this.pacienteUrlSearch + '/multimatch/' + value, { value });
-      }
+      return this.server.post(this.pacienteUrl, paciente);
     }
   }
-
-  searchMatch(field: String, dto: any, modo: String, porcentaje: boolean): any {
-    debugger
-    let bodyString = { 'objetoBusqueda': dto };
-    return this.server.post(this.pacienteUrlSearch + '/match/' + field + '/'+ modo + '/'+ porcentaje , bodyString);
-
-  }
-
-  save(paciente: IPaciente): Observable<IPaciente> {
-    debugger
-      if (paciente.id) {
-          return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
-      } else {
-          return this.server.post(this.pacienteUrl, paciente);
-      }
-  }
-
-
-
 }

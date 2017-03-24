@@ -67,10 +67,8 @@ import { OrganizacionCreateUpdateComponent } from './components/organizacion/org
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
-import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
-import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -242,7 +240,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

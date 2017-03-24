@@ -43,7 +43,7 @@ export interface IPaciente {
         apellido: String;
         documento: String
     }];
-    financiador: [{ //obrasocial; plan sumar 
+    financiador: [{
         entidad: {
             id: String;
             nombre: String
@@ -52,6 +52,5 @@ export interface IPaciente {
         fechaAlta: Date;
         fechaBaja: Date;
         ranking: Number;
-    }]
-
+    }];
 }

@@ -1,7 +1,6 @@
 
 import { RupComponent } from './components/rup/rup.component';
 import { PacienteService } from './services/paciente.service';
-import { PacienteComponent } from './components/paciente/paciente.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // Angular
 import { LOCALE_ID } from '@angular/core';

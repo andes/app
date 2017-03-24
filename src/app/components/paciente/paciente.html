@@ -1,7 +1,0 @@
-<div *ngIf="!showcreateupdate">
-  <pacientesSearch (selected)="seleccionar($event)" (scanned)="setScan($event)"></pacientesSearch>
-</div>
-
-<div *ngIf="showcreateupdate">
-  <paciente-create-update [seleccion]="selectedPaciente" [isScan]="isScan" (data)='onReturn($event)'></paciente-create-update>
-</div>

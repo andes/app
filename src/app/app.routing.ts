@@ -19,7 +19,6 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Componentes
 // ... Tablas Maestras
-import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -50,9 +49,8 @@ const appRoutes: Routes = [
   { path: 'inicio', component: InicioComponent },
   { path: 'profesional', component: ProfesionalComponent },
   { path: 'especialidad', component: EspecialidadComponent },
-  { path: 'paciente', component: PacienteComponent },
+  { path: 'paciente', component: PacienteSearchComponent },
   { path: 'agendas', component: AgendaComponent },
-  { path: 'pacienteSearch', component: PacienteSearchComponent },
   { path: 'agenda', component: AgendaComponent },
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'listaEspera', component: ListaEsperaComponent },
