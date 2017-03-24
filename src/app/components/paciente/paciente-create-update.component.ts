@@ -144,7 +144,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.validado = false;
         this.seleccion.estado = 'temporal';
       }
-      debugger;
+      //    debugger;
       if (this.seleccion.contacto) {
         if (this.seleccion.contacto.length <= 0) {
           this.seleccion.contacto[0] = this.contacto;
@@ -239,11 +239,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   loadProvincias(event, pais) {
     debugger;
-    this.provinciaService.get({ 'pais': pais.id }).subscribe(event.callback);
+    if (pais.id) {
+      this.provinciaService.get({ 'pais': pais.id }).subscribe(event.callback);
+    }
   }
 
   loadLocalidades(event, provincia) {
-    this.localidadService.get({ 'provincia': provincia.id }).subscribe(event.callback);
+    if (provincia.id) {
+      this.localidadService.get({ 'provincia': provincia.id }).subscribe(event.callback);
+    }
   }
 
   completarGenero() {
@@ -313,6 +317,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         //       this.save(true);
         //     }
         //   });
+
       } else {
         this.save(true);
       }
@@ -322,6 +327,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       alert('Debe completar los datos obligatorios');
     }
   }
+
 
   save(valid) {
     debugger;
@@ -377,6 +383,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.data.emit(null);
   }
 
+
   onSelect(paciente: IPaciente, id: String) {
     debugger;
     this.seleccion = Object.assign({}, paciente);
@@ -403,7 +410,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     this.pacienteModel = Object.assign({}, this.seleccion);
     this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
-
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;
   }
