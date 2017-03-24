@@ -25,6 +25,7 @@ export class PacienteSearchComponent {
 
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
   /**
    * Selecciona un paciente y emite el evento 'selected'
@@ -38,6 +39,7 @@ export class PacienteSearchComponent {
     // Emite el evento sólo si el paciente está en la base de datos
     if (paciente && paciente.id) {
       this.selected.emit(paciente);
+      this.escaneado.emit(this.esEscaneado);
     }
   }
 

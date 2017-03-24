@@ -55,5 +55,5 @@
 
 <!--Componente de Alta/Modificación-->
 <div *ngIf="showCreateUpdate">
-    <paciente-create-update [seleccion]="seleccion" (data)='onReturn($event)'></paciente-create-update>
+    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='onReturn($event)'></paciente-create-update>
 </div>

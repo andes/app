@@ -1,3 +1,4 @@
+import { PacienteSearch } from './../../services/pacienteSearch.interface';
 import { IContacto } from './../../interfaces/IContacto';
 import { FinanciadorService } from './../../services/financiador.service';
 import { IDireccion } from './../../interfaces/IDireccion';
@@ -136,13 +137,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
     debugger;
     if (this.seleccion) {
 
-      if (this.seleccion.estado === 'validado') {
+      if (this.escaneado) {
         this.validado = true;
+        this.seleccion.estado = 'validado';
+      } else {
+        this.validado = false;
+        this.seleccion.estado = 'temporal';
       }
       debugger;
       if (this.seleccion.contacto) {
         if (this.seleccion.contacto.length <= 0) {
-          this.seleccion.contacto.push(this.contacto);
+          this.seleccion.contacto[0] = this.contacto;
         }
       } else {
         this.seleccion.contacto = [this.contacto];
@@ -150,7 +155,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
       if (this.seleccion.direccion) {
         if (this.seleccion.direccion.length <= 0) {
-          this.seleccion.direccion.push(this.direccion);
+          this.seleccion.direccion[0] = this.direccion;
+        } else {
+          if (this.seleccion.direccion[0].ubicacion.pais && (!this.seleccion.direccion[0].ubicacion.pais.nombre)) {
+            this.seleccion.direccion[0] = this.direccion;
+          }
         }
       } else {
         this.seleccion.direccion = [this.direccion];
@@ -160,9 +169,29 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             this.seleccion = resultado;
-            if (this.isScan) {
+            if (this.escaneado) {
               this.seleccion.estado = 'validado';
               this.validado = true;
+            }
+
+            if (this.seleccion.contacto) {
+              if (this.seleccion.contacto.length <= 0) {
+                this.seleccion.contacto[0] = this.contacto;
+              }
+            } else {
+              this.seleccion.contacto = [this.contacto];
+            }
+
+            if (this.seleccion.direccion) {
+              if (this.seleccion.direccion.length <= 0) {
+                this.seleccion.direccion[0] = this.direccion;
+              } else {
+                if (this.seleccion.direccion[0].ubicacion.pais && (!this.seleccion.direccion[0].ubicacion.pais.nombre)) {
+                  this.seleccion.direccion[0] = this.direccion;
+                }
+              }
+            } else {
+              this.seleccion.direccion = [this.direccion];
             }
 
             this.pacienteModel = Object.assign({}, this.seleccion);
@@ -247,14 +276,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
       // });
       // Se controla si existe el paciente
       if (!this.pacienteModel.id) {
-        let dto = {
+        let dto: PacienteSearch = {
           type: 'suggest',
-          field: 'documento',
+          claveBlocking: 'documento',
           percentage: true,
-          apellido: pacienteGuardar.apellido,
-          nombre: pacienteGuardar.nombre,
-          documento: pacienteGuardar.documento,
-          sexo: pacienteGuardar.sexo,
+          apellido: pacienteGuardar.apellido.toString(),
+          nombre: pacienteGuardar.nombre.toString(),
+          documento: pacienteGuardar.documento.toString(),
+          sexo: pacienteGuardar.sexo.toString(),
           fechaNacimiento: pacienteGuardar.fechaNacimiento
         };
         this.pacienteService.get(dto).subscribe(resultado => {
