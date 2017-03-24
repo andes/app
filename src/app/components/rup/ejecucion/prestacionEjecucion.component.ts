@@ -27,7 +27,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @Input() prestacion: IPrestacionPaciente;
     public listaProblemas: IProblemaPaciente[] = [];
     public problemaBuscar: String = '';
-
+    public Error: String = '';
     public tiposProblemas = [];
     public tipoProblema = null;
     public problemaTratar: any;
@@ -98,12 +98,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // lista de problemas
     existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.nombre == tipoProblema.nombre)
+        return this.listaProblemas.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre)
     }
 
     guardarProblema(nuevoProblema) {
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
-            debugger;
             if (resultado) {
                 // asignamos el problema a la prestacion de origen
                 this.listaProblemas.push(resultado);
@@ -234,8 +233,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     });
                 }
 
-                console.log(find);
-
                 // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
                 if (!find) {
                     // asignamos valores a la nueva prestacion
@@ -255,7 +252,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             });
 
-            console.log(this.prestacionesEjecucion);
+            console.info(this.prestacionesEjecucion);
         }
 
         // recorremos todas las que se han ejecutado y si no esta 
@@ -309,7 +306,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // buscamos la posicion del array de la prestacion que acabamos
         // de agregar para luego quitarla / deshabilitarla del array de opciones
         let posicion = this.tiposPrestacionesPosibles.findIndex(tp => {
-            return tipoPrestacion.id == tp.id
+            return tipoPrestacion.id === tp.id;
         });
 
         // quitamos del array de opciones
@@ -318,80 +315,90 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacionesEjecucion.push(nuevaPrestacion);
     }
 
-    evolucionarPrestacion() {
+   evolucionarPrestacion() {
+        if (this.prestacion.ejecucion.listaProblemas.length > 0) {
         let i = 1;
+
+        // obtenemos un array de la cantidad de prestaciones que se van a guardar
+        let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
+            let tp; tp = _p.solicitud.tipoPrestacion;
+            return (typeof this.data[tp.key] !== 'undefined' && _p.ejecucion.evoluciones.length ) ? _p : null;
+        });
+        //debugger;
+
+        if (prestacionesGuardar = [ ]) {
+            this.Error = 'Debe registrar al menos un dato observable.';
+        }
+
         // recorremos todas las prestaciones que hemos ejecutado
-        this.prestacionesEjecucion.forEach(_prestacion => {
-            // console.log(_prestacion);
-            // this.listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key] = _prestacion.solicitud.listaProblemas;
+        prestacionesGuardar.forEach(_prestacion => {
             let prestacion; prestacion = _prestacion;
 
             let tp; tp = _prestacion.solicitud.tipoPrestacion;
 
+            // if (typeof this.data[tp.key] !== 'undefined') {
 
-            prestacion.ejecucion = {
-                fecha: new Date(),
-                evoluciones: [{
-                    valores: this.data[tp.key],
-                    estado: [{
-                        timestamp: new Date(),
-                        tipo: 'ejecucion'
+                prestacion.ejecucion = {
+                    fecha: new Date(),
+                    evoluciones: [{
+                        valores: this.data[tp.key]
                     }]
-                }]
-            };
+                };
 
-            // si he agregado algun problema a la nueva prestacion
-            // entonces asigno su id a la prestacion a guardar
-            if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
-                // recorremos array de problemas y asignamos a la nueva prestacion
-                // for (let problema of this.listaProblemaPrestacion[tp.key]) {
-                this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                    prestacion.solicitud.listaProblemas.push(problema.id);
-                });
-            } else {
-                // si no agrego ningun problema, entonces por defecto se le agregan todos
-                this.listaProblemas.forEach(idProblema => {
-                    prestacion.solicitud.listaProblemas.push(idProblema);
-                });
-            }
-
-            let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
-
-            // guardamos la nueva prestacion 
-            method.subscribe(prestacionEjecutada => {
-                // inicializamos el array en caso de que haga falta
-                // if (typeof this.prestacion.prestacionesEjecutadas === 'undefined') {
-                //     this.prestacion.prestacionesEjecutadas = [];
-                // }
-
-                // asignamos la prestacion nueva al array de prestaciones ejecutadas
-                let find;
-                if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
-                    find = this.prestacion.ejecucion.prestaciones.find(p => {
-                        return p.id === prestacionEjecutada.id
+                // si he agregado algun problema a la nueva prestacion
+                // entonces asigno su id a la prestacion a guardar
+                if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
+                    // recorremos array de problemas y asignamos a la nueva prestacion
+                    // for (let problema of this.listaProblemaPrestacion[tp.key]) {
+                    this.listaProblemaPrestacion[tp.key].forEach(problema => {
+                        prestacion.solicitud.listaProblemas.push(problema.id);
+                    });
+                } else {
+                    // si no agrego ningun problema, entonces por defecto se le agregan todos
+                    this.listaProblemas.forEach(idProblema => {
+                        prestacion.solicitud.listaProblemas.push(idProblema);
                     });
                 }
 
-                if (!find) {
-                    let id; id = prestacionEjecutada.id;
-                    this.prestacion.ejecucion.prestaciones.push(id);
-                }
+                let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
 
-                // actualizamos la prestacion que estamos loopeando con los datos recien guardados
-                _prestacion = prestacionEjecutada;
+                // guardamos la nueva prestacion 
+                method.subscribe(prestacionEjecutada => {
+                    // asignamos la prestacion nueva al array de prestaciones ejecutadas
+                    let find;
+                    if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
+                        find = this.prestacion.ejecucion.prestaciones.find(p => {
+                            return p.id === prestacionEjecutada.id
+                        });
+                    }
 
-                // this.prestacionesFuturas.push(prestacionFutura);
-                if (i == this.prestacionesEjecucion.length) {
-                    this.plex.alert('Prestacion confirmada');
+                    if (!find) {
+                        let id; id = prestacionEjecutada.id;
+                        this.prestacion.ejecucion.prestaciones.push(id);
+                    }
 
-                    this.updatePrestacion();
-                    this.validarPrestacion();
-                }
+                    // actualizamos la prestacion que estamos loopeando con los datos recien guardados
+                    _prestacion = prestacionEjecutada;
 
-                i++;
-            });
+                    // this.prestacionesFuturas.push(prestacionFutura);
+                    if (i === prestacionesGuardar.length) {
+                    // if (i === this.prestacionesEjecucion.length) {
+                        this.plex.alert('Prestacion confirmada');
+
+                        this.updatePrestacion();
+                        this.validarPrestacion();
+                    }
+
+                    i++;
+                });
+            // }
         });
     }
+
+    else{
+        this.Error= 'Debe seleccionar al menos un problema';
+    }
+}
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
     getPosiblesPrestaciones() {
@@ -487,7 +494,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showValidar = true;
     }
 
-    onReturnComponente(datos, tipoPrestacionActual) {
+    onReturnComponent(datos, tipoPrestacionActual) {
+        console.log(datos);
+
         this.data[tipoPrestacionActual.key] = datos;
     }
 

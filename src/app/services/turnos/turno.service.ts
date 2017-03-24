@@ -12,7 +12,7 @@ export class TurnoService {
     save(turno: any): Observable<any> {
         if (turno.idAgenda) {
             //return this.server.put(this.turnoUrl + '/' + turno.idAgenda, turno);
-            return this.server.patch(this.turnoUrl + '/agenda/' + turno.idAgenda + '/turno/' + turno.idTurno , turno);
+            return this.server.patch(this.turnoUrl + '/agenda/' + turno.idAgenda + '/bloque/' + turno.idBloque  + '/turno/' + turno.idTurno , turno);
         }
     }
 }

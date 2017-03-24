@@ -1,13 +1,14 @@
-<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="talla" label="Talla" min="0" max="240" suffix="cm" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="data[tipoPrestacion.key]" name="talla"
+  label="Talla" min="0" max="240" suffix="cm" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
-    <label>Talla</label>
-    <br /> {{data[tipoPrestacion.key]}} cm
+  <label>Talla</label>
+  <br /> {{data[tipoPrestacion.key]}} cm
 </p>
 
-<p *ngIf="data.mensaje.texto">
-    <span class="badge {{data.mensaje.class}}">
-    {{data.mensaje.texto}}
+<p *ngIf="mensaje.texto">
+  <span class="badge {{mensaje.class}}">
+    {{mensaje.texto}}
     </span>
 </p>

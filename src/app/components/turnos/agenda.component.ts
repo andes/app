@@ -38,10 +38,11 @@ export class AgendaComponent implements OnInit {
     public alertas: String[] = [];
     public fecha: Date;
     public permisos = [];
-    public autorizado: boolean;
+    public autorizado = false;
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
+    public hoy = moment().startOf('day');
 
     constructor(
         public plex: Plex,
@@ -180,16 +181,24 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
-            if (confirma) {
-                this.modelo.bloques.splice(indice, 1);
-                this.bloqueActivo = -1;
-                this.validarTodo();
-            }
-        }
-        ).catch(() => {
+        let confirma = confirm('Confirma que desea eliminar el bloque?');
+        if (confirma) {
+            this.modelo.bloques.splice(indice, 1);
+            this.bloqueActivo = -1;
+            this.validarTodo();
+        } else {
             alert('no borra');
-        });
+        }
+        // this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
+        //     if (confirma) {
+        //         this.modelo.bloques.splice(indice, 1);
+        //         this.bloqueActivo = -1;
+        //         this.validarTodo();
+        //     }
+        // }
+        // ).catch(() => {
+        //     alert('no borra');
+        // });
     }
 
     compararBloques(fecha1, fecha2): number {
@@ -220,6 +229,10 @@ export class AgendaComponent implements OnInit {
             this.bloqueActivo = 0;
             this.elementoActivo.horaInicio = this.modelo.horaInicio;
             this.elementoActivo.horaFin = this.modelo.horaFin;
+
+            this.elementoActivo.titulo = this.modelo.horaInicio.getHours() + ':' + (this.modelo.horaInicio.getMinutes() < 10 ? '0' : '') + this.modelo.horaInicio.getMinutes() + '-' +
+                this.modelo.horaFin.getHours() + ':' + (this.modelo.horaFin.getMinutes() < 10 ? '0' : '') + this.modelo.horaFin.getMinutes();
+
         } else {
             this.modelo.bloques.forEach((bloque) => {
                 // Si se elimino una prestación, la saco de los bloques
@@ -264,7 +277,7 @@ export class AgendaComponent implements OnInit {
     }
 
     cambioHoraBloques(texto: String) {
-        this.fecha = this.modelo.fecha ? new Date(this.modelo.fecha) : new Date();
+        this.fecha = new Date(this.modelo.fecha);
         let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
@@ -362,7 +375,7 @@ export class AgendaComponent implements OnInit {
         if (seleccion === 'simultaneos') {
             if (this.elementoActivo.citarPorBloque) {
                 console.log('acaa');
-                this.plex.alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
+                alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
@@ -407,6 +420,7 @@ export class AgendaComponent implements OnInit {
     }
 
     validarTodo() {
+
         let alerta: string;
         let indice: number;
         let cantidad: number;
@@ -423,7 +437,8 @@ export class AgendaComponent implements OnInit {
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.alertas = [];
+                // this.alertas = [];
+                let alts = [];
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
@@ -431,11 +446,36 @@ export class AgendaComponent implements OnInit {
                         });
                         cantidad = agds.length;
                         if (cantidad > 0) {
-                            this.alertas = [];
-                            this.alertas.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
+                            alts = [];
+                            alts.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
+                            this.alertas = this.alertas.concat(alts);
                         }
                     });
             });
+        }
+        if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
+            // this.alertas = [];
+            let alts = [];
+            this.ServicioAgenda.get({ 'espacioFisico': this.modelo.espacioFisico.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
+                subscribe(agendas => {
+                    let agds = agendas.filter(agenda => {
+                        return agenda.id !== this.modelo.id || !this.modelo.id;
+                    });
+                    cantidad = agds.length;
+                    if (cantidad > 0) {
+                        alts = [];
+                        alts.push('El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese rango horario');
+                        this.alertas = this.alertas.concat(alts);
+                    }
+                });
+        }
+        if (iniAgenda && finAgenda) {
+            if (iniAgenda > finAgenda) {
+                this.alertas.push('La hora de inicio no puede ser mayor a la de fin');
+            }
+            if (iniAgenda === finAgenda) {
+                this.alertas.push('La hora de inicio no puede igual a la de fin');
+            }
         }
         // Verifico que los bloques no estén fuera de los límites de la agenda
         bloques.forEach((bloque, index) => {
@@ -495,7 +535,7 @@ export class AgendaComponent implements OnInit {
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;
-        if (iniAgenda && finAgenda) {
+        if (iniAgenda && finAgenda && iniAgenda <= finAgenda) {
             let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
             if (totalBloques > totalAgenda) {
                 alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';
@@ -522,21 +562,63 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
+        debugger;
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            this.modelo.estado = 'Planificacion';
+
+            // Limpiar de bug selectize "$order", horrible todo esto :'(
+            if ( this.modelo.tipoPrestaciones ) {
+                this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
+                    delete prestacion.$order;
+                });
+            }
+            if ( this.modelo.profesionales ) {
+                this.modelo.profesionales.forEach(function(prestacion, key){
+                    delete prestacion.$order;
+                });
+            }
+
+            if ( this.modelo.espacioFisico ) {
+                delete this.modelo.espacioFisico.$order;
+            }
+
+            // [andrrr]: TODO: debe setear "Planificacion"
+            this.modelo.estado = 'Disponible';
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
+
             bloques.forEach((bloque, index) => {
+
+                let delDiaCount = bloque.accesoDirectoDelDia;
+                let programadoCount = bloque.accesoDirectoProgramado;
+                let profesionalCount = bloque.reservadoGestion;
+                let gestionCount = bloque.reservadoProfesional;
+
                 bloque.turnos = [];
+
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
+
                     let turno = {
-                        horaInicio: new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000),
-                        estado: 'disponible'
+                        estado: 'disponible',
+                        horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
+                        tipoTurno: null
                     };
+
+
+                    if ( delDiaCount > 0 ) {
+                        turno.tipoTurno = 'delDia';
+                        delDiaCount--;
+                    } else if ( programadoCount > 0 ) {
+                        turno.tipoTurno = 'programado';
+                        programadoCount--;
+                    } else if ( gestionCount > 0 ) {
+                        turno.tipoTurno = 'gestion';
+                        gestionCount--;
+                    }
+
                     if (bloque.pacienteSimultaneos) {
                         // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
                         for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
@@ -546,8 +628,7 @@ export class AgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno *
-                                    bloque.cantidadBloque * 60000);
+                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
                                     bloque.turnos.push(turno);
                                 }
@@ -562,24 +643,31 @@ export class AgendaComponent implements OnInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true;
+                    return el.activo === true && delete el.$order;
                 });
             });
+
             espOperation = this.ServicioAgenda.save(this.modelo);
+            debugger;
             espOperation.subscribe(resultado => {
+                console.log(resultado);
+                alert('La agenda se guardo correctamente');
                 if (clonar) {
                     this.showClonar = true;
                     this.showBuscarAgendas = false;
                     this.showAgenda = false;
                 } else {
-                    this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                        this.modelo = {};
-                        this.bloqueActivo = -1;
-                    });
+                    // this.plex.alert('La agenda se guardo correctamente').then(guardo => {
+                    this.modelo = {
+                        fecha: null
+                    };
+                    this.bloqueActivo = -1;
+                    // });
                 }
             });
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            // TODO: Plex alert
+            alert('Debe completar los datos requeridos');
         }
     }
 

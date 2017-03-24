@@ -14,20 +14,16 @@ export class ObservacionesComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     observaciones: Number = null;
-    mensaje: String = null;
 
-    data: any = {
-        mensaje: {
-            texto: String,
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     }
 
     devolverValores() {
-		this.data.mensaje = this.getMensajes();
+		this.mensaje = this.getMensajes();
 		this.evtData.emit(this.data);
 	}
 

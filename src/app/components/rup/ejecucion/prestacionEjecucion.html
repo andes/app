@@ -132,7 +132,7 @@
                             </pre>-->
                             <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">
 
-                                <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponente($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[0] && _prestacion.ejecucion.evoluciones[0].valores && _prestacion.ejecucion.evoluciones[0].valores[0]) ? _prestacion.ejecucion.evoluciones[0].valores[0][_prestacion.solicitud.tipoPrestacion.key] : null">
+                                <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[0] && _prestacion.ejecucion.evoluciones[0].valores && _prestacion.ejecucion.evoluciones[0].valores[0]) ? _prestacion.ejecucion.evoluciones[0].valores[0][_prestacion.solicitud.tipoPrestacion.key] : null">
                                 </rup>
 
 
@@ -192,6 +192,8 @@
             <div class="col-md-6">
                 <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
             </div>
+            <div class="badge-danger"> {{Error}} 
+            </div>    
             <div class="col-md-6 text-right">
                 <plex-button title="Guardar" label="GUARDAR" (click)="evolucionarPrestacion()" type="success btn-sm"></plex-button>
             </div>

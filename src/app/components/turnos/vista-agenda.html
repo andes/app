@@ -1,57 +1,43 @@
-<div class="row" *ngIf="showVistaAgendas">
-    <plex-box>
-        <div class="row">
-            <div class="col-md-12">
-                <table  style="height: 100px" class="table" *ngIf="vistaAgenda">
-                    <tr>
-                        <td colspan="5">
-                            <span><b>Estado de la Agenda: {{vistaAgenda.estado}}</b></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td *ngIf="vistaAgenda.botones.editarAgenda">
+
+                <span *ngIf="vistaAgenda">
+                        <span *ngIf="vistaAgenda.botones.editarAgenda">
                             <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
                             </plex-button>
-                        </td>
-                        <td *ngIf="vistaAgenda.botones.suspenderAgenda">
+                        </span>
+                        <span *ngIf="vistaAgenda.botones.suspenderAgenda">
                             <plex-button icon="mdi mdi-power" (click)="suspenderAgenda(vistaAgenda)" title="Suspender Agenda">
                             </plex-button>
-                        </td>
-                        <td *ngIf="vistaAgenda.botones.cerrarAgenda">
+                        </span>
+                        <span *ngIf="vistaAgenda.botones.cerrarAgenda">
                             <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
                             </plex-button>
-                        </td>
-                        <td *ngIf="vistaAgenda.botones.publicarAgenda">
+                        </span>
+                        <span *ngIf="vistaAgenda.botones.publicarAgenda">
                             <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="publicarAgenda(vistaAgenda)" title="Publicar Agenda">
                             </plex-button>
-                        </td>
-                        <td *ngIf="vistaAgenda.botones.clonarAgenda">
+                        </span>
+                        <span *ngIf="vistaAgenda.botones.clonarAgenda">
                             <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda(vistaAgenda)" title="Clonar Agenda">
                             </plex-button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+                        </span>
+                </span>
 
-        <div class="row" *ngIf="showEditarAgenda">
-            <div class="col-md-12">
-                <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                    placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre + ' ' + apellido">
-                </plex-select>
-            </div>
-            <div class="col-md-12">
-                <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-                    placeholder="Seleccione un espacio">
-                </plex-select>
-            </div>
+                <div class="float-right" *ngIf="showEditarAgenda">
+                    <div class="col-md-12">
+                        <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
+                            placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre + ' ' + apellido">
+                        </plex-select>
+                    </div>
+                    <div class="col-md-12">
+                        <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                            placeholder="Seleccione un espacio">
+                        </plex-select>
+                    </div>
 
-            <div class="col-md-12" align="left">
-                <plex-button icon="mdi-content-save" title="Guardar" label="Guardar" type="default" (click)="guardarAgenda(vistaAgenda)">
-                </plex-button>
-                <plex-button icon="mdi-content-save" title="Cancelar" label="Cancelar" type="default" (click)="cancelar()">
-                </plex-button>
-            </div>
-        </div>
-    </plex-box>
-</div>
+                    <div class="col-md-12" align="left">
+                        <plex-button icon="mdi-content-save" title="Guardar" label="Guardar" type="default" (click)="guardarAgenda(vistaAgenda)">
+                        </plex-button>
+                        <plex-button icon="mdi-content-save" title="Cancelar" label="Cancelar" type="default" (click)="cancelar()">
+                        </plex-button>
+                    </div>
+                </div>

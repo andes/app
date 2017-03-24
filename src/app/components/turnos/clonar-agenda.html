@@ -44,8 +44,9 @@
           <div class="list-group">
             <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item">
               <div class="row">
-                <div class="col-md-6">{{unBloque.descripcion}}</div>
-                <div class="col-md-6">{{unBloque.titulo}}</div>
+                <div class="col-md-4">{{unBloque.descripcion}}</div>
+                <div class="col-md-4">{{unBloque.titulo}}</div>
+                <div class="col-md-4">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
               </div>
             </a>
           </div>
