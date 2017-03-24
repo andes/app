@@ -1,3 +1,4 @@
+import { IContacto } from './IContacto';
 import { IUbicacion } from './IUbicacion';
 import { IDireccion } from './IDireccion';
 import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
@@ -12,28 +13,14 @@ export interface IPaciente {
     apellido: String;
     nombreCompleto: String;
     alias: String;
-    contacto: [{
-        tipo: String;
-        valor: String;
-        ranking: Number;
-        ultimaActualizacion: Date;
-        activo: Boolean
-    }];
-    sexo: Sexo;
-    genero: Genero;
+    contacto: IContacto[];
+    sexo: String;
+    genero: String;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
-    edadReal: {valor: Number, unidad: String};
+    edadReal: { valor: Number, unidad: String };
     fechaFallecimiento: Date;
-    direccion: [{
-        valor: String;
-        codigoPostal: String;
-        ubicacion: IUbicacion;
-        ranking: Number;
-        geoReferencia: [Number];
-        ultimaActualizacion: Date;
-        activo: Boolean
-    }];
+    direccion: IDireccion[];
     estadoCivil: EstadoCivil;
     foto: String;
     relaciones: [{
@@ -53,4 +40,10 @@ export interface IPaciente {
         fechaBaja: Date;
         ranking: Number;
     }];
+    identificadores: [{
+        entidad: String,
+        valor: String
+    }];
+    claveBlocking: [String];
+    entidadesValidadoras: [String];
 }
