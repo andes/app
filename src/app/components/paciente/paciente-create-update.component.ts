@@ -1,24 +1,72 @@
-import { PacienteSearch } from './../../services/pacienteSearch.interface';
-import { IContacto } from './../../interfaces/IContacto';
-import { FinanciadorService } from './../../services/financiador.service';
-import { IDireccion } from './../../interfaces/IDireccion';
-import { IBarrio } from './../../interfaces/IBarrio';
-import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IPais } from './../../interfaces/IPais';
-import { IFinanciador } from './../../interfaces/IFinanciador';
-import { Observable } from 'rxjs/Rx';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { BarrioService } from './../../services/barrio.service';
-import { LocalidadService } from './../../services/localidad.service';
-import { ProvinciaService } from './../../services/provincia.service';
-import { PaisService } from './../../services/pais.service';
-import { PacienteService } from './../../services/paciente.service';
+import {
+  PacienteSearch
+} from './../../services/pacienteSearch.interface';
+import {
+  IContacto
+} from './../../interfaces/IContacto';
+import {
+  FinanciadorService
+} from './../../services/financiador.service';
+import {
+  IDireccion
+} from './../../interfaces/IDireccion';
+import {
+  IBarrio
+} from './../../interfaces/IBarrio';
+import {
+  ILocalidad
+} from './../../interfaces/ILocalidad';
+import {
+  IPais
+} from './../../interfaces/IPais';
+import {
+  IFinanciador
+} from './../../interfaces/IFinanciador';
+import {
+  Observable
+} from 'rxjs/Rx';
+import {
+  Component,
+  OnInit,
+  Output,
+  Input,
+  EventEmitter
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators
+} from '@angular/forms';
+import {
+  BarrioService
+} from './../../services/barrio.service';
+import {
+  LocalidadService
+} from './../../services/localidad.service';
+import {
+  ProvinciaService
+} from './../../services/provincia.service';
+import {
+  PaisService
+} from './../../services/pais.service';
+import {
+  PacienteService
+} from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
-import { IPaciente } from './../../interfaces/IPaciente';
-import { IProvincia } from './../../interfaces/IProvincia';
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { Plex } from '@andes/plex';
+import {
+  IPaciente
+} from './../../interfaces/IPaciente';
+import {
+  IProvincia
+} from './../../interfaces/IProvincia';
+import {
+  DomSanitizer,
+  SafeHtml
+} from "@angular/platform-browser";
+import {
+  Plex
+} from '@andes/plex';
 
 
 
@@ -31,9 +79,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
-  @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+  @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
 
-  matchingItems: Array<any>;
+  matchingItems: Array < any > ;
 
   createForm: FormGroup;
   estados = [];
@@ -62,6 +110,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   validado = false;
   disableGuardar = false;
   sugerenciaAceptada = false;
+  entidadValidadora = '';
 
   contacto: IContacto = {
     tipo: 'celular',
@@ -111,7 +160,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     financiador: null,
     identificadores: null,
     claveBlocking: null,
-    entidadesValidadoras: null,
+    entidadesValidadoras: [this.entidadValidadora],
   };
 
 
@@ -121,12 +170,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private BarrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) { }
+    private financiadorService: FinanciadorService, public plex: Plex) {}
 
   ngOnInit() {
     // Se cargan los combos
-    this.financiadorService.get().subscribe(resultado => { this.obrasSociales = resultado; });
+    this.financiadorService.get().subscribe(resultado => {
+      this.obrasSociales = resultado;
+    });
     // Se cargan los enumerados
+    debugger;
     this.showCargar = false;
     this.sexos = enumerados.getObjSexos();
     this.generos = enumerados.getObjGeneros();
@@ -134,17 +186,26 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.tipoComunicacion = enumerados.getObjTipoComunicacion();
     this.estados = enumerados.getEstados();
     this.relacionTutores = enumerados.getObjRelacionTutor();
-    debugger;
+
     if (this.seleccion) {
 
       if (this.escaneado) {
         this.validado = true;
         this.seleccion.estado = 'validado';
+        if (this.seleccion.entidadesValidadoras) {
+          if (this.seleccion.entidadesValidadoras.length <= 0) {
+            //Caso que el paciente existe y no tiene ninguna entidad validadora e ingresó como validado
+            this.seleccion.entidadesValidadoras.push('RENAPER')
+          }
+        } else {
+          //El caso que el paciente no existe
+          this.seleccion.entidadesValidadoras = ['RENAPER'];
+        }
+      
       } else {
         this.validado = false;
         this.seleccion.estado = 'temporal';
       }
-      //    debugger;
       if (this.seleccion.contacto) {
         if (this.seleccion.contacto.length <= 0) {
           this.seleccion.contacto[0] = this.contacto;
@@ -171,6 +232,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.seleccion = resultado;
             if (this.escaneado) {
               this.seleccion.estado = 'validado';
+
               this.validado = true;
             }
 
@@ -240,13 +302,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
   loadProvincias(event, pais) {
     debugger;
     if (pais.id) {
-      this.provinciaService.get({ 'pais': pais.id }).subscribe(event.callback);
+      this.provinciaService.get({
+        'pais': pais.id
+      }).subscribe(event.callback);
     }
   }
 
   loadLocalidades(event, provincia) {
     if (provincia.id) {
-      this.localidadService.get({ 'provincia': provincia.id }).subscribe(event.callback);
+      this.localidadService.get({
+        'provincia': provincia.id
+      }).subscribe(event.callback);
     }
   }
 
@@ -257,8 +323,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   onSave(valid) {
-    let lista = [];
     debugger;
+    //El primer save
+    let lista = [];
     if (valid.formValid) {
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
@@ -268,9 +335,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
       pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
 
       pacienteGuardar.contacto.map(elem => {
-        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id)); return elem
+        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+        return elem
       });
 
+      
 
       // Si quitan las relaciones.referencia inexistentes
       // this.pacienteModel.relaciones.forEach(rel => {
@@ -292,11 +361,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           debugger;
-          this.pacientesSimilares = resultado; console.log(resultado)
+          this.pacientesSimilares = resultado;
+          console.log(resultado)
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             this.disableGuardar = true;
-            //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-            alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+            //alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
           } else {
             this.save(true);
           }
@@ -323,14 +393,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
       }
 
     } else {
-      // this.plex.alert('Debe completar los datos obligatorios');
-      alert('Debe completar los datos obligatorios');
+      this.plex.alert('Debe completar los datos obligatorios');
+      //alert('Debe completar los datos obligatorios');
     }
   }
 
 
   save(valid) {
     debugger;
+    //El segundo save
     if (valid) {
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
@@ -338,20 +409,25 @@ export class PacienteCreateUpdateComponent implements OnInit {
       pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
       pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : undefined;
       pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
+      //pacienteGuardar.entidadesValidadoras = this.pacienteModel.entidadesValidadoras
 
       pacienteGuardar.contacto.map(elem => {
-        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id)); return elem
+        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+        return elem
       });
 
-      let operacionPac: Observable<IPaciente>;
+
+
+
+      let operacionPac: Observable < IPaciente > ;
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
         debugger;
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-          //this.plex.alert('Los datos se actualizaron correctamente');
-          alert('Los datos se actualizaron correctamente');
+          this.plex.alert('Los datos se actualizaron correctamente');
+          //alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
         });
         //   }
@@ -363,19 +439,20 @@ export class PacienteCreateUpdateComponent implements OnInit {
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
           if (result) {
-            //this.plex.alert('Los datos se actualizaron correctamente');
-            alert('Los datos se actualizaron correctamente');
+            this.plex.alert('Los datos se actualizaron correctamente');
+            //alert('Los datos se actualizaron correctamente');
             this.data.emit(result);
           } else {
-            alert('ERROR: Ocurrio un problema al actualizar los datos');
+            this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
+            // alert('ERROR: Ocurrio un problema al actualizar los datos');
           }
         });
         //   }
         // })
       }
     } else {
-      //this.plex.alert('Debe completar los datos obligatorios');
-      alert('Debe completar los datos obligatorios');
+      this.plex.alert('Debe completar los datos obligatorios');
+      //alert('Debe completar los datos obligatorios');
     }
   }
 
