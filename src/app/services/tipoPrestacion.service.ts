@@ -1,19 +1,13 @@
-import { AppSettings } from './../appSettings';
 import { ITipoPrestacion } from './../interfaces/ITipoPrestacion';
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
+import { environment } from '../../environments/environment';
 import { Server } from '@andes/shared';
 
 @Injectable()
 export class TipoPrestacionService {
 
-    private tipoPrestacionUrl = AppSettings.API_ENDPOINT + '/core/tm/tiposPrestaciones';  // URL to web api
+    private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
 
     constructor(private server: Server) { }
 

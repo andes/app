@@ -1,18 +1,13 @@
 import { Server } from '@andes/shared';
-import { AppSettings } from './../../appSettings';
 import { IPrestacion } from './../../interfaces/turnos/IPrestacion';
 import { Observable } from 'rxjs/Rx';
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class PrestacionService {
-    private prestacionUrl = AppSettings.API_ENDPOINT + '/modules/turnos/prestacion';
-    constructor(private http: Http, private server: Server) { }
+    private prestacionUrl = '/modules/turnos/prestacion';
+    constructor(private server: Server) { }
 
     /**
      * Metodo get. Trae el objeto prestacion.
@@ -51,9 +46,5 @@ export class PrestacionService {
     enable(prestacion: IPrestacion): Observable<IPrestacion> {
         prestacion.activo = true;
         return this.put(prestacion);
-    }
-    handleError(error: any) {
-        console.log(error.json());
-        return Observable.throw(error.json().error || 'Server error');
     }
 }

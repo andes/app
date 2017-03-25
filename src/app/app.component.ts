@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { environment } from './../environments/environment';
+import { Component, OnInit, ModuleWithProviders } from '@angular/core';
 import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
 
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
 })
 
-export class AppComponent implements OnInit {
-    constructor(public plex: Plex) { }
-    ngOnInit() {
-        // Cargo el listado de componentes
-        this.loadSideBar();
-    }
+export class AppComponent {
+    constructor(public plex: Plex, public server: Server) {
+        // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
+        debugger;
+        server.setBaseURL(environment.API);
+     }
 
-    loadSideBar() {
+    // ngOnInit() {
         // const items = [
         //     new MenuItem({ label: 'Inicio', icon: 'creation', route: '/inicio' }),
         //     new MenuItem({ label: 'Organizacion', icon: 'hospital-building', route: '/organizacion' }),
@@ -30,5 +32,5 @@ export class AppComponent implements OnInit {
         //     new MenuItem({ label: 'Tipo de Prestaciones', icon: 'blur', route: '/tipoprestaciones' }),
         // ];
         // this.plex.initStaticItems(items);
-    }
+    // }
 }

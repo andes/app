@@ -1,21 +1,15 @@
+import { Observable } from 'rxjs/Rx';
 import { PacienteSearch } from './pacienteSearch.interface';
-import { AppSettings } from './../appSettings';
 import { IPaciente } from './../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { Server } from '@andes/shared';
-import 'rxjs/add/operator/toPromise';
-
-import { Observable } from 'rxjs/Rx';
-// Import RxJs required methods
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class PacienteService {
 
-  private pacienteUrl = AppSettings.API_ENDPOINT + '/core/mpi/pacientes';  // URL to web api
-  constructor(private server: Server, private http: Http) { }
+  private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
+  constructor(private server: Server) { }
 
   getConsultas(filtro: String): Observable<number> {
     return this.server.get(this.pacienteUrl + '/counts?consulta=' + filtro, null);

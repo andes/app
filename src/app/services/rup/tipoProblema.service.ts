@@ -1,20 +1,14 @@
+import { Observable } from 'rxjs/Rx';
 import { ITipoProblema } from './../../interfaces/rup/ITipoProblema';
 import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
-import { AppSettings } from './../../appSettings';
-
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
+import { environment } from '../../../environments/environment';
 import { Server } from '@andes/shared';
 
 @Injectable()
 export class TipoProblemaService {
 
-    private problemaUrl = AppSettings.API_ENDPOINT + '/modules/rup/tiposProblemas';  // URL to web api
+    private problemaUrl = '/modules/rup/tiposProblemas';  // URL to web api
 
     constructor(private server: Server) { }
 
@@ -32,7 +26,6 @@ export class TipoProblemaService {
      */
     getById(id: String): Observable<ITipoProblema> {
         var url = this.problemaUrl + "/" + id;
-        return this.server.get(url, null)
+        return this.server.get(url, null);
     }
-
 }
