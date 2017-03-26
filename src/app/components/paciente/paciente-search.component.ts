@@ -177,7 +177,8 @@ export class PacienteSearchComponent {
     }
   }
 
-  onReturn() {
+  afterCreateUpdate() {
     this.showCreateUpdate = false;
+    this.resultado = null;
   }
 }

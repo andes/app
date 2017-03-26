@@ -44,8 +44,8 @@
             <header>
                 <h3>Validación digital de pacientes</h3>
             </header>
-            <div class="label-info margin-bottom">Pacientes registrados en la Historia Digital de Salud: <strong>{{cantPacientesValidados}}</strong></div>
-            <img src="nuevoDNI.jpg" class="img-fluid">
+            <div class="label-info margin-bottom" style="font-size: 1em">Pacientes registrados en la Historia Digital de Salud: <strong>{{cantPacientesValidados}}</strong></div>
+            <div class="nuevoDNI"></div>
         </plex-box>
     </div>
 </div>
@@ -55,5 +55,5 @@
 
 <!--Componente de Alta/Modificación-->
 <div *ngIf="showCreateUpdate">
-    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='onReturn($event)'></paciente-create-update>
+    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
 </div>

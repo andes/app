@@ -1,3 +1,21 @@
 .logos {
-    background-image: url('../../assets/img/login.png');
+    width: 100%;
+    height: 100px;
+    background-image: url('../../assets/img/loginBackground.png');
+}
+
+.onelogin {
+    background-image: url('../../assets/img/loginOneLogin.png');
+    background-repeat: no-repeat;
+    float: left;
+    width: 137px;
+    height: 100px;
+}
+
+.andes {
+    background-image: url('../../assets/img/loginAndes.png');
+    background-repeat: no-repeat;
+    float: right;
+    width: 311px;
+    height: 100px;
 }
