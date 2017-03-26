@@ -11,7 +11,6 @@ import { Server } from '@andes/shared';
 export class AppComponent {
     constructor(public plex: Plex, public server: Server) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
-        debugger;
         server.setBaseURL(environment.API);
      }
 
