@@ -79,9 +79,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
-  @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
+  @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-  matchingItems: Array < any > ;
+  matchingItems: Array<any>;
 
   createForm: FormGroup;
   estados = [];
@@ -170,7 +170,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private BarrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) {}
+    private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
     // Se cargan los combos
@@ -201,7 +201,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           //El caso que el paciente no existe
           this.seleccion.entidadesValidadoras = ['RENAPER'];
         }
-      
+
       } else {
         this.validado = false;
         this.seleccion.estado = 'temporal';
@@ -301,7 +301,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   loadProvincias(event, pais) {
     debugger;
-    if (pais.id) {
+    if (pais && pais.id) {
       this.provinciaService.get({
         'pais': pais.id
       }).subscribe(event.callback);
@@ -309,7 +309,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   loadLocalidades(event, provincia) {
-    if (provincia.id) {
+    debugger;
+    if (provincia && provincia.id) {
       this.localidadService.get({
         'provincia': provincia.id
       }).subscribe(event.callback);
@@ -339,7 +340,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return elem
       });
 
-      
+
 
       // Si quitan las relaciones.referencia inexistentes
       // this.pacienteModel.relaciones.forEach(rel => {
@@ -419,7 +420,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
 
-      let operacionPac: Observable < IPaciente > ;
+      let operacionPac: Observable<IPaciente>;
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/

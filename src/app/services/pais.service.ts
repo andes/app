@@ -7,11 +7,11 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class PaisService {
 
-   private paisUrl = environment.API +'/core/tm/paises';  // URL to web api
+    private paisUrl = '/core/tm/paises';  // URL to web api
 
-   constructor(private server: Server) {}
+    constructor(private server: Server) { }
 
-   get(): Observable<IPais[]> {
-       return this.server.get(this.paisUrl);
-   }
+    get(): Observable<IPais[]> {
+        return this.server.get(this.paisUrl);
+    }
 }
