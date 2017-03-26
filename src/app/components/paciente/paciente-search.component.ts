@@ -1,6 +1,9 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
 import { IPaciente } from './../../interfaces/IPaciente';
+import { Plex } from '@andes/plex';
+import * as moment from 'moment';
+import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 
 @Component({
   selector: 'pacientesSearch',
@@ -9,13 +12,10 @@ import { IPaciente } from './../../interfaces/IPaciente';
 })
 export class PacienteSearchComponent {
   private timeoutHandle: number;
-  private regExs: RegExp[] = [
-    /[0-9]+".+".+"[M|F]"[0-9]{7,8}"[A-Z]"[0-9]{2}-[0-9]{2}-[0-9]{4}"[0-9]{2}-[0-9]{2}-[0-9]{4}/
-  ];
 
   // Propiedades públicas
   public busquedaAvanzada = false;
-  public textoLibre = null;
+  public textoLibre: string = null;
   public resultado = null;
   public seleccion = null;
   public esEscaneado = false;
@@ -60,19 +60,19 @@ export class PacienteSearchComponent {
     window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  constructor(private pacienteService: PacienteService) {
+  constructor(private plex: Plex, private pacienteService: PacienteService) {
     this.actualizarContadores();
   }
 
   /**
    * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
    *
-   * @returns {RegExp} Devuelve la expresión regular encontrada
+   * @returns {DocumentoEscaneado} Devuelve el documento encontrado
    */
-  comprobarRegExs(): RegExp {
-    for (let i = 0; i < this.regExs.length; i++) {
-      if (this.regExs[i].test(this.textoLibre)) {
-        return this.regExs[i];
+  private comprobarDocumentoEscaneado(): DocumentoEscaneado {
+    for (let key in DocumentoEscaneados) {
+      if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
+        return DocumentoEscaneados[key];
       }
     }
     return null;
@@ -81,24 +81,35 @@ export class PacienteSearchComponent {
   /**
    * Parsea el texto libre en un objeto paciente
    *
-   * @param {RegExp} regEx Expresión regular para analizar
+   * @param {DocumentoEscaneado} documento documento escaneado
    * @returns {*} Datos del paciente
    */
-  parseInput(regEx: RegExp): any {
-    let datos = this.textoLibre.split('"');
-    let sexo = (datos[3] === 'F') ? 'femenino' : 'masculino';
-    let fecha = datos[6].split('-');
+  private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
+    let datos = this.textoLibre.match(documento.regEx);
     return {
-      documento: datos[4],
-      apellido: datos[1],
-      nombre: datos[2],
-      sexo: sexo,
-      fechaNacimiento: new Date(parseInt(fecha[2], 10), parseInt(fecha[1], 10) - 1, parseInt(fecha[0], 10))
+      documento: datos[documento.grupoNumeroDocumento],
+      apellido: datos[documento.grupoApellido],
+      nombre: datos[documento.grupoNombre],
+      sexo: (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino',
+      fechaNacimiento: moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
     };
   }
 
-  onReturn() {
-    this.showCreateUpdate = false;
+  /**
+   * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
+   *
+   * @private
+   * @returns {boolean} Indica si está bien configurado
+   */
+  private controlarScanner(): boolean {
+    let index = this.textoLibre.indexOf('"');
+    if (index >= 0 && index < 20) {
+      this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+      this.textoLibre = null;
+      return false;
+    } else {
+      return true;
+    }
   }
 
   /**
@@ -108,17 +119,19 @@ export class PacienteSearchComponent {
     // Limpia los resultados de la búsqueda anterior
     this.resultado = null;
 
+    // Controla el scanner
+    if (!this.controlarScanner()) {
+      return;
+    }
+
     // Si matchea una expresión regular, busca inmediatamente el paciente
-    let regEx = this.comprobarRegExs();
-    if (regEx) {
+    let documentoEscaneado = this.comprobarDocumentoEscaneado();
+    if (documentoEscaneado) {
       this.loading = true;
-      let pacienteEscaneado = this.parseInput(regEx);
+      let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
+      this.textoLibre = null;
 
-      // BUG DE PLEX????
-      window.setTimeout(() => {
-        this.textoLibre = null;
-      });
-
+      // Consulta API
       this.pacienteService.get({
         type: 'simplequery',
         apellido: pacienteEscaneado.apellido,
@@ -136,7 +149,7 @@ export class PacienteSearchComponent {
         this.loading = false;
       });
     } else {
-      // Si está tipeando texto, espera unos milisegundos antes de buscar
+      // Si no es un documento escaneado, hace una búsqueda multimatch
       if (this.timeoutHandle) {
         window.clearTimeout(this.timeoutHandle);
       }
@@ -159,5 +172,9 @@ export class PacienteSearchComponent {
         }, 300);
       }
     }
+  }
+
+  onReturn() {
+    this.showCreateUpdate = false;
   }
 }
