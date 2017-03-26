@@ -1,8 +1,9 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
-import { IPaciente } from './../../interfaces/IPaciente';
-import { Plex } from '@andes/plex';
 import * as moment from 'moment';
+import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
+import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 
 @Component({
@@ -60,7 +61,7 @@ export class PacienteSearchComponent {
     window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  constructor(private plex: Plex, private pacienteService: PacienteService) {
+  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
     this.actualizarContadores();
   }
 
@@ -72,6 +73,8 @@ export class PacienteSearchComponent {
   private comprobarDocumentoEscaneado(): DocumentoEscaneado {
     for (let key in DocumentoEscaneados) {
       if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
+        // Loggea el documento escaneado para análisis
+        this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
         return DocumentoEscaneados[key];
       }
     }
@@ -87,7 +90,7 @@ export class PacienteSearchComponent {
   private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
     let datos = this.textoLibre.match(documento.regEx);
     return {
-      documento: datos[documento.grupoNumeroDocumento],
+      documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
       apellido: datos[documento.grupoApellido],
       nombre: datos[documento.grupoNombre],
       sexo: (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino',
