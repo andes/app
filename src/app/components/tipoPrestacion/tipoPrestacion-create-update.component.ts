@@ -1,8 +1,9 @@
-import { Observable } from 'rxjs/Rx';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+// import { Observable } from 'rxjs/Rx';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { TipoProblemaService } from './../../services/rup/tipoProblema.service';
 
 
 @Component({
@@ -14,7 +15,12 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
     public modelo: any = {};
     public SelectTipo: Array<Object> = [{ id: 'atomos', nombre: 'Atomos' }, { id: 'moleculas', nombre: 'Moleculas' }]; // tipoPisos:Array
+    public SelectTipoAtomo: Array<Object> = [{ id: 'entidadObservable', nombre: 'Entidad observable' }, { id: 'problema', nombre: 'Lista de problemas' }]; // tipoPisos:Array
     public granularidad = {
+        id: '',
+        nombre: ''
+    };
+     public tipo = {
         id: '',
         nombre: ''
     };
@@ -23,7 +29,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
 
-    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { };
+    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService, private servicioTipoProblema: TipoProblemaService) { };
 
     // ****************************************** //
     ngOnInit() {
@@ -46,12 +52,14 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                     ruta: '',
                     nombre: ''
                 },
+                tipo: String
 
             }; // this.modelo
-        } else{
+        } else {
             this.granularidad.id = this.modelo.granularidad;
+            this.tipo.id = this.modelo.tipo;
             this.titulo = 'Modificación tipo de prestación';
-         }
+        }
     } // ngOnInit
 
     // ****************************************** //
@@ -114,28 +122,24 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
     }; // utilizarTipoPrestacion(event)
 
 
+    getTiposProblemas(event) {
+        this.servicioTipoProblema.get({}).subscribe(event.callback);
+    }
+
     // ****************************************** //
     onSave() {
         //debugger;
 
         this.modelo.granularidad = this.granularidad.id;
+        this.modelo.tipo = this.tipo.id;
         // Modo Update
-        if (this.seleccion) {
-            this.tipoPrestacionService.put(this.modelo).subscribe(tipoPrestacion => {
-                 if (tipoPrestacion) {
-                 this.data.emit(tipoPrestacion);
-                 } // if (tipoPrestacion)
-            }); // post
-        
+        let method = (this.seleccion) ? this.tipoPrestacionService.put(this.modelo) : this.tipoPrestacionService.post(this.modelo);
 
-        // Modo Insert
-        } else {
-            this.tipoPrestacionService.post(this.modelo).subscribe(tipoPrestacion => {
-                if (tipoPrestacion) {
-                    this.data.emit(tipoPrestacion);
-                } // if (tipoPrestacion)
-            }); // post
-        }; // else
+        method.subscribe(tipoPrestacion => {
+            if (tipoPrestacion) {
+                this.data.emit(tipoPrestacion);
+            } // if (tipoPrestacion)
+        }); // post
     }; // onSave()
 
 
