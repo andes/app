@@ -132,8 +132,8 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
      volver() {
-        this.evtData.emit(this.prestacion);
+       this.showEjecucion = true;
+       this.evtData.emit(this.prestacion);
     }
-
 }
 

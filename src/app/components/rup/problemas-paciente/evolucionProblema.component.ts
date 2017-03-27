@@ -45,12 +45,16 @@ export class EvolucionProblemaComponent implements OnInit {
     }
 
     evolucionarProblema(event) {
-        debugger;
         if (event.formValid) {
+
+            if (this.duracion) {
             this.unaEvolucion.duracion = this.duracion.id;
+            }
+
             this.unaEvolucion.vigencia = this.vigencia.id;
+
             this.problema.evoluciones.push(this.unaEvolucion);
-            console.log(this.problema);
+
             this.servProbPaciente.put(this.problema).subscribe(resultado => {
                 if (resultado) {
                     this.evtData.emit(this.problema);

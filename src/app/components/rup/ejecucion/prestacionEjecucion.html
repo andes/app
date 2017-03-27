@@ -54,8 +54,8 @@
                                             </span>
                       <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                            </span>&nbsp;&nbsp;&nbsp;
-                      <span class="label label-warning">
+                                            </span>&nbsp;&nbsp;&nbsp;                                            
+                      <span class="label label-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'" >
                                                {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                                             </span>
                     </div>
@@ -134,18 +134,17 @@
                             </pre>-->
               <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">
 
-                {{_prestacion.ejecucion.evoluciones.length-1 | json}}
-                {{valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] | json}}
+                <!--{{_prestacion.ejecucion.evoluciones.length-1 | json}}
+                {{valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] | json}}-->
 
                 <!--<rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)"
                   [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1] && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores) ? _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores[_prestacion.solicitud.tipoPrestacion.key] : null">-->
                   <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(valoresPrestaciones && valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key]) ? valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] : null">
                 </rup>
 
-              <pre>
-                {{_prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1]._id}}
+              <!--<pre>
                 {{_prestacion.ejecucion.evoluciones | json}}
-              </pre>
+              </pre>-->
 
 
                 <div class="row">

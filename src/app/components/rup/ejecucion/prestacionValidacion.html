@@ -93,8 +93,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
-      <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
+    <div class="col-md-3">   
+      <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm" ></plex-button>      
     </div>
     <div class="col-md-9 text-right">
       <plex-button title="Validar Prestación" label="Validar Prestación" type="success" (click)="validarPrestacion()" *ngIf="showEjecucion && prestacion.estado[prestacion.estado.length-1].tipo != 'validada'"></plex-button>
@@ -102,11 +102,12 @@
     </div>
   </div>
   <div class="row" *ngIf="!showEjecucion">
-    <div class="col-md-12">
+    <div class="col-md-9">
       <div class="alert alert-success" role="alert">
         {{mensaje}}
       </div>
     </div>
+    
     <!--<div class="col-md-10">
             <a routerLink="/rup" routerLinkActive="active" class="btn btn-default">Cerrar</a>
         </div>-->

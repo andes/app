@@ -85,7 +85,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('-------------ngOnInit: -----------------')
         this.cargarDatosPrestacion();
 
         // obtenemos tipos de prestaciones posibles a ejecutarse
@@ -216,8 +215,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarDatosPrestacion() {
-        console.log('-------------------- cargarDatosPrestacion()--------------------');
-        debugger;
+
 
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
         // loopeamos las prestaciones que se deben cargar por defecto
@@ -239,14 +237,16 @@ export class PrestacionEjecucionComponent implements OnInit {
                     find = this.crearPrestacionVacia(element);
                     this.prestacionesEjecucion.push(find);
                      this.valoresPrestaciones[element.key.toString()] = {};
-                } else {
-                    debugger;
+                } else {                   
                     this.prestacionesEjecucion.push(find);
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
+                    let algo; algo = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
+
                     this.valoresPrestaciones[key] = {};
-                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+//                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? algo : null;
                     // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
                 }
             });
@@ -329,11 +329,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.error = 'Debe registrar al menos un dato observable.';
          } else {
                     this.error = '';
-                    console.log("PERSTAXCIONE ASJLAFJÑLDJ", prestacionesGuardar);
+                   
                     // recorremos todas las prestaciones que hemos ejecutado
                     prestacionesGuardar.forEach(_prestacion => {
 
-                            let prestacion; prestacion = _prestacion;
+                            // let prestacion; prestacion = _prestacion;
                             let tp; tp = _prestacion.solicitud.tipoPrestacion;
 
                             // prestacion.ejecucion = {
@@ -343,27 +343,27 @@ export class PrestacionEjecucionComponent implements OnInit {
                             //     // }]
                             // };
                             console.log("data: ", this.data);
-                            console.log("antes: ", prestacion.ejecucion.evoluciones);
+                            console.log("antes: ", _prestacion.ejecucion.evoluciones);
 
-                            prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
+                            _prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
 
-                            console.log("despues: ", prestacion.ejecucion.evoluciones);
+                            console.log("despues: ", _prestacion.ejecucion.evoluciones);
 
                             // si he agregado algun problema a la nueva prestacion
                             // entonces asigno su id a la prestacion a guardar
                             if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
                                 // recorremos array de problemas y asignamos a la nueva prestacion
                                 this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                                    prestacion.solicitud.listaProblemas.push(problema.id);
+                                    _prestacion.solicitud.listaProblemas.push(problema.id);
                                 });
                             } else {
                                 // si no agrego ningun problema, entonces por defecto se le agregan todos
                                     this.listaProblemas.forEach(idProblema => {
-                                        prestacion.solicitud.listaProblemas.push(idProblema);
+                                        _prestacion.solicitud.listaProblemas.push(idProblema);
                                     });
                                 }
 
-                                let method = (prestacion.id) ? this.servicioPrestacion.put(prestacion) : this.servicioPrestacion.post(prestacion);
+                                let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
 
                                 // guardamos la nueva prestacion
                                 method.subscribe(prestacionEjecutada => {
@@ -496,8 +496,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-        debugger;
-
+        // debugger;
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         }else {
@@ -512,6 +511,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     volver() {
-        this.evtData.emit(this.prestacion);
+       this.showValidar=false;
+       this.evtData.emit(this.prestacion);
     }
+
 }
