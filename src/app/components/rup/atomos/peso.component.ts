@@ -26,8 +26,12 @@ export class PesoComponent implements OnInit {
     }
 
     devolverValores() {
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        }
+
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
     }
 
     getMensajes() {

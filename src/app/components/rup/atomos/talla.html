@@ -1,5 +1,5 @@
 <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="data[tipoPrestacion.key]" name="talla"
-  label="Talla" min="0" max="240" suffix="cm" (keyup)="devolverValores()">
+  label="Talla" min="1" max="240" suffix="cm" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">

@@ -31,14 +31,38 @@ export class SignosVitalesComponent implements OnInit {
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
+        // valor: variable con el resultado qeu viene del input del formulario
+        console.log(!obj);
+        let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
+        console.log('1', this.data);
+        console.log('**', valor);
+        // debugger;
+        if (valor) {
+                if (!this.data[this.tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key] = {};
+                }
 
-            if (obj[tipoPrestacion.key]) {
-            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+                if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+                }
+                // alert('1');
+            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
 
-            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null ) {
+        } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null ) {
+            // alert('2');
                 delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
-            }
-            this.evtData.emit(this.data);
+
+        }
+
+        // alert('cant: ' + Object.keys(this.data[this.tipoPrestacion.key]).length);
+        console.log('2', this.data[this.tipoPrestacion.key][tipoPrestacion.key]);
+
+        if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
+            this.data = {};
+        }
+
+        console.log('3', this.data);
+        this.evtData.emit(this.data);
     }
 
 }

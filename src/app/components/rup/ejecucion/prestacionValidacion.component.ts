@@ -45,7 +45,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     ngOnInit() {
         this.loadPrestacionesEjacutadas();
-        console.log("vcalidacion: ", this.prestacion);
+        console.log("validacion: ", this.prestacion);
     }
 
     loadPrestacionesEjacutadas() {
@@ -126,9 +126,14 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         }
                     });
-                })
+                });
             }
         });
     }
 
+     volver() {
+       this.showEjecucion = true;
+       this.evtData.emit(this.prestacion);
+    }
 }
+
