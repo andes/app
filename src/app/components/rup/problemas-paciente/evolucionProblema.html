@@ -7,7 +7,7 @@
       <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                             </span>&nbsp;&nbsp;&nbsp;
-      <span class="label label-warning" >
+      <span class="label label-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
                                                {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                                             </span>
                                             
