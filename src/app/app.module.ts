@@ -1,3 +1,4 @@
+import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
 
 /*
@@ -212,7 +213,8 @@ export const RUP_COMPONENTS = [
   ActitudAnteLosCuidadosComponent,
   ControlDeEsfinteresComponent,
   DesarrolloIntelectualyJuegosComponent,
-  EscalaDeDesarrolloComponent
+  EscalaDeDesarrolloComponent,
+  EstadoNutricionalComponent
 
 ];
 

@@ -129,9 +129,7 @@
           <!-- nuevas prestaciones ejecutadas en la consulta -->
           <plex-accordion *ngIf="prestacionesEjecucion">
             <div *ngFor="let _prestacion of prestacionesEjecucion">
-              <!--<pre>
-                                {{_prestacion.ejecucion.evoluciones | json}}
-                            </pre>-->
+    
               <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">
 
                 <!--{{_prestacion.ejecucion.evoluciones.length-1 | json}}
@@ -139,11 +137,12 @@
 
                 <!--<rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)"
                   [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1] && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores) ? _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores[_prestacion.solicitud.tipoPrestacion.key] : null">-->
-                  <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)" [datosIngreso]="(valoresPrestaciones && valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key]) ? valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] : null">
+                  <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)" 
+                  [datosIngreso]="(valoresPrestaciones && valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key]) ? valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] : null">
                 </rup>
 
               <!--<pre>
-                {{_prestacion.ejecucion.evoluciones | json}}
+                {{data | json}}
               </pre>-->
 
 
