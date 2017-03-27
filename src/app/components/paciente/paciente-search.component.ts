@@ -105,20 +105,26 @@ export class PacienteSearchComponent {
    * @returns {boolean} Indica si está bien configurado
    */
   private controlarScanner(): boolean {
-    let index = this.textoLibre.indexOf('"');
-    if (index >= 0 && index < 20) {
-      this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
-      this.textoLibre = null;
-      return false;
-    } else {
-      return true;
+    if (this.textoLibre) {
+      let index = this.textoLibre.indexOf('"');
+      if (index >= 0 && index < 20) {
+        this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+        this.textoLibre = null;
+        return false;
+      }
     }
+    return true;
   }
 
   /**
    * Busca paciente cada vez que el campo de busca cambia su valor
    */
   public buscar() {
+    // Cancela la búsqueda anterior
+    if (this.timeoutHandle) {
+      window.clearTimeout(this.timeoutHandle);
+    }
+
     // Limpia los resultados de la búsqueda anterior
     this.resultado = null;
 
@@ -127,40 +133,36 @@ export class PacienteSearchComponent {
       return;
     }
 
-    // Si matchea una expresión regular, busca inmediatamente el paciente
-    let documentoEscaneado = this.comprobarDocumentoEscaneado();
-    if (documentoEscaneado) {
-      this.loading = true;
-      let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
-      this.textoLibre = null;
+    // Inicia búsqueda
+    if (this.textoLibre && this.textoLibre.trim()) {
+      this.timeoutHandle = window.setTimeout(() => {
+        this.timeoutHandle = null;
 
-      // Consulta API
-      this.pacienteService.get({
-        type: 'simplequery',
-        apellido: pacienteEscaneado.apellido,
-        nombre: pacienteEscaneado.nombre,
-        documento: pacienteEscaneado.documento,
-        sexo: pacienteEscaneado.sexo,
-        fechaNacimiento: pacienteEscaneado.fechaNacimiento
-      }).subscribe(resultado => {
-        this.loading = false;
-        this.resultado = resultado;
-        this.esEscaneado = true;
-        this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
-        this.showCreateUpdate = true;
-      }, (err) => {
-        this.loading = false;
-      });
-    } else {
-      // Si no es un documento escaneado, hace una búsqueda multimatch
-      if (this.timeoutHandle) {
-        window.clearTimeout(this.timeoutHandle);
-      }
-
-      if (this.textoLibre && this.textoLibre.trim()) {
-        this.timeoutHandle = window.setTimeout(() => {
-          this.timeoutHandle = null;
+        // Si matchea una expresión regular, busca inmediatamente el paciente
+        let documentoEscaneado = this.comprobarDocumentoEscaneado();
+        if (documentoEscaneado) {
           this.loading = true;
+          let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
+          this.textoLibre = null;
+
+          // Consulta API
+          this.pacienteService.get({
+            type: 'simplequery',
+            apellido: pacienteEscaneado.apellido,
+            nombre: pacienteEscaneado.nombre,
+            documento: pacienteEscaneado.documento,
+            sexo: pacienteEscaneado.sexo
+          }).subscribe(resultado => {
+            this.loading = false;
+            this.resultado = resultado;
+            this.esEscaneado = true;
+            this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
+            this.showCreateUpdate = true;
+          }, (err) => {
+            this.loading = false;
+          });
+        } else {
+          // Si no es un documento escaneado, hace una búsqueda multimatch
           this.pacienteService.get({
             type: 'multimatch',
             cadenaInput: this.textoLibre
@@ -172,8 +174,8 @@ export class PacienteSearchComponent {
           }, (err) => {
             this.loading = false;
           });
-        }, 300);
-      }
+        }
+      }, 200);
     }
   }
 
