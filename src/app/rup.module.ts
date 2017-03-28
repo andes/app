@@ -74,6 +74,9 @@ import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinat
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
 import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
+// NIÑO SANO
+import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
+import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
 // NO VA tslint:disable-next-line:max-line-length
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
@@ -139,7 +142,9 @@ export const RUP_COMPONENTS = [
     ActitudAnteLosCuidadosComponent,
     ControlDeEsfinteresComponent,
     DesarrolloIntelectualyJuegosComponent,
-    EscalaDeDesarrolloComponent
+    EscalaDeDesarrolloComponent,
+    EstadoNutricionalComponent,
+    OdontologiaComponent
 
     // NO VAPacienteComponent
 ];

@@ -1,5 +1,3 @@
-import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-
 
 /*
 @jgabriel | 04-03-2017
@@ -156,6 +154,10 @@ import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinat
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
 import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
+// NIÑO SANO
+import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
+import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
+
 
 
 export const RUP_COMPONENTS = [
@@ -214,7 +216,8 @@ export const RUP_COMPONENTS = [
   ControlDeEsfinteresComponent,
   DesarrolloIntelectualyJuegosComponent,
   EscalaDeDesarrolloComponent,
-  EstadoNutricionalComponent
+  EstadoNutricionalComponent,
+  OdontologiaComponent
 
 ];
 

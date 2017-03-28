@@ -2,6 +2,11 @@
   min="0" max="100" (keyup)="devolverValores()">
 </plex-int>
 
+<p *ngIf="soloValores">
+  <label>Peso</label>
+  <br /> {{data[tipoPrestacion.key]}} {{suffix}}
+</p>
+
 <p *ngIf="mensaje.texto">
   <span class="badge {{mensaje.class}}">
     {{mensaje.texto}}
