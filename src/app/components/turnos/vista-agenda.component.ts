@@ -6,7 +6,6 @@ import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.ser
 import { ProfesionalService } from './../../services/profesional.service';
 import { Router } from '@angular/router';
 import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'vista-agenda',
@@ -17,6 +16,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
 
     showVistaAgendas: Boolean = true;
     showEditarAgenda: Boolean = false;
+    showEditarAgendaPanel: Boolean = false;
 
     @Input() vistaAgenda: any;
 
@@ -27,14 +27,12 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     public vistaAux: any = {};
     public vistaBotones: any = {};
 
-    subscription: Subscription;
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
     }
 
     ngOnInit() {
-        console.log('this.vistaAgenda: ', this.vistaAgenda);
 
         if (this.vistaAgenda) {
             this.actualizarBotones();
@@ -51,7 +49,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         // TODO: Pausada
         this.vistaBotones = {
             // Para editar una agenda, tiene que estar seleccionada sólo una, y en estado "Planificación"
-            editarAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Planificacion'),
+            editarAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Planificacion' || this.vistaAgenda.estado === 'Publicada' || this.vistaAgenda.estado === 'Disponible'),
             // Se pueden suspender agendas que estén en estado Disponible o Publicada...
             suspenderAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Disponible' || this.vistaAgenda.estado === 'Publicada'),
             // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
@@ -72,43 +70,17 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         console.log(this.vistaBotones);
     }
 
+    // Botón editar agenda
     editarAgenda(agenda) {
         debugger;
-        if (agenda.estado === 'Disponible') {
-            this.modelo.profesionales = agenda.profesionales;
-            this.modelo.espacioFisico = agenda.espacioFisico;
-
-            this.showEditarAgenda = true;
+        if (agenda.estado === 'Disponible' || agenda.estado === 'Publicada') {
+            this.editarAgendaEmit.emit(this.vistaAgenda);
         } else if (agenda.estado === 'Planificacion') {
             this.editarAgendaEmit.emit(this.vistaAgenda);
         }
     }
 
-    guardarAgenda(agenda: IAgenda) {
-        let profesional = this.modelo.profesionales;
-        let espacioFisico = this.modelo.espacioFisico;
-
-        let patch = {
-            'op': 'editarAgenda',
-            'profesional': profesional,
-            'espacioFisico': espacioFisico
-        };
-
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.vistaAux = this.modelo = resultado;
-
-            this.showEditarAgenda = false;
-
-            // alert('La agenda se guardó correctamente ');
-            this.plex.alert('La agenda se guardó correctamente ');
-        });
-    }
-
-    cancelar() {
-        this.showEditarAgenda = false;
-        this.showVistaAgendas = true;
-    }
-
+    // Botones actualizar estado
     actualizarEstado(agenda: IAgenda, estado) {
         let patch = {
             'op': estado,
@@ -123,16 +95,16 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Botón clonar
     clonarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
         this.clonarEmit.emit(this.modelo);
     }
 
-    loadProfesionales(event) {
-        this.servicioProfesional.get({}).subscribe(event.callback);
+
+    cancelar() {
+        this.showEditarAgenda = false;
+        this.showVistaAgendas = true;
     }
 
-    loadEspacios(event) {
-        this.servicioEspacioFisico.get({}).subscribe(event.callback);
-    }
 }

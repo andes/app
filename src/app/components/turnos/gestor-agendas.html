@@ -1,4 +1,4 @@
-<form *ngIf="showGestorAgendas" [formGroup]="searchForm">
+<form *ngIf="autorizado && showGestorAgendas" [formGroup]="searchForm">
     <div class="row">
         <div class="col-9">
             <plex-box type="primary" class="header-nav">
@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tr *ngFor="let agenda of agendas; let i = index" (click)="verAgenda(agenda, $event)" class="row"  style="cursor: pointer; pointer-events: all">
-                            <td class="col">
+                            <td class="col-1">
                                 <i *ngIf="(agenda.agendaSeleccionada == true) && (agenda.estado != 'Suspendida')" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agenda.agendaSeleccionada}"></i>
                                 <i *ngIf="(agenda.agendaSeleccionada == false) && (agenda.estado != 'Suspendida')" class="mdi mdi-checkbox-blank-circle-outline"></i>
                                 <i *ngIf="(agenda.agendaSeleccionada == true) && (agenda.estado == 'Suspendida')" class="mdi mdi-mdi mdi-power" [ngClass]="{'text-danger danger': agenda.agendaSeleccionada}"></i>
@@ -73,10 +73,15 @@
 
         </div>
         <div class="col-3">
-            <plex-box title="Lateral" type="primary">
-                <div type="info" class="col-sm-4" *ngIf="showTurnos">
+            <plex-box type="primary">
+                <div *ngIf="showTurnos" type="info">
                     <div class="clear"></div>
                     <turnos [ag]="ag" (reasignaTurno)="reasignaTurno($event)"></turnos>
+                </div>
+
+                <div *ngIf="showEditarAgendaPanel" type="info">
+                    <div class="clear"></div>
+                    <panel-agenda [editaAgendaPanel]="vistaAgenda"></panel-agenda>
                 </div>
             </plex-box>
         </div>
@@ -88,4 +93,4 @@
 </form>
 <clonar-agenda *ngIf="showClonar" [agenda]="modelo" (cancelaClonar)="cancelaClonar($event)"></clonar-agenda>
 <dar-turnos *ngIf="showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
-<agenda *ngIf="showEditarAgenda" [editaAgenda]="vistaAgenda" (cancelarEditarAgendaEmit)="cancelarEditarAgendaEmit($event)"></agenda>
+<agenda *ngIf="showEditarAgenda" [editaAgenda]="vistaAgenda" (cancelaEditar)="cancelaEditar($event)"></agenda>

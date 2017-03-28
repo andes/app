@@ -1,10 +1,10 @@
-<form *ngIf="autorizado">
+<form *ngIf="autorizado && showAgenda">
   <div class="row">
     <div class="col-12">
       <plex-box type="primary">
         <header class="btn-group float-right">
         </header>
-        <div class="row" *ngIf="showAgenda">
+        <div class="row">
           <div class="col-md-5">
             <plex-box type="success" title="Agenda">
               <div class="row">
@@ -248,21 +248,21 @@
 
     <plex-box type="footer">
       <div class="float-left">
-        <plex-button icon="magnify" label="Buscar" (click)="cargar()" title="Buscar">
-        </plex-button>
+        
       </div>
       <div class="float-right">
-        <plex-button *ngIf="alertas.length>0" disabled=true icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)"
+        <plex-button *ngIf="alertas.length>0" disabled="true" icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)"
           title="Guardar">
         </plex-button>
         <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" validateForm="true" type="primary" (click)="onSave($event, false)" title="Guardar">
         </plex-button>
         <plex-button icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
         </plex-button>
-        <plex-button icon="close-circle-outline" label="Cancelar" (click)="onCancel(modelo)">
+        <plex-button icon="close-circle-outline" label="Cancelar" (click)="cancelar(modelo)">
         </plex-button>
       </div>
 
     </plex-box>
   </div>
 </form>
+<gestor-agendas *ngIf="showGestorAgendas"></gestor-agendas>

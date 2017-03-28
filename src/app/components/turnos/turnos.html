@@ -47,7 +47,7 @@
                         <div class="col-md-5" *ngIf="ag.estado == 'Suspendida'">
                             <a class="hover" (click)="enviarSMS()"><i title="Enviar SMS" class="mdi mdi-message-draw"></i></a>
                             <a class="hover" (click)="agregarPacienteListaEspera(ag)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-key"></i></a>
-                            <plex-bool name="seleccinar" [(ngModel)]="selectAll"></plex-bool>
+                            <plex-bool name="seleccionar" [(ngModel)]="selectAll"></plex-bool>
                             <!--<a class="hover" (click)="reasignarTurnosMasivo()"><i title="Reasignar Turno Masivo" class="mdi mdi-rotate-right"></i></a>-->
                         </div>
                     </td>

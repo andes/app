@@ -29,7 +29,7 @@ export class AgendaComponent implements OnInit {
         return this._editarAgenda;
     }
 
-    @Output() data: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
+    @Output() cancelaEditar = new EventEmitter<boolean>();
 
     public modelo: any = {};
     public bloqueActivo: Number = 0;
@@ -41,6 +41,7 @@ export class AgendaComponent implements OnInit {
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
+    showGestorAgendas = false;
     public hoy = moment().startOf('day');
 
     constructor(
@@ -53,7 +54,9 @@ export class AgendaComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
+
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
@@ -492,14 +495,12 @@ export class AgendaComponent implements OnInit {
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
-                > bloque.cantidadTurnos) {
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
-                < bloque.cantidadTurnos) {
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                 const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
                 this.alertas.push(alerta);
@@ -675,9 +676,14 @@ export class AgendaComponent implements OnInit {
         }
     }
 
-    onCancel(agenda) {
-        this.router.navigate(['/inicio']);
-        return false;
+    cancelar(agenda) {
+
+        this.cancelaEditar.emit(true);
+
+        this.showGestorAgendas = true;
+        this.showAgenda = false;
+        // this.router.navigate(['/inicio']);
+        // return false;
     }
 
     onReturn(agenda: IAgenda): void {

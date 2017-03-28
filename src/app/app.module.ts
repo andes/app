@@ -83,8 +83,8 @@ import { LiberarTurnoComponent } from './components/turnos/liberar-turno.compone
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
-
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+import { PanelAgendaComponent } from './components/turnos/panel-agenda.component';
 
 // Estos componentes utilizan ng-prime y deben ser actualizados
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
@@ -219,6 +219,7 @@ import { routing, appRoutingProviders } from './app.routing';
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
+
 // Main module
 @NgModule({
   imports: [
@@ -247,6 +248,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
+    PanelAgendaComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

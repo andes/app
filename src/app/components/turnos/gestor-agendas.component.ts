@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
@@ -11,11 +12,14 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import * as moment from 'moment';
 
 @Component({
+    selector: 'gestor-agendas',
     templateUrl: 'gestor-agendas.html',
     providers: [GestorAgendasService]
 })
 
 export class GestorAgendasComponent implements OnInit {
+
+    public autorizado = false;
 
     public agendas: any = [];
     public agenda: any = {};
@@ -29,6 +33,7 @@ export class GestorAgendasComponent implements OnInit {
     public showClonar: Boolean = false;
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
+    public showEditarAgendaPanel: Boolean = false;
 
     public modelo: any = {};
 
@@ -43,9 +48,12 @@ export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService) { }
+        public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService,
+        public auth: Auth) { }
 
     ngOnInit() {
+
+        this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
 
         // Por defecto cargar/mostrar agendas de hoy
         this.loadAgendas();
@@ -111,6 +119,21 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = false;
     }
 
+    // Cancelar la edición de una Agenda completa
+    cancelaEditar() {
+        debugger;
+        this.showGestorAgendas = true;
+        this.showEditarAgenda = false;
+    }
+
+    // Cancelar editar opcionales de Agenda en panel derecho
+    // (espacioFisico y profesional)
+    cancelaEditarPanel() {
+        debugger;
+        this.showGestorAgendas = true;
+        this.showEditarAgenda = false;
+    }
+
     reasignaTurno(reasTurno) {
         debugger;
         this.reasignar = reasTurno;
@@ -119,18 +142,21 @@ export class GestorAgendasComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
+
     editarAgenda(agenda) {
         debugger;
+
         this.editaAgenda = agenda;
 
-        this.showGestorAgendas = false;
-        this.showEditarAgenda = true;
-    }
-
-    cancelarEditarAgendaEmit() {
-        debugger;
-        this.showGestorAgendas = true;
-        this.showEditarAgenda = false;
+        if ( this.editaAgenda.estado === 'Planificacion' ){
+            this.showGestorAgendas = false;
+            this.showEditarAgendaPanel = false;
+            this.showEditarAgenda = true;
+        } else {
+            this.showGestorAgendas = true;
+            this.showEditarAgendaPanel = true;
+            this.showEditarAgenda = false;
+        }
     }
 
     loadAgendas() {
@@ -206,7 +232,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.agenda = agenda;
  
-        this.showTurnos = true;
+        // this.showTurnos = true;
         this.showVistaAgendas = true;
 
     }
