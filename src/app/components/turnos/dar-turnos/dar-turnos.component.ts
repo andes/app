@@ -45,6 +45,7 @@ export class DarTurnosComponent implements OnInit {
         profesional: null,
     };
 
+
     public estadoT: Estado;
     private turno: ITurno;
     private bloque: IBloque;
@@ -60,6 +61,8 @@ export class DarTurnosComponent implements OnInit {
     private turnoTipoPrestacion: any = {};
     countBloques: any[];
     countTurnos: any = {};
+
+    ultimosTurnos: any[];
 
     indice: number = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -86,7 +89,7 @@ export class DarTurnosComponent implements OnInit {
     pacientesSearch = false;
     showDarTurnos = true;
     cambioTelefono = false;
-    infoPaciente = false;
+    infoPaciente = true;
 
     tipoTurno: string;
     // tiposTurnosSelect: any[];
@@ -114,6 +117,7 @@ export class DarTurnosComponent implements OnInit {
         // Fresh start
         // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
+        this.getUltimosTurnos();
 
     }
 
@@ -463,6 +467,38 @@ export class DarTurnosComponent implements OnInit {
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
+    getUltimosTurnos() {
+        debugger;
+        let ultimosTurnos = [];
+        this.serviceAgenda.find(this.paciente.id).subscribe(agendas => {
+            console.log('AGENDAS', agendas)
+            debugger;
+            agendas.forEach((agenda, indexAgenda) => {
+                debugger;
+                agenda.bloques.forEach((bloque, indexBloque) => {
+                    debugger;
+                    bloque.turnos.forEach((turno, indexTurno) => {
+                        if (turno.paciente) {
+                            if (turno.paciente.id === this.paciente.id) {
+                                ultimosTurnos.push({
+                                    tipoPrestacion: turno.tipoPrestacion.nombre,
+                                    horaInicio: moment(turno.horaInicio).format('L'),
+                                    organizacion: agenda.organizacion.nombre
+                                });
+
+                            }
+                        }
+                        debugger;
+                    });
+                });
+            });
+        });
+        console.log('ULTIMOS TURNOS', ultimosTurnos);
+        this.ultimosTurnos = ultimosTurnos;
+    }
+
+
+
     /**
      *
      */
@@ -504,6 +540,7 @@ export class DarTurnosComponent implements OnInit {
                 };
 
                 let operacion: Observable<any>;
+                debugger;
                 operacion = this.serviceTurno.save(datosTurno);
                 operacion.subscribe(resultado => {
                     this.estadoT = 'noSeleccionada';

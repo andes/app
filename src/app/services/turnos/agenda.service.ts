@@ -10,6 +10,10 @@ export class AgendaService {
 
     constructor(private server: Server) { }
 
+    find(idPaciente: String): Observable<IAgenda[]> {
+        return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
+    }
+
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
     }
