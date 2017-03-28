@@ -234,7 +234,7 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-12" *ngIf="showBuscarAgendas">
+        <div class="col-sm-12" *ngIf="!showBuscarAgendas">
           <div class="panel panel-default">
             <div class="clear"></div>
             <buscar-agendas (selected)='onReturn($event)'></buscar-agendas>

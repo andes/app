@@ -245,8 +245,8 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    crearAgenda() {
-        this.router.navigate(['./agenda']);
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
         return false;
     }
 

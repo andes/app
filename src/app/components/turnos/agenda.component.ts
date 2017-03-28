@@ -588,8 +588,6 @@ export class AgendaComponent implements OnInit {
                 delete this.modelo.espacioFisico.$order;
             }
 
-            // [andrrr]: TODO: debe setear "Planificacion"
-            this.modelo.estado = 'Disponible';
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
 

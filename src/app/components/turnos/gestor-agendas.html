@@ -66,7 +66,7 @@
                             </template>
                         </tr>
                     </table>
-                    {{ agendasSeleccionadas.length | json }}
+                    <!--{{ agendasSeleccionadas.length | json }}-->
                 </div>
                 
             </plex-box>
@@ -88,7 +88,8 @@
     </div>
 
     <plex-box type="footer">
-        <plex-button type="primary" class="float-left" icon="mdi mdi-plus-box" label="Crear Agenda" (click)="crearAgenda(agenda)"></plex-button>
+        <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear Agenda" (click)="redirect('agenda')"></plex-button>
+        <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="redirect('turnos')"></plex-button>
     </plex-box>
 </form>
 <clonar-agenda *ngIf="showClonar" [agenda]="modelo" (cancelaClonar)="cancelaClonar($event)"></clonar-agenda>
