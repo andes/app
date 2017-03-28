@@ -474,7 +474,7 @@ export class DarTurnosComponent implements OnInit {
         this.serviceAgenda.find(this.paciente.id).subscribe(agendas => {
             console.log('AGENDAS', agendas)
             debugger;
-            agendas.forEach((agenda) => {
+            agendas.forEach((agenda, indexAgenda) => {
                 debugger;
                 agenda.bloques.forEach((bloque, indexBloque) => {
                     debugger;
@@ -483,9 +483,10 @@ export class DarTurnosComponent implements OnInit {
                             if (turno.paciente.id === this.paciente.id) {
                                 ultimosTurnos.push({
                                     tipoPrestacion: turno.tipoPrestacion.nombre,
-                                    horaInicio: turno.horaInicio
+                                    horaInicio: moment(turno.horaInicio).format('L'),
+                                    organizacion: agenda.organizacion.nombre
                                 });
-                                
+
                             }
                         }
                         debugger;
@@ -493,7 +494,7 @@ export class DarTurnosComponent implements OnInit {
                 });
             });
         });
-        console.log('ULTIMOS TURNOS',ultimosTurnos);
+        console.log('ULTIMOS TURNOS', ultimosTurnos);
         this.ultimosTurnos = ultimosTurnos;
     }
 

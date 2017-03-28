@@ -8,11 +8,11 @@ export interface IAgenda {
     tipoPrestaciones: ITipoPrestacion[];
     // profesionales: IProfesional[];
     profesionales: [{
-             id: String,
-             nombre: String,
-             apellido: String
+        id: String,
+        nombre: String,
+        apellido: String
     }];
-    espacioFisico:  {
+    espacioFisico: {
         id: String,
         nombre: String
     };
@@ -22,4 +22,8 @@ export interface IAgenda {
     bloques: IBloque[];
     estado: String;
     turnosDisponibles: number;
+    organizacion: {
+        id: String,
+        nombre: String
+    }
 }

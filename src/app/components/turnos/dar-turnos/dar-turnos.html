@@ -328,16 +328,18 @@
 
       </plex-tab>
       <plex-tab icon="account">
-        <plex-box title="Ultimos Turnos">
+        <!--<plex-box title="Ultimos Turnos">-->
               <div class="list-group">
-                <a *ngFor="let turno of ultimosTurnos;">
+                <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
                   <div class="row">
-                    <div class="col col-md-6"><label>Tipo de Prestación: &nbsp;</label> <span>{{turno.tipoPrestacion}} </span><br></div>
+                    <div class="col col-md-12"><label>Lugar: &nbsp;</label> <span>{{turno.organizacion}} </span><br></div>
+                    <div class="col col-md-12"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>
+                    <div class="col col-md-12"><label>Tipo de Prestación: &nbsp;</label> <span>{{turno.tipoPrestacion}} </span><br></div>
                     <!--<div class="col col-md-6"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>-->
                   </div>
                 </a>
               </div>
-            </plex-box>
+            <!--</plex-box>-->
       </plex-tab>
     </plex-tabs>
   </div>
