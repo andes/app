@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
     templateUrl: 'vista-agenda.html'
 })
 
-export class VistaAgendaComponent implements OnInit {
+export class VistaAgendaComponent implements OnInit, OnDestroy {
 
     showVistaAgendas: Boolean = true;
     showEditarAgenda: Boolean = false;
@@ -24,53 +24,52 @@ export class VistaAgendaComponent implements OnInit {
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
 
     public modelo: any = {};
+    public vistaAux: any = {};
+    public vistaBotones: any = {};
 
     subscription: Subscription;
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router, private gestorAgendasService: GestorAgendasService) {
-
-        this.subscription = gestorAgendasService.agendas$.subscribe(
-            agendas => {
-                this.actualizarBotones(this.vistaAgenda);
-                this.vistaAgenda = agendas;
-            });
+        public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
     }
 
     ngOnInit() {
+        console.log('this.vistaAgenda: ', this.vistaAgenda);
+
         if (this.vistaAgenda) {
-            this.actualizarBotones(this.vistaAgenda);
+            this.actualizarBotones();
         }
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        // this.subscription.unsubscribe();
     }
 
-    actualizarBotones(vistaAgenda: any) {
-        debugger;
+    actualizarBotones() {
 
-        vistaAgenda.botones = {
-            editarAgenda: (vistaAgenda.agendasSeleccionadas.length === 1) && (vistaAgenda.estado !== 'Suspendida'),
-            suspenderAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
-            cerrarAgenda: vistaAgenda.agendasSeleccionadas === 1,
-            publicarAgenda: (vistaAgenda.agendasSeleccionadas.length > 0) && (vistaAgenda.estado !== 'Suspendida'),
-            clonarAgenda: (vistaAgenda.agendasSeleccionadas === 1) && (vistaAgenda.estado !== 'Suspendida'),
+        // Muestra/oculta botones según una combinación de criterios
+        // TODO: Pausada
+        this.vistaBotones = {
+            // Para editar una agenda, tiene que estar seleccionada sólo una, y en estado "Planificación"
+            editarAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Planificacion'),
+            // Se pueden suspender agendas que estén en estado Disponible o Publicada...
+            suspenderAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Disponible' || this.vistaAgenda.estado === 'Publicada'),
+            // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
+            pasarDisponibleAgenda: (this.vistaAgenda) && this.vistaAgenda.estado === 'Planificacion',
+            // Se pueden publicar todas las agendas que estén en estado Planificacion o Disponible 
+            publicarAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado === 'Planificacion' || this.vistaAgenda.estado === 'Disponible'),
+            // Se pueden cambiar a estado Pausada todas las agendas que no estén en estado Planificacion
+            pausarAgenda: (this.vistaAgenda) && (this.vistaAgenda.estado !== 'Planificacion' && this.vistaAgenda.estado !== 'Pausada'),
+            // Se puede cerrar cualquier agenda [TODO: ver qué onda]
+            cerrarAgenda: false,
+
+            // Se pueden clonar todas las agendas, ya que sólo se usa como un blueprint
+            clonarAgenda: (this.vistaAgenda),
+            // En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play"
+            // Se puede pausar más de una
         };
-    }
 
-    suspenderAgenda(agenda) {
-
-        let patch = {
-            'op': 'suspenderAgenda',
-            'estado': 'Suspendida'
-        };
-
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            agenda.estado = resultado.estado;
-
-            this.plex.alert('La agenda paso a Estado: ' + resultado.estado);
-        });
+        console.log(this.vistaBotones);
     }
 
     editarAgenda(agenda) {
@@ -81,7 +80,7 @@ export class VistaAgendaComponent implements OnInit {
 
             this.showEditarAgenda = true;
         } else if (agenda.estado === 'Planificacion') {
-            this.editarAgendaEmit.emit(agenda);
+            this.editarAgendaEmit.emit(this.vistaAgenda);
         }
     }
 
@@ -96,35 +95,36 @@ export class VistaAgendaComponent implements OnInit {
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.vistaAgenda = resultado;
-            this.modelo = resultado;
+            this.vistaAux = this.modelo = resultado;
 
             this.showEditarAgenda = false;
 
+            // alert('La agenda se guardó correctamente ');
             this.plex.alert('La agenda se guardó correctamente ');
         });
     }
 
     cancelar() {
         this.showEditarAgenda = false;
+        this.showVistaAgendas = true;
     }
 
-    publicarAgenda(agenda: IAgenda) {
+    actualizarEstado(agenda: IAgenda, estado) {
         let patch = {
-            'op': 'publicarAgenda',
-            'estado': 'Publicada'
+            'op': estado,
+            'estado': estado
         };
 
         this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.vistaAgenda = resultado;
+            this.vistaAux = resultado;
 
-            this.plex.alert('La agenda se publicó correctamente ');
+            this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : this.vistaAux.prePausada));
+            // alert('La agenda cambió el estado a ' + estado);
         });
     }
 
     clonarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
-
         this.clonarEmit.emit(this.modelo);
     }
 

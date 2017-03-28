@@ -14,7 +14,6 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { PrestacionService } from './../../services/turnos/prestacion.service';
 
 @Component({
     selector: 'agenda',
@@ -57,10 +56,11 @@ export class AgendaComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
+            this.bloqueActivo = 0;
         } else {
             this.modelo.bloques = [];
+            this.bloqueActivo = -1;
         }
-        this.bloqueActivo = -1;
     }
 
     cargarAgenda(agenda: IAgenda) {
@@ -154,6 +154,7 @@ export class AgendaComponent implements OnInit {
     }
 
     activarBloque(indice: number) {
+        debugger;
         this.bloqueActivo = indice;
         this.elementoActivo = this.modelo.bloques[indice];
     }
@@ -562,7 +563,9 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
+
         debugger;
+
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
@@ -575,6 +578,7 @@ export class AgendaComponent implements OnInit {
                     delete prestacion.$order;
                 });
             }
+
             if ( this.modelo.profesionales ) {
                 this.modelo.profesionales.forEach(function(prestacion, key){
                     delete prestacion.$order;
@@ -647,8 +651,8 @@ export class AgendaComponent implements OnInit {
                 });
             });
 
+            console.log('this.modelo: ', this.modelo);
             espOperation = this.ServicioAgenda.save(this.modelo);
-            debugger;
             espOperation.subscribe(resultado => {
                 console.log(resultado);
                 alert('La agenda se guardo correctamente');

@@ -21,5 +21,7 @@ export interface IAgenda {
     intercalar: Boolean;
     bloques: IBloque[];
     estado: String;
+    prePausada: String;
     turnosDisponibles: number;
+    estadosAgendas: String[];
 }

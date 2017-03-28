@@ -10,7 +10,6 @@ export class EspacioFisicoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<IEspacioFisico[]> {
-        console.log('aca ', params);
         return this.server.get(this.espacioFisicoUrl, {params: params, showError: true});
     }
 
