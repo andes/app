@@ -43,7 +43,6 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
-import { PrestacionService } from './services/turnos/prestacion.service';
 import { AgendaService } from './services/turnos/agenda.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
@@ -269,7 +268,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BarrioService,
     PacienteService,
     FinanciadorService,
-    PrestacionService,
     appRoutingProviders,
     ConfigPrestacionService,
     AgendaComponent,

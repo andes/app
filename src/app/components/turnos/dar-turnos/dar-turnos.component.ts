@@ -1,4 +1,3 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
 
 import { Auth } from '@andes/auth';
@@ -16,7 +15,7 @@ moment.locale('en');
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-import { PrestacionService } from '../../../services/turnos/prestacion.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
@@ -96,7 +95,7 @@ export class DarTurnosComponent implements OnInit {
     // tiposTurnosSelect: any[];
     tiposTurnosSelect: String;
 
-    constructor(public servicioPrestacion: PrestacionService,
+    constructor(
         public serviceProfesional: ProfesionalService,
         public serviceAgenda: AgendaService,
         public serviceListaEspera: ListaEsperaService,
