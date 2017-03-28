@@ -109,6 +109,7 @@ export class DarTurnosComponent implements OnInit {
     ngOnInit() {
 
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        console.log('Autorizado: ', this.autorizado);
 
         if (this._reasignaTurnos) {
             this.paciente = this._reasignaTurnos.paciente;
@@ -123,11 +124,21 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
+        // this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+        console.log('PERMISOS TIPOPRESTACIONES: ', this.permisos);
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
+        });
     }
 
     loadProfesionales(event) {
         this.serviceProfesional.get({}).subscribe(event.callback);
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:profesional:?');
+        console.log('PERMISOS PROFESIONALES: ', this.permisos);
+        this.serviceProfesional.get({}).subscribe((data) => {
+            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
+        });
     }
 
     filtrar() {
@@ -157,7 +168,8 @@ export class DarTurnosComponent implements OnInit {
         // 2) Permisos
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
 
-        console.log(this.permisos);
+        // this.permisos = this.auth.getPermissions('turnos:darTurnos:organizacion:?');
+        console.log('PERMISOS: ', this.permisos);
 
         let params: any = {};
         this.estadoT = 'noSeleccionada';
@@ -178,14 +190,17 @@ export class DarTurnosComponent implements OnInit {
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
 
-            // Mostrar sólo las agendas a partir de hoy en adelante
             params = {
-                fechaDesde: new Date().setHours(0, 0, 0, 0)
+                // Mostrar sólo las agendas a partir de hoy en adelante
+                fechaDesde: new Date().setHours(0, 0, 0, 0),
                 // tipoPrestacion: this.permisos
+                // Mostrar solo las agendas que correspondan a la organización del usuario logueado
+                organizacion: this.auth.organizacion._id
             };
 
         }
 
+        console.log('params:', params);
         // Traer las agendas
         this.serviceAgenda.get(params).subscribe(agendas => {
 
@@ -480,11 +495,13 @@ export class DarTurnosComponent implements OnInit {
                     debugger;
                     bloque.turnos.forEach((turno, indexTurno) => {
                         if (turno.paciente) {
+                            // TODO. agregar la condicion turno.asistencia
                             if (turno.paciente.id === this.paciente.id) {
                                 ultimosTurnos.push({
                                     tipoPrestacion: turno.tipoPrestacion.nombre,
                                     horaInicio: moment(turno.horaInicio).format('L'),
-                                    organizacion: agenda.organizacion.nombre
+                                    organizacion: agenda.organizacion.nombre,
+                                    profesionales: agenda.profesionales
                                 });
 
                             }

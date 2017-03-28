@@ -562,7 +562,7 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-        debugger;
+        // debugger;
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
@@ -648,7 +648,7 @@ export class AgendaComponent implements OnInit {
             });
 
             espOperation = this.ServicioAgenda.save(this.modelo);
-            debugger;
+            // debugger;
             espOperation.subscribe(resultado => {
                 console.log(resultado);
                 alert('La agenda se guardo correctamente');
