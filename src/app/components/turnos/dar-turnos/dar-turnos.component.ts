@@ -192,7 +192,7 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 // Mostrar sólo las agendas a partir de hoy en adelante
                 fechaDesde: new Date().setHours(0, 0, 0, 0),
-                // tipoPrestacion: this.permisos
+                tipoPrestaciones: this.permisos,
                 // Mostrar solo las agendas que correspondan a la organización del usuario logueado
                 organizacion: this.auth.organizacion._id
             };

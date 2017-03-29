@@ -22,7 +22,7 @@
   "dependencies": {
     "@andes/auth": "^0.2.3",
     "@andes/plex": "^1.0.7",
-    "@andes/shared": "^0.4.0",
+    "@andes/shared": "^0.4.1",
     "@angular/common": "2.4.8",
     "@angular/compiler": "2.4.8",
     "@angular/core": "2.4.8",
