@@ -275,8 +275,6 @@ export class AgendaComponent implements OnInit {
                 }
             });
         }
-        console.log('modelo ', this.modelo);
-        console.log('elementoActivo ', this.elementoActivo);
     }
 
     cambioHoraBloques(texto: String) {
@@ -321,47 +319,51 @@ export class AgendaComponent implements OnInit {
     }
 
     cambiaCantTipo(cual: String) {
-        switch (cual) {
-            case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'reservadoGestion':
-                this.elementoActivo.reservadoGestionPorc = Math.floor
-                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesionalPorc = Math.floor
-                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
-                break;
+        if (this.elementoActivo.cantidadTurnos) {
+            switch (cual) {
+                case 'accesoDirectoDelDia':
+                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
+                        ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'accesoDirectoProgramado':
+                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
+                        ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'reservadoGestion':
+                    this.elementoActivo.reservadoGestionPorc = Math.floor
+                        ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'reservadoProfesional':
+                    this.elementoActivo.reservadoProfesionalPorc = Math.floor
+                        ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+            }
+            this.validarTodo();
         }
-        this.validarTodo();
     }
 
     cambiaPorcentajeTipo(cual: String) {
-        switch (cual) {
-            case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDia = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramado = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'reservadoGestion':
-                this.elementoActivo.reservadoGestion = Math.floor
-                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesional = Math.floor
-                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
+        if (this.elementoActivo.cantidadTurnos) {
+            switch (cual) {
+                case 'accesoDirectoDelDia':
+                    this.elementoActivo.accesoDirectoDelDia = Math.floor
+                        ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'accesoDirectoProgramado':
+                    this.elementoActivo.accesoDirectoProgramado = Math.floor
+                        ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'reservadoGestion':
+                    this.elementoActivo.reservadoGestion = Math.floor
+                        ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'reservadoProfesional':
+                    this.elementoActivo.reservadoProfesional = Math.floor
+                        ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+            }
         }
-        this.validarTodo();
+        // this.validarTodo();
     }
 
     intercalar() {
@@ -571,19 +573,19 @@ export class AgendaComponent implements OnInit {
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Limpiar de bug selectize "$order", horrible todo esto :'(
-            if ( this.modelo.tipoPrestaciones ) {
-                this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
+            if (this.modelo.tipoPrestaciones) {
+                this.modelo.tipoPrestaciones.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
 
-            if ( this.modelo.profesionales ) {
-                this.modelo.profesionales.forEach(function(prestacion, key){
+            if (this.modelo.profesionales) {
+                this.modelo.profesionales.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
 
-            if ( this.modelo.espacioFisico ) {
+            if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
             }
 
@@ -608,16 +610,16 @@ export class AgendaComponent implements OnInit {
                     };
 
 
-                    if ( delDiaCount > 0 ) {
+                    if (delDiaCount > 0) {
                         turno.tipoTurno = 'delDia';
                         delDiaCount--;
-                    } else if ( programadoCount > 0 ) {
+                    } else if (programadoCount > 0) {
                         turno.tipoTurno = 'programado';
                         programadoCount--;
-                    } else if ( gestionCount > 0 ) {
+                    } else if (gestionCount > 0) {
                         turno.tipoTurno = 'gestion';
                         gestionCount--;
-                    } else if ( profesionalCount > 0 ) {
+                    } else if (profesionalCount > 0) {
                         turno.tipoTurno = 'profesional';
                         profesionalCount--;
                     }
