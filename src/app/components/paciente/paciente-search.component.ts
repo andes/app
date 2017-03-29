@@ -6,27 +6,36 @@ import { Server } from '@andes/shared';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 
+
 @Component({
   selector: 'pacientesSearch',
   templateUrl: 'paciente-search.html',
   styleUrls: ['paciente-search.css']
 })
-export class PacienteSearchComponent {
+export class PacienteSearchComponent implements OnInit {
   private timeoutHandle: number;
 
   // Propiedades públicas
   public busquedaAvanzada = false;
   public textoLibre: string = null;
   public resultado = null;
+  public pacientesSimilares = null;
   public seleccion = null;
   public esEscaneado = false;
   public loading = false;
   public cantPacientesValidados: number;
   public showCreateUpdate = false;
+  public mostrarNuevo = false;
+  public autoFocus: number = 0;
 
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+
+  public ngOnInit() {
+    this.autoFocus = this.autoFocus + 1;
+  }
+
 
   /**
    * Selecciona un paciente y emite el evento 'selected'
@@ -34,14 +43,19 @@ export class PacienteSearchComponent {
    * @private
    * @param {*} paciente Paciente para seleccionar
    */
-  private seleccionarPaciente(paciente: any) {
-    this.seleccion = paciente;
-
-    // Emite el evento sólo si el paciente está en la base de datos
-    if (paciente && paciente.id) {
+  public seleccionarPaciente(paciente: any) {
+    debugger;
+    if (paciente) {
+      this.seleccion = paciente;
+      this.selected.emit(paciente);
+      this.escaneado.emit(this.esEscaneado);
+    } else {
+      this.esEscaneado = false;
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     }
+    this.showCreateUpdate = true;
+
   }
 
   /**
@@ -120,6 +134,7 @@ export class PacienteSearchComponent {
    * Busca paciente cada vez que el campo de busca cambia su valor
    */
   public buscar() {
+    debugger;
     // Cancela la búsqueda anterior
     if (this.timeoutHandle) {
       window.clearTimeout(this.timeoutHandle);
@@ -127,6 +142,8 @@ export class PacienteSearchComponent {
 
     // Limpia los resultados de la búsqueda anterior
     this.resultado = null;
+    this.pacientesSimilares = null;
+    this.mostrarNuevo = false;
 
     // Controla el scanner
     if (!this.controlarScanner()) {
@@ -148,19 +165,53 @@ export class PacienteSearchComponent {
           // Consulta API
           this.pacienteService.get({
             type: 'simplequery',
-            apellido: pacienteEscaneado.apellido,
-            nombre: pacienteEscaneado.nombre,
-            documento: pacienteEscaneado.documento,
-            sexo: pacienteEscaneado.sexo
+            apellido: pacienteEscaneado.apellido.toString(),
+            nombre: pacienteEscaneado.nombre.toString(),
+            documento: pacienteEscaneado.documento.toString(),
+            sexo: pacienteEscaneado.sexo.toString(),
+            escaneado: true
           }).subscribe(resultado => {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = true;
-            this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
-            this.showCreateUpdate = true;
+            // Encontramos un matcheo al 100%
+            if (resultado.length) {
+              this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
+              this.showCreateUpdate = true;
+            } else {
+              // Realizamos una busqueda por Suggest
+              this.pacienteService.get({
+                type: 'suggest',
+                claveBlocking: 'documento',
+                percentage: true,
+                apellido: pacienteEscaneado.apellido.toString(),
+                nombre: pacienteEscaneado.nombre.toString(),
+                documento: pacienteEscaneado.documento.toString(),
+                sexo: pacienteEscaneado.sexo.toString(),
+                fechaNacimiento: pacienteEscaneado.fechaNacimiento,
+                escaneado: true
+              }).subscribe(resultSuggest => {
+                this.pacientesSimilares = resultSuggest;
+                if (this.pacientesSimilares.length) {
+                  this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto');
+                  if (this.pacientesSimilares[0].match >= 0.90) {
+                    this.mostrarNuevo = false;
+                  } else {
+                    this.mostrarNuevo = true;
+                  }
+                } else {
+                  this.pacientesSimilares = null;
+                  this.seleccionarPaciente(pacienteEscaneado);
+                }
+              });
+
+            }
+
           }, (err) => {
             this.loading = false;
           });
+
+
         } else {
           // Si no es un documento escaneado, hace una búsqueda multimatch
           this.pacienteService.get({
@@ -170,7 +221,7 @@ export class PacienteSearchComponent {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            this.seleccionarPaciente(resultado.length ? resultado[0] : null);
+            this.mostrarNuevo = true;
           }, (err) => {
             this.loading = false;
           });
@@ -179,8 +230,13 @@ export class PacienteSearchComponent {
     }
   }
 
-  afterCreateUpdate() {
+  afterCreateUpdate(paciente) {
     this.showCreateUpdate = false;
-    this.resultado = null;
+    this.seleccion = null;
+    this.autoFocus = this.autoFocus + 1;
+    this.textoLibre = '';
+    if (paciente) {
+      this.resultado = [paciente];
+    }
   }
 }
