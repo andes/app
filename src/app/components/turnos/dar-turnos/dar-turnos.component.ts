@@ -86,8 +86,8 @@ export class DarTurnosComponent implements OnInit {
         }]
     };
 
-    pacientesSearch = false;
-    showDarTurnos = true;
+    pacientesSearch = true;
+    showDarTurnos = false;
     cambioTelefono = false;
     infoPaciente = true;
 
@@ -612,6 +612,7 @@ export class DarTurnosComponent implements OnInit {
         this.paciente = pacientes;
         this.showDarTurnos = true;
         this.infoPaciente = true;
+        this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
     }
 
