@@ -118,7 +118,7 @@ export class DarTurnosComponent implements OnInit {
         // Fresh start
         // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
-        this.getUltimosTurnos();
+        
 
     }
 
@@ -494,6 +494,7 @@ export class DarTurnosComponent implements OnInit {
                                 ultimosTurnos.push({
                                     tipoPrestacion: turno.tipoPrestacion.nombre,
                                     horaInicio: moment(turno.horaInicio).format('L'),
+                                    estado:turno.estado,
                                     organizacion: agenda.organizacion.nombre,
                                     profesionales: agenda.profesionales
                                 });
@@ -609,6 +610,7 @@ export class DarTurnosComponent implements OnInit {
         this.infoPaciente = true;
         this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
+        this.getUltimosTurnos();
     }
 
     onCancel() {

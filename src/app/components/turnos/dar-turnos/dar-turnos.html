@@ -329,8 +329,9 @@
             <div class="row">
               <div class="col col-md-12"><label>Lugar: &nbsp;</label> <span>{{turno.organizacion}} </span><br></div>
               <div class="col col-md-12"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>
+              <div class="col col-md-12"><label>Estado: &nbsp;</label> <span>{{turno.estado}} </span><br></div>
               <div class="col col-md-12"><label>Tipo de Prestación: &nbsp;</label> <span>{{turno.tipoPrestacion}} </span><br></div>
-              <div class="col col-md-6" *ngFor="let profesional of turno.profesionales"><label>Fecha: &nbsp;
+              <div class="col col-md-12" *ngFor="let profesional of turno.profesionales"><label>Fecha: &nbsp;
                 </label> <span>{{profesional.nombre}} {{profesional.apellido}} </span><br>
               </div>
             </div>
