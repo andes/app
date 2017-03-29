@@ -3,7 +3,7 @@
     <div class="col">
         <plex-box type="primary">
             <header>
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" prefix="💳" placeholder="Escanee un DNI digital para registrar al paciente">
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="💳" placeholder="Escanee un DNI digital para registrar al paciente">
                 </plex-text>
             </header>
 
@@ -11,14 +11,20 @@
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
             <!--Alerta si no se encontró ningun paciente-->
-            <div *ngIf="resultado && !resultado.length" class="alert alert-warning">
+            <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
             </div>
 
-            <!--Tabla de resultados-->
+            <!--Alerta si se encontraro pacientes con alto % de macheo -->
+            <div *ngIf="pacientesSimilares && pacientesSimilares.length && !mostrarNuevo" class="alert alert-warning">
+                <i class="mdi mdi-account-alert"></i> Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto
+            </div>
+
+            <!--Tabla de resultados por SimpleQuery -->
             <table *ngIf="resultado && resultado.length" class="table table-striped">
                 <thead>
                     <tr>
+                        <th>&nbsp;</th>
                         <th>Documento</th>
                         <th>Apellido</th>
                         <th>Nombre</th>
@@ -27,7 +33,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionarPaciente(paciente)">
+                    <tr class="hover" *ngFor="let paciente of resultado">
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(paciente)"></plex-button>
+                        </td>
                         <td>{{paciente.documento}}</td>
                         <td>{{paciente.apellido}}</td>
                         <td>{{paciente.nombre}}</td>
@@ -36,6 +45,35 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!--Tabla de resultados por Suggest -->
+            <table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Documento</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>% Similitud</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let elem of pacientesSimilares">
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
+                        </td>
+                        <td>{{elem.paciente.documento}}</td>
+                        <td>{{elem.paciente.apellido}}</td>
+                        <td>{{elem.paciente.nombre}}</td>
+                        <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                        <td>{{elem.paciente.sexo}}</td>
+                        <td>{{elem.match * 100}} %</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </plex-box>
     </div>
     <!--Panel lateral-->
@@ -49,9 +87,9 @@
         </plex-box>
     </div>
 </div>
-<!--<plex-box type="footer">
-    <plex-button *ngIf="nuevoPaciente" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="showcreate = !showcreate"></plex-button>
-</plex-box>-->
+<plex-box type="footer" *ngIf="mostrarNuevo">
+    <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(null)"></plex-button>
+</plex-box>
 
 <!--Componente de Alta/Modificación-->
 <div *ngIf="showCreateUpdate">
