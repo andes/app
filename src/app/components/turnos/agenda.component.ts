@@ -14,7 +14,6 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
-import { PrestacionService } from './../../services/turnos/prestacion.service';
 
 @Component({
     selector: 'agenda',
@@ -30,7 +29,7 @@ export class AgendaComponent implements OnInit {
         return this._editarAgenda;
     }
 
-    @Output() data: EventEmitter<IAgenda> = new EventEmitter<IAgenda>();
+    @Output() cancelaEditar = new EventEmitter<boolean>();
 
     public modelo: any = {};
     public bloqueActivo: Number = 0;
@@ -42,6 +41,7 @@ export class AgendaComponent implements OnInit {
     showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
+    showGestorAgendas = false;
     public hoy = moment().startOf('day');
 
     constructor(
@@ -54,13 +54,16 @@ export class AgendaComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
+
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
+            this.bloqueActivo = 0;
         } else {
             this.modelo.bloques = [];
+            this.bloqueActivo = -1;
         }
-        this.bloqueActivo = -1;
     }
 
     cargarAgenda(agenda: IAgenda) {
@@ -154,6 +157,7 @@ export class AgendaComponent implements OnInit {
     }
 
     activarBloque(indice: number) {
+        debugger;
         this.bloqueActivo = indice;
         this.elementoActivo = this.modelo.bloques[indice];
     }
@@ -491,14 +495,12 @@ export class AgendaComponent implements OnInit {
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
-                > bloque.cantidadTurnos) {
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
                 this.alertas.push(alerta);
             }
 
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional)
-                < bloque.cantidadTurnos) {
+            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                 const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                 alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
                 this.alertas.push(alerta);
@@ -562,7 +564,7 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-        // debugger;
+
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
@@ -575,6 +577,7 @@ export class AgendaComponent implements OnInit {
                     delete prestacion.$order;
                 });
             }
+
             if ( this.modelo.profesionales ) {
                 this.modelo.profesionales.forEach(function(prestacion, key){
                     delete prestacion.$order;
@@ -585,8 +588,6 @@ export class AgendaComponent implements OnInit {
                 delete this.modelo.espacioFisico.$order;
             }
 
-            // [andrrr]: TODO: debe setear "Planificacion"
-            this.modelo.estado = 'Disponible';
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
 
@@ -647,8 +648,9 @@ export class AgendaComponent implements OnInit {
                 });
             });
 
+            console.log('this.modelo: ', this.modelo);
             espOperation = this.ServicioAgenda.save(this.modelo);
-            // debugger;
+
             espOperation.subscribe(resultado => {
                 console.log(resultado);
                 alert('La agenda se guardo correctamente');
@@ -671,9 +673,14 @@ export class AgendaComponent implements OnInit {
         }
     }
 
-    onCancel(agenda) {
-        this.router.navigate(['/inicio']);
-        return false;
+    cancelar(agenda) {
+
+        this.cancelaEditar.emit(true);
+
+        this.showGestorAgendas = true;
+        this.showAgenda = false;
+        // this.router.navigate(['/inicio']);
+        // return false;
     }
 
     onReturn(agenda: IAgenda): void {

@@ -218,9 +218,8 @@ export class ClonarAgendaComponent implements OnInit {
             },
             function () {
                 console.log('Completed');
-                alert('La agenda se clonó correctamente');
-                // TODO: ver pq no puedo usar el plex alert
-                // this.plex.alert('La agenda se clonó correctamente');
+                // alert('La agenda se clonó correctamente');
+                this.plex.alert('La agenda se clonó correctamente');
             }
         );
     }
