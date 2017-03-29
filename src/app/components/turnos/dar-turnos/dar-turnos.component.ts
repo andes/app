@@ -134,11 +134,6 @@ export class DarTurnosComponent implements OnInit {
 
     loadProfesionales(event) {
         this.serviceProfesional.get({}).subscribe(event.callback);
-        this.permisos = this.auth.getPermissions('turnos:darTurnos:profesional:?');
-        console.log('PERMISOS PROFESIONALES: ', this.permisos);
-        this.serviceProfesional.get({}).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
-        });
     }
 
     filtrar() {
