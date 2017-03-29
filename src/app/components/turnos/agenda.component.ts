@@ -184,24 +184,24 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        let confirma = confirm('Confirma que desea eliminar el bloque?');
-        if (confirma) {
-            this.modelo.bloques.splice(indice, 1);
-            this.bloqueActivo = -1;
-            this.validarTodo();
-        } else {
-            alert('no borra');
-        }
-        // this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
-        //     if (confirma) {
-        //         this.modelo.bloques.splice(indice, 1);
-        //         this.bloqueActivo = -1;
-        //         this.validarTodo();
-        //     }
-        // }
-        // ).catch(() => {
+        // let confirma = confirm('Confirma que desea eliminar el bloque?');
+        // if (confirma) {
+        //     this.modelo.bloques.splice(indice, 1);
+        //     this.bloqueActivo = -1;
+        //     this.validarTodo();
+        // } else {
         //     alert('no borra');
-        // });
+        // }
+        this.plex.confirm('¿Confirma que desea eliminar el bloque?').then((confirma) => {
+            if (confirma) {
+                this.modelo.bloques.splice(indice, 1);
+                this.bloqueActivo = -1;
+                this.validarTodo();
+            }
+        }
+        ).catch(() => {
+            alert('no borra');
+        });
     }
 
     compararBloques(fecha1, fecha2): number {
@@ -378,11 +378,11 @@ export class AgendaComponent implements OnInit {
         if (seleccion === 'simultaneos') {
             if (this.elementoActivo.citarPorBloque) {
                 console.log('acaa');
-                alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
+                this.plex.alert('No puede haber pacientes simultáneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
-        alert('y ahora??' + seleccion);
+        // alert('y ahora??' + seleccion);
     }
 
     calcularDuracion(inicio, fin, cantidad) {
@@ -655,23 +655,22 @@ export class AgendaComponent implements OnInit {
 
             espOperation.subscribe(resultado => {
                 console.log(resultado);
-                alert('La agenda se guardo correctamente');
-                if (clonar) {
-                    this.showClonar = true;
-                    this.showBuscarAgendas = false;
-                    this.showAgenda = false;
-                } else {
-                    // this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                    this.modelo = {
-                        fecha: null
-                    };
-                    this.bloqueActivo = -1;
-                    // });
-                }
+                // alert('La agenda se guardo correctamente');
+                this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
+                    if (clonar) {
+                        this.showClonar = true;
+                        this.showBuscarAgendas = false;
+                        this.showAgenda = false;
+                    } else {
+                        this.modelo = {
+                            fecha: null
+                        };
+                        this.bloqueActivo = -1;
+                    }
+                });
             });
         } else {
-            // TODO: Plex alert
-            alert('Debe completar los datos requeridos');
+            this.plex.alert('Debe completar los datos requeridos');
         }
     }
 
