@@ -237,6 +237,7 @@ export class PacienteSearchComponent implements OnInit {
     this.textoLibre = '';
     if (paciente) {
       this.resultado = [paciente];
+      this.seleccionarPaciente(paciente);
     }
   }
 }
