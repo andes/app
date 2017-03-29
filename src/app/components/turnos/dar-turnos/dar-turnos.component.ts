@@ -86,8 +86,8 @@ export class DarTurnosComponent implements OnInit {
         }]
     };
 
-    pacientesSearch = false;
-    showDarTurnos = true;
+    pacientesSearch = true;
+    showDarTurnos = false;
     cambioTelefono = false;
     infoPaciente = true;
 
@@ -192,7 +192,7 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 // Mostrar sólo las agendas a partir de hoy en adelante
                 fechaDesde: new Date().setHours(0, 0, 0, 0),
-                // tipoPrestacion: this.permisos
+                tipoPrestaciones: this.permisos,
                 // Mostrar solo las agendas que correspondan a la organización del usuario logueado
                 organizacion: this.auth.organizacion._id
             };
@@ -612,6 +612,7 @@ export class DarTurnosComponent implements OnInit {
         this.paciente = pacientes;
         this.showDarTurnos = true;
         this.infoPaciente = true;
+        this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
     }
 

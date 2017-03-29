@@ -8,4 +8,5 @@ export interface PacienteSearch {
     apellido?: string;
     sexo?: string;
     fechaNacimiento?: Date;
+    escaneado?: boolean;
 }
