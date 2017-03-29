@@ -232,6 +232,7 @@ export class PacienteSearchComponent implements OnInit {
 
   afterCreateUpdate(paciente) {
     this.showCreateUpdate = false;
+    this.seleccion = null;
     this.autoFocus = this.autoFocus + 1;
     this.textoLibre = '';
     if (paciente) {
