@@ -67,6 +67,7 @@ export class TurnosComponent implements OnInit {
                 this.actualizarBotones(this.turnos[x]);
             }
         }
+
     }
 
     agregarPaciente(turno) {
@@ -129,7 +130,9 @@ export class TurnosComponent implements OnInit {
         this.botones = {
 
             asistencias: (this.ag.estado !== 'Suspendida') && (this.estadoTurno === 'asignado'),
+
             darAsistencia: (!this.estadoAsistencia),
+
             sacarAsistencia: (this.estadoAsistencia),
 
             // lblTieneAsistencia: (this.ag.estado != 'Suspendida') && (turno.paciente) && (turno.asistencia),
@@ -140,7 +143,9 @@ export class TurnosComponent implements OnInit {
             tdLiberarTurno: (this.ag.estado !== 'Suspendida') && (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
 
             tdBloquearTurno: (this.ag.estado !== 'Suspendida') && (this.estadoTurno === 'disponible') || (this.estadoTurno === 'bloqueado'),
+
             bloquearTurno: (this.estadoTurno === 'disponible'),
+
             desbloquearTurno: (this.estadoTurno === 'bloqueado'),
 
             tdReasignarTurno: (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
@@ -242,7 +247,7 @@ export class TurnosComponent implements OnInit {
         this.showAgregarNotaTurno = true;
     }
 
-    eventosTurno(agenda: IAgenda, index, event) {
+    eventosTurno(agenda: IAgenda, event) {
 
         let btnClicked = event.currentTarget.id;
 
@@ -262,16 +267,19 @@ export class TurnosComponent implements OnInit {
             }
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                
+                debugger;
                 this.ag = resultado;
-                this.turnos = this.ag.bloques[index].turnos;
+                
+                this.turnos = this.ag.bloques[0].turnos;
 
                 this.setBotones(this.pacientesSeleccionados);
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotones(this.turnos[x]);
+                for (let y = 0; y < this.turnos.length; y++) {
+                    this.actualizarBotones(this.turnos[y]);
                 }
 
-                for (let x = 0; x < this.turnos.length; x++) {
-                    this.actualizarBotonesTurnos(this.turnos[x]);
+                for (let z = 0; z < this.turnos.length; z++) {
+                    this.actualizarBotonesTurnos(this.turnos[z]);
                 }
 
                 this.pacientesSeleccionados.length = 0;
@@ -402,12 +410,15 @@ export class TurnosComponent implements OnInit {
     }
 
     saveAgregarNotaTurno(agenda: any) {
-        this.showTurnos = true;
-        this.showAgregarNotaTurno = false;
-
-        this.pacientesSeleccionados.length = 0;
 
         this.ag = agenda;
+        this.showTurnos = false;
+        this.showAgregarNotaTurno = true;
+    }
+
+    cancelaAgregarNota() {
+
+        this.pacientesSeleccionados.length = 0;
 
         for (let i = 0; i < this.ag.bloques.length; i++) {
             this.turnos = this.ag.bloques[i].turnos;
@@ -422,9 +433,7 @@ export class TurnosComponent implements OnInit {
                 this.actualizarBotones(this.turnos[x]);
             }
         }
-    }
 
-    cancelaAgregarNota() {
         this.showTurnos = true;
         this.showAgregarNotaTurno = false;
     }

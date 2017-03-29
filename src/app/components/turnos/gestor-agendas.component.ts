@@ -228,12 +228,14 @@ export class GestorAgendasComponent implements OnInit {
         this.setColorEstadoAgenda(agenda);
 
         this.ag = agenda;
+        
         this.vistaAgenda = agenda;
 
         this.agenda = agenda;
  
-        // this.showTurnos = true;
         this.showVistaAgendas = true;
+
+        this.showTurnos = true;
 
     }
 

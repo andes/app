@@ -58,7 +58,7 @@
                                 <td class="col-3"><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</span></td>
                             </template>
                             <template [ngIf]="agenda.profesionales">
-                                <td class="col"><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}}</span></td>
+                                <td class="col"><span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}}</span><span *ngIf="agenda.profesionales.length > 1">,</span></td>
                             </template>
                             <td class="col"><span *ngIf="agenda.espacioFisico">{{agenda.espacioFisico.nombre}}</span></td>
                             <template [ngIf]="agenda.estado">
@@ -66,7 +66,7 @@
                             </template>
                         </tr>
                     </table>
-                    <!--{{ agendasSeleccionadas.length | json }}-->
+                    {{ agendasSeleccionadas.length | json }}
                 </div>
                 
             </plex-box>
@@ -74,9 +74,9 @@
         </div>
         <div class="col-3">
             <plex-box type="primary">
-                <div *ngIf="showTurnos" type="info">
+                <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
                     <div class="clear"></div>
-                    <turnos [ag]="ag" (reasignaTurno)="reasignaTurno($event)"></turnos>
+                    <turnos [ag]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
                 </div>
 
                 <div *ngIf="showEditarAgendaPanel" type="info">

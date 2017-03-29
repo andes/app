@@ -5,12 +5,6 @@
       <div class="col col-md-12">
         <plex-box>
           <div class="row">
-            <div class="col col-md-12">
-              <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
             <div class="col col-md-6">
               <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
