@@ -157,7 +157,6 @@ export class AgendaComponent implements OnInit {
     }
 
     activarBloque(indice: number) {
-        debugger;
         this.bloqueActivo = indice;
         this.elementoActivo = this.modelo.bloques[indice];
     }
@@ -618,6 +617,9 @@ export class AgendaComponent implements OnInit {
                     } else if ( gestionCount > 0 ) {
                         turno.tipoTurno = 'gestion';
                         gestionCount--;
+                    } else if ( profesionalCount > 0 ) {
+                        turno.tipoTurno = 'profesional';
+                        profesionalCount--;
                     }
 
                     if (bloque.pacienteSimultaneos) {
