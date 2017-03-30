@@ -51,6 +51,7 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
+import { IndiceDeMasaCorporalComponent } from './components/rup/moleculas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -144,7 +145,8 @@ export const RUP_COMPONENTS = [
     DesarrolloIntelectualyJuegosComponent,
     EscalaDeDesarrolloComponent,
     EstadoNutricionalComponent,
-    OdontologiaComponent
+    OdontologiaComponent,
+    IndiceDeMasaCorporalComponent
 
     // NO VAPacienteComponent
 ];

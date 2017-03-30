@@ -1,3 +1,4 @@
+import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from './../../interfaces/IPaciente';
@@ -28,6 +29,11 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
     @Input() datosIngreso: Object;
     @Input() soloValores: Boolean = null;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+     // array de prestaciones que se estan ejecutando actualmente en el proceso
+    @Input('prestacionesEjecucion') prestacionesEjecucion: ITipoPrestacion;
+    //array de valores de las prestaciones que se estan ejecutando actualmente
+    @Input('valoresPrestacionEjecucion') valoresPrestacionEjecucion: any = [];
+    @Input() prestacion: IPrestacionPaciente;
 
     pacientePrestacion: any = {};
     // resultados a devolver
@@ -114,7 +120,10 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
         // console.info('datosComponente: ', datosComponente);
 
         // Generamos valores de la ejecución
-        // TODO: debe ser un array
+        // TODO: debe ser un array  
+        this.componentReference.instance.prestacion = this.prestacion;
+        this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
+        this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
         this.componentReference.instance.soloValores = this.soloValores;
         this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
         this.componentReference.instance.paciente = this.paciente;

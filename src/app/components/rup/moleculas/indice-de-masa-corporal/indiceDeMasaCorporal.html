@@ -1,0 +1,29 @@
+<!--<pre>{{prestacionesEjecucion | json}}</pre>-->
+
+<div class="row">
+    <div class="col-md-12">
+        <h4> <strong>{{tipoPrestacion.nombre}}</strong></h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12" *ngIf="showMoleculas">
+        <div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
+            <div *ngFor="let tp of tipoPrestacion.ejecucion">
+                <div class="col-md-6">
+                    <rup #rup [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+                    </rup>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="form-group col-md-6" *ngIf="showAlertas">
+                {{data.alerta}}
+        </div>
+        <div class="form-group col-md-6" *ngIf="showIMC">
+            <label>IMC</label>
+            <input value="{{data.imc}}" name="talla" name="IMC" class="form-control">
+        </div>
+    </div>
+    <plex-button title="prueba" label="prueba" (click)="calculoIMC()" type="success btn-sm"></plex-button>
+</div>
