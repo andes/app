@@ -24,24 +24,24 @@
             <table *ngIf="resultado && resultado.length" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>&nbsp;</th>
                         <th>Documento</th>
                         <th>Apellido</th>
                         <th>Nombre</th>
                         <th>Fecha de Nacimiento</th>
                         <th>Sexo</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="hover" *ngFor="let paciente of resultado">
-                        <td>
-                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(paciente)"></plex-button>
-                        </td>
                         <td>{{paciente.documento}}</td>
                         <td>{{paciente.apellido}}</td>
                         <td>{{paciente.nombre}}</td>
                         <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                         <td>{{paciente.sexo}}</td>
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(paciente)"></plex-button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -50,26 +50,27 @@
             <table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>&nbsp;</th>
                         <th>Documento</th>
                         <th>Apellido</th>
                         <th>Nombre</th>
                         <th>Fecha de Nacimiento</th>
                         <th>Sexo</th>
                         <th>% Similitud</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="hover" *ngFor="let elem of pacientesSimilares">
-                        <td>
-                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
-                        </td>
+
                         <td>{{elem.paciente.documento}}</td>
                         <td>{{elem.paciente.apellido}}</td>
                         <td>{{elem.paciente.nombre}}</td>
                         <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                         <td>{{elem.paciente.sexo}}</td>
                         <td>{{elem.match * 100}} %</td>
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -87,7 +88,7 @@
         </plex-box>
     </div>
 </div>
-<plex-box type="footer" *ngIf="mostrarNuevo">
+<plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
     <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(null)"></plex-button>
 </plex-box>
 
