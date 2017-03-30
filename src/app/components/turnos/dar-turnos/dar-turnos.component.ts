@@ -88,6 +88,8 @@ export class DarTurnosComponent implements OnInit {
 
     pacientesSearch = true;
     showDarTurnos = false;
+    // pacientesSearch = false;
+    // showDarTurnos = true;
     cambioTelefono = false;
     infoPaciente = true;
 
