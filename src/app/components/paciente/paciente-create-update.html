@@ -3,7 +3,7 @@
         <div class="col-8">
             <plex-box title="Empadronamiento de Paciente" type="primary">
                 <header>
-                    <h3>Empadronamiento de Paciente</h3>
+                    <h3>Registro de Pacientes</h3>
                 </header>
                 <!-- DATOS BASICOS -->
 
@@ -37,7 +37,7 @@
                         </plex-datetime>
                     </div>
                     <div class="col-md-4">
-                        <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [data]="sexos" (change)="completarGenero()" placeholder="Seleccione..." [required]="true" label="Sexo">
+                        <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil">
                         </plex-select>
                     </div>
                 </div>
@@ -47,13 +47,13 @@
                         </plex-select>
                     </div>
                     <div class="col-md-4">
-                        <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil">
+                        <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero()" placeholder="Seleccione..." [required]="true" label="Sexo">
                         </plex-select>
                     </div>
-                    <div class="col-md-4">
+                    <!--<div class="col-md-4">
                         <plex-text label="Estado:" [(ngModel)]="pacienteModel.estado" [readonly]="validado" name="estado">
                         </plex-text>
-                    </div>
+                    </div>-->
                 </div>
 
                 <!-- / DATOS BASICOS -->
@@ -103,7 +103,41 @@
                         <h3 class="box-title-principal">Datos de domicilio</h3>
                     </div>
                 </div>
-                <div *ngIf="pacienteModel.direccion">
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                         <plex-bool [(ngModel)]="viveEnNeuquen.checkbox" label="¿Vive en Neuquén Capital?" name="viveNQN"></plex-bool>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="row" *ngIf="viveEnNeuquen.checkbox">
+                                <div class="col-md-6">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                    </plex-text>
+                                </div>
+                                <div class="col-md-6">
+                                    <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre">
+                                    </plex-select>
+                                </div>
+                        </div>
+                        <div class="row" *ngIf="!viveEnNeuquen.checkbox">
+                                <div class="col-md-4">
+                                    <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
+                                    </plex-text>
+                                </div>
+                                <div class="col-md-4">
+                                   <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios" placeholder="Seleccione..." labelField="nombre">
+                                    </plex-select>
+                                </div>
+                                <div class="col-md-4">
+                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre">
+                                    </plex-select>
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--<div *ngIf="pacienteModel.direccion">
                     <div>
                         <div class="row">
                             <div class="col-md-8">
@@ -135,7 +169,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <!--<div class="row">
                     <div class="col-md-6">
@@ -230,12 +264,22 @@
         <div class="col-4">
             <plex-box type="primary" title="Datos Paciente">
                 <header>
-                    <h3>Datos del Paciente</h3>
+                    <h3>Datos del Paciente 
+                        
+                        <span style="float: right" *ngIf="pacienteModel.estado === 'validado'" class="label label-success">
+                            {{pacienteModel.estado | uppercase}} 
+                        </span>
+                        <span style="float: right" *ngIf="pacienteModel.estado !== 'validado'" class="label label-warning">
+                            {{pacienteModel.estado | uppercase}} 
+                        </span>
+                    </h3>
                 </header>
                 <div class="row" *ngIf="pacienteModel.apellido">
                     <div class="col-md-12">
                         <h3><strong>{{pacienteModel.apellido}}</strong>
-                            <small *ngIf="pacienteModel.nombre"> {{pacienteModel.nombre}}</small></h3>
+                            <small *ngIf="pacienteModel.nombre && !pacienteModel.alias"> {{pacienteModel.nombre}}</small>
+                            <small *ngIf="pacienteModel.nombre && pacienteModel.alias"> {{pacienteModel.alias}}</small>
+                        </h3>
                     </div>
                 </div>
                 <div class="row" *ngIf="pacienteModel.documento">
@@ -249,20 +293,29 @@
                     </div>
                 </div>
                 <div class="row" *ngIf="pacienteModel.sexo">
-                    <div class="col-md-12">
+                    <div class="col-md-12" *ngIf="pacienteModel.sexo == pacienteModel.genero">
                         <h4> <label>Sexo: </label>
                             <span *ngIf="pacienteModel.sexo.nombre">{{pacienteModel.sexo.nombre}}</span>
-                            <span *ngIf="!pacienteModel.sexo.nombre">{{pacienteModel.sexo}}</span></h4>
+                            <span *ngIf="!pacienteModel.sexo.nombre">{{pacienteModel.sexo}}</span>
+                        </h4>
+                    </div>
+                    <div class="col-md-12" *ngIf="pacienteModel.sexo !== pacienteModel.genero">
+                        <h4> <label>Genero: </label>
+                            <span *ngIf="pacienteModel.genero.nombre">{{pacienteModel.genero.nombre}}</span>
+                            <span *ngIf="!pacienteModel.genero.nombre">{{pacienteModel.genero}}</span>
+                        </h4>
                     </div>
                 </div>
-                <div class="row" *ngIf="pacienteModel.estado">
+                
+
+                <!--<div class="row" *ngIf="pacienteModel.estado">
                     <div class="col-md-12">
                         <h4> <label>Estado: </label>
-                            <span class="label label-primary">
-                          {{pacienteModel.estado}}
-                        </span></h4>
+                            <span *ngIf="pacienteModel.estado === 'validado'" class="label label-success">{{pacienteModel.estado}} </span>
+                            <span *ngIf="pacienteModel.estado === 'temporal'" class="label label-warning">{{pacienteModel.estado}} </span>
+                        </h4>
                     </div>
-                </div>
+                </div>-->
                 <div class="row">&nbsp;</div>
 
 
