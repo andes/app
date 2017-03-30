@@ -5,12 +5,6 @@
       <div class="col col-md-12">
         <plex-box>
           <div class="row">
-            <div class="col col-md-12">
-              <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
             <div class="col col-md-6">
               <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
@@ -329,17 +323,21 @@
       </plex-tab>
       <plex-tab icon="account-search">
         <!--<plex-box title="Ultimos Turnos">-->
-              <div class="list-group">
-                <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
-                  <div class="row">
-                    <div class="col col-md-12"><label>Lugar: &nbsp;</label> <span>{{turno.organizacion}} </span><br></div>
-                    <div class="col col-md-12"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>
-                    <div class="col col-md-12"><label>Tipo de Prestación: &nbsp;</label> <span>{{turno.tipoPrestacion}} </span><br></div>
-                    <!--<div class="col col-md-6"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>-->
-                  </div>
-                </a>
+        <label>ÚLTIMOS TURNOS DEL PACIENTE</label>
+        <div class="list-group">
+          <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
+            <div class="row">
+              <div class="col col-md-12"><label>Lugar: &nbsp;</label> <span>{{turno.organizacion}} </span><br></div>
+              <div class="col col-md-12"><label>Fecha: &nbsp;</label> <span>{{turno.horaInicio}} </span><br></div>
+              <div class="col col-md-12"><label>Estado: &nbsp;</label> <span>{{turno.estado}} </span><br></div>
+              <div class="col col-md-12"><label>Tipo de Prestación: &nbsp;</label> <span>{{turno.tipoPrestacion}} </span><br></div>
+              <div class="col col-md-12" *ngFor="let profesional of turno.profesionales"><label>Fecha: &nbsp;
+                </label> <span>{{profesional.nombre}} {{profesional.apellido}} </span><br>
               </div>
-            <!--</plex-box>-->
+            </div>
+          </a>
+        </div>
+        <!--</plex-box>-->
       </plex-tab>
     </plex-tabs>
   </div>
