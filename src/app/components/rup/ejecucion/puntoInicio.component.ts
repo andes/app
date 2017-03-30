@@ -70,7 +70,8 @@ export class PuntoInicioComponent implements OnInit {
 
     listadoTurnos(bloque) {
         this.bloqueSeleccionado = bloque;
-        var turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id })
+        let turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id; });
+
         this.servicioPrestacion.get({ turnos: turnos }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
         })

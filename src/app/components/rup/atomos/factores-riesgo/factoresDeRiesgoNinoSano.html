@@ -1,0 +1,19 @@
+<div *ngIf="tipoProblemas">
+    <div *ngFor="let tipoProblema of tipoProblemas; let i = index">
+        <!--{{existeProblema(tipoProblema.id)}}-->
+        <!--<plex-bool [(ngModel)]="algo" label="{{tipoProblema.nombre}}" name="activo" [disabled]="!existeProblema(tipoProblema.id)"></plex-bool>-->
+
+        <label for="problema-{{tipoProblema.id}}">
+
+        <input 
+            id="problema-{{tipoProblema.id}}" 
+            type="checkbox" 
+            [checked]="data[tipoPrestacion.key][i].activo"
+            [(ngModel)]="data[tipoPrestacion.key][i].activo" 
+            *ngIf="!existeProblema(tipoProblema.id)">
+        
+            {{tipoProblema.nombre}} <span *ngIf="existeProblema(tipoProblema.id)" class="label label-default">Problema existente</span>
+        </label>
+        <!--(change)="updateValores(tipoPrestacion.key, tipoProblema.id, $event)"-->
+    </div>
+</div>
