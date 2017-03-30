@@ -139,8 +139,8 @@ export const RUP_COMPONENTS = [
     ActitudAnteLosCuidadosComponent,
     ControlDeEsfinteresComponent,
     DesarrolloIntelectualyJuegosComponent,
-    EscalaDeDesarrolloComponent
-
+    EscalaDeDesarrolloComponent,
+    FactoresDeRiesgoNinoSanoComponent
     // NO VAPacienteComponent
 ];
 

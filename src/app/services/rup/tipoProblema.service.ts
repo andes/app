@@ -14,7 +14,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class TipoProblemaService {
 
-    private problemaUrl = AppSettings.API_ENDPOINT + '/modules/rup/tiposProblemas';  // URL to web api
+    private tipoProblemaUrl = AppSettings.API_ENDPOINT + '/modules/rup/tiposProblemas';  // URL to web api
 
     constructor(private server: Server) { }
 
@@ -23,7 +23,7 @@ export class TipoProblemaService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<ITipoProblema[]> {
-        return this.server.get(this.problemaUrl, params)
+        return this.server.get(this.tipoProblemaUrl, { params: params, showError: true });
     }
 
     /**
@@ -31,8 +31,8 @@ export class TipoProblemaService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<ITipoProblema> {
-        var url = this.problemaUrl + "/" + id;
-        return this.server.get(url, null)
+        let url = this.tipoProblemaUrl + '/' + id;
+        return this.server.get(url, null);
     }
 
 }
