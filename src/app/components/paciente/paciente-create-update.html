@@ -15,11 +15,11 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
+                        <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" [required]="true" (change)="verificaPacienteRepetido()" [readonly]="validado" placeholder="Ingrese nombre...">
                         </plex-text>
                     </div>
                     <div class="col-sm-4">
-                        <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
+                        <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" [required]="true" (change)="verificaPacienteRepetido()" [readonly]="validado" placeholder="Ingrese apellido...">
                         </plex-text>
                     </div>
                     <div class="col-sm-4">
@@ -29,11 +29,11 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" [readonly]="validado" name="documento" [required]="true" placeholder="Ingresar DNI...">
+                        <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" [readonly]="validado" (change)="verificaPacienteRepetido()" name="documento" [required]="true" placeholder="Ingresar DNI...">
                         </plex-int>
                     </div>
                     <div class="col-md-4">
-                        <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="true">
+                        <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" (change)="verificaPacienteRepetido()" [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="true">
                         </plex-datetime>
                     </div>
                     <div class="col-md-4">
@@ -47,7 +47,7 @@
                         </plex-select>
                     </div>
                     <div class="col-md-4">
-                        <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero()" placeholder="Seleccione..." [required]="true" label="Sexo">
+                        <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="verificaPacienteRepetido()" placeholder="Seleccione..." [required]="true" label="Sexo">
                         </plex-select>
                     </div>
                     <!--<div class="col-md-4">
@@ -306,7 +306,15 @@
                         </h4>
                     </div>
                 </div>
-                
+                <div class="row" *ngIf="pacienteModel.contacto">
+                    <div class="col-md-12">
+                        <h4> <label>Teléfono:</label>
+                            <span *ngFor="let fono of pacienteModel.contacto; let i = index"> 
+                                {{fono.valor}}
+                            </span>
+                        </h4>
+                    </div>
+                </div>
 
                 <!--<div class="row" *ngIf="pacienteModel.estado">
                     <div class="col-md-12">
