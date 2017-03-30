@@ -1,19 +1,12 @@
-
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
-// import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
-
 import { Plex } from '@andes/plex';
 import { MenuItem } from '@andes/plex/src/lib/app/menu-item.class';
 
@@ -55,17 +48,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     // tipos de prestaciones posibles a ejecutar durante la prestacion
     // este tipo de prestaciones se le van quitando opciones a medida que ejecuto una nueva
     tiposPrestacionesPosibles: ITipoPrestacion[] = [];
-
     // prestaciones que se ejecutan por defecto con la prestacion de origen
     // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
     prestacionesEjecucion: IPrestacionPaciente[] = [];
-
     // // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
     listaProblemaPrestacion = [];
-
     // id que se van ejecutando
     idPrestacionesEjecutadas = [];
-
     // PRESTACIONES FUTURAS
     // utilizado para el select de tipos de prestaciones a ejecutar en un plan
     nuevoTipoPrestacion: ITipoPrestacion;
@@ -86,7 +75,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     ngOnInit() {
         this.cargarDatosPrestacion();
-
         // obtenemos tipos de prestaciones posibles a ejecutarse
         this.serviceTipoPrestacion.get({}).subscribe(tiposPrestaciones => {
             this.tiposPrestacionesPosibles = tiposPrestaciones;
@@ -179,7 +167,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     // Fin lista de problemas
 
-
     onReturn(dato: IProblemaPaciente) {
         this.showEvolucionar = false;
         this.showEnmendar = false;
@@ -205,8 +192,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.prestacion.ejecucion.listaProblemas = this.listaProblemas;
             this.updatePrestacion();
         }
-
-
     }
 
     onReturnTodos(dato: IProblemaPaciente[]) {
@@ -228,7 +213,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         return p.solicitud.tipoPrestacion.id === element.id;
                     });
                 }
-
                 // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
                 if (!find) {
                     // asignamos valores a la nueva prestacion
@@ -241,11 +225,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
                     let algo; algo = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
-
-                    this.valoresPrestaciones[key] = {};
-//                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
-                    this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? algo : null;
-                    // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
+                    // this.valoresPrestaciones[key] = {};
+                    // this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? algo : null;
+                    if (this.valoresPrestaciones[key]) {
+                        this.valoresPrestaciones[key] = {};
+                        this.valoresPrestaciones[key] = algo;
+                    }else {
+                        this.valoresPrestaciones[key] = null;
+                    }
                 }
             });
         }
@@ -262,13 +249,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.prestacionesEjecucion.push(_prestacion);
                 let key; key = _prestacion.solicitud.tipoPrestacion.key;
                 this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
-                // let valores = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length-1].valores[key];
             }
         });
     }
 
     crearPrestacionVacia(tipoPrestacion) {
-
         // asignamos valores a la nueva prestacion
         let nuevaPrestacion = {
             idPrestacionOrigen: this.prestacion.id,
@@ -287,9 +272,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 evoluciones: []
             }
         };
-
         this.listaProblemaPrestacion[tipoPrestacion.key] = [];
-
         return nuevaPrestacion;
     }
 
@@ -306,11 +289,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // quitamos del array de opciones
         this.tiposPrestacionesPosibles.splice(posicion, 1);
-
         this.prestacionesEjecucion.push(nuevaPrestacion);
     }
 
    evolucionarPrestacion() {
+
+         debugger;
 
          if (this.prestacion.ejecucion.listaProblemas.length > 0) {
              this.error = '';
@@ -321,64 +305,63 @@ export class PrestacionEjecucionComponent implements OnInit {
                  return (typeof this.data[tp.key] !== 'undefined' && Object.keys(this.data[tp.key]).length) ? _p : null;
              });
 
-          debugger;
-          if (prestacionesGuardar.length === 0) {
-             this.error = 'Debe registrar al menos un dato observable.';
-          } else {
+            if (prestacionesGuardar.length === 0) {
+                this.error = 'Debe registrar al menos un dato observable.';
+            } else {
                      this.error = '';
                      // recorremos todas las prestaciones que hemos ejecutado
                      prestacionesGuardar.forEach(_prestacion => {
                             let prestacion; prestacion = _prestacion;
                             let tp; tp = _prestacion.solicitud.tipoPrestacion;
-
+                            // Cargo el arreglo de prestaciones evoluciones
                             prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
-
-                                // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
-
-                                if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
-                                    // recorremos array de problemas y asignamos a la nueva prestacion
-                                    this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                                        prestacion.solicitud.listaProblemas.push(problema.id);
+                            // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
+                            if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
+                                // recorremos array de problemas y asignamos a la nueva prestacion
+                                this.listaProblemaPrestacion[tp.key].forEach(problema => {
+                                    prestacion.solicitud.listaProblemas.push(problema.id);
+                                });
+                            } else {
+                                // si no agrego ningun problema, entonces por defecto se le agregan todos
+                                    this.listaProblemas.forEach(idProblema => {
+                                        prestacion.solicitud.listaProblemas.push(idProblema);
                                     });
-                                } else {
-                                    // si no agrego ningun problema, entonces por defecto se le agregan todos
-                                        this.listaProblemas.forEach(idProblema => {
-                                            prestacion.solicitud.listaProblemas.push(idProblema);
-                                        });
+                            }
+                            let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
+
+                            if(_prestacion.ejecucion.evoluciones.length < 1){
+                                alert('No hay evoluciones');
+                            }
+
+                            // guardamos la nueva prestacion
+                            method.subscribe(prestacionEjecutada => {
+                                // asignamos la prestacion nueva al array de prestaciones ejecutadas
+                                let find;
+                                if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
+                                    find = this.prestacion.ejecucion.prestaciones.find(p => {
+                                        return p.id === prestacionEjecutada.id;
+                                    });
                                 }
 
-                                let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
-
-                                // guardamos la nueva prestacion
-                                method.subscribe(prestacionEjecutada => {
-                                    // asignamos la prestacion nueva al array de prestaciones ejecutadas
-                                    let find;
-                                    if (this.prestacion.ejecucion.prestaciones && this.prestacion.ejecucion.prestaciones.length) {
-                                        find = this.prestacion.ejecucion.prestaciones.find(p => {
-                                            return p.id === prestacionEjecutada.id;
-                                        });
-                                    }
-
-                                    if (!find) {
-                                        let id; id = prestacionEjecutada.id;
-                                        this.prestacion.ejecucion.prestaciones.push(id);
-                                    }
-                                    // actualizamos la prestacion que estamos loopeando con los datos recien guardados
-                                    _prestacion = prestacionEjecutada;
-                                    // this.prestacionesFuturas.push(prestacionFutura);
-                                    if (i === prestacionesGuardar.length) {
-                                    // if (i === this.prestacionesEjecucion.length) {
-                                        this.plex.alert('Prestacion confirmada');
-                                        this.updatePrestacion();
-                                        this.validarPrestacion();
-                                    }
-                                    i++;
-                                }); // guardamos la nueva prestacion
+                                if (!find) {
+                                    let id; id = prestacionEjecutada.id;
+                                    this.prestacion.ejecucion.prestaciones.push(id);
+                                }
+                                // actualizamos la prestacion que estamos loopeando con los datos recien guardados
+                                _prestacion = prestacionEjecutada;
+                                // this.prestacionesFuturas.push(prestacionFutura);
+                                if (i === prestacionesGuardar.length) {
+                                    this.plex.alert('Prestacion confirmada');
+                                    this.updatePrestacion();
+                                    this.validarPrestacion();
+                                }
+                                i++;
+                            }); // guardamos la nueva prestacion
                  }); // prestacionesGuardar.forEach
-          } // else Datos observables
+            }; // else Datos observables
      } else {
          this.error = 'Debe seleccionar al menos un problema';
-     } // else problemas
+     }; // else problemas
 }
 
     // listado de prestaciones a solicitar y ejecutar durante el transcurso de la prestacion
@@ -399,7 +382,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     // agregamos la prestacion al plan
     agregarPrestacionFutura() {
 
-        debugger;
         if (this.nuevoTipoPrestacion) {
             // asignamos valores a la nueva prestacion
             this.nuevaPrestacion = {
@@ -454,12 +436,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     // borramos la prestacion del plan
     borrarPrestacionFutura(index) {
         alert('Implementar');
-        // this.prestacionesFuturas.splice(index, 1);
     }
     // Fin prestaciones futuras / Plan
 
     updatePrestacion() {
-        debugger;
         // actualizamos la prestacion de origen
         this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
 
@@ -478,6 +458,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
+         debugger;
+         console.log('this.data[tipoPrestacionActual.key]', this.data[tipoPrestacionActual.key]);
+
+        // console.log('On return component - this.data[tipoPrestacionActual.key] - ', this.data[tipoPrestacionActual.key]);
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         }else {
@@ -494,5 +478,4 @@ export class PrestacionEjecucionComponent implements OnInit {
        this.showValidar = false;
        this.evtData.emit(this.prestacion);
     }
-
 }
