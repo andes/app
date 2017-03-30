@@ -144,8 +144,8 @@ export const RUP_COMPONENTS = [
     DesarrolloIntelectualyJuegosComponent,
     EscalaDeDesarrolloComponent,
     EstadoNutricionalComponent,
-    OdontologiaComponent
-
+    OdontologiaComponent,
+    FactoresDeRiesgoNinoSanoComponent
     // NO VAPacienteComponent
 ];
 
