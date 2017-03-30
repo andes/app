@@ -219,12 +219,9 @@ export const RUP_COMPONENTS = [
   EscalaDeDesarrolloComponent,
   EstadoNutricionalComponent,
   OdontologiaComponent,
-<<<<<<< HEAD
-  IndiceDeMasaCorporalComponent
-
-=======
+  IndiceDeMasaCorporalComponent,
   FactoresDeRiesgoNinoSanoComponent
->>>>>>> f37cbf5887ae8964375eb4b871aab130d59c6f93
+
 ];
 
 // Locales
