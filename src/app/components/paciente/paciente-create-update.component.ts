@@ -180,6 +180,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
+
+    debugger; 
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
@@ -247,8 +249,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
 
       } else {
-        this.validado = false;
-        this.seleccion.estado = 'temporal';
+        if (this.seleccion.estado !== 'validado') {
+            this.validado = false;
+            this.seleccion.estado = 'temporal';
+          }
+          else
+          {
+            this.validado = true;
+          }
       }
       if (this.seleccion.contacto) {
         if (this.seleccion.contacto.length <= 0) {
