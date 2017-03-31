@@ -149,7 +149,7 @@ export class ClonarAgendaComponent implements OnInit {
                 (v => {return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                     agenda.conflictoProfesional = 1;
                 }
-               
+
                 if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                     agenda.conflictoEF = 1;
                 }
@@ -203,6 +203,7 @@ export class ClonarAgendaComponent implements OnInit {
 
                     });
                 });
+                this.agenda.estado = 'Planificacion';
                 delete this.agenda._id;
                 delete this.agenda.id;
                 operacion = this.serviceAgenda.save(this.agenda);
@@ -218,8 +219,8 @@ export class ClonarAgendaComponent implements OnInit {
             },
             function () {
                 console.log('Completed');
-                // alert('La agenda se clonó correctamente');
-                this.plex.alert('La agenda se clonó correctamente');
+                alert('La agenda se clonó correctamente');
+                // this.plex.alert('La agenda se clonó correctamente');
             }
         );
     }

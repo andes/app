@@ -1,35 +1,35 @@
 
-                <span *ngIf="vistaAgenda">
-                    <span *ngIf="vistaBotones.editarAgenda">
-                        <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
-                        </plex-button>
-                    </span>
-                    <span *ngIf="vistaBotones.clonarAgenda">
-                        <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda(vistaAgenda)" title="Clonar Agenda">
-                        </plex-button>
-                    </span>
-                    <!--<span *ngIf="vistaBotones.cerrarAgenda">
-                        <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
-                        </plex-button>
-                    </span>-->
-                    <span *ngIf="vistaBotones.pasarDisponibleAgenda">
-                        <plex-button icon="mdi mdi-check" (click)="actualizarEstado(vistaAgenda, 'Disponible')" title="Pasar Agenda a disponible">
-                        </plex-button>
-                    </span>
-                    <span *ngIf="vistaBotones.publicarAgenda">
-                        <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="actualizarEstado(vistaAgenda, 'Publicada')" title="Publicar Agenda">
-                        </plex-button>
-                    </span>
-                    <span *ngIf="vistaBotones.suspenderAgenda">
-                        <plex-button icon="mdi mdi-power" (click)="actualizarEstado(vistaAgenda, 'Suspendida')" title="Suspender Agenda">
-                        </plex-button>
-                    </span>
-                    <span *ngIf="vistaBotones.pausarAgenda">
-                        <plex-button icon="mdi mdi-pause" (click)="actualizarEstado(vistaAgenda, 'Pausada')" title="Pausar Agenda">
-                        </plex-button>
-                    </span>
-                    <span *ngIf="vistaAgenda.estado === 'Pausada'">
-                        <plex-button icon="mdi mdi-play" (click)="actualizarEstado(vistaAgenda, 'prePausada')" title="Reanudar Agenda">
-                        </plex-button>
-                    </span>
-                </span>
+<span *ngIf="vistaAgenda && cantSel>0">
+    <span *ngIf="vistaBotones.editarAgenda">
+        <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda(vistaAgenda)" title="Editar Agenda">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.clonarAgenda">
+        <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda(vistaAgenda)" title="Clonar Agenda">
+        </plex-button>
+    </span>
+    <!--<span *ngIf="vistaBotones.cerrarAgenda">
+        <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
+        </plex-button>
+    </span>-->
+    <span *ngIf="vistaBotones.pasarDisponibleAgenda">
+        <plex-button icon="mdi mdi-check" (click)="actualizarEstado( 'Disponible' )" title="Pasar Agenda a disponible">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.publicarAgenda">
+        <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="actualizarEstado('Publicada')" title="Publicar Agenda">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.suspenderAgenda">
+        <plex-button icon="mdi mdi-power" (click)="actualizarEstado( 'Suspendida' )" title="Suspender Agenda">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.pausarAgenda">
+        <plex-button icon="mdi mdi-pause" (click)="actualizarEstado( 'Pausada' )" title="Pausar Agenda">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.reanudarAgenda">
+        <plex-button icon="mdi mdi-play" (click)="actualizarEstado( 'prePausada' )" title="Reanudar Agenda">
+        </plex-button>
+    </span>
+</span>

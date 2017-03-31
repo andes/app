@@ -483,58 +483,60 @@ export class AgendaComponent implements OnInit {
             }
         }
         // Verifico que los bloques no estén fuera de los límites de la agenda
-        bloques.forEach((bloque, index) => {
-            let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-            let fin = this.combinarFechas(this.fecha, bloque.horaFin);
+        if ( bloques ) {
+            bloques.forEach((bloque, index) => {
+                let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
-            if (bloque.cantidadTurnos && bloque.duracionTurno) {
-                totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
-            }
-            if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
-                indice = this.alertas.indexOf(alerta);
-                this.alertas.push(alerta);
-            }
-
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
-                this.alertas.push(alerta);
-            }
-
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
-                const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
-                this.alertas.push(alerta);
-            }
-
-            if (this.compararFechas(inicio, fin) > 0) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': La hora de inicio es mayor a la hora de fin';
-                this.alertas.push(alerta);
-            }
-
-            // por cada bloque verificar que no se solape con ningún otro
-            let mapeo = bloques.map(function (obj) {
-                if (obj.id !== bloque.id) {
-                    let robj = {};
-                    robj['horaInicio'] = obj.horaInicio;
-                    robj['horaFin'] = obj.horaFin;
-                    return robj;
-                } else {
-                    return null;
+                if (bloque.cantidadTurnos && bloque.duracionTurno) {
+                    totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
                 }
-            });
+                if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
+                    indice = this.alertas.indexOf(alerta);
+                    this.alertas.push(alerta);
+                }
 
-            mapeo.forEach((bloqueMap, index1) => {
-                if (bloqueMap) {
-                    let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
-                    let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
-                    if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
-                        alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
-                        this.alertas.push(alerta);
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
+                    this.alertas.push(alerta);
+                }
+
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
+                    const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
+                    this.alertas.push(alerta);
+                }
+
+                if (this.compararFechas(inicio, fin) > 0) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La hora de inicio es mayor a la hora de fin';
+                    this.alertas.push(alerta);
+                }
+
+                // por cada bloque verificar que no se solape con ningún otro
+                let mapeo = bloques.map(function (obj) {
+                    if (obj.id !== bloque.id) {
+                        let robj = {};
+                        robj['horaInicio'] = obj.horaInicio;
+                        robj['horaFin'] = obj.horaFin;
+                        return robj;
+                    } else {
+                        return null;
                     }
-                }
+                });
+
+                mapeo.forEach((bloqueMap, index1) => {
+                    if (bloqueMap) {
+                        let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
+                        let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
+                        if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
+                            alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
+                            this.alertas.push(alerta);
+                        }
+                    }
+                });
             });
-        });
+        }
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;

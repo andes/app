@@ -34,6 +34,8 @@ export class GestorAgendasComponent implements OnInit {
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
+    public fechaDesde: any;
+    public fechaHasta: any;
 
     public modelo: any = {};
 
@@ -56,6 +58,7 @@ export class GestorAgendasComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
 
         // Por defecto cargar/mostrar agendas de hoy
+        this.hoy = true;
         this.loadAgendas();
 
         // Reactive Form
@@ -72,11 +75,11 @@ export class GestorAgendasComponent implements OnInit {
         this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
 
             let fechaDesde = moment(value.fechaDesde).startOf('day');
-            let fechaHasta = moment(value.fechaHasta).endOf('month');
+            let fechaHasta = moment(value.fechaHasta).endOf('day');
 
             let params = {
-                fechaDesde:         fechaDesde.format(),
-                fechaHasta:         fechaHasta.format(),
+                fechaDesde: fechaDesde.format(),
+                fechaHasta: fechaHasta.format(),
             };
 
             // Filtro de Tipos de Prestaciones (si está vacío, trae todas)
@@ -97,6 +100,8 @@ export class GestorAgendasComponent implements OnInit {
                 agendas => {
                     this.hoy = false;
                     this.agendas = agendas;
+                    this.fechaDesde = fechaDesde;
+                    this.fechaHasta = fechaHasta;
                 },
                 err => {
                     if (err) {
@@ -109,7 +114,6 @@ export class GestorAgendasComponent implements OnInit {
 
     clonar(modelo) {
         this.modelo = modelo;
-
         this.showGestorAgendas = false;
         this.showClonar = true;
     }
@@ -121,41 +125,33 @@ export class GestorAgendasComponent implements OnInit {
 
     // Cancelar la edición de una Agenda completa
     cancelaEditar() {
-        debugger;
-        this.showGestorAgendas = true;
-        this.showEditarAgenda = false;
-    }
-
-    // Cancelar editar opcionales de Agenda en panel derecho
-    // (espacioFisico y profesional)
-    cancelaEditarPanel() {
-        debugger;
         this.showGestorAgendas = true;
         this.showEditarAgenda = false;
     }
 
     reasignaTurno(reasTurno) {
-        debugger;
         this.reasignar = reasTurno;
-
         this.showGestorAgendas = false;
         this.showDarTurnos = true;
     }
 
+    showVistaTurnos(showTurnos: Boolean) {
+        this.showTurnos = showTurnos;
+        this.showEditarAgendaPanel = false;
+    }
 
     editarAgenda(agenda) {
-        debugger;
-
         this.editaAgenda = agenda;
 
         if ( this.editaAgenda.estado === 'Planificacion' ){
             this.showGestorAgendas = false;
-            this.showEditarAgendaPanel = false;
             this.showEditarAgenda = true;
+            this.showEditarAgendaPanel = false;
         } else {
             this.showGestorAgendas = true;
-            this.showEditarAgendaPanel = true;
             this.showEditarAgenda = false;
+            this.showEditarAgendaPanel = true;
+            this.showTurnos = false;
         }
     }
 
@@ -163,20 +159,20 @@ export class GestorAgendasComponent implements OnInit {
 
         let fecha = moment().format();
 
-        this.hoy = true;
-
-        let fechaDesde = moment(fecha).startOf('day').format();
-        let fechaHasta = moment(fecha).endOf('day').format();
+        if ( this.hoy ) {
+            this.fechaDesde = moment(fecha).startOf('day');
+            this.fechaHasta = moment(fecha).endOf('day');
+        }
 
         this.serviceAgenda.get({
-            fechaDesde:         fechaDesde,
-            fechaHasta:         fechaHasta,
+            fechaDesde:         this.fechaDesde,
+            fechaHasta:         this.fechaHasta,
             idTipoPrestacion:   '',
             idProfesional:      '',
             idEspacioFisico:    ''
         }).subscribe(
-            agendas => { 
-                this.agendas = agendas; 
+            agendas => {
+                this.agendas = agendas;
             },
             err => {
                 if (err) {
@@ -207,36 +203,29 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     verAgenda(agenda, e) {
-
         let index;
 
-        if (agenda.agendaSeleccionada) {
-            agenda.agendaSeleccionada = false;
-            agenda.agendaSeleccionadaColor = 'default';
-
+        if (this.estaSeleccionada(agenda)) {
+            agenda.agendaSeleccionadaColor = 'success';
             index = this.agendasSeleccionadas.indexOf(agenda);
             this.agendasSeleccionadas.splice(index, 1);
-        } else {
-            agenda.agendaSeleccionada = true;
+            this.agendasSeleccionadas = [...this.agendasSeleccionadas];
 
-            // this.agendaSel = agenda;
-            this.agendasSeleccionadas.push(agenda);
+        } else {
+            this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
         }
 
-        // agenda.agendasSeleccionadas = this.agendasSeleccionadas;
-
         this.setColorEstadoAgenda(agenda);
-
         this.ag = agenda;
-        
         this.vistaAgenda = agenda;
-
         this.agenda = agenda;
- 
+
         this.showVistaAgendas = true;
-
         this.showTurnos = true;
+    }
 
+    estaSeleccionada(agenda: any) {
+        return this.agendasSeleccionadas.indexOf(agenda) >= 0;
     }
 
     setColorEstadoAgenda(agenda) {
@@ -255,6 +244,14 @@ export class GestorAgendasComponent implements OnInit {
     gestorAgendas() {
         this.showGestorAgendas = false;
     }
+
+    actualizarEstadoEmit() {
+        this.loadAgendas();
+        this.showTurnos = false;
+        this.showEditarAgenda = false;
+        this.showEditarAgendaPanel = false;
+    }
+
 }
 
 class AgendaSeleccionada {
