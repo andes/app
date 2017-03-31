@@ -422,7 +422,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
           nombre: this.pacienteModel.nombre.toString(),
           documento: this.pacienteModel.documento.toString(),
           sexo: this.pacienteModel.sexo.toString(),
-          fechaNacimiento: this.pacienteModel.fechaNacimiento
+          fechaNacimiento: this.pacienteModel.fechaNacimiento,
+          escaneado: false, //ver aca el que corresponda
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           debugger;
