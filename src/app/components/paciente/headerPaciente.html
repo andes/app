@@ -16,25 +16,24 @@
     }
 </style>
 
-<plex-box type="primary">
-    <div class="row">
-        <div class="col-md-8">
-            <h4>
-                <strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}
-            </h4>
-            <small class="gris">
+
+<div class="row">
+    <div class="col">
+        <h4>
+            <strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}
+        </h4>
+        <small class="gris">
                 <span *ngIf="paciente.edadReal">{{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} |</span> Documento: {{paciente.documento}}
             </small>
-        </div>
-
-        <div class="col-md-2 bl capitalize">
-            <b>Estado</b>
-            <br /> {{paciente.estado}}
-        </div>
-
-        <div class="col-md-2 bl" *ngIf="paciente.financiador[0]">
-            <b>Obra social</b>
-            <br /> {{paciente.financiador[0].entidad.nombre}}
-        </div>
     </div>
-</plex-box>
+
+    <div class="col bl capitalize">
+        <b>Estado</b>
+        <br /> {{paciente.estado}}
+    </div>
+
+    <div class="col bl" *ngIf="paciente.financiador[0]">
+        <b>Obra social</b>
+        <br /> {{paciente.financiador[0].entidad.nombre}}
+    </div>
+</div>

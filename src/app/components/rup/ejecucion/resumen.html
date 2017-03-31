@@ -12,94 +12,102 @@
         color: #b1b1b1;
     }
 </style>
-<div *ngIf="!showEjecucion && !showValidacion">
+
+<header>
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>
-    <plex-box>
-        <div class="row">
-            <div class="col-md-6">
-                <b class="celeste">Tipo de prestación: </b> {{prestacion.solicitud.tipoPrestacion.nombre}}
-            </div>
-            <div class="col-md-6 text-right">
-                {{prestacion.paciente.apellido}} {{prestacion.paciente.nombre}} > {{prestacion.solicitud.tipoPrestacion.nombre}}
-            </div>
-        </div>
-    </plex-box>
+</header>
 
-
-    <plex-box>
-        <div class="row">
-            <div class="col-md-4">
-                <p class="celeste">Ultimas Solicitudes Pendientes</p>
-                <ul class="list-group">
-                    <li class="list-group-item clearfix" *ngFor="let pendiente of prestacionesPendientes">
-                        <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>
-                        <br />
-                        <small class="gris">
-                                Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}
-                        </small>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <p class="celeste">Problemas</p>
-                <ul class="list-group" *ngIf="listaProblemas">
-                    <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
-                        <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            {{problema.tipoProblema.nombre}}
-                            <br />
-                            <small class="gris">
-                                Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
-                            </small>
-                            <span class="label label-success pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                Activo
-                            </span>
-                            <span class="label label-danger pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                            </span>
+<section *ngIf="!showEjecucion && !showValidacion">
+    <div class="row">
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            <b class="celeste">Tipo de prestación: </b> {{prestacion.solicitud.tipoPrestacion.nombre}}
                         </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <p class="celeste">Indicadores</p>
+                        <div class="col text-right">
+                            {{prestacion.paciente.apellido}} {{prestacion.paciente.nombre}} > {{prestacion.solicitud.tipoPrestacion.nombre}}
+                        </div>
+                    </div>
+                </header>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <dl *ngIf="prestacionPeso">
-                            <dt>Peso</dt>
-                            <dd>{{prestacionPeso.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.signosVitales.peso}} Kg<br><small class="gris">
-                                Fecha: {{prestacionPeso.ejecucion.fecha | date: 'dd/MM/yyyy'}}
-                        </small></dd>
-                        </dl>
+                    <div class="col-md-4">
+                        <p class="celeste">Ultimas Solicitudes Pendientes</p>
+                        <ul class="list-group">
+                            <li class="list-group-item clearfix" *ngFor="let pendiente of prestacionesPendientes">
+                                <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>
+                                <br />
+                                <small class="gris">
+                                        Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}
+                                </small>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-md-6">
-                        <dl *ngIf="prestacionTalla">
-                            <dt>Talla</dt>
-                            <dd>{{prestacionTalla.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.talla}} cm<br><small class="gris">
-                                Fecha: {{prestacionTalla.ejecucion.fecha | date: 'dd/MM/yyyy'}}
-                        </small></dd>
-                        </dl>
+                    <div class="col-md-4">
+                        <p class="celeste">Problemas</p>
+                        <ul class="list-group" *ngIf="listaProblemas">
+                            <li class="list-group-item clearfix" *ngFor="let problema of listaProblemas">
+                                <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                    {{problema.tipoProblema.nombre}}
+                                    <br />
+                                    <small class="gris">
+                                        Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
+                                    </small>
+                                    <span class="label label-success pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                        Activo
+                                    </span>
+                                    <span class="label label-danger pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                        {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+                    <div class="col-md-4">
+                        <p class="celeste">Indicadores</p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl *ngIf="prestacionPeso">
+                                    <dt>Peso</dt>
+                                    <dd>{{prestacionPeso.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.signosVitales.peso}} Kg<br><small class="gris">
+                                        Fecha: {{prestacionPeso.ejecucion.fecha | date: 'dd/MM/yyyy'}}
+                                </small></dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl *ngIf="prestacionTalla">
+                                    <dt>Talla</dt>
+                                    <dd>{{prestacionTalla.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.talla}} cm<br><small class="gris">
+                                        Fecha: {{prestacionTalla.ejecucion.fecha | date: 'dd/MM/yyyy'}}
+                                </small></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-
+            </plex-box>
         </div>
-    </plex-box>
-    <plex-box>
-        <div class="row">
-            <div class="col-md-6 pull-left">
-                <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
-            </div>
-            <div class="col-lg-6 text-right">
-                <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
-                <plex-button title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
+    </div>
+</section>
 
-                <plex-button title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'"></plex-button>
-            </div>
+<footer *ngIf="!showEjecucion && !showValidacion">
+    <div class="row">
+        <div class="col">
+            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
         </div>
+        <div class="col text-right">
+            <plex-button title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'"></plex-button>
 
-    </plex-box>
-</div>
+            <plex-button title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'"></plex-button>
+            <plex-button title="Ver prestación" label="Ver" type="success" (click)="verPrestacion()" *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'"></plex-button>
+        </div>
+    </div>
+</footer>
+
 
 <div *ngIf="showEjecucion">
     <rup-prestacionEjecucion [prestacion]="prestacion" (evtData)="onReturn(prestacion)"></rup-prestacionEjecucion>
