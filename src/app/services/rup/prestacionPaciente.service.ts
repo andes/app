@@ -1,20 +1,14 @@
-import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
-import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
-import { AppSettings } from './../../appSettings';
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
+import { environment } from '../../../environments/environment';
 import { Server } from '@andes/shared';
+import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
+import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
 
 @Injectable()
 export class PrestacionPacienteService {
 
-    private prestacionesUrl = AppSettings.API_ENDPOINT + '/modules/rup/prestaciones';  // URL to web api
+    private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
 
     constructor(private server: Server) { }
 

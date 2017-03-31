@@ -1,19 +1,13 @@
 import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
-import { AppSettings } from './../../appSettings';
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
+import { environment } from '../../../environments/environment';
 import { Server } from '@andes/shared';
 
 @Injectable()
 export class ProblemaPacienteService {
 
-    private problemaUrl = AppSettings.API_ENDPOINT + '/modules/rup';  // URL to web api
+    private problemaUrl = '/modules/rup';  // URL to web api
 
     constructor(private server: Server) { }
 

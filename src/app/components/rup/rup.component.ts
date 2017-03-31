@@ -6,7 +6,7 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { PacienteService } from './../../services/paciente.service';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
-import { RUP_COMPONENTS } from '../../rup.module';
+import { RUP_COMPONENTS } from '../../app.module';
 
 import {
     Component, ViewContainerRef, ComponentFactoryResolver,

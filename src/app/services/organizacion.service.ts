@@ -1,21 +1,13 @@
-import { AppSettings } from './../appSettings';
+import { Server } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { Http } from '@angular/http';
-import { Server } from '@andes/shared';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class OrganizacionService {
-
-
-    private organizacionUrl = AppSettings.API_ENDPOINT + '/core/tm/organizaciones';  // URL to web api
-
-
-    constructor(private server: Server, private http: Http) { }
+    private organizacionUrl = '/core/tm/organizaciones';  // URL to web api
+    constructor(private server: Server) { }
 
     /**
      * Metodo get. Trae el objeto organizacion.
@@ -25,6 +17,7 @@ export class OrganizacionService {
         console.log ('url ', this.organizacionUrl);
         return this.server.get(this.organizacionUrl, {params: params, showError: true});
     }
+
     /**
      * Metodo getById. Trae el objeto organizacion por su Id.
      * @param {String} id Busca por Id
@@ -32,6 +25,7 @@ export class OrganizacionService {
     getById(id: String): Observable<IOrganizacion> {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
+
     /**
      * Metodo post. Inserta un objeto organizacion nuevo.
      * @param {IOrganizacion} organizacion Recibe IOrganizacion
@@ -39,6 +33,7 @@ export class OrganizacionService {
     post(organizacion: IOrganizacion): Observable<IOrganizacion> {
         return this.server.post(this.organizacionUrl, organizacion) // ...using post request
     }
+
      /**
      * Metodo put. actualiza un objeto organizacion.
      * @param {IOrganizacion} organizacion Recibe IOrganizacion

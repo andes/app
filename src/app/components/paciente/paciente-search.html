@@ -1,207 +1,98 @@
-<div class="row">
-  <div class="col-sm-12" *ngIf="!showcreate">
-    <div class="row">
-      <div class="col-md-7">
-        <plex-box type="info" title="Búsqueda de Pacientes">
-          <div class="col-sm-11">
-            <div class="row">
-              <div class="col-md-11" *ngIf="!pacientesSearch">
-                <div class="form-group">
-                  <!--<input  (focus)="active = true" [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">-->
-                  <input [formControl]="searchText" [(ngModel)]="searchTextModel" class="form-control" placeholder="Buscar...">
-                </div>
-              </div>
-              <div class="col-md-11" *ngIf="pacientesSearch">
-                <form [formGroup]="searchForm">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <plex-int label="DNI" formControlName="documento" placeholder="Ingresar DNI...">
-                      </plex-int>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <plex-text label="Nombre" formControlName="nombre" placeholder="Ingrese nombre...">
-                      </plex-text>
-                    </div>
-                    <div class="col-md-4">
-                      <plex-text label="Apellido" formControlName="apellido" placeholder="Ingrese apellido...">
-                      </plex-text>
-                    </div>
-                    <br>
-                    <div class="col-md-4">
-                      <plex-button icon="account-search" title="buscar" label="Buscar" type="default" (click)="findPacientes()"></plex-button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <!--*ngIf="pacientesSearch">-->
+<div *ngIf="!showCreateUpdate" class="row">
+    <!--Panel central-->
+    <div class="col">
+        <plex-box type="primary">
+            <header>
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="💳" placeholder="Escanee un DNI digital para registrar al paciente">
+                </plex-text>
+            </header>
 
-              <div class="col-sm-1">
-                <plex-bool type="slide" [(ngModel)]="modeloSlide.activo" name="modeloSlide.activo" (ngModelChange)="activate($event)"></plex-bool>
-              </div>
+            <!--Loader-->
+            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+            <!--Alerta si no se encontró ningun paciente-->
+            <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
             </div>
 
-          </div>
-          <!--class="col-sm-11"-->
-          <div>
-            <plex-button icon="account-plus" type="primary" (click)="showcreate = !showcreate" *ngIf="nuevoPaciente" label="Nuevo Paciente"></plex-button>
-          </div>
-        </plex-box>
-        <!--"Búsqueda de Pacientes"-->
+            <!--Alerta si se encontraro pacientes con alto % de macheo -->
+            <div *ngIf="pacientesSimilares && pacientesSimilares.length && !mostrarNuevo" class="alert alert-warning">
+                <i class="mdi mdi-account-alert"></i> Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto
+            </div>
 
-        <div>
-        </div>
-
-        <div class="row">
-          <plex-loader *ngIf="active"></plex-loader>
-        </div>
-
-        <plex-box type="info" title="Pacientes Encontrados">
-          <!-- Search results -->
-          <div class="hover" *ngIf="!pacientesSearch">
-            <div class="table-responsive">
-              <table class="table table-hover">
+            <!--Tabla de resultados por SimpleQuery -->
+            <table *ngIf="resultado && resultado.length" class="table table-striped">
                 <thead>
-                  <tr>
-                    <th>Documento</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Fecha de Nacimiento</th>
-                    <th>Sexo</th>
-                  </tr>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>&nbsp;</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let paciente of resultados$ | async" (click)="mostrarPaciente(paciente)">
-                    <td>{{paciente.documento}}</td>
-                    <td>{{paciente.nombre| uppercase}}</td>
-                    <td>{{paciente.apellido| uppercase}}</td>
-                    <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                    <td>{{paciente.sexo}}</td>
-                  </tr>
+                    <tr class="hover" *ngFor="let paciente of resultado">
+                        <td>{{paciente.documento}}</td>
+                        <td>{{paciente.apellido}}</td>
+                        <td>{{paciente.nombre}}</td>
+                        <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                        <td>{{paciente.sexo}}</td>
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(paciente)"></plex-button>
+                        </td>
+                    </tr>
                 </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="hover" *ngIf="pacientesSearch">
-            <div class="table-responsive">
-              <table class="table table-hover">
+            </table>
+
+            <!--Tabla de resultados por Suggest -->
+            <table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
                 <thead>
-                  <tr>
-                    <th>Documento</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Fecha de Nacimiento</th>
-                    <th>Sexo</th>
-                  </tr>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>% Similitud</th>
+                        <th>&nbsp;</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let paciente of pacientesLista">
-                    <td>{{paciente.documento}}</td>
-                    <td>{{paciente.nombre| uppercase}}</td>
-                    <td>{{paciente.apellido| uppercase}}</td>
-                    <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                    <td>{{paciente.sexo}}</td>
-                  </tr>
+                    <tr class="hover" *ngFor="let elem of pacientesSimilares">
+
+                        <td>{{elem.paciente.documento}}</td>
+                        <td>{{elem.paciente.apellido}}</td>
+                        <td>{{elem.paciente.nombre}}</td>
+                        <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                        <td>{{elem.paciente.sexo}}</td>
+                        <td>{{elem.match * 100}} %</td>
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="check" type="success" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
+                        </td>
+                    </tr>
                 </tbody>
-              </table>
-            </div>
-          </div>
+            </table>
+
         </plex-box>
-
-        <div class="row">
-          <plex-box type="danger" *ngIf="!!mensaje">
-            {{mensaje}}
-          </plex-box>
-        </div>
-      </div>
-      <!--col-md-7 -->
-
-      <!--fin de col-md-8 -->
-      <div class="col-md-5">
-        <plex-box type="info" title="Panel de Eventos">
-
-          <div class="panel panel-success" *ngIf="(pacientesScan || selectedPaciente)">
-            <plex-box type="info" title="Paciente Seleccionado">
-              <div class="row">
-                <div class="col-md-12">
-                  <h4><strong>{{selectedPaciente.nombre}} {{selectedPaciente.apellido}}</strong></h4>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <h4>D.N.I. {{selectedPaciente.documento}} </h4>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Fecha de Nacimiento</label>
-                  <div class="row">
-                    <div class="col-md-4">{{selectedPaciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Sexo</label>
-                  <div class="row">
-                    <div class="col-md-4">{{selectedPaciente.sexo}}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Estado</label>
-                  <div class="row">
-                    <div class="col-md-4">{{selectedPaciente.estado}}</div>
-                  </div>
-                </div>
-              </div>
-              <br>
-              <div *ngIf="pacientesScan && mensaje">
-                <div class="alert alert-warning" role="alert">
-                  {{mensaje}}
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12" *ngIf="selectedPaciente && !mensaje">
-                  <plex-button icon="account-edit" type="primary" label="Seleccionar" (click)="onSelect(selectedPaciente)"></plex-button>
-                </div>
-              </div>
-            </plex-box>
-            <!--Paciente Seleccionado-->
-          </div>
-          <!--panel panel-success-->
-          <div class="panel panel-warning" *ngIf="!(pacientesScan || selectedPaciente)">
-            <div class="panel-heading">Recordatorios</div>
-            <div class="panel-body">
-              <ul>
-                <li>
-                  <p>Recuerde que puede realizar las búsquedas más rápidamente solicitando el DNI
-                </li>
-                <li>
-                  <p>Recuerde actualizar la información de contacto.
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="panel panel-success">
-            <div class="panel-heading">Últimas novedades al <b> {{fechaActual | date:'dd-MM-yyyy'}} </b> </div>
-            <div class="panel-body">
-              <p> Cantidad de pacientes validados fuente auténtica RENAPER <span class="badge">{{cantPacientesValidados}}</span></p>
-              <p> Cantidad de pacientes fallecidos registrados <span class="badge">{{cantPacientesFallecidos}}</span> </p>
-            </div>
-          </div>
-        </plex-box>
-        <!--Panel de Eventos-->
-      </div>
-      <!--col-md-5"-->
     </div>
-  </div>
+    <!--Panel lateral-->
+    <div class="col-4">
+        <plex-box type="primary">
+            <header>
+                <h3>Validación digital de pacientes</h3>
+            </header>
+            <div class="label-info margin-bottom" style="font-size: 1em">Pacientes registrados en la Historia Digital de Salud: <strong>{{cantPacientesValidados}}</strong></div>
+            <div class="nuevoDNI"></div>
+        </plex-box>
+    </div>
 </div>
-<div *ngIf="showcreate && !pacientesScan">
-  <paciente-create-update (data)='onReturn($event)'></paciente-create-update>
-</div>
-<div *ngIf="(showcreate && pacientesScan)">
-  <paciente-create-update [seleccion]="selectedPaciente" (data)='onReturn($event)'></paciente-create-update>
+<plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
+    <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(null)"></plex-button>
+</plex-box>
+
+<!--Componente de Alta/Modificación-->
+<div *ngIf="showCreateUpdate">
+    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
 </div>

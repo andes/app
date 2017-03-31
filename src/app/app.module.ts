@@ -20,11 +20,12 @@ import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-// Globales
+// Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
+import { RoutingGuard } from './app.routings-guard.class';
 
 // Servicios
 // ... Tablas Maestras
@@ -43,7 +44,6 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
-import { PrestacionService } from './services/turnos/prestacion.service';
 import { AgendaService } from './services/turnos/agenda.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
@@ -66,10 +66,8 @@ import { OrganizacionCreateUpdateComponent } from './components/organizacion/org
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
-import { PacienteComponent } from './components/paciente/paciente.component';
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
-import { PacienteUpdateComponent } from './components/paciente/paciente-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -86,8 +84,8 @@ import { LiberarTurnoComponent } from './components/turnos/liberar-turno.compone
 import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
-
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+import { PanelAgendaComponent } from './components/turnos/panel-agenda.component';
 
 // Estos componentes utilizan ng-prime y deben ser actualizados
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
@@ -231,6 +229,7 @@ import { routing, appRoutingProviders } from './app.routing';
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
+
 // Main module
 @NgModule({
   imports: [
@@ -251,7 +250,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteComponent, PacienteUpdateComponent, PacienteSearchComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
@@ -259,6 +258,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
+    PanelAgendaComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,
@@ -269,6 +269,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
   },
     Plex,
     Auth,
+    RoutingGuard,
     OrganizacionService,
     ProvinciaService,
     TipoEstablecimientoService,
@@ -279,7 +280,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BarrioService,
     PacienteService,
     FinanciadorService,
-    PrestacionService,
     appRoutingProviders,
     ConfigPrestacionService,
     AgendaComponent,

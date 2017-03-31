@@ -1,0 +1,11 @@
+.nuevoDNI {
+    background-image: url('../../assets/img/nuevoDNI.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 300px;
+}
+
+.label-info {
+    font-size: 1em;
+}

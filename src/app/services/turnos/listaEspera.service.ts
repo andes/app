@@ -1,21 +1,15 @@
-import { AppSettings } from './../../appSettings';
 import { IListaEspera } from './../../interfaces/turnos/IListaEspera';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import { Server } from '@andes/shared';
-import 'rxjs/add/operator/toPromise';
-
 import { Observable } from 'rxjs/Rx';
-// Import RxJs required methods
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ListaEsperaService {
 
-    private listaEsperaUrl = AppSettings.API_ENDPOINT + '/modules/turnos/listaEspera';  // URL to web api
+    private listaEsperaUrl = '/modules/turnos/listaEspera';  // URL to web api
 
-    constructor(private server: Server, private http: Http) { }
+    constructor(private server: Server) { }
 
     /**
        * Metodo get. Trae el objeto organizacion.

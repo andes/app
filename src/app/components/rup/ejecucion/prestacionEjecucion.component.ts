@@ -8,7 +8,7 @@ import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 import { Plex } from '@andes/plex';
-import { MenuItem } from '@andes/plex/src/lib/app/menu-item.class';
+import { DropdownItem } from '@andes/plex';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -25,10 +25,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tipoProblema = null;
     public problemaTratar: any;
     items = [
-        new MenuItem({ label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } }),
-        new MenuItem({ label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) }),
-        new MenuItem({ label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) }),
-        new MenuItem({ label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) }),
+        { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
+        { label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) },
+        { label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) },
+        { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
     ];
     problemaItem: any;
 

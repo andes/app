@@ -213,7 +213,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     /*Código de filtrado de combos*/
     loadPaises(event) {
-        this.paisService.get().subscribe(event.callback);
+        this.paisService.get({}).subscribe(event.callback);
     }
 
     loadProvincias(event, pais) {

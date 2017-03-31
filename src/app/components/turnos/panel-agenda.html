@@ -1,0 +1,13 @@
+<plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)" 
+    placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre + ' ' + apellido">
+</plex-select>
+
+<plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+    placeholder="Seleccione un espacio">
+</plex-select>
+
+<plex-button icon="mdi-content-save" title="Guardar" label="Guardar" type="primary" (click)="guardarAgenda(editaAgendaPanel)">
+</plex-button>
+
+<plex-button icon="mdi-content-save" title="Cancelar" label="Cancelar" type="default" (click)="cancelar()">
+</plex-button>

@@ -11,7 +11,7 @@ import { IProfesional } from './../../../interfaces/IProfesional';
 import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Services
-import { PrestacionService } from '../../../services/turnos/prestacion.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { ProfesionalService } from './../../../services/profesional.service';
 import { PacienteService } from './../../../services/paciente.service';
@@ -52,7 +52,7 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
         public profesionalService: ProfesionalService,
         public pacienteService: PacienteService,
         public listaEsperaService: ListaEsperaService,
-        public prestacionService: PrestacionService,
+        public prestacionService: TipoPrestacionService,
         public plex: Plex,
         private router: Router
     ) { }
