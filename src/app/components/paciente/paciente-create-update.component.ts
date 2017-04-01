@@ -79,9 +79,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
-  @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
+  @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-  matchingItems: Array < any > ;
+  matchingItems: Array<any>;
 
   createForm: FormGroup;
   estados = [];
@@ -179,7 +179,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private barrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) {}
+    private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
 
@@ -300,7 +300,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             if (resultado) {
               this.seleccion = resultado;
             }
-            
+
             if (this.escaneado) {
               this.seleccion.estado = 'validado';
               this.validado = true;
@@ -409,38 +409,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
 
-  // Verifica paciente repetido
-  verificaPacienteRepetido() {
-    if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      debugger;
-      if (!this.pacienteModel.id) {
-        let dto: PacienteSearch = {
-          type: 'suggest',
-          claveBlocking: 'documento',
-          percentage: true,
-          apellido: this.pacienteModel.apellido.toString(),
-          nombre: this.pacienteModel.nombre.toString(),
-          documento: this.pacienteModel.documento.toString(),
-          sexo: this.pacienteModel.sexo.toString(),
-          fechaNacimiento: this.pacienteModel.fechaNacimiento,
-          escaneado: false, //ver aca el que corresponda
-        };
-        this.pacienteService.get(dto).subscribe(resultado => {
-          debugger;
-          this.pacientesSimilares = resultado;
-          console.log(resultado)
-          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            this.disableGuardar = true;
-            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-          }
-        });
-      }
-    }
-  }
-
 
   onSave(valid) {
-
+    debugger;
     //El primer save
     let lista = [];
     if (valid.formValid) {
@@ -465,6 +436,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         pacienteGuardar.direccion[0].ubicacion.localidad = null;
       }
 
+      this.save(true);
 
       // Si quitan las relaciones.referencia inexistentes
       // this.pacienteModel.relaciones.forEach(rel => {
@@ -474,52 +446,52 @@ export class PacienteCreateUpdateComponent implements OnInit {
       // });
       // Se controla si existe el paciente
 
-      if (!this.pacienteModel.id) {
-        let dto: PacienteSearch = {
-          type: 'suggest',
-          claveBlocking: 'documento',
-          percentage: true,
-          apellido: pacienteGuardar.apellido.toString(),
-          nombre: pacienteGuardar.nombre.toString(),
-          documento: pacienteGuardar.documento.toString(),
-          sexo: pacienteGuardar.sexo.toString(),
-          fechaNacimiento: pacienteGuardar.fechaNacimiento
-        };
-        this.pacienteService.get(dto).subscribe(resultado => {
-          debugger;
-          this.pacientesSimilares = resultado;
-          console.log(resultado)
-          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            this.disableGuardar = true;
-            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-          } else {
-            this.save(true);
-          }
-        });
+      // if (!this.pacienteModel.id) {
+      //   let dto: PacienteSearch = {
+      //     type: 'suggest',
+      //     claveBlocking: 'documento',
+      //     percentage: true,
+      //     apellido: pacienteGuardar.apellido.toString(),
+      //     nombre: pacienteGuardar.nombre.toString(),
+      //     documento: pacienteGuardar.documento.toString(),
+      //     sexo: pacienteGuardar.sexo.toString(),
+      //     fechaNacimiento: pacienteGuardar.fechaNacimiento
+      //   };
+      //   this.pacienteService.get(dto).subscribe(resultado => {
+      //     debugger;
+      //     this.pacientesSimilares = resultado;
+      //     console.log(resultado)
+      //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+      //       this.disableGuardar = true;
+      //       this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+      //     } else {
+      //       this.save(true);
+      //     }
+      //   });
 
-        // let dtoBusqueda = {
-        //   'apellido': this.pacienteModel.apellido, 'nombre': this.pacienteModel.nombre, 'documento': this.pacienteModel.documento.toString(),
-        //   'fechaNacimiento': this.pacienteModel.fechaNacimiento
-        // };
-        // this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
-        //   .subscribe(valor => {
-        //     this.pacientesSimilares = valor; console.log(valor)
-        //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-        //       this.disableGuardar = true;
-        //       //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-        //       alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-        //     } else {
-        //       this.save(true);
-        //     }
-        //   });
+      // let dtoBusqueda = {
+      //   'apellido': this.pacienteModel.apellido, 'nombre': this.pacienteModel.nombre, 'documento': this.pacienteModel.documento.toString(),
+      //   'fechaNacimiento': this.pacienteModel.fechaNacimiento
+      // };
+      // this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
+      //   .subscribe(valor => {
+      //     this.pacientesSimilares = valor; console.log(valor)
+      //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+      //       this.disableGuardar = true;
+      //       //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+      //       alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+      //     } else {
+      //       this.save(true);
+      //     }
+      //   });
 
-      } else {
-        this.save(true);
-      }
+      // } else {
+      //   this.save(true);
+      // }
+
 
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
-      //alert('Debe completar los datos obligatorios');
     }
   }
 
@@ -541,7 +513,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return elem
       });
 
-      let operacionPac: Observable < IPaciente > ;
+      let operacionPac: Observable<IPaciente>;
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
@@ -700,5 +672,37 @@ export class PacienteCreateUpdateComponent implements OnInit {
   //   this.disableGuardar = false;
   //   this.sugerenciaAceptada = true;
   // }
+
+
+
+  // Verifica paciente repetido
+  verificaPacienteRepetido() {
+    
+    if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
+      
+      this.completarGenero();
+
+      if (!this.pacienteModel.id) {
+        let dto: PacienteSearch = {
+          type: 'suggest',
+          claveBlocking: 'documento',
+          percentage: true,
+          apellido: this.pacienteModel.apellido.toString(),
+          nombre: this.pacienteModel.nombre.toString(),
+          documento: this.pacienteModel.documento.toString(),
+          sexo: this.pacienteModel.sexo.toString(),
+          fechaNacimiento: this.pacienteModel.fechaNacimiento
+        };
+        this.pacienteService.get(dto).subscribe(resultado => {
+          this.pacientesSimilares = resultado;
+          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+            this.disableGuardar = true;
+          }
+        });
+      }
+    }
+  }
+
 
 }
