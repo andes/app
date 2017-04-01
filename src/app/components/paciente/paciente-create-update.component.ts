@@ -367,9 +367,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     //       }
     //     })
     //   });
-
-
-
   }
 
   /*Código de filtrado de combos*/
