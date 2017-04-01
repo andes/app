@@ -291,7 +291,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.seleccion.direccion = [this.direccion];
       }
 
-
+ 
 
       if (this.seleccion.id) {
         // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
