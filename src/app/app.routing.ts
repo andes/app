@@ -18,6 +18,7 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Global
 import { RoutingGuard } from './app.routings-guard.class';
+import {GoogleMaps} from './utils/googleMaps';
 
 // Componentes
 // ... Tablas Maestras

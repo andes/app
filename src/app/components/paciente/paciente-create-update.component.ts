@@ -66,10 +66,13 @@ import {
 import {
   DomSanitizer,
   SafeHtml
-} from "@angular/platform-browser";
+} from '@angular/platform-browser';
 import {
   Plex
 } from '@andes/plex';
+import {
+  MapsComponent
+} from './../../utils/MapsComponent';
 
 @Component({
   selector: 'paciente-create-update',

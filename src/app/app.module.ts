@@ -26,6 +26,8 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
+import { AgmCoreModule } from 'angular2-google-maps/core';
+import { MapsComponent } from './utils/mapsComponent';
 
 // Servicios
 // ... Tablas Maestras
@@ -69,6 +71,7 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
+
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -239,6 +242,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     HttpModule,
     PlexModule,
     routing,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+    }),
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     })
@@ -250,7 +256,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

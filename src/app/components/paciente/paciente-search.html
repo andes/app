@@ -1,7 +1,7 @@
 <section>
   <div *ngIf="!showCreateUpdate" class="row">
     <!--Panel central-->
-    <div class="col">
+    <div class="col-8">
       <plex-box type="primary">
         <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="💳" placeholder="Escanee un DNI digital para registrar al paciente">
         </plex-text>
@@ -77,7 +77,7 @@
       </plex-box>
     </div>
     <!--Panel lateral-->
-    <div class="col-4">
+    <div class="col">
       <plex-box type="primary">
         <header>
           <h3>Validación digital de pacientes</h3>
@@ -87,12 +87,17 @@
       </plex-box>
     </div>
   </div>
-  <plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
-    <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(null)"></plex-button>
-  </plex-box>
-
-  <!--Componente de Alta/Modificación-->
+   <!--Componente de Alta/Modificación-->
   <div *ngIf="showCreateUpdate">
     <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
   </div>
 </section>
+<footer>
+<plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
+    <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(null)"></plex-button>
+  </plex-box>
+
+</footer>
+  
+ 
+
