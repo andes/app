@@ -1,0 +1,33 @@
+<plex-select [(ngModel)]="data[tipoPrestacion.key].edadControl" name="tiempo" [data]="SelectControlEdad" label="Edad a Controlar"
+  (change)="devolverValores()"  placeholder="Seleccionar edad a controlar">
+</plex-select>
+
+
+<plex-bool [(ngModel)]="data[tipoPrestacion.key].concurrio" name="concurrio" label="concurrió" (change)="devolverValores()">
+</plex-bool>
+
+
+
+<!--<plex-bool [(ngModel)]="data[tipoPrestacion.key].sano" name="sano" label="Sano" (change)="devolverValores()">
+</plex-bool>
+<plex-bool [(ngModel)]="data[tipoPrestacion.key].soloActPrev" name="soloActPrev" label="Solo actividades de prevención" (change)="devolverValores()">
+</plex-bool>-->
+
+<plex-select [(ngModel)]="data[tipoPrestacion.key].sanoOactividades" name="sanoOactividades" [data]="SelectSanoOactividades" 
+  (change)="devolverValores()" placeholder="Seleccionar un valor">
+</plex-select>
+
+<plex-select [(ngModel)]="data[tipoPrestacion.key].patologiaOTratamiento" name="patologiaOTratamiento" [data]="SelectPatologiaOTratamiento" 
+  (change)="devolverValores()" placeholder="Seleccionar un valor">
+</plex-select>
+
+
+<!--<plex-bool [(ngModel)]="data[tipoPrestacion.key].patologia" name="patologia" label="Patología" (change)="devolverValores()">
+</plex-bool> 
+<plex-bool [(ngModel)]="data[tipoPrestacion.key].necesitaTratamiento" name="necesitaTratamiento" label="Necesita Tratamiento"
+  (change)="devolverValores()">
+</plex-bool>-->
+
+
+<pre> {{data|json}}
+</pre>

@@ -6,15 +6,16 @@ import { IBarrio } from './../interfaces/IBarrio';
 
 @Injectable()
 export class BarrioService {
-    private barrioUrl = '/barrios';  // URL to web api
+
+     private barrioUrl = '/core/tm/barrios';  // URL to web api
 
     constructor(private server: Server) { }
 
-    get(): Observable<IBarrio[]> {
-        return this.server.get(this.barrioUrl);
+    get(params: any): Observable<IBarrio[]> {
+        return this.server.get(this.barrioUrl, { params: params, showError: true });
     }
 
-    getXProvincia(localidad: String): Observable<IBarrio[]> {
+    getXLocalidad(localidad: String): Observable<IBarrio[]> {
         return this.server.get(this.barrioUrl + '?localidad=' + localidad);
     }
 }

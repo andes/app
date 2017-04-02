@@ -42,9 +42,9 @@ export class PuntoInicioComponent implements OnInit {
     ngOnInit() {
 
         this.profesionalLog = {
-            'id': '57fe1dafe46ceaf8317c7ddf',
-            'nombre': 'Jorge',
-            'apellido': 'Perez',
+            'id': '58480c39dbd0a72c249b11f2',
+            'nombre': 'Sara',
+            'apellido': 'Connor',
             'activo': true,
         }
         this.loadAgendasXDia();
@@ -70,7 +70,8 @@ export class PuntoInicioComponent implements OnInit {
 
     listadoTurnos(bloque) {
         this.bloqueSeleccionado = bloque;
-        var turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id })
+        let turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id; });
+
         this.servicioPrestacion.get({ turnos: turnos }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
         })

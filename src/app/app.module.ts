@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -25,6 +26,8 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
+import { AgmCoreModule } from 'angular2-google-maps/core';
+import { MapsComponent } from './utils/mapsComponent';
 
 // Servicios
 // ... Tablas Maestras
@@ -68,6 +71,7 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
+
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
@@ -127,7 +131,8 @@ import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitud
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
-// import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
+import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
+import { IndiceDeMasaCorporalComponent } from './components/rup/moleculas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -151,6 +156,10 @@ import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinat
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
 import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
+// NIÑO SANO
+import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
+import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
+
 
 
 export const RUP_COMPONENTS = [
@@ -208,7 +217,11 @@ export const RUP_COMPONENTS = [
   ActitudAnteLosCuidadosComponent,
   ControlDeEsfinteresComponent,
   DesarrolloIntelectualyJuegosComponent,
-  EscalaDeDesarrolloComponent
+  EscalaDeDesarrolloComponent,
+  EstadoNutricionalComponent,
+  OdontologiaComponent,
+  IndiceDeMasaCorporalComponent,
+  FactoresDeRiesgoNinoSanoComponent
 
 ];
 
@@ -229,6 +242,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     HttpModule,
     PlexModule,
     routing,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+    }),
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     })
@@ -240,7 +256,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

@@ -1,99 +1,78 @@
-// import { IPaciente } from './../../../interfaces/IPaciente';
-// import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
-// @Component({
-//     selector: 'rup-EstadoNutricional',
-//     templateUrl: 'estadoNutricional.html'
-// })// @Component
+@Component({
+    selector: 'rup-estadoNutricional',
+    templateUrl: 'estadoNutricional.html'
+})// @Component
 
-// export class EstadoNutricionalComponent implements OnInit {
+export class EstadoNutricionalComponent implements OnInit {
 
-//     @Input('datosIngreso') datosIngreso: any;
-//     @Input('tipoPrestacion') tipoPrestacion: any;
-//     @Input('paciente') paciente: IPaciente;
-//     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    @Input('datosIngreso') datosIngreso: any;
+    @Input('tipoPrestacion') tipoPrestacion: any;
+    @Input('paciente') paciente: any;
+    @Input('soloValores') soloValores: Boolean;
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-//     data: any = {
-//         mensaje: {
-//             class: '',
-//             texto: '',
-//         },
-//     };
+    suffix: String;
+    data: any = {};
+    mensaje: any = {};
 
-//     // *************************************************************************************** //
-//     ngOnInit() {
-//         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+    ngOnInit() {
 
+    if (this.paciente.edad >= 2) {
+        this.suffix = 'IMC';
+    } else {
+        this.suffix = 'PRC';
+    };
 
-//         // this.paciente = {
-//         //     "id": "57ebacce69fe79a598e6281d",
-//         //     "documento": "29410428",
-//         //     "activo": true,
-//         //     "estado": "validado",
-//         //     "nombre": "Carolina",
-//         //     "apellido": "Celeste",
-//         //     "sexo": "femenino",
-//         //     "genero": "femenino",
-//         //     "fechaNacimiento": "02/11/1993",
-//         //     "estadoCivil": "soltera"
-//         // };
+    this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
 
-//         // {
-//         //     this.tipoPrestacion = "id" : "58c937167cf90c44906b17cc",
-//         //     "key" : "estadoNutricional",
-//         //     "nombre" : "Estado Nutricional",
-//         //     "autonoma" : false,
-//         //     "activo" : true,
-//         //     "granularidad" : "atomos",
-//         //     "turneable" : false,
-//         //     "componente" : {
-//         //         "ruta" : "rup/atomos/estadoNutricional.component.ts",
-//         //         "nombre" : "EstadoNutricionalComponent"
-//         //     };
+    // si tengo valores cargados entonces devuelvo los resultados y mensajes
+    if (this.datosIngreso) {
+        this.devolverValores();
+    }
 
-// }
-
-//     } // ngOnInit()
+} // ngOnInit()
 
 
-//     // *************************************************************************************** //
-//     devolverValores() { // Hacer las validaciones
-//         this.data.mensaje = this.getMensajes();
-//         this.evtData.emit(this.data);
-//     }// devolverValores()
+
+    devolverValores() { // Hacer las validaciones
+
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        }
+
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
+    }// devolverValores()
 
 
-//     // *************************************************************************************** //
-//     getMensajes() {
-//         let Edad;
-//         let prc;
-//         let mensaje: any = {
-//             texto: '',
-//             class: 'outline-danger'
-//         }; // let mensaje
 
-//         Edad = this.paciente.edad;
-//         debugger;
-//         prc = this.data[this.tipoPrestacion.key];
+    getMensajes() {
+        let edad; edad = this.paciente.edad;
+        let prc;  prc = this.data[this.tipoPrestacion.key];
+        let mensaje: any = {
+            texto: '',
+            class: 'outline-danger'
+        };
 
+        if (edad >= 2) {
 
-//         if (Edad >= 2) {
-//             switch (prc) {
-//                 case (prc > 97): mensaje.texto = 'O (Obesidad)';
-//                     break;
-//                 case (prc > 85 && prc <= 97): mensaje.texto = 'Sp (Sobrepeso)';
-//                     break;
-//                 case (prc >= 15 && prc < 85): mensaje.texto = 'N (Normal)';
-//                     break;
-//                 case (prc >= 3 && prc < 15): mensaje.texto = 'RN (Riesgo Nutricional)';
-//                     break;
-//                 case (prc < 3): mensaje.texto = 'Em (Emaciación)';
-//                     break;
-//                 default:
-//                     break;
-//             } // switch (prc)
-//         } // if (Edad >= 2)
-
-//     }// getMensajes()
-// }// export class EstadoNutricionalComponent
+            switch (true) {
+                case (prc > 97): mensaje.texto = 'O (Obesidad)';
+                    break;
+                case (prc > 85 && prc <= 97): mensaje.texto = 'Sp (Sobrepeso)';
+                    break;
+                case (prc >= 15 && prc < 85): mensaje.texto = 'N (Normal)';
+                    break;
+                case (prc >= 3 && prc < 15): mensaje.texto = 'RN (Riesgo Nutricional)';
+                    break;
+                case (prc < 3): mensaje.texto = 'Em (Emaciación)';
+                    break;
+                default:
+                    break;
+            } // switch (true)
+        }
+    }// getMensajes()
+}// export class EstadoNutricionalComponent
 

@@ -19,7 +19,6 @@ export class TensionSistolicaComponent implements OnInit {
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
             this.devolverValores();
@@ -27,6 +26,9 @@ export class TensionSistolicaComponent implements OnInit {
     }
 
     devolverValores() {
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        }         
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);        
     }

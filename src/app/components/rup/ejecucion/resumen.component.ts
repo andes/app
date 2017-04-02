@@ -52,7 +52,7 @@ export class ResumenComponent implements OnInit {
     }
 
     cargarIndicadores() {
-        this.servicioPrestacionPaciente.getByKey({ key: "signosVitales.peso", idPaciente: this.prestacion.paciente.id })
+        this.servicioPrestacionPaciente.getByKey({ key: "peso", idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
                 if (prestacion)
                     this.prestacionPeso = prestacion[0];

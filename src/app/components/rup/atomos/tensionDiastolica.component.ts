@@ -1,5 +1,5 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from "../../../interfaces/IPaciente";
+import { IPaciente } from '../../../interfaces/IPaciente';
 
 @Component({
     selector: 'rup-tension-diastolica',
@@ -9,9 +9,7 @@ export class TensionDiastolicaComponent implements OnInit {
     @Input('datosIngreso') datosIngreso: any;
     @Input('paciente') paciente: IPaciente;
     @Input('tipoPrestacion') tipoPrestacion: any;
-    @Input('soloValores') soloValores: Boolean;
-    @Input('required') required: Boolean;
-
+    @Input('soloValores') soloValores: Boolean;    
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
     data: any = {};
@@ -21,13 +19,15 @@ export class TensionDiastolicaComponent implements OnInit {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
 
         // si tengo valores cargados entonces devuelvo los resultados y mensajes        
-
     if (this.datosIngreso) {
             this.devolverValores();
         };
     }
 
-    devolverValores() {       
+    devolverValores() {      
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        } 
             this.mensaje = this.getMensajes();
             this.evtData.emit(this.data);        
     }

@@ -12,8 +12,8 @@
         color: #333;
     }
 </style>
-<header-paciente [paciente]="prestacion.paciente">
-</header-paciente>
+<!--<header-paciente [paciente]="prestacion.paciente">
+</header-paciente>-->
 <plex-box type="primary" title="Validar Prestación">
     <div class="row">
         <div class="col-md-12">
@@ -49,8 +49,8 @@
                                 <h5 class="msg-title">Registros y cálculos</h5>
                                 <!--<div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">-->
                                 <div *ngFor="let datoPrestacion of prestaciones[problema.id]">
-                                    <div class="col-md-12" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key]">
-                                        <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0] && datoPrestacion.ejecucion.evoluciones[0].valores[0]) ? datoPrestacion.ejecucion.evoluciones[0].valores[0][datoPrestacion.solicitud.tipoPrestacion.key] : null">
+                                    <div class="col-md-12" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores[datoPrestacion.solicitud.tipoPrestacion.key]">
+                                        <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores) ? datoPrestacion.ejecucion.evoluciones[0].valores[datoPrestacion.solicitud.tipoPrestacion.key] : null">
                                         </rup>
                                     </div>
                                     <!--<br> {{problema.id }} <br> {{datoPrestacion.ejecucion.evoluciones[0].valores | json }}-->
@@ -91,17 +91,21 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 text-right">
+        <div class="col-md-3">
+            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger btn-sm"></plex-button>
+        </div>
+        <div class="col-md-9 text-right">
             <plex-button title="Validar Prestación" label="Validar Prestación" type="success" (click)="validarPrestacion()" *ngIf="showEjecucion && prestacion.estado[prestacion.estado.length-1].tipo != 'validada'"></plex-button>
             <!--<a routerLink="/rup" routerLinkActive="active" class="btn btn-default">Cerrar</a>-->
         </div>
     </div>
     <div class="row" *ngIf="!showEjecucion">
-        <div class="col-md-12">
+        <div class="col-md-9">
             <div class="alert alert-success" role="alert">
                 {{mensaje}}
             </div>
         </div>
+
         <!--<div class="col-md-10">
             <a routerLink="/rup" routerLinkActive="active" class="btn btn-default">Cerrar</a>
         </div>-->

@@ -14,7 +14,6 @@ import { GestorAgendasService } from './../../services/turnos/gestor-agendas.ser
 
 export class PanelAgendaComponent implements OnInit {
 
-    showVistaAgendas: Boolean = true;
     showEditarAgenda: Boolean = false;
 
     private _editarAgendaPanel: any;
@@ -28,6 +27,7 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
+    @Output() showVistaTurnos = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
 
@@ -65,7 +65,7 @@ export class PanelAgendaComponent implements OnInit {
 
     cancelar() {
         this.showEditarAgendaPanel = false;
-        this.showVistaAgendas = true;
+        this.showVistaTurnos.emit(true);
     }
 
 

@@ -184,24 +184,24 @@ export class AgendaComponent implements OnInit {
     }
 
     deleteBloque(indice: number) {
-        let confirma = confirm('Confirma que desea eliminar el bloque?');
-        if (confirma) {
-            this.modelo.bloques.splice(indice, 1);
-            this.bloqueActivo = -1;
-            this.validarTodo();
-        } else {
-            alert('no borra');
-        }
-        // this.plex.confirm('Confirma que desea eliminar el bloque?').then((confirma) => {
-        //     if (confirma) {
-        //         this.modelo.bloques.splice(indice, 1);
-        //         this.bloqueActivo = -1;
-        //         this.validarTodo();
-        //     }
-        // }
-        // ).catch(() => {
+        // let confirma = confirm('Confirma que desea eliminar el bloque?');
+        // if (confirma) {
+        //     this.modelo.bloques.splice(indice, 1);
+        //     this.bloqueActivo = -1;
+        //     this.validarTodo();
+        // } else {
         //     alert('no borra');
-        // });
+        // }
+        this.plex.confirm('¿Confirma que desea eliminar el bloque?').then((confirma) => {
+            if (confirma) {
+                this.modelo.bloques.splice(indice, 1);
+                this.bloqueActivo = -1;
+                this.validarTodo();
+            }
+        }
+        ).catch(() => {
+            alert('no borra');
+        });
     }
 
     compararBloques(fecha1, fecha2): number {
@@ -275,8 +275,6 @@ export class AgendaComponent implements OnInit {
                 }
             });
         }
-        console.log('modelo ', this.modelo);
-        console.log('elementoActivo ', this.elementoActivo);
     }
 
     cambioHoraBloques(texto: String) {
@@ -321,47 +319,51 @@ export class AgendaComponent implements OnInit {
     }
 
     cambiaCantTipo(cual: String) {
-        switch (cual) {
-            case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'reservadoGestion':
-                this.elementoActivo.reservadoGestionPorc = Math.floor
-                    ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
-                break;
-            case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesionalPorc = Math.floor
-                    ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
-                break;
+        if (this.elementoActivo.cantidadTurnos) {
+            switch (cual) {
+                case 'accesoDirectoDelDia':
+                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
+                        ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'accesoDirectoProgramado':
+                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
+                        ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'reservadoGestion':
+                    this.elementoActivo.reservadoGestionPorc = Math.floor
+                        ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+                case 'reservadoProfesional':
+                    this.elementoActivo.reservadoProfesionalPorc = Math.floor
+                        ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
+                    break;
+            }
+            this.validarTodo();
         }
-        this.validarTodo();
     }
 
     cambiaPorcentajeTipo(cual: String) {
-        switch (cual) {
-            case 'accesoDirectoDelDia':
-                this.elementoActivo.accesoDirectoDelDia = Math.floor
-                    ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'accesoDirectoProgramado':
-                this.elementoActivo.accesoDirectoProgramado = Math.floor
-                    ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'reservadoGestion':
-                this.elementoActivo.reservadoGestion = Math.floor
-                    ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
-            case 'reservadoProfesional':
-                this.elementoActivo.reservadoProfesional = Math.floor
-                    ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
-                break;
+        if (this.elementoActivo.cantidadTurnos) {
+            switch (cual) {
+                case 'accesoDirectoDelDia':
+                    this.elementoActivo.accesoDirectoDelDia = Math.floor
+                        ((this.elementoActivo.accesoDirectoDelDiaPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'accesoDirectoProgramado':
+                    this.elementoActivo.accesoDirectoProgramado = Math.floor
+                        ((this.elementoActivo.accesoDirectoProgramadoPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'reservadoGestion':
+                    this.elementoActivo.reservadoGestion = Math.floor
+                        ((this.elementoActivo.reservadoGestionPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+                case 'reservadoProfesional':
+                    this.elementoActivo.reservadoProfesional = Math.floor
+                        ((this.elementoActivo.reservadoProfesionalPorc * this.elementoActivo.cantidadTurnos) / 100);
+                    break;
+            }
         }
-        this.validarTodo();
+        // this.validarTodo();
     }
 
     intercalar() {
@@ -378,11 +380,11 @@ export class AgendaComponent implements OnInit {
         if (seleccion === 'simultaneos') {
             if (this.elementoActivo.citarPorBloque) {
                 console.log('acaa');
-                alert('No puede haber pacientes simultaneos y citación por segmento al mismo tiempo');
+                this.plex.alert('No puede haber pacientes simultáneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
-        alert('y ahora??' + seleccion);
+        // alert('y ahora??' + seleccion);
     }
 
     calcularDuracion(inicio, fin, cantidad) {
@@ -481,58 +483,60 @@ export class AgendaComponent implements OnInit {
             }
         }
         // Verifico que los bloques no estén fuera de los límites de la agenda
-        bloques.forEach((bloque, index) => {
-            let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-            let fin = this.combinarFechas(this.fecha, bloque.horaFin);
+        if ( bloques ) {
+            bloques.forEach((bloque, index) => {
+                let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
-            if (bloque.cantidadTurnos && bloque.duracionTurno) {
-                totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
-            }
-            if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
-                indice = this.alertas.indexOf(alerta);
-                this.alertas.push(alerta);
-            }
-
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
-                this.alertas.push(alerta);
-            }
-
-            if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
-                const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
-                this.alertas.push(alerta);
-            }
-
-            if (this.compararFechas(inicio, fin) > 0) {
-                alerta = 'Bloque ' + (bloque.indice + 1) + ': La hora de inicio es mayor a la hora de fin';
-                this.alertas.push(alerta);
-            }
-
-            // por cada bloque verificar que no se solape con ningún otro
-            let mapeo = bloques.map(function (obj) {
-                if (obj.id !== bloque.id) {
-                    let robj = {};
-                    robj['horaInicio'] = obj.horaInicio;
-                    robj['horaFin'] = obj.horaFin;
-                    return robj;
-                } else {
-                    return null;
+                if (bloque.cantidadTurnos && bloque.duracionTurno) {
+                    totalBloques = totalBloques + (bloque.cantidadTurnos * bloque.duracionTurno);
                 }
-            });
+                if (this.compararFechas(iniAgenda, inicio) > 0 || this.compararFechas(finAgenda, fin) < 0) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Está fuera de los límites de la agenda';
+                    indice = this.alertas.indexOf(alerta);
+                    this.alertas.push(alerta);
+                }
 
-            mapeo.forEach((bloqueMap, index1) => {
-                if (bloqueMap) {
-                    let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
-                    let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
-                    if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
-                        alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
-                        this.alertas.push(alerta);
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) > bloque.cantidadTurnos) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La cantidad de turnos asignados es mayor a la cantidad disponible';
+                    this.alertas.push(alerta);
+                }
+
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
+                    const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
+                    this.alertas.push(alerta);
+                }
+
+                if (this.compararFechas(inicio, fin) > 0) {
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': La hora de inicio es mayor a la hora de fin';
+                    this.alertas.push(alerta);
+                }
+
+                // por cada bloque verificar que no se solape con ningún otro
+                let mapeo = bloques.map(function (obj) {
+                    if (obj.id !== bloque.id) {
+                        let robj = {};
+                        robj['horaInicio'] = obj.horaInicio;
+                        robj['horaFin'] = obj.horaFin;
+                        return robj;
+                    } else {
+                        return null;
                     }
-                }
+                });
+
+                mapeo.forEach((bloqueMap, index1) => {
+                    if (bloqueMap) {
+                        let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
+                        let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
+                        if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
+                            alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
+                            this.alertas.push(alerta);
+                        }
+                    }
+                });
             });
-        });
+        }
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
         totalBloques *= 60000;
@@ -571,19 +575,19 @@ export class AgendaComponent implements OnInit {
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
 
             // Limpiar de bug selectize "$order", horrible todo esto :'(
-            if ( this.modelo.tipoPrestaciones ) {
-                this.modelo.tipoPrestaciones.forEach(function(prestacion, key){
+            if (this.modelo.tipoPrestaciones) {
+                this.modelo.tipoPrestaciones.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
 
-            if ( this.modelo.profesionales ) {
-                this.modelo.profesionales.forEach(function(prestacion, key){
+            if (this.modelo.profesionales) {
+                this.modelo.profesionales.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
 
-            if ( this.modelo.espacioFisico ) {
+            if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
             }
 
@@ -608,16 +612,16 @@ export class AgendaComponent implements OnInit {
                     };
 
 
-                    if ( delDiaCount > 0 ) {
+                    if (delDiaCount > 0) {
                         turno.tipoTurno = 'delDia';
                         delDiaCount--;
-                    } else if ( programadoCount > 0 ) {
+                    } else if (programadoCount > 0) {
                         turno.tipoTurno = 'programado';
                         programadoCount--;
-                    } else if ( gestionCount > 0 ) {
+                    } else if (gestionCount > 0) {
                         turno.tipoTurno = 'gestion';
                         gestionCount--;
-                    } else if ( profesionalCount > 0 ) {
+                    } else if (profesionalCount > 0) {
                         turno.tipoTurno = 'profesional';
                         profesionalCount--;
                     }
@@ -655,23 +659,22 @@ export class AgendaComponent implements OnInit {
 
             espOperation.subscribe(resultado => {
                 console.log(resultado);
-                alert('La agenda se guardo correctamente');
-                if (clonar) {
-                    this.showClonar = true;
-                    this.showBuscarAgendas = false;
-                    this.showAgenda = false;
-                } else {
-                    // this.plex.alert('La agenda se guardo correctamente').then(guardo => {
-                    this.modelo = {
-                        fecha: null
-                    };
-                    this.bloqueActivo = -1;
-                    // });
-                }
+                // alert('La agenda se guardo correctamente');
+                this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
+                    if (clonar) {
+                        this.showClonar = true;
+                        this.showBuscarAgendas = false;
+                        this.showAgenda = false;
+                    } else {
+                        this.modelo = {
+                            fecha: null
+                        };
+                        this.bloqueActivo = -1;
+                    }
+                });
             });
         } else {
-            // TODO: Plex alert
-            alert('Debe completar los datos requeridos');
+            this.plex.alert('Debe completar los datos requeridos');
         }
     }
 

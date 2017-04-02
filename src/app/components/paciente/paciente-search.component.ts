@@ -51,7 +51,7 @@ export class PacienteSearchComponent implements OnInit {
       this.escaneado.emit(this.esEscaneado);
     } else {
       this.esEscaneado = false;
-      this.selected.emit(paciente);
+      // this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     }
     this.showCreateUpdate = true;
@@ -237,6 +237,8 @@ export class PacienteSearchComponent implements OnInit {
     this.textoLibre = '';
     if (paciente) {
       this.resultado = [paciente];
+      // Comentado para evitar mal funcionamiento de turnos
+      // this.seleccionarPaciente(paciente);
     }
   }
 }

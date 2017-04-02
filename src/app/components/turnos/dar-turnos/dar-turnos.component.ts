@@ -86,8 +86,10 @@ export class DarTurnosComponent implements OnInit {
         }]
     };
 
-    pacientesSearch = false;
-    showDarTurnos = true;
+    pacientesSearch = true;
+    showDarTurnos = false;
+    // pacientesSearch = false;
+    // showDarTurnos = true;
     cambioTelefono = false;
     infoPaciente = true;
 
@@ -118,7 +120,7 @@ export class DarTurnosComponent implements OnInit {
         // Fresh start
         // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
-        this.getUltimosTurnos();
+        
 
     }
 
@@ -133,11 +135,6 @@ export class DarTurnosComponent implements OnInit {
 
     loadProfesionales(event) {
         this.serviceProfesional.get({}).subscribe(event.callback);
-        this.permisos = this.auth.getPermissions('turnos:darTurnos:profesional:?');
-        console.log('PERMISOS PROFESIONALES: ', this.permisos);
-        this.serviceProfesional.get({}).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
-        });
     }
 
     filtrar() {
@@ -499,6 +496,7 @@ export class DarTurnosComponent implements OnInit {
                                 ultimosTurnos.push({
                                     tipoPrestacion: turno.tipoPrestacion.nombre,
                                     horaInicio: moment(turno.horaInicio).format('L'),
+                                    estado:turno.estado,
                                     organizacion: agenda.organizacion.nombre,
                                     profesionales: agenda.profesionales
                                 });
@@ -612,7 +610,9 @@ export class DarTurnosComponent implements OnInit {
         this.paciente = pacientes;
         this.showDarTurnos = true;
         this.infoPaciente = true;
+        this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
+        this.getUltimosTurnos();
     }
 
     onCancel() {

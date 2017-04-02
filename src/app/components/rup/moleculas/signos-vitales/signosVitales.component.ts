@@ -1,7 +1,4 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
-
-// import { IPaciente } from './../../../interfaces/IPaciente';
-// import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 
 @Component({
@@ -22,6 +19,7 @@ export class SignosVitalesComponent implements OnInit {
     }
 
     ngOnInit() {
+        // como es una molécula buscamos sus atomos
         this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
             this.tipoPrestacion = tipoPrestacion;
         });
@@ -31,14 +29,29 @@ export class SignosVitalesComponent implements OnInit {
     }
 
     onReturnComponent(obj: any, tipoPrestacion: any) {
+        // valor: variable con el resultado qeu viene del input del formulario
+        let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
 
-            if (obj[tipoPrestacion.key]) {
-            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
+        if (valor) {
+                if (!this.data[this.tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key] = {};
+                }
 
-            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null ) {
+                if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+                }
+            this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
+
+        } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null ) {
                 delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
-            }
-            this.evtData.emit(this.data);
+        }
+
+
+        if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
+            this.data = {};
+        }
+
+        this.evtData.emit(this.data);
     }
 
 }
