@@ -1,32 +1,31 @@
-<div *ngIf="!auth.loggedIn()" class="jumbotron">
-    <div class="logos clearfix">
-        <div class="onelogin">
-        </div>
-        <div class="andes">
-        </div>
+<div *ngIf="!auth.loggedIn()" class="login-container">
+    <div class="login-form">
+        <form>
+            <div class="row login-header">
+                <div class="col">
+                    <div class="onelogin"></div>
+                    <div class="andes"></div>
+                </div>
+            </div>
+            <div class="row login-content">
+                <div class="col">
+                    <plex-int label="Ingrese su usuario provincial OneLogin" prefix="<i class='mdi mdi-account-key'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
+                    </plex-int>
+                    <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-dialpad'></i>" [(ngModel)]="password" name="password" [password]="true" [required]="true">
+                    </plex-text>
+                    <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
+                    </plex-select>
+                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" (click)="login($event)"></plex-button>
+                </div>
+            </div>
+            <div class="row login-footer">
+                <div class="col">
+                    <div class="redTICS"></div>
+                    <div class="ministerio"></div>
+                </div>
+            </div>
+        </form>
     </div>
-    <form class="margin-top">
-        <div class="row">
-            <div class="col-6 offset-md-3">
-                <plex-int label="Ingrese su usuario provincial OneLogin" prefix="<i class='mdi mdi-account-key mdi-24px'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
-                </plex-int>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 offset-md-3">
-                <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-fingerprint mdi-24px'></i>" [(ngModel)]="password" name="password" [password]="true" [required]="true">
-                </plex-text>
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 offset-md-3">
-                <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
-                </plex-select>
-                <plex-button icon="lock-open" label="Iniciar sesión" type="primary" [validateForm]="true" (click)="login($event)"></plex-button>
-            </div>
-        </div>
-    </form>
 </div>
 
 <div *ngIf="auth.loggedIn()" class="jumbotron">
@@ -35,11 +34,3 @@
         <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="/pacientes"><i class="mdi mdi-account-check"></i> Ingresar a la Validación Digital de Pacientes</a>
     </p>
 </div>
-<!--<h3>Datos de la sesión</h3>
-    <h4>Usuario</h4>
-    <pre>{{ auth.usuario | json }}</pre>
-    <h4>Organización</h4>
-    <pre>{{ auth.organizacion | json }}</pre>
-    <h4>Permisos</h4>
-    <pre>{{ auth.permisos | json }}</pre>
-    <plex-button label="Cerrar sesión" type="danger" (click)="auth.logout()"></plex-button>-->
