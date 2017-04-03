@@ -41,6 +41,7 @@ import {
   FormArray,
   Validators
 } from '@angular/forms';
+import * as moment from 'moment';
 import {
   BarrioService
 } from './../../services/barrio.service';
@@ -676,11 +677,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
   verificaPacienteRepetido() {
     
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      debugger;
+
       this.completarGenero();  
 
       if (!this.pacienteModel.id) {
-        let dto: PacienteSearch = {
+        let dto: any = {
           type: 'suggest',
           claveBlocking: 'documento',
           percentage: true,
@@ -688,7 +689,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           nombre: this.pacienteModel.nombre.toString(),
           documento: this.pacienteModel.documento.toString(),
           sexo: this.pacienteModel.sexo.toString(),
-          fechaNacimiento: this.pacienteModel.fechaNacimiento
+          fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
