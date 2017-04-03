@@ -173,6 +173,7 @@ export class GestorAgendasComponent implements OnInit {
         }).subscribe(
             agendas => {
                 this.agendas = agendas;
+                this.agendasSeleccionadas = [];
             },
             err => {
                 if (err) {
@@ -202,26 +203,36 @@ export class GestorAgendasComponent implements OnInit {
         });
     }
 
-    verAgenda(agenda, e) {
-        let index;
+    verAgenda(agenda, multiple, e) {
 
-        if (this.estaSeleccionada(agenda)) {
-            agenda.agendaSeleccionadaColor = 'success';
-            index = this.agendasSeleccionadas.indexOf(agenda);
-            this.agendasSeleccionadas.splice(index, 1);
-            this.agendasSeleccionadas = [...this.agendasSeleccionadas];
+        if (!multiple) {
+
+            this.showTurnos = false;
+            this.agendasSeleccionadas = [];
+            this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
 
         } else {
-            this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+
+            let index;
+
+            if (this.estaSeleccionada(agenda)) {
+                agenda.agendaSeleccionadaColor = 'success';
+                index = this.agendasSeleccionadas.indexOf(agenda);
+                this.agendasSeleccionadas.splice(index, 1);
+                this.agendasSeleccionadas = [...this.agendasSeleccionadas];
+            } else {
+                this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+            }
+
+
         }
+            this.setColorEstadoAgenda(agenda);
 
-        this.setColorEstadoAgenda(agenda);
-        this.ag = agenda;
-        this.vistaAgenda = agenda;
-        this.agenda = agenda;
+            // this.vistaAgenda = agenda;
+            this.agenda = agenda;
 
-        this.showVistaAgendas = true;
-        this.showTurnos = true;
+            this.showVistaAgendas = true;
+            this.showTurnos = true;
     }
 
     estaSeleccionada(agenda: any) {

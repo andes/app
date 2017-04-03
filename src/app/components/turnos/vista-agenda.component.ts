@@ -24,7 +24,6 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
 
-
     private _agendasSeleccionadas: Array<any>;
 
     @Input('agendasSeleccionadas')
@@ -38,7 +37,6 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     }
 
     public modelo: any = {};
-    public vistaAux: any = {};
     public vistaBotones: any = {};
 
 
@@ -118,7 +116,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     }
 
     // Botón editar agenda
-    editarAgenda(agenda) {
+    editarAgenda() {
         this.editarAgendaEmit.emit(this.agendasSeleccionadas[0]);
     }
 
@@ -138,12 +136,16 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
                         this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                         this.actualizarEstadoEmit.emit(true);
                     } else {
-                        this.plex.alert('Las agendas cambiaron el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        if ( estado === 'prePausada' ) {
+                            this.plex.alert('Las agendas cambiaron de estado');
+                        } else {
+                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        }
                         this.actualizarEstadoEmit.emit(true);
                     }
                     alertCount++;
                 }
-                this.vistaAux = resultado;
+                this.vistaAgenda = resultado;
             });
         });
 
