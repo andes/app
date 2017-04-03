@@ -28,8 +28,12 @@ export class FrecuenciaCardiacaComponent implements OnInit {
         if (this.data[this.tipoPrestacion.key] === null) {
             this.data = {};
         }
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
+
+        if (this.data[this.tipoPrestacion.key] === null) {
+            this.data = {};
+        }
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
     } // devolverValores()
 
     getMensajes() {
@@ -38,7 +42,7 @@ export class FrecuenciaCardiacaComponent implements OnInit {
         let frecuenciaCardiaca;
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
 
         Sexo = this.paciente.sexo

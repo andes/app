@@ -31,7 +31,7 @@ export class ObservacionesComponent implements OnInit {
 
 		let mensaje: any = {
 			texto: '',
-			class: 'outline-danger'
+			class: 'danger'
 		};
 
 		return mensaje;

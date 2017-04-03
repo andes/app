@@ -42,7 +42,7 @@ export class PuntoInicioComponent implements OnInit {
     ngOnInit() {
 
         this.profesionalLog = {
-            'id': '58480c39dbd0a72c249b11f2',
+            'id': '57fe1dafe46ceaf8317c7ddf',
             'nombre': 'Sara',
             'apellido': 'Connor',
             'activo': true,

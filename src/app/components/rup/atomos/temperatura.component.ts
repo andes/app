@@ -40,7 +40,7 @@ export class TemperaturaComponent implements OnInit {
 		let temperatura = this.data[this.tipoPrestacion.key];
 		let mensaje: any = {
 			texto: '',
-			class: 'outline-danger'
+			class: 'danger'
 		};
 
 		// agregar validaciones

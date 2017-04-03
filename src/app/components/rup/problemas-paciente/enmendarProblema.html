@@ -1,34 +1,34 @@
-<plex-box title="Enmendar">
-    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-        <div class="col-md-12">
-            <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+<h2>
+    Enmendar</h2>
+<div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+    <div class="col-md-12">
+        <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                                 Activo
                                             </span>
-            <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+        <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                            </span>&nbsp;&nbsp;&nbsp;
-            <span class="label label-warning">
+                                            </span>
+        <span class="badge-warning">
                                                {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                                             </span>
+    </div>
+</div>
+<form>
+    <div class="row">
+        <div class="col-md-12">
+            <h3> {{problema.tipoProblema.nombre}} </h3>
         </div>
     </div>
-    <form>
-        <div class="row">
-            <div class="col-md-12">
-                <h3> {{problema.tipoProblema.nombre}} </h3>
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
+            </plex-text>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-                </plex-text>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <plex-button title="Enmendar Problema " label="Enmendar " validateForm="true" (click)="enmendarProblema($event)" type="success"></plex-button>
+            <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
         </div>
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <plex-button title="Enmendar Problema " label="Enmendar " validateForm="true" (click)="enmendarProblema($event)" type="success"></plex-button>
-                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
-            </div>
-        </div>
-    </form>
-</plex-box>
+    </div>
+</form>

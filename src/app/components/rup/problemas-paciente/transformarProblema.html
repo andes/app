@@ -1,47 +1,46 @@
-<plex-box title="Transformar">
-    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-        <div class="col-md-12">
-            <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+<h2>Transformar</h2>
+<div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+    <div class="col-md-12">
+        <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                                 Activo
                                             </span>
-            <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+        <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                            </span>&nbsp;&nbsp;&nbsp;
-            <span class="label label-warning">
+                                            </span>
+        <span class="badge-warning">
                                                {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                                             </span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3> {{problema.tipoProblema.nombre}}</h3>
+    </div>
+</div>
+
+<form>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-select [(ngModel)]="tipoProblema" name="tipoProblema" [required]="true" label="Transformar a:" (getData)="loadTiposProblemas($event)" placeholder="Seleccionar Problema">
+            </plex-select>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h3> {{problema.tipoProblema.nombre}}</h3>
+            <plex-text [(ngModel)]="observacion" name="observacion" [required]="true" label="Observaciones">
+            </plex-text>
         </div>
     </div>
-
-    <form>
-        <div class="row">
-            <div class="col-md-12">
-                <plex-select [(ngModel)]="tipoProblema" name="tipoProblema" [required]="true" label="Transformar a:" (getData)="loadTiposProblemas($event)" placeholder="Seleccionar Problema">
-                </plex-select>
-            </div>
+    <div class="row">
+        <div class="col-md-6">
+            <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" label="Duración" [required]="true" placeholder="Ingrese duración">
+            </plex-select>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <plex-text [(ngModel)]="observacion" name="observacion" [required]="true" label="Observaciones">
-                </plex-text>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <plex-button title="Transformar Problema " label="Transformar Problema " type="success" validateForm="true" (click)="transformarProblema($event)"></plex-button>
+            <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" label="Duración" [required]="true" placeholder="Ingrese duración">
-                </plex-select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <plex-button title="Transformar Problema " label="Transformar Problema " type="success" validateForm="true" (click)="transformarProblema($event)"></plex-button>
-                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
-            </div>
-        </div>
-    </form>
-</plex-box>
+    </div>
+</form>
