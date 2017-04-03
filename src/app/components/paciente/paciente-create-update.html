@@ -300,6 +300,7 @@
           </header>
           <div class="row" *ngIf="pacienteModel.apellido">
             <div class="col-md-12">
+              {{pacienteModel | patient}}
               <h3><strong>{{pacienteModel.apellido}}</strong>
                 <small *ngIf="pacienteModel.nombre && !pacienteModel.alias"> {{pacienteModel.nombre}}</small>
                 <small *ngIf="pacienteModel.nombre && pacienteModel.alias"> {{pacienteModel.alias}}</small>
