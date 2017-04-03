@@ -12,10 +12,23 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 export class AgregarNotaTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turnoSeleccionado: ITurno;
+
+    // @Input() turnosSeleccionados: ITurno[];
 
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
     @Output() cancelaAgregarNota = new EventEmitter<boolean>();
+
+
+    private _turnosSeleccionados: Array<any>;
+
+    @Input('turnosSeleccionados')
+    set turnosSeleccionados(value: any) {
+        this._turnosSeleccionados = value;
+    }
+    get turnosSeleccionados(): any {
+        return this._turnosSeleccionados;
+    }
+
 
     showAgregarNotaTurno: Boolean = true;
     turnos: any = [];
@@ -24,7 +37,8 @@ export class AgregarNotaTurnoComponent implements OnInit {
     public resultado: any;
 
     ngOnInit() {
-        this.turnos = this.turnoSeleccionado;
+        console.log('this.turnosSeleccionados: ', this.turnosSeleccionados);
+        this.turnos = this.turnosSeleccionados;
     }
 
     guardarNota(turnos: any, idTurno) {

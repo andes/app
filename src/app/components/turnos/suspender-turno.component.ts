@@ -14,7 +14,7 @@ import { SmsService } from './../../services/turnos/sms.service';
 export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() pacientesSeleccionados: ITurno;
+    @Input() turnosSeleccionados: ITurno;
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
@@ -29,7 +29,7 @@ export class SuspenderTurnoComponent implements OnInit {
     public motivoSuspensionSelect = { select: null };
 
     ngOnInit() {
-        this.pacientes = this.pacientesSeleccionados;
+        this.pacientes = this.turnosSeleccionados;
 
         this.motivoSuspension = [{
             id: 1,
@@ -108,9 +108,9 @@ export class SuspenderTurnoComponent implements OnInit {
                 // this.smsLoader = false;
                 debugger;
                 // if (resultado === '0') {
-                //     this.pacientesSeleccionados[x].smsEnviado = true;
+                //     this.turnosSeleccionados[x].smsEnviado = true;
                 // } else {
-                //     this.pacientesSeleccionados[x].smsEnviado = false;
+                //     this.turnosSeleccionados[x].smsEnviado = false;
                 // }
             },
             err => {
