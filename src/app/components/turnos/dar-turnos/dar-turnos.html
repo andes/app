@@ -35,14 +35,12 @@
 
           <plex-tab icon="history">
             <div class="row">
-
               <div class="col" *ngIf="estadoT=='seleccionada'">
-
                 <div class="row">
-                  <div class="col col-md-8 text-center">
+                  <div class="col text-center">
                     <div class="box">
                       <div class="box-content text-center" title="{{tipoPrestaciones}}">
-                        <h1>
+                        <h4>
                           <small> 
                           <!--{{ tipoPrestacionesArray | json }}-->
                           <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
@@ -64,7 +62,7 @@
                               </div>
                           </div>
                       </small>
-                        </h1>
+                        </h4>
                         <h1 class="date-lg">
                           <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
                           {{agenda.horaInicio | date: 'dd/MM'}}
@@ -78,7 +76,7 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-md-8">
+                  <div class="col">
                     <plex-box>
                       <div *ngFor="let bloque of bloques; let indiceBq=index">
                         <div *ngIf="tieneTurnos(bloque)" class="row">
@@ -172,25 +170,25 @@
 
               <div class="col" *ngIf="estadoT=='noTurnos'">
                 <plex-box>
-                  <div class="row">
-                    <div class="col-12">
-                      <h2>
-                        <div *ngFor="let profesional of agenda.profesionales let i=index">
-                          <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
-                          <div *ngIf="i>=agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
-                        </div>
-                      </h2>
-                    </div>
-                    <br>
-                    <div class="col-8">
-                      <h3>
-                        <plex-button type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                        {{agenda.horaInicio | date: 'dd/MM'}}
-                        <plex-button type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
-                      </h3>
-                    </div>
-                    <div class="col-4">
-                      <h4>{{semana[agenda.horaInicio.getDay()]}}</h4>
+                  <div class="row justify-content-center">
+                    <div class="box-content text-center">
+                      <div class="col-12 ">
+                        <h3>
+                          <div *ngFor="let profesional of agenda.profesionales let i=index">
+                            <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
+                            <div *ngIf="i>=agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
+                          </div>
+                        </h3>
+                      </div>
+                      <br>
+                      <div class="col-12 ">
+                        <h1 class="date-lg">
+                          <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                          {{agenda.horaInicio | date: 'dd/MM'}}
+                          <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                        </h1>
+                        <div class="text-uppercase ">{{semana[agenda.horaInicio.getDay()]}}</div>
+                      </div>
                     </div>
                   </div>
                   <br>
@@ -283,37 +281,21 @@
             <div *ngIf="infoPaciente">
               <plex-box type="info" title="Paciente Seleccionado">
                 <div class="row">
-                  <div class="col col-md-12">
+                  <div class="col-12">
                     <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col col-md-6">
+                  <div class="col-12">
                     <h4>D.N.I. {{paciente.documento}} </h4>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <label>Fecha de Nacimiento</label>
+                  <div class="col-12">
+                    <h5>Fecha de Nacimiento: {{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</h5>
                   </div>
-                  <div class="col">
-                    {{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}
+                  <div class="col-12">
+                    <h4>Sexo: {{paciente.sexo}}</h4>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <label>Sexo</label>
-                  </div>
-                  <div class="col-4">
-                    {{paciente.sexo}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <label>Estado</label>
-                  </div>
-                  <div class="col-4">
-                    {{paciente.estado}}
+                  <div class="col-12">
+                    <h4>Estado: {{paciente.estado}} </h4>
+
                   </div>
                 </div>
                 <br>

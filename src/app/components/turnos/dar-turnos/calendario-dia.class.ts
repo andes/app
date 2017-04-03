@@ -74,7 +74,7 @@ export class CalendarioDia {
                         });
                         bloque.turnos.forEach((turno) => {
                             if (turno.estado === 'asignado') {
-                                switch (tiposTurnosSelect) {
+                                switch (turno.tipoTurno) {
                                     case ('programado'):
                                         countBloques[indexBloque].programado--;
                                         break;

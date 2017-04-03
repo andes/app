@@ -355,7 +355,7 @@ export class DarTurnosComponent implements OnInit {
                                 });
                                 bloque.turnos.forEach((turno) => {
                                     if (turno.estado === 'asignado') {
-                                        switch (this.tiposTurnosSelect) {
+                                        switch (turno.tipoTurno) {
                                             case ('programado'):
                                                 countBloques[indexBloque].programado--;
                                                 break;
@@ -553,8 +553,8 @@ export class DarTurnosComponent implements OnInit {
                     idBloque: this.bloque.id,
                     paciente: pacienteSave,
                     tipoPrestacion: this.turnoTipoPrestacion,
-                    tipoTurno: 'delDia'
-                };
+                    tipoTurno: this.tiposTurnosSelect
+                  };
 
                 let operacion: Observable<any>;
                 debugger;
