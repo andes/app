@@ -1,14 +1,13 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="data[tipoPrestacion.key]" name="tensionSistolica"
-  label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (keyup)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="data[tipoPrestacion.key]" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
-  <label>Tensión Sistólica</label>
-  <br /> {{data[tipoPrestacion.key]}} mmHG
+    <label>Tensión Sistólica</label>
+    <br /> {{data[tipoPrestacion.key]}} mmHG
 </p>
 
 <p *ngIf="mensaje.texto">
-  <span class="badge {{mensaje.class}}">
+    <span class="badge-{{mensaje.class}}">
     {{mensaje.texto}}
     </span>
 </p>

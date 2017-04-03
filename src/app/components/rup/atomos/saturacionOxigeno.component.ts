@@ -41,7 +41,7 @@ export class SaturacionOxigenoComponent implements OnInit {
         
         let mensaje: any = {
 			texto: '',
-			class: 'outline-danger'
+			class: 'danger'
 		};
 
         if (saturacionOxigeno) {

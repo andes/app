@@ -1,31 +1,30 @@
-<plex-box title="Evolucionar">
-    <form>
-        <div class="row">
-            <div class="col-md-12">
-                <h3> Evolucionar problemas de la consulta</h3>
-            </div>
+<h2>Evolucionar</h2>
+<form>
+    <div class="row">
+        <div class="col-md-12">
+            <h3> Evolucionar problemas de la consulta</h3>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-                </plex-text>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
+            </plex-text>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración">
-                </plex-select>
-            </div>
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" placeholder="Ingrese Vigencia">
-                </plex-select>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración">
+            </plex-select>
         </div>
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <plex-button title="Evolucionar Problemas " label="Evolucionar " validateForm="true" (click)="evolucionar($event)" type="success"></plex-button>
-                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
-            </div>
+        <div class="col-md-6">
+            <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" placeholder="Ingrese Vigencia">
+            </plex-select>
         </div>
-    </form>
-</plex-box>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <plex-button title="Evolucionar Problemas " label="Evolucionar " validateForm="true" (click)="evolucionar($event)" type="success"></plex-button>
+            <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
+        </div>
+    </div>
+</form>

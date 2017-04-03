@@ -1,14 +1,14 @@
-<div class="row">
-    <div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
-        <div *ngFor="let tp of tipoPrestacion.ejecucion">
-            <div class="col-md-12" *ngIf="!soloValores">
-                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
-                </rup>
-            </div>
-            <div class="col-md-12" *ngIf="soloValores && datosIngreso && datosIngreso[tp.key]">
-                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
-                </rup>
-            </div>
+<div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
+    <div class="row">
+        <!--<div *ngFor="let tp of tipoPrestacion.ejecucion">-->
+        <div class="col" *ngFor="let tp of tipoPrestacion.ejecucion">
+            <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+            </rup>
         </div>
+        <!--<div class="col" *ngIf="soloValores && datosIngreso && datosIngreso[tp.key]">
+                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+                </rup>
+            </div>-->
+        <!--</div>-->
     </div>
 </div>

@@ -5,13 +5,13 @@
     <div class="box-body">
         <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
             <div class="col-md-12">
-                <span class="label label-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                                 Activo
                                             </span>
-                <span class="label label-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                            </span>&nbsp;&nbsp;&nbsp;
-                <span class="label label-warning">
+                                            </span>
+                <span class="badge-warning">
                         {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                     </span>
             </div>
