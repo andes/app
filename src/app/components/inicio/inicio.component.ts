@@ -1,11 +1,12 @@
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { Auth } from '@andes/auth';
 
 @Component({
     templateUrl: 'inicio.html',
-    styleUrls: ['inicio.css']
+    styleUrls: ['inicio.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class InicioComponent {
     public usuario: number;
