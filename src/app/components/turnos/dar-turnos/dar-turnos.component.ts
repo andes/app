@@ -120,7 +120,7 @@ export class DarTurnosComponent implements OnInit {
         // Fresh start
         // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
-        
+
 
     }
 
@@ -163,7 +163,6 @@ export class DarTurnosComponent implements OnInit {
 
         // 2) Permisos
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-
         // this.permisos = this.auth.getPermissions('turnos:darTurnos:organizacion:?');
         console.log('PERMISOS: ', this.permisos);
 
@@ -207,7 +206,6 @@ export class DarTurnosComponent implements OnInit {
 
 
             // El siguiente codigo se reemplazó en el bloque de abajo, cambia el lugar de la condición
-            // no borro por las dudas
 
             // Loop agendas / bloques / turnos
             // this.agendas.forEach((agenda, indexAgenda) => {
@@ -299,6 +297,7 @@ export class DarTurnosComponent implements OnInit {
                 if (this.agenda) {
 
                     let myBloques = [];
+                    let isDelDia = false;
 
                     this.indice = this.agendas.indexOf(this.agenda);
 
@@ -316,11 +315,13 @@ export class DarTurnosComponent implements OnInit {
                         let countBloques = [];
                         let programadosDisponibles = 0;
                         let gestionDisponibles = 0;
+                        let delDiaDisponibles =0;
                         // let tiposTurnosSelect = [];
 
                         // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
                         if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate()
                             && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+                            isDelDia = true;
                             this.tiposTurnosSelect = 'del dia';
                             // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
@@ -335,6 +336,7 @@ export class DarTurnosComponent implements OnInit {
                                         countBloques[indexBloque].delDia--;
                                     }
                                 });
+                                delDiaDisponibles = + countBloques[indexBloque].delDia;
                             });
 
                         } else {
@@ -381,6 +383,9 @@ export class DarTurnosComponent implements OnInit {
                         }
                         if (this.agenda.estado === 'Publicada') {
                             (programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                        }
+                        if (this.agenda.estado === 'Publicada' && isDelDia) {
+                            (delDiaDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                         }
 
                         // this.estadoT = 'seleccionada';
@@ -496,7 +501,7 @@ export class DarTurnosComponent implements OnInit {
                                 ultimosTurnos.push({
                                     tipoPrestacion: turno.tipoPrestacion.nombre,
                                     horaInicio: moment(turno.horaInicio).format('L'),
-                                    estado:turno.estado,
+                                    estado: turno.estado,
                                     organizacion: agenda.organizacion.nombre,
                                     profesionales: agenda.profesionales
                                 });

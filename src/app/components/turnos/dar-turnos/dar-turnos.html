@@ -3,36 +3,29 @@
     <!-- TODO: quitar showDarTurnos -->
     <div class="col">
       <plex-box>
-
         <header>
           <div class="row align-items-center">
-
             <div class="col">
               <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
             </div>
-
             <div class="col">
               <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" labelField="nombre + ' ' + apellido"
                 (change)="filtrar()">
               </plex-select>
             </div>
-
             <div class="col offset-1 justify-content-center">
               <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
               <strong>{{ opciones.fecha | date: "MMM yy" | uppercase}}</strong>
               <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
             </div>
-
           </div>
         </header>
-
         <div class="row">
-          <div class="col-12">
+          <div class="col">
             <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estado" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
           </div>
         </div>
-
       </plex-box>
     </div>
 
