@@ -72,7 +72,7 @@ import {
 } from '@andes/plex';
 import {
   MapsComponent
-} from './../../utils/MapsComponent';
+} from './../../utils/mapsComponent';
 
 @Component({
   selector: 'paciente-create-update',
