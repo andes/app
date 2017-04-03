@@ -24,11 +24,11 @@
           </div>
           <div class="row">
             <div class="col-sm-4">
-              <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
+              <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" [required]="true" [readonly]="validado" (focusout)="verificaPacienteRepetido()" placeholder="Ingrese nombre...">
               </plex-text>
             </div>
             <div class="col-sm-4">
-              <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" [required]="true" [readonly]="validado"
+              <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" [required]="true" [readonly]="validado" (focusout)="verificaPacienteRepetido()"
                 placeholder="Ingrese apellido...">
               </plex-text>
             </div>
@@ -38,12 +38,12 @@
           </div>
           <div class="row">
             <div class="col-md-4">
-              <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" [readonly]="validado" name="documento" [required]="true"
+              <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" [readonly]="validado" name="documento" [required]="true" (focusout)="verificaPacienteRepetido()"
                 placeholder="Ingresar DNI...">
               </plex-int>
             </div>
             <div class="col-md-4">
-              <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" [(ngModel)]="pacienteModel.fechaNacimiento"
+              <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" [(ngModel)]="pacienteModel.fechaNacimiento" (focusout)="verificaPacienteRepetido()"
                 name="fechaNacimiento" [required]="true">
               </plex-datetime>
             </div>

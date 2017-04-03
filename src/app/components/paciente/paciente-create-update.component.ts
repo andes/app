@@ -185,8 +185,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
-
-    debugger;
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
@@ -411,7 +409,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   onSave(valid) {
-    debugger;
+
     //El primer save
     let lista = [];
     if (valid.formValid) {
@@ -497,7 +495,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   save(valid) {
-    debugger;
+
 
     if (valid) {
 
@@ -517,10 +515,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
-        debugger;
+
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-          debugger;
+
           this.plex.alert('Los datos se actualizaron correctamente');
           //alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
@@ -530,10 +528,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
       } else {
         /*this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
           if (resultado) {*/
-        debugger
+
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-          debugger;
+ 
           if (result) {
             this.plex.alert('Los datos se actualizaron correctamente');
             //alert('Los datos se actualizaron correctamente');
@@ -558,7 +556,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   onSelect(paciente: IPaciente, id: String) {
-    debugger;
     this.seleccion = Object.assign({}, paciente);
     this.seleccion.id = id;
     if (this.seleccion.estado === 'validado') {
@@ -679,8 +676,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   verificaPacienteRepetido() {
     
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      
-      this.completarGenero();
+      debugger;
+      this.completarGenero();  
 
       if (!this.pacienteModel.id) {
         let dto: PacienteSearch = {
