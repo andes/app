@@ -13,7 +13,7 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 export class LiberarTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() pacientesSeleccionados: ITurno;
+    @Input() turnosSeleccionados: ITurno;
 
     @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
@@ -26,7 +26,7 @@ export class LiberarTurnoComponent implements OnInit {
 
     ngOnInit() {
         debugger;
-        this.pacientes = this.pacientesSeleccionados;
+        this.pacientes = this.turnosSeleccionados;
     }
 
     liberarTurno() {

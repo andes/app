@@ -82,7 +82,9 @@ export class AgendaComponent implements OnInit {
     loadTipoPrestaciones(event) {
         this.permisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
+            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            console.log(dataF);
+            event.callback(dataF);
         });
     }
 
@@ -95,6 +97,7 @@ export class AgendaComponent implements OnInit {
     }
 
     inicializarPrestacionesBloques(bloque) {
+        console.log(this.modelo);
         if (this.modelo.tipoPrestaciones) {
             this.modelo.tipoPrestaciones.forEach((prestacion, index) => {
                 const copiaPrestacion = operaciones.clonarObjeto(prestacion);
@@ -158,10 +161,14 @@ export class AgendaComponent implements OnInit {
 
     activarBloque(indice: number) {
         this.bloqueActivo = indice;
+        console.log('this.modelo.bloques[indice]: ', this.modelo.bloques[indice] ); // MAL
         this.elementoActivo = this.modelo.bloques[indice];
     }
 
     addBloque() {
+
+        console.log('this.modelo.bloques: ', this.modelo.bloques); // MAL
+
         const longitud = this.modelo.bloques.length;
         this.modelo.bloques.push({
             indice: longitud,
@@ -228,6 +235,8 @@ export class AgendaComponent implements OnInit {
 
     cambioPrestaciones() {
         if (this.modelo.bloques.length === 0) {
+
+            console.log('this.modelo.bloques @ cambioPrestaciones', this.modelo.bloques);
             this.addBloque();
             this.bloqueActivo = 0;
             this.elementoActivo.horaInicio = this.modelo.horaInicio;

@@ -1,8 +1,8 @@
 <div class="row" *ngIf="showSuspenderTurno">
     <plex-box>
         <div class="row">
-            <div class="col-md-12" *ngFor="let paciente of pacientesSeleccionados; let i = index">
-                <label>El turno de {{paciente.paciente.apellido}} {{paciente.paciente.nombre}} va a ser Suspendido!</label>
+            <div class="col-md-12" *ngFor="let turno of turnosSeleccionados; let i = index">
+                <label>El turno de {{turno.paciente.apellido}} {{turno.paciente.nombre}} va a ser Suspendido!</label>
             </div>
 
             <div class="col-md-12">
@@ -23,9 +23,9 @@
                         </plex-button>
                     </div>
                 </div>
-                <div class="row" *ngFor="let paciente of pacientesSeleccionados; let i = index">
+                <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
                     <div class="col-md-8">
-                        <label>Reprogramar Turno de {{paciente.paciente.nombre}} {{paciente.paciente.apellido}}</label>
+                        <label>Reprogramar Turno de {{turno.paciente.nombre}} {{turno.paciente.apellido}}</label>
                     </div>
                     <div class="col-md-4">
                         <plex-button icon="mdi mdi-backup-restore" (click)="reasignarTurno(paciente)" title="Reprogramar Turno">

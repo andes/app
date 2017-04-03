@@ -45,10 +45,10 @@
                           <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(agenda)}"></i>
                           <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-circle-outline"></i>
                         </td>
-                        <td class="col-3" (click)="verAgenda(agenda, false, $event)">{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date:
+                        <td class="col-2.5" (click)="verAgenda(agenda, false, $event)">{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date:
                         'HH:mm'}} horas.</td>
                         <template [ngIf]="agenda.tipoPrestaciones">
-                        <td class="col-3" (click)="verAgenda(agenda, false, $event)"><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</span></td>
+                        <td class="col-2.5" (click)="verAgenda(agenda, false, $event)"><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</span></td>
                         </template>
                         <template [ngIf]="agenda.profesionales">
                         <td class="col" (click)="verAgenda(agenda, false, $event)">

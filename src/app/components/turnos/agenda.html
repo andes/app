@@ -25,10 +25,11 @@
                   </plex-datetime>
                 </div>
               </div>
+              {{ modelo.tipoPrestaciones | json }}
               <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                 <div class="col-md-12">
                   <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
-                    placeholder="Seleccione las prestaciones" [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
+                    placeholder="Seleccione las prestaciones" [required]="true" (change)="cambioPrestaciones()">
                   </plex-select>
                 </div>
               </div>

@@ -14,3 +14,22 @@
 //     /* overflow-x: hidden; */
 //     padding: 0 25px;
 // }
+
+.table-striped {
+    font-size: 0.85em;
+
+    .text-success {
+        color: $green !important;
+    }
+
+    .bg-primary {
+        background-color: $dark-blue !important;
+    }
+
+}
+
+
+.plex-box-content .h4{
+    display: inline-block;
+    height: 38px;
+}
