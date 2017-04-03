@@ -38,30 +38,29 @@
             (clonarEmit)="clonar($event)" (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
             <table class="table table-striped">
                 <thead>
-                   
                 </thead>
                 <tbody>
-                    <tr *ngFor="let agenda of agendas; let i = index" (click)="verAgenda(agenda, $event)" class="row text-center" style="cursor: pointer; pointer-events: all">
-                        <td class="col-1">
-                        <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-check-circle" [ngClass]="{'text-success success': estaSeleccionada(agenda)}"></i>
-                        <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-circle-outline"></i>
+                    <tr *ngFor="let agenda of agendas; let i = index" class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(agenda)}">
+                        <td class="col-1" (click)="verAgenda(agenda, true, $event)">
+                          <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(agenda)}"></i>
+                          <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-circle-outline"></i>
                         </td>
-                        <td class="col-3">{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date:
+                        <td class="col-3" (click)="verAgenda(agenda, false, $event)">{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date:
                         'HH:mm'}} horas.</td>
                         <template [ngIf]="agenda.tipoPrestaciones">
-                        <td class="col-3"><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</span></td>
+                        <td class="col-3" (click)="verAgenda(agenda, false, $event)"><span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</span></td>
                         </template>
                         <template [ngIf]="agenda.profesionales">
-                        <td class="col">
+                        <td class="col" (click)="verAgenda(agenda, false, $event)">
                             <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">sin profesional asignado</span>
                             <span *ngFor="let profesional of agenda.profesionales">{{profesional.nombre}} {{profesional.apellido}} </span>
                         </td>
                         </template>
-                        <td class="col">
+                        <td class="col" (click)="verAgenda(agenda, false, $event)">
                             <span>{{agenda?.espacioFisico?.nombre}}</span>
                             <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">sin espacio asignado</span>
                         </td>
-                        <td class="col"><span>{{agenda?.estado}}</span></td>
+                        <td class="col" (click)="verAgenda(agenda, false, $event)"><span>{{agenda?.estado}}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -71,7 +70,7 @@
       <div class="col-3">
         <plex-box>
           <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
-            <turnos [ag]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
+            <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
           </div>
 
           <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
