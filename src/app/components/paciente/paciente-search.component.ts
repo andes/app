@@ -46,6 +46,7 @@ export class PacienteSearchComponent implements OnInit {
   public seleccionarPaciente(paciente: any) {
     debugger;
     if (paciente) {
+
       this.seleccion = paciente;
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
@@ -160,6 +161,7 @@ export class PacienteSearchComponent implements OnInit {
         if (documentoEscaneado) {
           this.loading = true;
           let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
+          pacienteEscaneado.scan = this.textoLibre;
           this.textoLibre = null;
 
           // Consulta API
