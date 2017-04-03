@@ -387,7 +387,7 @@
     <plex-button *ngIf="!disableGuardar" title="Guardar" icon="content-save" label="Guardar" type="success" validateForm="true"
       (click)="onSave($event)">
     </plex-button>
-    <plex-button *ngIf="disableGuardar" title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" validateForm="true"
+    <plex-button *ngIf="enableIgnorarGuardar" title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" validateForm="true"
       type="success" (click)="save($event.formValid)">
     </plex-button>
     <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
