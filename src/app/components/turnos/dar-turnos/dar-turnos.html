@@ -154,11 +154,11 @@
                     </plex-box>
                   </div>
                 </div>
-                <!--<div class="row">
+                <div class="row">
                   <div class="col col-md-12">
                     <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
                   </div>
-                </div>-->
+                </div>
               </div>
 
               <div class="col" *ngIf="estadoT=='noSeleccionada'">
@@ -170,12 +170,11 @@
                   </div>
                 </div>
                 <br>
-                <!--TODO: EL BOTON SE VA AL FOOTER-->
-                <!--<div class="row">
+                <div class="row">
                   <div class="col">
                     <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
                   </div>
-                </div>-->
+                </div>
               </div>
 
               <div class="col" *ngIf="estadoT=='noTurnos'">
@@ -228,11 +227,11 @@
                     </div>
                   </div>
                 </plex-box>
-                <!--<div class="row">
+                <div class="row">
                   <div class="col col-md-12">
                     <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
                   </div>
-                </div>-->
+                </div>
               </div>
 
               <div class="col" *ngIf="estadoT=='confirmacion'">
@@ -368,13 +367,3 @@
     </div>
   </div>
 </section>
-<div *ngIf="autorizado && showDarTurnos">
-  <footer>
-    <div class="btn-group">
-      <plex-button label="xxx" type="primary" icon="clock"></plex-button>
-      <plex-button type="success" icon="clock"></plex-button>
-      <plex-button type="danger" icon="clock" label="No se asigna turno"></plex-button>
-      <!--<plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>-->
-    </div>
-  </footer>
-</div>
