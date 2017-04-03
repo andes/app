@@ -611,7 +611,6 @@ export class AgendaComponent implements OnInit {
                         tipoTurno: null
                     };
 
-
                     if (delDiaCount > 0) {
                         turno.tipoTurno = 'delDia';
                         delDiaCount--;

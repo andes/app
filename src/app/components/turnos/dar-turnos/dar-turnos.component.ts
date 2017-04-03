@@ -315,7 +315,7 @@ export class DarTurnosComponent implements OnInit {
                         let countBloques = [];
                         let programadosDisponibles = 0;
                         let gestionDisponibles = 0;
-                        let delDiaDisponibles =0;
+                        let delDiaDisponibles = 0;
                         // let tiposTurnosSelect = [];
 
                         // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
@@ -338,10 +338,11 @@ export class DarTurnosComponent implements OnInit {
                                 });
                                 delDiaDisponibles = + countBloques[indexBloque].delDia;
                             });
-
+                            if (this.agenda.estado === 'Publicada') {
+                                (delDiaDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                            }
                         } else {
                             // En caso contrario, se calculan  los contadores por separado
-                            // loopear turnos para sacar el tipo de turno!
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
                                 debugger;
                                 countBloques.push({
@@ -370,6 +371,12 @@ export class DarTurnosComponent implements OnInit {
                                 programadosDisponibles = + countBloques[indexBloque].programado;
                                 gestionDisponibles = + countBloques[indexBloque].gestion;
                             });
+                            if (this.agenda.estado === 'Disponible') {
+                                (gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                            }
+                            if (this.agenda.estado === 'Publicada') {
+                                (programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                            }
                         }
                         // contador de turnos por Bloque
                         this.countBloques = countBloques;
@@ -378,17 +385,7 @@ export class DarTurnosComponent implements OnInit {
                         // this.tiposTurnosSelect = tiposTurnosSelect.filter(function (item, pos, self) {
                         //     return self.indexOf(item) === pos;
                         // });
-                        if (this.agenda.estado === 'Disponible') {
-                            (gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                        }
-                        if (this.agenda.estado === 'Publicada') {
-                            (programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                        }
-                        if (this.agenda.estado === 'Publicada' && isDelDia) {
-                            (delDiaDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                        }
 
-                        // this.estadoT = 'seleccionada';
                         this.tipoPrestaciones = '';
 
                         let tipoPrestacionesArray = [];
