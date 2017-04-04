@@ -26,9 +26,18 @@
 <header *ngIf="showPendientes">
     <div class="row">
         <div class="col-12">
-            Profesional: {{this.auth.profesional.apellido}}, {{this.auth.profesional.nombre}}
+            <b>Profesional: </b>
+            {{this.auth.profesional.apellido}}, {{this.auth.profesional.nombre}}
         </div>
     </div>
+
+    <div class="col-12">
+    <b>Especialidad: </b>
+    <span *ngFor="let especialidad of auth.profesional.especialidad">
+        {{especialidad.nombre}}.
+    </span>
+    </div>
+    
     <div class="row">
         <div class="col-12">
             Fecha Actual: {{fechaActual | date: 'dd/MM/yyyy'}}
