@@ -40,21 +40,8 @@ export class PuntoInicioComponent implements OnInit {
 
 
     ngOnInit() {
-
-
-        // this.auth.profesional = {
-        //                             'id' : '58e259a0a99b5e0646e8f444',
-        //                             'nombre' : 'Leandro',
-        //                             'apellido' : 'Lambertucci',
-        //                             'documento' : '32907917',
-        //                             'fechaNacimiento' : '1987-02-11T00:00:00.000Z',
-        //                             'fechaFallecimiento' : null,
-        //                             'sexo' : 'masculino',
-        //                             'genero' : 'masculino', };
         console.log('Authorization', this.auth);
-
         this.loadAgendasXDia();
-
     }
 
     loadAgendasXDia() {
