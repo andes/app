@@ -1,8 +1,8 @@
-<input id="pesquisaNeonatal" type="checkbox" [(ngModel)]="data[tipoPrestacion.key]"  name="pesquisaNeonatal" (change)="devolverValores()" />
+<input id="pesquisaNeonatal" type="checkbox" [(ngModel)]="data[tipoPrestacion.key]" name="pesquisaNeonatal" (change)="devolverValores()" />
 <label for="pesquisaNeonatal">Pesquisa neonatal</label>
 
 <p *ngIf="data.mensaje.texto">
-    <span class="badge {{data.mensaje.class}}">
+    <span class="badge-{{data.mensaje.class}}">
     {{data.mensaje.texto}}
     </span>
 </p>

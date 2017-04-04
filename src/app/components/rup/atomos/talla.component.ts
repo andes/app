@@ -50,7 +50,7 @@ export class TallaComponent implements OnInit {
 
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
 
         if (talla) {

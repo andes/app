@@ -42,7 +42,7 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
 		let frecuenciaRespiratoria;
 		let mensaje: any = {
 			texto: '',
-			class: 'outline-danger'
+			class: 'danger'
 		};
 
 		Sexo = this.paciente.sexo

@@ -1,15 +1,13 @@
-<plex-int *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" placeholder="Ingrese estado nutricional" 
- name="estadoNutricional" label='Estado Nutricional'
-  suffix="{{suffix}}" min="0" max="100" (keyup)="devolverValores()">
+<plex-int *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" placeholder="Ingrese estado nutricional" name="estadoNutricional" label='Estado Nutricional' suffix="{{suffix}}" min="0" max="100" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
-  <label>Peso</label>
-  <br /> {{data[tipoPrestacion.key]}} {{suffix}}
+    <label>Peso</label>
+    <br /> {{data[tipoPrestacion.key]}} {{suffix}}
 </p>
 
 <p *ngIf="mensaje.texto">
-  <span class="badge {{mensaje.class}}">
+    <span class="badge-{{mensaje.class}}">
     {{mensaje.texto}}
     </span>
 </p>

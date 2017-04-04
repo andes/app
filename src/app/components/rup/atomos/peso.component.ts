@@ -42,7 +42,7 @@ export class PesoComponent implements OnInit {
 
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
 
         // Calculo Edad en Meses

@@ -224,12 +224,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
-                    let algo; algo = find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key];
-                    // this.valoresPrestaciones[key] = {};
-                    // this.valoresPrestaciones[key] = (find.ejecucion.evoluciones.length) ? algo : null;
-                    if (this.valoresPrestaciones[key]) {
+                    let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+
+                    if (this.valoresPrestaciones[key] && evolucion) {
                         this.valoresPrestaciones[key] = {};
-                        this.valoresPrestaciones[key] = algo;
+                        this.valoresPrestaciones[key] = evolucion;
                     }else {
                         this.valoresPrestaciones[key] = null;
                     }
