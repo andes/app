@@ -1,6 +1,7 @@
 <style>
     .box-hora {
         border: 1px solid #00A8E0;
+        border-radius: 0px;
     }
     
     .noLine {
@@ -20,66 +21,79 @@
         background-color: #c0c0c0;
     }
 </style>
-<div *ngIf="showPendientes">
 
-    <plex-box>
+ <header>
+    <plex-box >
         <div class="row">
-            <div class="col-md-12">
-                Profesional: {{profesionalLog.apellido}}, {{profesionalLog.nombre}}
+            <div class="col">
+                Profesional: {{this.auth.profesional.apellido}}, {{this.auth.profesional.nombre}}
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col">
                 Fecha Actual: {{fechaActual | date: 'dd/MM/yyyy'}}
             </div>
         </div>
     </plex-box>
+</header>
 
+
+
+<section>
+<div *ngIf="showPendientes">
     <div class="row">
-        <div class="col-md-6">
-            <form>
-                <plex-box type="info" title="Agendas">
-                    <div *ngFor="let agenda of agendas; let i = index">
-                        <ul class="list-group">
-                            <li class="list-group-item box-hora" *ngFor="let bloque of agenda.bloques; let i=index">
-
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span class="span-hora"> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}}</span>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <plex-button icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos">
-                                        </plex-button>
-                                    </div>
+        <div class="col-6">                           
+            <plex-box type="primary" title="Agenda">
+                <div *ngFor="let agenda of agendas; let i = index">
+                    <ul class="list-group">
+                        <li class="list-group-item box-hora" *ngFor="let bloque of agenda.bloques; let i=index">
+                                <div class="col-4">
+                                    <span class="span-hora"> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</span>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </plex-box>
-            </form>
-        </div>
-        <div *ngIf="bloqueSeleccionado" class="col-md-6">
+
+                                <div class="col-6">
+                                    <b>Prestacion: </b>
+                                    <span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                        {{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} - 
+                                    </span>
+                                    <br />
+
+                                    <span><b>Espacio Físico: </b> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</span>
+                                </div>
+
+                                <div class="col-2">
+                                    <plex-button class="pull-right" icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos">
+                                    </plex-button>
+                                </div>
+                        </li>
+                    </ul>
+                </div>
+            </plex-box>                   
+          </div>
+
+
+
+
+         <div class="col-6">   
+
+        <div *ngIf="bloqueSeleccionado">
             <form>
                 <plex-box type="info" title="Listado de Pacientes">
                     <ul class="list-group">
                         <li class="list-group-item noLine hover" *ngFor="let p of listaPrestaciones; let i=index">
                             <div class="box-paciente" (click)="elegirPrestacion(p)">
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div class="col">
                                         <strong>{{p.paciente.apellido}}</strong> {{p.paciente.nombre}} <small>DNI: {{p.paciente.documento}}</small>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col">
                                         <span class="label label-warning">
                                         {{p.estado[p.estado.length-1].tipo}}
                                     </span>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div class="col">
                                         {{p.solicitud.tipoPrestacion.nombre}}
                                     </div>
                                 </div>
@@ -90,26 +104,11 @@
             </form>
         </div>
     </div>
-
-    <!--
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Prestaciones Pendientes: <span> {{tipoPrestacion.nombre}}</span></h2>
-        </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="list-group">
-                <li class="list-group-item" *ngFor="let prestacion of listaPrestaciones" (click)="elegirPrestacion(prestacion)">
-                    {{prestacion.paciente.nombreCompleto}}
-                    <span class="label label-warning">
-                        {{prestacion.estado[prestacion.estado.length-1].tipo}}
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>-->
-</div>
+    </div>
+    </section>
+
+
 <div *ngIf="showDashboard">
     <rup-resumen [prestacion]="prestacionSeleccionada" (evtData)="onReturn()"></rup-resumen>
 </div>
