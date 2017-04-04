@@ -32,10 +32,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     ];
     problemaItem: any;
 
-    mostrarOpciones(problema) {
-        this.problemaItem = problema;
-    }
-
     showEvolucionar = false;
     showTransformar = false;
     showEnmendar = false;
@@ -71,6 +67,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex) {
+    }
+
+    mostrarOpciones(problema) {
+        this.problemaItem = problema;
     }
 
     ngOnInit() {

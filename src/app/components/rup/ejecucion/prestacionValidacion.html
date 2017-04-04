@@ -23,32 +23,38 @@
         <div class="col">
 
             <plex-box>
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            Validación de la prestación
+                        </div>
+                    </div>
+                </header>
                 <div class="row" *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <div class="col">
 
                         <div class="row">
-                            <div class="col">
+                            <div class="col-8">
                                 <h4 class="titulo">
                                     <strong>{{problema.tipoProblema.nombre}}</strong>
-
-                                    <div class="pull-right text-right">
-                                        <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                            Activo
-                                        </span>
-
-                                        <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                        </span>
-
-                                        <span class="badge-warning">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                        </span>
-
-                                        <span class="badge-success" *ngIf="prestaciones[problema.id]">
-                                            {{prestaciones[problema.id].length}} <i class="mdi mdi-link"></i>
-                                        </span>
-                                    </div>
                                 </h4>
+                            </div>
+                            <div class="col pull-right text-right">
+                                <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                    Activo
+                                </span>
+
+                                <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span>
+
+                                <span class="badge-warning">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                                </span>
+
+                                <span class="badge-success" *ngIf="prestaciones[problema.id]">
+                                    {{prestaciones[problema.id].length}} <i class="mdi mdi-link"></i>
+                                </span>
                             </div>
                         </div>
 
