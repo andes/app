@@ -1,3 +1,4 @@
+import { patientPipe } from './utils/patientPipe';
 
 /*
 @jgabriel | 04-03-2017
@@ -256,7 +257,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

@@ -74,6 +74,9 @@ import {
 import {
   MapsComponent
 } from './../../utils/mapsComponent';
+import {
+  patientPipe
+} from './../../utils/patientPipe';
 
 @Component({
   selector: 'paciente-create-update',
@@ -523,7 +526,6 @@ debugger;
         operacionPac.subscribe(result => {
 
           this.plex.alert('Los datos se actualizaron correctamente');
-          //alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
         });
         //   }
@@ -537,11 +539,9 @@ debugger;
 
           if (result) {
             this.plex.alert('Los datos se actualizaron correctamente');
-            //alert('Los datos se actualizaron correctamente');
             this.data.emit(result);
           } else {
             this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
-            // alert('ERROR: Ocurrio un problema al actualizar los datos');
           }
         });
         //   }
@@ -549,7 +549,6 @@ debugger;
       }
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
-      //alert('Debe completar los datos obligatorios');
     }
   }
 
