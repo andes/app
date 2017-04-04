@@ -4,7 +4,8 @@ import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'header-paciente',
-    templateUrl: 'headerPaciente.html'
+    templateUrl: 'headerPaciente.html',
+      styleUrls: ['headerPaciente.css']
 })
 export class HeaderPacienteComponent implements OnInit {
 

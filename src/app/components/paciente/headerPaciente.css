@@ -1,0 +1,84 @@
+.friso {
+  background-color: white;
+  position: relative;
+  height: 100px;
+  padding: 0px;
+}
+
+/*.logo {
+  background-color: #002738;
+  background-image: url("");
+  height: 100px;
+}
+
+ @media screen and (max-width: 720px) {
+   .logo {
+     background-image: url("");
+     height: 80px;
+     width: 60px;
+     z-index: 1200; 
+     }
+   }*/
+
+.sub-friso {
+  background-color: lightslategrey;
+  height: 80px;
+  position: relative;
+  max-height: 100px;
+  padding: 5px 20px 5px 20px;
+  z-index: 1030;
+}
+
+.sub-friso-usuario {
+  background-color: grey;
+  color: white;
+  height: 25px;
+  position: relative;
+  padding: 5px 20px 5px 20px;
+  z-index: 1030;
+}
+
+.data-paciente {
+  height: 75px;
+  padding: 5px 20px 5px 20px;
+ border-left: solid 1px #111111;
+}
+
+.data-usuario {
+  background-color: #f7f7f7;
+  height: 75px;
+  padding: 20px;
+}
+
+h5.nombre-paciente {
+ color: black;
+ font-weight: 300;
+}
+
+h6.subtitulo-paciente {
+  color: #AAAAAA;
+  font-weight: normal;
+  line-height: 3px;
+}
+
+h5.nombre-usuario {
+ color: black;
+ font-weight: 300;
+}
+
+.contenedor-subdata {
+  border-left: solid 1px #111111;
+  padding-left: 15px; 
+  padding-right: 15px; 
+}
+
+h6.subdata-paciente {
+  color: #00c0ef;
+  font-weight: 400;
+}
+
+h6.subdata-descripcion {
+  color:grey;
+  font-weight: 300;
+  line-height: 2px;
+}
