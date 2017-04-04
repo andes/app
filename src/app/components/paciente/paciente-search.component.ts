@@ -46,7 +46,6 @@ export class PacienteSearchComponent implements OnInit {
   public seleccionarPaciente(paciente: any) {
     debugger;
     if (paciente) {
-
       this.seleccion = paciente;
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
@@ -178,6 +177,9 @@ export class PacienteSearchComponent implements OnInit {
             this.esEscaneado = true;
             // Encontramos un matcheo al 100%
             if (resultado.length) {
+
+              resultado[0].scan = pacienteEscaneado.scan;
+
               this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
               this.showCreateUpdate = true;
             } else {
