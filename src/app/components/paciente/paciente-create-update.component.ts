@@ -175,6 +175,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     identificadores: null,
     claveBlocking: null,
     entidadesValidadoras: [this.entidadValidadora],
+    scan: ''
   };
 
 
@@ -417,7 +418,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     if (valid.formValid) {
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
-
+debugger;
       pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
       pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
       pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
