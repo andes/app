@@ -1,3 +1,4 @@
+import { PacienteComponent } from './../../../paciente/paciente.component';
 import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
 import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../../services/rup/tipoProblema.service';
@@ -47,7 +48,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
             this.servicioTipoProblema.get({ tiposProblemas: idTiposProblemas }).subscribe(tiposProblemas => {
                 this.tipoProblemas = tiposProblemas;
 
-                tiposProblemas.forEach(_tp => {
+                 tiposProblemas.forEach(_tp => {
                     let indice = _tp.id.toString();
                     // this.data[this.tipoPrestacion.key][indice].push({idTipoProblema: _tp.id, activo: false});
 
@@ -93,6 +94,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
         //         _opcion.activo = event.target.checked;
         //     }
         // });
+        this.devolverValores();
     }
 
     existeProblema(idTipoProblema) {
