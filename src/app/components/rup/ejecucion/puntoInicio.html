@@ -1,6 +1,7 @@
 <style>
     .box-hora {
         border: 1px solid #00A8E0;
+        border-radius: 0px;
     }
     
     .noLine {
@@ -21,10 +22,11 @@
     }
 </style>
 
+
 <header *ngIf="showPendientes">
     <div class="row">
         <div class="col-12">
-            Profesional: {{profesionalLog.apellido}}, {{profesionalLog.nombre}}
+            Profesional: {{this.auth.profesional.apellido}}, {{this.auth.profesional.nombre}}
         </div>
     </div>
     <div class="row">
@@ -41,22 +43,26 @@
                 <form>
 
                     <div *ngFor="let agenda of agendas; let i = index">
-                        <ul class="list-group">
+                    <ul class="list-group">
                             <li class="list-group-item box-hora" *ngFor="let bloque of agenda.bloques; let i=index">
+                                    <div class="col-4">
+                                        <span class="span-hora"> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</span>
+                                    </div>
 
-                                <div class="row">
-                                    <div class="col-3">
-                                        <span class="span-hora"> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}}</span>
+                                    <div class="col-6">
+                                        <b>Prestacion: </b>
+                                        <span *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                            {{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} - 
+                                        </span>
+                                        <br />
+
+                                        <span><b>Espacio Físico: </b> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</span>
                                     </div>
-                                    <div class="col-7">
-                                        <b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
-                                        <br /><span><b>Esp. Físico: </b> {{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
-                                    </div>
+
                                     <div class="col-2">
-                                        <plex-button icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos">
+                                        <plex-button class="pull-right" icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos">
                                         </plex-button>
                                     </div>
-                                </div>
                             </li>
                         </ul>
                     </div>
@@ -74,56 +80,32 @@
                     </div>
                 </header>
                 <form>
-                    <div class="row" *ngFor="let p of listaPrestaciones; let i=index">
-                        <!--<ul class="list-group">
-                            <li class="list-group-item noLine hover" *ngFor="let p of listaPrestaciones; let i=index">-->
-                        <div class="col">
-                            <a href="javascript:void(0)" (click)="elegirPrestacion(p)">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <strong>{{p.paciente.apellido}}</strong> {{p.paciente.nombre}} <small>DNI: {{p.paciente.documento}}</small>
-                                    </div>
-                                    <div class="col-2">
-                                        <span class="badge-warning">
+
+                        <ul class="list-group">
+                            <li class="list-group-item noLine hover" *ngFor="let p of listaPrestaciones; let i=index"  (click)="elegirPrestacion(p)">
+
+                                        <div class="col">
+                                            <strong>{{p.paciente.apellido}}</strong> {{p.paciente.nombre}} <small>DNI: {{p.paciente.documento}}</small>
+                                        </div>
+                                        <div class="col">
+                                            <span class="label label-warning">
                                             {{p.estado[p.estado.length-1].tipo}}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        {{p.solicitud.tipoPrestacion.nombre}}
-                                    </div>
-                                </div>
-                            </a>
-                            <hr />
-                        </div>
-                        <!--</li>
-                        </ul>-->
-                    </div>
+                                            </span>
+                                        </div>
+
+                                        <div class="col">
+                                            {{p.solicitud.tipoPrestacion.nombre}}
+                                        </div>
+
+                            </li>
+                        </ul>
                 </form>
+
             </plex-box>
         </div>
     </div>
 </section>
 
-<!--
-    <div class="row">
-        <div class="col-12">
-            <h2>Prestaciones Pendientes: <span> {{tipoPrestacion.nombre}}</span></h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <ul class="list-group">
-                <li class="list-group-item" *ngFor="let prestacion of listaPrestaciones" (click)="elegirPrestacion(prestacion)">
-                    {{prestacion.paciente.nombreCompleto}}
-                    <span class="label label-warning">
-                        {{prestacion.estado[prestacion.estado.length-1].tipo}}
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>-->
 
 <div *ngIf="showDashboard">
     <rup-resumen [prestacion]="prestacionSeleccionada" (evtData)="onReturn()"></rup-resumen>
