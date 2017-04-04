@@ -617,22 +617,22 @@ export class AgendaComponent implements OnInit {
                     let turno = {
                         estado: 'disponible',
                         horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                        tipoTurno: null
+                        tipoTurno: undefined
                     };
 
-                    if (delDiaCount > 0) {
-                        turno.tipoTurno = 'delDia';
-                        delDiaCount--;
-                    } else if (programadoCount > 0) {
-                        turno.tipoTurno = 'programado';
-                        programadoCount--;
-                    } else if (gestionCount > 0) {
-                        turno.tipoTurno = 'gestion';
-                        gestionCount--;
-                    } else if (profesionalCount > 0) {
-                        turno.tipoTurno = 'profesional';
-                        profesionalCount--;
-                    }
+                    // if (delDiaCount > 0) {
+                    //     turno.tipoTurno = 'delDia';
+                    //     delDiaCount--;
+                    // } else if (programadoCount > 0) {
+                    //     turno.tipoTurno = 'programado';
+                    //     programadoCount--;
+                    // } else if (gestionCount > 0) {
+                    //     turno.tipoTurno = 'gestion';
+                    //     gestionCount--;
+                    // } else if (profesionalCount > 0) {
+                    //     turno.tipoTurno = 'profesional';
+                    //     profesionalCount--;
+                    // }
 
                     if (bloque.pacienteSimultaneos) {
                         // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario

@@ -91,7 +91,7 @@ export class DarTurnosComponent implements OnInit {
     // pacientesSearch = false;
     // showDarTurnos = true;
     cambioTelefono = false;
-    infoPaciente = true;
+    infoPaciente = false;
 
     tipoTurno: string;
     // tiposTurnosSelect: any[];
