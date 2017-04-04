@@ -32,10 +32,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     ];
     problemaItem: any;
 
-    mostrarOpciones(problema) {
-        this.problemaItem = problema;
-    }
-
     showEvolucionar = false;
     showTransformar = false;
     showEnmendar = false;
@@ -71,6 +67,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex) {
+    }
+
+    mostrarOpciones(problema) {
+        this.problemaItem = problema;
     }
 
     ngOnInit() {
@@ -224,14 +224,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
-                    let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
-
-                    if (this.valoresPrestaciones[key] && evolucion) {
-                        this.valoresPrestaciones[key] = {};
-                        this.valoresPrestaciones[key] = evolucion;
-                    }else {
-                        this.valoresPrestaciones[key] = null;
-                    }
+                    // let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                    // console.log(evolucion);
+                    // if (evolucion) {
+                    //     this.valoresPrestaciones[key] = {};
+                    //     this.valoresPrestaciones[key] = evolucion;
+                    // }else {
+                    //     this.valoresPrestaciones[key] = null;
+                    // }
                 }
             });
         }
@@ -248,6 +248,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.prestacionesEjecucion.push(_prestacion);
                 let key; key = _prestacion.solicitud.tipoPrestacion.key;
                 this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+
+                // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
             }
         });
     }
@@ -299,11 +301,27 @@ export class PrestacionEjecucionComponent implements OnInit {
              this.error = '';
              let i = 1;
              // obtenemos un array de la cantidad de prestaciones que se van a guardar
+            console.log("Prestaciones en ejecucion", this.prestacionesEjecucion);
              let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
+                 debugger;
                  let tp; tp = _p.solicitud.tipoPrestacion;
-                 return (typeof this.data[tp.key] !== 'undefined' && Object.keys(this.data[tp.key]).length) ? _p : null;
+
+                // verificamos si existe algun valor a devolver en data
+                if (typeof this.data[tp.key] !== 'undefined') {
+                    // si es un objeto, entonces verificamos que no este vacia ninguna
+                    // de sus propiedades, y retornamos la prestacion
+                    if (typeof this.data[tp.key] === 'object') {
+                        return (Object.keys(this.data[tp.key]).length) ? _p : null;
+                    }else {
+                        // retornamos si es numero, texto, algo distinto de 'undefined'
+                        return _p;
+                    }
+                }
+                // no se cumple ninguna condicion retornamos null
+                return null;
              });
 
+            console.log("Prestaciones a guardar", prestacionesGuardar);
             if (prestacionesGuardar.length === 0) {
                 this.error = 'Debe registrar al menos un dato observable.';
             } else {
@@ -459,6 +477,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     onReturnComponent(datos, tipoPrestacionActual) {
          debugger;
          console.log('this.data[tipoPrestacionActual.key]', this.data[tipoPrestacionActual.key]);
+         console.log(this.data);
 
         // console.log('On return component - this.data[tipoPrestacionActual.key] - ', this.data[tipoPrestacionActual.key]);
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {

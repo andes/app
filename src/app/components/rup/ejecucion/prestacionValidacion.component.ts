@@ -34,7 +34,8 @@ export class PrestacionValidacionComponent implements OnInit {
     cantidadPrestaciones: any[];
 
     showEjecucion = true;
-    mensaje = "";
+    showValidacion = true;
+    mensaje = '';
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -45,12 +46,12 @@ export class PrestacionValidacionComponent implements OnInit {
 
     ngOnInit() {
         this.loadPrestacionesEjacutadas();
-        console.log("validacion: ", this.prestacion);
+        console.log('validacion: ', this.prestacion);
     }
 
     loadPrestacionesEjacutadas() {
         let estado = (this.prestacion.estado[this.prestacion.estado.length-1].tipo == 'ejecucion') ? 'ejecucion' : 'validada';
-        
+
             this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
 
@@ -87,21 +88,23 @@ export class PrestacionValidacionComponent implements OnInit {
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
         return this.prestacionesEjecutadas.filter(data => {
-            if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
+            if (data.solicitud.listaProblemas.find(p => p.id == problema.id)) {
                 return data;
+            }
         });
     }
 
     buscarPlanesPorProblema(problema) {
         return this.prestacionesSolicitadas.filter(data => {
-            if (data.solicitud.listaProblemas.find(p => p.id == problema.id))
+            if (data.solicitud.listaProblemas.find(p => p.id == problema.id)) {
                 return data;
+            }
         });
     }
 
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
-            var listaFinal = [];
+            let listaFinal = [];
 
             if (resultado) {
                 this.prestacionesEjecutadas.forEach(prestacion => {
@@ -121,7 +124,7 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.servicioPrestacion.put(this.prestacion).subscribe(prestacion => {
                                 if (prestacion) {
                                     this.showEjecucion = false;
-                                    this.mensaje = "La prestación ha sido validada correctamente";
+                                    this.mensaje = 'La prestación ha sido validada correctamente';
                                 }
                             });
                         }
@@ -133,6 +136,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
      volver() {
        this.showEjecucion = true;
+       this.showValidacion = false;
        this.evtData.emit(this.prestacion);
     }
 }

@@ -55,10 +55,10 @@
                                     <small class="gris">
                                         Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
                                     </small>
-                                    <span class="label label-success pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                    <span class="badge-success pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                         Activo
                                     </span>
-                                    <span class="label label-danger pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                    <span class="badge-danger pull-right" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                         {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                     </span>
                                 </div>

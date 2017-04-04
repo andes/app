@@ -45,23 +45,25 @@ export class ResumenComponent implements OnInit {
     }
 
     loadPrestacionesPendientes() {
-        this.servicioPrestacionPaciente.get({ estado: "pendiente", idPaciente: this.prestacion.paciente.id, limit: 10 })
+        this.servicioPrestacionPaciente.get({ estado: 'pendiente', idPaciente: this.prestacion.paciente.id, limit: 10 })
             .subscribe(prestaciones => {
                 this.prestacionesPendientes = prestaciones;
             });
     }
 
     cargarIndicadores() {
-        this.servicioPrestacionPaciente.getByKey({ key: "peso", idPaciente: this.prestacion.paciente.id })
+        this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
-                if (prestacion)
+                if (prestacion) {
                     this.prestacionPeso = prestacion[0];
+                }
             });
 
-        this.servicioPrestacionPaciente.getByKey({ key: "talla", idPaciente: this.prestacion.paciente.id })
+        this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
-                if (prestacion)
+                if (prestacion) {
                     this.prestacionTalla = prestacion[0];
+                }
             });
     }
 
@@ -73,7 +75,7 @@ export class ResumenComponent implements OnInit {
 
         this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
         this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
-            //this.prestacion = prestacion;
+            // this.prestacion = prestacion;
             this.showEjecucion = true;
         });
 
