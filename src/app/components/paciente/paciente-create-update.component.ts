@@ -83,12 +83,13 @@ import {
   templateUrl: 'paciente-create-update.html'
 })
 export class PacienteCreateUpdateComponent implements OnInit {
+  server: any;
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
-  @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
+  @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-  matchingItems: Array < any > ;
+  matchingItems: Array<any>;
 
   createForm: FormGroup;
   estados = [];
@@ -178,6 +179,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     identificadores: null,
     claveBlocking: null,
     entidadesValidadoras: [this.entidadValidadora],
+    scan: null
   };
 
 
@@ -187,7 +189,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private barrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) {}
+    private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
     // Se cargan los combos
@@ -304,6 +306,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             if (resultado) {
+              if (!resultado.scan) {
+                resultado.scan = this.seleccion.scan;
+              }
               this.seleccion = resultado;
             }
 
@@ -339,6 +344,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 }
               }
             }
+
 
             this.pacienteModel = Object.assign({}, this.seleccion);
             this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
@@ -516,7 +522,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return elem
       });
 
-      let operacionPac: Observable < IPaciente > ;
+      let operacionPac: Observable<IPaciente>;
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
@@ -556,9 +562,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
 
-  onSelect(paciente: IPaciente, id: String) {
+  onSelect(paciente: IPaciente) {
     this.seleccion = Object.assign({}, paciente);
-    this.seleccion.id = id;
+    //this.seleccion.id = id;
     if (this.seleccion.estado === 'validado') {
       this.validado = true;
       this.enableIgnorarGuardar = false;
@@ -682,6 +688,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       this.completarGenero();
 
       if (!this.pacienteModel.id) {
+        debugger;
         let dto: any = {
           type: 'suggest',
           claveBlocking: 'documento',
@@ -689,27 +696,37 @@ export class PacienteCreateUpdateComponent implements OnInit {
           apellido: this.pacienteModel.apellido.toString(),
           nombre: this.pacienteModel.nombre.toString(),
           documento: this.pacienteModel.documento.toString(),
-          sexo: this.pacienteModel.sexo.toString(),
+          sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
           fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
         };
         this.pacienteService.get(dto).subscribe(resultado => {
-            this.pacientesSimilares = resultado;
-            if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-              if (this.pacientesSimilares.length == 1 && this.pacientesSimilares[0].match >= 0.9) {
-                this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+          this.pacientesSimilares = resultado;
+          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+            if (this.pacientesSimilares[0].match >= 0.9) {
+              this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { })
+              if (this.pacientesSimilares[0].match >= 1.0) {
+                this.onSelect(this.pacientesSimilares[0].paciente);
+                this.pacientesSimilares = null;
               } else {
-                this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-                this.enableIgnorarGuardar = true;
+                this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+                this.enableIgnorarGuardar = false;
+                this.disableGuardar = true;
               }
-            this.disableGuardar = true;
-          } else
-          {
+
+            } else {
+              this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { })
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+              this.enableIgnorarGuardar = true;
+              this.disableGuardar = true;
+            }
+          } else {
             this.disableGuardar = false;
+            this.enableIgnorarGuardar = false;
           }
-          });
+        });
+      }
     }
   }
-}
 
 
 }

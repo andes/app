@@ -47,15 +47,15 @@ export class PacienteSearchComponent implements OnInit {
     debugger;
     if (paciente) {
       this.seleccion = paciente;
+      this.seleccion.scan = this.textoLibre;
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     } else {
       this.esEscaneado = false;
-      // this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     }
     this.showCreateUpdate = true;
-
+    this.textoLibre = null;
   }
 
   /**
@@ -134,7 +134,6 @@ export class PacienteSearchComponent implements OnInit {
    * Busca paciente cada vez que el campo de busca cambia su valor
    */
   public buscar() {
-    debugger;
     // Cancela la búsqueda anterior
     if (this.timeoutHandle) {
       window.clearTimeout(this.timeoutHandle);
@@ -160,7 +159,7 @@ export class PacienteSearchComponent implements OnInit {
         if (documentoEscaneado) {
           this.loading = true;
           let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
-          this.textoLibre = null;
+
 
           // Consulta API
           this.pacienteService.get({
@@ -171,6 +170,7 @@ export class PacienteSearchComponent implements OnInit {
             sexo: pacienteEscaneado.sexo.toString(),
             escaneado: true
           }).subscribe(resultado => {
+            debugger;
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = true;
@@ -191,13 +191,30 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
+                debugger;
                 this.pacientesSimilares = resultSuggest;
-                if (this.pacientesSimilares.length) {
-                  this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto');
-                  if (this.pacientesSimilares[0].match >= 0.90) {
-                    this.mostrarNuevo = false;
+                if (this.pacientesSimilares.length > 0) {
+
+                  let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
+                    if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
+                      return valuePac.paciente;
+                    }
+                  });
+
+                  if (pacienteEncontrado) {
+                    this.seleccionarPaciente(pacienteEncontrado);
                   } else {
-                    this.mostrarNuevo = true;
+                    if (this.pacientesSimilares[0].match >= 0.90) {
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
+                      this.mostrarNuevo = false;
+                    } else {
+                      if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                        this.seleccionarPaciente(pacienteEscaneado);
+                      }
+                      this.mostrarNuevo = true;
+                    }
                   }
                 } else {
                   this.pacientesSimilares = null;
