@@ -75,7 +75,6 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
-import { BuscarAgendasComponent } from './components/turnos/buscar-agendas.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
@@ -260,7 +259,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
-    BuscarAgendasComponent, DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
+    DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,

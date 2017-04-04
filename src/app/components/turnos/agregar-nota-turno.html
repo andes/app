@@ -1,8 +1,8 @@
 <div class="row" *ngIf="showAgregarNotaTurno">
     <plex-box>
-        <div class="row" *ngFor="let turno of turnos; let i = index">
+        <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
             <div class="col-md-12">
-                <label>Nota en el turno: {{turno.horaInicio | date: 'dd/MM/yyyy'}}<br>
+                <label>Turno: {{turno.horaInicio | date: 'H:mm'}} hs<br>
                     <span *ngIf="turno.paciente">Paciente: {{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
                 </label>
             </div>
@@ -17,7 +17,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarNota(turnos)" title="Guardar Nota">
+                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarNota()" title="Guardar Nota">
                 </plex-button>
                 <plex-button icon="mdi mdi-arrow-left" label="Volver" (click)="cancelar()" title="Volver">
                 </plex-button>

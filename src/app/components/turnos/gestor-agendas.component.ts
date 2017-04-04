@@ -34,6 +34,7 @@ export class GestorAgendasComponent implements OnInit {
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
+    public showInsertarAgenda: Boolean = false;
     public fechaDesde: any;
     public fechaHasta: any;
 
@@ -57,58 +58,64 @@ export class GestorAgendasComponent implements OnInit {
 
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
 
-        // Por defecto cargar/mostrar agendas de hoy
-        this.hoy = true;
-        this.loadAgendas();
+        if ( !this.autorizado ) {
+            this.redirect('incio');
+        } else {
 
-        // Reactive Form
-        this.searchForm = this.formBuilder.group({
-            // Debe respetarse el tipo de dato Date, o el componente datepicker no funciona
-            fechaDesde: [new Date()],
-            fechaHasta: [new Date()],
-            prestaciones: [''],
-            profesionales: [''],
-            espacioFisico: [''],
-            estado: ['']
-        });
+            // Por defecto cargar/mostrar agendas de hoy
+            this.hoy = true;
+            this.loadAgendas();
 
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+            // Reactive Form
+            this.searchForm = this.formBuilder.group({
+                // Debe respetarse el tipo de dato Date, o el componente datepicker no funciona
+                fechaDesde: [new Date()],
+                fechaHasta: [new Date()],
+                prestaciones: [''],
+                profesionales: [''],
+                espacioFisico: [''],
+                estado: ['']
+            });
 
-            let fechaDesde = moment(value.fechaDesde).startOf('day');
-            let fechaHasta = moment(value.fechaHasta).endOf('day');
+            this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
 
-            let params = {
-                fechaDesde: fechaDesde.format(),
-                fechaHasta: fechaHasta.format(),
-            };
+                let fechaDesde = moment(value.fechaDesde).startOf('day');
+                let fechaHasta = moment(value.fechaHasta).endOf('day');
 
-            // Filtro de Tipos de Prestaciones (si está vacío, trae todas)
-            if ( value.prestaciones ) {
-                params['idTipoPrestacion'] = value.prestaciones.id;
-            }
-            if ( value.profesionales ) {
-                params['idProfesional'] = value.profesionales.id;
-            }
-            if ( value.espacioFisico ) {
-                params['espacioFisico'] = value.espacioFisico.id;
-            }
-            if ( value.estado ) {
-                params['estado'] = value.estado.id;
-            }
+                let params = {
+                    fechaDesde: fechaDesde.format(),
+                    fechaHasta: fechaHasta.format(),
+                };
 
-            this.serviceAgenda.get( params ).subscribe(
-                agendas => {
-                    this.hoy = false;
-                    this.agendas = agendas;
-                    this.fechaDesde = fechaDesde;
-                    this.fechaHasta = fechaHasta;
-                },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-        });
+                // Filtro de Tipos de Prestaciones (si está vacío, trae todas)
+                if ( value.prestaciones ) {
+                    params['idTipoPrestacion'] = value.prestaciones.id;
+                }
+                if ( value.profesionales ) {
+                    params['idProfesional'] = value.profesionales.id;
+                }
+                if ( value.espacioFisico ) {
+                    params['espacioFisico'] = value.espacioFisico.id;
+                }
+                if ( value.estado ) {
+                    params['estado'] = value.estado.id;
+                }
+
+                this.serviceAgenda.get( params ).subscribe(
+                    agendas => {
+                        this.hoy = false;
+                        this.agendas = agendas;
+                        this.fechaDesde = fechaDesde;
+                        this.fechaHasta = fechaHasta;
+                    },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+            });
+
+        }
 
     }
 
@@ -127,6 +134,7 @@ export class GestorAgendasComponent implements OnInit {
     cancelaEditar() {
         this.showGestorAgendas = true;
         this.showEditarAgenda = false;
+        this.showInsertarAgenda = false;
     }
 
     reasignaTurno(reasTurno) {
@@ -138,6 +146,11 @@ export class GestorAgendasComponent implements OnInit {
     showVistaTurnos(showTurnos: Boolean) {
         this.showTurnos = showTurnos;
         this.showEditarAgendaPanel = false;
+    }
+
+    insertarAgenda() {
+        this.showInsertarAgenda = true;
+        this.showGestorAgendas = false;
     }
 
     editarAgenda(agenda) {
@@ -205,9 +218,11 @@ export class GestorAgendasComponent implements OnInit {
 
     verAgenda(agenda, multiple, e) {
 
+        this.showEditarAgendaPanel = false;
+
         if (!multiple) {
 
-            this.showTurnos = false;
+            // this.showTurnos = false;
             this.agendasSeleccionadas = [];
             this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
 
@@ -223,7 +238,6 @@ export class GestorAgendasComponent implements OnInit {
             } else {
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
             }
-
 
         }
             this.setColorEstadoAgenda(agenda);
