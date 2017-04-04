@@ -61,7 +61,7 @@ export class PesquisaNeonatalComponent implements OnInit {
   getMensajes() {
     let mensaje: any = {
       texto: '',
-      class: 'outline-danger'
+      class: 'danger'
     };
     if (this.data[this.tipoPrestacion.key] == false) {
       mensaje.texto = 'Alarma' //Ver el texto.

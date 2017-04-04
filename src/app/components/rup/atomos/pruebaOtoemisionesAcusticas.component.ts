@@ -46,7 +46,7 @@ export class PruebaOtoemisionesAcusticasComponent implements OnInit {
     getMensajes() {
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
         if (this.data[this.tipoPrestacion.key].id != 'si') {
             mensaje.texto = 'alarma'; //ver el texto que va a alertar

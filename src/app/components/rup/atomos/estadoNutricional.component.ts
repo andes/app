@@ -53,7 +53,7 @@ export class EstadoNutricionalComponent implements OnInit {
         let prc;  prc = this.data[this.tipoPrestacion.key];
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
 
         if (edad >= 2) {

@@ -40,7 +40,7 @@ export class TensionDiastolicaComponent implements OnInit {
 
         let mensaje: any = {
             texto: '',
-            class: 'outline-danger'
+            class: 'danger'
         };
 
         Edad = this.paciente.edad;
