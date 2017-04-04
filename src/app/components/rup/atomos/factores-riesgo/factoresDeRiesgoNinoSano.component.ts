@@ -1,4 +1,4 @@
-import { PacienteComponent } from './../../../paciente/paciente.component';
+// import { PacienteComponent } from './../../../paciente/paciente.component';
 import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
 import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../../services/rup/tipoProblema.service';
