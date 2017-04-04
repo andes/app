@@ -29,22 +29,21 @@ export class AgregarNotaTurnoComponent implements OnInit {
         return this._turnosSeleccionados;
     }
 
-
     showAgregarNotaTurno: Boolean = true;
-    turnos: any = [];
 
     public modelo: any;
     public resultado: any;
 
+    constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
+
     ngOnInit() {
         console.log('this.turnosSeleccionados: ', this.turnosSeleccionados);
-        this.turnos = this.turnosSeleccionados;
     }
 
-    guardarNota(turnos: any, idTurno) {
+    guardarNota() {
 
         let alertCount = 0;
-        turnos.forEach((turno, index) => {
+        this.turnosSeleccionados.forEach((turno, index) => {
 
             let patch = {
                 'op': 'guardarNotaTurno',
@@ -56,7 +55,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
 
                 if ( alertCount === 0 ) {
-                    if ( turnos.length === 1 ) {
+                    if ( this.turnosSeleccionados.length === 1 ) {
                         this.plex.alert('La Nota se guardó correctamente');
                     } else {
                         this.plex.alert('Las Notas se guardaron correctamente');
@@ -64,15 +63,17 @@ export class AgregarNotaTurnoComponent implements OnInit {
                     alertCount++;
                 }
 
-                this.resultado = resultado;
-
-                this.saveAgregarNotaTurno.emit(this.resultado);
+                this.agenda = resultado;
             },
                 err => {
                     if (err) {
                         console.log(err);
                     }
                 });
+
+            if ( index === this.turnosSeleccionados.length - 1 ){
+                this.saveAgregarNotaTurno.emit(this.agenda);
+            }
         });
     }
 
@@ -80,5 +81,4 @@ export class AgregarNotaTurnoComponent implements OnInit {
         this.cancelaAgregarNota.emit(true);
     }
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 }

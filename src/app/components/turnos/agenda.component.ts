@@ -513,7 +513,7 @@ export class AgendaComponent implements OnInit {
 
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ' turnos';
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? 'turno' : 'turnos' );
                     this.alertas.push(alerta);
                 }
 
@@ -662,7 +662,7 @@ export class AgendaComponent implements OnInit {
                 });
             });
 
-            console.log('this.modelo: ', this.modelo);
+            // console.log('this.modelo: ', this.modelo);
             espOperation = this.ServicioAgenda.save(this.modelo);
 
             espOperation.subscribe(resultado => {
@@ -674,10 +674,9 @@ export class AgendaComponent implements OnInit {
                         this.showBuscarAgendas = false;
                         this.showAgenda = false;
                     } else {
-                        this.modelo = {
-                            fecha: null
-                        };
-                        this.bloqueActivo = -1;
+                        this.modelo = {};
+                        this.showAgenda = false;
+                        this.showGestorAgendas = true;
                     }
                 });
             });
@@ -686,7 +685,7 @@ export class AgendaComponent implements OnInit {
         }
     }
 
-    cancelar(agenda) {
+    cancelar() {
 
         this.cancelaEditar.emit(true);
 
