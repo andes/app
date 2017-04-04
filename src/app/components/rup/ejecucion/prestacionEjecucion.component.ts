@@ -224,14 +224,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
 
-                    let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
-
-                    if (this.valoresPrestaciones[key] && evolucion) {
-                        this.valoresPrestaciones[key] = {};
-                        this.valoresPrestaciones[key] = evolucion;
-                    }else {
-                        this.valoresPrestaciones[key] = null;
-                    }
+                    // let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                    // console.log(evolucion);
+                    // if (evolucion) {
+                    //     this.valoresPrestaciones[key] = {};
+                    //     this.valoresPrestaciones[key] = evolucion;
+                    // }else {
+                    //     this.valoresPrestaciones[key] = null;
+                    // }
                 }
             });
         }
@@ -248,6 +248,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.prestacionesEjecucion.push(_prestacion);
                 let key; key = _prestacion.solicitud.tipoPrestacion.key;
                 this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+
+                // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
             }
         });
     }

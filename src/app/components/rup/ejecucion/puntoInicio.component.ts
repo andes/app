@@ -17,6 +17,7 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
 })
+
 export class PuntoInicioComponent implements OnInit {
 
     public profesional: IProfesional;
@@ -37,7 +38,6 @@ export class PuntoInicioComponent implements OnInit {
         private router: Router) {
 
     }
-
 
     ngOnInit() {
         console.log('Authorization', this.auth);
