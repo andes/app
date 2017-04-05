@@ -41,6 +41,7 @@ import {
   FormArray,
   Validators
 } from '@angular/forms';
+import * as moment from 'moment';
 import {
   BarrioService
 } from './../../services/barrio.service';
@@ -73,12 +74,16 @@ import {
 import {
   MapsComponent
 } from './../../utils/mapsComponent';
+import {
+  patientPipe
+} from './../../utils/patientPipe';
 
 @Component({
   selector: 'paciente-create-update',
   templateUrl: 'paciente-create-update.html'
 })
 export class PacienteCreateUpdateComponent implements OnInit {
+  server: any;
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
@@ -117,6 +122,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   mensaje = '';
   validado = false;
   disableGuardar = false;
+  enableIgnorarGuardar = false;
   sugerenciaAceptada = false;
   entidadValidadora = '';
   viveEnNeuquen = null;
@@ -173,6 +179,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     identificadores: null,
     claveBlocking: null,
     entidadesValidadoras: [this.entidadValidadora],
+    scan: null
   };
 
 
@@ -185,8 +192,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex) { }
 
   ngOnInit() {
-
-    debugger;
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
@@ -294,13 +299,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.seleccion.direccion = [this.direccion];
       }
 
- 
+
 
       if (this.seleccion.id) {
         // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             if (resultado) {
+              if (!resultado.scan) {
+                resultado.scan = this.seleccion.scan;
+              }
               this.seleccion = resultado;
             }
 
@@ -336,6 +344,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 }
               }
             }
+
 
             this.pacienteModel = Object.assign({}, this.seleccion);
             this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
@@ -411,13 +420,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   onSave(valid) {
-    debugger;
+
     //El primer save
     let lista = [];
     if (valid.formValid) {
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
-
+      debugger;
       pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
       pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
       pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
@@ -497,7 +506,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   save(valid) {
-    debugger;
+
 
     if (valid) {
 
@@ -517,12 +526,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
-        debugger;
+
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-          debugger;
+
           this.plex.alert('Los datos se actualizaron correctamente');
-          //alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
         });
         //   }
@@ -530,17 +538,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
       } else {
         /*this.plex.confirm('¿Esta seguro que desea guardar los datos? ').then(resultado => {
           if (resultado) {*/
-        debugger
+
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-          debugger;
+
           if (result) {
             this.plex.alert('Los datos se actualizaron correctamente');
-            //alert('Los datos se actualizaron correctamente');
             this.data.emit(result);
           } else {
             this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
-            // alert('ERROR: Ocurrio un problema al actualizar los datos');
           }
         });
         //   }
@@ -548,7 +554,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
       }
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
-      //alert('Debe completar los datos obligatorios');
     }
   }
 
@@ -557,12 +562,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
 
-  onSelect(paciente: IPaciente, id: String) {
-    debugger;
+  onSelect(paciente: IPaciente) {
     this.seleccion = Object.assign({}, paciente);
-    this.seleccion.id = id;
+    //this.seleccion.id = id;
     if (this.seleccion.estado === 'validado') {
       this.validado = true;
+      this.enableIgnorarGuardar = false;
     }
 
     if (this.seleccion.contacto) {
@@ -675,29 +680,48 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
 
-  // Verifica paciente repetido
+  // Verifica paciente repetido y genera lista de candidatos
   verificaPacienteRepetido() {
-    
+
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      
+
       this.completarGenero();
 
       if (!this.pacienteModel.id) {
-        let dto: PacienteSearch = {
+        debugger;
+        let dto: any = {
           type: 'suggest',
           claveBlocking: 'documento',
           percentage: true,
           apellido: this.pacienteModel.apellido.toString(),
           nombre: this.pacienteModel.nombre.toString(),
           documento: this.pacienteModel.documento.toString(),
-          sexo: this.pacienteModel.sexo.toString(),
-          fechaNacimiento: this.pacienteModel.fechaNacimiento
+          sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
+          fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-            this.disableGuardar = true;
+            if (this.pacientesSimilares[0].match >= 0.9) {
+              this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { })
+              if (this.pacientesSimilares[0].match >= 1.0) {
+                this.onSelect(this.pacientesSimilares[0].paciente);
+                this.pacientesSimilares = null;
+              } else {
+                this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+                this.enableIgnorarGuardar = false;
+                this.disableGuardar = true;
+              }
+
+            } else {
+              this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { })
+              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+              this.enableIgnorarGuardar = true;
+              this.disableGuardar = true;
+            }
+          } else {
+            this.disableGuardar = false;
+            this.enableIgnorarGuardar = false;
           }
         });
       }
