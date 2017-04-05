@@ -546,7 +546,7 @@ export class DarTurnosComponent implements OnInit {
                     // sino, se genera un nuevo contacto
                     if (this.paciente.contacto.length > 0) {
                         this.paciente.contacto.forEach((contacto, index) => {
-                            if (contacto.activo && contacto.ranking === 1 && contacto.tipo === 'celular') {
+                            if (contacto.tipo === 'celular') {
                                 contacto.valor = this.telefono;
                                 flagTelefono = true;
                             }
@@ -602,7 +602,7 @@ export class DarTurnosComponent implements OnInit {
         // se busca entre los contactos si tiene un celular en ranking 1
         if (this.paciente.contacto.length > 0) {
             this.paciente.contacto.forEach((contacto) => {
-                if (contacto.activo && contacto.ranking === 1 && contacto.tipo === 'celular') {
+                if (contacto.tipo === 'celular') {
                     this.telefono = contacto.valor;
                 }
             });
