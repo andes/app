@@ -71,20 +71,20 @@ export class DarTurnosComponent implements OnInit {
     public autorizado = false;
 
     // Este paciente hay que reemplazarlo por el que viene de la búsqueda
-    // paciente: IPaciente;
+    paciente: IPaciente;
 
-    paciente: any = {
-        id: '57f66f2076e97c2d18f1808b',
-        documento: '30403872',
-        apellido: 'Diego',
-        nombre: 'Pérez',
-        contacto: [{
-            tipo: 'Teléfono Fijo',
-            valor: '2995573273',
-            ranking: 1,
-            activo: true
-        }]
-    };
+    // paciente: any = {
+    //     id: '57f66f2076e97c2d18f1808b',
+    //     documento: '30403872',
+    //     apellido: 'Diego',
+    //     nombre: 'Pérez',
+    //     contacto: [{
+    //         tipo: 'Teléfono Fijo',
+    //         valor: '2995573273',
+    //         ranking: 1,
+    //         activo: true
+    //     }]
+    // };
 
     pacientesSearch = true;
     showDarTurnos = false;
