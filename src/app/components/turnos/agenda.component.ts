@@ -513,7 +513,7 @@ export class AgendaComponent implements OnInit {
 
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? 'turno' : 'turnos' );
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? ' turno' : ' turnos' );
                     this.alertas.push(alerta);
                 }
 
