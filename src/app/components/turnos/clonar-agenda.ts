@@ -4,7 +4,7 @@ import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import * as moment from 'moment';
-type Estado = 'noSeleccionado' | 'seleccionado'
+type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
     selector: 'clonar-agenda',
     templateUrl: 'clonar-agenda.html'
@@ -22,10 +22,9 @@ export class ClonarAgendaComponent implements OnInit {
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
-    private original: boolean = true;
+    private original = true;
     private inicioAgenda: Date;
     public danger = 'list-group-item-danger';
-    
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -33,7 +32,7 @@ export class ClonarAgendaComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
-    @Output() cancelaClonar = new EventEmitter<boolean>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
 
     ngOnInit() {
         this.inicioAgenda = new Date(this.agenda.horaInicio);
@@ -54,9 +53,13 @@ export class ClonarAgendaComponent implements OnInit {
         let params = {
             fechaDesde: this.inicioMesDate,
             fechaHasta: this.finMesDate,
-            espacioFisico: this.agenda.espacioFisico.id
         };
-        params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
+        if (this.agenda.espacioFisico) {
+            params['espacioFisico'] = this.agenda.espacioFisico.id;
+        }
+        if (this.agenda.profesionales) {
+            params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
+        }
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         this.cargarCalendario();
     }
@@ -111,47 +114,63 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public seleccionar(dia: any) {
-        if (dia.fecha.getTime() >= this.hoy.getTime()){
+        if (dia.fecha.getTime() >= this.hoy.getTime()) {
             let original = this.agenda;
-            // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
             if (dia.original) {
                 this.original = true;
             } else {
                 this.original = false;
             }
+            let band = false;
+            let originalIni = moment(original.horaInicio).format('HH:mm');
+            let originalFin = moment(original.horaFin).format('HH:mm');
+            let filtro = this.agendas.filter(
+                function (actual) {
+                    let actualIni = moment(original.horaInicio).format('HH:mm');
+                    let actualFin = moment(original.horaInicio).format('HH:mm');
+                    band = moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
+                    band = band &&
+                        ((originalIni <= actualIni && actualIni <= originalFin)
+                            || (originalIni <= actualFin && actualFin <= originalFin));
+                    return band;
+                }
+            );
+            // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
                 this.seleccionados.push(dia.fecha.getTime());
-                let band = false;
-                let originalIni = moment(original.horaInicio).format('HH:mm');
-                let originalFin = moment(original.horaFin).format('HH:mm');
-                this.agendasFiltradas = this.agendas.filter(
-                    function (actual) {
-                        let actualIni = moment(original.horaInicio).format('HH:mm');
-                        let actualFin = moment(original.horaInicio).format('HH:mm');
-                        band = moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                        band = band &&
-                            ((originalIni <= actualIni && actualIni <= originalFin)
-                                || (originalIni <= actualFin && actualFin <= originalFin));
-                        return band;
+                filtro.forEach((fil) => {
+                    let aux = this.agendasFiltradas.map(elem => { return elem.id });
+                    if (aux.indexOf(fil.id) < 0) {
+                        this.agendasFiltradas = this.agendasFiltradas.concat(fil);
                     }
-                );
+                });
             } else {
-                this.agendasFiltradas = [];
                 if (this.original !== true) {
                     dia.estado = 'noSeleccionado';
                     let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                     this.seleccionados.splice(i, 1);
+                    filtro.forEach((fil) => {
+                        let aux = this.agendasFiltradas.map(elem => { return elem.id });
+                        console.log(aux);
+                        let indice = aux.indexOf(fil.id);
+                        if (indice >= 0) {
+                            this.agendasFiltradas.splice(indice, 1);
+                        }
+                    });
                 }
             }
             this.agendasFiltradas.forEach((agenda, index) => {
-                if (agenda.profesionales.map(elem => { return elem.id; }).some
-                (v => {return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
-                    agenda.conflictoProfesional = 1;
+                if (agenda.profesionales) {
+                    if (agenda.profesionales.map(elem => { return elem.id; }).some
+                        (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
+                        agenda.conflictoProfesional = 1;
+                    }
                 }
-
-                if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
-                    agenda.conflictoEF = 1;
+                if (agenda.espacioFisico) {
+                    if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
+                        agenda.conflictoEF = 1;
+                    }
                 }
             });
         }
@@ -200,7 +219,9 @@ export class ClonarAgendaComponent implements OnInit {
                         turno.paciente = null;
                         turno.tipoPrestacion = null;
                         turno.idPrestacionPaciente = null;
-
+                        if (turno.tipoTurno){
+                            delete turno.tipoTurno;
+                        }
                     });
                 });
                 this.agenda.estado = 'Planificacion';
@@ -218,16 +239,15 @@ export class ClonarAgendaComponent implements OnInit {
                 console.log('Error: %s', err);
             },
             function () {
-                console.log('Completed');
-                alert('La agenda se clonó correctamente');
-                // this.plex.alert('La agenda se clonó correctamente');
+                // alert('La agenda se clonó correctamente');
+                this.plex.alert('La agenda se clonó correctamente');
+                this.volverAlGestor.emit(true);
             }
         );
     }
 
     cancelar() {
-        debugger;
-        this.cancelaClonar.emit(true);
+        this.volverAlGestor.emit(true);
     }
 
     constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
