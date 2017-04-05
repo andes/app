@@ -1,4 +1,4 @@
-<style>
+<!--<style>
     .celeste {
         color: #00A8E0;
     }
@@ -14,8 +14,8 @@
     .capitalize {
         text-transform: capitalize;
     }
-</style>
-
+</style>-->
+<!--
 
 <div class="row">
     <div class="col">
@@ -35,5 +35,23 @@
     <div class="col bl" *ngIf="paciente.financiador[0]">
         <b>Obra social</b>
         <br /> {{paciente.financiador[0].entidad.nombre}}
+    </div>
+</div>-->
+
+
+<div class="sub-friso" style="width: 790px">
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
+                <div class="col-12">{{paciente.documento|number}}</div>
+                <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
+                <div class="col-4">Edad: 26 años</div>
+            </div>
+        </div>
+        <div class="col-6 data-paciente ">
+            <div class="subdata-paciente">Estado</div>
+            <div class="subdata-descripcion">{{paciente.estado}}</div>
+        </div>
     </div>
 </div>

@@ -45,7 +45,7 @@ export class DarTurnosComponent implements OnInit {
         profesional: null,
     };
 
-
+    paciente: IPaciente;
     public estadoT: Estado;
     private turno: ITurno;
     private bloque: IBloque;
@@ -70,31 +70,15 @@ export class DarTurnosComponent implements OnInit {
     public permisos = [];
     public autorizado = false;
 
-    // Este paciente hay que reemplazarlo por el que viene de la búsqueda
-    // paciente: IPaciente;
 
-    paciente: any = {
-        id: '57f66f2076e97c2d18f1808b',
-        documento: '30403872',
-        apellido: 'Diego',
-        nombre: 'Pérez',
-        contacto: [{
-            tipo: 'Teléfono Fijo',
-            valor: '2995573273',
-            ranking: 1,
-            activo: true
-        }]
-    };
+
 
     pacientesSearch = true;
     showDarTurnos = false;
-    // pacientesSearch = false;
-    // showDarTurnos = true;
     cambioTelefono = false;
     infoPaciente = false;
 
     tipoTurno: string;
-    // tiposTurnosSelect: any[];
     tiposTurnosSelect: String;
 
     constructor(
@@ -114,7 +98,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._reasignaTurnos) {
             this.paciente = this._reasignaTurnos.paciente;
-            this.telefono = this.paciente.telefono;
+            this.telefono = this.turno.paciente.telefono;
         }
 
         // Fresh start
@@ -203,20 +187,6 @@ export class DarTurnosComponent implements OnInit {
             this.agendas = agendas.filter((data) => {
                 return (data.estado === 'Disponible' || data.estado === 'Publicada');
             });
-
-
-            // El siguiente codigo se reemplazó en el bloque de abajo, cambia el lugar de la condición
-
-            // Loop agendas / bloques / turnos
-            // this.agendas.forEach((agenda, indexAgenda) => {
-            //     agenda.bloques.forEach((bloque, indexBloque) => {
-            //         bloque.turnos.forEach((turno, indexTurno) => {
-            //             if (turno.horaInicio >= moment(new Date()).startOf('day').toDate() && turno.horaInicio <= moment(new Date()).endOf('day').toDate()) {
-            //                 turno.tipoTurno = 'delDia';
-            //             }
-            //         });
-            //     });
-            // });
 
 
             // Evaluamos c/ agenda para ver si tienen fecha de hoy
@@ -539,13 +509,11 @@ export class DarTurnosComponent implements OnInit {
                     documento: this.paciente.documento,
                     apellido: this.paciente.apellido,
                     nombre: this.paciente.nombre,
-                    telefono: this.paciente.telefono
+                    telefono: this.telefono
                 };
 
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
                 this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-
-                // this.countBloques[this.indiceBloque][String()]
 
                 let datosTurno = {
                     idAgenda: this.agenda.id,
@@ -554,7 +522,7 @@ export class DarTurnosComponent implements OnInit {
                     paciente: pacienteSave,
                     tipoPrestacion: this.turnoTipoPrestacion,
                     tipoTurno: this.tiposTurnosSelect
-                  };
+                };
 
                 let operacion: Observable<any>;
                 debugger;
@@ -569,10 +537,35 @@ export class DarTurnosComponent implements OnInit {
 
                 // Si cambió el teléfono lo actualizo en el MPI
                 if (this.cambioTelefono) {
-                    let mpi: Observable<any>;
-                    let cambios = {
-                        telefono: this.paciente.telefono
+                    let nuevoCel = {
+                        'tipo': 'celular',
+                        'valor': this.telefono,
+                        'ranking': 1,
+                        'activo': true,
+                        'ultimaActualizacion': new Date()
                     };
+                    let mpi: Observable<any>;
+                    let flagTelefono = false;
+                    // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
+                    // sino, se genera un nuevo contacto
+                    if (this.paciente.contacto.length > 0) {
+                        this.paciente.contacto.forEach((contacto, index) => {
+                            if (contacto.activo && contacto.ranking === 1 && contacto.tipo === 'celular') {
+                                contacto.valor = this.telefono;
+                                flagTelefono = true;
+                            }
+                        });
+                        if (!flagTelefono) {
+                            this.paciente.contacto.push(nuevoCel)
+                        }
+                    } else {
+                        this.paciente.contacto = [nuevoCel];
+                    }
+                    console.log(this.paciente.contacto)
+                    let cambios = {
+                        'op': 'updateContactos',
+                        'contacto': this.paciente.contacto
+                    }
                     mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
                     mpi.subscribe(resultado => {
                         this.plex.alert('Se actualizó el numero de telefono');
@@ -610,6 +603,14 @@ export class DarTurnosComponent implements OnInit {
 
     onReturn(pacientes: IPaciente): void {
         this.paciente = pacientes;
+        // se busca entre los contactos si tiene un celular en ranking 1
+        if (this.paciente.contacto.length > 0) {
+            this.paciente.contacto.forEach((contacto) => {
+                if (contacto.activo && contacto.ranking === 1 && contacto.tipo === 'celular') {
+                    this.telefono = contacto.valor;
+                }
+            });
+        }
         this.showDarTurnos = true;
         this.infoPaciente = true;
         this.pacientesSearch = false;

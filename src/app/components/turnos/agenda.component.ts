@@ -29,7 +29,7 @@ export class AgendaComponent implements OnInit {
         return this._editarAgenda;
     }
 
-    @Output() cancelaEditar = new EventEmitter<boolean>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
 
     public modelo: any = {};
     public bloqueActivo: Number = 0;
@@ -513,7 +513,7 @@ export class AgendaComponent implements OnInit {
 
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? 'turno' : 'turnos' );
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? ' turno' : ' turnos' );
                     this.alertas.push(alerta);
                 }
 
@@ -620,20 +620,6 @@ export class AgendaComponent implements OnInit {
                         tipoTurno: undefined
                     };
 
-                    // if (delDiaCount > 0) {
-                    //     turno.tipoTurno = 'delDia';
-                    //     delDiaCount--;
-                    // } else if (programadoCount > 0) {
-                    //     turno.tipoTurno = 'programado';
-                    //     programadoCount--;
-                    // } else if (gestionCount > 0) {
-                    //     turno.tipoTurno = 'gestion';
-                    //     gestionCount--;
-                    // } else if (profesionalCount > 0) {
-                    //     turno.tipoTurno = 'profesional';
-                    //     profesionalCount--;
-                    // }
-
                     if (bloque.pacienteSimultaneos) {
                         // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
                         for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
@@ -671,13 +657,13 @@ export class AgendaComponent implements OnInit {
                 this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
                     if (clonar) {
                         this.showClonar = true;
-                        this.showBuscarAgendas = false;
                         this.showAgenda = false;
                     } else {
                         this.modelo = {};
                         this.showAgenda = false;
                         this.showGestorAgendas = true;
                     }
+                    this.volverAlGestor.emit(true);
                 });
             });
         } else {
@@ -687,7 +673,7 @@ export class AgendaComponent implements OnInit {
 
     cancelar() {
 
-        this.cancelaEditar.emit(true);
+        this.volverAlGestor.emit(true);
 
         this.showGestorAgendas = true;
         this.showAgenda = false;

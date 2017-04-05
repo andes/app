@@ -1,30 +1,5 @@
-<header *ngIf="infoPaciente" class="col-12" color="00A8E0">
-  <div class="row">
-    <div class="col-4">
-      <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
-    </div>
-    <div class="col-8">
-      <div class="row">
-        <div class="col-6">
-          <h4>D.N.I. {{paciente.documento}} </h4>
-        </div>
-        <div class="col-6">
-          <h4>Sexo: {{paciente.sexo}}</h4>
-        </div>
-        <div class="col-6">
-          <h4>Fecha de Nacimiento: {{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</h4>
-        </div>
-        <div class="col-6">
-          <h4>Estado: {{paciente.estado}} </h4>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="pacientesScan && mensaje">
-    <div class="alert alert-warning" role="alert">
-      {{mensaje}}
-    </div>
-  </div>
+<header *ngIf="infoPaciente" class="header-paciente">
+  <header-paciente [paciente]="paciente"></header-paciente>
 </header>
 <section>
   <div class="row" *ngIf="autorizado && showDarTurnos">
@@ -305,7 +280,7 @@
             </div>
           </plex-tab>
 
-          <plex-tab icon="account">
+          <!--<plex-tab icon="account">
             <div *ngIf="infoPaciente">
               <plex-box type="info" title="Paciente Seleccionado">
                 <div class="row">
@@ -335,7 +310,7 @@
               </plex-box>
             </div>
 
-          </plex-tab>
+          </plex-tab>-->
 
           <plex-tab icon="account-search">
             <plex-box title="Ultimos Turnos">

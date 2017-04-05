@@ -6,13 +6,10 @@
         <div *ngIf="cantSel === 0" style="height: 38px"></div>
         <div *ngIf="cantSel > 0">
             <!--<div class="botonera-turnos" *ngIf="!botones.asistencias"></div>-->
-
-                {{botones | json}}
-                {{turnosSeleccionados.length | json}}
-                <button *ngIf="botones.sacarAsistencia" id="darAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
+            <button *ngIf="botones.sacarAsistencia" id="sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
                     <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
                 </button>
-                <button *ngIf="botones.darAsistencia" id="sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
+            <button *ngIf="botones.darAsistencia" id="darAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
                     <span><i title="Dar Asistencia" class="mdi mdi-account-check"></i></span>
                 </button>
             <span *ngIf="botones.tdSuspenderTurno">
@@ -54,50 +51,50 @@
                 <!--<plex-bool name="seleccionar" [(ngModel)]="selectAll"></plex-bool>-->
                 <!--<a class="hover" (click)="reasignarTurnosMasivo()"><i title="Reasignar Turno Masivo" class="mdi mdi-rotate-right"></i></a>-->
             </span>
-            
+
         </div>
         <table class="table table-striped" *ngIf="agenda">
             <tbody>
-            <template ngFor let-bloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
-                <tr>
-                    <td colspan="3">
-                        <strong>Bloque: </strong>{{bloque.descripcion}}
-                    </td>
-                    <td colspan="1">
-                        <input type="checkbox" [ngModel]="todos" (click)="seleccionarTodos()">
-                    </td>
-                </tr>
-                <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
-                    <td>
-                        <strong>{{turno.horaInicio | date: 'HH:mm'}}</strong>
-                    </td>
-                    <td colspan="1">
-                        <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}
+                <template ngFor let-bloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
+                    <tr>
+                        <td colspan="3">
+                            <strong>Bloque: </strong>{{bloque.descripcion}}
+                        </td>
+                        <td colspan="1">
+                            <input type="checkbox" [ngModel]="todos" (click)="seleccionarTodos()">
+                        </td>
+                    </tr>
+                    <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
+                        <td>
+                            <strong>{{turno.horaInicio | date: 'HH:mm'}}</strong>
+                        </td>
+                        <td colspan="1">
+                            <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}
                             <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                         </span>
-                        <span *ngIf="turno.estado === 'disponible'">Disponible
+                            <span *ngIf="turno.estado === 'disponible'">Disponible
                                 <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                         </span>
-                        <span *ngIf="turno.estado === 'bloqueado'">No Disponible
+                            <span *ngIf="turno.estado === 'bloqueado'">No Disponible
                             <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                         </span>
-                    </td>
-                    <td>
-                        <label *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</label>
-                        <label *ngIf="!turno.asistencia && turno.paciente">No Tiene Asistencia</label>
-                    </td>
-                    <td class="text-center" *ngIf="turno.botones?.smsVisible">
-                        <i *ngIf="turno.botones.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
-                        <i *ngIf="turno.botones.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
-                        <div>
-                            <plex-loader *ngIf="turno.botones.smsLoader" type="ball-pulse"></plex-loader>
-                        </div>
-                    </td>
-                    <td colspan="1">
-                        <input type="checkbox" [ngModel]="turno.checked" (click)="seleccionarTurno(turno)">
-                    </td>
-                </tr>
-            </template>
+                        </td>
+                        <td>
+                            <label *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</label>
+                            <label *ngIf="!turno.asistencia && turno.paciente">No Tiene Asistencia</label>
+                        </td>
+                        <td class="text-center" *ngIf="turno.botones?.smsVisible">
+                            <i *ngIf="turno.botones.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
+                            <i *ngIf="turno.botones.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
+                            <div>
+                                <plex-loader *ngIf="turno.botones.smsLoader" type="ball-pulse"></plex-loader>
+                            </div>
+                        </td>
+                        <td colspan="1">
+                            <input type="checkbox" [ngModel]="turno.checked" (click)="seleccionarTurno(turno)">
+                        </td>
+                    </tr>
+                </template>
             </tbody>
         </table>
     </div>
