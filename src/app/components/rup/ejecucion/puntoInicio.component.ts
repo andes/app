@@ -21,6 +21,7 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 export class PuntoInicioComponent implements OnInit {
 
     public profesional: IProfesional;
+    public usuario: IPaciente;
     public listaPrestaciones: IPrestacionPaciente[] = [];
     public prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
 
@@ -52,7 +53,8 @@ export class PuntoInicioComponent implements OnInit {
             fechaDesde: fechaDesde,
             fechaHasta: fechaHasta,
             idProfesional: this.auth.profesional.id,
-            organizacion : this.auth.organizacion.id
+            organizacion : this.auth.organizacion.id,
+            usuario : this.auth.usuario.documento
         }).subscribe(
             agendas => { this.agendas = agendas; },
             err => {
