@@ -32,6 +32,11 @@ export class PacienteSearchComponent implements OnInit {
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
+    this.actualizarContadores();
+  }
+
+
   public ngOnInit() {
     this.autoFocus = this.autoFocus + 1;
   }
@@ -44,7 +49,6 @@ export class PacienteSearchComponent implements OnInit {
    * @param {*} paciente Paciente para seleccionar
    */
   public seleccionarPaciente(paciente: any) {
-    debugger;
     if (paciente) {
       this.seleccion = paciente;
       this.seleccion.scan = this.textoLibre;
@@ -56,6 +60,7 @@ export class PacienteSearchComponent implements OnInit {
     }
     this.showCreateUpdate = true;
     this.textoLibre = null;
+    this.mostrarNuevo = false;
   }
 
   /**
@@ -75,9 +80,7 @@ export class PacienteSearchComponent implements OnInit {
     window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
-    this.actualizarContadores();
-  }
+
 
   /**
    * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
@@ -92,6 +95,7 @@ export class PacienteSearchComponent implements OnInit {
         return DocumentoEscaneados[key];
       }
     }
+    this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
     return null;
   }
 
@@ -191,7 +195,6 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
-                debugger;
                 this.pacientesSimilares = resultSuggest;
                 if (this.pacientesSimilares.length > 0) {
 
@@ -207,13 +210,11 @@ export class PacienteSearchComponent implements OnInit {
                     if (this.pacientesSimilares[0].match >= 0.90) {
                       this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
-                      this.mostrarNuevo = false;
                     } else {
                       if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
-                        this.seleccionarPaciente(pacienteEscaneado);
                       }
-                      this.mostrarNuevo = true;
+                      this.seleccionarPaciente(pacienteEscaneado);
                     }
                   }
                 } else {
