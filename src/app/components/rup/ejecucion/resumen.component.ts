@@ -52,19 +52,21 @@ export class ResumenComponent implements OnInit {
     }
 
     cargarIndicadores() {
-        this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
-            .subscribe(prestacion => {
-                if (prestacion) {
-                    this.prestacionPeso = prestacion[0];
-                }
-            });
 
-        this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
-            .subscribe(prestacion => {
-                if (prestacion) {
-                    this.prestacionTalla = prestacion[0];
-                }
-            });
+        alert('Se comenta la carga de los indicadores - Estado: En coreecion');
+    //     this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
+    //         .subscribe(prestacion => {
+    //             if (prestacion) {
+    //                 this.prestacionPeso = prestacion[0];
+    //             }
+    //         });
+
+    //     this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
+    //         .subscribe(prestacion => {
+    //             if (prestacion) {
+    //                 this.prestacionTalla = prestacion[0];
+    //             }
+    //         });
     }
 
     iniciarPrestacion() {
@@ -81,15 +83,15 @@ export class ResumenComponent implements OnInit {
 
     }
 
-    verPrestacion() {
+    verPrestacion(){
         this.showEjecucion = true;
     }
 
-    verResumen() {
+    verResumen(){
         this.showValidacion = true;
     }
 
-    volver() {
+    volver(){
         this.showEjecucion = false;
         this.evtData.emit(null);
     }
