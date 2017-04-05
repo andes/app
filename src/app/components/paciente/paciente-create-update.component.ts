@@ -1,3 +1,4 @@
+import { Server } from '@andes/shared';
 import {
   IUbicacion
 } from './../../interfaces/IUbicacion';
@@ -83,7 +84,7 @@ import {
   templateUrl: 'paciente-create-update.html'
 })
 export class PacienteCreateUpdateComponent implements OnInit {
-  server: any;
+
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
@@ -179,7 +180,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     identificadores: null,
     claveBlocking: null,
     entidadesValidadoras: [this.entidadValidadora],
-    scan: null
+    scan: null,
+    reportarError: false
   };
 
 
@@ -189,7 +191,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private barrioService: BarrioService,
     private pacienteService: PacienteService,
-    private financiadorService: FinanciadorService, public plex: Plex) { }
+    private financiadorService: FinanciadorService, public plex: Plex, private server: Server) { }
 
   ngOnInit() {
     // Se cargan los combos
@@ -258,49 +260,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     if (this.seleccion) {
 
-      if (this.escaneado) {
-        this.validado = true;
-        this.seleccion.estado = 'validado';
-        if (this.seleccion.entidadesValidadoras) {
-          if (this.seleccion.entidadesValidadoras.length <= 0) {
-            //Caso que el paciente existe y no tiene ninguna entidad validadora e ingresó como validado
-            this.seleccion.entidadesValidadoras.push('RENAPER')
-          }
-        } else {
-          //El caso que el paciente no existe
-          this.seleccion.entidadesValidadoras = ['RENAPER'];
-        }
-
-      } else {
-        if (this.seleccion.estado !== 'validado') {
-          this.validado = false;
-          this.seleccion.estado = 'temporal';
-        } else {
-          this.validado = true;
-        }
-      }
-      if (this.seleccion.contacto) {
-        if (this.seleccion.contacto.length <= 0) {
-          this.seleccion.contacto[0] = this.contacto;
-        }
-      } else {
-        this.seleccion.contacto = [this.contacto];
-      }
-
-      if (this.seleccion.direccion) {
-        if (this.seleccion.direccion.length <= 0) {
-          this.seleccion.direccion[0] = this.direccion;
-        } else {
-          if (this.seleccion.direccion[0].ubicacion.pais && (!this.seleccion.direccion[0].ubicacion.pais.nombre)) {
-            this.seleccion.direccion[0] = this.direccion;
-          }
-        }
-      } else {
-        this.seleccion.direccion = [this.direccion];
-      }
-
-
-
+      this.actualizarDatosPaciente();
       if (this.seleccion.id) {
         // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
         this.pacienteService.getById(this.seleccion.id)
@@ -309,82 +269,84 @@ export class PacienteCreateUpdateComponent implements OnInit {
               if (!resultado.scan) {
                 resultado.scan = this.seleccion.scan;
               }
-              this.seleccion = resultado;
+              this.seleccion = Object.assign({}, resultado);
             }
-
-            if (this.escaneado) {
-              this.seleccion.estado = 'validado';
-              this.validado = true;
-            }
-            if (this.seleccion.contacto) {
-              if (this.seleccion.contacto.length <= 0) {
-                this.seleccion.contacto[0] = this.contacto;
-              }
-            } else {
-              this.seleccion.contacto = [this.contacto];
-            }
-
-            if (this.seleccion.direccion) {
-              if (this.seleccion.direccion.length <= 0) {
-                this.seleccion.direccion[0] = this.direccion;
-              } else {
-                if (this.seleccion.direccion[0].ubicacion.pais && (!this.seleccion.direccion[0].ubicacion.pais.nombre)) {
-                  this.seleccion.direccion[0] = this.direccion;
-                }
-              }
-            } else {
-              this.seleccion.direccion = [this.direccion];
-            }
-
-            if (this.seleccion.direccion) {
-              if (this.seleccion.direccion.length > 0) {
-                if (this.seleccion.direccion[0].ubicacion) {
-                  if (this.seleccion.direccion[0].ubicacion.localidad !== null)
-                    this.viveEnNeuquen.checkbox = false;
-                }
-              }
-            }
-
-
-            this.pacienteModel = Object.assign({}, this.seleccion);
-            this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+            this.actualizarDatosPaciente();
 
           });
-      } else {
-        this.pacienteModel = Object.assign({}, this.seleccion);
-        this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
-
       }
-
     }
-
-    // this.detectarRelaciones();
-    // // this.createForm.controls['relaciones'].valueChanges
-    //   .debounceTime(1000)
-    //   .subscribe((value) => {
-    //     console.log(value);
-    //     // Se busca el matcheo
-
-    //     let relaciones = value;
-    //     relaciones.forEach(rel => {
-    //       let familiarPacientes;
-    //       if (!rel.referencia) {
-    //         if (rel.nombre && rel.documento && rel.apellido) {
-    //           let dtoBusqueda = {
-    //             'apellido': rel.apellido, 'nombre': rel.nombre, 'documento': rel.documento,
-    //           };
-    //           this.pacienteService.searchMatch('documento', dtoBusqueda, "suggest", false)
-    //             .subscribe(valor => { this.familiaresPacientes = valor; console.log(valor) });
-    //         }
-    //       }
-    //     })
-    //   });
   }
 
-  /*Código de filtrado de combos*/
-  // loadPaises(event) {
-  //   this.paisService.get().subscribe(event.callback);
-  // }
+  actualizarDatosPaciente() {
+
+    if (this.escaneado) {
+      this.validado = true;
+      this.seleccion.estado = 'validado';
+      if (this.seleccion.entidadesValidadoras) {
+        if (this.seleccion.entidadesValidadoras.length <= 0) {
+          // Caso que el paciente existe y no tiene ninguna entidad validadora e ingresó como validado
+          this.seleccion.entidadesValidadoras.push('RENAPER');
+        } else {
+          let validador = this.seleccion.entidadesValidadoras.find(entidad => entidad === 'RENAPER');
+          if (!validador) {
+            this.seleccion.entidadesValidadoras.push('RENAPER');
+          }
+        }
+      } else {
+        // El caso que el paciente no existe
+        this.seleccion.entidadesValidadoras = ['RENAPER'];
+      }
+
+    } else {
+      if (this.seleccion.estado !== 'validado') {
+        this.validado = false;
+        this.seleccion.estado = 'temporal';
+      } else {
+        this.validado = true;
+      }
+    }
+
+
+    if (this.seleccion.contacto) {
+      if (this.seleccion.contacto.length <= 0) {
+        this.seleccion.contacto[0] = this.contacto;
+      }
+    } else {
+      this.seleccion.contacto = [this.contacto];
+    }
+
+    if (this.seleccion.direccion) {
+      if (this.seleccion.direccion.length <= 0) {
+        this.seleccion.direccion[0] = this.direccion;
+      } else {
+        if (this.seleccion.direccion[0].ubicacion.pais && (!this.seleccion.direccion[0].ubicacion.pais.nombre)) {
+          this.seleccion.direccion[0] = this.direccion;
+        }
+      }
+    } else {
+      this.seleccion.direccion = [this.direccion];
+    }
+
+    if (this.seleccion.direccion) {
+      if (this.seleccion.direccion.length > 0) {
+        if (this.seleccion.direccion[0].ubicacion) {
+          if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
+            this.viveEnNeuquen.checkbox = false;
+          }
+        }
+      }
+    }
+
+    if (!this.seleccion.reportarError) {
+      this.seleccion.reportarError = false;
+    }
+
+    this.pacienteModel = Object.assign({}, this.seleccion);
+    this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
+
+  }
 
 
   loadProvincias(event, pais) {
@@ -419,96 +381,96 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
 
-  onSave(valid) {
+  // onSave(valid) {
 
-    //El primer save
-    let lista = [];
-    if (valid.formValid) {
+  //   //El primer save
+  //   let lista = [];
+  //   if (valid.formValid) {
 
-      let pacienteGuardar = Object.assign({}, this.pacienteModel);
-      debugger;
-      pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
-      pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
-      pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
-
-
-      pacienteGuardar.contacto.map(elem => {
-        elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
-        return elem
-      });
-
-      // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
-      pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-      pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
-
-      if (this.viveEnNeuquen.checkbox) {
-        pacienteGuardar.direccion[0].ubicacion.localidad = null;
-      }
-
-      this.save(true);
-
-      // Si quitan las relaciones.referencia inexistentes
-      // this.pacienteModel.relaciones.forEach(rel => {
-      //   if (rel.referencia === "") {
-      //     rel.referencia = null;
-      //   }
-      // });
-      // Se controla si existe el paciente
-
-      // if (!this.pacienteModel.id) {
-      //   let dto: PacienteSearch = {
-      //     type: 'suggest',
-      //     claveBlocking: 'documento',
-      //     percentage: true,
-      //     apellido: pacienteGuardar.apellido.toString(),
-      //     nombre: pacienteGuardar.nombre.toString(),
-      //     documento: pacienteGuardar.documento.toString(),
-      //     sexo: pacienteGuardar.sexo.toString(),
-      //     fechaNacimiento: pacienteGuardar.fechaNacimiento
-      //   };
-      //   this.pacienteService.get(dto).subscribe(resultado => {
-      //     debugger;
-      //     this.pacientesSimilares = resultado;
-      //     console.log(resultado)
-      //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-      //       this.disableGuardar = true;
-      //       this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-      //     } else {
-      //       this.save(true);
-      //     }
-      //   });
-
-      // let dtoBusqueda = {
-      //   'apellido': this.pacienteModel.apellido, 'nombre': this.pacienteModel.nombre, 'documento': this.pacienteModel.documento.toString(),
-      //   'fechaNacimiento': this.pacienteModel.fechaNacimiento
-      // };
-      // this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
-      //   .subscribe(valor => {
-      //     this.pacientesSimilares = valor; console.log(valor)
-      //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-      //       this.disableGuardar = true;
-      //       //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-      //       alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-      //     } else {
-      //       this.save(true);
-      //     }
-      //   });
-
-      // } else {
-      //   this.save(true);
-      // }
+  //     let pacienteGuardar = Object.assign({}, this.pacienteModel);
+  //     debugger;
+  //     pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+  //     pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
+  //     pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
 
 
-    } else {
-      this.plex.alert('Debe completar los datos obligatorios');
-    }
-  }
+  //     pacienteGuardar.contacto.map(elem => {
+  //       elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+  //       return elem
+  //     });
+
+  //     // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
+  //     pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+  //     pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+
+  //     if (this.viveEnNeuquen.checkbox) {
+  //       pacienteGuardar.direccion[0].ubicacion.localidad = null;
+  //     }
+
+  //     this.save(true);
+
+  //     // Si quitan las relaciones.referencia inexistentes
+  //     // this.pacienteModel.relaciones.forEach(rel => {
+  //     //   if (rel.referencia === "") {
+  //     //     rel.referencia = null;
+  //     //   }
+  //     // });
+  //     // Se controla si existe el paciente
+
+  //     // if (!this.pacienteModel.id) {
+  //     //   let dto: PacienteSearch = {
+  //     //     type: 'suggest',
+  //     //     claveBlocking: 'documento',
+  //     //     percentage: true,
+  //     //     apellido: pacienteGuardar.apellido.toString(),
+  //     //     nombre: pacienteGuardar.nombre.toString(),
+  //     //     documento: pacienteGuardar.documento.toString(),
+  //     //     sexo: pacienteGuardar.sexo.toString(),
+  //     //     fechaNacimiento: pacienteGuardar.fechaNacimiento
+  //     //   };
+  //     //   this.pacienteService.get(dto).subscribe(resultado => {
+  //     //     debugger;
+  //     //     this.pacientesSimilares = resultado;
+  //     //     console.log(resultado)
+  //     //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+  //     //       this.disableGuardar = true;
+  //     //       this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+  //     //     } else {
+  //     //       this.save(true);
+  //     //     }
+  //     //   });
+
+  //     // let dtoBusqueda = {
+  //     //   'apellido': this.pacienteModel.apellido, 'nombre': this.pacienteModel.nombre, 'documento': this.pacienteModel.documento.toString(),
+  //     //   'fechaNacimiento': this.pacienteModel.fechaNacimiento
+  //     // };
+  //     // this.pacienteService.searchMatch('documento', dtoBusqueda, 'exactMatch', true)
+  //     //   .subscribe(valor => {
+  //     //     this.pacientesSimilares = valor; console.log(valor)
+  //     //     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+  //     //       this.disableGuardar = true;
+  //     //       //this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+  //     //       alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+  //     //     } else {
+  //     //       this.save(true);
+  //     //     }
+  //     //   });
+
+  //     // } else {
+  //     //   this.save(true);
+  //     // }
+
+
+  //   } else {
+  //     this.plex.alert('Debe completar los datos obligatorios');
+  //   }
+  // }
 
 
   save(valid) {
 
 
-    if (valid) {
+    if (valid.formValid) {
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -523,6 +485,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
       });
 
       let operacionPac: Observable<IPaciente>;
+
+      debugger;
       if (this.sugerenciaAceptada) {
         /*this.plex.confirm('¿Esta seguro que desea modificar los datos del paciente seleccionado? ').then(resultado => {
           if (resultado) {*/
@@ -564,30 +528,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   onSelect(paciente: IPaciente) {
     this.seleccion = Object.assign({}, paciente);
-    //this.seleccion.id = id;
-    if (this.seleccion.estado === 'validado') {
-      this.validado = true;
-      this.enableIgnorarGuardar = false;
-    }
-
-    if (this.seleccion.contacto) {
-      if (this.seleccion.contacto.length <= 0) {
-        this.seleccion.contacto.push(this.contacto);
-      }
-    } else {
-      this.seleccion.contacto = [this.contacto];
-    }
-
-    if (this.seleccion.direccion) {
-      if (this.seleccion.direccion.length <= 0) {
-        this.seleccion.direccion.push(this.direccion);
-      }
-    } else {
-      this.seleccion.direccion = [this.direccion];
-    }
-
-    this.pacienteModel = Object.assign({}, this.seleccion);
-    this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+    this.actualizarDatosPaciente();
     this.disableGuardar = false;
     this.sugerenciaAceptada = true;
   }
@@ -682,10 +623,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   // Verifica paciente repetido y genera lista de candidatos
   verificaPacienteRepetido() {
+    if (this.pacienteModel.sexo) {
+      this.completarGenero();
+    }
 
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
 
-      this.completarGenero();
+
 
       if (!this.pacienteModel.id) {
         debugger;
@@ -703,6 +647,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.pacientesSimilares = resultado;
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             if (this.pacientesSimilares[0].match >= 0.9) {
+              debugger;
               this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { })
               if (this.pacientesSimilares[0].match >= 1.0) {
                 this.onSelect(this.pacientesSimilares[0].paciente);

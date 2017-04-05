@@ -13,10 +13,6 @@
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                 </div>
 
-                <!--Alerta si se encontraro pacientes con alto % de macheo -->
-                <div *ngIf="pacientesSimilares && pacientesSimilares.length && !mostrarNuevo" class="alert alert-warning">
-                    <i class="mdi mdi-account-alert"></i> Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto
-                </div>
 
                 <!--Tabla de resultados por SimpleQuery -->
                 <table *ngIf="resultado && resultado.length" class="table table-striped">

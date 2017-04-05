@@ -47,4 +47,5 @@ export interface IPaciente {
     claveBlocking: [String];
     entidadesValidadoras: [String];
     scan: String;
+    reportarError: Boolean;
 }
