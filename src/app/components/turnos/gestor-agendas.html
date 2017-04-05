@@ -87,7 +87,7 @@
 </footer>
 
 <div *ngIf="autorizado">
-  <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (cancelaClonar)="cancelaClonar($event)"></clonar-agenda>
+  <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
   <dar-turnos *ngIf="showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
   <agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></agenda>
   <agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></agenda>
