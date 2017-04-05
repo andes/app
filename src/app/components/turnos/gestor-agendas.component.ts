@@ -125,16 +125,13 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = true;
     }
 
-    cancelaClonar() {
-        this.showGestorAgendas = true;
-        this.showClonar = false;
-    }
-
-    // Volver al gestor luego de editar una Agenda completa o cancelar
+    // Volver al gestor luego de hacer algo
     volverAlGestor() {
         this.showGestorAgendas = true;
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
+        this.showClonar = false;
+        this.loadAgendas();
     }
 
     reasignaTurno(reasTurno) {
