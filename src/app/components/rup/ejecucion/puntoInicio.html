@@ -4,20 +4,20 @@
     font-weight: 350;
     padding-bottom: 5px;
   }
-
+  
   h5.titulo-item-lista {
     display: inline-block;
     font-weight: 400;
     line-height: 1;
   }
-
+  
   small {
     color: grey;
     font-weight: 400;
     font-size: 0.85rem;
   }
   /*Etiquetas*/
-
+  
   .badge {
     text-transform: uppercase;
     font-size: 0.75rem;
@@ -25,28 +25,28 @@
     margin: 0px 10px 10px 0px;
     display: inline-block;
   }
-
+  
   .badge-danger {
     border: 1.5px solid #dd4b39;
     border-radius: 0px;
     background: transparent;
     color: #dd4b39;
   }
-
+  
   .badge-success {
     border: 1.5px solid #8CC63F;
     border-radius: 0px;
     background: transparent;
     color: #8CC63F;
   }
-
+  
   .badge-warning {
     border: 1.5px solid #ff8d22;
     border-radius: 0px;
     background: transparent;
     color: #ff8d22;
   }
-
+  
   .badge-info {
     border: 1.5px solid #00A8E0;
     border-radius: 0px;
@@ -54,58 +54,57 @@
     color: #00A8E0;
   }
   /* Item lista */
-
+  
   h5.item-title {
     display: inline-block;
     font-weight: 600;
     line-height: 1;
   }
-
+  
   h5.item-title:hover {
     color: #00A8E0;
   }
-
-.list-group-item-hora {
-  border: solid 1px #00c0ef;
-  color: #00c0ef;
-  font-weight: 500;
-  padding: 2.5rem;
-  text-align: center;
-}
-
-.btn-contextual {
-  font-size: 1.5em;
-  color: #AAAAAA;
-  background-color: white;
-  border-color: none;
-  box-shadow: none;
-  border: none;
-}
-
+  
+  .list-group-item-hora {
+    border: solid 1px #00c0ef;
+    color: #00c0ef;
+    font-weight: 500;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  
+  .btn-contextual {
+    font-size: 1.5em;
+    color: #AAAAAA;
+    background-color: white;
+    border-color: none;
+    box-shadow: none;
+    border: none;
+  }
+  
   .list-inline>.list-inline-item {
     margin-bottom: 10px;
   }
-
+  
   .list-group>.list-group-item {
     border-color: #AAAAAA;
     border-radius: 0px;
   }
-
+  
   .list-group-item:hover {
     background-color: #f9f9f9;
     border: solid 1px #00A8E0;
   }
-
+  
   .list-group-item:active {
     background-color: #f5f5f5;
     border: solid 1px #AAAAAA;
   }
-
+  
   .icono {
     margin-right: 10px;
     float: right;
   }
-
 </style>
 
 
@@ -137,6 +136,22 @@
   </div>
 </header>
 
+
+<section *ngIf="alerta">
+  <div class="row">
+    <div class="col-12">
+      <plex-box type="info" title="">
+        <div class=" col-12 text-center ">
+          <div class="alert alert-danger " role="alert ">
+            No se encontraron agendas para el profesional.
+          </div>
+        </div>
+      </plex-box>
+    </div>
+  </div>
+</section>
+
+
 <section *ngIf="showPendientes">
   <div class="row">
     <!--INICIO Agendas-->
@@ -150,28 +165,28 @@
           </div>
         </header>
 
-        <ul class="list-group" *ngFor="let agenda of agendas; let i = index" >            
-            <li class="row no-gutters" *ngFor="let bloque of agenda.bloques; let i=index">
-                <div class="col-3">
-                    <div class="list-group-item-hora" >
-                        <h5> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</h5>
-                    </div>
-                </div>
-                        
-                <div class="col-9 list-group-item">            
-                    <div class="col-9">
-                        <span class="badge badge-warning" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{agenda.estado ? agenda.estado:''}}</span>
-                        <br>
-                        <h5 class="item-title" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} .</h5>
-                        <br>
-                        <small> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</small>    
-                    </div>     
+        <ul class="list-group" *ngFor="let agenda of agendas; let i = index">
+          <li class="row no-gutters" *ngFor="let bloque of agenda.bloques; let i=index">
+            <div class="col-3">
+              <div class="list-group-item-hora">
+                <h5> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</h5>
+              </div>
+            </div>
 
-                    <span class="col-1">
+            <div class="col-9 list-group-item">
+              <div class="col-9">
+                <span class="badge badge-warning" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{agenda.estado ? agenda.estado:''}}</span>
+                <br>
+                <h5 class="item-title" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} .</h5>
+                <br>
+                <small> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</small>
+              </div>
+
+              <span class="col-1">
                         <plex-button  icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos" class="btn-contextual"></plex-button>
-                    </span>                                                                          
-                </div>   
-           </li>        
+                    </span>
+            </div>
+          </li>
         </ul>
 
       </plex-box>

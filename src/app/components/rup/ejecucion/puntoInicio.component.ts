@@ -28,7 +28,7 @@ export class PuntoInicioComponent implements OnInit {
     public showPendientes = true;
     public showDashboard = false;
     public enEjecucion = false;
-
+    public alerta = false;
     public agendas: any = [];
     public fechaActual = new Date();
     public bloqueSeleccionado: any;
@@ -46,22 +46,26 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     loadAgendasXDia() {
-
-        let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
-        let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
-        this.servicioAgenda.get({
-            fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta,
-            idProfesional: this.auth.profesional.id,
-            organizacion : this.auth.organizacion.id,
-            usuario : this.auth.usuario.documento
-        }).subscribe(
-            agendas => { this.agendas = agendas; },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+if (this.auth.profesional) {
+            let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
+            let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
+            this.servicioAgenda.get({
+                fechaDesde: fechaDesde,
+                fechaHasta: fechaHasta,
+                idProfesional: this.auth.profesional.id,
+                organizacion: this.auth.organizacion.id
+            }).subscribe(
+                agendas => { this.agendas = agendas; },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
+        else {
+            this.showPendientes = false;
+            this.alerta = true;
+        }
     }
 
     listadoTurnos(bloque) {
