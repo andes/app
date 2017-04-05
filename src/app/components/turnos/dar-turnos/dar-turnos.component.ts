@@ -69,10 +69,6 @@ export class DarTurnosComponent implements OnInit {
 
     public permisos = [];
     public autorizado = false;
-
-
-
-
     pacientesSearch = true;
     showDarTurnos = false;
     cambioTelefono = false;

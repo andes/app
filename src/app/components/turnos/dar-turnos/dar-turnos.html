@@ -9,11 +9,11 @@
         <header>
           <div class="row align-items-center">
             <div class="col">
-              <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación" (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col">
-              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" label="Profesionales" labelField="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="nombre + ' ' + apellido"
                 (change)="filtrar()">
               </plex-select>
             </div>
@@ -80,7 +80,6 @@
 
                 <div class="row">
                   <div class="col">
-                    <plex-box>
                       <div *ngFor="let bloque of bloques; let indiceBq=index">
                         <div *ngIf="tieneTurnos(bloque)" class="row">
                           <div class="col-md-12">
@@ -119,7 +118,7 @@
                           <!-- end ngFor turnos -->
                         </div>
                         <br>
-                        <div class="container">
+                        <div >
                           <div class="row">
                             <div class="col-md-12">
                               <h5 class="bloque-subtitle">Turnos restantes:</h5>
@@ -145,7 +144,6 @@
                         <hr>
                       </div>
                       <!-- end ngFor bloques -->
-                    </plex-box>
                   </div>
                 </div>
                 <div class="row">
@@ -172,7 +170,6 @@
               </div>
 
               <div class="col" *ngIf="estadoT=='noTurnos'">
-                <plex-box>
                   <div class="row justify-content-center">
                     <div class="box-content text-center">
                       <div class="col-12 ">
@@ -220,7 +217,6 @@
                       <div class="col col-md-12">No existen alternativas<br></div>
                     </div>
                   </div>
-                </plex-box>
                 <div class="row">
                   <div class="col col-md-12">
                     <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
@@ -229,14 +225,13 @@
               </div>
 
               <div class="col" *ngIf="estadoT=='confirmacion'">
-                <plex-box type="warning" title="Confirmar Turno">
 
                   <div class="row">
 
                     <div class="col">
-                      <div class="col col-md-12"><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}}</div>
-                      <div class="col col-md-12"><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
-                      <div class="col col-md-12"><label>Tipo de turno: &nbsp;</label>{{this.tiposTurnosSelect}}</div>
+                      <div><label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}}</div>
+                      <div><label>Documento: &nbsp;</label>{{this.paciente.documento}}</div>
+                      <div><label>Tipo de turno: &nbsp;</label>{{this.tiposTurnosSelect}}</div>
                       <!--<div class="col-md-12">
                     <plex-select [(ngModel)]="tiposTurnosSelect" labelField="tipo" label="Tipos de Turnos"></plex-select>
                   </div>-->
@@ -274,7 +269,6 @@
                     </div>
                   </div>
 
-                </plex-box>
               </div>
 
             </div>
@@ -313,7 +307,6 @@
           </plex-tab>-->
 
           <plex-tab icon="account-search">
-            <plex-box title="Ultimos Turnos">
               <!--<label>ÚLTIMOS TURNOS DEL PACIENTE</label>-->
               <div class="list-group">
                 <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
@@ -328,7 +321,6 @@
                   </div>
                 </a>
               </div>
-            </plex-box>
           </plex-tab>
 
         </plex-tabs>
