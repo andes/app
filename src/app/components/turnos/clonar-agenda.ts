@@ -34,6 +34,7 @@ export class ClonarAgendaComponent implements OnInit {
     }
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
+    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
     ngOnInit() {
         this.inicioAgenda = new Date(this.agenda.horaInicio);
         this.inicioAgenda.setHours(0, 0, 0, 0);
@@ -218,7 +219,7 @@ export class ClonarAgendaComponent implements OnInit {
                         turno.paciente = null;
                         turno.tipoPrestacion = null;
                         turno.idPrestacionPaciente = null;
-                        if (turno.tipoTurno){
+                        if (turno.tipoTurno) {
                             delete turno.tipoTurno;
                         }
                     });
@@ -230,6 +231,7 @@ export class ClonarAgendaComponent implements OnInit {
                 operaciones.push(operacion);
             }
         });
+        let self = this;
         Observable.forkJoin(operaciones).subscribe(
             function (x) {
                 console.log('Next: %s', x);
@@ -239,8 +241,9 @@ export class ClonarAgendaComponent implements OnInit {
             },
             function () {
                 // alert('La agenda se clonó correctamente');
-                this.plex.alert('La agenda se clonó correctamente');
-                this.volverAlGestor.emit(true);
+                self.plex.alert('La agenda se clonó correctamente').then(guardo => {
+                    self.volverAlGestor.emit(true);
+                });
             }
         );
     }
@@ -248,6 +251,4 @@ export class ClonarAgendaComponent implements OnInit {
     cancelar() {
         this.volverAlGestor.emit(true);
     }
-
-    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
 }

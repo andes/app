@@ -11,16 +11,17 @@ export interface ITurno {
         nombre: String,
         apellido: String,
         documento: String,
-        telefono: String
+        telefono: String,
     };
     pacientes: [{
         id: String,
         nombre: String,
         apellido: String,
-        documento: String
+        documento: String,
+        telefono: String,
     }];
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
     tipoTurno: String;
-    nota: String
+    nota: String;
 }
