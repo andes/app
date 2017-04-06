@@ -135,6 +135,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showGestorAgendas = true;
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
+        this.showClonar = false;
     }
 
     reasignaTurno(reasTurno) {
