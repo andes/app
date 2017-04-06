@@ -36,7 +36,6 @@
     <div class="col-4">
       <plex-box>
         <plex-tabs>
-
           <plex-tab icon="history">
             <div class="row">
               <div class="col" *ngIf="estadoT=='seleccionada'">
@@ -264,41 +263,9 @@
 
             </div>
           </plex-tab>
-
-          <!--<plex-tab icon="account">
-            <div *ngIf="infoPaciente">
-              <plex-box type="info" title="Paciente Seleccionado">
-                <div class="row">
-                  <div class="col-12">
-                    <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
-                  </div>
-                  <div class="col-12">
-                    <h4>D.N.I. {{paciente.documento}} </h4>
-                  </div>
-                  <div class="col-12">
-                    <h5>Fecha de Nacimiento: {{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</h5>
-                  </div>
-                  <div class="col-12">
-                    <h4>Sexo: {{paciente.sexo}}</h4>
-                  </div>
-                  <div class="col-12">
-                    <h4>Estado: {{paciente.estado}} </h4>
-
-                  </div>
-                </div>
-                <br>
-                <div *ngIf="pacientesScan && mensaje">
-                  <div class="alert alert-warning" role="alert">
-                    {{mensaje}}
-                  </div>
-                </div>
-              </plex-box>
-            </div>
-
-          </plex-tab>-->
-
-          <plex-tab icon="account-search">
-            <!--<label>ÚLTIMOS TURNOS DEL PACIENTE</label>-->
+          <plex-tab icon="account-search" >
+            <br>
+            <label><h4>ÚLTIMOS TURNOS DEL PACIENTE</h4></label><br>
             <div class="list-group">
               <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
                 <div class="row">
@@ -313,7 +280,6 @@
               </a>
             </div>
           </plex-tab>
-
         </plex-tabs>
       </plex-box>
     </div>

@@ -570,6 +570,8 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
         });
+        this.showDarTurnos = false;
+        this.pacientesSearch = true;
     }
 
     borrarTurnoAnterior() {
