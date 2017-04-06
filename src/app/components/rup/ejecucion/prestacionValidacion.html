@@ -18,7 +18,7 @@
     Validar Prestación
 </header>-->
 
-<section>
+<section *ngIf="showEjecucion">
     <div class="row">
         <div class="col">
 
@@ -65,11 +65,11 @@
                                         <h5 class="msg-title">Registros y cálculos</h5>
                                         <!--<div *ngFor="let datoPrestacion of buscarPrestacionesPorProblema(problema)">-->
                                         <div *ngFor="let datoPrestacion of prestaciones[problema.id]">
-                                            <div class="col" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores[datoPrestacion.solicitud.tipoPrestacion.key]">
-                                                <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente" [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[0] && datoPrestacion.ejecucion.evoluciones[0].valores && datoPrestacion.ejecucion.evoluciones[0].valores) ? datoPrestacion.ejecucion.evoluciones[0].valores[datoPrestacion.solicitud.tipoPrestacion.key] : null">
+                                            <div class="col" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key]">
+                                                <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente"
+                                                    [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores) ? datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key] : null">
                                                 </rup>
                                             </div>
-                                            <!--<br> {{problema.id }} <br> {{datoPrestacion.ejecucion.evoluciones[0].valores | json }}-->
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
     </div>
 </section>
 
-<footer>
+<footer *ngIf="!showPrestacionEjecucion">
     <div class="row">
         <div class="col-3">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
@@ -120,7 +120,8 @@
             <!--<a routerLink="/rup" routerLinkActive="active" class="btn btn-default">Cerrar</a>-->
         </div>
     </div>
-    <div class="row" *ngIf="!showEjecucion">
+
+    <div class="row" *ngIf="showValidacion">
         <div class="col">
             <div class="alert alert-success" role="alert">
                 {{mensaje}}
@@ -128,3 +129,6 @@
         </div>
     </div>
 </footer>
+<div *ngIf="showPrestacionEjecucion">
+    <rup-prestacionEjecucion [prestacion]="prestacion"></rup-prestacionEjecucion>
+</div>

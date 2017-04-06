@@ -34,7 +34,8 @@ export class PrestacionValidacionComponent implements OnInit {
     cantidadPrestaciones: any[];
 
     showEjecucion = true;
-    showValidacion = true;
+    showValidacion = false;
+    showPrestacionEjecucion = false;
     mensaje = '';
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -124,6 +125,7 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.servicioPrestacion.put(this.prestacion).subscribe(prestacion => {
                                 if (prestacion) {
                                     this.showEjecucion = false;
+                                    this.showValidacion = true;
                                     this.mensaje = 'La prestación ha sido validada correctamente';
                                 }
                             });
@@ -135,8 +137,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
      volver() {
-       this.showEjecucion = true;
+       this.showEjecucion = false;
        this.showValidacion = false;
+       this.showPrestacionEjecucion = true;
        this.evtData.emit(this.prestacion);
     }
 }
