@@ -484,6 +484,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return elem
       });
 
+      // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
+      pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+      pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+
+      if (this.viveEnNeuquen.checkbox) {
+        pacienteGuardar.direccion[0].ubicacion.localidad = null;
+      }
+
+
       let operacionPac: Observable<IPaciente>;
 
       debugger;
