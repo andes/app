@@ -105,7 +105,39 @@
 <section *ngIf="!showValidar">
 
     <div class="row">
-        <div class="col-6">
+
+         <!--LISTA DE PROBLEMAS ACTIVOS-->
+         <div class="col-2">
+              <plex-box> 
+                  <header>
+                      <div class="row">
+                          <div class="col">
+                            <h5 class="box-title-principal">Lista de Problemas Activos</h5>
+                          </div>
+                       </div>      
+                  </header>      
+
+                 <ul class="list-group" *ngIf="listaProblemas">
+                    <ng-container  *ngFor="let problema of listaProblemas">
+                        <li class="list-group-item"  *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                            <div>                            
+                                <span class="badge badge-success">Activo</span>
+                                <br />
+                                    {{problema.tipoProblema.nombre}}
+                                <br />
+                                <small>
+                                    Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
+                                </small>                                                        
+                            </div>
+                        </li>
+                    </ng-container>
+                 </ul>
+              </plex-box>      
+        </div>
+
+
+
+        <div class="col-5">
             <plex-box>
                 <header>
                     <div class="row">
@@ -191,7 +223,7 @@
             </plex-box>
         </div>
 
-        <div class="col-6">
+        <div class="col-5">
             <plex-box type="primary" title="Prestaciones" *ngIf="prestacion.paciente">
                 <header>
                     <div class="row">
@@ -256,8 +288,9 @@
                     <!-- nuevas prestaciones ejecutadas en la consulta -->
                 </fieldset>
 
+                <br />
                 <fieldset>
-                    <legend>Lista de Planes</legend>
+                    <h5 class="box-title-principal">Lista de Planes</h5>
                     <div class="row">
                         <div class="col-5">
                             <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (getData)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>

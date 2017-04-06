@@ -79,11 +79,9 @@
                  <ul class="list-group">
                     <li class="list-group-item clearfix" *ngFor="let pendiente of prestacionesPendientes">
                          <div>
-                        <strong>{{pendiente.solicitud.tipoPrestacion.nombre}} </strong>
+                        {{pendiente.solicitud.tipoPrestacion.nombre}}
                         <br>
-                        <small class="gris">
-                                 Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}
-                        </small>
+                        <small>Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</small>
                         </div>
                     </li>
                 </ul>
@@ -98,27 +96,24 @@
                   <header>
                       <div class="row">
                           <div class="col">
-                            <h5 class="box-title-principal">Lista de Problemas Activos</h5>
+                            <h5 class="box-title-principal">Lista de Problemas</h5>
                           </div>
                        </div>      
                   </header>      
 
                  <ul class="list-group" *ngIf="listaProblemas">
-                    <li class="row no-gutters" *ngFor="let problema of listaProblemas">
+                    <li class="list-group-item" *ngFor="let problema of listaProblemas">
                         <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                            
                             <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                 Activo
                             </span>
-                            <br />
-                                {{problema.tipoProblema.nombre}}
-                            <br />
-                            <small class="gris">
-                                Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
-                            </small>
-                            
                             <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
+                            <br />
+                                {{problema.tipoProblema.nombre}}
+                            <br />
+                            <small>Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}</small>                                                      
                         </div>
                     </li>
                  </ul>
