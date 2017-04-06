@@ -1,4 +1,4 @@
-{{soloValores | json}}
+<!--{{soloValores | json}}-->
 <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="data[tipoPrestacion.key]" name="tensionSistolica" label="Tensión Sistólica" suffix=" mmHG " min="20" max="300" (keyup)="devolverValores()">
 </plex-int>
 

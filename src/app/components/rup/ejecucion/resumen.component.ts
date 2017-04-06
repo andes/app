@@ -53,20 +53,23 @@ export class ResumenComponent implements OnInit {
 
     cargarIndicadores() {
 
-        alert('Se comenta la carga de los indicadores - Estado: En coreecion');
-    //     this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
-    //         .subscribe(prestacion => {
-    //             if (prestacion) {
-    //                 this.prestacionPeso = prestacion[0];
-    //             }
-    //         });
+        this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
+            .subscribe(prestacion => {
 
-    //     this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
-    //         .subscribe(prestacion => {
-    //             if (prestacion) {
-    //                 this.prestacionTalla = prestacion[0];
-    //             }
-    //         });
+                console.log('prestacionPeso', prestacion);
+                if (prestacion && prestacion.length > 0) {
+                    this.prestacionPeso = prestacion[0];
+                }
+            });
+
+        this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
+            .subscribe(prestacion => {
+
+                console.log('prestacionTalla', prestacion);
+                if (prestacion && prestacion.length > 0) {
+                     this.prestacionTalla = prestacion[0];
+                }
+            });
     }
 
     iniciarPrestacion() {

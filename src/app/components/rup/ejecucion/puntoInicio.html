@@ -111,29 +111,35 @@
 <header *ngIf="showPendientes">
   <div class="row">
     <div class="col">
+      <small>
       <b>Profesional:</b> {{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}
+      </small>
     </div>
   </div>
 
   <div class="row">
     <div class="col">
+      <small>
       <b>Especialidad: </b>
       <span *ngFor="let especialidad of auth.profesional.especialidad"> {{especialidad.nombre}}.</span>
+        </small>
     </div>
   </div>
 
   <div class="row">
     <div class="col">
+      <small>
       <b>Matricula: </b>
       <span *ngFor="let matricula of auth.profesional.matriculas"> {{matricula.numero}}.</span>
+      </small>
     </div>
   </div>
 
-  <div class="row">
+  <!--<div class="row">
     <div class="col">
       {{fechaActual | date: 'dd/MM/yyyy'}}
     </div>
-  </div>
+  </div>-->
 </header>
 
 
