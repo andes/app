@@ -97,9 +97,9 @@
                                 </plex-phone>
                             </span>
                             </div>
-                            <div class="col-md-2"> <br>
+                            <!--<div class="col-md-2"> <br>
                                 <plex-bool [(ngModel)]="_unContacto.activo" name="activo-{{i}}" [required]="true" label="Activo"></plex-bool>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <!--<div class="row">
@@ -137,11 +137,11 @@
                                     </plex-text>
                                 </div>
                                 <div class="col-md-4">
-                                    <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios" placeholder="Seleccione..." labelField="nombre">
+                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre">
                                     </plex-select>
                                 </div>
                                 <div class="col-md-4">
-                                    <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre">
+                                    <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios" placeholder="Seleccione..." labelField="nombre">
                                     </plex-select>
                                 </div>
                             </div>
