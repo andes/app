@@ -42,36 +42,35 @@
                 <div class="row">
                   <div class="col text-center">
                     <div class="box">
+                      <h1 class="date-lg">
+                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                        {{agenda.horaInicio | date: 'dd/MM'}}
+                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                      </h1>
+                      <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
                       <div class="box-content text-center" title="{{tipoPrestaciones}}">
                         <h4>
                           <small> 
-                          <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
-                              <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
-                              </tr>
-                          </table>
-                          <plex-accordion *ngIf="tipoPrestacionesArray.length > 1">
-                              <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
-                              </tr>
-                          </plex-accordion>
-                          <div *ngFor="let profesional of agenda.profesionales let i=index">
-                              <div class="" *ngIf="i<agenda.profesionales.length-1">
-                                  {{profesional.nombre}} {{profesional.apellido}},
+                            <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
+                                <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
+                                  <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
+                                </tr>
+                            </table>
+                            <plex-accordion *ngIf="tipoPrestacionesArray.length > 1">
+                                <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
+                                  <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
+                                </tr>
+                            </plex-accordion>
+                            <div *ngFor="let profesional of agenda.profesionales let i=index">
+                                <div class="" *ngIf="i<agenda.profesionales.length-1">
+                                    {{profesional.nombre}} {{profesional.apellido}},
+                                </div>
+                                <div class="" *ngIf="i>=agenda.profesionales.length-1">
+                                    {{profesional.nombre}} {{profesional.apellido}}
                               </div>
-                              <div class="" *ngIf="i>=agenda.profesionales.length-1">
-                                  {{profesional.nombre}} {{profesional.apellido}}
-                              </div>
-                          </div>
+                            </div>
                       </small>
                         </h4>
-                        <h1 class="date-lg">
-                          <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                          {{agenda.horaInicio | date: 'dd/MM'}}
-                          <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
-                        </h1>
-                        <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
-
                       </div>
                     </div>
                   </div>
@@ -172,6 +171,14 @@
                 <div class="row justify-content-center">
                   <div class="box-content text-center">
                     <div class="col-12 ">
+                      <h1 class="date-lg">
+                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
+                        {{agenda.horaInicio | date: 'dd/MM'}}
+                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
+                      </h1>
+                      <div class="text-uppercase ">{{semana[agenda.horaInicio.getDay()]}}</div>
+                    </div>
+                    <div class="col-12 ">
                       <h3>
                         <div *ngFor="let profesional of agenda.profesionales let i=index">
                           <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
@@ -180,14 +187,6 @@
                       </h3>
                     </div>
                     <br>
-                    <div class="col-12 ">
-                      <h1 class="date-lg">
-                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda(false)"></plex-button>
-                        {{agenda.horaInicio | date: 'dd/MM'}}
-                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
-                      </h1>
-                      <div class="text-uppercase ">{{semana[agenda.horaInicio.getDay()]}}</div>
-                    </div>
                   </div>
                 </div>
                 <br>
@@ -231,7 +230,7 @@
                     <label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}} <br>
                     <label>Documento: &nbsp;</label>{{this.paciente.documento}} <br>
                     <label>Tipo de turno: &nbsp;</label>{{this.tiposTurnosSelect}} <br>
-                    <plex-phone label="Verifique el número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone> 
+                    <plex-phone label="Verifique el número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                     <label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}<br>
                     <label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}<br>
                     <label>Profesionales: </label>
@@ -263,7 +262,7 @@
 
             </div>
           </plex-tab>
-          <plex-tab icon="account-search" >
+          <plex-tab icon="account-search">
             <br>
             <label><h4>ÚLTIMOS TURNOS DEL PACIENTE</h4></label><br>
             <div class="list-group">
