@@ -265,7 +265,8 @@ export class DarTurnosComponent implements OnInit {
                     let myBloques = [];
                     let isDelDia = false;
 
-                    this.indice = this.agendas.indexOf(this.agenda);
+                    let idAgendas = this.agendas.map(elem => { return elem.id; });
+                    this.indice = idAgendas.indexOf(this.agenda.id);
 
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
 
