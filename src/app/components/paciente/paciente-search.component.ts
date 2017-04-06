@@ -95,7 +95,9 @@ export class PacienteSearchComponent implements OnInit {
         return DocumentoEscaneados[key];
       }
     }
-    this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
+    if (this.textoLibre.length > 30) {
+      this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
+    }
     return null;
   }
 
@@ -152,7 +154,7 @@ export class PacienteSearchComponent implements OnInit {
     if (!this.controlarScanner()) {
       return;
     }
-
+    debugger;
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {
       this.timeoutHandle = window.setTimeout(() => {
@@ -195,6 +197,7 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
+                debugger;
                 this.pacientesSimilares = resultSuggest;
                 if (this.pacientesSimilares.length > 0) {
 
@@ -205,6 +208,7 @@ export class PacienteSearchComponent implements OnInit {
                   });
 
                   if (pacienteEncontrado) {
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                     this.seleccionarPaciente(pacienteEncontrado);
                   } else {
                     if (this.pacientesSimilares[0].match >= 0.90) {
@@ -239,7 +243,7 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            this.mostrarNuevo = true;
+            //this.mostrarNuevo = true;
           }, (err) => {
             this.loading = false;
           });
