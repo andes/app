@@ -1,6 +1,8 @@
-## Aplicación para ANDES
+![ANDES](https://github.com/andes/andes.github.io/raw/master/images/logo.png)
 
-Aplicación web Angular2 para ANDES
+## App
+
+Aplicación Angular2 para ANDES
 
 ## Notas
 
