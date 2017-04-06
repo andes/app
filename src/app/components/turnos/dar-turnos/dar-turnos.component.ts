@@ -72,7 +72,6 @@ export class DarTurnosComponent implements OnInit {
     pacientesSearch = true;
     showDarTurnos = false;
     cambioTelefono = false;
-    infoPaciente = false;
 
     tipoTurno: string;
     tiposTurnosSelect: String;
@@ -549,8 +548,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
         });
-        this.showDarTurnos = false;
-        this.pacientesSearch = true;
+       this.buscarPaciente();
     }
 
     borrarTurnoAnterior() {
@@ -590,7 +588,6 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         this.showDarTurnos = true;
-        this.infoPaciente = true;
         this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.getUltimosTurnos();
@@ -599,7 +596,7 @@ export class DarTurnosComponent implements OnInit {
     onCancel() {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
-        let datosPrestacion = {
+        let datosPrestacion = !this.opciones.tipoPrestacion ? null : {
             id: this.opciones.tipoPrestacion.id,
             nombre: this.opciones.tipoPrestacion.nombre
         };
@@ -608,21 +605,23 @@ export class DarTurnosComponent implements OnInit {
             nombre: this.opciones.profesional.nombre,
             apellido: this.opciones.profesional.apellido
         };
-        let datosPaciente = {
+        let datosPaciente = !this.paciente ? null : {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento
         };
-        listaEspera = {
+        listaEspera = !this.agenda ? null : {
             fecha: this.agenda.horaInicio,
             estado: 'Demanda Rechazada',
             tipoPrestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
         };
-        operacion = this.serviceListaEspera.post(listaEspera);
-        operacion.subscribe();
+        if (listaEspera !== null) {
+            operacion = this.serviceListaEspera.post(listaEspera);
+            operacion.subscribe();
+        }
+        this.buscarPaciente();
     }
-
 }

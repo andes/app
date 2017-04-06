@@ -1,4 +1,4 @@
-<header *ngIf="infoPaciente" class="header-paciente">
+<header *ngIf="showDarTurnos" class="header-paciente">
   <header-paciente [paciente]="paciente"></header-paciente>
 </header>
 <section>
@@ -163,7 +163,7 @@
                 <br>
                 <div class="row">
                   <div class="col">
-                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
                   </div>
                 </div>
               </div>
@@ -218,7 +218,7 @@
                 </div>
                 <div class="row">
                   <div class="col col-md-12">
-                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger"></plex-button>
+                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
                   </div>
                 </div>
               </div>
