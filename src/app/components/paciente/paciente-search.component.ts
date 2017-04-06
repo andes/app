@@ -207,20 +207,31 @@ export class PacienteSearchComponent implements OnInit {
                     }
                   });
 
+                  let datoDB = {
+                    id: this.pacientesSimilares[0].paciente.id,
+                    apellido: this.pacientesSimilares[0].paciente.apellido,
+                    nombre: this.pacientesSimilares[0].paciente.nombre,
+                    documento: this.pacientesSimilares[0].paciente.documento,
+                    sexo: this.pacientesSimilares[0].paciente.sexo,
+                    fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
+                    match: this.pacientesSimilares[0].match
+                  }
+
                   if (pacienteEncontrado) {
-                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                     this.seleccionarPaciente(pacienteEncontrado);
                   } else {
                     if (this.pacientesSimilares[0].match >= 0.90) {
-                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                     } else {
                       if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
-                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       }
                       this.seleccionarPaciente(pacienteEscaneado);
                     }
                   }
+
                 } else {
                   this.pacientesSimilares = null;
                   this.seleccionarPaciente(pacienteEscaneado);
