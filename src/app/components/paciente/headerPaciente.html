@@ -39,14 +39,14 @@
 </div>-->
 
 
-<div class="sub-friso" style="width: 140%">
+<div class="sub-friso" style="width: 115%">
     <div class="row">
         <div class="col-6">
             <div class="row">
                 <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
                 <div class="col-12">{{paciente.documento|number}}</div>
                 <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
-                <div class="col-4">Edad: 26 años</div>
+                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}}</div>
             </div>
         </div>
         <div class="col-6 data-paciente ">
