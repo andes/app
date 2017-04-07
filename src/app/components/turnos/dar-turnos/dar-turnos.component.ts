@@ -622,6 +622,7 @@ export class DarTurnosComponent implements OnInit {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
+        this.actualizar('sinFiltro');
         this.buscarPaciente();
     }
 }
