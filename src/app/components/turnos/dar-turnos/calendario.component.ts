@@ -2,7 +2,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
-moment.locale('en');
 
 @Component({
     selector: 'app-calendario',
@@ -20,7 +19,6 @@ export class CalendarioComponent {
     @Input('fecha') fecha: Date;
     @Input('agenda')
     set agenda(value: IAgenda) {
-        debugger;
         this._agenda = value;
         if (value) {
             this.actualizar();
@@ -32,7 +30,6 @@ export class CalendarioComponent {
 
     @Input('agendas')
     set agendas(value: Array<IAgenda>) {
-        debugger;
         this._agendas = value;
         this.actualizar();
     }
@@ -68,7 +65,6 @@ export class CalendarioComponent {
     /** Regenera el calendario */
     private actualizar() {
         if (this.fecha && this.agendas) {
-            moment.locale('en');
             let inicio = moment(this.fecha).startOf('month').startOf('week');
             this.diaSeleccionado = null;
             this.calendario = [];

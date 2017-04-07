@@ -32,6 +32,11 @@ export class PacienteSearchComponent implements OnInit {
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
+    this.actualizarContadores();
+  }
+
+
   public ngOnInit() {
     this.autoFocus = this.autoFocus + 1;
   }
@@ -44,18 +49,18 @@ export class PacienteSearchComponent implements OnInit {
    * @param {*} paciente Paciente para seleccionar
    */
   public seleccionarPaciente(paciente: any) {
-    debugger;
     if (paciente) {
       this.seleccion = paciente;
+      this.seleccion.scan = this.textoLibre;
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     } else {
       this.esEscaneado = false;
-      // this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     }
     this.showCreateUpdate = true;
-
+    this.textoLibre = null;
+    this.mostrarNuevo = false;
   }
 
   /**
@@ -75,9 +80,7 @@ export class PacienteSearchComponent implements OnInit {
     window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
-    this.actualizarContadores();
-  }
+
 
   /**
    * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
@@ -91,6 +94,9 @@ export class PacienteSearchComponent implements OnInit {
         this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
         return DocumentoEscaneados[key];
       }
+    }
+    if (this.textoLibre.length > 30) {
+      this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
     }
     return null;
   }
@@ -134,7 +140,6 @@ export class PacienteSearchComponent implements OnInit {
    * Busca paciente cada vez que el campo de busca cambia su valor
    */
   public buscar() {
-    debugger;
     // Cancela la búsqueda anterior
     if (this.timeoutHandle) {
       window.clearTimeout(this.timeoutHandle);
@@ -149,7 +154,7 @@ export class PacienteSearchComponent implements OnInit {
     if (!this.controlarScanner()) {
       return;
     }
-
+    debugger;
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {
       this.timeoutHandle = window.setTimeout(() => {
@@ -160,8 +165,6 @@ export class PacienteSearchComponent implements OnInit {
         if (documentoEscaneado) {
           this.loading = true;
           let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
-          this.textoLibre = null;
-
           // Consulta API
           this.pacienteService.get({
             type: 'simplequery',
@@ -176,6 +179,9 @@ export class PacienteSearchComponent implements OnInit {
             this.esEscaneado = true;
             // Encontramos un matcheo al 100%
             if (resultado.length) {
+
+              resultado[0].scan = pacienteEscaneado.scan;
+
               this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
               this.showCreateUpdate = true;
             } else {
@@ -191,13 +197,29 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
+                debugger;
                 this.pacientesSimilares = resultSuggest;
-                if (this.pacientesSimilares.length) {
-                  this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista y seleccione el paciente correcto');
-                  if (this.pacientesSimilares[0].match >= 0.90) {
-                    this.mostrarNuevo = false;
+                if (this.pacientesSimilares.length > 0) {
+
+                  let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
+                    if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
+                      return valuePac.paciente;
+                    }
+                  });
+
+                  if (pacienteEncontrado) {
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                    this.seleccionarPaciente(pacienteEncontrado);
                   } else {
-                    this.mostrarNuevo = true;
+                    if (this.pacientesSimilares[0].match >= 0.90) {
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
+                    } else {
+                      if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      }
+                      this.seleccionarPaciente(pacienteEscaneado);
+                    }
                   }
                 } else {
                   this.pacientesSimilares = null;
@@ -221,7 +243,7 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            this.mostrarNuevo = true;
+            //this.mostrarNuevo = true;
           }, (err) => {
             this.loading = false;
           });

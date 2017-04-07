@@ -56,7 +56,6 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.indexOf(this.inicioAgenda.getTime()) < 0) {
             this.seleccionados.push(this.inicioAgenda.getTime());
         }
-        moment.locale('en');
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
