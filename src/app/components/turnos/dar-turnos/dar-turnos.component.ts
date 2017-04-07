@@ -11,7 +11,6 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Component, AfterViewInit, Input, OnInit } from '@angular/core';
 import * as moment from 'moment';
-moment.locale('en');
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';

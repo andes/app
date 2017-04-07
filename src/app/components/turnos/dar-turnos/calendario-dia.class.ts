@@ -1,6 +1,6 @@
 type Estado = 'vacio' | 'disponible' | 'ocupado'
 import * as moment from 'moment';
-moment.locale('en');
+
 export class CalendarioDia {
     public seleccionado: boolean;
     public estado: Estado;

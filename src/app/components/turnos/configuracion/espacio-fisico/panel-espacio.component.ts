@@ -4,7 +4,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import * as moment from 'moment';
-moment.locale('en');
 
 @Component({
     selector: 'app-panel-espacio',
