@@ -55,7 +55,7 @@ export class DarTurnosComponent implements OnInit {
     private telefono: String = '';
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private alternativas: any[] = [];
-    private reqfiltros: boolean = false;
+    private reqfiltros = false;
     private tipoPrestaciones: String = '';
     private tipoPrestacionesArray: Object[];
     private turnoTipoPrestacion: any = {};
@@ -72,7 +72,6 @@ export class DarTurnosComponent implements OnInit {
     pacientesSearch = true;
     showDarTurnos = false;
     cambioTelefono = false;
-    infoPaciente = false;
 
     tipoTurno: string;
     tiposTurnosSelect: String;
@@ -101,11 +100,9 @@ export class DarTurnosComponent implements OnInit {
         // En este punto debería tener paciente ya seleccionado
         this.actualizar('sinFiltro');
 
-
     }
 
     loadTipoPrestaciones(event) {
-        // this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         console.log('PERMISOS TIPOPRESTACIONES: ', this.permisos);
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
@@ -265,19 +262,18 @@ export class DarTurnosComponent implements OnInit {
                     let myBloques = [];
                     let isDelDia = false;
 
-                    this.indice = this.agendas.indexOf(this.agenda);
+                    let idAgendas = this.agendas.map(elem => { return elem.id; });
+                    this.indice = idAgendas.indexOf(this.agenda.id);
 
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
 
                     if (this.agenda.turnosDisponibles > 0) {
-                        debugger
                         if (this.agenda.estado === 'Disponible') {
                             this.tiposTurnosSelect = 'gestion';
                         }
                         if (this.agenda.estado === 'Publicada') {
                             this.tiposTurnosSelect = 'programado';
                         }
-                        debugger;
                         let countBloques = [];
                         let programadosDisponibles = 0;
                         let gestionDisponibles = 0;
@@ -291,7 +287,6 @@ export class DarTurnosComponent implements OnInit {
                             this.tiposTurnosSelect = 'del dia';
                             // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
-                                debugger;
                                 countBloques.push({
                                     delDia: bloque.cantidadTurnos,
                                     programado: 0,
@@ -310,9 +305,8 @@ export class DarTurnosComponent implements OnInit {
                         } else {
                             // En caso contrario, se calculan  los contadores por separado
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
-                                debugger;
                                 countBloques.push({
-                                    // Asignamos a contadores dinamicos la cantidad inicial de c/u 
+                                    // Asignamos a contadores dinamicos la cantidad inicial de c/u
                                     // de los tipos de turno respectivamente
                                     delDia: bloque.accesoDirectoDelDia,
                                     programado: bloque.accesoDirectoProgramado,
@@ -346,11 +340,6 @@ export class DarTurnosComponent implements OnInit {
                         }
                         // contador de turnos por Bloque
                         this.countBloques = countBloques;
-                        debugger;
-
-                        // this.tiposTurnosSelect = tiposTurnosSelect.filter(function (item, pos, self) {
-                        //     return self.indexOf(item) === pos;
-                        // });
 
                         this.tipoPrestaciones = '';
 
@@ -448,15 +437,10 @@ export class DarTurnosComponent implements OnInit {
     }
 
     getUltimosTurnos() {
-        debugger;
         let ultimosTurnos = [];
         this.serviceAgenda.find(this.paciente.id).subscribe(agendas => {
-            console.log('AGENDAS', agendas)
-            debugger;
             agendas.forEach((agenda, indexAgenda) => {
-                debugger;
                 agenda.bloques.forEach((bloque, indexBloque) => {
-                    debugger;
                     bloque.turnos.forEach((turno, indexTurno) => {
                         if (turno.paciente) {
                             // TODO. agregar la condicion turno.asistencia
@@ -468,10 +452,8 @@ export class DarTurnosComponent implements OnInit {
                                     organizacion: agenda.organizacion.nombre,
                                     profesionales: agenda.profesionales
                                 });
-
                             }
                         }
-                        debugger;
                     });
                 });
             });
@@ -479,8 +461,6 @@ export class DarTurnosComponent implements OnInit {
         console.log('ULTIMOS TURNOS', ultimosTurnos);
         this.ultimosTurnos = ultimosTurnos;
     }
-
-
 
     /**
      *
@@ -521,7 +501,6 @@ export class DarTurnosComponent implements OnInit {
                 };
 
                 let operacion: Observable<any>;
-                debugger;
                 operacion = this.serviceTurno.save(datosTurno);
                 operacion.subscribe(resultado => {
                     this.estadoT = 'noSeleccionada';
@@ -552,16 +531,16 @@ export class DarTurnosComponent implements OnInit {
                             }
                         });
                         if (!flagTelefono) {
-                            this.paciente.contacto.push(nuevoCel)
+                            this.paciente.contacto.push(nuevoCel);
                         }
                     } else {
                         this.paciente.contacto = [nuevoCel];
                     }
-                    console.log(this.paciente.contacto)
+                    console.log(this.paciente.contacto);
                     let cambios = {
                         'op': 'updateContactos',
                         'contacto': this.paciente.contacto
-                    }
+                    };
                     mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
                     mpi.subscribe(resultado => {
                         this.plex.alert('Se actualizó el numero de telefono');
@@ -569,6 +548,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             }
         });
+       this.buscarPaciente();
     }
 
     borrarTurnoAnterior() {
@@ -608,7 +588,6 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         this.showDarTurnos = true;
-        this.infoPaciente = true;
         this.pacientesSearch = false;
         window.setTimeout(() => this.pacientesSearch = false, 100);
         this.getUltimosTurnos();
@@ -617,7 +596,7 @@ export class DarTurnosComponent implements OnInit {
     onCancel() {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
-        let datosPrestacion = {
+        let datosPrestacion = !this.opciones.tipoPrestacion ? null : {
             id: this.opciones.tipoPrestacion.id,
             nombre: this.opciones.tipoPrestacion.nombre
         };
@@ -626,21 +605,23 @@ export class DarTurnosComponent implements OnInit {
             nombre: this.opciones.profesional.nombre,
             apellido: this.opciones.profesional.apellido
         };
-        let datosPaciente = {
+        let datosPaciente = !this.paciente ? null : {
             id: this.paciente.id,
             nombre: this.paciente.nombre,
             apellido: this.paciente.apellido,
             documento: this.paciente.documento
         };
-        listaEspera = {
+        listaEspera = !this.agenda ? null : {
             fecha: this.agenda.horaInicio,
             estado: 'Demanda Rechazada',
             tipoPrestacion: datosPrestacion,
             profesional: datosProfesional,
             paciente: datosPaciente,
         };
-        operacion = this.serviceListaEspera.post(listaEspera);
-        operacion.subscribe();
+        if (listaEspera !== null) {
+            operacion = this.serviceListaEspera.post(listaEspera);
+            operacion.subscribe();
+        }
+        this.buscarPaciente();
     }
-
 }

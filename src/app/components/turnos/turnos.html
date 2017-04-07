@@ -7,31 +7,35 @@
         <div *ngIf="cantSel > 0">
             <!--<div class="botonera-turnos" *ngIf="!botones.asistencias"></div>-->
             <button *ngIf="botones.sacarAsistencia" id="sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
-                    <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
-                </button>
+                <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
+            </button>
             <button *ngIf="botones.darAsistencia" id="darAsistencia" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
-                    <span><i title="Dar Asistencia" class="mdi mdi-account-check"></i></span>
-                </button>
-            <span *ngIf="botones.tdSuspenderTurno">
+                <span><i title="Dar Asistencia" class="mdi mdi-account-check"></i></span>
+            </button>
+            <span *ngIf="botones.suspenderTurno">
                 <button id="suspenderTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
-                    placement="top" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
+                    placement="bottom" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                     <i title="Suspender Turno" class="mdi mdi-power"></i>
                 </button>
                 <!--<i *ngIf="botones.suspenderTurnoDeshabilitado" title="No es posible suspender el Turno" class="text-info info mdi mdi-select"></i>-->
             </span>
-            <span *ngIf="botones.tdLiberarTurno">
+            <span *ngIf="botones.liberarTurno">
                 <button id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
-                    placement="top" (confirm)="liberarTurno(agenda, confirmaLiberarTurno = true)"
+                    placement="bottom" (confirm)="liberarTurno(agenda, confirmaLiberarTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
-                    <i title="Liberar Turno" class="mdi mdi-stop"></i>
+                    <i title="Liberar Turno" class="mdi mdi-account-plus"></i>
                 </button>
                 <!--<i *ngIf="turno.botones.liberarTurnoDeshabilitado" title="No es posible Liberar el Turno" class="mdi mdi-select"></i>-->
             </span>
-            <span *ngIf="botones.tdBloquearTurno">
+            <span *ngIf="botones.bloquearTurno">
                 <button id="bloquearTurno" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
-                    <i *ngIf="botones.bloquearTurno" title="Bloquear Turno" class="mdi mdi-brightness-1"></i>
-                    <i *ngIf="botones.desbloquearTurno" title="Desbloquear Turno" class="mdi mdi-block-helper"></i>
+                    <i title="Desbloquear Turno" class="mdi mdi-lock-open-outline"></i>
+                </button>
+            </span>
+            <span *ngIf="botones.desbloquearTurno">
+                <button id="BloquearTurno" class="btn btn-default hover" (click)="eventosTurno(agenda, $event)">
+                    <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
                 </button>
                 <!--<i *ngIf="turno.botones.bloquearTurnoDeshabilitado" title="No es posible bloquear el Turno" class="mdi mdi-select"></i>-->
             </span>
@@ -53,50 +57,52 @@
             </span>
 
         </div>
-        <table class="table table-striped" *ngIf="agenda">
-            <tbody>
-                <template ngFor let-bloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
-                    <tr>
-                        <td colspan="3">
-                            <strong>Bloque: </strong>{{bloque.descripcion}}
-                        </td>
-                        <td colspan="1">
-                            <input type="checkbox" [ngModel]="todos" (click)="seleccionarTodos()">
-                        </td>
-                    </tr>
-                    <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success success': turno.paciente}">
-                        <td>
-                            <strong>{{turno.horaInicio | date: 'HH:mm'}}</strong>
-                        </td>
-                        <td colspan="1">
-                            <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}
-                            <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                        </span>
-                            <span *ngIf="turno.estado === 'disponible'">Disponible
-                                <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                        </span>
-                            <span *ngIf="turno.estado === 'bloqueado'">No Disponible
-                            <i *ngIf="turno.nota" title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                        </span>
-                        </td>
-                        <td>
-                            <label *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</label>
-                            <label *ngIf="!turno.asistencia && turno.paciente">No Tiene Asistencia</label>
-                        </td>
-                        <td class="text-center" *ngIf="turno.botones?.smsVisible">
-                            <i *ngIf="turno.botones.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
-                            <i *ngIf="turno.botones.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
-                            <div>
-                                <plex-loader *ngIf="turno.botones.smsLoader" type="ball-pulse"></plex-loader>
-                            </div>
-                        </td>
-                        <td colspan="1">
-                            <input type="checkbox" [ngModel]="turno.checked" (click)="seleccionarTurno(turno)">
-                        </td>
-                    </tr>
-                </template>
-            </tbody>
+            <template ngFor let-bloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
+        <table *ngIf="agenda" class="table" >
+            Turnos: {{ this.turnos.length }}
+            Seleccionados: {{ this.turnosSeleccionados.length }}
+            <!--turno: {{ this.turnosSeleccionados[0] | json }}-->
+            botones.darAsistencia: {{ botones.darAsistencia }}
+            turnoEstado: {{ this.turnosSeleccionados[0]?.estado | json }}
+            Paciente: {{ this.turnosSeleccionados[0]?.paciente?.length }}
+                <tr>
+                    <td colspan="3">
+                        <strong>Bloque: </strong>{{bloque.descripcion}}
+                    </td>
+                    <td colspan="1">
+                        <input type="checkbox" [ngModel]="todos" (click)="seleccionarTodos()">
+                    </td>
+                </tr>
         </table>
+        <table class="table table-striped">
+                <tr *ngFor="let turno of bloque.turnos; let i=index" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td>
+                        <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                    </td>
+                    <td>
+                        <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
+                        <span *ngIf="turno.estado === 'disponible'">Disponible</span>
+                        <span *ngIf="turno.estado === 'bloqueado'" [ngClass]="{'text-danger': turno.estado === 'bloqueado'}">No Disponible</span>
+                        <span *ngIf="turno.nota" ><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+                    </td>
+                    <td>
+                        <label *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</label>
+                        <label *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Tiene Asistencia</label>
+                        <label *ngIf="!turno.paciente">({{ turno.estado }})</label>
+                    </td>
+                    <td class="text-center" *ngIf="turno.botones?.smsVisible">
+                        <i *ngIf="turno.botones.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
+                        <i *ngIf="turno.botones.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
+                        <div>
+                            <plex-loader *ngIf="turno.botones.smsLoader" type="ball-pulse"></plex-loader>
+                        </div>
+                    </td>
+                    <td colspan="1">
+                        <input type="checkbox" [ngModel]="turno.checked" (click)="seleccionarTurno(turno)">
+                    </td>
+                </tr>
+        </table>
+            </template>
     </div>
 </div>
 

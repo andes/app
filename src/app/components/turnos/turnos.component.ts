@@ -28,13 +28,8 @@ export class TurnosComponent implements OnInit {
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            this.turnos = this.agenda.bloques[i].turnos;
-        }
-        this.actualizarBotones();
-
+        // this.actualizarBotones();
         this.cantSel = 0;
-        
     }
     get agenda(): any {
         return this._agenda;
@@ -80,9 +75,8 @@ export class TurnosComponent implements OnInit {
         this.turnosSeleccionados = [];
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
-
-            this.actualizarBotones();
         }
+        this.actualizarBotones();
     }
 
     seleccionarTurno(turno) {
@@ -97,15 +91,15 @@ export class TurnosComponent implements OnInit {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
 
-        this.cantSel = this.turnosSeleccionados.length;
-
-        if ( this.cantSel === 0 ) {
+        if (this.turnosSeleccionados.length < this.turnos.length) {
             this.todos = false;
         }
 
-        if ( this.cantSel === this.turnos.length ) {
+        if (this.turnosSeleccionados.length === this.turnos.length) {
             this.todos = true;
         }
+
+        this.cantSel = this.turnosSeleccionados.length;
 
         this.actualizarBotones();
 
@@ -113,29 +107,21 @@ export class TurnosComponent implements OnInit {
 
     seleccionarTodos() {
 
+        this.turnosSeleccionados = [];
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             this.agenda.bloques[i].turnos.forEach((turno, index) => {
                 if (!this.todos) {
                     this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
                     turno.checked = true;
                 } else {
-                    this.turnosSeleccionados = [];
                     turno.checked = false;
                 }
             });
         }
 
         this.cantSel = this.turnosSeleccionados.length;
-        this.todos = !this.todos;
-
         this.actualizarBotones();
-    }
-
-    sonIguales(arr) {
-        let x = arr[0];
-        return arr.every(function (item) {
-            return item === x;
-        });
+        this.todos = !this.todos;
     }
 
     agendaNoSuspendida() {
@@ -149,41 +135,108 @@ export class TurnosComponent implements OnInit {
     }
 
     tienenAsistencia() {
-        let band = true;
-        for (let x = 0; x < this.turnosSeleccionados.length && band; x++) {
+        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             if (this.turnosSeleccionados[x].asistencia !== true) {
-                band = false;
+                return false;
             }
         };
-        return band;
+        return true;
     }
 
-   noTienenAsistencia() {
-        let band = true;
-        for (let x = 0; x < this.turnosSeleccionados.length && band; x++) {
+    noTienenAsistencia() {
+        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             if (this.turnosSeleccionados[x].asistencia !== false) {
-                band = false;
+                return false;
             }
         };
-        return band;
+        if ( this.turnosSeleccionados.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    hayTurnosConEstado(estado) {
+        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
+            if (this.turnosSeleccionados[x].estado === estado) {
+                return false;
+            }
+        };
+        if ( this.turnosSeleccionados.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    noHayTurnosConEstado(estado) {
+        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
+            if (this.turnosSeleccionados[x].estado !== estado) {
+                return false;
+            }
+        };
+        if ( this.turnosSeleccionados.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    sonIguales(arr) {
+        let x = arr[0];
+        return arr.every(function (item) {
+            return item === x;
+        });
+    }
+    setBotones() {
+        let estado = [];
+        let asistencia = [];
+
+        if (this.turnosSeleccionados.length > 0) {
+            this.turnosSeleccionados.forEach(pac => {
+                estado.push(pac.estado);
+            });
+
+            this.estadoTurno = this.sonIguales(estado);
+
+            if (this.estadoTurno) {
+                this.estadoTurno = this.turnosSeleccionados[0].estado;
+            }
+
+            this.turnosSeleccionados.forEach(pac => {
+                asistencia.push(pac.asistencia);
+            });
+
+            this.estadoAsistencia = this.sonIguales(asistencia);
+
+            if (this.estadoAsistencia) {
+                this.estadoAsistencia = this.turnosSeleccionados[0].asistencia;
+            } else {
+                this.estadoTurno = '';
+            }
+
+        } else {
+            this.estadoTurno = '';
+        }
+    }
+    unsetBotones() {
+        this.estadoTurno = '';
+        this.estadoAsistencia = null;
     }
 
     actualizarBotones() {
 
+
         this.botones = {
 
-            darAsistencia: (this.agendaNoSuspendida() && this.noTienenAsistencia() && !this.tienenAsistencia()) && this.tienenPacientes(),
-            sacarAsistencia: (this.agendaNoSuspendida() && this.tienenAsistencia() && !this.noTienenAsistencia()) && this.tienenPacientes(),
-
-            tdSuspenderTurno: (this.agendaNoSuspendida()) && (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
-
-            tdLiberarTurno: (this.agendaNoSuspendida()) && (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
-
-            tdBloquearTurno: (this.agendaNoSuspendida()) && (this.estadoTurno === 'disponible') || (this.estadoTurno === 'bloqueado'),
-
-            bloquearTurno: (this.estadoTurno === 'disponible'),
-
-            desbloquearTurno: (this.estadoTurno === 'bloqueado'),
+            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.noHayTurnosConEstado('disponible') && this.noHayTurnosConEstado('bloqueado')),
+            sacarAsistencia: (this.agendaNoSuspendida() && this.tienenAsistencia()) && this.tienenPacientes(),
+            // "Turno suspendido": Estado bloqueado pero con paciente
+            suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
+            liberarTurno: (this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
+            // "Turno bloqueado": Estado bloqueado y sin paciente
+            bloquearTurno: this.hayTurnosConEstado('disponible') && !this.tienenPacientes(),
+            desbloquearTurno: this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes(),
 
             tdReasignarTurno: (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
             tdNota: this.turnosSeleccionados.length > 0
@@ -222,6 +275,7 @@ export class TurnosComponent implements OnInit {
 
         let patch: any = {};
 
+        // TODO: REFACTOOOOORRR!!!
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             if (btnClicked === 'darAsistencia') {
                 patch = {
@@ -242,13 +296,13 @@ export class TurnosComponent implements OnInit {
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
 
+                // Traer agenda actualizada
                 this.agenda = resultado;
 
-                this.turnos = this.agenda.bloques[0].turnos;
-
+                // Reset botones y turnos seleccionados
                 this.actualizarBotones();
-
                 this.turnosSeleccionados = [];
+
             },
                 err => {
                     if (err) {
