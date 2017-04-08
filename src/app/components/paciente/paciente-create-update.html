@@ -288,9 +288,16 @@
                         </span>
                         </h3>
                     </header>
+
+                    <div>
+                        {{pacienteModel | fullName}}
+                        {{ pacienteModel | realAge }}                     
+                    </div>
+
                     <div class="row" *ngIf="pacienteModel.apellido">
                         <div class="col-md-12">
                             <h3><strong>{{pacienteModel.apellido}}</strong>
+                                
                                 <small *ngIf="pacienteModel.nombre && !pacienteModel.alias"> {{pacienteModel.nombre}}</small>
                                 <small *ngIf="pacienteModel.nombre && pacienteModel.alias"> {{pacienteModel.alias}}</small>
                             </h3>
@@ -306,6 +313,7 @@
                             <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | date: 'dd/MM/yyyy'}}</h4>
                         </div>
                     </div>
+                    
                     <div class="row" *ngIf="pacienteModel.sexo">
                         <div class="col-md-12" *ngIf="pacienteModel.sexo == pacienteModel.genero">
                             <h4> <label>Sexo: </label>
