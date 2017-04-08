@@ -4,12 +4,21 @@ import * as moment from 'moment';
 @Pipe({name: 'fullName'})
 export class patientFullNamePipe implements PipeTransform {
   transform(value: any, args: string[]): any {
+    debugger;
+    let fullName;
     if (value.alias) {
-        return value.apellido + ' ' + value.alias;
+        fullName = value.apellido + ' ' + value.alias;
     }
     else {
-        return value.apellido + ' ' + value.nombre;
+        fullName = value.apellido + ' ' + value.nombre;
     }
+
+    if (args[0]){
+      fullName = fullName.toUpperCase();
+    }
+
+    return fullName;
+
   }
 }
 @Pipe({name: 'realAge'})
