@@ -41,7 +41,7 @@ export class PrestacionPacienteService {
      * Metodo post. Inserta un objeto prestacionPaciente nuevo.
      * @param {IPrestacionPaciente} prestacion Recibe IPrestacionPaciente
      */
-    post(prestacion: IPrestacionPaciente): Observable<IPrestacionPaciente> {
+    post(prestacion:any): Observable<IPrestacionPaciente> {
         return this.server.post(this.prestacionesUrl, prestacion);
     }
 
