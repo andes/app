@@ -349,7 +349,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     });
                             }
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
-
+                            debugger;
                             if (_prestacion.ejecucion.evoluciones.length < 1){
                                 alert('No hay evoluciones');
                             }

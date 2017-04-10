@@ -112,16 +112,16 @@
             <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                 <div class="col-md-12">
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let ev of problema.evoluciones">
-                            <pre>{{ev | json}}</pre>
+                        <li class="list-group-item" *ngFor="let ev of problema.evoluciones">                            
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p>
-                                        {{ev.observacion}}
-                                        <br />
-                                        <small class="gris">
-                                            {{ev.fecha | date: 'dd/MM/yyyy'}} | 
-                                            <span *ngIf="ev.profesional">Profesional: {{ev.profesional.apellido}}, {{ev.profesional.nombre}}</span>
+                                    <p>                                                                               
+                                        <small>  <strong>{{ev.observacion}} </strong>  
+                                            <br />                                                                                                                                    
+                                            <span *ngIf="ev.profesional"> <strong>Profesional: </strong> 
+                                                {{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}} 
+                                                  <!--{{ev.fecha | date: 'dd/MM/yyyy'}}                                                                                                  -->
+                                            </span>
                                         </small>
                                     </p>
                                 </div>

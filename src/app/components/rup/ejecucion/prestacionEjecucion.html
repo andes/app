@@ -30,6 +30,13 @@
     padding-bottom: 5px;
   }
 
+   h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid black 1px;
+  }
+
   .btn-contextual {
     font-size: 1.5em;
     color: #AAAAAA;
@@ -99,11 +106,15 @@
 
 <header>
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>    
-    {{prestacion.solicitud.tipoPrestacion.nombre}}    
+     <br/> 
+    <div class="row">
+        <div class="col-12">
+            <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
+        </div>
+    </div>   
 </header>
 
 <section *ngIf="!showValidar">
-
     <div class="row">
 
          <!--LISTA DE PROBLEMAS ACTIVOS-->
@@ -294,7 +305,7 @@
 
                 <br />
                 <fieldset>
-                    <h5 class="box-title-principal">Lista de Planes</h5>
+                    <h5 class="box-title-secundario">Lista de Planes</h5>
                     <div class="row">
                         <div class="col-5">
                             <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (getData)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>

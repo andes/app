@@ -5,7 +5,7 @@
     padding-bottom: 5px;
   }
 
-    h5.item-title {
+  h5.item-title {
     display: inline-block;
     font-weight: 600;
     line-height: 1;
@@ -13,6 +13,13 @@
   
   h5.item-title:hover {
     color: #00A8E0;
+  }
+
+  h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid black 1px;
   }
 
   .badge {
@@ -51,17 +58,21 @@
     color: #00A8E0;
   }
     
-    .gris {
-        color: #b1b1b1;
-    }
 </style>
 
 <header *ngIf="!showEjecucion && !showValidacion">
-    <header-paciente [paciente]="prestacion.paciente"></header-paciente>
-    
-    {{prestacion.solicitud.tipoPrestacion.nombre}}
-    
+    <header-paciente [paciente]="prestacion.paciente"></header-paciente>         
+    <br/> 
+    <div class="row">
+        <div class="col-12">
+            <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
+        </div>
+    </div>  
 </header>
+
+
+
+
 
 <section *ngIf="!showEjecucion && !showValidacion">
     <div class="row">

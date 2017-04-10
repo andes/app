@@ -13,6 +13,8 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
+import { Auth } from '@andes/auth';
+
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -42,7 +44,7 @@ export class PrestacionValidacionComponent implements OnInit {
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex) {
+        public plex: Plex, public auth: Auth) {
     }
 
     ngOnInit() {
@@ -51,7 +53,7 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     loadPrestacionesEjacutadas() {
-        let estado = (this.prestacion.estado[this.prestacion.estado.length-1].tipo == 'ejecucion') ? 'ejecucion' : 'validada';
+        let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
 
             this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
@@ -78,7 +80,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
-        debugger;
         if (prestacionEj.solicitud.listaProblemas.find(p => p.id = idProblema)) {
             return prestacionEj;
         } else {
@@ -89,7 +90,7 @@ export class PrestacionValidacionComponent implements OnInit {
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         // return this.prestacionesEjecutadas.filter(data => {
         return this.prestacionesEjecutadas.filter(data => {
-            if (data.solicitud.listaProblemas.find(p => p.id == problema.id)) {
+            if (data.solicitud.listaProblemas.find(p => p.id === problema.id)) {
                 return data;
             }
         });
@@ -97,7 +98,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPlanesPorProblema(problema) {
         return this.prestacionesSolicitadas.filter(data => {
-            if (data.solicitud.listaProblemas.find(p => p.id == problema.id)) {
+            if (data.solicitud.listaProblemas.find(p => p.id === problema.id)) {
                 return data;
             }
         });
@@ -114,9 +115,9 @@ export class PrestacionValidacionComponent implements OnInit {
                         tipo: 'validada'
                     });
 
-                    this.servicioPrestacion.put(prestacion).subscribe(prestacion => {
+                    this.servicioPrestacion.put(prestacion).subscribe( prestacion => {
                         listaFinal.push(prestacion);
-                        if (listaFinal.length == this.prestacionesEjecutadas.length) {
+                        if (listaFinal.length === this.prestacionesEjecutadas.length) {
                             this.prestacion.estado.push({
                                 timestamp: new Date(),
                                 tipo: 'validada'
