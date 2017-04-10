@@ -76,8 +76,13 @@ import {
   MapsComponent
 } from './../../utils/mapsComponent';
 import {
-  patientPipe
+  patientFullNamePipe,
+  patientRealAgePipe
 } from './../../utils/patientPipe';
+// import {
+//   patientRealAgePipe
+// } from './../../utils/patientRealAgePipe';
+
 
 @Component({
   selector: 'paciente-create-update',
@@ -198,6 +203,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
     });
+
 
     //Set País Argentina
     this.paisService.get({
@@ -483,6 +489,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
         elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
         return elem
       });
+
+      // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
+      pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
+      pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+
+      if (this.viveEnNeuquen.checkbox) {
+        pacienteGuardar.direccion[0].ubicacion.localidad = null;
+      }
+
 
       let operacionPac: Observable<IPaciente>;
 
