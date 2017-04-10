@@ -199,7 +199,7 @@ export class DarTurnosComponent implements OnInit {
 
       // Ordena las Agendas por fecha/hora de inicio
       this.agendas = this.agendas.sort(
-        function(a, b) {
+        function (a, b) {
           let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
           let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
           {
@@ -245,8 +245,8 @@ export class DarTurnosComponent implements OnInit {
 
         /*Filtra los bloques segun el filtro tipoPrestacion*/
         this.bloques = this.agenda.bloques.filter(
-          function(value) {
-            let prestacionesBlq = value.tipoPrestaciones.map(function(obj) {
+          function (value) {
+            let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
               return obj.id;
             });
             if (tipoPrestacion) {
@@ -511,18 +511,10 @@ export class DarTurnosComponent implements OnInit {
           this.plex.alert('El turno se asignó correctamente');
           let nuevaPrestacion;
           nuevaPrestacion = {
-            //  id : null,
-            //  idPrestacionOrigen: null,
             paciente: this.paciente,
             solicitud: {
               tipoPrestacion: this.turnoTipoPrestacion,
               fecha: new Date(),
-              // procedencia: '',
-              // prioridad: '',
-              // proposito: [],
-              // estadoPaciente: '',
-              // profesional: null,
-              // organizacion: null,
               listaProblemas: [],
               idTurno: this.turno.id,
             },
@@ -543,7 +535,7 @@ export class DarTurnosComponent implements OnInit {
 
 
         });
-
+        debugger;
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {
@@ -577,8 +569,12 @@ export class DarTurnosComponent implements OnInit {
           };
           mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
           mpi.subscribe(resultado => {
-            this.plex.alert('Se actualizó el numero de telefono');
+
+            if (resultado) {
+              this.plex.alert('Se actualizó el numero de telefono');
+            }
           });
+
         }
       }
     });
@@ -614,6 +610,8 @@ export class DarTurnosComponent implements OnInit {
   onReturn(pacientes: IPaciente): void {
     this.paciente = pacientes;
     // se busca entre los contactos si tiene un celular en ranking 1
+    this.telefono = '';
+    this.cambioTelefono = false;
     if (this.paciente.contacto.length > 0) {
       this.paciente.contacto.forEach((contacto) => {
         if (contacto.tipo === 'celular') {
