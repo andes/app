@@ -44,18 +44,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
-            <label>Bloques</label>
-            <div class="list-group">
-              <a *ngFor="let unBloque of agenda.bloques; let i=index" class="list-group-item">
-                <div class="row">
-                  <div class="col-4">{{unBloque.descripcion}}</div>
-                  <div class="col-4">{{unBloque.titulo}}</div>
-                  <div class="col-4">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
-                </div>
-              </a>
-            </div>
-          </div>
+          <label>Bloques</label>
+          <template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
+            <div class="col-4">{{unBloque.descripcion}}</div>
+            <div class="col-4">{{unBloque.titulo}}</div>
+            <div class="col-4">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
+          </template>
+
         </div>
         <div *ngIf="agendasFiltradas.length>0">
           <hr>

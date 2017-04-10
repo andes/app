@@ -38,10 +38,8 @@ export class AgendaComponent implements OnInit {
     public fecha: Date;
     public permisos = [];
     public autorizado = false;
-    showBuscarAgendas = false;
     showClonar = false;
     showAgenda = true;
-    showGestorAgendas = false;
     public hoy = moment().startOf('day');
 
     constructor(
@@ -74,16 +72,10 @@ export class AgendaComponent implements OnInit {
         this.calculosInicio();
     }
 
-    cargar() {
-        this.showBuscarAgendas = true;
-        this.showAgenda = false;
-    }
-
     loadTipoPrestaciones(event) {
         this.permisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
             let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            console.log(dataF);
             event.callback(dataF);
         });
     }
@@ -97,7 +89,6 @@ export class AgendaComponent implements OnInit {
     }
 
     inicializarPrestacionesBloques(bloque) {
-        console.log(this.modelo);
         if (this.modelo.tipoPrestaciones) {
             this.modelo.tipoPrestaciones.forEach((prestacion, index) => {
                 const copiaPrestacion = operaciones.clonarObjeto(prestacion);
@@ -161,13 +152,10 @@ export class AgendaComponent implements OnInit {
 
     activarBloque(indice: number) {
         this.bloqueActivo = indice;
-        console.log('this.modelo.bloques[indice]: ', this.modelo.bloques[indice] ); // MAL
         this.elementoActivo = this.modelo.bloques[indice];
     }
 
     addBloque() {
-
-        console.log('this.modelo.bloques: ', this.modelo.bloques); // MAL
 
         const longitud = this.modelo.bloques.length;
         this.modelo.bloques.push({
@@ -492,7 +480,7 @@ export class AgendaComponent implements OnInit {
             }
         }
         // Verifico que los bloques no estén fuera de los límites de la agenda
-        if ( bloques ) {
+        if (bloques) {
             bloques.forEach((bloque, index) => {
                 let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 let fin = this.combinarFechas(this.fecha, bloque.horaFin);
@@ -513,7 +501,7 @@ export class AgendaComponent implements OnInit {
 
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
-                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + ( cant === 1 ? ' turno' : ' turnos' );
+                    alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
                     this.alertas.push(alerta);
                 }
 
@@ -643,17 +631,25 @@ export class AgendaComponent implements OnInit {
 
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
+                
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true && delete el.$order;
+                   return el.activo === true && delete el.$order;
                 });
+                console.log('tipoPrestaciones ', bloque.tipoPrestaciones);
+                // let aux = bloque.tipoPrestaciones.filter(function (el) {
+                //     return el.activo === true && delete el.$order;
+                // });
+                // console.log('aux ', aux.length);
+                // if (aux.length >= 0) {
+                //     bloque.tipoPrestaciones = aux;
+                // } else {
+                //     delete bloque.tipoPrestaciones;
+                // }
             });
 
-            // console.log('this.modelo: ', this.modelo);
+            console.log('this.modelo.bloques: ', this.modelo.bloques);
             espOperation = this.ServicioAgenda.save(this.modelo);
-
             espOperation.subscribe(resultado => {
-                console.log(resultado);
-                // alert('La agenda se guardo correctamente');
                 this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
                     if (clonar) {
                         this.showClonar = true;
@@ -661,9 +657,8 @@ export class AgendaComponent implements OnInit {
                     } else {
                         this.modelo = {};
                         this.showAgenda = false;
-                        this.showGestorAgendas = true;
+                        this.volverAlGestor.emit(true);
                     }
-                    this.volverAlGestor.emit(true);
                 });
             });
         } else {
@@ -674,8 +669,6 @@ export class AgendaComponent implements OnInit {
     cancelar() {
 
         this.volverAlGestor.emit(true);
-
-        this.showGestorAgendas = true;
         this.showAgenda = false;
         // this.router.navigate(['/inicio']);
         // return false;
@@ -683,7 +676,6 @@ export class AgendaComponent implements OnInit {
 
     onReturn(agenda: IAgenda): void {
         this.showAgenda = true;
-        this.showBuscarAgendas = false;
         this.cargarAgenda(agenda);
     }
 }

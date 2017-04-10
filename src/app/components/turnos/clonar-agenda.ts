@@ -1,7 +1,9 @@
+import { Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
@@ -12,19 +14,21 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 
 export class ClonarAgendaComponent implements OnInit {
     private _agenda: any;
+    public autorizado = false;
     public hoy: Date = new Date();
     private fecha: Date;
     private calendario: any = [];
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
-    private agendasFiltradas: any[] = []; // Las agendas que hay en el día, cuando se selecciona una fecha para clonar
+    private agendasFiltradas: any[] = []; // Las agendas que hay en el día, cuapublic autorizado = false;ndo se selecciona una fecha para clonar
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
     private original = true;
     private inicioAgenda: Date;
     public danger = 'list-group-item-danger';
+
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -34,13 +38,18 @@ export class ClonarAgendaComponent implements OnInit {
     }
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    constructor(private serviceAgenda: AgendaService, public plex: Plex) { }
+    constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
     ngOnInit() {
-        this.inicioAgenda = new Date(this.agenda.horaInicio);
-        this.inicioAgenda.setHours(0, 0, 0, 0);
-        this.hoy.setHours(0, 0, 0, 0);
-        this.fecha = this.inicioAgenda;
-        this.actualizar();
+        this.autorizado = this.auth.check('turnos:clonarAgenda');
+        if (!this.autorizado) {
+            this.redirect('incio');
+        } else {
+            this.inicioAgenda = new Date(this.agenda.horaInicio);
+            this.inicioAgenda.setHours(0, 0, 0, 0);
+            this.hoy.setHours(0, 0, 0, 0);
+            this.fecha = this.inicioAgenda;
+            this.actualizar();
+        }
     }
 
     private actualizar() {
@@ -58,7 +67,8 @@ export class ClonarAgendaComponent implements OnInit {
             params['espacioFisico'] = this.agenda.espacioFisico.id;
         }
         if (this.agenda.profesionales) {
-            params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
+            // params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
+            params['profesionales'] = this.agenda.profesionales.map(elem => { return elem.id; });
         }
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
         this.cargarCalendario();
@@ -135,12 +145,12 @@ export class ClonarAgendaComponent implements OnInit {
                     return band;
                 }
             );
-            // Mostrar las agendas que coincidan con las prestaciones de la agenda seleccionada en ese dia
+            // Mostrar las agendas que coincidan con los profesionales de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
                 this.seleccionados.push(dia.fecha.getTime());
                 filtro.forEach((fil) => {
-                    let aux = this.agendasFiltradas.map(elem => { return elem.id });
+                    let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                     if (aux.indexOf(fil.id) < 0) {
                         this.agendasFiltradas = this.agendasFiltradas.concat(fil);
                     }
@@ -160,6 +170,7 @@ export class ClonarAgendaComponent implements OnInit {
                     });
                 }
             }
+            // Detectar el tipo de conflicto
             this.agendasFiltradas.forEach((agenda, index) => {
                 if (agenda.profesionales) {
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
@@ -174,6 +185,11 @@ export class ClonarAgendaComponent implements OnInit {
                 }
             });
         }
+    }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -240,12 +256,29 @@ export class ClonarAgendaComponent implements OnInit {
                 console.log('Error: %s', err);
             },
             function () {
-                // alert('La agenda se clonó correctamente');
                 self.plex.alert('La agenda se clonó correctamente').then(guardo => {
                     self.volverAlGestor.emit(true);
                 });
             }
         );
+    }
+
+    public clonarPatch() {
+        let patch = {
+            'op': 'clonarAgenda',
+            'fechas': this.seleccionados
+        };
+        console.log('patch ', patch);
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                this.volverAlGestor.emit(true);
+            });
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     cancelar() {
