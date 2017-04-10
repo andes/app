@@ -64,8 +64,8 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
             suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender()),
             // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
             pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer()),
-            // Se pueden publicar todas las agendas que estén en estado Planificacion o Disponible 
-            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()),
+            // Se pueden publicar todas las agendas que estén en estado Planificacion o Disponible
+            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados(),
             // Se pueden cambiar a estado Pausada todas las agendas que no estén en estado Planificacion
             pausarAgenda: (this.cantSel > 0 && this.puedoPausar()),
             // Se pueden reanudar las agendas en estado Pausada
@@ -114,6 +114,25 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
             return agenda.estado !== 'Pausada';
         }).length <= 0;
     }
+
+    haySoloTurnosReservados() {
+        for ( let x = 0; x < this.agendasSeleccionadas.length; x++ ) {
+            for ( let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++ ) {
+                if ( this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0 ) {
+                    if ( this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0 ) {
+                        // No se puede Publicar
+                        return false;
+                    } 
+                }
+            }
+        }
+        if ( this.agendasSeleccionadas.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     // Botón editar agenda
     editarAgenda() {

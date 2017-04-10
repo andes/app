@@ -10,7 +10,7 @@ export class SmsService {
 
     constructor(private server: Server) { }
 
-    enviarSms(numero): Observable<String> {
-        return this.server.get(this.smsUrl + numero);
+    enviarSms(params): Observable<String> {
+        return this.server.get(this.smsUrl, { params: params, showError: true });
     }
 }
