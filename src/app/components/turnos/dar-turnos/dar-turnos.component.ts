@@ -510,28 +510,29 @@ export class DarTurnosComponent implements OnInit {
           this.actualizar('sinFiltro');
           this.borrarTurnoAnterior();
           this.plex.alert('El turno se asignó correctamente');
-          let nuevaPrestacion;
-          nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-              tipoPrestacion: this.turnoTipoPrestacion,
-              fecha: new Date(),
-              listaProblemas: [],
-              idTurno: this.turno.id,
-            },
-            estado: {
-              timestamp: new Date(),
-              tipo: 'pendiente'
-            },
-            ejecucion: {
-              fecha: new Date(),
-              evoluciones: []
-            }
-          };
-          this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('prestacion paciente creada');
 
-          });
+          // let nuevaPrestacion;
+          // nuevaPrestacion = {
+          //   paciente: this.paciente,
+          //   solicitud: {
+          //     tipoPrestacion: this.turnoTipoPrestacion,
+          //     fecha: new Date(),
+          //     listaProblemas: [],
+          //     idTurno: this.turno.id,
+          //   },
+          //   estado: {
+          //     timestamp: new Date(),
+          //     tipo: 'pendiente'
+          //   },
+          //   ejecucion: {
+          //     fecha: new Date(),
+          //     evoluciones: []
+          //   }
+          // };
+          // this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+          //   this.plex.alert('prestacion paciente creada');
+
+          // });
 
 
 
