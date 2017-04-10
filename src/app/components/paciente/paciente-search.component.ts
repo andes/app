@@ -44,7 +44,6 @@ export class PacienteSearchComponent implements OnInit {
    * @param {*} paciente Paciente para seleccionar
    */
   public seleccionarPaciente(paciente: any) {
-    debugger;
     if (paciente) {
       this.seleccion = paciente;
       this.selected.emit(paciente);
@@ -134,7 +133,6 @@ export class PacienteSearchComponent implements OnInit {
    * Busca paciente cada vez que el campo de busca cambia su valor
    */
   public buscar() {
-    debugger;
     // Cancela la búsqueda anterior
     if (this.timeoutHandle) {
       window.clearTimeout(this.timeoutHandle);

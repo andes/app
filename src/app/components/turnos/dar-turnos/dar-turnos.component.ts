@@ -610,21 +610,26 @@ export class DarTurnosComponent implements OnInit {
   }
 
   onReturn(pacientes: IPaciente): void {
-    this.paciente = pacientes;
-    // se busca entre los contactos si tiene un celular en ranking 1
-    this.telefono = '';
-    this.cambioTelefono = false;
-    if (this.paciente.contacto.length > 0) {
-      this.paciente.contacto.forEach((contacto) => {
-        if (contacto.tipo === 'celular') {
-          this.telefono = contacto.valor;
+    debugger;
+    if (pacientes) {
+      this.paciente = pacientes;
+      // se busca entre los contactos si tiene un celular en ranking 1
+      this.telefono = '';
+      this.cambioTelefono = false;
+      if (this.paciente.contacto) {
+        if (this.paciente.contacto.length > 0) {
+          this.paciente.contacto.forEach((contacto) => {
+            if (contacto.tipo === 'celular') {
+              this.telefono = contacto.valor;
+            }
+          });
         }
-      });
+      }
+      this.showDarTurnos = true;
+      this.pacientesSearch = false;
+      window.setTimeout(() => this.pacientesSearch = false, 100);
+      this.getUltimosTurnos();
     }
-    this.showDarTurnos = true;
-    this.pacientesSearch = false;
-    window.setTimeout(() => this.pacientesSearch = false, 100);
-    this.getUltimosTurnos();
   }
 
   onCancel() {
