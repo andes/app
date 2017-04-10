@@ -27,20 +27,8 @@ export class verProblemaComponent implements OnInit {
         this.servicioProblemaPaciente.getById(this.problema.id)
             .subscribe(problema => {
                 this.problema = problema;
-                console.log("problema populado", this.problema);
             });
         debugger;
-        // this.route.params.forEach((params: Params) => {
-        //     debugger;
-        //     if (params['id']) {
-        //         let id = params['id'];
-        //         this.servicioProblemaPaciente.getById(id)
-        //             .subscribe(problema => {
-        //                 this.problema = problema;
-        //             });
-        //     }
-        // });
-
 
     }
 

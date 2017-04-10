@@ -202,15 +202,19 @@
 
                 <div class="row">
                     <div class="col">
+                        <br/>
                         <div *ngIf="showEvolucionar && !showEvolTodo">
                             <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
                         </div>
+                        <br/>
                         <div *ngIf="showTransformar">
                             <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
                         </div>
+                        <br/>
                         <div *ngIf="showEnmendar">
                             <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
                         </div>
+                        <br/>
                         <div *ngIf="showDetalles">
                             <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
                         </div>

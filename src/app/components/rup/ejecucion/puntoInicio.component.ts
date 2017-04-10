@@ -41,7 +41,6 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     ngOnInit() {
-        // console.log('Authorization', this.auth);
         this.loadAgendasXDia();
     }
 

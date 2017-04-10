@@ -12,6 +12,9 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
+import { Auth } from '@andes/auth';
+import { IProfesional } from './../../../interfaces/IProfesional';
+
 @Component({
     selector: 'rup-enmendarProblema',
     templateUrl: 'enmendarProblema.html'
@@ -23,15 +26,15 @@ export class EnmendarProblemaComponent implements OnInit {
     unaEvolucion: any = {
         fecha: new Date(),
         observacion: '',
-        profesional: null,
-        organizacion: null,
+        profesional: this.auth.profesional.id,
+        organizacion: this.auth.organizacion.id,
         duracion: '',
         vigencia: '',
         segundaOpinion: null
     };
 
     constructor(private servProbPaciente: ProblemaPacienteService,
-        public plex: Plex) { }
+        public plex: Plex, public auth: Auth) { }
 
 
     ngOnInit() {

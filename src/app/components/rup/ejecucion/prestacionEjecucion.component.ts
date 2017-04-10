@@ -9,6 +9,8 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 import { Plex } from '@andes/plex';
 import { DropdownItem } from '@andes/plex';
+import { Auth } from '@andes/auth';
+import { IProfesional } from './../../../interfaces/IProfesional';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -66,7 +68,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex) {
+        public plex: Plex, public auth: Auth) {
     }
 
     mostrarOpciones(problema) {
@@ -91,6 +93,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     guardarProblema(nuevoProblema) {
+        console.log('nuevoProblema', nuevoProblema);
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
             if (resultado) {
                 // asignamos el problema a la prestacion de origen
@@ -115,8 +118,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                     {
                         fecha: new Date(),
                         observacion: 'Inicio del Problema',
-                        profesional: null,
-                        organizacion: null,
+                        profesional: this.auth.profesional.id,
+                        organizacion: this.auth.organizacion.id,
                         duracion: 'agudo',
                         vigencia: 'activo',
                         segundaOpinion: null
@@ -201,6 +204,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+        console.log(this.listaProblemas);
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
         if (this.prestacion.solicitud) {
@@ -301,7 +305,7 @@ export class PrestacionEjecucionComponent implements OnInit {
              this.error = '';
              let i = 1;
              // obtenemos un array de la cantidad de prestaciones que se van a guardar
-            console.log("Prestaciones en ejecucion", this.prestacionesEjecucion);
+            console.log('Prestaciones en ejecucion', this.prestacionesEjecucion);
              let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
                  debugger;
                  let tp; tp = _p.solicitud.tipoPrestacion;
@@ -321,7 +325,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return null;
              });
 
-            console.log("Prestaciones a guardar", prestacionesGuardar);
+            console.log('Prestaciones a guardar', prestacionesGuardar);
             if (prestacionesGuardar.length === 0) {
                 this.error = 'Debe registrar al menos un dato observable.';
             } else {
@@ -346,7 +350,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
 
-                            if(_prestacion.ejecucion.evoluciones.length < 1){
+                            if (_prestacion.ejecucion.evoluciones.length < 1){
                                 alert('No hay evoluciones');
                             }
 

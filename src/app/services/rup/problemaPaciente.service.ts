@@ -10,7 +10,6 @@ export class ProblemaPacienteService {
     private problemaUrl = '/modules/rup';  // URL to web api
 
     constructor(private server: Server) { }
-
     /**
      * Metodo get. Trae listado de objetos problema.
      * @param {any} params Opciones de busqueda
@@ -43,8 +42,6 @@ export class ProblemaPacienteService {
      * @param {IProblemaPaciente} problema Recibe IProblemaPaciente
      */
     put(problema: IProblemaPaciente): Observable<IProblemaPaciente> {
-        debugger;
-        console.log(problema);
         return this.server.put(this.problemaUrl + '/problemas/' + problema.id, problema);
     }
 

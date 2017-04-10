@@ -12,6 +12,9 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
+import { Auth } from '@andes/auth';
+import { IProfesional } from './../../../interfaces/IProfesional';
+
 @Component({
     selector: 'rup-transformarProblema',
     templateUrl: 'transformarProblema.html'
@@ -35,7 +38,7 @@ export class TransformarProblemaComponent implements OnInit {
 
     constructor(private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex) { }
+        public plex: Plex, public auth: Auth) { }
 
 
     ngOnInit() {
@@ -47,7 +50,7 @@ export class TransformarProblemaComponent implements OnInit {
     }
 
     existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.id === tipoProblema.id)
+        return this.listaProblemas.find(elem => elem.tipoProblema.id === tipoProblema.id);
     }
 
     agregarProblema() {
@@ -92,7 +95,7 @@ export class TransformarProblemaComponent implements OnInit {
                     if (problemaActivo.idProblemaOrigen) {
                         problemaActivo.idProblemaOrigen.push(this.problema.id);
                     } else {
-                        problemaActivo.idProblemaOrigen = [this.problema.id]
+                        problemaActivo.idProblemaOrigen = [this.problema.id];
                     }
                     problemaActivo.evoluciones.push(unaEvolucion);
                     this.servicioProblemaPac.put(problemaActivo).subscribe(problema => {
@@ -129,7 +132,7 @@ export class TransformarProblemaComponent implements OnInit {
                     });
                 }
             });
-        //}
+        // }
 
     }
 
@@ -149,7 +152,7 @@ export class TransformarProblemaComponent implements OnInit {
             this.servicioProblemaPac.put(this.problema).subscribe(resultado => {
                 if (resultado) {
                     // Aqui vamos a cargar el nuevo problema del paciente
-                    this.listaProblemas = this.listaProblemas.filter(p => { return p.id !== this.problema.id });
+                    this.listaProblemas = this.listaProblemas.filter(p => { return p.id !== this.problema.id; });
                     debugger;
                     this.agregarProblema();
                 } else {
