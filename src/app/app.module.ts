@@ -1,3 +1,5 @@
+import { Molecula } from './components/rup/moleculas/molecula.component';
+import { Atomo } from './components/rup/atomos/atomoComponent';
 
 /*
 @jgabriel | 04-03-2017
@@ -221,7 +223,10 @@ export const RUP_COMPONENTS = [
   EstadoNutricionalComponent,
   OdontologiaComponent,
   IndiceDeMasaCorporalComponent,
-  FactoresDeRiesgoNinoSanoComponent
+  FactoresDeRiesgoNinoSanoComponent,
+  Atomo,
+  Molecula
+  
 
 ];
 
