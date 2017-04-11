@@ -46,7 +46,7 @@
                 <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
                 <div class="col-12">{{paciente.documento|number}}</div>
                 <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
-                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}}</div>
+                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal}}</div>
             </div>
         </div>
         <div class="col-6 data-paciente ">

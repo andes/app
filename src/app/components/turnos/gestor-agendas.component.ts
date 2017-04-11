@@ -215,35 +215,41 @@ export class GestorAgendasComponent implements OnInit {
 
     verAgenda(agenda, multiple, e) {
 
-        this.showEditarAgendaPanel = false;
+        this.serviceAgenda.getById(agenda.id).subscribe( ag => {
 
-        if (!multiple) {
+            this.agenda = ag;
 
-            // this.showTurnos = false;
-            this.agendasSeleccionadas = [];
-            this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+            this.showEditarAgendaPanel = false;
 
-        } else {
+            if (!multiple) {
 
-            let index;
-
-            if (this.estaSeleccionada(agenda)) {
-                agenda.agendaSeleccionadaColor = 'success';
-                index = this.agendasSeleccionadas.indexOf(agenda);
-                this.agendasSeleccionadas.splice(index, 1);
-                this.agendasSeleccionadas = [...this.agendasSeleccionadas];
-            } else {
+                this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+
+            } else {
+
+                let index;
+
+                if (this.estaSeleccionada(agenda)) {
+                    agenda.agendaSeleccionadaColor = 'success';
+                    index = this.agendasSeleccionadas.indexOf(agenda);
+                    this.agendasSeleccionadas.splice(index, 1);
+                    this.agendasSeleccionadas = [...this.agendasSeleccionadas];
+                } else {
+                    this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+                }
+
             }
+                this.setColorEstadoAgenda(agenda);
 
-        }
-            this.setColorEstadoAgenda(agenda);
+                this.agenda = agenda;
 
-            // this.vistaAgenda = agenda;
-            this.agenda = agenda;
+                this.showVistaAgendas = true;
+                this.showTurnos = true;
 
-            this.showVistaAgendas = true;
-            this.showTurnos = true;
+            });
+
+
     }
 
     estaSeleccionada(agenda: any) {

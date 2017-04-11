@@ -49,21 +49,21 @@ import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/molecula
 
 const appRoutes: Routes = [
   // Tablas maestras
-  { path: 'organizacion', component: OrganizacionComponent },
-  { path: 'profesional', component: ProfesionalComponent },
-  { path: 'especialidad', component: EspecialidadComponent },
+  { path: 'organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
+  { path: 'especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'espacio_fisico', component: EspacioFisicoComponent },
-  { path: 'tipoprestaciones', component: TipoPrestacionComponent },
+  { path: 'espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
+  { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
 
   // Turnos
-  { path: 'clonarAgenda', component: ClonarAgendaComponent },
-  { path: 'gestor_agendas', component: GestorAgendasComponent },
-  { path: 'panelEspacio', component: PanelEspacioComponent },
-  { path: 'agendas', component: AgendaComponent },
-  { path: 'agenda', component: AgendaComponent },
-  { path: 'turnos', component: DarTurnosComponent },
-  { path: 'listaEspera', component: ListaEsperaComponent },
+  { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
+  { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
+  { path: 'panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingGuard] },
+  { path: 'agendas', component: AgendaComponent, canActivate: [RoutingGuard] },
+  { path: 'agenda', component: AgendaComponent, canActivate: [RoutingGuard] },
+  { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent },
