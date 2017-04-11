@@ -21,7 +21,7 @@ export class ClonarAgendaComponent implements OnInit {
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
-    private agendasFiltradas: any[] = []; // Las agendas que hay en el día, cuapublic autorizado = false;ndo se selecciona una fecha para clonar
+    private agendasFiltradas: any[] = []; // Las agendas que hay en el día,
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
@@ -40,6 +40,7 @@ export class ClonarAgendaComponent implements OnInit {
 
     constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
     ngOnInit() {
+        moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
         if (!this.autorizado) {
             this.redirect('incio');
@@ -60,7 +61,7 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
         let params = {
-            fechaDesde: this.inicioMesDate,
+            fechaDesde: this.inicioAgenda,
             fechaHasta: this.finMesDate,
         };
         if (this.agenda.espacioFisico) {
@@ -263,25 +264,25 @@ export class ClonarAgendaComponent implements OnInit {
         );
     }
 
-    public clonar2() {
-        console.log('seleccionados ',new Date(this.seleccionados[0]));
-        this.seleccionados.splice(0, 1);
-        this.seleccionados = [...this.seleccionados];
-        let data = {
-            idAgenda: this.agenda.id,
-            clones: this.seleccionados
-        }
-        this.serviceAgenda.clonar(data).subscribe(resultado => {
-            this.plex.alert('La Agenda se clonó correctamente').then(ok => {
-                this.volverAlGestor.emit(true);
-            });
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
+    // public clonar2() {
+    //     console.log('seleccionados ',new Date(this.seleccionados[0]));
+    //     this.seleccionados.splice(0, 1);
+    //     this.seleccionados = [...this.seleccionados];
+    //     let data = {
+    //         idAgenda: this.agenda.id,
+    //         clones: this.seleccionados
+    //     }
+    //     this.serviceAgenda.clonar(data).subscribe(resultado => {
+    //         this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+    //             this.volverAlGestor.emit(true);
+    //         });
+    //     },
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    // }
 
     cancelar() {
         this.volverAlGestor.emit(true);
