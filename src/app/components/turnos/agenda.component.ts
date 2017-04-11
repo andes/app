@@ -564,44 +564,36 @@ export class AgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-
             // Limpiar de bug selectize "$order", horrible todo esto :'(
             if (this.modelo.tipoPrestaciones) {
                 this.modelo.tipoPrestaciones.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
-
             if (this.modelo.profesionales) {
                 this.modelo.profesionales.forEach(function (prestacion, key) {
                     delete prestacion.$order;
                 });
             }
-
             if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
             }
-
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-
                 let delDiaCount = bloque.accesoDirectoDelDia;
                 let programadoCount = bloque.accesoDirectoProgramado;
                 let profesionalCount = bloque.reservadoGestion;
                 let gestionCount = bloque.reservadoProfesional;
 
                 bloque.turnos = [];
-
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
-
                     let turno = {
                         estado: 'disponible',
                         horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
@@ -628,26 +620,12 @@ export class AgendaComponent implements OnInit {
                         }
                     }
                 }
-
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
-                
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
                    return el.activo === true && delete el.$order;
                 });
-                console.log('tipoPrestaciones ', bloque.tipoPrestaciones);
-                // let aux = bloque.tipoPrestaciones.filter(function (el) {
-                //     return el.activo === true && delete el.$order;
-                // });
-                // console.log('aux ', aux.length);
-                // if (aux.length >= 0) {
-                //     bloque.tipoPrestaciones = aux;
-                // } else {
-                //     delete bloque.tipoPrestaciones;
-                // }
             });
-
-            console.log('this.modelo.bloques: ', this.modelo.bloques);
             espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.alert('La Agenda se guardó correctamente').then(guardo => {

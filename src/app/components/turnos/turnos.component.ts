@@ -28,8 +28,13 @@ export class TurnosComponent implements OnInit {
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
-        // this.actualizarBotones();
+        this.turnosSeleccionados = [];
         this.cantSel = 0;
+
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            this.turnos = this.agenda.bloques[i].turnos;
+        }
+            this.actualizarBotones();
     }
     get agenda(): any {
         return this._agenda;
@@ -73,55 +78,70 @@ export class TurnosComponent implements OnInit {
 
     ngOnInit() {
         this.turnosSeleccionados = [];
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            this.turnos = this.agenda.bloques[i].turnos;
-        }
         this.actualizarBotones();
     }
 
-    seleccionarTurno(turno) {
+    seleccionarTurno(turno, multiple = false) {
 
-        if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-            this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
-        } else {
-            this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
-        }
 
-        this.turnosSeleccionados.sort((a, b) => {
-            return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
-        });
+            if (!multiple) {
 
-        if (this.turnosSeleccionados.length < this.turnos.length) {
-            this.todos = false;
-        }
+                this.turnosSeleccionados = [];
+                this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
 
-        if (this.turnosSeleccionados.length === this.turnos.length) {
-            this.todos = true;
-        }
+            } else {
 
-        this.cantSel = this.turnosSeleccionados.length;
+                if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
+                    this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
+                    this.turnosSeleccionados = [... this.turnosSeleccionados];
+                } else {
+                    this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
+                }
 
-        this.actualizarBotones();
 
+            }
+            this.turnosSeleccionados.sort((a, b) => {
+                return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
+            });
+
+            if (this.turnosSeleccionados.length < this.turnos.length) {
+                this.todos = false;
+            }
+
+            if (this.turnosSeleccionados.length === this.turnos.length) {
+                this.todos = true;
+            }
+
+            this.cantSel = this.turnosSeleccionados.length;
+
+            this.actualizarBotones();
+
+    }
+
+    estaSeleccionado(turno: any) {
+        return this.turnosSeleccionados.indexOf(turno) >= 0;
     }
 
     seleccionarTodos() {
 
         this.turnosSeleccionados = [];
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            this.agenda.bloques[i].turnos.forEach((turno, index) => {
+
+        for (let a = 0; a < this.agenda.bloques.length; a++) {
+            for (let b = 0; b < this.agenda.bloques[a].turnos.length; b++) {
                 if (!this.todos) {
-                    this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
-                    turno.checked = true;
+                    this.agenda.bloques[a].turnos[b].checked = true;
+                    this.turnosSeleccionados = [...this.turnosSeleccionados, this.agenda.bloques[a].turnos[b]];
                 } else {
-                    turno.checked = false;
+                    this.agenda.bloques[a].turnos[b].checked = false;
                 }
-            });
+
+            }
         }
 
+
+        this.todos = !this.todos;
         this.cantSel = this.turnosSeleccionados.length;
         this.actualizarBotones();
-        this.todos = !this.todos;
     }
 
     agendaNoSuspendida() {
@@ -131,7 +151,7 @@ export class TurnosComponent implements OnInit {
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
             return turno.paciente;
-        }).length > 0;
+        }).length == this.turnosSeleccionados.length;
     }
 
     tienenAsistencia() {
@@ -226,10 +246,10 @@ export class TurnosComponent implements OnInit {
 
     actualizarBotones() {
 
-
         this.botones = {
 
-            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.noHayTurnosConEstado('disponible') && this.noHayTurnosConEstado('bloqueado')),
+            // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
+            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')),
             sacarAsistencia: (this.agendaNoSuspendida() && this.tienenAsistencia()) && this.tienenPacientes(),
             // "Turno suspendido": Estado bloqueado pero con paciente
             suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
@@ -238,15 +258,16 @@ export class TurnosComponent implements OnInit {
             bloquearTurno: this.hayTurnosConEstado('disponible') && !this.tienenPacientes(),
             desbloquearTurno: this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes(),
 
-            tdReasignarTurno: (this.estadoTurno === 'asignado') && (!this.estadoAsistencia),
-            tdNota: this.turnosSeleccionados.length > 0
+            tdReasignarTurno: this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
+            tdNota: this.turnosSeleccionados.length > 0,
+            smsVisible: this.agenda.estado === 'Suspendida' && this.noHayTurnosConEstado('asignado'),
+            smsNoEnviado: false,
+
         };
+
     }
 
-
-    liberarTurno(agenda: any) {
-        this.agenda = agenda;
-        // this.turno = turno;
+    liberarTurno() {
 
         this.confirmaLiberarTurno = false;
 
@@ -254,8 +275,7 @@ export class TurnosComponent implements OnInit {
         this.showLiberarTurno = true;
     }
 
-    suspenderTurno(agenda: any) {
-        this.agenda = agenda;
+    suspenderTurno() {
 
         this.confirmaSuspenderTurno = false;
 
@@ -263,53 +283,50 @@ export class TurnosComponent implements OnInit {
         this.showSuspenderTurno = true;
     }
 
-    agregarNotaTurno(agenda: any) {
-        this.agenda = agenda;
+    agregarNotaTurno() {
         this.showTurnos = false;
         this.showAgregarNotaTurno = true;
     }
 
-    eventosTurno(agenda: IAgenda, event) {
-
-        let btnClicked = event.currentTarget.id;
+    eventosTurno(opcion) {
 
         let patch: any = {};
 
-        // TODO: REFACTOOOOORRR!!!
+        // Por cada turno...
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-            if (btnClicked === 'darAsistencia') {
-                patch = {
-                    'op': 'darAsistencia',
-                    'idTurno': this.turnosSeleccionados[x].id
-                };
-            } else if (btnClicked === 'sacarAsistencia') {
-                patch = {
-                    'op': 'sacarAsistencia',
-                    'idTurno': this.turnosSeleccionados[x].id
-                };
-            } else if (btnClicked === 'bloquearTurno') {
-                patch = {
-                    'op': 'bloquearTurno',
-                    'idTurno': this.turnosSeleccionados[x].id
-                };
-            }
 
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            patch = {
+                'op': opcion,
+                'idTurno': this.turnosSeleccionados[x].id
+            };
 
-                // Traer agenda actualizada
-                this.agenda = resultado;
+        }
+            patch = {
+                op: opcion,
+                turnos: this.turnosSeleccionados
+            };
 
-                // Reset botones y turnos seleccionados
-                this.actualizarBotones();
-                this.turnosSeleccionados = [];
+            this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
 
-            },
+                resultado => {
+                    this.agenda = resultado;
+                },
+
                 err => {
                     if (err) {
                         console.log(err);
                     }
-                });
-        }
+                }
+
+            );
+
+        // Reset botones y turnos seleccionados
+        this.turnosSeleccionados = [];
+        this.actualizarBotones();
+        this.turnos.forEach((turno, index) => {
+            turno.checked = false;
+        });
+        this.todos = false;
     }
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
@@ -350,6 +367,9 @@ export class TurnosComponent implements OnInit {
             agenda = resultado;
 
             this.plex.alert('El paciente paso a Lista de Espera');
+
+            this.enviarSMS();
+
         });
     }
 
@@ -369,7 +389,6 @@ export class TurnosComponent implements OnInit {
 
             turno.smsVisible = true;
             turno.smsLoader = true;
-
 
             if (this.turnosSeleccionados[x].paciente != null) {
 
@@ -392,7 +411,8 @@ export class TurnosComponent implements OnInit {
                         if (err) {
                             console.log(err);
                         }
-                    });
+                    }
+                );
             }
         }
     }
@@ -422,42 +442,18 @@ export class TurnosComponent implements OnInit {
         this.showTurnos = false;
         this.showTurnos = true;
         this.showAgregarNotaTurno = false;
+        this.turnos.forEach((turno, index) => {
+            turno.checked = false;
+        });
+        this.todos = false;
     }
 
     cancelaAgregarNota() {
 
         this.turnosSeleccionados.length = 0;
-
-        this.actualizarBotones();
-
         this.showTurnos = true;
         this.showAgregarNotaTurno = false;
 
-    }
-
-    @Input()
-    public get selectAll() {
-        return this._selectAll;
-    }
-    public set selectAll(value) {
-        if (!this.turnos) {
-            return;
-        }
-
-        this.turnosSeleccionados = [];
-
-        this.turnos = this.turnos.filter(
-            pac => pac.paciente != null);
-
-        this.turnos.forEach(turno => {
-            turno.checked = value;
-
-            if (value) {
-                this.turnosSeleccionados.push(turno);
-            }
-        });
-
-        this._selectAll = value;
     }
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,

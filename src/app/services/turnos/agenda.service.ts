@@ -26,11 +26,19 @@ export class AgendaService {
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 
+    patchMultiple(id: String, params: any): Observable<IAgenda> {
+        return this.server.patch(this.agendaUrl + '/' + id + '/multiple', params);
+    }
+
     save(agenda: IAgenda): Observable<IAgenda> {
         if (agenda.id) {
             return this.server.put(this.agendaUrl + '/' + agenda.id, agenda);
         } else {
             return this.server.post(this.agendaUrl, agenda);
         }
+    }
+
+    clonar(data: any): Observable<IAgenda[]> {
+        return this.server.post(this.agendaUrl + '/clonar', data);
     }
 }
