@@ -84,6 +84,9 @@ export class SuspenderTurnoComponent implements OnInit {
                     this.saveSuspenderTurno.emit(resulAgenda);
 
                     this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+
+                    this.enviarSMS(this.pacientes[x], 'Su turno fue cancelado, queda en lista de espera');
+
                 });
             });
         }
@@ -94,15 +97,20 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.suspenderTurno();
 
-        this.enviarSMS(paciente);
+        this.enviarSMS(paciente, 'Su turno se suspendió, será reasignado');
 
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
-    enviarSMS(paciente: any) {
+    enviarSMS(paciente: any, mensaje) {
         // this.smsLoader = true;
 
-        this.smsService.enviarSms(paciente.paciente.telefono).subscribe(
+        let smsParams = {
+            telefono: paciente.paciente.telefono,
+            mensaje: mensaje,
+        }
+
+        this.smsService.enviarSms(smsParams).subscribe(
             resultado => {
                 this.resultado = resultado;
                 // this.smsLoader = false;

@@ -71,7 +71,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
                     }
                 });
 
-            if ( index === this.turnosSeleccionados.length - 1 ){
+            if ( index === this.turnosSeleccionados.length - 1 ) {
                 this.saveAgregarNotaTurno.emit(this.agenda);
             }
         });

@@ -266,15 +266,13 @@
             <br>
             <label><h5><strong>ÚLTIMOS TURNOS DEL PACIENTE</strong></h5></label><br>
             <div class="list-group">
-              <a *ngFor="let turno of ultimosTurnos" class="list-group-item hover">
-                <div class="row">
-                  <label> <span>{{turno.organizacion}} </span> </label><br>
-                  <label>Fecha: &nbsp; <span>{{turno.horaInicio}} </span> </label><br>
-                  <label>Estado: &nbsp; <span>{{turno.estado}} </span> </label><br>
-                  <label>Tipo de Prestación: &nbsp;<span>{{turno.tipoPrestacion}} </span> </label><br>
-                  <div *ngFor="let profesional of turno.profesionales">Profesional: &nbsp;
-                    <span>{{profesional.nombre}} {{profesional.apellido}} </span> <br>
-                  </div>
+              <a *ngFor="let turno of ultimosTurnos" class="list-group-item">
+                <p> <span>{{turno.organizacion}} </span> </p>
+                <p>Fecha: &nbsp; <span>{{turno.horaInicio}} </span> </p>
+                <p>Estado: &nbsp; <span>{{turno.estado}} </span> </p>
+                <p>Tipo de Prestación: &nbsp;<span>{{turno.tipoPrestacion}} </span> </p>
+                <div *ngFor="let profesional of turno.profesionales">Profesional: &nbsp;
+                  <span>{{profesional.nombre}} {{profesional.apellido}} </span> <br>
                 </div>
               </a>
             </div>
@@ -289,6 +287,12 @@
       <div class="panel panel-default">
         <div class="clear"></div>
         <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
+      </div>
+    </div>
+    <div class="col col-sm-12" *ngIf="showCreateUpdate">
+      <div class="panel panel-default">
+        <div class="clear"></div>
+        <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
       </div>
     </div>
   </div>
