@@ -9,9 +9,8 @@ import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { Component, AfterViewInit, Input, OnInit } from '@angular/core';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import * as moment from 'moment';
-moment.locale('en');
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -29,6 +28,9 @@ const size = 4;
 
 export class DarTurnosComponent implements OnInit {
   private _reasignaTurnos: any;
+
+  @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
   @Input('reasignar')
   set reasignar(value: any) {
@@ -63,6 +65,9 @@ export class DarTurnosComponent implements OnInit {
   countBloques: any[];
   countTurnos: any = {};
 
+  public seleccion = null;
+  public esEscaneado = false;
+
   ultimosTurnos: any[];
 
   indice: number = -1;
@@ -73,7 +78,7 @@ export class DarTurnosComponent implements OnInit {
   pacientesSearch = true;
   showDarTurnos = false;
   cambioTelefono = false;
-
+  showCreateUpdate = false;
   tipoTurno: string;
   tiposTurnosSelect: String;
 
@@ -609,26 +614,48 @@ export class DarTurnosComponent implements OnInit {
     }
   }
 
+  afterCreateUpdate(paciente) {
+    this.showCreateUpdate = false;
+    this.showDarTurnos = true;
+    if (paciente) {
+      this.paciente = paciente;
+      this.verificarTelefono(this.paciente);
+    } else {
+      this.buscarPaciente();
+    }
+  }
+
   onReturn(pacientes: IPaciente): void {
-    debugger;
-    if (pacientes) {
+    if (pacientes.id) {
       this.paciente = pacientes;
-      // se busca entre los contactos si tiene un celular en ranking 1
-      this.telefono = '';
-      this.cambioTelefono = false;
-      if (this.paciente.contacto) {
-        if (this.paciente.contacto.length > 0) {
-          this.paciente.contacto.forEach((contacto) => {
-            if (contacto.tipo === 'celular') {
-              this.telefono = contacto.valor;
-            }
-          });
-        }
-      }
+      this.verificarTelefono(this.paciente);
       this.showDarTurnos = true;
       this.pacientesSearch = false;
       window.setTimeout(() => this.pacientesSearch = false, 100);
       this.getUltimosTurnos();
+    }
+    else {
+      this.seleccion = pacientes;
+      this.esEscaneado = true;
+      this.escaneado.emit(this.esEscaneado);
+      this.selected.emit(this.seleccion);
+      this.pacientesSearch = false;
+      this.showCreateUpdate = true;
+    }
+  }
+
+  verificarTelefono(paciente: IPaciente) {
+    // se busca entre los contactos si tiene un celular
+    this.telefono = '';
+    this.cambioTelefono = false;
+    if (this.paciente.contacto) {
+      if (this.paciente.contacto.length > 0) {
+        this.paciente.contacto.forEach((contacto) => {
+          if (contacto.tipo === 'celular') {
+            this.telefono = contacto.valor;
+          }
+        });
+      }
     }
   }
 
