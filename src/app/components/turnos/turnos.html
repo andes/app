@@ -85,9 +85,9 @@
                         <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
-                        <label *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</label>
-                        <label *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Tiene Asistencia</label>
-                        <label *ngIf="!turno.paciente">({{ turno.estado }})</label>
+                        <strong *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</strong>
+                        <strong *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Tiene Asistencia</strong>
+                        <strong *ngIf="!turno.paciente"> </strong>
                     </td>
                     <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
                         <i *ngIf="turno.botones?.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
