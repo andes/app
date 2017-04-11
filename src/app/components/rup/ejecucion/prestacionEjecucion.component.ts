@@ -9,6 +9,8 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 import { Plex } from '@andes/plex';
 import { DropdownItem } from '@andes/plex';
+import { Auth } from '@andes/auth';
+import { IProfesional } from './../../../interfaces/IProfesional';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -31,10 +33,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
     ];
     problemaItem: any;
-
-    mostrarOpciones(problema) {
-        this.problemaItem = problema;
-    }
 
     showEvolucionar = false;
     showTransformar = false;
@@ -70,7 +68,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex) {
+        public plex: Plex, public auth: Auth) {
+    }
+
+    mostrarOpciones(problema) {
+        this.problemaItem = problema;
     }
 
     ngOnInit() {
@@ -91,11 +93,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     guardarProblema(nuevoProblema) {
+
+        delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select
+
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
             if (resultado) {
                 // asignamos el problema a la prestacion de origen
                 this.listaProblemas.push(resultado);
-                // this.prestacion.ejecucion.listaProblemas.push(resultado);
+                // this.listaProblemas = this.listaProblemas.concat(resultado);//[... this.listaProblemas, resultado];
                 this.updatePrestacion();
             } else {
                 this.plex.alert('Error al intentar asociar el problema a la consulta');
@@ -115,8 +120,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                     {
                         fecha: new Date(),
                         observacion: 'Inicio del Problema',
-                        profesional: null,
-                        organizacion: null,
+                        profesional: this.auth.profesional.id,
+                        organizacion: this.auth.organizacion.id,
                         duracion: 'agudo',
                         vigencia: 'activo',
                         segundaOpinion: null
@@ -140,12 +145,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     evolucionarProblema(problema) {
         this.showEvolucionar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
 
     }
 
     transformarProblema(problema) {
         this.showTransformar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
         this.listaProblemas = this.listaProblemas.filter(item => item.id !== problema.id);
 
@@ -153,11 +160,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     enmendarProblema(problema) {
         this.showEnmendar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
     }
 
     verDetalles(problema) {
         this.showDetalles = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
     }
 
@@ -223,15 +232,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.prestacionesEjecucion.push(find);
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
-
-                    let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
-
-                    if (this.valoresPrestaciones[key] && evolucion) {
-                        this.valoresPrestaciones[key] = {};
-                        this.valoresPrestaciones[key] = evolucion;
-                    }else {
-                        this.valoresPrestaciones[key] = null;
-                    }
                 }
             });
         }
@@ -248,6 +248,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.prestacionesEjecucion.push(_prestacion);
                 let key; key = _prestacion.solicitud.tipoPrestacion.key;
                 this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+
+                // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
             }
         });
     }
@@ -293,15 +295,26 @@ export class PrestacionEjecucionComponent implements OnInit {
 
    evolucionarPrestacion() {
 
-         debugger;
-
          if (this.prestacion.ejecucion.listaProblemas.length > 0) {
              this.error = '';
              let i = 1;
              // obtenemos un array de la cantidad de prestaciones que se van a guardar
              let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
                  let tp; tp = _p.solicitud.tipoPrestacion;
-                 return (typeof this.data[tp.key] !== 'undefined' && Object.keys(this.data[tp.key]).length) ? _p : null;
+
+                // verificamos si existe algun valor a devolver en data
+                if (typeof this.data[tp.key] !== 'undefined') {
+                    // si es un objeto, entonces verificamos que no este vacia ninguna
+                    // de sus propiedades, y retornamos la prestacion
+                    if (typeof this.data[tp.key] === 'object') {
+                        return (Object.keys(this.data[tp.key]).length) ? _p : null;
+                    }else {
+                        // retornamos si es numero, texto, algo distinto de 'undefined'
+                        return _p;
+                    }
+                }
+                // no se cumple ninguna condicion retornamos null
+                return null;
              });
 
             if (prestacionesGuardar.length === 0) {
@@ -327,8 +340,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     });
                             }
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
-
-                            if(_prestacion.ejecucion.evoluciones.length < 1){
+                            debugger;
+                            if (_prestacion.ejecucion.evoluciones.length < 1){
                                 alert('No hay evoluciones');
                             }
 
@@ -457,10 +470,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-         debugger;
-         console.log('this.data[tipoPrestacionActual.key]', this.data[tipoPrestacionActual.key]);
 
-        // console.log('On return component - this.data[tipoPrestacionActual.key] - ', this.data[tipoPrestacionActual.key]);
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         }else {
@@ -470,8 +480,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.data[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
         }
     }
-
-
 
     volver() {
        this.showValidar = false;

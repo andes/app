@@ -25,7 +25,7 @@ import {
 export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() paciente: IPaciente;
-    @Input() tipoPrestacion: ITipoPrestacion;
+    @Input() tipoPrestacion: any; //Ver que sea de tipo IPrestacion..
     @Input() datosIngreso: Object;
     @Input() soloValores: Boolean = null;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -37,12 +37,9 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
     pacientePrestacion: any = {};
     // resultados a devolver
-    data: any = {
-        valor: {},
-        mensaje: {
-            texto: '',
-        },
-    };
+    data: any = {};
+    mensaje: any = {};
+    
 
     // Componente a cargar
     private componentContainer: any;
@@ -59,14 +56,16 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
     constructor(private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef,
         private pacienteService: PacienteService,
-        private tipoPrestacionService: TipoPrestacionService) {
+        private tipoPrestacionService: TipoPrestacionService,
+        public servicioTipoPrestacion: TipoPrestacionService //Publico por que lo usa la molecula
+        ) {
     }
 
     ngOnInit() {
-
+        console.log(this.tipoPrestacion.granularidad);
         // El View ya está inicializado
         this.isViewInitialized = true;
-
+        
         // Inicializamos la lista de Componentes RUP
         for (let comp of RUP_COMPONENTS) {
             this.tiposPrestaciones.push({

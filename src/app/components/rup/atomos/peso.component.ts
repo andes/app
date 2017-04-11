@@ -1,40 +1,43 @@
+import { Atomo } from './atomoComponent';
+import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
+
 
 @Component({
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
-export class PesoComponent implements OnInit {
+export class PesoComponent extends Atomo{
 
-    @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') tipoPrestacion: any;
-    @Input('paciente') paciente: any;
-    @Input('soloValores') soloValores: Boolean;
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // @Input('datosIngreso') datosIngreso: any;
+    //@Input('tipoPrestacion') tipoPrestacion: any;
+    // @Input('paciente') paciente: any;
+    // @Input('soloValores') soloValores: Boolean;
+    // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    data: any = {};
-    mensaje: any = {};
+    // data: any = {};
+    //mensaje: any = {};
 
-    ngOnInit() {
-        
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-        // si tengo valores cargados entonces devuelvo los resultados y mensajes
-        if (this.datosIngreso) {
-            this.devolverValores();
-        }
-    }
+    // ngOnInit() {
+    //     this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+    //     // si tengo valores cargados entonces devuelvo los resultados y mensajes
+    //     if (this.datosIngreso) {
+    //         this.devolverValores();
+    //     }
+    // }
 
-    devolverValores() {
+    // devolverValores() {
 
-        if (this.data[this.tipoPrestacion.key] === null) {
-            this.data = {};
-        }
-        this.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-    }
+    //     if (this.data[this.tipoPrestacion.key] === null) {
+    //         this.data = {};
+    //     }
+    //     this.mensaje = this.getMensajes();
+    //     this.evtData.emit(this.data);
+    // }
 
     getMensajes() {
+        debugger;
         let peso = this.data[this.tipoPrestacion.key];
         let edadEnMeses;
         let sexo = this.paciente.sexo;
@@ -57,7 +60,6 @@ export class PesoComponent implements OnInit {
         fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
         difDias = fechaAct.diff(fechaNac, 'd');     // Diferencia en días
         edadEnMeses = Math.trunc(difDias / 30.4375); // Diferencia en Meses
-
         if (peso) {
             // Peso niño
                 switch (true) {
@@ -343,9 +345,9 @@ export class PesoComponent implements OnInit {
                         break;
 
                     default: mensaje.texto = '';
-                } // switch()
-        } // if (peso)
+                } 
+        } 
         return mensaje;
-    } // Mensajes
+    } 
 
-} // export class PesoComponent implements OnInit
+} 
