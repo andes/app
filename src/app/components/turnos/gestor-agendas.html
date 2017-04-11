@@ -83,7 +83,7 @@
 
 <footer *ngIf="autorizado && showGestorAgendas">
   <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear Agenda" (click)="insertarAgenda()"></plex-button>
-  <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="* Dar Turnos *" (click)="redirect('turnos')"></plex-button>
+  <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="redirect('turnos')"></plex-button>
 </footer>
 
 <div *ngIf="autorizado">
