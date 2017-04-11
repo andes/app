@@ -143,22 +143,20 @@
                   </header>   
 
                   <div class="row">
-                    <div class="col-6">
+                     <div class="col-6" >
                             <dl *ngIf="prestacionPeso">
                                 <dt>Peso</dt>
-                                <!--<dd>{{prestacionPeso.ejecucion.evoluciones[prestacionPeso.ejecucion.evoluciones.length-1].valores.signosVitales.peso}} Kg<br><small>-->
-                                    <dd>30 Kg<br><small>
-                                    Fecha: {{prestacionPeso.ejecucion.fecha | date: 'dd/MM/yyyy'}}
-                            </small></dd>
+                                {{prestacionPeso.valor}} Kg <br />
+                                <small>{{prestacionPeso.fecha | date: 'dd/MM/yyyy'}}</small>
+                                 
                             </dl>
                       </div>                        
 
                     <div class="col-6">
                         <dl *ngIf="prestacionTalla">
                             <dt>Talla</dt>
-                            <dd>{{prestacionTalla.ejecucion.evoluciones[prestacionTalla.ejecucion.evoluciones.length-1].valores.talla}} cm<br><small class="gris">
-                                Fecha: {{prestacionTalla.ejecucion.fecha | date: 'dd/MM/yyyy'}}
-                        </small></dd>
+                            {{prestacionTalla.valor}} cm  <br />
+                            <small>{{prestacionTalla.fecha | date: 'dd/MM/yyyy'}}</small>
                         </dl>
                     </div>
                 </div>
