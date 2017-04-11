@@ -1,3 +1,4 @@
+import { Atomo } from './../atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from "../../../../interfaces/IPaciente";
 
@@ -7,29 +8,29 @@ import { IPaciente } from "../../../../interfaces/IPaciente";
   templateUrl: 'perinatalesEmbarazoNormal.html'
 })//@Component
 
-export class PerinatalesEmbarazoNormalComponent implements OnInit {
+export class PerinatalesEmbarazoNormalComponent extends Atomo {
 
-  @Input('datosIngreso') datosIngreso: any;
-  @Input('tipoPrestacion') tipoPrestacion: any;
-  @Input('paciente') paciente: IPaciente;
-  @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+  // @Input('datosIngreso') datosIngreso: any;
+  // @Input('tipoPrestacion') tipoPrestacion: any;
+  // @Input('paciente') paciente: IPaciente;
+  // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-  data: any = {
-    mensaje: {
-      class: "",
-      texto: "",
-    },
-  };
+  // data: any = {
+  //   mensaje: {
+  //     class: "",
+  //     texto: "",
+  //   },
+  // };
 
-  ngOnInit() {
-    this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
-  } //ngOnInit()
+  // ngOnInit() {
+  //   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
+  // } //ngOnInit()
 
-  devolverValores() { //Hacer las validaciones                                              
-    this.data.mensaje = this.getMensajes();
-    this.evtData.emit(this.data);
-  }//devolverValores()
+  // devolverValores() { //Hacer las validaciones                                              
+  //   this.data.mensaje = this.getMensajes();
+  //   this.evtData.emit(this.data);
+  // }//devolverValores()
 
-  getMensajes() { };
+  // getMensajes() { };
 
-}//export class PerinatalesEmbarazoNormalComponent
+}
