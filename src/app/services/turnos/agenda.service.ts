@@ -33,4 +33,8 @@ export class AgendaService {
             return this.server.post(this.agendaUrl, agenda);
         }
     }
+
+    clonar(data: any): Observable<IAgenda[]> {
+        return this.server.post(this.agendaUrl + '/clonar', data);
+    }
 }

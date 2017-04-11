@@ -56,7 +56,6 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.indexOf(this.inicioAgenda.getTime()) < 0) {
             this.seleccionados.push(this.inicioAgenda.getTime());
         }
-        moment.locale('en');
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
@@ -264,13 +263,15 @@ export class ClonarAgendaComponent implements OnInit {
         );
     }
 
-    public clonarPatch() {
-        let patch = {
-            'op': 'clonarAgenda',
-            'fechas': this.seleccionados
-        };
-        console.log('patch ', patch);
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+    public clonar2() {
+        console.log('seleccionados ',new Date(this.seleccionados[0]));
+        this.seleccionados.splice(0, 1);
+        this.seleccionados = [...this.seleccionados];
+        let data = {
+            idAgenda: this.agenda.id,
+            clones: this.seleccionados
+        }
+        this.serviceAgenda.clonar(data).subscribe(resultado => {
             this.plex.alert('La Agenda se clonó correctamente').then(ok => {
                 this.volverAlGestor.emit(true);
             });
