@@ -56,7 +56,6 @@ export class ResumenComponent implements OnInit {
         this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
 
-                console.log('prestacionPeso', prestacion);
                 if (prestacion && prestacion.length > 0) {
                     this.prestacionPeso = prestacion[0];
                 }
@@ -65,7 +64,6 @@ export class ResumenComponent implements OnInit {
         this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
 
-                console.log('prestacionTalla', prestacion);
                 if (prestacion && prestacion.length > 0) {
                      this.prestacionTalla = prestacion[0];
                 }

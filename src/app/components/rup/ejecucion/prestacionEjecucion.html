@@ -104,6 +104,9 @@
 
 </style>
 
+<!--<pre> {{prestacion.ejecucion.listaProblemas | json}}
+</pre>-->
+
 <header>
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>    
      <br/> 
@@ -114,8 +117,10 @@
     </div>   
 </header>
 
+
 <section *ngIf="!showValidar">
     <div class="row">
+
 
          <!--LISTA DE PROBLEMAS ACTIVOS-->
          <div class="col-2">
@@ -145,7 +150,6 @@
                  </ul>
               </plex-box>      
         </div>
-
 
 
         <div class="col-5">
@@ -261,49 +265,35 @@
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <!--<legend>{{prestacion.solicitud.tipoPrestacion.nombre}}</legend>-->
 
+                <fieldset>
                     <!-- nuevas prestaciones ejecutadas en la consulta -->
                     <plex-accordion *ngIf="prestacionesEjecucion">
                         <div *ngFor="let _prestacion of prestacionesEjecucion">
 
-                            <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">
-
-                                <!--
-                                    {{_prestacion.ejecucion.evoluciones.length-1 | json}}
-                                    {{valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] | json}}
-                                -->
-
-                                <!--
-                                    <rup #rup [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)"
-                                        [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1] && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores) ? _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores[_prestacion.solicitud.tipoPrestacion.key] : null">
-                                -->
-                                <!--<rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)"
-                                    [datosIngreso]="(valoresPrestaciones && valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key]) ? valoresPrestaciones[_prestacion.solicitud.tipoPrestacion.key] : null">
-                                </rup>-->
-
+                            <plex-panel tituloPrincipal="{{_prestacion.solicitud.tipoPrestacion.nombre}}">                               
                                 <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="_prestacion.solicitud.tipoPrestacion" [paciente]="_prestacion.paciente" (evtData)="onReturnComponent($event, _prestacion.solicitud.tipoPrestacion)"
                                     [datosIngreso]="(_prestacion.ejecucion.evoluciones && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1] && _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores) ? _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length-1].valores[_prestacion.solicitud.tipoPrestacion.key] : null">
                                 </rup>
 
-                                <!--<pre>
-                                    {{valoresPrestaciones | json}}
-                                </pre>-->
-
                                 <div class="row">
                                     <div class="col-12">
-                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" (getData)="$event.callback(listaProblemas)" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" 
+                                                        name="tallaListaProblemas"  label="Vincular a problemas" labelField="tipoProblema.nombre" 
+                                                        (getData)="$event.callback(listaProblemas)"
+                                                        [multiple]="true" placeholder="Seleccione problema(s)">
+                                        </plex-select>
                                     </div>
                                 </div>
                             </plex-panel>
 
                         </div>
                     </plex-accordion>
-                    <!-- nuevas prestaciones ejecutadas en la consulta -->
+                    <!--nuevas prestaciones ejecutadas en la consulta -->
                 </fieldset>
 
                 <br />
+
                 <fieldset>
                     <h5 class="box-title-secundario">Lista de Planes</h5>
                     <div class="row">
@@ -317,6 +307,7 @@
                             <plex-button title="Agregar al plan" label="" icon="mdi mdi-plus" type="primary " (click)="agregarPrestacionFutura()"></plex-button>
                         </div>
                     </div>
+
                     <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
                         <div class="row" style="margin-bottom: 20px;" *ngIf="prestacionFutura.solicitud">
                             <div class="col-10">
@@ -341,6 +332,7 @@
                         </div>
                     </div>
                 </fieldset>
+
             </plex-box>
         </div>
 

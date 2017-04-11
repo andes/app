@@ -60,6 +60,9 @@
     
 </style>
 
+<!--<pre> {{prestacion.ejecucion.listaProblemas | json}}
+</pre>-->
+
 <header *ngIf="!showEjecucion && !showValidacion">
     <header-paciente [paciente]="prestacion.paciente"></header-paciente>         
     <br/> 
@@ -69,9 +72,6 @@
         </div>
     </div>  
 </header>
-
-
-
 
 
 <section *ngIf="!showEjecucion && !showValidacion">

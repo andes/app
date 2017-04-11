@@ -68,37 +68,38 @@
     </header>            
 
 
-    <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-        <div class="col-md-12">
-            <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                Activo
-            </span>
-            <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-            </span>
-            <span class="badge badge-warning">
-                {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-            </span>
+    <form>
+        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+            <div class="col-md-12">
+                <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                    Activo
+                </span>
+                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                </span>
+                <span class="badge badge-warning">
+                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                </span>
+            </div>
         </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-md-12">
-            <strong><h3> {{problema.tipoProblema.nombre}} </h3></strong>
+        <div class="row">
+            <div class="col-md-12">
+                <strong><h3> {{problema.tipoProblema.nombre}} </h3></strong>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-            </plex-text>
+        <div class="row">
+            <div class="col-md-12">
+                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
+                </plex-text>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <plex-button title="Enmendar Problema " label="Enmendar " validateForm="true" (click)="enmendarProblema($event)" type="success"></plex-button>
-            <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <plex-button title="Enmendar Problema " label="Enmendar " validateForm="true" (click)="enmendarProblema($event)" type="success"></plex-button>
+                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
+            </div>
         </div>
-    </div>
-
+    </form>
 </div>

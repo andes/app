@@ -51,22 +51,15 @@ export class EvolucionProblemaComponent implements OnInit {
 
     evolucionarProblema(event) {
 
-
         if (event.formValid) {
 
             if (this.duracion) {
                 this.unaEvolucion.duracion = this.duracion.id;
             }
-
             this.unaEvolucion.vigencia = this.vigencia.id;
-
-
 
             // Guardo los datos del formulario
             this.problema.evoluciones.push(this.unaEvolucion);
-
-            console.log('EV: ', this.problema);
-
             this.servProbPaciente.put(this.problema).subscribe(resultado => {
                 if (resultado) {
                     this.evtData.emit(this.problema);
@@ -78,8 +71,6 @@ export class EvolucionProblemaComponent implements OnInit {
         } else {
             this.plex.alert('Completar datos requeridos');
         }
-
-
     }
 
     cerrar() {

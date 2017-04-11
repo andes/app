@@ -93,12 +93,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     guardarProblema(nuevoProblema) {
-        console.log('nuevoProblema', nuevoProblema);
+
+        delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select
+
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
             if (resultado) {
                 // asignamos el problema a la prestacion de origen
                 this.listaProblemas.push(resultado);
-                // this.prestacion.ejecucion.listaProblemas.push(resultado);
+                // this.listaProblemas = this.listaProblemas.concat(resultado);//[... this.listaProblemas, resultado];
                 this.updatePrestacion();
             } else {
                 this.plex.alert('Error al intentar asociar el problema a la consulta');
@@ -143,12 +145,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     evolucionarProblema(problema) {
         this.showEvolucionar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
 
     }
 
     transformarProblema(problema) {
         this.showTransformar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
         this.listaProblemas = this.listaProblemas.filter(item => item.id !== problema.id);
 
@@ -156,11 +160,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     enmendarProblema(problema) {
         this.showEnmendar = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
     }
 
     verDetalles(problema) {
         this.showDetalles = true;
+        delete problema.$order; // Se debe comentar luego de que funcione el plex select
         this.problemaTratar = problema;
     }
 
@@ -204,7 +210,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
-        console.log(this.listaProblemas);
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
         if (this.prestacion.solicitud) {
@@ -227,15 +232,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.prestacionesEjecucion.push(find);
                     let key; key = element.key;
                     this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
-
-                    // let evolucion; evolucion = (find.ejecucion.evoluciones.length) ? find.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
-                    // console.log(evolucion);
-                    // if (evolucion) {
-                    //     this.valoresPrestaciones[key] = {};
-                    //     this.valoresPrestaciones[key] = evolucion;
-                    // }else {
-                    //     this.valoresPrestaciones[key] = null;
-                    // }
                 }
             });
         }
@@ -299,15 +295,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
    evolucionarPrestacion() {
 
-         debugger;
-
          if (this.prestacion.ejecucion.listaProblemas.length > 0) {
              this.error = '';
              let i = 1;
              // obtenemos un array de la cantidad de prestaciones que se van a guardar
-            console.log('Prestaciones en ejecucion', this.prestacionesEjecucion);
              let prestacionesGuardar = this.prestacionesEjecucion.filter(_p => {
-                 debugger;
                  let tp; tp = _p.solicitud.tipoPrestacion;
 
                 // verificamos si existe algun valor a devolver en data
@@ -325,7 +317,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return null;
              });
 
-            console.log('Prestaciones a guardar', prestacionesGuardar);
             if (prestacionesGuardar.length === 0) {
                 this.error = 'Debe registrar al menos un dato observable.';
             } else {
@@ -479,11 +470,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-         debugger;
-         console.log('this.data[tipoPrestacionActual.key]', this.data[tipoPrestacionActual.key]);
-         console.log(this.data);
 
-        // console.log('On return component - this.data[tipoPrestacionActual.key] - ', this.data[tipoPrestacionActual.key]);
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         }else {
@@ -493,8 +480,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.data[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
         }
     }
-
-
 
     volver() {
        this.showValidar = false;

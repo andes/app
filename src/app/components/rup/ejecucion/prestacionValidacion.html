@@ -124,70 +124,71 @@
                 <div class="row" *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <div class="col">
 
-                        <div class="row">
-                            <div class="col-10">
-                                <h5 class="box-title-secundarioNegro"><strong>{{problema.tipoProblema.nombre}}</strong></h5>
-                            </div>
-                            <!--estados del problema-->
-                            <div class="col pull-right text-right">
-                                <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                    Activo
-                                </span>
+                        <plex-accordion >
+                            <plex-panel tituloPrincipal="{{problema.tipoProblema.nombre}}" >
 
-                                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                </span>
+                                <!--estados del problema-->
+                                <div class="row">                                                                       
+                                    <div class="col pull-right text-right">
+                                        <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                            Activo
+                                        </span>
 
-                                <span class="badge badge-warning">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                </span>
+                                        <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                        </span>
 
-                                <span class="badge badge-success" *ngIf="prestaciones[problema.id]">
-                                    {{prestaciones[problema.id].length}} <i class="mdi mdi-link"></i>
-                                </span>
-                            </div>
-                        </div>
+                                        <span class="badge badge-warning">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                                        </span>
 
-                        <br/>
-                        <!--Calculos y Evolución-->
-                        <div class="row">
+                                        <span class="badge badge-success" *ngIf="prestaciones[problema.id]">
+                                            {{prestaciones[problema.id].length}} <i class="mdi mdi-link"></i>
+                                        </span>
+                                    </div>
+                                </div>                  
 
-                            <!--Registros y cálculos-->
-                            <div class="col-8">
-                                <div class="row" *ngIf="prestacionesEjecutadas">
-                                    <div class="col">
-                                       <h5 class="box-title-secundario">Registros y cálculos</h5>                                       
-                                        <div *ngFor="let datoPrestacion of prestaciones[problema.id]">
-                                            <div class="col" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key]">
-                                                <small>
-                                                <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente"
-                                                    [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores) ? datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key] : null">
-                                                </rup>
-                                                </small>
+                                
+                                <div class="row">
+                                    <!--Calculos y Evolución-->
+                                    <div class="col-8">
+                                        <div class="row" *ngIf="prestacionesEjecutadas">
+                                            <div class="col">
+                                            <h5 class="box-title-secundario">Registros y cálculos</h5>                                       
+                                                <div *ngFor="let datoPrestacion of prestaciones[problema.id]">
+                                                    <div class="col" *ngIf="datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key]">
+                                                        <small>
+                                                        <rup #rup [soloValores]="true" [tipoPrestacion]="datoPrestacion.solicitud.tipoPrestacion" [paciente]="prestacion.paciente"
+                                                            [datosIngreso]="(datoPrestacion.ejecucion.evoluciones && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1] && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores && datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores) ? datoPrestacion.ejecucion.evoluciones[datoPrestacion.ejecucion.evoluciones.length - 1].valores[datoPrestacion.solicitud.tipoPrestacion.key] : null">
+                                                        </rup>
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                           
+
+                                    <!--Texto de evolución-->
+                                    <div class="col-4">
+                                        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                            <div class="col">
+                                                <h5 class="box-title-secundario">Texto de evolución</h5>
+                                                <textarea class="form-control" rows="8" [(ngModel)]="problema.evoluciones[problema.evoluciones.length - 1].observacion"></textarea>
+                                                <p>
+                                                    <small> Fecha: {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}  
+                                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].profesional"> - Profesional: {{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</span>
+                                                        <small class="text-right">
+                                                            <!--<plex-button label="ver mas..." type="link"></plex-button>-->
+                                                        </small>
+                                                    </small>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                           
 
-                            <!--Texto de evolución-->
-                            <div class="col-4">
-                                <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                    <div class="col">
-                                         <h5 class="box-title-secundario">Texto de evolución</h5>
-                                        <textarea class="form-control" rows="8" [(ngModel)]="problema.evoluciones[problema.evoluciones.length - 1].observacion"></textarea>
-                                        <p>
-                                            <small> Fecha: {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}  
-                                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].profesional"> - Profesional: {{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</span>
-                                                <small class="text-right">
-                                                    <!--<plex-button label="ver mas..." type="link"></plex-button>-->
-                                                </small>
-                                            </small>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            </plex-panel>
+                        </plex-accordion>         
                     </div>
                 </div>
             </plex-box>
