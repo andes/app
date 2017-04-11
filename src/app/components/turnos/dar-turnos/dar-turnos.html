@@ -99,7 +99,7 @@
                           <div *ngIf="bloque.pacienteSimultaneos">
                             <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
                               <div class="col col-md-12">
-                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>horas
+                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
                               </div>
                             </div>
                             <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
@@ -107,7 +107,7 @@
                           <div *ngIf="bloque.citarPorBloque">
                             <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
                               <div class="col col-md-12">
-                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>horas
+                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
                               </div>
                             </div>
                             <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
@@ -269,6 +269,7 @@
               <a *ngFor="let turno of ultimosTurnos" class="list-group-item">
                 <p> <span>{{turno.organizacion}} </span> </p>
                 <p>Fecha: &nbsp; <span>{{turno.horaInicio}} </span> </p>
+                <br>
                 <p>Estado: &nbsp; <span>{{turno.estado}} </span> </p>
                 <p>Tipo de Prestación: &nbsp;<span>{{turno.tipoPrestacion}} </span> </p>
                 <div *ngFor="let profesional of turno.profesionales">Profesional: &nbsp;
