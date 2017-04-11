@@ -47,8 +47,6 @@ export class EnmendarProblemaComponent implements OnInit {
             this.unaEvolucion.vigencia = 'enmendado';
             this.problema.evoluciones.push(this.unaEvolucion);
 
-            delete this.problema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select
-
             this.servProbPaciente.put(this.problema).subscribe(resultado => {
                 if (resultado) {
                     this.plex.alert('Los datos se cargaron correctamente');
