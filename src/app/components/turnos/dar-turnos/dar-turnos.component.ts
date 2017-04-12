@@ -291,7 +291,7 @@ export class DarTurnosComponent implements OnInit {
             if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate()
               && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
               isDelDia = true;
-              this.tiposTurnosSelect = 'del dia';
+              this.tiposTurnosSelect = 'delDia';
               // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
               this.agenda.bloques.forEach((bloque, indexBloque) => {
                 countBloques.push({
@@ -516,6 +516,36 @@ export class DarTurnosComponent implements OnInit {
           this.borrarTurnoAnterior();
           this.plex.alert('El turno se asignó correctamente');
         });
+        let nuevaPrestacion;
+          nuevaPrestacion = {
+            //  id : null,
+            //  idPrestacionOrigen: null,
+            paciente: this.paciente,
+            solicitud: {
+              tipoPrestacion: this.turnoTipoPrestacion,
+              fecha: new Date(),
+              // procedencia: '',
+              // prioridad: '',
+              // proposito: [],
+              // estadoPaciente: '',
+              // profesional: null,
+              // organizacion: null,
+              listaProblemas: [],
+              idTurno: this.turno.id,
+            },
+            estado: {
+              timestamp: new Date(),
+              tipo: 'pendiente'
+            },
+            ejecucion: {
+              fecha: new Date(),
+              evoluciones: []
+            }
+          };
+          this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+            this.plex.alert('prestacion paciente creada');
+
+          });
         debugger;
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
