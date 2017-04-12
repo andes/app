@@ -250,7 +250,9 @@
     <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" validateForm="true" type="primary" (click)="onSave($event, false)"
       title="Guardar">
     </plex-button>
-    <plex-button icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
+    <plex-button *ngIf="alertas.length>0" disabled="true" icon="mdi mdi-content-copy" label="Guardar y clonar" type="primary" (click)="onSave($event, true)">
+    </plex-button>
+    <plex-button *ngIf="alertas.length<=0" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
     </plex-button>
     <plex-button icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
     </plex-button>
