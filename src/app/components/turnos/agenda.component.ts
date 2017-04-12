@@ -360,7 +360,7 @@ export class AgendaComponent implements OnInit {
                     break;
             }
         }
-        // this.validarTodo();
+        this.validarTodo();
     }
 
     intercalar() {
@@ -422,7 +422,7 @@ export class AgendaComponent implements OnInit {
     }
 
     validarTodo() {
-
+        this.alertas = [];
         let alerta: string;
         let indice: number;
         let cantidad: number;
@@ -434,13 +434,13 @@ export class AgendaComponent implements OnInit {
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
         }
         let bloques = this.modelo.bloques;
-        this.alertas = [];
+
         let totalBloques = 0;
         // Verifico que ningún profesional esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
                 // this.alertas = [];
-                let alts = [];
+                // let alts = [];
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
@@ -448,9 +448,11 @@ export class AgendaComponent implements OnInit {
                         });
                         cantidad = agds.length;
                         if (cantidad > 0) {
-                            alts = [];
-                            alts.push('El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario');
-                            this.alertas = this.alertas.concat(alts);
+                            alerta = 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario';
+                            if (this.alertas.indexOf(alerta) < 0) {
+                                this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
+
+                            }
                         }
                     });
             });
@@ -502,7 +504,7 @@ export class AgendaComponent implements OnInit {
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
-                    this.alertas.push(alerta);
+                    this.alertas = [... this.alertas, alerta];
                 }
 
                 if (this.compararFechas(inicio, fin) > 0) {
@@ -536,14 +538,14 @@ export class AgendaComponent implements OnInit {
         }
 
         // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
-        totalBloques *= 60000;
-        if (iniAgenda && finAgenda && iniAgenda <= finAgenda) {
-            let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
-            if (totalBloques > totalAgenda) {
-                alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';
-                this.alertas.push(alerta);
-            }
-        }
+        // totalBloques *= 60000;
+        // if (iniAgenda && finAgenda && iniAgenda <= finAgenda) {
+        //     let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
+        //     if (totalBloques > totalAgenda) {
+        //         alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';
+        //         this.alertas.push(alerta);
+        //     }
+        // }
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -623,7 +625,7 @@ export class AgendaComponent implements OnInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                   return el.activo === true && delete el.$order;
+                    return el.activo === true && delete el.$order;
                 });
             });
             espOperation = this.ServicioAgenda.save(this.modelo);
