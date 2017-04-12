@@ -46,7 +46,7 @@ export class PanelAgendaComponent implements OnInit {
 
     guardarAgenda(agenda: IAgenda) {
 
-        if ( this.alertas.length === 0 ) {
+        if (this.alertas.length === 0) {
 
             let profesional = this.modelo.profesionales;
             let espacioFisico = this.modelo.espacioFisico;
@@ -62,10 +62,9 @@ export class PanelAgendaComponent implements OnInit {
 
                 this.showEditarAgenda = false;
 
-                // alert('La agenda se guardó correctamente ');
                 this.plex.alert('La agenda se guardó correctamente ');
             });
-        } 
+        }
     }
 
 
@@ -100,12 +99,14 @@ export class PanelAgendaComponent implements OnInit {
 
                 this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
                     subscribe(agendas => {
-                        let agendasMatch = agendas.filter(agenda => {
+
+                        // Hay problemas de solapamiento?
+                        let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
                         });
 
                         // Si encontramos una agenda que coincida con la búsqueda...
-                        if (agendasMatch.length > 0) {
+                        if (agendasConSolapamiento.length > 0) {
                             this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
                         }
                     });
@@ -116,12 +117,14 @@ export class PanelAgendaComponent implements OnInit {
             // Loop Espacios Físicos
             this.serviceAgenda.get({ 'idProfesional': this.modelo.espacioFisico.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
                 subscribe(agendas => {
-                    let agendasMatch = agendas.filter(agenda => {
+
+                    // Hay problemas de solapamiento?
+                    let agendasConSolapamiento = agendas.filter(agenda => {
                         return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
                     });
 
                     // Si encontramos una agenda que coincida con la búsqueda...
-                    if (agendasMatch.length > 0) {
+                    if (agendasConSolapamiento.length > 0) {
                         this.alertas = [... this.alertas, 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
                     }
                 });
