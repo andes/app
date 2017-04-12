@@ -23,7 +23,6 @@ export class GestorAgendasComponent implements OnInit {
 
     public agendas: any = [];
     public agenda: any = {};
-    public agendaSel: AgendaSeleccionada;
 
     agendasSeleccionadas: IAgenda[] = [];
 
@@ -58,8 +57,10 @@ export class GestorAgendasComponent implements OnInit {
 
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
 
-        if ( !this.autorizado ) {
+        // No está autorizado para ver esta pantalla?
+        if (!this.autorizado) {
             this.redirect('incio');
+
         } else {
 
             // Por defecto cargar/mostrar agendas de hoy
@@ -81,27 +82,33 @@ export class GestorAgendasComponent implements OnInit {
 
                 let fechaDesde = moment(value.fechaDesde).startOf('day');
                 let fechaHasta = moment(value.fechaHasta).endOf('day');
+                let params = {};
 
-                let params = {
-                    fechaDesde: fechaDesde.format(),
-                    fechaHasta: fechaHasta.format(),
-                };
+                if ( fechaDesde.isValid() && fechaHasta.isValid() ) {
+                    params = {
+                        fechaDesde: fechaDesde.format(),
+                        fechaHasta: fechaHasta.format(),
+                    };
+                } else {
+                    // Darle tiempo para que seleccionen una fecha válida
+                    return;
+                }
 
                 // Filtro de Tipos de Prestaciones (si está vacío, trae todas)
-                if ( value.prestaciones ) {
+                if (value.prestaciones) {
                     params['idTipoPrestacion'] = value.prestaciones.id;
                 }
-                if ( value.profesionales ) {
+                if (value.profesionales) {
                     params['idProfesional'] = value.profesionales.id;
                 }
-                if ( value.espacioFisico ) {
+                if (value.espacioFisico) {
                     params['espacioFisico'] = value.espacioFisico.id;
                 }
-                if ( value.estado ) {
+                if (value.estado) {
                     params['estado'] = value.estado.id;
                 }
 
-                this.serviceAgenda.get( params ).subscribe(
+                this.serviceAgenda.get(params).subscribe(
                     agendas => {
                         this.hoy = false;
                         this.agendas = agendas;
@@ -119,8 +126,7 @@ export class GestorAgendasComponent implements OnInit {
 
     }
 
-    clonar(modelo) {
-        this.modelo = modelo;
+    clonar() {
         this.showGestorAgendas = false;
         this.showClonar = true;
     }
@@ -153,7 +159,7 @@ export class GestorAgendasComponent implements OnInit {
     editarAgenda(agenda) {
         this.editaAgenda = agenda;
 
-        if ( this.editaAgenda.estado === 'Planificacion' ){
+        if (this.editaAgenda.estado === 'Planificacion') {
             this.showGestorAgendas = false;
             this.showEditarAgenda = true;
             this.showEditarAgendaPanel = false;
@@ -169,17 +175,17 @@ export class GestorAgendasComponent implements OnInit {
 
         let fecha = moment().format();
 
-        if ( this.hoy ) {
+        if (this.hoy) {
             this.fechaDesde = moment(fecha).startOf('day');
             this.fechaHasta = moment(fecha).endOf('day');
         }
 
         this.serviceAgenda.get({
-            fechaDesde:         this.fechaDesde,
-            fechaHasta:         this.fechaHasta,
-            idTipoPrestacion:   '',
-            idProfesional:      '',
-            idEspacioFisico:    ''
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            idTipoPrestacion: '',
+            idProfesional: '',
+            idEspacioFisico: ''
         }).subscribe(
             agendas => {
                 this.agendas = agendas;
@@ -205,9 +211,9 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEstados(event) {
-        this.serviceAgenda.get({}).subscribe( agendas => {
-            let estadosAgendas = agendas[0].estadosAgendas.map( estado => {
-                return { id: estado, nombre: estado }; // armo objeto compatible con plex-select
+        this.serviceAgenda.get({}).subscribe(agendas => {
+            let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
+                return { id: estado, nombre: estado }; // return objeto compatible con plex-select
             });
             event.callback(estadosAgendas);
         });
@@ -215,16 +221,19 @@ export class GestorAgendasComponent implements OnInit {
 
     verAgenda(agenda, multiple, e) {
 
-        this.serviceAgenda.getById(agenda.id).subscribe( ag => {
+        this.showVistaAgendas = false;
+        this.showTurnos = false;
 
-            this.agenda = ag;
+        this.serviceAgenda.getById(agenda.id).subscribe(ag => {
+
+            agenda = ag;
 
             this.showEditarAgendaPanel = false;
 
             if (!multiple) {
 
                 this.agendasSeleccionadas = [];
-                this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+                this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
 
             } else {
 
@@ -236,24 +245,25 @@ export class GestorAgendasComponent implements OnInit {
                     this.agendasSeleccionadas.splice(index, 1);
                     this.agendasSeleccionadas = [...this.agendasSeleccionadas];
                 } else {
-                    this.agendasSeleccionadas = [...this.agendasSeleccionadas, agenda];
+                    this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
                 }
 
             }
-                this.setColorEstadoAgenda(agenda);
 
-                this.agenda = agenda;
+            this.setColorEstadoAgenda(agenda);
 
-                this.showVistaAgendas = true;
-                this.showTurnos = true;
+            this.agenda = ag;
 
-            });
+            this.showVistaAgendas = true;
+            this.showTurnos = true;
+
+        });
 
 
     }
 
     estaSeleccionada(agenda: any) {
-        return this.agendasSeleccionadas.indexOf(agenda) >= 0;
+        return this.agendasSeleccionadas.find(x => x.id === agenda._id);
     }
 
     setColorEstadoAgenda(agenda) {
@@ -282,8 +292,3 @@ export class GestorAgendasComponent implements OnInit {
 
 }
 
-class AgendaSeleccionada {
-    public agendaSeleccionada: boolean;
-    public agendasSeleccionadas: any = [];
-    public agendaSeleccionadaColor: String;
-}

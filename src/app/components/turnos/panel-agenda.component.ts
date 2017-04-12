@@ -33,6 +33,8 @@ export class PanelAgendaComponent implements OnInit {
 
     public modelo: any = {};
 
+    public alertas: any[] = [];
+
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
     }
@@ -43,23 +45,27 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     guardarAgenda(agenda: IAgenda) {
-        let profesional = this.modelo.profesionales;
-        let espacioFisico = this.modelo.espacioFisico;
 
-        let patch = {
-            'op': 'editarAgenda',
-            'profesional': profesional,
-            'espacioFisico': espacioFisico
-        };
+        if ( this.alertas.length === 0 ) {
 
-        this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-            this.modelo = resultado;
+            let profesional = this.modelo.profesionales;
+            let espacioFisico = this.modelo.espacioFisico;
 
-            this.showEditarAgenda = false;
+            let patch = {
+                'op': 'editarAgenda',
+                'profesional': profesional,
+                'espacioFisico': espacioFisico
+            };
 
-            // alert('La agenda se guardó correctamente ');
-            this.plex.alert('La agenda se guardó correctamente ');
-        });
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                this.modelo = resultado;
+
+                this.showEditarAgenda = false;
+
+                // alert('La agenda se guardó correctamente ');
+                this.plex.alert('La agenda se guardó correctamente ');
+            });
+        } 
     }
 
 
@@ -75,6 +81,52 @@ export class PanelAgendaComponent implements OnInit {
 
     loadEspacios(event) {
         this.servicioEspacioFisico.get({}).subscribe(event.callback);
+    }
+
+    /**
+     * Valida que no se solapen Profesionales y/o Espacios físicos
+     */
+    validarSolapamientos(tipo) {
+
+        this.alertas = [];
+
+        // Inicio y Fin de Agenda
+        let iniAgenda, finAgenda;
+
+        if (tipo === 'profesionales') {
+
+            // Loop profesionales
+            this.modelo.profesionales.forEach((profesional, index) => {
+
+                this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+                    subscribe(agendas => {
+                        let agendasMatch = agendas.filter(agenda => {
+                            return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
+                        });
+
+                        // Si encontramos una agenda que coincida con la búsqueda...
+                        if (agendasMatch.length > 0) {
+                            this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
+                        }
+                    });
+            });
+
+        } else if (tipo === 'espacioFisico') {
+
+            // Loop Espacios Físicos
+            this.serviceAgenda.get({ 'idProfesional': this.modelo.espacioFisico.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+                subscribe(agendas => {
+                    let agendasMatch = agendas.filter(agenda => {
+                        return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
+                    });
+
+                    // Si encontramos una agenda que coincida con la búsqueda...
+                    if (agendasMatch.length > 0) {
+                        this.alertas = [... this.alertas, 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                    }
+                });
+
+        }
     }
 
 }

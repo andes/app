@@ -83,7 +83,6 @@ export class TurnosComponent implements OnInit {
 
     seleccionarTurno(turno, multiple = false) {
 
-
             if (!multiple) {
 
                 this.turnosSeleccionados = [];
@@ -151,7 +150,7 @@ export class TurnosComponent implements OnInit {
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
             return turno.paciente;
-        }).length == this.turnosSeleccionados.length;
+        }).length === this.turnosSeleccionados.length;
     }
 
     tienenAsistencia() {
