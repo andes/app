@@ -1,6 +1,7 @@
 <div class="row" style="" *ngIf="showTurnos">
     <div class="col-12">
-        <strong class="h4">Turnos: {{agenda.horaInicio | date: 'dd/MM/yyyy'}}</strong>
+        <strong class="h4">Turnos: {{agenda.horaInicio | date: 'dd/MM/yyyy'}}</strong><br>
+        <strong *ngIf="hayTurnosTarde()" class="h6 text-danger">Agenda en ejecución</strong>
     </div>
     <div class="col-12">
         <div *ngIf="cantSel === 0" style="height: 38px"></div>
@@ -70,23 +71,23 @@
             </table>
             <table class="table table-striped">
                 <tr *ngFor="let turno of bloque.turnos; let i=index"  style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionado(bloque.turnos[i])}">
-                    <td (click)="seleccionarTurno(turno, true)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td (click)="seleccionarTurno(turno, true)">
                         <!--<input type="checkbox" [ngModel]="bloque.turnos[i].checked" [name]="'turno' + i">-->
-                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionado(bloque.turnos[i])}"></i>
+                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-check-circle"></i>
                         <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-circle-outline"></i>
                     </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i])" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td (click)="seleccionarTurno(bloque.turnos[i])">
                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td (click)="seleccionarTurno(bloque.turnos[i], false)">
                         <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
                         <span *ngIf="turno.estado === 'disponible'">Disponible</span>
-                        <span *ngIf="turno.estado === 'bloqueado'" [ngClass]="{'text-danger': turno.estado === 'bloqueado'}">No Disponible</span>
+                        <span [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</span>
                         <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
-                        <strong *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</strong>
-                        <strong *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Tiene Asistencia</strong>
+                    <td (click)="seleccionarTurno(bloque.turnos[i], false)">
+                        <strong [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado' && turno.asistencia}" *ngIf="turno.asistencia && turno.paciente">Tiene Asistencia</strong>
+                        <strong [ngClass]="{'text-warning': turno.paciente && turno.estado !== 'bloqueado' && !turno.asistencia}" *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Tiene Asistencia</strong>
                         <strong *ngIf="!turno.paciente"> </strong>
                     </td>
                     <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">

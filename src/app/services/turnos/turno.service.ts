@@ -10,7 +10,7 @@ export class TurnoService {
     constructor(private server: Server) { }
     save(turno: any): Observable<any> {
         if (turno.idAgenda) {
-            return this.server.patch(this.turnoUrl + '/agenda/' + turno.idAgenda + '/bloque/' + turno.idBloque  + '/turno/' + turno.idTurno , turno);
+            return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque  + '/agenda/' + turno.idAgenda , turno);
         }
     }
 }
