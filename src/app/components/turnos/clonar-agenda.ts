@@ -210,79 +210,25 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        let seleccionada = new Date(this.seleccionados[0]);
-        let operaciones: Observable<IAgenda>[] = [];
-        let operacion: Observable<IAgenda>;
-        this.seleccionados.forEach((seleccion, index0) => {
-            seleccionada = new Date(seleccion);
-            if (seleccionada && index0 > 0) {
-                let newHoraInicio = this.combinarFechas(seleccionada, new Date(this.agenda.horaInicio));
-                let newHoraFin = this.combinarFechas(seleccionada, this.agenda.horaFin);
-                this.agenda.horaInicio = newHoraInicio;
-                this.agenda.horaFin = newHoraFin;
-                let newIniBloque: any;
-                let newFinBloque: any;
-                let newIniTurno: any;
-                this.agenda.bloques.forEach((bloque, index) => {
-                    newIniBloque = this.combinarFechas(seleccionada, bloque.horaInicio);
-                    newFinBloque = this.combinarFechas(seleccionada, bloque.horaFin);
-                    bloque.horaInicio = newIniBloque;
-                    bloque.horaFin = newFinBloque;
-                    bloque.turnos.forEach((turno, index1) => {
-                        newIniTurno = this.combinarFechas(seleccionada, turno.horaInicio);
-                        turno.horaInicio = newIniTurno;
-                        turno.estado = 'disponible';
-                        turno.asistencia = false;
-                        turno.paciente = null;
-                        turno.tipoPrestacion = null;
-                        turno.idPrestacionPaciente = null;
-                        if (turno.tipoTurno) {
-                            delete turno.tipoTurno;
-                        }
-                    });
-                });
-                this.agenda.estado = 'Planificacion';
-                delete this.agenda._id;
-                delete this.agenda.id;
-                operacion = this.serviceAgenda.save(this.agenda);
-                operaciones.push(operacion);
-            }
-        });
-        let self = this;
-        Observable.forkJoin(operaciones).subscribe(
-            function (x) {
-                console.log('Next: %s', x);
-            },
-            function (err) {
-                console.log('Error: %s', err);
-            },
-            function () {
-                self.plex.alert('La agenda se clonó correctamente').then(guardo => {
-                    self.volverAlGestor.emit(true);
-                });
-            }
-        );
+        console.log('seleccionados ',new Date(this.seleccionados[0]));
+        this.seleccionados.splice(0, 1);
+        this.seleccionados = [...this.seleccionados];
+        let data = {
+            idAgenda: this.agenda.id,
+            clones: this.seleccionados
+        };
+        this.serviceAgenda.clonar(data).subscribe(resultado => {
+            console.log('resultado ', resultado);
+            this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                this.volverAlGestor.emit(true);
+            });
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
-
-    // public clonar2() {
-    //     console.log('seleccionados ',new Date(this.seleccionados[0]));
-    //     this.seleccionados.splice(0, 1);
-    //     this.seleccionados = [...this.seleccionados];
-    //     let data = {
-    //         idAgenda: this.agenda.id,
-    //         clones: this.seleccionados
-    //     }
-    //     this.serviceAgenda.clonar(data).subscribe(resultado => {
-    //         this.plex.alert('La Agenda se clonó correctamente').then(ok => {
-    //             this.volverAlGestor.emit(true);
-    //         });
-    //     },
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
 
     cancelar() {
         this.volverAlGestor.emit(true);
