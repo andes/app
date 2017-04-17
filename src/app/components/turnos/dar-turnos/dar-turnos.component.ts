@@ -141,7 +141,8 @@ export class DarTurnosComponent implements OnInit {
    * @param etiqueta: define qué filtros usar para traer todas las Agendas
    */
   actualizar(etiqueta) {
-
+    
+      debugger
     // 1) Auth general (si puede ver esta pantalla)
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
@@ -159,12 +160,13 @@ export class DarTurnosComponent implements OnInit {
 
       // Filtro búsqueda
       params = {
+        // Mostrar sólo las agendas a partir de hoy en adelante
+        fechaDesde: new Date().setHours(0, 0, 0, 0),
         idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
         idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
       };
 
     } else {
-
       // Reseteat opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
