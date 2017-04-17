@@ -385,7 +385,6 @@ export class DarTurnosComponent implements OnInit {
   seleccionarTurno(bloque: any, indice: number) {
     if (this.paciente) {
       this.bloque = bloque;
-
       this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
       this.indiceTurno = indice;
       this.turno = bloque.turnos[indice];
@@ -546,7 +545,6 @@ export class DarTurnosComponent implements OnInit {
             this.plex.alert('prestacion paciente creada');
 
           });
-        debugger;
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {
@@ -640,6 +638,7 @@ export class DarTurnosComponent implements OnInit {
     }
     else {
       this.seleccion = pacientes;
+      this.verificarTelefono(this.seleccion);
       this.esEscaneado = true;
       this.escaneado.emit(this.esEscaneado);
       this.selected.emit(this.seleccion);
