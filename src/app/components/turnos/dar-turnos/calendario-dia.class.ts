@@ -24,7 +24,6 @@ export class CalendarioDia {
             this.estado = 'vacio';
             this.turnosDisponibles = 0;
         } else {
-            debugger
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             this.turnosDisponibles = this.agenda.turnosDisponibles;
             if (disponible) {
@@ -46,7 +45,6 @@ export class CalendarioDia {
                     tiposTurnosSelect = 'delDia';
                     // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
-                        debugger;
                         countBloques.push({
                             delDia: bloque.cantidadTurnos,
                             programado: 0,
@@ -66,7 +64,6 @@ export class CalendarioDia {
 
                     // loopear turnos para sacar el tipo de turno!
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
-                        debugger;
                         countBloques.push({
                             // Asignamos a contadores dinamicos la cantidad inicial de c/u 
                             programado: bloque.accesoDirectoProgramado,
