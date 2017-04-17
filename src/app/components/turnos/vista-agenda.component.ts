@@ -2,10 +2,6 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from './../../services/profesional.service';
-import { Router } from '@angular/router';
-import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 
 @Component({
     selector: 'vista-agenda',
@@ -14,12 +10,6 @@ import { GestorAgendasService } from './../../services/turnos/gestor-agendas.ser
 
 export class VistaAgendaComponent implements OnInit, OnDestroy {
 
-    showVistaAgendas: Boolean = true;
-    showEditarAgenda: Boolean = false;
-    showEditarAgendaPanel: Boolean = false;
-    cantSel: number;
-    // TODO: Eliminar input vistaAgenda
-    @Input() vistaAgenda: any;
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
@@ -36,12 +26,16 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         return this._agendasSeleccionadas;
     }
 
-    public modelo: any = {};
-    public vistaBotones: any = {};
+    // Mantiene la combinación de condiciones para mostrar/ocultar botones
+    vistaBotones: any = {};
 
+    // Muestra/oculta este componente
+    showVistaAgendas: Boolean = true;
+    showEditarAgenda: Boolean = false;
+    showEditarAgendaPanel: Boolean = false;
+    cantSel: number;
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
+    constructor(public plex: Plex, public serviceAgenda: AgendaService) {
     }
 
     ngOnInit() {
@@ -51,12 +45,11 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // this.subscription.unsubscribe();
+        this.clonarEmit.unsubscribe();
     }
 
     actualizarBotones() {
         // Muestra/oculta botones según una combinación de criterios
-        // TODO: Pausada
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado Planificacion o Disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar(),
@@ -122,7 +115,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
                     if ( this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0 ) {
                         // No se puede Publicar
                         return false;
-                    } 
+                    }
                 }
             }
         }
@@ -164,16 +157,14 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
                     }
                     alertCount++;
                 }
-                this.vistaAgenda = resultado;
             });
         });
 
     }
 
     // Botón clonar
-    clonarAgenda(agenda: IAgenda) {
-        this.modelo = agenda;
-        this.clonarEmit.emit(this.modelo);
+    clonarAgenda(agenda: any) {
+        this.clonarEmit.emit(agenda);
     }
 
     cancelar() {
