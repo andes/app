@@ -1,5 +1,6 @@
-type Estado = 'vacio' | 'disponible' | 'ocupado'
 import * as moment from 'moment';
+
+type Estado = 'vacio' | 'disponible' | 'ocupado';
 
 export class CalendarioDia {
     public seleccionado: boolean;

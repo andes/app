@@ -13,11 +13,6 @@
           <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
         </div>
 
-        <!--Alerta si se encontraro pacientes con alto % de macheo -->
-        <div *ngIf="pacientesSimilares && pacientesSimilares.length && !mostrarNuevo" class="alert alert-warning">
-          <i class="mdi mdi-account-alert"></i> Existen pacientes con un alto procentaje de matcheo, verifique la lista y
-          seleccione el paciente correcto
-        </div>
 
         <!--Tabla de resultados por SimpleQuery -->
         <table *ngIf="resultado && resultado.length" class="table table-striped">
@@ -46,33 +41,33 @@
         </table>
 
         <!--Tabla de resultados por Suggest -->
-        <table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Documento</th>
-              <th>Apellido</th>
-              <th>Nombre</th>
-              <th>Fecha de Nacimiento</th>
-              <th>Sexo</th>
-              <th>% Similitud</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover" *ngFor="let elem of pacientesSimilares">
+        <!--<table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Apellido</th>
+                            <th>Nombre</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>% Similitud</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let elem of pacientesSimilares">
 
-              <td>{{elem.paciente.documento}}</td>
-              <td>{{elem.paciente.apellido}}</td>
-              <td>{{elem.paciente.nombre}}</td>
-              <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-              <td>{{elem.paciente.sexo}}</td>
-              <td>{{elem.match * 100}} %</td>
-              <td>
-                <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                            <td>{{elem.paciente.documento}}</td>
+                            <td>{{elem.paciente.apellido}}</td>
+                            <td>{{elem.paciente.nombre}}</td>
+                            <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                            <td>{{elem.paciente.sexo}}</td>
+                            <td>{{elem.match * 100}} %</td>
+                            <td>
+                                <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>-->
 
       </plex-box>
     </div>
@@ -94,7 +89,7 @@
 </section>
 <br>
 <footer *ngIf="!showCreateUpdate">
-  <plex-button *ngIf="!showCreateUpdate && mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+  <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
   <!--boton provisorio hasta tener el menu desplegable-->
   <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
 </footer>
