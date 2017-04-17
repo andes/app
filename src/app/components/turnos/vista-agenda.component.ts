@@ -8,7 +8,7 @@ import { AgendaService } from '../../services/turnos/agenda.service';
     templateUrl: 'vista-agenda.html'
 })
 
-export class VistaAgendaComponent implements OnInit, OnDestroy {
+export class VistaAgendaComponent implements OnInit {
 
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
@@ -44,12 +44,40 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this.clonarEmit.unsubscribe();
+
+    // Actualiza estado de las Agendas seleccionadas
+    actualizarEstado(estado) {
+
+        let alertCount = 0;
+        this.agendasSeleccionadas.forEach((agenda, index) => {
+            let patch = {
+                'op': estado,
+                'estado': estado
+            };
+
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                // Si son múltiples, esperar a que todas se actualicen
+                if (alertCount === 0) {
+                    if (this.cantSel === 1) {
+                        this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(true);
+                    } else {
+                        if ( estado === 'prePausada' ) {
+                            this.plex.alert('Las agendas cambiaron de estado');
+                        } else {
+                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        }
+                        this.actualizarEstadoEmit.emit(true);
+                    }
+                    alertCount++;
+                }
+            });
+        });
+
     }
 
+    // Muestra/oculta botones según una combinación de criterios
     actualizarBotones() {
-        // Muestra/oculta botones según una combinación de criterios
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado Planificacion o Disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar(),
@@ -70,7 +98,6 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
             // En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play"
         };
     }
-
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
@@ -98,7 +125,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'Planificacion' || agenda.estado === 'Pausada';
+            return agenda.estado === 'Planificacion' || agenda.estado === 'Pausada' || agenda.estado === 'Suspendida';
         }).length <= 0;
     }
 
@@ -130,36 +157,6 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
     // Botón editar agenda
     editarAgenda() {
         this.editarAgendaEmit.emit(this.agendasSeleccionadas[0]);
-    }
-
-    // Botones actualizar estado
-    actualizarEstado(estado) {
-
-        let alertCount = 0;
-        this.agendasSeleccionadas.forEach((agenda, index) => {
-            let patch = {
-                'op': estado,
-                'estado': estado
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                if (alertCount === 0) {
-                    if (this.cantSel === 1) {
-                        this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        this.actualizarEstadoEmit.emit(true);
-                    } else {
-                        if ( estado === 'prePausada' ) {
-                            this.plex.alert('Las agendas cambiaron de estado');
-                        } else {
-                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        }
-                        this.actualizarEstadoEmit.emit(true);
-                    }
-                    alertCount++;
-                }
-            });
-        });
-
     }
 
     // Botón clonar
