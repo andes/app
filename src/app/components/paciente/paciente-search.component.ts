@@ -5,14 +5,16 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
-
+import { Auth } from '@andes/auth';
 
 @Component({
   selector: 'pacientesSearch',
   templateUrl: 'paciente-search.html',
   styleUrls: ['paciente-search.css']
 })
+
 export class PacienteSearchComponent implements OnInit {
+
   private timeoutHandle: number;
 
   // Propiedades públicas
@@ -27,13 +29,16 @@ export class PacienteSearchComponent implements OnInit {
   public showCreateUpdate = false;
   public mostrarNuevo = false;
   public autoFocus: number = 0;
+  private permisoAgendas = false;
 
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+
   public ngOnInit() {
     this.autoFocus = this.autoFocus + 1;
+    this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
   }
 
 
@@ -74,7 +79,7 @@ export class PacienteSearchComponent implements OnInit {
     window.setInterval(actualizar, 1000 * 60); // Cada un minuto
   }
 
-  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
+  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
     this.actualizarContadores();
   }
 
