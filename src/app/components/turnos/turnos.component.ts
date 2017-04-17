@@ -202,22 +202,30 @@ export class TurnosComponent implements OnInit {
 
     actualizarBotones() {
 
+            // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
         this.botones = {
 
-            // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
+            // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
             darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')) && (!this.hayTurnosTarde()),
-            sacarAsistencia: (this.agendaNoSuspendida() && this.tienenAsistencia()) && this.tienenPacientes(),
-            // "Turno suspendido": Estado bloqueado pero con paciente
+            // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
+            sacarAsistencia: (  this.tienenAsistencia()) && this.tienenPacientes(),
+            // Suspender turno: El turno no está asignado ==> el estado pasa a "bloqueado"
             suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')) && (!this.hayTurnosTarde()),
+            // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
             liberarTurno: (this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
-            // "Turno bloqueado": Estado bloqueado y sin paciente
-            bloquearTurno: this.hayTurnosConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
-            desbloquearTurno: this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
-
-            tdReasignarTurno: this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
-            tdNota: this.turnosSeleccionados.length > 0,
-            smsVisible: this.agenda.estado === 'Suspendida' && this.noHayTurnosConEstado('asignado') && (!this.hayTurnosTarde()),
+            // Bloquear turno: está "disponible" pero sin paciente ==> el estado pasa a "bloqueado"
+            bloquearTurno: this.agendaNoSuspendida() && this.hayTurnosConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
+            // Desbloquear turno: está "bloqueado" pero sin paciente ==> el estado pasa a "disponible"
+            desbloquearTurno: this.agendaNoSuspendida() && this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
+            // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> TODO!!!
+            // reasignarTurno: this.agendaNoSuspendida() && this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
+            reasignarTurno: false,
+            // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
+            listaDeEspera: this.agendaNoSuspendida() && this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
+            // Enviar SMS 
+            sms: this.agendaNoSuspendida() && this.noHayTurnosConEstado('asignado') && this.noHayTurnosConEstado('bloqueado') && this.noTienenAsistencia() && (!this.hayTurnosTarde() ),
             smsNoEnviado: false,
+            nota: this.turnosSeleccionados.length > 0,
 
         };
 
@@ -303,15 +311,12 @@ export class TurnosComponent implements OnInit {
         this.reasignaTurno.emit(this.reasignar);
     }
 
-    agregarPacienteListaEspera(agenda: any, paciente: any) {
+    agregarPacienteListaEspera(agenda: any) {
+
         let patch: any = {};
         let pacienteListaEspera = {};
 
-        if (paciente) {
-            pacienteListaEspera = paciente;
-        } else {
-            pacienteListaEspera = this.turnosSeleccionados;
-        }
+        pacienteListaEspera = this.turnosSeleccionados;
 
         patch = {
             'op': 'listaEsperaSuspensionAgenda',
@@ -319,10 +324,11 @@ export class TurnosComponent implements OnInit {
             'pacientes': pacienteListaEspera
         };
 
+        // Bag of cats
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
-            agenda = resultado;
+            this.agenda = resultado;
 
-            this.plex.alert('El paciente paso a Lista de Espera');
+            this.plex.alert('El paciente pasó a Lista de Espera');
 
             this.enviarSMS();
 
