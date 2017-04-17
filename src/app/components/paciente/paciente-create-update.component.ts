@@ -205,50 +205,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
       nombre: 'Argentina'
     }).subscribe(arg => {
       this.paisArgentina = arg[0];
-    })
-
-    //Set Provincia Neuquén
-    this.provinciaService.get({
-      nombre: 'Neuquén'
-    }).subscribe(Nqn => {
-      this.provinciaNeuquen = Nqn[0];
-    });
-
-
-    //Todos los barrios de la localidad de Neuquén
-    let parametroNombre = {
-      nombre: 'Neuquén'
-    };
-
-    this.localidadService.get(parametroNombre).subscribe(resultado => {
-      this.localidadNeuquen = resultado;
-      let param = {
-        localidad: this.localidadNeuquen[0].id
-      }
-      this.barrioService.get(param).subscribe(rta => {
-        return this.barriosNeuquen = rta
-      });
-    });
-
-    // Todas las localidades de la Prov. de Neuquén
-    this.provinciaService.get(parametroNombre).subscribe(rta => {
-      let param = {
-        provincia: rta[0].id
-      };
-      this.localidadService.get(param).subscribe(result => {
-        return this.localidadesNeuquen = result;
-      })
     });
 
     this.provinciaService.get({}).subscribe(rta => {
       debugger;
       this.provincias = rta;
     });
-
-    // Todos los barrios de la Provincia
-    this.barrioService.get({}).subscribe(data => {
-      return this.barrios = data;
-    })
 
     // Se cargan los enumerados
     this.showCargar = false;
@@ -330,6 +292,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       this.seleccion.direccion = [this.direccion];
     }
 
+
     if (this.seleccion.direccion) {
       if (this.seleccion.direccion.length > 0) {
         if (this.seleccion.direccion[0].ubicacion) {
@@ -342,19 +305,31 @@ export class PacienteCreateUpdateComponent implements OnInit {
               }).subscribe(Prov => {
                 this.provinciaNeuquen = Prov[0];
                 this.localidadService.get({}).subscribe(result => {
-                  return this.localidadesNeuquen = result;
+                  this.localidadesNeuquen = result;
                 });
               });
             }
 
-
-
+            this.localidadService.get({ provincia: this.seleccion.direccion[0].ubicacion.provincia.id }).subscribe(resultado => {
+              this.localidadesNeuquen = resultado;
+            });
           }
-
 
           if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
             if (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') {
               this.viveEnNeuquen = true;
+              //Todos los barrios de la localidad de Neuquén
+              let parametroNombre = {
+                nombre: 'Neuquén'
+              };
+              this.localidadService.get(parametroNombre).subscribe(resultado => {
+                this.localidadNeuquen = resultado[0];
+                let param = { localidad: this.localidadNeuquen.id };
+                this.barrioService.get(param).subscribe(rta => {
+                  this.barriosNeuquen = rta;
+                });
+              });
+
             }
           }
 
