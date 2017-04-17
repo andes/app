@@ -87,7 +87,7 @@
         <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
     </div>
 </section>
-<footer>
+<footer *ngIf="!showCreateUpdate">
     <plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
         <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(pacienteEscaneado)"></plex-button>
     </plex-box>

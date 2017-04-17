@@ -79,9 +79,6 @@ import {
   patientFullNamePipe,
   patientRealAgePipe
 } from './../../utils/patientPipe';
-// import {
-//   patientRealAgePipe
-// } from './../../utils/patientRealAgePipe';
 
 
 @Component({
@@ -95,20 +92,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
   @Input('escaneado') escaneado: Boolean;
   @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
-  matchingItems: Array<any>;
 
-  createForm: FormGroup;
   estados = [];
   sexos: any[];
   generos: any[];
   estadosCiviles: any[];
   tipoComunicacion: any[];
   relacionTutores: any[];
+
   paises: IPais[] = [];
   provincias: IProvincia[] = [];
   localidades: ILocalidad[] = [];
-  todasProvincias: IProvincia[] = [];
-  todasLocalidades: ILocalidad[] = [];
   barrios: IBarrio[] = [];
   obrasSociales: IFinanciador[] = [];
   pacRelacionados = [];
@@ -116,10 +110,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
   pacientesSimilares = [];
   barriosNeuquen: any[];
   localidadesNeuquen: any[];
-  localidadNeuquen: any[];
 
   paisArgentina = null;
   provinciaNeuquen = null;
+  localidadNeuquen = null;
   unSexo = null;
   unEstadoCivil = null;
   unGenero = null;
@@ -131,7 +125,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   enableIgnorarGuardar = false;
   sugerenciaAceptada = false;
   entidadValidadora = '';
-  viveEnNeuquen = null;
+  viveEnNeuquen = false;
+  viveProvNeuquen = false;
 
 
   contacto: IContacto = {
@@ -217,7 +212,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
       nombre: 'Neuquén'
     }).subscribe(Nqn => {
       this.provinciaNeuquen = Nqn[0];
-    })
+    });
 
 
     //Todos los barrios de la localidad de Neuquén
@@ -245,6 +240,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
       })
     });
 
+    this.provinciaService.get({}).subscribe(rta => {
+      debugger;
+      this.provincias = rta;
+    });
+
     // Todos los barrios de la Provincia
     this.barrioService.get({}).subscribe(data => {
       return this.barrios = data;
@@ -258,11 +258,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.tipoComunicacion = enumerados.getObjTipoComunicacion();
     this.estados = enumerados.getEstados();
     this.relacionTutores = enumerados.getObjRelacionTutor();
-    // Inicializa checkbox
-    this.viveEnNeuquen = {
-      checkbox: true,
-      slide: false
-    };
+
 
     if (this.seleccion) {
 
@@ -285,7 +281,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   actualizarDatosPaciente() {
-
+    debugger;
     if (this.escaneado) {
       this.validado = true;
       this.seleccion.estado = 'validado';
@@ -337,9 +333,32 @@ export class PacienteCreateUpdateComponent implements OnInit {
     if (this.seleccion.direccion) {
       if (this.seleccion.direccion.length > 0) {
         if (this.seleccion.direccion[0].ubicacion) {
-          if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
-            this.viveEnNeuquen.checkbox = false;
+
+          if (this.seleccion.direccion[0].ubicacion.provincia !== null) {
+            if (this.seleccion.direccion[0].ubicacion.provincia.nombre === 'Neuquén') {
+              this.viveProvNeuquen = true;
+              this.provinciaService.get({
+                nombre: this.seleccion.direccion[0].ubicacion.provincia.nombre
+              }).subscribe(Prov => {
+                this.provinciaNeuquen = Prov[0];
+                this.localidadService.get({}).subscribe(result => {
+                  return this.localidadesNeuquen = result;
+                });
+              });
+            }
+
+
+
           }
+
+
+          if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
+            if (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') {
+              this.viveEnNeuquen = true;
+            }
+          }
+
+
         }
       }
     }
@@ -363,11 +382,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
 
-  loadLocalidades(event, provincia) {
+  loadLocalidades(provincia) {
+    debugger;
     if (provincia && provincia.id) {
       this.localidadService.get({
         'provincia': provincia.id
-      }).subscribe(event.callback);
+      }).subscribe(result => { debugger; this.localidadesNeuquen = [...result]; });
     }
   }
 
@@ -492,10 +512,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
       // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
       pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
-      pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+      //pacienteGuardar.direccion[0].ubicacion.provincia = this.pro;
 
-      if (this.viveEnNeuquen.checkbox) {
-        pacienteGuardar.direccion[0].ubicacion.localidad = null;
+      if (this.viveProvNeuquen) {
+        pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
+      }
+
+      if (this.viveEnNeuquen) {
+        pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
       }
 
 
@@ -643,8 +667,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
 
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-
-
 
       if (!this.pacienteModel.id) {
         debugger;
