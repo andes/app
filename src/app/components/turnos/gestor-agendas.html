@@ -31,7 +31,7 @@
           </div>
         </header>
         <div class="container">
-          <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [vistaAgenda]="agenda" [agendasSeleccionadas]="agendasSeleccionadas"
+          <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [agendasSeleccionadas]="agendasSeleccionadas"
             (clonarEmit)="clonar()" (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
           <span class="h4" *ngIf="agendas.length && hoy">Agendas de hoy</span>
           <span class="h4" *ngIf="agendas.length && !hoy">Agendas</span>

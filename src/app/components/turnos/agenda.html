@@ -56,7 +56,7 @@
                       <div *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item active" style="cursor: pointer; pointer-events: all"
                         [ngClass]="{active: i==bloqueActivo}" (click)="activarBloque(i)">
                         <div class="col-md-5">{{unBloque.descripcion}}</div>
-                        <div class="col-md-5">{{unBloque.titulo}}</div>
+                        <div class="col-md-5">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date: 'HH:mm'}}</div>
                         <div class="col-md-2">
                           <plex-button class="float-right" icon="delete" title="Eliminar Bloque" label="" type="default" (click)="deleteBloque(i)">
                           </plex-button>

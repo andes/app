@@ -5,7 +5,6 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { Router } from '@angular/router';
-import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 
 @Component({
     selector: 'panel-agenda',
