@@ -7,14 +7,12 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../services/profesional.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
-import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import * as moment from 'moment';
 
 @Component({
     selector: 'gestor-agendas',
-    templateUrl: 'gestor-agendas.html',
-    providers: [GestorAgendasService]
+    templateUrl: 'gestor-agendas.html'
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -50,7 +48,7 @@ export class GestorAgendasComponent implements OnInit {
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
-        public serviceAgenda: AgendaService, private router: Router, private gestorAgendasService: GestorAgendasService,
+        public serviceAgenda: AgendaService, private router: Router,
         public auth: Auth) { }
 
     ngOnInit() {
@@ -67,7 +65,7 @@ export class GestorAgendasComponent implements OnInit {
             this.hoy = true;
             this.loadAgendas();
 
-            // Reactive Form
+            // Reactive De-Form
             this.searchForm = this.formBuilder.group({
                 // Debe respetarse el tipo de dato Date, o el componente datepicker no funciona
                 fechaDesde: [new Date()],
@@ -78,6 +76,7 @@ export class GestorAgendasComponent implements OnInit {
                 estado: ['']
             });
 
+            // Un buen día los formularios reactivos volarán...
             this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
 
                 let fechaDesde = moment(value.fechaDesde).startOf('day');
@@ -90,7 +89,7 @@ export class GestorAgendasComponent implements OnInit {
                         fechaHasta: fechaHasta.format(),
                     };
                 } else {
-                    // Darle tiempo para que seleccionen una fecha válida
+                    // Demos tiempo para que seleccionen una fecha válida, claro papá
                     return;
                 }
 
@@ -226,9 +225,12 @@ export class GestorAgendasComponent implements OnInit {
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
 
+            // Actualizo la agenda local
             agenda = ag;
 
-            this.showEditarAgendaPanel = false;
+            // Actualizo la agenda global (modelo)
+            this.agenda = ag;
+
 
             if (!multiple) {
 
@@ -252,8 +254,8 @@ export class GestorAgendasComponent implements OnInit {
 
             this.setColorEstadoAgenda(agenda);
 
-            this.agenda = ag;
-
+            // Reseteo el panel de la derecha
+            this.showEditarAgendaPanel = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
 

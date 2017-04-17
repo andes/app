@@ -6,6 +6,7 @@ import { PacienteService } from './../../services/paciente.service';
 import { SmsService } from './../../services/turnos/sms.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'turnos',
@@ -13,6 +14,7 @@ import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
 })
 
 export class TurnosComponent implements OnInit {
+
     /*Propiedades del PopOver para confirmar acciones en Turnos*/
     public titleLiberarTurno: String = 'Liberar Turno';
     public titleSuspenderTurno: String = 'Suspender Turno';
@@ -22,9 +24,7 @@ export class TurnosComponent implements OnInit {
     public confirmaSuspenderTurno: Boolean = false;
     public cancelClicked: Boolean = false;
 
-    cantSel: number;
     private _agenda: IAgenda;
-
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -34,47 +34,38 @@ export class TurnosComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
         }
-            this.actualizarBotones();
+        this.actualizarBotones();
     }
     get agenda(): any {
         return this._agenda;
     }
-
-
 
     @Input() reasturnos: IAgenda;
 
     @Output() reasignaTurno = new EventEmitter<boolean>();
 
     showTurnos: Boolean = true;
-    public showLiberarTurno: Boolean = false;
-    public showSuspenderTurno: Boolean = false;
-    public showAgregarNotaTurno: Boolean = false;
+    showLiberarTurno: Boolean = false;
+    showSuspenderTurno: Boolean = false;
+    showAgregarNotaTurno: Boolean = false;
 
     smsEnviado: Boolean = false;
     smsLoader: Boolean = false;
 
-    resultado: any;
-
-    listaEspera: any;
-
+    turnos = [];
+    turnosSeleccionados: any[] = [];
     turno: ITurno;
-
+    cantSel: number;
     todos: Boolean = false;
+    reasignar: any = {};
 
-    public turnosSeleccionados: any[] = [];
-    public turnos = [];
-    public bloques = [];
+    bloques = [];
 
-    private _selectAll;
+    // Contiene el cálculo de la visualización de botones
+    botones: any = {};
 
-    public reasignar: any = {};
+    constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
 
-    public botones: any = {};
-    public botonesTurno: any = {};
-
-    public estadoTurno: String;
-    public estadoAsistencia: boolean;
 
     ngOnInit() {
         this.turnosSeleccionados = [];
@@ -83,37 +74,35 @@ export class TurnosComponent implements OnInit {
 
     seleccionarTurno(turno, multiple = false) {
 
-            if (!multiple) {
-
-                this.turnosSeleccionados = [];
-                this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
-
+        if (!multiple) {
+            this.turnosSeleccionados = [];
+            this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+        } else {
+            if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
+                this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
+                this.turnosSeleccionados = [... this.turnosSeleccionados];
             } else {
-
-                if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-                    this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
-                    this.turnosSeleccionados = [... this.turnosSeleccionados];
-                } else {
-                    this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
-                }
-
-
+                this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
             }
-            this.turnosSeleccionados.sort((a, b) => {
-                return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
-            });
+        }
 
-            if (this.turnosSeleccionados.length < this.turnos.length) {
-                this.todos = false;
-            }
 
-            if (this.turnosSeleccionados.length === this.turnos.length) {
-                this.todos = true;
-            }
+        this.turnosSeleccionados.sort((a, b) => {
+            return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
+        });
 
-            this.cantSel = this.turnosSeleccionados.length;
 
-            this.actualizarBotones();
+        if (this.turnosSeleccionados.length < this.turnos.length) {
+            this.todos = false;
+        }
+
+        if (this.turnosSeleccionados.length === this.turnos.length) {
+            this.todos = true;
+        }
+
+        this.cantSel = this.turnosSeleccionados.length;
+
+        this.actualizarBotones();
 
     }
 
@@ -133,10 +122,8 @@ export class TurnosComponent implements OnInit {
                 } else {
                     this.agenda.bloques[a].turnos[b].checked = false;
                 }
-
             }
         }
-
 
         this.todos = !this.todos;
         this.cantSel = this.turnosSeleccionados.length;
@@ -168,7 +155,7 @@ export class TurnosComponent implements OnInit {
                 return false;
             }
         };
-        if ( this.turnosSeleccionados.length > 0) {
+        if (this.turnosSeleccionados.length > 0) {
             return true;
         } else {
             return false;
@@ -181,7 +168,7 @@ export class TurnosComponent implements OnInit {
                 return false;
             }
         };
-        if ( this.turnosSeleccionados.length > 0) {
+        if (this.turnosSeleccionados.length > 0) {
             return true;
         } else {
             return false;
@@ -194,53 +181,23 @@ export class TurnosComponent implements OnInit {
                 return false;
             }
         };
-        if ( this.turnosSeleccionados.length > 0) {
+        if (this.turnosSeleccionados.length > 0) {
             return true;
         } else {
             return false;
         }
     }
 
-    sonIguales(arr) {
-        let x = arr[0];
-        return arr.every(function (item) {
-            return item === x;
-        });
-    }
-    setBotones() {
-        let estado = [];
-        let asistencia = [];
+    hayTurnosTarde() {
 
-        if (this.turnosSeleccionados.length > 0) {
-            this.turnosSeleccionados.forEach(pac => {
-                estado.push(pac.estado);
-            });
-
-            this.estadoTurno = this.sonIguales(estado);
-
-            if (this.estadoTurno) {
-                this.estadoTurno = this.turnosSeleccionados[0].estado;
-            }
-
-            this.turnosSeleccionados.forEach(pac => {
-                asistencia.push(pac.asistencia);
-            });
-
-            this.estadoAsistencia = this.sonIguales(asistencia);
-
-            if (this.estadoAsistencia) {
-                this.estadoAsistencia = this.turnosSeleccionados[0].asistencia;
-            } else {
-                this.estadoTurno = '';
-            }
-
-        } else {
-            this.estadoTurno = '';
+        // Si la Agenda actual tiene fecha de hoy...
+        if (moment(this.agenda.horaInicio).startOf('day').format() === moment().startOf('day').format()) {
+            return this.turnosSeleccionados.filter((turno) => {
+                // hay turnos tarde (ya se les pasó la hora)
+                return moment(turno.horaInicio).format() < moment().format();
+            }).length;
         }
-    }
-    unsetBotones() {
-        this.estadoTurno = '';
-        this.estadoAsistencia = null;
+
     }
 
     actualizarBotones() {
@@ -248,18 +205,18 @@ export class TurnosComponent implements OnInit {
         this.botones = {
 
             // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
-            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')),
+            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')) && (!this.hayTurnosTarde()),
             sacarAsistencia: (this.agendaNoSuspendida() && this.tienenAsistencia()) && this.tienenPacientes(),
             // "Turno suspendido": Estado bloqueado pero con paciente
-            suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
+            suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')) && (!this.hayTurnosTarde()),
             liberarTurno: (this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.noHayTurnosConEstado('asignado')),
             // "Turno bloqueado": Estado bloqueado y sin paciente
-            bloquearTurno: this.hayTurnosConEstado('disponible') && !this.tienenPacientes(),
-            desbloquearTurno: this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes(),
+            bloquearTurno: this.hayTurnosConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
+            desbloquearTurno: this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
 
             tdReasignarTurno: this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
             tdNota: this.turnosSeleccionados.length > 0,
-            smsVisible: this.agenda.estado === 'Suspendida' && this.noHayTurnosConEstado('asignado'),
+            smsVisible: this.agenda.estado === 'Suspendida' && this.noHayTurnosConEstado('asignado') && (!this.hayTurnosTarde()),
             smsNoEnviado: false,
 
         };
@@ -300,24 +257,24 @@ export class TurnosComponent implements OnInit {
             };
 
         }
-            patch = {
-                op: opcion,
-                turnos: this.turnosSeleccionados
-            };
+        patch = {
+            op: opcion,
+            turnos: this.turnosSeleccionados
+        };
 
-            this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
+        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
 
-                resultado => {
-                    this.agenda = resultado;
-                },
+            resultado => {
+                this.agenda = resultado;
+            },
 
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
+            err => {
+                if (err) {
+                    console.log(err);
                 }
+            }
 
-            );
+        );
 
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
@@ -455,6 +412,4 @@ export class TurnosComponent implements OnInit {
 
     }
 
-    constructor(public plex: Plex, public servicePaciente: PacienteService, public smsService: SmsService,
-        public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
 }
