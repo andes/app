@@ -46,6 +46,8 @@ export class GestorAgendasComponent implements OnInit {
     reasignar: IAgenda;
     editaAgenda: IAgenda;
 
+    items: any[];
+
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
@@ -60,6 +62,12 @@ export class GestorAgendasComponent implements OnInit {
             this.redirect('incio');
 
         } else {
+
+            this.items = [
+                { label: 'Inicio', route: '/inicio' },
+                { label: 'MPI', route: '/' },
+                { label: 'Agendas', route: '/gestor_agendas' }
+            ]
 
             // Por defecto cargar/mostrar agendas de hoy
             this.hoy = true;
