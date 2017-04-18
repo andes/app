@@ -103,23 +103,19 @@
     }
 </style>
 
-<!--<pre> {{prestacion.ejecucion.listaProblemas | json}}
-</pre>-->
-
 <header>
-    <header-paciente [paciente]="prestacion.paciente"></header-paciente>
-    <br/>
+    <!--<header-paciente [paciente]="prestacion.paciente"></header-paciente>-->
+    <!--<br/>
     <div class="row">
         <div class="col-12">
             <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
         </div>
-    </div>
+    </div>-->
 </header>
 
 
-<section *ngIf="!showValidar">
+<section>
     <div class="row">
-
 
         <!--LISTA DE PROBLEMAS ACTIVOS-->
         <div class="col-2">
@@ -132,7 +128,7 @@
                     </div>
                 </header>
 
-                <ul class="list-group" *ngIf="listaProblemas">
+                <ul class="list-group">
                     <ng-container *ngFor="let problema of listaProblemas">
                         <li class="list-group-item" *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                             <div>
@@ -149,7 +145,7 @@
             </plex-box>
         </div>
 
-
+        <!--LISTA DE PROBLEMAS TRATADOS EN ESTA CONSULTA-->
         <div class="col-5">
             <plex-box>
                 <header>
@@ -173,7 +169,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="prestacion.solicitud && prestacion.ejecucion.listaProblemas">
+                <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             <li class="list-group-item">
@@ -194,19 +190,18 @@
 
                                     <br>
 
-                                    <span class="" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                                        
-                                                        
-                                                            <strong> Última evolución: </strong> 
-                                                            <small>
-                                                            {{problema.evoluciones[problema.evoluciones.length - 1].observacion}} |
-                                                            {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} 
-                                                        </small>                                       
-                                                </span>
+                                    <span class="" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                                                                                                
+                                        <strong> Última evolución: </strong> 
+                                        <small>
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].observacion}} |
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} 
+                                        </small>                                       
+                                    </span>
                                 </div>
                                 <div class="col-1">
                                     <span class="pull-right">
-                                                <plex-dropdown [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
-                                            </span>
+                                        <plex-dropdown [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -240,8 +235,9 @@
             </plex-box>
         </div>
 
+        <!--LISTA DE PRESTACIONES-->
         <div class="col-5">
-            <plex-box *ngIf="prestacion.paciente">
+            <plex-box *ngIf=" prestacion && prestacion.paciente">
                 <header>
                     <div class="row">
                         <div class="col">
@@ -333,22 +329,18 @@
     </div>
 </section>
 
-<footer *ngIf="!showValidar">
+<footer>
     <div class="row">
         <div class="col-3">
-            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
+            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
-            <div *ngIf="error !=0 " class="alert alert-danger " role="alert ">
+            <div *ngIf="error !=0 " class="alert alert-danger " role="alert">
                 {{error}}
             </div>
         </div>
         <div class="col-3 text-right ">
-            <plex-button title="Guardar " label="GUARDAR " (click)="evolucionarPrestacion() " type="success "></plex-button>
+            <plex-button title="Guardar " label="GUARDAR " (click)="evolucionarPrestacion('rup/validacion')" type="success"></plex-button>
         </div>
     </div>
 </footer>
-
-<div *ngIf="showValidar ">
-    <rup-prestacionValidacion [prestacion]="prestacion "></rup-prestacionValidacion>
-</div>
