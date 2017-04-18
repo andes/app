@@ -1,17 +1,17 @@
 <div class="row" style="" *ngIf="showTurnos">
     <div class="col-12">
-        <strong class="h4">Turnos: {{agenda.horaInicio | date: 'dd/MM/yyyy'}}</strong><br>
+        <strong class="h5">Turnos: <span class="h6">{{ horaInicio }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} </span></strong><br>
     </div>
     <div class="col-12">
         <div *ngIf="cantSel === 0" style="height: 38px"></div>
+        <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
         <div *ngIf="cantSel > 0" class="float-right">
-            <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
             
-            <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno('sacarAsistencia')">
+            <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'sacarAsistencia' )">
                 <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
             </button>
 
-            <button *ngIf="botones.darAsistencia" class="btn btn-default hover" (click)="eventosTurno('darAsistencia')">
+            <button *ngIf="botones.darAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'darAsistencia' )">
                 <span><i title="Dar Asistencia" class="mdi mdi-account-check"></i></span>
             </button>
 
@@ -42,13 +42,13 @@
             </span>
 
             <span *ngIf="botones.bloquearTurno">
-                <button class="btn btn-default hover" (click)="eventosTurno('bloquearTurno')">
+                <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
                     <i title="Desbloquear Turno" class="mdi mdi-lock-open-outline"></i>
                 </button>
             </span>
 
             <span *ngIf="botones.desbloquearTurno">
-                <button class="btn btn-default hover" (click)="eventosTurno('bloquearTurno')">
+                <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
                     <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
                 </button>
             </span>
@@ -76,7 +76,6 @@
             <table class="table table-striped">
                 <tr *ngFor="let turno of bloque.turnos; let i=index"  style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionado(bloque.turnos[i])}">
                     <td (click)="seleccionarTurno(turno, true)">
-                        <!--<input type="checkbox" [ngModel]="bloque.turnos[i].checked" [name]="'turno' + i">-->
                         <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-check-circle"></i>
                         <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-circle-outline"></i>
                     </td>

@@ -30,6 +30,7 @@ export class TurnosComponent implements OnInit {
         this._agenda = value;
         this.turnosSeleccionados = [];
         this.cantSel = 0;
+        this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
@@ -58,6 +59,7 @@ export class TurnosComponent implements OnInit {
     cantSel: number;
     todos: Boolean = false;
     reasignar: any = {};
+    horaInicio: any;
 
     bloques = [];
 
@@ -257,14 +259,15 @@ export class TurnosComponent implements OnInit {
         let patch: any = {};
 
         // Por cada turno...
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
+        // for (let x = 0; x < this.turnosSeleccionados.length; x++) {
 
-            patch = {
-                'op': opcion,
-                'idTurno': this.turnosSeleccionados[x].id
-            };
+        //     patch = {
+        //         'op': opcion,
+        //         'idTurno': this.turnosSeleccionados[x].id
+        //     };
 
-        }
+        // }
+
         patch = {
             op: opcion,
             turnos: this.turnosSeleccionados

@@ -1,3 +1,10 @@
+<header>
+  <div title="Menú hamburguesa" class="hover float-right" style="background-color: #00a8e0; height: 100%; width: 85vw; right: 0; top: 10px; text-align: right; padding-top: 10px;">
+    <plex-dropdown class=" mdi-36px float-right" icon="food" type="link" [items]="items" style="background-color: #00a8e0;">
+    </plex-dropdown>
+  </div>
+
+</header>
 <section *ngIf="autorizado && showGestorAgendas" [formGroup]="searchForm">
   <div class="row">
     <div class="col-9">
