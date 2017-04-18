@@ -31,7 +31,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 
-//Pipes
+// Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 
 // Servicios
@@ -165,7 +165,6 @@ import { OdontologiaComponent } from './components/rup/atomos/odontologia.compon
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
 
-
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -228,7 +227,7 @@ export const RUP_COMPONENTS = [
   FactoresDeRiesgoNinoSanoComponent,
   Atomo,
   Molecula
-  
+
 
 ];
 

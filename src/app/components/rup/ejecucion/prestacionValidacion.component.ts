@@ -1,21 +1,18 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
-
 import { Auth } from '@andes/auth';
-
 import { Plex } from '@andes/plex';
+// Rutas
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -23,33 +20,48 @@ import { Plex } from '@andes/plex';
 })
 export class PrestacionValidacionComponent implements OnInit {
 
-    @Input() prestacion: IPrestacionPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
+    // @Input() prestacion: IPrestacionPaciente;
+    prestacion: IPrestacionPaciente;
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
 
     // arreglo de prestaciones a mostrar por cada problema
     prestaciones: any[] = [];
     prestacionesPlan: any[] = [];
-
     cantidadPrestaciones: any[];
 
-    showEjecucion = true;
-    showValidacion = false;
-    showPrestacionEjecucion = false;
+    validarlabel : String = '';
+    validaboton = '';
     mensaje = '';
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex, public auth: Auth) {
+        public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.loadPrestacionesEjacutadas();
-        console.log('validacion: ', this.prestacion);
+        this.route.params.subscribe(params => {
+            let id = params['id'];
+            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.loadPrestacionesEjacutadas();
+
+                         console.log('this.prestacion', this.prestacion);
+
+                            if ( (this.prestacion.estado[this.prestacion.estado.length - 1].tipo) !== 'validada') {
+                                this.validarlabel = 'Validar';
+                            } else {
+                                this.validarlabel = 'Validada';
+                                this.validaboton = 'deshabilitar';
+                            };
+
+            });
+
+         });
     }
 
     loadPrestacionesEjacutadas() {
@@ -125,9 +137,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
                             this.servicioPrestacion.put(this.prestacion).subscribe(prestacion => {
                                 if (prestacion) {
-                                    this.showEjecucion = false;
-                                    this.showValidacion = true;
                                     this.mensaje = 'La prestación ha sido validada correctamente';
+                                    this.validaboton = 'deshabilitar';
                                 }
                             });
                         }
@@ -137,11 +148,8 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
-     volver() {
-       this.showEjecucion = false;
-       this.showValidacion = false;
-       this.showPrestacionEjecucion = true;
-       this.evtData.emit(this.prestacion);
-    }
+     volver(ruta) {
+         this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+    };
 }
 

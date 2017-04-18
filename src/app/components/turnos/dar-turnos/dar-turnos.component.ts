@@ -537,8 +537,11 @@ export class DarTurnosComponent implements OnInit {
           this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('prestacion paciente creada');
 
+
           });
 
+
+ 
 
 
         });
