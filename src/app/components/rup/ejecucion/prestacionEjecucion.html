@@ -271,7 +271,7 @@
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" (getData)="$event.callback(listaProblemas)" [multiple]="true" placeholder="Seleccione problema(s)">
+                                        <plex-select [(ngModel)]="listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]" name="tallaListaProblemas" label="Vincular a problemas" labelField="tipoProblema.nombre" [data]="listaProblemas" [multiple]="true" placeholder="Seleccione problema(s)">
                                         </plex-select>
                                     </div>
                                 </div>
