@@ -72,7 +72,6 @@ export class CalendarioComponent {
                 let week = [];
                 this.calendario.push(week);
                 for (let c = 1; c <= 7; c++) {
-                    inicio.add(1, 'day');
                     let ags = this.agendasPorFecha(inicio);
                     let ag = null;
                     if (ags.length > 1) {
@@ -97,6 +96,7 @@ export class CalendarioComponent {
                         dia.seleccionado = true;
                         this.diaSeleccionado = dia;
                     }
+                    inicio.add(1, 'day');
                 }
             }
         }
