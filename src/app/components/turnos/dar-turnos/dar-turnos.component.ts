@@ -141,8 +141,8 @@ export class DarTurnosComponent implements OnInit {
    * @param etiqueta: define qué filtros usar para traer todas las Agendas
    */
   actualizar(etiqueta) {
-    
-      debugger
+
+    debugger
     // 1) Auth general (si puede ver esta pantalla)
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
@@ -187,7 +187,11 @@ export class DarTurnosComponent implements OnInit {
 
       // Sólo traer agendas disponibles o publicadas
       this.agendas = agendas.filter((data) => {
-        return (data.estado === 'Disponible' || data.estado === 'Publicada');
+        if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+          return (data.estado === 'Publicada');
+        } else {
+          return (data.estado === 'Disponible' || data.estado === 'Publicada');
+        }
       });
 
 
@@ -518,35 +522,35 @@ export class DarTurnosComponent implements OnInit {
           this.plex.alert('El turno se asignó correctamente');
         });
         let nuevaPrestacion;
-          nuevaPrestacion = {
-            //  id : null,
-            //  idPrestacionOrigen: null,
-            paciente: this.paciente,
-            solicitud: {
-              tipoPrestacion: this.turnoTipoPrestacion,
-              fecha: new Date(),
-              // procedencia: '',
-              // prioridad: '',
-              // proposito: [],
-              // estadoPaciente: '',
-              // profesional: null,
-              // organizacion: null,
-              listaProblemas: [],
-              idTurno: this.turno.id,
-            },
-            estado: {
-              timestamp: new Date(),
-              tipo: 'pendiente'
-            },
-            ejecucion: {
-              fecha: new Date(),
-              evoluciones: []
-            }
-          };
-          this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('prestacion paciente creada');
+        nuevaPrestacion = {
+          //  id : null,
+          //  idPrestacionOrigen: null,
+          paciente: this.paciente,
+          solicitud: {
+            tipoPrestacion: this.turnoTipoPrestacion,
+            fecha: new Date(),
+            // procedencia: '',
+            // prioridad: '',
+            // proposito: [],
+            // estadoPaciente: '',
+            // profesional: null,
+            // organizacion: null,
+            listaProblemas: [],
+            idTurno: this.turno.id,
+          },
+          estado: {
+            timestamp: new Date(),
+            tipo: 'pendiente'
+          },
+          ejecucion: {
+            fecha: new Date(),
+            evoluciones: []
+          }
+        };
+        this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+          this.plex.alert('prestacion paciente creada');
 
-          });
+        });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {
