@@ -1,7 +1,18 @@
-<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="partoViaVaginal" [data]="selectPartoViaVaginal"
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="partoViaVaginal" [data]="selectPartoViaVaginal"
     label="Parto via vaginal" (change)="devolverValores()" placeholder="Seleccionar método">
 </plex-select>
 
-<plex-text  type="date" [(ngModel)]="data[tipoPrestacion.key].detalle" (change)="devolverValores()"
+<plex-text *ngIf="!soloValores" type="date" [(ngModel)]="data[tipoPrestacion.key].detalle" (change)="devolverValores()"
     name="detalleParto" label="Detalle del parto">
 </plex-text>
+
+<p *ngIf="soloValores">
+    <b>Parto via vaginal</b>
+    <br/>
+    <b>valor</b>
+    <br /> {{data[tipoPrestacion.key].nombre}} 
+    <br/>
+    <b>Detalle</b>
+    <br /> {{data[tipoPrestacion.key].detalle}} 
+</p>
+

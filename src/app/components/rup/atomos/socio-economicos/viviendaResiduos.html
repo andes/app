@@ -1,3 +1,9 @@
-<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="residuo" [data]="SelectResiduos" label="Recolección de Residuos"
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="residuo" [data]="SelectResiduos" label="Recolección de Residuos"
   placeholder="Seleccion de recolección de residuos" [multiple]="true" (change)="devolverValores()">
 </plex-select>
+<div *ngIf="soloValores">
+  <b> Recolección de Residuos </b>
+  <div *ngFor="let dato of data[tipoPrestacion.key]">
+    {{dato.nombre}}
+  </div>
+</div>

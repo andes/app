@@ -1,2 +1,12 @@
-<input id="partoCesarea" type="checkbox" [(ngModel)]="data[tipoPrestacion.key]"  name="partoCesarea" (change)="devolverValores()" />
-<label for="partoCesarea">Parto por Cesárea</label>
+<plex-bool *ngIf="!soloValores" label="Parto por Cesárea" [(ngModel)]="data[tipoPrestacion.key]" name="partoCesarea" (change)="devolverValores()">
+</plex-bool>
+<div *ngIf="soloValores">
+    <b>Parto por Cesárea</b>
+    <br />
+    <p *ngIf='data[tipoPrestacion.key]'>
+        Si
+    </p>
+    <p *ngIf='!data[tipoPrestacion.key]'>
+        No
+    </p>
+</div>
