@@ -254,7 +254,7 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            //this.mostrarNuevo = true;
+            this.mostrarNuevo = true;
           }, (err) => {
             this.loading = false;
           });
