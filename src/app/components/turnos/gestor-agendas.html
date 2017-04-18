@@ -1,32 +1,9 @@
 <header>
-  <plex-box title="Dropdowns" type="primary">
-    <div class="row">
-      <div class="col-4">
-        <plex-dropdown label="Dropdown con título" [items]="items">
-        </plex-dropdown>
-      </div>
-      <div class="col-4">
-        <plex-dropdown label="Dropdown con ícono" icon="account" [items]="items">
-        </plex-dropdown>
-      </div>
-      <div class="col-4">
-        <plex-dropdown label="Dropdown con tipo primary" type="primary" [items]="items">
-        </plex-dropdown>
-      </div>
-    </div>
-    <div class="row margin-top">
-      <div class="col-4">
-        <label>Dropdown sólo con ícono</label>
-        <plex-dropdown icon="dots-horizontal" [items]="items">
-        </plex-dropdown>
-      </div>
-      <div class="col-4">
-        <label>Dropdown sólo con ícono y tipo link</label>
-        <plex-dropdown icon="dots-horizontal" type="link" [items]="items">
-        </plex-dropdown>
-      </div>
-    </div>
-  </plex-box>
+  <div title="Menú hamburguesa" class="hover float-right" style="background-color: #00a8e0; height: 100%; width: 85vw; right: 0; top: 10px; text-align: right; padding-top: 10px;">
+    <plex-dropdown class=" mdi-36px float-right" icon="food" type="link" [items]="items" style="background-color: #00a8e0;">
+    </plex-dropdown>
+  </div>
+
 </header>
 <section *ngIf="autorizado && showGestorAgendas" [formGroup]="searchForm">
   <div class="row">

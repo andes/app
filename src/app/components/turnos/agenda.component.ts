@@ -278,19 +278,19 @@ export class AgendaComponent implements OnInit {
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
-                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.floor
+                    this.elementoActivo.accesoDirectoDelDiaPorc = Math.ceil
                         ((this.elementoActivo.accesoDirectoDelDia * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'accesoDirectoProgramado':
-                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.floor
+                    this.elementoActivo.accesoDirectoProgramadoPorc = Math.ceil
                         ((this.elementoActivo.accesoDirectoProgramado * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoGestion':
-                    this.elementoActivo.reservadoGestionPorc = Math.floor
+                    this.elementoActivo.reservadoGestionPorc = Math.ceil
                         ((this.elementoActivo.reservadoGestion * 100) / this.elementoActivo.cantidadTurnos);
                     break;
                 case 'reservadoProfesional':
-                    this.elementoActivo.reservadoProfesionalPorc = Math.floor
+                    this.elementoActivo.reservadoProfesionalPorc = Math.ceil
                         ((this.elementoActivo.reservadoProfesional * 100) / this.elementoActivo.cantidadTurnos);
                     break;
             }

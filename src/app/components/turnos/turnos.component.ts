@@ -259,14 +259,15 @@ export class TurnosComponent implements OnInit {
         let patch: any = {};
 
         // Por cada turno...
-        for (let x = 0; x < this.turnosSeleccionados.length; x++) {
+        // for (let x = 0; x < this.turnosSeleccionados.length; x++) {
 
-            patch = {
-                'op': opcion,
-                'idTurno': this.turnosSeleccionados[x].id
-            };
+        //     patch = {
+        //         'op': opcion,
+        //         'idTurno': this.turnosSeleccionados[x].id
+        //     };
 
-        }
+        // }
+
         patch = {
             op: opcion,
             turnos: this.turnosSeleccionados
