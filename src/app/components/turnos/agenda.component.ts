@@ -1,15 +1,10 @@
 import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
-
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-
 import * as moment from 'moment';
 import * as operaciones from './../../utils/operacionesJSON';
-
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
@@ -40,16 +35,9 @@ export class AgendaComponent implements OnInit {
     public autorizado = false;
     showClonar = false;
     showAgenda = true;
-    public hoy = moment().startOf('day');
 
-    constructor(
-        public plex: Plex,
-        private router: Router,
-        public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService,
-        public ServicioAgenda: AgendaService,
-        public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth) { }
+    constructor( public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
+        public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
@@ -179,7 +167,6 @@ export class AgendaComponent implements OnInit {
             }
         }
         ).catch(() => {
-            alert('no borra');
         });
     }
 
@@ -352,7 +339,6 @@ export class AgendaComponent implements OnInit {
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
-        // alert('y ahora??' + seleccion);
     }
 
     calcularDuracion(inicio, fin, cantidad) {
@@ -405,9 +391,8 @@ export class AgendaComponent implements OnInit {
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
         }
         let bloques = this.modelo.bloques;
-
         let totalBloques = 0;
-        // Verifico que ningún profesional esté asignado a otra agenda en ese horario
+        // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
                 this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
@@ -425,6 +410,7 @@ export class AgendaComponent implements OnInit {
                     });
             });
         }
+        // Verifica que el espacio fisico no esté ocupado en ese rango horario
         if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
             this.ServicioAgenda.get({ 'espacioFisico': this.modelo.espacioFisico.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
                 subscribe(agendas => {
@@ -439,6 +425,7 @@ export class AgendaComponent implements OnInit {
                     }
                 });
         }
+        // Verifica que la hora inicio y hora fin de la agenda sean correctas
         if (iniAgenda && finAgenda) {
             if (iniAgenda > finAgenda) {
                 this.alertas.push('La hora de inicio no puede ser mayor a la de fin');
@@ -447,7 +434,7 @@ export class AgendaComponent implements OnInit {
                 this.alertas.push('La hora de inicio no puede igual a la de fin');
             }
         }
-        // Verifico que los bloques no estén fuera de los límites de la agenda
+        // Verificaciones en cada bloque
         if (bloques) {
             bloques.forEach((bloque, index) => {
                 let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
@@ -478,7 +465,7 @@ export class AgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                // por cada bloque verificar que no se solape con ningún otro
+                // Verifica que no se solape con ningún otro
                 let mapeo = bloques.map(function (obj) {
                     if (obj.id !== bloque.id) {
                         let robj = {};
@@ -489,7 +476,6 @@ export class AgendaComponent implements OnInit {
                         return null;
                     }
                 });
-
                 mapeo.forEach((bloqueMap, index1) => {
                     if (bloqueMap) {
                         let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
@@ -502,16 +488,6 @@ export class AgendaComponent implements OnInit {
                 });
             });
         }
-
-        // Si son bloques intercalados (sin horainicio/horafin) verifico que no superen los minutos totales de la agenda
-        // totalBloques *= 60000;
-        // if (iniAgenda && finAgenda && iniAgenda <= finAgenda) {
-        //     let totalAgenda = finAgenda.getTime() - iniAgenda.getTime();
-        //     if (totalBloques > totalAgenda) {
-        //         alerta = ' Los turnos de los bloques superan los minutos disponibles de la agenda';
-        //         this.alertas.push(alerta);
-        //     }
-        // }
     }
 
     combinarFechas(fecha1, fecha2) {
@@ -529,6 +505,18 @@ export class AgendaComponent implements OnInit {
         } else {
             return null;
         }
+    }
+
+    mostrarAlertas() {
+        let texto = '';
+        this.alertas.forEach((alerta, indice) => {
+            if (indice === this.alertas.length - 1) {
+                texto = texto + alerta;
+            } else {
+                texto = texto + alerta + '; ';
+            }
+        });
+        this.plex.alert(texto);
     }
 
     onSave($event, clonar) {
@@ -613,11 +601,8 @@ export class AgendaComponent implements OnInit {
     }
 
     cancelar() {
-
         this.volverAlGestor.emit(true);
         this.showAgenda = false;
-        // this.router.navigate(['/inicio']);
-        // return false;
     }
 
     onReturn(agenda: IAgenda): void {

@@ -126,9 +126,9 @@
                     <div class="col-md-6">
                       <div class="row" *ngFor="let unaPrestacion of elementoActivo.tipoPrestaciones; let i=index">
                         <div class="col-md-12">
-                          <plex-bool [(ngModel)]="elementoActivo.tipoPrestaciones[i].activo" [name]="'activo' + i" label="{{unaPrestacion.nombre}}" type="slide">
+                          <plex-bool [(ngModel)]="elementoActivo.tipoPrestaciones[i].activo" [name]="'activo' + i" label="{{unaPrestacion.nombre}}"
+                            type="slide">
                           </plex-bool>
-                          <!--<input type="checkbox" [(ngModel)]="unaPrestacion.activo" name="unaPrestacion.activo"> {{unaPrestacion.nombre}}-->
                         </div>
                       </div>
                     </div>
@@ -221,42 +221,57 @@
                       <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
                     </div>
                     <div *ngIf="elementoActivo.citarPorBloque" class="col-md-4">
-                      <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
+                      <plex-int [(ngModel)]="elementoActivo.cantidadBloque" [max]="elementoActivo.cantidadTurnos" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
                       </plex-int>
                     </div>
                   </div>
                   <br>
                 </plex-box>
               </div>
-              <div class="row">
+              <!--<div class="row">
                 <div class="col-md-12">
-                  <div *ngIf="alertas.length>0" class="alert alert-warning" role="alert">
-                    <li *ngFor="let unAlerta of alertas; let i=index">
+                  <ul *ngIf="alertas.length>0" class="list-group" role="alert">
+                    <li *ngFor="let unAlerta of alertas; let i=index" class="bg-warning list-group-item">
                       {{unAlerta}}
                     </li>
-                  </div>
+                  </ul>
                 </div>
-              </div>
+              </div>-->
             </div>
           </div>
         </plex-box>
       </div>
     </div>
   </section>
-  
+
   <footer *ngIf="autorizado && showAgenda">
-    <plex-button *ngIf="alertas.length>0" disabled="true" icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)"
-      title="Guardar">
-    </plex-button>
-    <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" validateForm="true" type="primary" (click)="onSave($event, false)"
-      title="Guardar">
-    </plex-button>
-    <plex-button *ngIf="alertas.length>0" disabled="true" icon="mdi mdi-content-copy" label="Guardar y clonar" type="primary" (click)="onSave($event, true)">
-    </plex-button>
-    <plex-button *ngIf="alertas.length<=0" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
-    </plex-button>
-    <plex-button icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
-    </plex-button>
+    <div class="row">
+      <div class="col-4">
+        <plex-button *ngIf="alertas.length>0" disabled="true" icon="content-save" label="Guardar" type="primary" (click)="onSave($event, false)"
+          title="Guardar">
+        </plex-button>
+        <plex-button *ngIf="alertas.length<=0" icon="content-save" label="Guardar" validateForm="true" type="primary" (click)="onSave($event, false)"
+          title="Guardar">
+        </plex-button>
+        <plex-button *ngIf="alertas.length>0" disabled="true" icon="mdi mdi-content-copy" label="Guardar y clonar" type="primary"
+          (click)="onSave($event, true)">
+        </plex-button>
+        <plex-button *ngIf="alertas.length<=0" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary"
+          (click)="onSave($event, true)">
+        </plex-button>
+        <plex-button icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+      </div>
+      <div *ngIf="alertas.length>0" class="col-4 alert alert-warning text-center" role="alert">
+        Alerta: Hay datos a completar o corregir. <a class="font-weight-bold text-white hover" (click)="mostrarAlertas()">ver detalle</a>
+      </div>
+      <!--<div class="col-4">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-warning">Hay errores de validación <a href="#">ver detalle</a></li>
+        </ul>
+      </div>-->
+      <div class="col"></div>
+    </div>
   </footer>
 
 </form>
