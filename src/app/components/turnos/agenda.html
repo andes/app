@@ -221,7 +221,7 @@
                       <plex-bool [(ngModel)]="elementoActivo.citarPorBloque" label="Citar por segmento" name="citarPorBloque"></plex-bool>
                     </div>
                     <div *ngIf="elementoActivo.citarPorBloque" class="col-md-4">
-                      <plex-int [(ngModel)]="elementoActivo.cantidadBloque" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
+                      <plex-int [(ngModel)]="elementoActivo.cantidadBloque" [max]="elementoActivo.cantidadTurnos" name="cantidadBloque" placeholder="Cantidad Pacientes" required>
                       </plex-int>
                     </div>
                   </div>
