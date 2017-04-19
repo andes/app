@@ -333,11 +333,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                             let tp; tp = _prestacion.solicitud.tipoPrestacion;
                             // Cargo el arreglo de prestaciones evoluciones
                             prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
+
+
                             // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
                             if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
                                 // recorremos array de problemas y asignamos a la nueva prestacion
                                 this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                                    prestacion.solicitud.listaProblemas.push(problema.id);
+
+                                    let find; // Verifico que no se repitan los problemas a vincular a la solicitud de la prestación
+                                    find = prestacion.solicitud.listaProblemas.find(p => {
+                                        return p.id === problema.id;
+                                    });
+                                    if (!find) {
+                                        prestacion.solicitud.listaProblemas.push(problema.id);
+                                    }
                                 });
                             } else {
                                 // si no agrego ningun problema, entonces por defecto se le agregan todos
@@ -345,6 +354,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         prestacion.solicitud.listaProblemas.push(idProblema);
                                     });
                             }
+
+
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
 
                             if (_prestacion.ejecucion.evoluciones.length < 1){
@@ -375,7 +386,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                                 i++;
                             }); // guardamos la nueva prestacion
+
                  }); // prestacionesGuardar.forEach
+
             }; // else Datos observables
      } else {
          this.error = 'Debe seleccionar al menos un problema';
@@ -462,7 +475,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
             // buscamos la prestacion actualizada con los datos populados
             this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-
                 this.prestacion = prestacion;
                 this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
             });

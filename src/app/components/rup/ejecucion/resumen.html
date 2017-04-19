@@ -180,7 +180,7 @@
         </div>
         <div class="col text-right">
             <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'" 
-                          title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion()">
+                          title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
             </plex-button>
             <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'"
                          title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)"> 
