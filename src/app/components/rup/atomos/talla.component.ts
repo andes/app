@@ -1,41 +1,12 @@
 import { Atomo } from './atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
-
 @Component({
     selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
 export class TallaComponent extends Atomo {
-    // @Input('datosIngreso') datosIngreso: any;
-    // @Input('paciente') paciente:  any;
-    // @Input('tipoPrestacion') tipoPrestacion: any;
-    // @Input('soloValores') soloValores: Boolean;
-    // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-    // data: any = {};
-    // mensaje: any = {};
-
-    // ngOnInit() {
-
-    //     this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-    //     // si tengo valores cargados entonces devuelvo los resultados y mensajes
-    //     if (this.datosIngreso) {
-    //         this.devolverValores();
-    //     }
-    // }
-
-
-    // devolverValores() {
-
-    //      if (this.data[this.tipoPrestacion.key] === null ) {
-    //          this.data = {};
-    //      } 
-
-    //     this.mensaje = this.getMensajes();
-    //     this.evtData.emit(this.data);
-    // }
-
+    
     getMensajes() {
 
         // Calculo Edad en Meses

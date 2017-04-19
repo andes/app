@@ -1,2 +1,7 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="ActitudAnteLosCuidados" label="Actitud ante los cuidados" suffix=" % " min="0" max="100" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="ActitudAnteLosCuidados" label="Actitud ante los cuidados" suffix=" % " min="0" max="100" (change)="devolverValores()">
 </plex-int>
+<p *ngIf="soloValores">
+    <label><b>Actitud ante los cuidados</b></label>
+    <br /> {{data[tipoPrestacion.key]}} %
+</p>
+

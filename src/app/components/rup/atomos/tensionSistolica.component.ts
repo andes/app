@@ -1,38 +1,11 @@
+import { Atomo } from './atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from "../../../interfaces/IPaciente";
-
-
 @Component({
     selector: 'rup-tension-sistolica',
     templateUrl: 'tensionSistolica.html'
 })
-export class TensionSistolicaComponent implements OnInit {
-
-    @Input('datosIngreso') datosIngreso: any;
-    @Input('tipoPrestacion') tipoPrestacion: any;
-    @Input('paciente') paciente: IPaciente;
-    @Input('soloValores') soloValores: Boolean;
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-    data: any = {};
-    mensaje: any = {};
-
-    ngOnInit() {
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-        // si tengo valores cargados entonces devuelvo los resultados y mensajes
-        if (this.datosIngreso) {
-            this.devolverValores();
-        }
-    }
-
-    devolverValores() {
-        if (this.data[this.tipoPrestacion.key] === null) {
-            this.data = {};
-        }         
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);        
-    }
-
+export class TensionSistolicaComponent extends Atomo {
     getMensajes() {
         let Edad;
         let percentiloTalla;
