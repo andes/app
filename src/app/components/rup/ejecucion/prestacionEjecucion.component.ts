@@ -328,6 +328,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             } else {
                      this.error = '';
                      // recorremos todas las prestaciones que hemos ejecutado
+                    //  console.log('Prestaciones guardar: ', prestacionesGuardar );
                      prestacionesGuardar.forEach(_prestacion => {
                             let prestacion; prestacion = _prestacion;
                             let tp; tp = _prestacion.solicitud.tipoPrestacion;
@@ -337,7 +338,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                             if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
                                 // recorremos array de problemas y asignamos a la nueva prestacion
                                 this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                                    prestacion.solicitud.listaProblemas.push(problema.id);
+
+
+                                    let find;
+                                    find = prestacion.solicitud.listaProblemas.find(p => {
+                                        return p.id === problema.id;
+                                    });
+
+                                    if (!find) {
+                                        prestacion.solicitud.listaProblemas.push(problema.id);
+                                    }
+
                                 });
                             } else {
                                 // si no agrego ningun problema, entonces por defecto se le agregan todos
@@ -345,6 +356,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         prestacion.solicitud.listaProblemas.push(idProblema);
                                     });
                             }
+
+
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
 
                             if (_prestacion.ejecucion.evoluciones.length < 1){
