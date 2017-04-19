@@ -210,19 +210,30 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        this.serviceProfesional.get({}).subscribe(event.callback);
+        if ( event.query ) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.serviceProfesional.get( query ).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 
     loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get({}).subscribe(event.callback);
+        this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
     loadEstados(event) {
         this.serviceAgenda.get({}).subscribe(agendas => {
-            let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
-                return { id: estado, nombre: estado }; // return objeto compatible con plex-select
-            });
-            event.callback(estadosAgendas);
+            if ( agendas.length > 0 ) {
+                let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
+                    return { id: estado, nombre: estado }; // return objeto compatible con plex-select
+                });
+                event.callback(estadosAgendas);
+            } else {
+                event.callback([]);
+            }
         });
     }
 

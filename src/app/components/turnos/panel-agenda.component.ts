@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
@@ -35,7 +36,7 @@ export class PanelAgendaComponent implements OnInit {
     public alertas: any[] = [];
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
+        public servicioEspacioFisico: EspacioFisicoService, public router: Router, public auth: Auth) {
     }
 
     ngOnInit() {
@@ -74,11 +75,18 @@ export class PanelAgendaComponent implements OnInit {
 
 
     loadProfesionales(event) {
-        this.servicioProfesional.get({}).subscribe(event.callback);
+        if ( event.query ) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get( query ).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({}).subscribe(event.callback);
+        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
     /**

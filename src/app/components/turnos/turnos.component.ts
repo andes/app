@@ -208,7 +208,7 @@ export class TurnosComponent implements OnInit {
         this.botones = {
 
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')) || !this.hayTurnosTarde(),
+            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.hayTurnosConEstado('bloqueado')) && !this.hayTurnosTarde(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
             sacarAsistencia: (  this.tienenAsistencia()) && this.tienenPacientes(),
             // Suspender turno: El turno no está asignado ==> el estado pasa a "bloqueado"

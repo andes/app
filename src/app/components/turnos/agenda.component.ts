@@ -67,7 +67,14 @@ export class AgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        this.servicioProfesional.get({}).subscribe(event.callback);
+        if ( event.query ) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get( query ).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 
     loadEspacios(event) {

@@ -44,7 +44,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                      placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre+' '+apellido" (change)="validarTodo()">
+                      placeholder="Seleccione los profesionales" [multiple]="true" labelField="apellido+' '+nombre" (change)="validarTodo()">
                     </plex-select>
                   </div>
                 </div>
