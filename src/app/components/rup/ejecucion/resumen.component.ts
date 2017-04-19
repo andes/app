@@ -74,7 +74,7 @@ export class ResumenComponent implements OnInit {
             });
     }
 
-    iniciarPrestacion() {
+    iniciarPrestacion(id) {
         this.prestacion.estado.push({
             timestamp: new Date(),
             tipo: 'ejecucion'
@@ -82,6 +82,8 @@ export class ResumenComponent implements OnInit {
         this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
         this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
         });
+
+        this.router.navigate(['/rup/ejecucion', id]);
 
     }
 
