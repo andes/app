@@ -208,7 +208,7 @@ export class TurnosComponent implements OnInit {
         this.botones = {
 
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')) && (!this.hayTurnosTarde()),
+            darAsistencia: this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.tienenPacientes() && this.hayTurnosConEstado('bloqueado')) || !this.hayTurnosTarde(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
             sacarAsistencia: (  this.tienenAsistencia()) && this.tienenPacientes(),
             // Suspender turno: El turno no está asignado ==> el estado pasa a "bloqueado"
@@ -256,29 +256,17 @@ export class TurnosComponent implements OnInit {
 
     eventosTurno(opcion) {
 
-        let patch: any = {};
-
-        // Por cada turno...
-        // for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-
-        //     patch = {
-        //         'op': opcion,
-        //         'idTurno': this.turnosSeleccionados[x].id
-        //     };
-
-        // }
-
-        patch = {
+        let patch: any = {
             op: opcion,
             turnos: this.turnosSeleccionados
         };
 
+        // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
 
             resultado => {
                 this.agenda = resultado;
             },
-
             err => {
                 if (err) {
                     console.log(err);
@@ -295,6 +283,7 @@ export class TurnosComponent implements OnInit {
         });
         this.todos = false;
     }
+
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
         this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
