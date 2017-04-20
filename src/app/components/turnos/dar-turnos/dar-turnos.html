@@ -146,23 +146,25 @@
                 </div>
                 <div class="row">
                   <div class="col col-md-12">
-                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
+                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
                   </div>
                 </div>
               </div>
 
-              <div class="col" *ngIf="estadoT=='noSeleccionada'">
+              <div class="col" *ngIf="estadoT == 'noSeleccionada'">
+                <br>
+                <h5>Seleccione una agenda en el Calendario</h5><br>
                 <br>
                 <div *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
-                    <div *ngIf="busqueda.tipoPrestacion"><label>Tipo de Prestación: &nbsp;</label> <span>{{busqueda.tipoPrestacion.nombre}} </span><br></div>
-                    <div *ngIf="busqueda.profesional"><label>Profesional: &nbsp;</label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
+                    <div *ngIf="busqueda.tipoPrestacion"><label>Tipo de Prestación: </label> <span>{{busqueda.tipoPrestacion.nombre}} </span><br></div>
+                    <div *ngIf="busqueda.profesional"><label>Profesional: </label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
                   </div>
                 </div>
                 <br>
                 <div class="row">
                   <div class="col">
-                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
+                    <!--<plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>-->
                   </div>
                 </div>
               </div>
@@ -218,7 +220,7 @@
                 </div>
                 <div class="row">
                   <div class="col col-md-12">
-                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="onCancel()"></plex-button>
+                    <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
                   </div>
                 </div>
               </div>
@@ -259,7 +261,7 @@
           </plex-tab>
           <plex-tab icon="account-search" class="text-center">
             <br>
-            <label><h5><strong>ÚLTIMOS TURNOS DEL PACIENTE</strong></h5></label><br>
+            <h5>Últimos turnos del paciente</h5><br>
             <div *ngFor="let turno of ultimosTurnos let i=index" class="text-left">
               <a (click)="seleccionarBusqueda(i)" class="hover">
                 <h5>{{turno.organizacion}}</h5>
@@ -292,3 +294,8 @@
     </div>
   </div>
 </section>
+
+<footer *ngIf="autorizado && showDarTurnos">
+  <plex-button title="No se asigna turno" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+  <plex-button type="default" icon="mdi mdi-close-circle-outline" label="Cancelar" (click)="cancelar()"></plex-button>
+</footer>

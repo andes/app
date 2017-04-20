@@ -1,5 +1,6 @@
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
 
+import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TurnoService } from './../../../services/turnos/turno.service';
@@ -93,7 +94,8 @@ export class DarTurnosComponent implements OnInit {
     public servicioTipoPrestacion: TipoPrestacionService,
     public servicioPrestacionPaciente: PrestacionPacienteService,
     public plex: Plex,
-    public auth: Auth) { }
+    public auth: Auth, 
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -131,9 +133,13 @@ export class DarTurnosComponent implements OnInit {
     if (this.busquedas.length === size) {
       this.busquedas.shift();
     }
-    this.busquedas.push(search);
 
-    localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
+
+    if (search.tipoPrestacion || search.profesional) {
+      this.busquedas.push(search);
+      localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
+    }
+
 
     this.actualizar('');
   }
@@ -390,7 +396,7 @@ export class DarTurnosComponent implements OnInit {
 
             /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
             this.estadoT = 'noTurnos';
-            
+
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
               this.serviceAgenda.get({
                 'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
@@ -692,7 +698,7 @@ export class DarTurnosComponent implements OnInit {
     }
   }
 
-  onCancel() {
+  noSeAsignaTurno() {
     let listaEspera: any;
     let operacion: Observable<IListaEspera>;
     let datosPrestacion = !this.opciones.tipoPrestacion ? null : {
@@ -723,4 +729,15 @@ export class DarTurnosComponent implements OnInit {
     }
     this.buscarPaciente();
   }
+
+  cancelar() {
+    this.pacientesSearch = true;
+    this.showDarTurnos = false;
+  }
+
+  redirect(pagina: string) {
+    this.router.navigate(['./' + pagina]);
+    return false;
+  }
+
 }
