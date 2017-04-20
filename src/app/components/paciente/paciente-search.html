@@ -42,6 +42,7 @@
 
                 <!--Tabla de resultados por Suggest -->
                 <!--<table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
+
                     <thead>
                         <tr>
                             <th>Documento</th>
@@ -87,9 +88,9 @@
         <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
     </div>
 </section>
-<footer>
-    <plex-box type="footer" *ngIf="!showCreateUpdate && mostrarNuevo">
-        <plex-button label="Nuevo Paciente" icon="account-plus" type="primary btn-lg" (click)="seleccionarPaciente(pacienteEscaneado)"></plex-button>
-    </plex-box>
-
+<br>
+<footer *ngIf="!showCreateUpdate">
+    <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+    <!--boton provisorio hasta tener el menu desplegable-->
+    <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
 </footer>

@@ -1,4 +1,5 @@
-import { patientPipe } from './utils/patientPipe';
+import { Molecula } from './components/rup/moleculas/molecula.component';
+import { Atomo } from './components/rup/atomos/atomoComponent';
 
 /*
 @jgabriel | 04-03-2017
@@ -29,6 +30,9 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
+
+//Pipes
+import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -221,7 +225,10 @@ export const RUP_COMPONENTS = [
   EstadoNutricionalComponent,
   OdontologiaComponent,
   IndiceDeMasaCorporalComponent,
-  FactoresDeRiesgoNinoSanoComponent
+  FactoresDeRiesgoNinoSanoComponent,
+  Atomo,
+  Molecula
+  
 
 ];
 
@@ -256,7 +263,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientPipe,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientFullNamePipe, patientRealAgePipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,

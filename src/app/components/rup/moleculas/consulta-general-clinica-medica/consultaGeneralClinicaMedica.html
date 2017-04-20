@@ -1,4 +1,4 @@
-<fieldset>
+<!--<fieldset>
     <legend>Consulta de medicina general</legend>
     <div class="row">
         <div class="col-md-12">
@@ -10,4 +10,25 @@
             <rup-talla [paciente]="paciente" [tipoPrestacion]="prestacionTalla" (evtData)="onReturn($event, 'prestacionTalla')"></rup-talla>
         </div>
     </div>
-</fieldset>
+</fieldset>-->
+
+<div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
+    <!--<div *ngFor="let tp of tipoPrestacion.ejecucion">-->
+    <div class="row">
+
+        <!--<div class="col-6" *ngIf="!soloValores">-->
+        <ng-container *ngFor="let tp of tipoPrestacion.ejecucion">
+            <div class="col-6" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
+                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+                </rup>
+            </div>
+        </ng-container>
+
+        <!--<div class="col-6" *ngIf="soloValores && datosIngreso && datosIngreso[tp.key]">
+                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="onReturnComponent($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+                </rup>
+            </div>-->
+
+    </div>
+    <!--</div>-->
+</div>

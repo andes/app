@@ -10,15 +10,15 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 })
 
 export class EspacioFisicoComponent implements OnInit {
-    showupdate: boolean = false;
+    showupdate = false;
     espaciosFisicos: IEspacioFisico[];
     searchForm: FormGroup;
     selectedEspacioFisico: IEspacioFisico;
     value: any;
-    skip: number = 0;
-    finScroll: boolean = false;
-    tengoDatos: boolean = true;
-    loader: boolean = false;
+    skip = 0;
+    finScroll = false;
+    tengoDatos = true;
+    loader = false;
 
     constructor(private formBuilder: FormBuilder, private espacioFisicoService: EspacioFisicoService) { }
 
@@ -83,7 +83,7 @@ export class EspacioFisicoComponent implements OnInit {
 
     onDisable(espacioFisico: IEspacioFisico) {
         this.espacioFisicoService.disable(espacioFisico)
-            .subscribe(dato => this.loadEspaciosFisicos(), //Bind to view
+            .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
             err => {
                 if (err) {
                     console.log(err);
@@ -93,7 +93,7 @@ export class EspacioFisicoComponent implements OnInit {
 
     onEnable(espacioFisico: IEspacioFisico) {
         this.espacioFisicoService.enable(espacioFisico)
-            .subscribe(dato => this.loadEspaciosFisicos(), //Bind to view
+            .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
             err => {
                 if (err) {
                     console.log(err);
@@ -101,7 +101,7 @@ export class EspacioFisicoComponent implements OnInit {
             });
     }
 
-        activate(objEspacioFisico: IEspacioFisico) {
+    activate(objEspacioFisico: IEspacioFisico) {
 
         if (objEspacioFisico.activo) {
 

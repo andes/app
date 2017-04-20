@@ -21,7 +21,7 @@ export class ClonarAgendaComponent implements OnInit {
     private estado: Estado = 'noSeleccionado';
     private seleccionados: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
-    private agendasFiltradas: any[] = []; // Las agendas que hay en el día, cuapublic autorizado = false;ndo se selecciona una fecha para clonar
+    private agendasFiltradas: any[] = []; // Las agendas que hay en el día,
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
     private finMesDate;
@@ -40,6 +40,7 @@ export class ClonarAgendaComponent implements OnInit {
 
     constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
     ngOnInit() {
+        moment.locale('en');
         this.autorizado = this.auth.check('turnos:clonarAgenda');
         if (!this.autorizado) {
             this.redirect('incio');
@@ -60,7 +61,7 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
         let params = {
-            fechaDesde: this.inicioMesDate,
+            fechaDesde: this.inicioAgenda,
             fechaHasta: this.finMesDate,
         };
         if (this.agenda.espacioFisico) {
@@ -209,67 +210,15 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        let seleccionada = new Date(this.seleccionados[0]);
-        let operaciones: Observable<IAgenda>[] = [];
-        let operacion: Observable<IAgenda>;
-        this.seleccionados.forEach((seleccion, index0) => {
-            seleccionada = new Date(seleccion);
-            if (seleccionada && index0 > 0) {
-                let newHoraInicio = this.combinarFechas(seleccionada, new Date(this.agenda.horaInicio));
-                let newHoraFin = this.combinarFechas(seleccionada, this.agenda.horaFin);
-                this.agenda.horaInicio = newHoraInicio;
-                this.agenda.horaFin = newHoraFin;
-                let newIniBloque: any;
-                let newFinBloque: any;
-                let newIniTurno: any;
-                this.agenda.bloques.forEach((bloque, index) => {
-                    newIniBloque = this.combinarFechas(seleccionada, bloque.horaInicio);
-                    newFinBloque = this.combinarFechas(seleccionada, bloque.horaFin);
-                    bloque.horaInicio = newIniBloque;
-                    bloque.horaFin = newFinBloque;
-                    bloque.turnos.forEach((turno, index1) => {
-                        newIniTurno = this.combinarFechas(seleccionada, turno.horaInicio);
-                        turno.horaInicio = newIniTurno;
-                        turno.estado = 'disponible';
-                        turno.asistencia = false;
-                        turno.paciente = null;
-                        turno.tipoPrestacion = null;
-                        turno.idPrestacionPaciente = null;
-                        if (turno.tipoTurno) {
-                            delete turno.tipoTurno;
-                        }
-                    });
-                });
-                this.agenda.estado = 'Planificacion';
-                delete this.agenda._id;
-                delete this.agenda.id;
-                operacion = this.serviceAgenda.save(this.agenda);
-                operaciones.push(operacion);
-            }
-        });
-        let self = this;
-        Observable.forkJoin(operaciones).subscribe(
-            function (x) {
-                console.log('Next: %s', x);
-            },
-            function (err) {
-                console.log('Error: %s', err);
-            },
-            function () {
-                self.plex.alert('La agenda se clonó correctamente').then(guardo => {
-                    self.volverAlGestor.emit(true);
-                });
-            }
-        );
-    }
-
-    public clonarPatch() {
-        let patch = {
-            'op': 'clonarAgenda',
-            'fechas': this.seleccionados
+        console.log('seleccionados ',new Date(this.seleccionados[0]));
+        this.seleccionados.splice(0, 1);
+        this.seleccionados = [...this.seleccionados];
+        let data = {
+            idAgenda: this.agenda.id,
+            clones: this.seleccionados
         };
-        console.log('patch ', patch);
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+        this.serviceAgenda.clonar(data).subscribe(resultado => {
+            console.log('resultado ', resultado);
             this.plex.alert('La Agenda se clonó correctamente').then(ok => {
                 this.volverAlGestor.emit(true);
             });

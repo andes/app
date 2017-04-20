@@ -76,8 +76,13 @@ import {
   MapsComponent
 } from './../../utils/mapsComponent';
 import {
-  patientPipe
+  patientFullNamePipe,
+  patientRealAgePipe
 } from './../../utils/patientPipe';
+// import {
+//   patientRealAgePipe
+// } from './../../utils/patientRealAgePipe';
+
 
 @Component({
   selector: 'paciente-create-update',
@@ -198,6 +203,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
     });
+
 
     //Set País Argentina
     this.paisService.get({

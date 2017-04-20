@@ -12,6 +12,9 @@ import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPacien
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
+import { Auth } from '@andes/auth';
+import { IProfesional } from './../../../interfaces/IProfesional';
+
 @Component({
     selector: 'rup-transformarProblema',
     templateUrl: 'transformarProblema.html'
@@ -19,7 +22,6 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 export class TransformarProblemaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<IProblemaPaciente[]> = new EventEmitter<IProblemaPaciente[]>();
-
     @Input() listaProblemas: IProblemaPaciente[];
     @Input() problema: IProblemaPaciente;
     @Input() paciente: IPaciente;
@@ -35,7 +37,7 @@ export class TransformarProblemaComponent implements OnInit {
 
     constructor(private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex) { }
+        public plex: Plex, public auth: Auth) { }
 
 
     ngOnInit() {
@@ -47,11 +49,10 @@ export class TransformarProblemaComponent implements OnInit {
     }
 
     existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.id === tipoProblema.id)
+        return this.listaProblemas.find(elem => elem.tipoProblema.id === tipoProblema.id);
     }
 
     agregarProblema() {
-        debugger;
         let problemaActivo: IProblemaPaciente;
         let unaEvolucion = {
             fecha: new Date(),
@@ -62,37 +63,16 @@ export class TransformarProblemaComponent implements OnInit {
             vigencia: 'activo',
             segundaOpinion: null
         };
-        // Chequeamos si ya existe el problema en la lista en ejecucion.
-        /*if (problemaActivo = this.existeProblema(this.tipoProblema)) {
 
-            // Si exite le cargamos una nueva evolucion y lo agregamos en la lista de problemas a ejecutar
-            if (problemaActivo.idProblemaOrigen) {
-                problemaActivo.idProblemaOrigen.push(this.problema.id);
-            } else {
-                problemaActivo.idProblemaOrigen = [this.problema.id]
-            }
-            problemaActivo.evoluciones.push(unaEvolucion);
-            this.servicioProblemaPac.put(problemaActivo).subscribe(resultado => {
-                if (resultado) {
-                    this.listaProblemas.push(resultado);
-                    this.evtData.emit(this.listaProblemas);
-                } else {
-                    this.plex.alert('Ha ocurrido un error al transformar el problema');
-                }
-
-            });
-
-        } else {*/
         // Chequeamos si ya existe el problema en la lista completa del paciente.
         this.servicioProblemaPac.get({ idPaciente: this.paciente.id, idTipoProblema: this.tipoProblema.id })
             .subscribe(resultado => {
-                debugger;
                 if (resultado && resultado.length > 0) {
                     problemaActivo = resultado[0];
                     if (problemaActivo.idProblemaOrigen) {
                         problemaActivo.idProblemaOrigen.push(this.problema.id);
                     } else {
-                        problemaActivo.idProblemaOrigen = [this.problema.id]
+                        problemaActivo.idProblemaOrigen = [this.problema.id];
                     }
                     problemaActivo.evoluciones.push(unaEvolucion);
                     this.servicioProblemaPac.put(problemaActivo).subscribe(problema => {
@@ -129,7 +109,7 @@ export class TransformarProblemaComponent implements OnInit {
                     });
                 }
             });
-        //}
+        // }
 
     }
 
@@ -146,11 +126,12 @@ export class TransformarProblemaComponent implements OnInit {
                 segundaOpinion: null
             };
             this.problema.evoluciones.push(unaEvolucion);
+
+
             this.servicioProblemaPac.put(this.problema).subscribe(resultado => {
                 if (resultado) {
                     // Aqui vamos a cargar el nuevo problema del paciente
-                    this.listaProblemas = this.listaProblemas.filter(p => { return p.id !== this.problema.id });
-                    debugger;
+                    this.listaProblemas = this.listaProblemas.filter(p => { return p.id !== this.problema.id; });
                     this.agregarProblema();
                 } else {
                     this.plex.alert('Ha ocurrido un error al transformar el problema');

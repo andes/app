@@ -2,24 +2,14 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../services/turnos/agenda.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from './../../services/profesional.service';
-import { Router } from '@angular/router';
-import { GestorAgendasService } from './../../services/turnos/gestor-agendas.service';
 
 @Component({
     selector: 'vista-agenda',
     templateUrl: 'vista-agenda.html'
 })
 
-export class VistaAgendaComponent implements OnInit, OnDestroy {
+export class VistaAgendaComponent implements OnInit {
 
-    showVistaAgendas: Boolean = true;
-    showEditarAgenda: Boolean = false;
-    showEditarAgendaPanel: Boolean = false;
-    cantSel: number;
-    // TODO: Eliminar input vistaAgenda
-    @Input() vistaAgenda: any;
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
@@ -36,12 +26,16 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         return this._agendasSeleccionadas;
     }
 
-    public modelo: any = {};
-    public vistaBotones: any = {};
+    // Mantiene la combinación de condiciones para mostrar/ocultar botones
+    vistaBotones: any = {};
 
+    // Muestra/oculta este componente
+    showVistaAgendas: Boolean = true;
+    showEditarAgenda: Boolean = false;
+    showEditarAgendaPanel: Boolean = false;
+    cantSel: number;
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router) {
+    constructor(public plex: Plex, public serviceAgenda: AgendaService) {
     }
 
     ngOnInit() {
@@ -50,13 +44,52 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        // this.subscription.unsubscribe();
+    confirmarEstado(estado) {
+        let alertCount = 0;
+        this.agendasSeleccionadas.forEach((agenda, index) => {
+            let patch = {
+                'op': estado,
+                'estado': estado
+            };
+
+            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                // Si son múltiples, esperar a que todas se actualicen
+                if (alertCount === 0) {
+                    if (this.cantSel === 1) {
+                        this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(true);
+                    } else {
+                        if (estado === 'prePausada') {
+                            this.plex.alert('Las agendas cambiaron de estado');
+                        } else {
+                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        }
+                        this.actualizarEstadoEmit.emit(true);
+                    }
+                    alertCount++;
+                }
+            });
+        });
     }
 
+    // Actualiza estado de las Agendas seleccionadas
+    actualizarEstado(estado) {
+
+        if (estado === 'Publicada') {
+            this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                if (!confirmado) {
+                    return false;
+                } else {
+                    this.confirmarEstado(estado);
+                }
+            });
+        } else {
+            this.confirmarEstado(estado);
+        }
+    }
+
+    // Muestra/oculta botones según una combinación de criterios
     actualizarBotones() {
-        // Muestra/oculta botones según una combinación de criterios
-        // TODO: Pausada
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado Planificacion o Disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar(),
@@ -64,8 +97,8 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
             suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender()),
             // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
             pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer()),
-            // Se pueden publicar todas las agendas que estén en estado Planificacion o Disponible 
-            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()),
+            // Se pueden publicar todas las agendas que estén en estado Planificacion, o si estado Disponible y no tiene *sólo* turnos reservados
+            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados(),
             // Se pueden cambiar a estado Pausada todas las agendas que no estén en estado Planificacion
             pausarAgenda: (this.cantSel > 0 && this.puedoPausar()),
             // Se pueden reanudar las agendas en estado Pausada
@@ -77,7 +110,6 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
             // En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play"
         };
     }
-
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
@@ -105,7 +137,7 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'Planificacion' || agenda.estado === 'Pausada';
+            return agenda.estado === 'Planificacion' || agenda.estado === 'Pausada' || agenda.estado === 'Suspendida';
         }).length <= 0;
     }
 
@@ -115,46 +147,33 @@ export class VistaAgendaComponent implements OnInit, OnDestroy {
         }).length <= 0;
     }
 
+    haySoloTurnosReservados() {
+        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
+            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
+                if (this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0) {
+                    if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
+                        // No se puede Publicar
+                        return false;
+                    }
+                }
+            }
+        }
+        if (this.agendasSeleccionadas.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     // Botón editar agenda
     editarAgenda() {
         this.editarAgendaEmit.emit(this.agendasSeleccionadas[0]);
     }
 
-    // Botones actualizar estado
-    actualizarEstado(estado) {
-
-        let alertCount = 0;
-        this.agendasSeleccionadas.forEach((agenda, index) => {
-            let patch = {
-                'op': estado,
-                'estado': estado
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                if (alertCount === 0) {
-                    if (this.cantSel === 1) {
-                        this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        this.actualizarEstadoEmit.emit(true);
-                    } else {
-                        if ( estado === 'prePausada' ) {
-                            this.plex.alert('Las agendas cambiaron de estado');
-                        } else {
-                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        }
-                        this.actualizarEstadoEmit.emit(true);
-                    }
-                    alertCount++;
-                }
-                this.vistaAgenda = resultado;
-            });
-        });
-
-    }
-
     // Botón clonar
-    clonarAgenda(agenda: IAgenda) {
-        this.modelo = agenda;
-        this.clonarEmit.emit(this.modelo);
+    clonarAgenda(agenda: any) {
+        this.clonarEmit.emit(agenda);
     }
 
     cancelar() {

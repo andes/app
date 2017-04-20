@@ -2,7 +2,7 @@ import { ProblemaPacienteService } from './../../../services/rup/problemaPacient
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-
+import { Auth } from '@andes/auth';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 
@@ -16,31 +16,18 @@ export class verProblemaComponent implements OnInit {
 
     @Input() problema: IProblemaPaciente;
     public evoluciones: any[];
+    // public usuario: IPaciente;
 
-    constructor(private servicioProblemaPaciente: ProblemaPacienteService, private route: ActivatedRoute) {
+    constructor(private servicioProblemaPaciente: ProblemaPacienteService, public auth: Auth, private route: ActivatedRoute) {
 
     }
 
 
     ngOnInit() {
-        console.log(this.problema);
         this.servicioProblemaPaciente.getById(this.problema.id)
             .subscribe(problema => {
                 this.problema = problema;
-                console.log("problema populado", this.problema);
             });
-        debugger;
-        // this.route.params.forEach((params: Params) => {
-        //     debugger;
-        //     if (params['id']) {
-        //         let id = params['id'];
-        //         this.servicioProblemaPaciente.getById(id)
-        //             .subscribe(problema => {
-        //                 this.problema = problema;
-        //             });
-        //     }
-        // });
-
 
     }
 

@@ -1,45 +1,121 @@
-<h2>
-    Evolucionar</h2>
-<div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-    <div class="col-md-12">
-        <span class="badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                                Activo
-                                            </span>
-        <span class="badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                            </span>
-        <span class="badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
-                                               {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                            </span>
+<style>    
 
-    </div>
+      small {
+    color: grey;
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+   
+     h5.box-title-principal {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+  }
+
+   h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid white 1px;
+  }
+
+   /*Etiquetas*/
+  
+  .badge {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin: 0px 10px 10px 0px;
+    display: inline-block;
+  }
+  
+  .badge-danger {
+    border: 1.5px solid #dd4b39;
+    border-radius: 0px;
+    background: transparent;
+    color: #dd4b39;
+  }
+  
+  .badge-success {
+    border: 1.5px solid #8CC63F;
+    border-radius: 0px;
+    background: transparent;
+    color: #8CC63F;
+  }
+  .badge-warning {
+    border: 1.5px solid #ff8d22;
+    border-radius: 0px;
+    background: transparent;
+    color: #ff8d22;
+  }
+
+   .plex-box-invert {
+        color: white;
+        background-color: #002738; 
+        padding: 20px;       
+    }
+  
+</style>
+
+
+<div class="plex-box-invert">
+
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5 class="box-title-secundario">Evolucionar Problema</h5>
+            </div>
+        </div>             
+    </header>
+
+        <form>
+        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+            <div class="col-md-12">      
+                <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                    Activo
+                </span>
+                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                </span>
+                <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
+                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <strong><h3>{{problema.tipoProblema.nombre}}</h3></strong>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" 
+                        placeholder="Ingrese Vigencia">
+                </plex-select>
+            </div>
+            <div class="col-md-6">
+                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" 
+                        placeholder="Ingrese duración" *ngIf="vigencia && vigencia.id != 'Resuelto'">
+                </plex-select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones"
+                    placeholder="Ingrese una observación" >
+                </plex-text>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <plex-button title="Evolucionar Problema " label="Evolucionar " validateForm="true" (click)="evolucionarProblema($event)" type="success"></plex-button>
+                <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
+            </div>
+        </div>
+
+        </form>
 </div>
-<form>
-    <div class="row">
-        <div class="col-md-12">
-            <h3> {{problema.tipoProblema.nombre}}</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-            </plex-text>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" placeholder="Ingrese Vigencia">
-            </plex-select>
-        </div>
-        <div class="col-md-6">
-            <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración" *ngIf="vigencia && vigencia.id != 'Resuelto'">
-            </plex-select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <plex-button title="Evolucionar Problema " label="Evolucionar " validateForm="true" (click)="evolucionarProblema($event)" type="success"></plex-button>
-            <plex-button title="Cerrar" label="Cerrar " (click)="cerrar()" type="danger"></plex-button>
-        </div>
-    </div>
-</form>

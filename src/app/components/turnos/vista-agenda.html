@@ -1,4 +1,3 @@
-<!--{{ vistaBotones | json }}-->
 <span *ngIf="cantSel > 0">
     <span *ngIf="vistaBotones.editarAgenda">
         <plex-button icon="mdi mdi-tooltip-edit" (click)="editarAgenda()" title="Editar Agenda">
@@ -8,14 +7,10 @@
         <plex-button icon="mdi mdi-content-copy" (click)="clonarAgenda()" title="Clonar Agenda">
         </plex-button>
     </span>
-    <!--<span *ngIf="vistaBotones.cerrarAgenda">
-        <plex-button icon="mdi mdi-close-circle-outline" (click)="cerrarAgenda(agenda)" title="Cerrar Agenda">
-        </plex-button>
-    </span>-->
     <span *ngIf="vistaBotones.pasarDisponibleAgenda">
         <plex-button icon="mdi mdi-check" (click)="actualizarEstado( 'Disponible' )" title="Pasar Agenda a disponible">
         </plex-button>
-    </span>
+    </span>     
     <span *ngIf="vistaBotones.publicarAgenda">
         <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="actualizarEstado( 'Publicada' )" title="Publicar Agenda">
         </plex-button>

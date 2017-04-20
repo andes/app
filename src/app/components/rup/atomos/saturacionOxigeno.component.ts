@@ -1,6 +1,6 @@
+import { IPaciente } from './../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from "../../../interfaces/IPaciente";
-
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-saturacion-oxigeno',
@@ -34,15 +34,27 @@ export class SaturacionOxigenoComponent implements OnInit {
             this.evtData.emit(this.data);
 	}
 
-	getMensajes() {
+        getMensajes() {
         let saturacionOxigeno = this.data[this.tipoPrestacion.key];
         let edadEnMeses;
-        edadEnMeses = 8; //Falta la edad en meses esta asi para probar.. 
-        
+
+        // Calculo Edad en Meses
+        let edadMeses: any = null;
+        let fechaNac: any;
+        let fechaActual: Date = new Date();
+        let fechaAct: any;
+        let difDias: any;
+        let difMeses: any;
+        fechaNac = moment(this.paciente.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
+        fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
+        difDias = fechaAct.diff(fechaNac, 'd');     // Diferencia en días
+        edadEnMeses = Math.trunc(difDias / 30.4375); // Diferencia en Meses
+
+
         let mensaje: any = {
-			texto: '',
-			class: 'danger'
-		};
+            texto: '',
+            class: 'danger'
+        };
 
         if (saturacionOxigeno) {
 
