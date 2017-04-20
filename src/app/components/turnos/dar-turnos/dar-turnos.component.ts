@@ -102,6 +102,8 @@ export class DarTurnosComponent implements OnInit {
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     console.log('Autorizado: ', this.autorizado);
 
+    this.opciones.fecha = moment().toDate();
+
     if (this._reasignaTurnos) {
       this.paciente = this._reasignaTurnos.paciente;
       this.telefono = this.turno.paciente.telefono;
@@ -157,7 +159,7 @@ export class DarTurnosComponent implements OnInit {
    */
   actualizar(etiqueta) {
 
-    // debugger
+    
 
     // 1) Auth general (si puede ver esta pantalla)
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
@@ -171,7 +173,7 @@ export class DarTurnosComponent implements OnInit {
     this.estadoT = 'noSeleccionada';
     this.agenda = null;
 
-    let fechaHasta = (moment().endOf('month')).toDate();
+    let fechaHasta = (moment(this.opciones.fecha).endOf('month')).toDate();
 
     if (etiqueta !== 'sinFiltro') {
 
