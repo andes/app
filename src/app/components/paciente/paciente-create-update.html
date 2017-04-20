@@ -63,8 +63,11 @@
                         </div>-->
                     </div>
                     <div class="row" *ngIf="validado">
-                        <div class="col"> <br>
+                        <div class="col-12"> <br>
                             <plex-bool [(ngModel)]="pacienteModel.reportarError" name="reportarError" label="Considero que los datos escaneados son incorrectos y quiero reportar el error"></plex-bool>
+                        </div>
+                        <div class="col-12" *ngIf="pacienteModel.reportarError"> 
+                            <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
                         </div>
                     </div>
 
@@ -118,12 +121,12 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen"></plex-bool>
+                            <plex-bool [(ngModel)]="viveProvNeuquen" label="¿Vive en la Provincia de Neuquén?" name="viveProvNeuquen" (change)="changeProvNeuquen($event)" ></plex-bool>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12" *ngIf="viveProvNeuquen">
-                            <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN"></plex-bool>
+                            <plex-bool [(ngModel)]="viveEnNeuquen" label="¿Vive en Neuquén Capital?" name="viveNQN" (change)="changeLocalidadNeuquen($event)" ></plex-bool>
                         </div>
                     </div>
                     <div *ngIf="viveProvNeuquen">
@@ -133,7 +136,7 @@
                                 </plex-text>
                             </div>
                             <div class="col">
-                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre" >
                                 </plex-select>
                             </div>
                         </div>
@@ -143,11 +146,12 @@
                                 </plex-text>
                             </div>
                             <div class="col">
-                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre">
+                                <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre"
+                                (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
                                 </plex-select>
                             </div>
                             <div class="col">
-                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barrios" placeholder="Seleccione..." labelField="nombre">
+                                <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre" >
                                 </plex-select>
                             </div>
                         </div>

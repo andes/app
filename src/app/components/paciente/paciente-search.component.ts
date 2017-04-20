@@ -154,7 +154,6 @@ export class PacienteSearchComponent implements OnInit {
     if (!this.controlarScanner()) {
       return;
     }
-    debugger;
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {
       this.timeoutHandle = window.setTimeout(() => {
@@ -197,7 +196,6 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
-                debugger;
                 this.pacientesSimilares = resultSuggest;
                 if (this.pacientesSimilares.length > 0) {
 

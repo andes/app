@@ -48,4 +48,5 @@ export interface IPaciente {
     entidadesValidadoras: [String];
     scan: String;
     reportarError: Boolean;
+    notaError: String;
 }
