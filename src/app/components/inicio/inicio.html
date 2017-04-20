@@ -28,9 +28,13 @@
     </div>
 </div>
 
+<header *ngIf="auth.loggedIn()" class="header-paciente">
+    <!--<div title="Menú hamburguesa" class="hover float-right mdi mdi-food mdi-36px" style="background-color: #00a8e0; height: 100%; width: 90vw; right: 0; top: 10px; text-align: right; padding-top: 10px;"></div>-->
+</header>
 <div *ngIf="auth.loggedIn()" class="jumbotron">
     <h1 class="display-4 margin-bottom">Bienvenido a la plataforma de la Historia Digital de Salud</h1>
-    <p class="lead">
-        <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="/pacientes"><i class="mdi mdi-account-check"></i> Ingresar a la Validación Digital de Pacientes</a>
+    <p>
+        <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="/pacientes"><i class="mdi mdi-account-card-details"></i> Ingresar a la Validación Digital de Pacientes</a>
+        <a *ngIf="permisoAgendas" class="btn btn-primary btn-lg" href="#" role="button" routerLink="/gestor_agendas"><i class="mdi mdi-account-multiple"></i> Ingresar al Gestor de Agendas y Turnos</a>
     </p>
 </div>
