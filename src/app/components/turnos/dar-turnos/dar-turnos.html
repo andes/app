@@ -75,15 +75,15 @@
                     </div>
                   </div>
                 </div>
-
+                <hr>
                 <div class="row">
                   <div class="col">
                     <div *ngFor="let bloque of bloques; let indiceBq=index">
                       <div *ngIf="tieneTurnos(bloque)" class="row">
                         <div class="col-md-12">
-                          <h3 class="bloque-title">
-                            <span>{{bloque.descripcion}}</span> <span class="badge"> {{bloque.duracionTurno}} '</span><br>
-                          </h3>
+                          <div class="bloque-title">
+                            <span>{{bloque.descripcion}}</span> <span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span><br>
+                          </div>
                         </div>
                       </div>
                       <div class="container">
@@ -116,7 +116,7 @@
                         <!-- end ngFor turnos -->
                       </div>
                       <br>
-                      <div class="container">
+                      <div *ngIf="tieneTurnos(bloque)" class="container">
                         <div class="row">
                           <div class="col-md-12">
                             <h5 class="bloque-subtitle">Turnos restantes:</h5>
@@ -139,8 +139,8 @@
                           </div>
                         </div>
                       </div>
-                      <hr>
                     </div>
+                    <hr>
                     <!-- end ngFor bloques -->
                   </div>
                 </div>
@@ -176,9 +176,9 @@
                         {{agenda.horaInicio | date: 'dd/MM'}}
                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda(true)"></plex-button>
                       </h1>
-                      <div class="text-uppercase ">{{semana[agenda.horaInicio.getDay()]}}</div>
+                      <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
                     </div>
-                    <div class="col-12 ">
+                    <div class="col-12">
                       <h3>
                         <div *ngFor="let profesional of agenda.profesionales let i=index">
                           <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
@@ -191,6 +191,7 @@
                 </div>
                 <br>
                 <div *ngIf="alternativas.length > 0" class="list-group">
+                  
                   <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
                     <div class="row">
                       <div class="col col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: &nbsp;</label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
@@ -224,12 +225,12 @@
               <div class="col" *ngIf="estadoT=='confirmacion'">
                 <div class="row">
                   <div class="col">
-                    <label>Paciente: &nbsp;</label>{{this.paciente.nombre}} {{this.paciente.apellido}} <br>
-                    <label>Documento: &nbsp;</label>{{this.paciente.documento}} <br>
-                    <label>Tipo de turno: &nbsp;</label>{{this.tiposTurnosSelect}} <br>
-                    <plex-phone label="Verifique el número telefónico" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
-                    <label>Fecha: &nbsp;</label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}<br>
-                    <label>Hora: &nbsp;</label>{{turno.horaInicio | date: 'HH:mm'}}<br>
+                    <label>Paciente: </label>{{this.paciente.nombre}} {{this.paciente.apellido}} <br>
+                    <label>Documento: </label>{{this.paciente.documento}} <br>
+                    <label>Tipo de turno: </label>{{this.tiposTurnosLabel}} <br>
+                    <plex-phone label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                    <label>Fecha: </label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}<br>
+                    <label>Hora: </label>{{turno.horaInicio | date: 'HH:mm'}}<br>
                     <label>Profesionales: </label>
                     <div *ngFor="let profesional of agenda.profesionales let i=index">{{profesional.nombre}} {{profesional.apellido}} <br>
                       <!--<div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}},</div>
@@ -259,17 +260,17 @@
           <plex-tab icon="account-search" class="text-center">
             <br>
             <label><h5><strong>ÚLTIMOS TURNOS DEL PACIENTE</strong></h5></label><br>
-            <div class="list-group">
-              <a *ngFor="let turno of ultimosTurnos" class="list-group-item">
-                <p> <span>{{turno.organizacion}} </span> </p>
-                <p>Fecha: &nbsp; <span>{{turno.horaInicio}} </span> </p>
-                <br>
-                <p>Estado: &nbsp; <span>{{turno.estado}} </span> </p>
-                <p>Tipo de Prestación: &nbsp;<span>{{turno.tipoPrestacion}} </span> </p>
-                <div *ngFor="let profesional of turno.profesionales">Profesional: &nbsp;
-                  <span>{{profesional.nombre}} {{profesional.apellido}} </span> <br>
-                </div>
+            <div *ngFor="let turno of ultimosTurnos let i=index" class="text-left">
+              <a (click)="seleccionarBusqueda(i)" class="hover">
+                <h5>{{turno.organizacion}}</h5>
+                <p><strong>Fecha:</strong> {{turno.horaInicio}}</p>
+                <p><strong>Tipo de Prestación: </strong>{{turno.tipoPrestacion}}</p>
+                <p *ngFor="let profesional of turno.profesionales">
+                  <strong>Profesional:</strong> {{profesional.nombre}} {{profesional.apellido}}
+                </p>
+                <p><strong>Estado: </strong> {{turno.estado}}</p>
               </a>
+              <hr>
             </div>
           </plex-tab>
         </plex-tabs>

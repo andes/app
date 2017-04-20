@@ -33,3 +33,17 @@
     display: inline-block;
     height: 38px;
 }
+
+
+.td-calendario {
+    position: relative;
+
+    .badge {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        color: white;
+        font-weight: normal;
+    }
+
+}

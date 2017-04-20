@@ -44,10 +44,7 @@ export class VistaAgendaComponent implements OnInit {
         }
     }
 
-
-    // Actualiza estado de las Agendas seleccionadas
-    actualizarEstado(estado) {
-
+    confirmarEstado(estado) {
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
             let patch = {
@@ -62,7 +59,7 @@ export class VistaAgendaComponent implements OnInit {
                         this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                         this.actualizarEstadoEmit.emit(true);
                     } else {
-                        if ( estado === 'prePausada' ) {
+                        if (estado === 'prePausada') {
                             this.plex.alert('Las agendas cambiaron de estado');
                         } else {
                             this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
@@ -73,7 +70,22 @@ export class VistaAgendaComponent implements OnInit {
                 }
             });
         });
+    }
 
+    // Actualiza estado de las Agendas seleccionadas
+    actualizarEstado(estado) {
+
+        if (estado === 'Publicada') {
+            this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                if (!confirmado) {
+                    return false;
+                } else {
+                    this.confirmarEstado(estado);
+                }
+            });
+        } else {
+            this.confirmarEstado(estado);
+        }
     }
 
     // Muestra/oculta botones según una combinación de criterios
@@ -85,7 +97,7 @@ export class VistaAgendaComponent implements OnInit {
             suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender()),
             // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
             pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer()),
-            // Se pueden publicar todas las agendas que estén en estado Planificacion o Disponible
+            // Se pueden publicar todas las agendas que estén en estado Planificacion, o si estado Disponible y no tiene *sólo* turnos reservados
             publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados(),
             // Se pueden cambiar a estado Pausada todas las agendas que no estén en estado Planificacion
             pausarAgenda: (this.cantSel > 0 && this.puedoPausar()),
@@ -136,17 +148,17 @@ export class VistaAgendaComponent implements OnInit {
     }
 
     haySoloTurnosReservados() {
-        for ( let x = 0; x < this.agendasSeleccionadas.length; x++ ) {
-            for ( let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++ ) {
-                if ( this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0 ) {
-                    if ( this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0 ) {
+        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
+            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
+                if (this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0) {
+                    if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
                         // No se puede Publicar
                         return false;
                     }
                 }
             }
         }
-        if ( this.agendasSeleccionadas.length > 0) {
+        if (this.agendasSeleccionadas.length > 0) {
             return true;
         } else {
             return false;

@@ -191,15 +191,13 @@ export class TurnosComponent implements OnInit {
     }
 
     hayTurnosTarde() {
-
         // Si la Agenda actual tiene fecha de hoy...
-        if (moment(this.agenda.horaInicio).startOf('day').format() === moment().startOf('day').format()) {
+        if (moment(this.agenda.horaInicio).startOf('day').format() >= moment().startOf('day').format()) {
             return this.turnosSeleccionados.filter((turno) => {
                 // hay turnos tarde (ya se les pasó la hora)
                 return moment(turno.horaInicio).format() < moment().format();
             }).length;
         }
-
     }
 
     actualizarBotones() {
@@ -208,7 +206,7 @@ export class TurnosComponent implements OnInit {
         this.botones = {
 
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.hayTurnosConEstado('bloqueado')) && !this.hayTurnosTarde(),
+            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.hayTurnosConEstado('bloqueado')) && this.hayTurnosTarde(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
             sacarAsistencia: (  this.tienenAsistencia()) && this.tienenPacientes(),
             // Suspender turno: El turno no está asignado ==> el estado pasa a "bloqueado"
@@ -219,7 +217,7 @@ export class TurnosComponent implements OnInit {
             bloquearTurno: this.agendaNoSuspendida() && this.hayTurnosConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
             // Desbloquear turno: está "bloqueado" pero sin paciente ==> el estado pasa a "disponible"
             desbloquearTurno: this.agendaNoSuspendida() && this.hayTurnosConEstado('bloqueado') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
-            // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> TODO!!!
+            // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
             // reasignarTurno: this.agendaNoSuspendida() && this.noHayTurnosConEstado('asignado') && this.noTienenAsistencia(),
             reasignarTurno: false,
             // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"

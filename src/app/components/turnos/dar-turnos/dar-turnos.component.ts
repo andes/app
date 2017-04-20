@@ -10,6 +10,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { CalendarioDia } from './calendario-dia.class';
 import * as moment from 'moment';
 
 // Servicios
@@ -81,6 +82,7 @@ export class DarTurnosComponent implements OnInit {
   showCreateUpdate = false;
   tipoTurno: string;
   tiposTurnosSelect: String;
+  tiposTurnosLabel: String;
 
   constructor(
     public serviceProfesional: ProfesionalService,
@@ -142,14 +144,15 @@ export class DarTurnosComponent implements OnInit {
    */
   actualizar(etiqueta) {
 
-    debugger
+    // debugger
+
     // 1) Auth general (si puede ver esta pantalla)
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
     // 2) Permisos
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     // this.permisos = this.auth.getPermissions('turnos:darTurnos:organizacion:?');
-    console.log('PERMISOS: ', this.permisos);
+    // console.log('PERMISOS: ', this.permisos);
 
     let params: any = {};
     this.estadoT = 'noSeleccionada';
@@ -167,6 +170,7 @@ export class DarTurnosComponent implements OnInit {
       };
 
     } else {
+
       // Reseteat opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
@@ -230,7 +234,7 @@ export class DarTurnosComponent implements OnInit {
   seleccionarAgenda(agenda) {
 
     // Actualiza el calendario, para ver si no ho hubo cambios
-    this.actualizar('sinFiltro');
+    this.actualizar('');
 
     // Asigno agenda
     this.agenda = agenda;
@@ -275,18 +279,29 @@ export class DarTurnosComponent implements OnInit {
           let myBloques = [];
           let isDelDia = false;
 
-          let idAgendas = this.agendas.map(elem => { return elem.id; });
+          let idAgendas = this.agendas.map(elem => {
+            return elem.id;
+          });
+
           this.indice = idAgendas.indexOf(this.agenda.id);
 
-          /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
+          // Usamos CalendarioDia para hacer chequeos
+          // TODO: Cleanup y usar sólo la clase donde se pueda
+          let cal = new CalendarioDia(null, this.agenda);
 
-          if (this.agenda.turnosDisponibles > 0) {
+          /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
+          if (cal.estado !== 'ocupado') {
+
             if (this.agenda.estado === 'Disponible') {
               this.tiposTurnosSelect = 'gestion';
+              this.tiposTurnosLabel = 'Para gestión de pacientes';
             }
+
             if (this.agenda.estado === 'Publicada') {
               this.tiposTurnosSelect = 'programado';
+              this.tiposTurnosLabel = 'Programado';
             }
+
             let countBloques = [];
             let programadosDisponibles = 0;
             let gestionDisponibles = 0;
@@ -294,10 +309,10 @@ export class DarTurnosComponent implements OnInit {
             // let tiposTurnosSelect = [];
 
             // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
-            if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate()
-              && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+            if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate() && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
               isDelDia = true;
               this.tiposTurnosSelect = 'delDia';
+              this.tiposTurnosLabel = 'Del día';
               // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
               this.agenda.bloques.forEach((bloque, indexBloque) => {
                 countBloques.push({
@@ -369,16 +384,22 @@ export class DarTurnosComponent implements OnInit {
               tipoPrestacionesArray.push({ nombre: this.agenda.tipoPrestaciones[0].nombre });
             }
             this.tipoPrestacionesArray = tipoPrestacionesArray;
+
+            // no hay turnos disponibles
           } else {
 
             /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
             this.estadoT = 'noTurnos';
+            
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
               this.serviceAgenda.get({
                 'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                 'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
                 'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
-              }).subscribe(alternativas => { this.alternativas = alternativas; this.reqfiltros = false; });
+              }).subscribe(alternativas => {
+                this.alternativas = alternativas;
+                this.reqfiltros = false;
+              });
             } else {
               this.reqfiltros = true;
             }
@@ -521,6 +542,8 @@ export class DarTurnosComponent implements OnInit {
           this.borrarTurnoAnterior();
           this.plex.alert('El turno se asignó correctamente');
         });
+
+        // Guardar Prestación Paciente
         let nuevaPrestacion;
         nuevaPrestacion = {
           //  id : null,
@@ -547,10 +570,11 @@ export class DarTurnosComponent implements OnInit {
             evoluciones: []
           }
         };
-        this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-          this.plex.alert('prestacion paciente creada');
+        // TODO: Revisar alert
+        // this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+        //   this.plex.alert('prestacion paciente creada');
 
-        });
+        // });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {

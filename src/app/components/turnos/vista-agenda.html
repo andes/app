@@ -12,8 +12,7 @@
         </plex-button>
     </span>     
     <span *ngIf="vistaBotones.publicarAgenda">
-        <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" mwlConfirmationPopover  (confirm)="actualizarEstado( 'Publicada' )" 
-            (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar" title="Publicar Agenda">
+        <plex-button icon="mdi mdi-arrow-up-bold-circle-outline" (click)="actualizarEstado( 'Publicada' )" title="Publicar Agenda">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.suspenderAgenda">
