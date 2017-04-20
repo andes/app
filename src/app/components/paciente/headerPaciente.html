@@ -39,19 +39,24 @@
 </div>-->
 
 
-<div class="sub-friso" style="width: 115%">
+<div class="sub-friso">
     <div class="row">
-        <div class="col-6">
+        <div class="col-8">
             <div class="row">
                 <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
-                <div class="col-12">{{paciente.documento|number}}</div>
-                <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
-                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal}}</div>
+            </div>
+            <div class="row">
+                <div class="col-12">{{paciente.documento | number}}</div>
+            </div>
+            <div class="row">
+                <div class="col-6">{{paciente.fechaNacimiento | date: 'dd/MM/yyyy'}}</div>
+                <div class="col-6 text-right">Edad: {{paciente | realAge}}</div>
             </div>
         </div>
-        <div class="col-6 data-paciente ">
-            <div class="subdata-paciente">Estado</div>
+        <div class="col-4 estado-paciente">
+            <div class="subdata-paciente">Estado:</div>
             <div class="subdata-descripcion">{{paciente.estado}}</div>
         </div>
+        <div class="col-2"></div>
     </div>
 </div>

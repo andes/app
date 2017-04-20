@@ -87,15 +87,10 @@
     <div *ngIf="showCreateUpdate">
         <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
     </div>
-  </div>
-  <!--Componente de Alta/Modificación-->
-  <div *ngIf="showCreateUpdate">
-    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
-  </div>
 </section>
 <br>
 <footer *ngIf="!showCreateUpdate">
-  <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
-  <!--boton provisorio hasta tener el menu desplegable-->
-  <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
+    <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+    <!--boton provisorio hasta tener el menu desplegable-->
+    <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
 </footer>

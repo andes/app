@@ -47,3 +47,17 @@
     }
 
 }
+
+// temp Paciente header @ Dar turnos 
+.sub-friso {
+    background-color: $blue !important;
+}
+.header-paciente {
+    min-width: 600px;
+    background-color: $blue;
+    color: white;
+
+    .estado-paciente {
+        border-left: 1px solid white !important;
+    }
+}

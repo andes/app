@@ -122,8 +122,15 @@ export class DarTurnosComponent implements OnInit {
   }
 
   loadProfesionales(event) {
-    this.serviceProfesional.get({}).subscribe(event.callback);
-  }
+        if ( event.query ) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.serviceProfesional.get( query ).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
 
   filtrar() {
     let search = {
@@ -164,6 +171,7 @@ export class DarTurnosComponent implements OnInit {
     this.estadoT = 'noSeleccionada';
     this.agenda = null;
 
+    let fechaHasta = (moment().endOf('month')).toDate();
 
     if (etiqueta !== 'sinFiltro') {
 
@@ -171,6 +179,7 @@ export class DarTurnosComponent implements OnInit {
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
         fechaDesde: new Date().setHours(0, 0, 0, 0),
+        fechaHasta: fechaHasta,
         idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
         idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
       };
@@ -181,9 +190,11 @@ export class DarTurnosComponent implements OnInit {
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
 
+
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
         fechaDesde: new Date().setHours(0, 0, 0, 0),
+        fechaHasta: fechaHasta,
         tipoPrestaciones: this.permisos,
         // Mostrar solo las agendas que correspondan a la organización del usuario logueado
         organizacion: this.auth.organizacion._id
@@ -217,7 +228,7 @@ export class DarTurnosComponent implements OnInit {
         }
       });
 
-      this.indice = -1;
+      // this.indice = -1;
 
       // Ordena las Agendas por fecha/hora de inicio
       this.agendas = this.agendas.sort(
@@ -399,9 +410,10 @@ export class DarTurnosComponent implements OnInit {
 
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
               this.serviceAgenda.get({
-                'fechaDesde': moment(this.agenda.horaInicio).add(1, 'day').toDate(),
-                'idTipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
-                'idProfesional': this.opciones.profesional ? this.opciones.profesional.id : null,
+                fechaDesde: moment(this.agenda.horaInicio).add(1, 'day').toDate(),
+                idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
+                idProfesional: this.opciones.profesional ? this.opciones.profesional.id : null,
+                estados: [ 'Disponible', 'Publicada' ]
               }).subscribe(alternativas => {
                 this.alternativas = alternativas;
                 this.reqfiltros = false;
@@ -440,19 +452,23 @@ export class DarTurnosComponent implements OnInit {
     this.seleccionarAgenda(this.alternativas[indice]);
   }
 
-  verAgenda(suma: boolean) {
+  verAgenda(direccion: String) {
+
     if (this.agendas) {
-      let condiciones = suma ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
-      if (condiciones) {
-        if (suma) {
+
+      // Asegurar que no nos salimos del rango de agendas (agendas.length)
+      let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
+
+      if (enRango) {
+        if (direccion === 'der') {
           this.indice++;
         } else {
           this.indice--;
         }
         this.agenda = this.agendas[this.indice];
+        this.seleccionarAgenda(this.agenda);
       }
     }
-    this.seleccionarAgenda(this.agenda);
   }
 
   cambiarMes(signo) {
@@ -664,6 +680,7 @@ export class DarTurnosComponent implements OnInit {
   }
 
   onReturn(pacientes: IPaciente): void {
+    debugger;
     if (pacientes.id) {
       this.paciente = pacientes;
       this.verificarTelefono(this.paciente);
@@ -671,10 +688,9 @@ export class DarTurnosComponent implements OnInit {
       this.pacientesSearch = false;
       window.setTimeout(() => this.pacientesSearch = false, 100);
       this.getUltimosTurnos();
-    }
-    else {
+    } else {
       this.seleccion = pacientes;
-      this.verificarTelefono(this.seleccion);
+      // this.verificarTelefono(this.seleccion);
       this.esEscaneado = true;
       this.escaneado.emit(this.esEscaneado);
       this.selected.emit(this.seleccion);
@@ -687,9 +703,9 @@ export class DarTurnosComponent implements OnInit {
     // se busca entre los contactos si tiene un celular
     this.telefono = '';
     this.cambioTelefono = false;
-    if (this.paciente.contacto) {
-      if (this.paciente.contacto.length > 0) {
-        this.paciente.contacto.forEach((contacto) => {
+    if (paciente.contacto) {
+      if (paciente.contacto.length > 0) {
+        paciente.contacto.forEach((contacto) => {
           if (contacto.tipo === 'celular') {
             this.telefono = contacto.valor;
           }
