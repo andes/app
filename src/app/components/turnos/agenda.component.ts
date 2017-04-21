@@ -592,6 +592,7 @@ export class AgendaComponent implements OnInit {
             espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
+                    this.modelo.id = resultado.id;
                     if (clonar) {
                         this.showClonar = true;
                         this.showAgenda = false;
