@@ -400,7 +400,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.data.emit(result);
         });
       } else {
-        operacionPac = this.pacienteService.post(pacienteGuardar);
+        operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
 
           if (result) {
