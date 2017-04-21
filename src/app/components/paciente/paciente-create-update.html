@@ -64,7 +64,7 @@
                     </div>
                     <div class="row" *ngIf="validado">
                         <div class="col-12"> <br>
-                            <plex-bool [(ngModel)]="pacienteModel.reportarError" name="reportarError" label="Considero que los datos escaneados son incorrectos y quiero reportar el error"></plex-bool>
+                            <plex-bool [(ngModel)]="pacienteModel.reportarError" name="reportarError" label="Considero que los datos son incorrectos y quiero reportar el error"></plex-bool>
                         </div>
                         <div class="col-12" *ngIf="pacienteModel.reportarError"> 
                             <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
