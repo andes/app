@@ -3,8 +3,6 @@
     <div class="row">
       <div class="col-12">
         <plex-box>
-          <header class="btn-group float-right">
-          </header>
           <div class="row">
             <div class="col-5">
               <plex-box>
@@ -65,11 +63,7 @@
                     </div>
                   </div>
                 </template>
-                <!--<div class="row">
-              <div class="col-6">
-                <plex-bool [(ngModel)]="modelo.intercalar" label="Permitir intercalar bloques" name="modelo.intercalar" (click)="intercalar()"></plex-bool>
-              </div>
-            </div>-->
+               
                 <br>
                 <div *ngIf="modelo.fecha && modelo.horaInicio && modelo.horaFin && modelo.tipoPrestaciones && modelo.tipoPrestaciones.length>0"
                   class="row">
@@ -232,15 +226,7 @@
                   <br>
                 </plex-box>
               </div>
-              <!--<div class="row">
-                <div class="col-12">
-                  <ul *ngIf="alertas.length>0" class="list-group" role="alert">
-                    <li *ngFor="let unAlerta of alertas; let i=index" class="bg-warning list-group-item">
-                      {{unAlerta}}
-                    </li>
-                  </ul>
-                </div>
-              </div>-->
+             
             </div>
           </div>
         </plex-box>
