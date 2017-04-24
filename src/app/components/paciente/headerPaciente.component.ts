@@ -1,6 +1,7 @@
+import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-
 import { IPaciente } from '../../interfaces/IPaciente';
+
 
 @Component({
     selector: 'header-paciente',
@@ -10,9 +11,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 export class HeaderPacienteComponent implements OnInit {
 
     @Input() paciente: IPaciente;
+    @Input() prestacion: IPrestacionPaciente;
 
-
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 }

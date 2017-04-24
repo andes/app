@@ -103,8 +103,8 @@
     }
 </style>
 
-<header>
-    <!--<header-paciente [paciente]="prestacion.paciente"></header-paciente>-->
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
     <!--<br/>
     <div class="row">
         <div class="col-12">

@@ -72,13 +72,13 @@
 </style>
 
 
-<header>
-    <!--<header-paciente [paciente]="prestacion.paciente"></header-paciente>-->
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
     <!--<div class="row" *ngIf="prestacion && prestacion.paciente">
         <div class="col-12">
             <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
         </div>
-    </div> -->
+    </div>-->
 </header>
   
 

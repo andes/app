@@ -108,6 +108,16 @@
 
 </style>
 
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion" ></header-paciente>
+    <!--<br/>
+    <div class="row">
+        <div class="col-12">
+            <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
+        </div>
+    </div>-->
+</header>
+
 <section>
     <div class="row" *ngIf="prestacion">
 

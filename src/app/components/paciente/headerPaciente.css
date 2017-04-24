@@ -21,8 +21,9 @@
    }*/
 
 .sub-friso {
-  background-color: lightslategrey;
-  height: 80px;
+  /*background-color: lightslategrey;*/
+  background-color:#00A8E0;
+  height: 50px;
   position: relative;
   max-height: 100px;
   padding: 5px 20px 5px 20px;
@@ -30,9 +31,9 @@
 }
 
 .sub-friso-usuario {
-  background-color: grey;
+  background-color: #00A8E0;  
   color: white;
-  height: 25px;
+  height: 30px;
   position: relative;
   padding: 5px 20px 5px 20px;
   z-index: 1030;
@@ -45,9 +46,11 @@
 }
 
 .data-usuario {
-  background-color: #f7f7f7;
-  height: 75px;
-  padding: 20px;
+  background-color: #00A8E0;
+  position: relative;
+  height: 30px;
+  padding: 5px 20px 5px 20px;
+  z-index: 1030;
 }
 
 h5.nombre-paciente {
@@ -81,4 +84,10 @@ h6.subdata-descripcion {
   color:grey;
   font-weight: 300;
   line-height: 2px;
+}
+
+ small {
+        color: black;
+        font-weight: 400;
+        font-size: 0.85rem;
 }

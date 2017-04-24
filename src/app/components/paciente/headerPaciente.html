@@ -41,17 +41,52 @@
 
 <div class="sub-friso" style="width: 115%">
     <div class="row">
-        <div class="col-6">
+        <div class="col-4">
             <div class="row">
-                <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
-                <div class="col-12">{{paciente.documento|number}}</div>
-                <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
-                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal}}</div>
+                <div class="col-12"><strong>{{paciente.apellido}}</strong> ,{{paciente.nombre}}</div>
+                <div class="col-12"><small>{{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} | D.N.I {{paciente.documento|number}}</small></div>
+                <!--<div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>-->
+                <!--<div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}}</div>-->
             </div>
         </div>
-        <div class="col-6 data-paciente ">
-            <div class="subdata-paciente">Estado</div>
-            <div class="subdata-descripcion">{{paciente.estado}}</div>
+        
+        <div class="col-2 data-paciente ">
+            <small>
+            <div class="subdata-paciente"><strong>{{paciente.estado}}</strong></div>
+            <div class="subdata-descripcion">{{paciente.entidadesValidadoras}}</div>  
+            </small>          
+        </div>
+        <div class="col-2 data-paciente ">
+            <small>
+            <div class="subdata-paciente " > 
+                    <strong>Identificadores</strong>
+            </div> 
+            <div class="subdata-descripcion" *ngFor="let identificador of paciente.identificadores">{{identificador.entidad}}</div>
+            </small>                    
+        </div>
+         <div class="col-2 data-paciente ">
+             <small>
+            <div class="subdata-paciente" ><strong>Teléfonos</strong></div>  
+            <div class="subdata-descripcion" *ngFor="let tel of paciente.contacto">{{tel.valor}}</div>
+            </small>                  
+        </div>
+            <div class="col-2 data-paciente ">
+            <small>
+            <div class="subdata-paciente"><strong>Obra social</strong></div>     
+            <div class="subdata-descripcion" *ngFor="let financiador of paciente.financiador">{{financiador.nombre}}</div>
+            </small>                
         </div>
     </div>
+</div>
+
+<div class="sub-friso-usuario" style="width: 115%">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">               
+                <div class="col-12"><small><strong>Tipo de Prestación:</strong></small>                     
+                        {{prestacion.solicitud.tipoPrestacion.nombre}}                                                       
+                 </div>                                         
+                
+            </div>
+        </div>
 </div>

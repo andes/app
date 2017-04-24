@@ -353,7 +353,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     });
                             }
 
-
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
 
                             if (_prestacion.ejecucion.evoluciones.length < 1) {
@@ -374,7 +373,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     this.prestacion.ejecucion.prestaciones.push(id);
                                 }
                                 // actualizamos la prestacion que estamos loopeando con los datos recien guardados
-                                // _prestacion = prestacionEjecutada;
                                 if (i === prestacionesGuardar.length) {
                                     this.plex.alert('Prestacion confirmada');
                                     this.updatePrestacion();
@@ -431,7 +429,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             // entonces asigno su id a la prestacion a guardar
             if (this.listaProblemasPlan && this.listaProblemasPlan.length > 0) {
                 // recorremos array de problemas y asignamos a la nueva prestacion
-                // for (let problema of this.listaProblemaPrestacion[tp.key]) {
                 this.listaProblemasPlan.forEach(problema => {
                     this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
                 });
