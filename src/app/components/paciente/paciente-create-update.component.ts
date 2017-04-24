@@ -250,7 +250,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   actualizarDatosPaciente() {
-
     if (this.escaneado) {
       this.validado = true;
       this.seleccion.estado = 'validado';
@@ -338,8 +337,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
       }).subscribe(result => { this.barriosNeuquen = [...result]; });
     }
   }
-
-  // los change que siguen responden a los cambios de los plex-bool
+  /**
+   * Change del plex-bool viveProvNeuquen
+   * carga las localidades correspondientes a Neuquén
+   * @param {any} event
+   *
+   * @memberOf PacienteCreateUpdateComponent
+   */
   changeProvNeuquen(event) {
     if (event.value) {
       this.loadLocalidades(this.provinciaNeuquen);
@@ -350,6 +354,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
 
   }
+  /**
+   * Change del plex-bool viveNQN
+   * carga los barrios de Neuquén
+   * @param {any} event
+   *
+   * @memberOf PacienteCreateUpdateComponent
+   */
   changeLocalidadNeuquen(event) {
     if (event.value) {
       this.loadBarrios(this.localidadNeuquen);
