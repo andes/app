@@ -7,9 +7,9 @@ import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IPaciente } from './../IPaciente';
 
 export interface IPrestacionPaciente {
-    id: String,
-    idPrestacionOrigen: String, // prestacion desde la que se solicita
-    paciente: IPaciente,
+    id: String;
+    idPrestacionOrigen: String; // prestacion desde la que se solicita
+    paciente: IPaciente;
     solicitud: {
         // tipo de prsetacion a ejecutarse
         tipoPrestacion: ITipoPrestacion,
@@ -60,8 +60,8 @@ export interface IPrestacionPaciente {
             momentoRealizacionSolicitud: String,
             observaciones: String,
             idProfesionalAsignado: String
-        },
-    },
+        }
+    };
 
 
     ejecucion: {
@@ -75,15 +75,16 @@ export interface IPrestacionPaciente {
         // que objeto van a estar,... solicitud .. ejecucion .. ¿postEjecucion?
         evoluciones: [Object],
         datosPropios: Object
-    },
+    };
 
     // a futuro que se ejecuta
-    prestacionesSolicitadas: [String],
+    prestacionesSolicitadas: [String];
 
     estado: [
         {
             timestamp: Date,
             tipo: String
         }
-    ]
+    ];
+// tslint:disable-next-line:eofline
 }
