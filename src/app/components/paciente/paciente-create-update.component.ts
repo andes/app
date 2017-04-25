@@ -519,8 +519,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
     if (this.pacienteModel.sexo) {
       this.completarGenero();
     }
-
-    if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
+    
+    if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
+      && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
       if (!this.pacienteModel.id) {
         let dto: any = {
           type: 'suggest',
@@ -540,6 +541,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
               if (this.pacientesSimilares[0].match >= 1.0) {
                 this.onSelect(this.pacientesSimilares[0].paciente);
                 this.pacientesSimilares = null;
+                this.enableIgnorarGuardar = false;
               } else {
                 this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
                 this.enableIgnorarGuardar = false;
