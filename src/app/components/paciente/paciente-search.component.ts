@@ -5,7 +5,7 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
-
+import { Auth } from '@andes/auth';
 
 @Component({
   selector: 'pacientesSearch',
@@ -32,7 +32,7 @@ export class PacienteSearchComponent implements OnInit {
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService) {
+  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, public auth: Auth) {
     this.actualizarContadores();
   }
 
@@ -252,7 +252,10 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            this.mostrarNuevo = true;
+            let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
+            if (permisos) {
+              this.mostrarNuevo = true;
+            }
           }, (err) => {
             this.loading = false;
           });
