@@ -46,6 +46,7 @@
                         {{agenda.horaInicio | date: 'dd/MM'}}
                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right 36px" (click)="verAgenda('der')"></plex-button>
                       </h1>
+                      <div>Estado: <span class="text-success">{{ agenda.estado }}</span></div>
                       <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
                       <div class="box-content text-center" title="{{tipoPrestaciones}}">
                           <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
@@ -117,18 +118,23 @@
                             <h5 class="bloque-subtitle">Turnos restantes:</h5>
                             <table class="table table-condensed contador-turnos">
                               <thead>
-                                <td class="text-sm">Del día</td>
-                                <td class="text-sm">Programados</td>
-                                <td class="text-sm">Gestión</td>
-                                <!--No se visualizan los turnos disponibles para profesionales-->
-                                <!--<td class="text-sm">Profesional</td>-->
+                                <tr>
+                                  <td class="text-sm">Del día</td>
+                                  <td class="text-sm">Programados</td>
+                                  <td class="text-sm">Gestión</td>
+                                  <!--No se visualizan los turnos disponibles para profesionales-->
+                                  <!--<td class="text-sm">Profesional</td>-->
+                                </tr>
                               </thead>
                               <tbody>
-                                <td class="text-sm">{{countBloques[indiceBq].delDia}}</td>
-                                <td class="text-sm">{{countBloques[indiceBq].programado}}</td>
-                                <td class="text-sm">{{countBloques[indiceBq].gestion}}</td>
-                                <!--No se visualizan los turnos disponibles para profesionales-->
-                                <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
+                                <tr>
+                                  <td class="text-sm">{{countBloques[indiceBq].delDia}}</td>
+                                  <td class="text-sm">{{countBloques[indiceBq].programado}}</td>
+                                  <td class="text-sm">{{countBloques[indiceBq].gestion}}</td>
+                                  <!--No se visualizan los turnos disponibles para profesionales-->
+                                  <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
+                                </tr>
+
                               </tbody>
                             </table>
                           </div>

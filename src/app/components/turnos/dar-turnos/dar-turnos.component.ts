@@ -217,21 +217,6 @@ export class DarTurnosComponent implements OnInit {
         }
       });
 
-
-      // Evaluamos c/ agenda para ver si tienen fecha de hoy
-      this.agendas.forEach((agenda, indexAgenda) => {
-        // En caso de tener fecha de hoy, los turnos deben pasar a ser de tipo: delDia
-        if (agenda.horaInicio >= moment(new Date()).startOf('day').toDate() && agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
-          agenda.bloques.forEach((bloque, indexBloque) => {
-            bloque.turnos.forEach((turno, indexTurno) => {
-              turno.tipoTurno = 'delDia';
-            });
-          });
-        }
-      });
-
-      // this.indice = -1;
-
       // Ordena las Agendas por fecha/hora de inicio
       this.agendas = this.agendas.sort(
         function (a, b) {
@@ -327,31 +312,58 @@ export class DarTurnosComponent implements OnInit {
             let delDiaDisponibles = 0;
             // let tiposTurnosSelect = [];
 
-            // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
+            // Si la agenda es de hoy, los turnos deberán sumarse al contador "delDia"
             if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate() && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+
               isDelDia = true;
               this.tiposTurnosSelect = 'delDia';
               this.tiposTurnosLabel = 'Del día';
-              // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
+
+              // Recorro los bloques y cuento los turnos programados como "delDia", luego descuento los ya asignados
               this.agenda.bloques.forEach((bloque, indexBloque) => {
+
                 countBloques.push({
-                  delDia: bloque.cantidadTurnos,
+                  delDia: ((bloque.accesoDirectoDelDia as number) + (bloque.accesoDirectoProgramado as number)),
                   programado: 0,
-                  gestion: 0,
+                  gestion: bloque.reservadoGestion,
+                  profesional: bloque.reservadoProfesional
                 });
+
                 bloque.turnos.forEach((turno) => {
+
+                  console.log(turno.tipoTurno);
+
                   if (turno.estado === 'asignado') {
-                    countBloques[indexBloque].delDia--;
+                    switch (turno.tipoTurno) {
+                      case ('delDia'):
+                        countBloques[indexBloque].delDia--;
+                      break;
+                      case ('programado'):
+                        countBloques[indexBloque].delDia--;
+                      break;
+                      case ('profesional'):
+                        countBloques[indexBloque].profesional--;
+                      break;
+                      case ('gestion'):
+                        countBloques[indexBloque].gestion--;
+                      break;
+                    }
                   }
+
                 });
+
+                console.log(countBloques);
+
                 delDiaDisponibles = + countBloques[indexBloque].delDia;
               });
               if (this.agenda.estado === 'Publicada') {
-                (delDiaDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                this.estadoT = (delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
               }
+
             } else {
               // En caso contrario, se calculan  los contadores por separado
               this.agenda.bloques.forEach((bloque, indexBloque) => {
+
                 countBloques.push({
                   // Asignamos a contadores dinamicos la cantidad inicial de c/u
                   // de los tipos de turno respectivamente
@@ -360,9 +372,13 @@ export class DarTurnosComponent implements OnInit {
                   gestion: bloque.reservadoGestion,
                   profesional: bloque.reservadoProfesional
                 });
+
                 bloque.turnos.forEach((turno) => {
                   if (turno.estado === 'asignado') {
                     switch (turno.tipoTurno) {
+                      case ('delDia'):
+                        countBloques[indexBloque].delDia--;
+                      break;
                       case ('programado'):
                         countBloques[indexBloque].programado--;
                         break;

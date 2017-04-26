@@ -83,6 +83,14 @@ export class VistaAgendaComponent implements OnInit {
                     this.confirmarEstado(estado);
                 }
             });
+        } else if (estado === 'Suspendida') {
+            this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
+                if (!confirmado) {
+                    return false;
+                } else {
+                    this.confirmarEstado(estado);
+                }
+            });
         } else {
             this.confirmarEstado(estado);
         }
