@@ -105,12 +105,6 @@
 
 <header *ngIf="prestacion">
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
-    <!--<br/>
-    <div class="row">
-        <div class="col-12">
-            <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
-        </div>
-    </div>-->
 </header>
 
 
@@ -329,7 +323,7 @@
     </div>
 </section>
 
-<footer>
+<footer class="plex-box-invert" >
     <div class="row">
         <div class="col-3">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
