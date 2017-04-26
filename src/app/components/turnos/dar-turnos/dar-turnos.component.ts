@@ -183,7 +183,8 @@ export class DarTurnosComponent implements OnInit {
         fechaDesde: new Date().setHours(0, 0, 0, 0),
         fechaHasta: fechaHasta,
         idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-        idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : '')
+        idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
+        organizacion: this.auth.organizacion._id
       };
 
     } else {
@@ -198,7 +199,6 @@ export class DarTurnosComponent implements OnInit {
         fechaDesde: new Date().setHours(0, 0, 0, 0),
         fechaHasta: fechaHasta,
         tipoPrestaciones: this.permisos,
-        // Mostrar solo las agendas que correspondan a la organización del usuario logueado
         organizacion: this.auth.organizacion._id
       };
 
@@ -522,7 +522,7 @@ export class DarTurnosComponent implements OnInit {
                   tipoPrestacion: turno.tipoPrestacion.nombre,
                   horaInicio: moment(turno.horaInicio).format('L'),
                   estado: turno.estado,
-                  organizacion: agenda.organizacion.nombre,
+                  organizacion: this.auth.organizacion._id,
                   profesionales: agenda.profesionales
                 });
               }
