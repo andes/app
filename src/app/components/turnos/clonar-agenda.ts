@@ -27,7 +27,6 @@ export class ClonarAgendaComponent implements OnInit {
     private finMesDate;
     private original = true;
     private inicioAgenda: Date;
-    public danger = 'list-group-item-danger';
 
     @Input('agenda')
     set agenda(value: any) {
@@ -210,24 +209,28 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        console.log('seleccionados ',new Date(this.seleccionados[0]));
-        this.seleccionados.splice(0, 1);
-        this.seleccionados = [...this.seleccionados];
-        let data = {
-            idAgenda: this.agenda.id,
-            clones: this.seleccionados
-        };
-        this.serviceAgenda.clonar(data).subscribe(resultado => {
-            console.log('resultado ', resultado);
-            this.plex.alert('La Agenda se clonó correctamente').then(ok => {
-                this.volverAlGestor.emit(true);
-            });
-        },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+        this.plex.confirm('Está seguro que desea realizar la clonación?').then(conf => {
+            if (conf) {
+                this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
+                this.seleccionados = [...this.seleccionados];
+                let data = {
+                    idAgenda: this.agenda.id,
+                    clones: this.seleccionados
+                };
+                this.serviceAgenda.clonar(data).subscribe(resultado => {
+                    console.log('resultado ', resultado);
+                    this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                        this.volverAlGestor.emit(true);
+                    });
+                },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+            }
+        }).catch(() => {
+        });
     }
 
     cancelar() {
