@@ -20,6 +20,7 @@ export class CalendarioDia {
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             this.turnosDisponibles = this.agenda.turnosDisponibles;
+
             if (disponible) {
                 let countBloques = [];
 
@@ -31,19 +32,38 @@ export class CalendarioDia {
                         countBloques.push({
                             delDia: bloque.cantidadTurnos,
                             programado: 0,
-                            gestion: 0,
+                            gestion: bloque.reservadoGestion,
                         });
+
                         bloque.turnos.forEach((turno) => {
                             if (turno.estado === 'asignado') {
-                                countBloques[indexBloque].delDia--;
+
+                                switch (turno.tipoTurno) {
+                                    case ('delDia'):
+                                        countBloques[indexBloque].delDia--;
+                                    break;
+                                    case ('programado'):
+                                        countBloques[indexBloque].delDia--;
+                                    break;
+                                    case ('profesional'):
+                                        countBloques[indexBloque].profesional--;
+                                    break;
+                                    case ('gestion'):
+                                        countBloques[indexBloque].reservadoGestion--;
+                                    break;
+                                }
+
                             }
                         });
-                        this.delDiaDisponibles = + countBloques[indexBloque].delDia;
-                    });
-                    this.estado = (this.delDiaDisponibles > 0) ? 'disponible' : 'ocupado';
 
-                    // En caso contrario, se calculan los contadores por separado
+                        this.delDiaDisponibles  += countBloques[indexBloque].delDia;
+                        this.gestionDisponibles += countBloques[indexBloque].gestion;
+                    });
+                    // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
+                    this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
+
                 } else {
+                // En caso contrario, se calculan los contadores por separado
 
                     // loopear turnos para sacar el tipo de turno!
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
