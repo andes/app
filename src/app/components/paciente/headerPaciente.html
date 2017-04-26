@@ -1,5 +1,5 @@
 <!-- Barra de navegación -->
-<nav class="friso" style=" width:167%">
+<nav class="friso" style=" width:180%">
   <div class="row no-gutters">
         <!-- Datos pacientes-->
         <div class="col-9">
@@ -71,26 +71,34 @@
 
         <!-- Datos usuario logeado-->
         <div class="col-3 invert"> 
-                <div>
-                    <i ng-reflect-class-name="mdi mdi-account-card-details" class="mdi md-48 mdi-account-card-details"></i>                    
-                </div>               
-                <div class="data-usuario">                                             
-                    <div class="list-inline-item">                
-                        <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6>
-                        <!--<h6 class="consulta">Lambertucci, Leandro</h6>-->
-                        <h6 class="subdata-descripcion consulta d-inline" *ngFor="let EspecialidadActiva of auth.profesional.matriculas"> 
-                            <small>
-                                <span class="consulta"> Especialidad: {{EspecialidadActiva.descripcion}} </span>                                 
-                                <span class="consulta"> |  Matricula: {{EspecialidadActiva.numero}}</span>                            
-                            </small>
-                        </h6>                            
-                        <!--<h6 class="consulta">{{this.auth.organizacion.nombre}}</h6>-->
-                    </div>
+            <div class="row">
+                <div class="col-2">            
+                    <i ng-reflect-class-name="account" class="mdi mdi-account"></i>                                                                         
                 </div>
+                <div class="col-6 data-usuario">                                                                               
+                    <div class="list-inline-item">   
+                        <div class="row">             
+                        <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6> 
+                        </div> 
 
-                <div class="burger-container">
-                    <i ng-reflect-class-name="mdi mdi-menu" class="mdi md-48 mdi-menu"></i>
+                        <div class="row"> 
+                        <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas"> 
+                            Especialidad: {{EspecialidadActiva.descripcion}}
+                        </h6>                          
+                        </div> 
+
+                        <div class="row"> 
+                        <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas"> 
+                            Matricula: {{EspecialidadActiva.numero}}
+                        </h6>      
+                        </div>                      
+                    </div>               
+                </div>  
+
+                <div class="col-4 burger-container">                
+                    <i ng-reflect-class-name="menu" class="mdi mdi-menu"></i>             
                 </div>
-        </div>
+            </div>
+        </div>        
   </div>
 </nav>
