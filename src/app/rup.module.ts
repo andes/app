@@ -1,3 +1,6 @@
+import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
 
 // import { RupComponent } from './components/rup/rup.component';
 // import { PacienteService } from './services/paciente.service';
@@ -230,9 +233,12 @@ export const RUP_COMPONENTS = [
     EstadoNutricionalComponent,
     OdontologiaComponent,
     IndiceDeMasaCorporalComponent,
-    FactoresDeRiesgoNinoSanoComponent
+    FactoresDeRiesgoNinoSanoComponent,
+    NinoSanoComponent,
+    DatosPerinatalesComponent,
+    RegistrosVisitasComponent
     //     // NO VAPacienteComponent
-];
+];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
 // @NgModule({
 //     declarations: [
