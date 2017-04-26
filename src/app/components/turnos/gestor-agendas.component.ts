@@ -95,6 +95,7 @@ export class GestorAgendasComponent implements OnInit {
                     params = {
                         fechaDesde: fechaDesde.format(),
                         fechaHasta: fechaHasta.format(),
+                        organizacion: this.auth.organizacion._id
                     };
                 } else {
                     // Demos tiempo para que seleccionen una fecha válida, claro papá
@@ -147,6 +148,11 @@ export class GestorAgendasComponent implements OnInit {
         this.loadAgendas();
     }
 
+        // this.loadAgendas();
+        // this.showTurnos = false;
+        // this.showEditarAgenda = false;
+        // this.showEditarAgendaPanel = false;
+
     reasignaTurno(reasTurno) {
         this.reasignar = reasTurno;
         this.showGestorAgendas = false;
@@ -190,6 +196,7 @@ export class GestorAgendasComponent implements OnInit {
         this.serviceAgenda.get({
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id,
             idTipoPrestacion: '',
             idProfesional: '',
             idEspacioFisico: ''
@@ -243,23 +250,16 @@ export class GestorAgendasComponent implements OnInit {
         this.showTurnos = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
-
             // Actualizo la agenda local
             agenda = ag;
-
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
 
-
             if (!multiple) {
-
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
-
             } else {
-
                 let index;
-
                 if (this.estaSeleccionada(agenda)) {
                     agenda.agendaSeleccionadaColor = 'success';
                     index = this.agendasSeleccionadas.indexOf(agenda);
@@ -268,7 +268,6 @@ export class GestorAgendasComponent implements OnInit {
                 } else {
                     this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
                 }
-
             }
 
             this.setColorEstadoAgenda(agenda);
@@ -277,7 +276,6 @@ export class GestorAgendasComponent implements OnInit {
             this.showEditarAgendaPanel = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
-
         });
 
 

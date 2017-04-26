@@ -36,7 +36,7 @@ export class AgendaComponent implements OnInit {
     showClonar = false;
     showAgenda = true;
 
-    constructor( public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -67,13 +67,13 @@ export class AgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        if ( event.query ) {
+        if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get( query ).subscribe(event.callback);
+            this.servicioProfesional.get(query).subscribe(event.callback);
         } else {
-            event.callback([]);
+            event.callback(this.modelo.profesionales || []);
         }
     }
 

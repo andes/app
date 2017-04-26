@@ -28,6 +28,7 @@ export class PanelAgendaComponent implements OnInit {
 
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() showVistaTurnos = new EventEmitter<Boolean>();
+    @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
 
     showEditarAgendaPanel: Boolean = true;
 
@@ -63,6 +64,7 @@ export class PanelAgendaComponent implements OnInit {
                 this.showEditarAgenda = false;
 
                 this.plex.alert('La agenda se guardó correctamente ');
+                this.actualizarEstadoEmit.emit(true);
             });
         }
     }
@@ -81,7 +83,7 @@ export class PanelAgendaComponent implements OnInit {
             };
             this.servicioProfesional.get( query ).subscribe(event.callback);
         } else {
-            event.callback([]);
+            event.callback(this.modelo.profesionales || []);
         }
     }
 

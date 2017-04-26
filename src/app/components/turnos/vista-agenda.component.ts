@@ -121,7 +121,7 @@ export class VistaAgendaComponent implements OnInit {
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'Planificacion' && agenda.estado !== 'Disponible';
+            return agenda.estado === 'Pausada' || agenda.estado === 'Suspendida';
         }).length <= 0;
     }
 
