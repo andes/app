@@ -1,3 +1,6 @@
+import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
 import { Molecula } from './components/rup/moleculas/molecula.component';
 import { Atomo } from './components/rup/atomos/atomoComponent';
 
@@ -227,9 +230,10 @@ export const RUP_COMPONENTS = [
   IndiceDeMasaCorporalComponent,
   FactoresDeRiesgoNinoSanoComponent,
   Atomo,
-  Molecula
-
-
+  Molecula,
+  NinoSanoComponent,
+  DatosPerinatalesComponent,
+  RegistrosVisitasComponent
 ];
 
 // Locales
