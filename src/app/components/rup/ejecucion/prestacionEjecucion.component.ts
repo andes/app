@@ -474,7 +474,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Transformar - Emendar - Gardar nuevo problema
         let cambios = {
               'op': 'listaProblemas',
-              'Problema': problemaid
+              'problema': problemaid
         };
 
         this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
