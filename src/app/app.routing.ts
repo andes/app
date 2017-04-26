@@ -39,6 +39,9 @@ import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 
+//MPI
+import { DashboardComponent } from './components/paciente/dashboard.component';
+
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
@@ -55,6 +58,8 @@ const appRoutes: Routes = [
   { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'espacio_fisico', component: EspacioFisicoComponent },
   { path: 'tipoprestaciones', component: TipoPrestacionComponent },
+
+    { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // Turnos
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
@@ -74,7 +79,9 @@ const appRoutes: Routes = [
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },
-  { path: '**', redirectTo: 'inicio' }
+  { path: '**', redirectTo: 'inicio' },
+
+
 ];
 
 export const appRoutingProviders: any[] = [];
