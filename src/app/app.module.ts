@@ -60,6 +60,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+import { ObservarDatosService } from './services/rup/observarDatos.service';
 
 // Componentes
 // ... Tablas Maestras
@@ -228,7 +229,7 @@ export const RUP_COMPONENTS = [
   FactoresDeRiesgoNinoSanoComponent,
   Atomo,
   Molecula
-  
+
 
 ];
 
@@ -307,6 +308,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
+    ObservarDatosService
   ]
 })
 
