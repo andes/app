@@ -14,14 +14,14 @@ export class Atomo extends RupComponent {
             this.devolverValores();
         }
     }
-    devolverValores() {
-
-        if (this.data[this.tipoPrestacion.key] === null) {
-            this.data = {};
-        }
-        this.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-    }
+    // devolverValores() {
+    //
+    //     if (this.data[this.tipoPrestacion.key] === null) {
+    //         this.data = {};
+    //     }
+    //     this.mensaje = this.getMensajes();
+    //     this.evtData.emit(this.data);
+    // }
 
     getMensajes() {
 
