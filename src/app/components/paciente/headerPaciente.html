@@ -1,50 +1,57 @@
 <!-- Barra de navegación -->
-<nav class="friso" style=" width:180%">
+<nav class="friso" style=" width:167%">
   <div class="row no-gutters">
         <!-- Datos pacientes-->
         <div class="col-9">
         <div class="data-paciente">
             <div class="row">
             <div class="col-6">
-                <h5><strong>{{paciente.apellido}}, </strong> {{paciente.nombre}}</h5>
-                <h6 class="subtitulo-paciente" *ngIf="paciente.edadReal">
-                    {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} | D.N.I {{paciente.documento|number}}
-                </h6>
+                 <small>
+                <h5><strong>{{paciente.apellido}}, </strong> {{paciente.nombre}}</h5>               
+                    <h6 class="subtitulo-paciente" *ngIf="paciente.edadReal">
+                        {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} | D.N.I {{paciente.documento|number}}
+                    </h6>
+                </small>
             </div>
                 <ul class="list-inline pull-right">
 
                 <div class="list-inline-item contenedor-subdata">
-                    <h6 class="subdata-paciente">{{paciente.estado}}</h6>
+                    <h6 class="subdata-paciente consulta">Estado</h6>
+                    <h6 class="subdata-descripcion">{{paciente.estado}}</h6>
+                </div>
+
+                 <div class="list-inline-item contenedor-subdata">
+                    <h6 class="subdata-paciente consulta">Validador</h6>
                     <h6 class="subdata-descripcion">{{paciente.entidadesValidadoras}}</h6>
                 </div>
 
                 <div class="list-inline-item contenedor-subdata" *ngFor="let identificador of paciente.identificadores">
-                    <h6 class="subdata-paciente">Identificadores</h6>
+                    <h6 class="subdata-paciente consulta">Identificador</h6>
                     <h6 class="subdata-descripcion"> 
                         {{identificador.entidad}}
                     </h6>
                 </div> 
                 <!--Si posee teléfono tomo el primero-->
                 <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length>0" >                           
-                    <h6 class="subdata-paciente">Teléfonos</h6>
+                    <h6 class="subdata-paciente consulta">Teléfonos</h6>
                     <h6 class="subdata-descripcion" *ngFor="let tel of paciente.contacto | slice:0:1;">
                         {{tel.valor}}
                     </h6>
                 </div>  
                 <!--Si no posee telefono muestro un nro. genérico-->
                 <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length<1" >                           
-                    <h6 class="subdata-paciente">Teléfonos</h6>                     
+                    <h6 class="subdata-paciente consulta">Contacto</h6>                     
                     <h6 class="subdata-descripcion">...</h6>
                 </div>  
 
                 <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length>0">
-                    <h6 class="subdata-paciente">Obra social</h6>
+                    <h6 class="subdata-paciente consulta">Obra social</h6>
                     <h6 class="subdata-descripcion" *ngFor="let financiador of paciente.financiador">                          
                         {{financiador.nombre}}                          
                     </h6>
                 </div>
                 <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length<1">
-                    <h6 class="subdata-paciente">Obra social</h6>
+                    <h6 class="subdata-paciente consulta">Obra social</h6>
                     <h6 class="subdata-descripcion">...</h6>
                 </div>
                 </ul>
@@ -54,7 +61,7 @@
          <div class="sub-friso" >
           <div class="row">
                 <div class="col-6" *ngIf="prestacion && prestacion.solicitud">
-                    <h6><strong>Tipo de Prestación: </strong><span class="consulta"> {{ prestacion.solicitud.tipoPrestacion.nombre }}</span></h6>
+                    <h6 class="consulta"><strong>Tipo de Prestación: </strong><span> {{ prestacion.solicitud.tipoPrestacion.nombre }}</span></h6>
                 </div>
             </div>
         </div>
