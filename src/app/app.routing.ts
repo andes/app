@@ -73,7 +73,7 @@ const appRoutes: Routes = [
   { path: 'rup/resumen/:id', component: ResumenComponent},
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent},
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent},
-  { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
+  // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },
