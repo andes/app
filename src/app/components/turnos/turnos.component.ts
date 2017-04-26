@@ -42,9 +42,8 @@ export class TurnosComponent implements OnInit {
     }
 
     @Input() reasturnos: IAgenda;
-
     @Output() reasignaTurno = new EventEmitter<boolean>();
-
+    
     showTurnos: Boolean = true;
     showLiberarTurno: Boolean = false;
     showSuspenderTurno: Boolean = false;

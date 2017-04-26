@@ -107,7 +107,7 @@
         </div>
 
         <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
-          <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)"></panel-agenda>
+          <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
         </div>
       </plex-box>
     </div>
