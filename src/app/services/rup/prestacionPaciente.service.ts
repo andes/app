@@ -17,15 +17,15 @@ export class PrestacionPacienteService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IPrestacionPaciente[]> {
-        return this.server.get(this.prestacionesUrl, { params: params, showError: true })
+        return this.server.get(this.prestacionesUrl, { params: params, showError: true });
     }
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IPrestacionPaciente> {
-        var url = this.prestacionesUrl + "/" + id;
-        return this.server.get(url, null)
+        let url = this.prestacionesUrl + '/' + id;
+        return this.server.get(url, null);
     }
 
     /**
@@ -33,15 +33,15 @@ export class PrestacionPacienteService {
      * @param {String} id Busca por Id
      */
     getByKey(params: any): Observable<IPrestacionPaciente[]> {
-        var url = this.prestacionesUrl + "/forKey/";
-        return this.server.get(url, { params: params, showError: true })
+        let url = this.prestacionesUrl + '/forKey/';
+        return this.server.get(url, { params: params, showError: true });
     }
 
     /**
      * Metodo post. Inserta un objeto prestacionPaciente nuevo.
      * @param {IPrestacionPaciente} prestacion Recibe IPrestacionPaciente
      */
-    post(prestacion:any): Observable<IPrestacionPaciente> {
+    post(prestacion: any): Observable<IPrestacionPaciente> {
         return this.server.post(this.prestacionesUrl, prestacion);
     }
 
@@ -50,6 +50,12 @@ export class PrestacionPacienteService {
      * @param {IPrestacionPaciente} problema Recibe IPrestacionPaciente
      */
     put(prestacion: IPrestacionPaciente): Observable<IPrestacionPaciente> {
-        return this.server.put(this.prestacionesUrl + "/" + prestacion.id, prestacion);
+        return this.server.put(this.prestacionesUrl + '/' + prestacion.id, prestacion);
     }
+
+    patch(prestacion: IPrestacionPaciente, cambios: any): Observable<IPrestacionPaciente> {
+        return this.server.patch(this.prestacionesUrl + '/' + prestacion.id, cambios);
+    }
+
+// tslint:disable-next-line:eofline
 }

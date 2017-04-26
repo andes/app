@@ -1,57 +1,89 @@
-<!--<style>
-    .celeste {
-        color: #00A8E0;
-    }
-    
-    .gris {
-        color: #b1b1b1;
-    }
-    
-    .bl {
-        border-left: 1px solid #cccccc;
-    }
-    
-    .capitalize {
-        text-transform: capitalize;
-    }
-</style>-->
-<!--
-
-<div class="row">
-    <div class="col">
-        <h4>
-            <strong>{{paciente.apellido}}</strong>, {{paciente.nombre}}
-        </h4>
-        <small class="gris">
-            <span *ngIf="paciente.edadReal">{{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} |</span> Documento: {{paciente.documento}}
-        </small>
-    </div>
-
-    <div class="col bl capitalize">
-        <b>Estado</b>
-        <br /> {{paciente.estado}}
-    </div>
-
-    <div class="col bl" *ngIf="paciente.financiador[0]">
-        <b>Obra social</b>
-        <br /> {{paciente.financiador[0].entidad.nombre}}
-    </div>
-</div>-->
-
-
-<div class="sub-friso" style="width: 115%">
-    <div class="row">
-        <div class="col-6">
+<!-- Barra de navegación -->
+<nav class="friso" style=" width:180%">
+  <div class="row no-gutters">
+        <!-- Datos pacientes-->
+        <div class="col-9">
+        <div class="data-paciente">
             <div class="row">
-                <div class="col-12"><strong>{{paciente.apellido}}</strong> {{paciente.nombre}}</div>
-                <div class="col-12">{{paciente.documento|number}}</div>
-                <div class="col-4">{{paciente.fechaNacimiento|date: 'dd/MM/yyyy'}}</div>
-                <div class="col-4" *ngIf="paciente.edadReal" >Edad: {{paciente.edadReal}}</div>
+            <div class="col-6">
+                <h5><strong>{{paciente.apellido}}, </strong> {{paciente.nombre}}</h5>
+                <h6 class="subtitulo-paciente" *ngIf="paciente.edadReal">
+                    {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} | D.N.I {{paciente.documento|number}}
+                </h6>
+            </div>
+                <ul class="list-inline pull-right">
+
+                <div class="list-inline-item contenedor-subdata">
+                    <h6 class="subdata-paciente">{{paciente.estado}}</h6>
+                    <h6 class="subdata-descripcion">{{paciente.entidadesValidadoras}}</h6>
+                </div>
+
+                <div class="list-inline-item contenedor-subdata" *ngFor="let identificador of paciente.identificadores">
+                    <h6 class="subdata-paciente">Identificadores</h6>
+                    <h6 class="subdata-descripcion"> 
+                        {{identificador.entidad}}
+                    </h6>
+                </div> 
+                <!--Si posee teléfono tomo el primero-->
+                <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length>0" >                           
+                    <h6 class="subdata-paciente">Teléfonos</h6>
+                    <h6 class="subdata-descripcion" *ngFor="let tel of paciente.contacto | slice:0:1;">
+                        {{tel.valor}}
+                    </h6>
+                </div>  
+                <!--Si no posee telefono muestro un nro. genérico-->
+                <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length<1" >                           
+                    <h6 class="subdata-paciente">Teléfonos</h6>                     
+                    <h6 class="subdata-descripcion">...</h6>
+                </div>  
+
+                <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length>0">
+                    <h6 class="subdata-paciente">Obra social</h6>
+                    <h6 class="subdata-descripcion" *ngFor="let financiador of paciente.financiador">                          
+                        {{financiador.nombre}}                          
+                    </h6>
+                </div>
+                <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length<1">
+                    <h6 class="subdata-paciente">Obra social</h6>
+                    <h6 class="subdata-descripcion">...</h6>
+                </div>
+                </ul>
+            </div> 
+            </div>
+        <!-- Subfriso Prestación-->
+         <div class="sub-friso" >
+          <div class="row">
+                <div class="col-6" *ngIf="prestacion && prestacion.solicitud">
+                    <h6><strong>Tipo de Prestación: </strong><span class="consulta"> {{ prestacion.solicitud.tipoPrestacion.nombre }}</span></h6>
+                </div>
             </div>
         </div>
-        <div class="col-6 data-paciente ">
-            <div class="subdata-paciente">Estado</div>
-            <div class="subdata-descripcion">{{paciente.estado}}</div>
+        <!-- /.Subfriso -->
         </div>
-    </div>
-</div>
+        <!-- /.Datos pacientes-->
+
+        <!-- Datos usuario logeado-->
+        <div class="col-3 invert"> 
+                <div>
+                    <i ng-reflect-class-name="mdi mdi-account-card-details" class="mdi md-48 mdi-account-card-details"></i>                    
+                </div>               
+                <div class="data-usuario">                                             
+                    <div class="list-inline-item">                
+                        <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6>
+                        <!--<h6 class="consulta">Lambertucci, Leandro</h6>-->
+                        <h6 class="subdata-descripcion consulta d-inline" *ngFor="let EspecialidadActiva of auth.profesional.matriculas"> 
+                            <small>
+                                <span class="consulta"> Especialidad: {{EspecialidadActiva.descripcion}} </span>                                 
+                                <span class="consulta"> |  Matricula: {{EspecialidadActiva.numero}}</span>                            
+                            </small>
+                        </h6>                            
+                        <!--<h6 class="consulta">{{this.auth.organizacion.nombre}}</h6>-->
+                    </div>
+                </div>
+
+                <div class="burger-container">
+                    <i ng-reflect-class-name="mdi mdi-menu" class="mdi md-48 mdi-menu"></i>
+                </div>
+        </div>
+  </div>
+</nav>

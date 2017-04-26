@@ -75,17 +75,34 @@ export class ResumenComponent implements OnInit {
     }
 
     iniciarPrestacion(id) {
-        this.prestacion.estado.push({
+
+        let cambioestado = {
             timestamp: new Date(),
             tipo: 'ejecucion'
-        });
-        this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
-        this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
-        });
+        };
 
+        this.prestacion.estado.push(cambioestado);
+        this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
+        this.update();
         this.router.navigate(['/rup/ejecucion', id]);
 
     }
+
+    update() {
+        let cambios = {
+              'op': 'estado',
+              'estado': this.prestacion.estado
+        };
+        this.servicioPrestacionPaciente.patch(this.prestacion, cambios ).subscribe(prestacion => { });
+
+        // Actualiza Lista Problemas en la prestación
+         let cambiosProblemas = {
+              'op': 'listaProblemas',
+              'problemas': this.prestacion.ejecucion.listaProblemas
+        };
+        this.servicioPrestacionPaciente.patch(this.prestacion, cambiosProblemas ).subscribe(prestacionAct => {});
+    }
+
 
     verPrestacion(id) {
         // this.showEjecucion = true;

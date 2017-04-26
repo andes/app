@@ -21,7 +21,6 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 export class PrestacionValidacionComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    // @Input() prestacion: IPrestacionPaciente;
     prestacion: IPrestacionPaciente;
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
@@ -31,7 +30,7 @@ export class PrestacionValidacionComponent implements OnInit {
     prestacionesPlan: any[] = [];
     cantidadPrestaciones: any[];
 
-    validarlabel : String = '';
+    validarlabel: String = '';
     validaboton = '';
     mensaje = '';
 
@@ -49,44 +48,32 @@ export class PrestacionValidacionComponent implements OnInit {
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.loadPrestacionesEjacutadas();
-
-                         console.log('this.prestacion', this.prestacion);
-
-                            if ( (this.prestacion.estado[this.prestacion.estado.length - 1].tipo) !== 'validada') {
-                                this.validarlabel = 'Validar';
-                            } else {
-                                this.validarlabel = 'Validada';
-                                this.validaboton = 'deshabilitar';
-                            };
-
+                    if ( (this.prestacion.estado[this.prestacion.estado.length - 1].tipo) !== 'validada') {
+                        this.validarlabel = 'Validar';
+                    } else {
+                        this.validarlabel = 'Validada';
+                        this.validaboton = 'deshabilitar';
+                    };
             });
 
          });
     }
 
     loadPrestacionesEjacutadas() {
-        let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
-
+            let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
             this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
-
             // asignamos las prestaciones por problemas asi luego loopeamos
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
-
                 this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
-
             });
         });
-
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
             this.prestacionesSolicitadas = resultado;
-
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
-
                 this.prestacionesPlan[idProblema] = this.buscarPlanesPorProblema(_problema);
-
             });
         });
     }
@@ -100,7 +87,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
-        // return this.prestacionesEjecutadas.filter(data => {
         return this.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id === problema.id)) {
                 return data;
@@ -118,7 +104,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
-            let listaFinal = [];
 
             if (resultado) {
                 this.prestacionesEjecutadas.forEach(prestacion => {
@@ -126,27 +111,39 @@ export class PrestacionValidacionComponent implements OnInit {
                         timestamp: new Date(),
                         tipo: 'validada'
                     });
-
-                    this.servicioPrestacion.put(prestacion).subscribe( prestacion => {
-                        listaFinal.push(prestacion);
-                        if (listaFinal.length === this.prestacionesEjecutadas.length) {
-                            this.prestacion.estado.push({
-                                timestamp: new Date(),
-                                tipo: 'validada'
-                            });
-
-                            this.servicioPrestacion.put(this.prestacion).subscribe(prestacion => {
-                                if (prestacion) {
-                                    this.mensaje = 'La prestación ha sido validada correctamente';
-                                    this.validaboton = 'deshabilitar';
-                                }
-                            });
-                        }
-                    });
+                    this.updateEstado(prestacion);
                 });
             }
         });
     }
+
+
+    updateEstado(prestacion) {
+
+        let cambios = {
+              'op': 'estado',
+              'estado': this.prestacion.estado
+        };
+        let listaFinal = [];
+
+        this.servicioPrestacion.patch(prestacion, cambios).subscribe( prestacion => {
+        listaFinal.push(prestacion);
+        if (listaFinal.length === this.prestacionesEjecutadas.length) {
+            this.prestacion.estado.push({
+                timestamp: new Date(),
+                tipo: 'validada'
+            });
+
+            this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+                if (prestacion) {
+                    this.mensaje = 'La prestación ha sido validada correctamente';
+                    this.validaboton = 'deshabilitar';
+                }
+            });
+        }
+        });
+    }
+
 
      volver(ruta) {
          this.router.navigate(['rup/ejecucion', this.prestacion.id]);
