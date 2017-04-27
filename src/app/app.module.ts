@@ -45,6 +45,7 @@ import { TipoEstablecimientoService } from './services/tipoEstablecimiento.servi
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
+import { LogService } from './services/log.service';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
@@ -74,6 +75,7 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
+import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... Turnos
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
@@ -258,7 +260,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientFullNamePipe, patientRealAgePipe,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
@@ -302,6 +305,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
+    LogService,
   ]
 })
 
