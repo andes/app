@@ -64,6 +64,9 @@ export class DarTurnosComponent implements OnInit {
   private tipoPrestaciones: String = '';
   private tipoPrestacionesArray: Object[];
   private turnoTipoPrestacion: any = {};
+  private delDiaDisponibles: number;
+  private programadosDisponibles: number;
+  private gestionDisponibles: number;
   countBloques: any[];
   countTurnos: any = {};
 
@@ -84,7 +87,7 @@ export class DarTurnosComponent implements OnInit {
   tipoTurno: string;
   tiposTurnosSelect: String;
   tiposTurnosLabel: String;
-
+  hoy: Date;
   constructor(
     public serviceProfesional: ProfesionalService,
     public serviceAgenda: AgendaService,
@@ -94,45 +97,40 @@ export class DarTurnosComponent implements OnInit {
     public servicioTipoPrestacion: TipoPrestacionService,
     public servicioPrestacionPaciente: PrestacionPacienteService,
     public plex: Plex,
-    public auth: Auth, 
+    public auth: Auth,
     private router: Router) { }
 
   ngOnInit() {
-
+    this.hoy = new Date();
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-    console.log('Autorizado: ', this.autorizado);
-
     this.opciones.fecha = moment().toDate();
 
     if (this._reasignaTurnos) {
       this.paciente = this._reasignaTurnos.paciente;
       this.telefono = this.turno.paciente.telefono;
     }
-
     // Fresh start
     // En este punto debería tener paciente ya seleccionado
     this.actualizar('sinFiltro');
-
   }
 
   loadTipoPrestaciones(event) {
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    console.log('PERMISOS TIPOPRESTACIONES: ', this.permisos);
     this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
       let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
     });
   }
 
   loadProfesionales(event) {
-        if ( event.query ) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.serviceProfesional.get( query ).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
+    if (event.query) {
+      let query = {
+        nombreCompleto: event.query
+      };
+      this.serviceProfesional.get(query).subscribe(event.callback);
+    } else {
+      event.callback([]);
     }
+  }
 
   filtrar() {
     let search = {
@@ -143,12 +141,10 @@ export class DarTurnosComponent implements OnInit {
       this.busquedas.shift();
     }
 
-
     if (search.tipoPrestacion || search.profesional) {
       this.busquedas.push(search);
       localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
     }
-
 
     this.actualizar('');
   }
@@ -159,15 +155,11 @@ export class DarTurnosComponent implements OnInit {
    */
   actualizar(etiqueta) {
 
-    
-
     // 1) Auth general (si puede ver esta pantalla)
     this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
     // 2) Permisos
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    // this.permisos = this.auth.getPermissions('turnos:darTurnos:organizacion:?');
-    // console.log('PERMISOS: ', this.permisos);
 
     let params: any = {};
     this.estadoT = 'noSeleccionada';
@@ -180,31 +172,29 @@ export class DarTurnosComponent implements OnInit {
       // Filtro búsqueda
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
-        fechaDesde: new Date().setHours(0, 0, 0, 0),
-        fechaHasta: fechaHasta,
+        // fechaDesde: new Date().setHours(0, 0, 0, 0),
+        // fechaHasta: fechaHasta,
+        rango: true, desde: new Date(), hasta: fechaHasta,
         idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
         idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
         organizacion: this.auth.organizacion._id
       };
 
     } else {
-
-      // Reseteat opciones
+      // Resetear opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
 
-
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
-        fechaDesde: new Date().setHours(0, 0, 0, 0),
-        fechaHasta: fechaHasta,
+        // fechaDesde: new Date().setHours(0, 0, 0, 0),
+        // fechaHasta: fechaHasta,
+        rango: true, desde: new Date(), hasta: fechaHasta,
         tipoPrestaciones: this.permisos,
         organizacion: this.auth.organizacion._id
       };
 
     }
-
-    console.log('params:', params);
     // Traer las agendas
     this.serviceAgenda.get(params).subscribe(agendas => {
 
@@ -238,7 +228,7 @@ export class DarTurnosComponent implements OnInit {
   seleccionarAgenda(agenda) {
 
     // Actualiza el calendario, para ver si no ho hubo cambios
-    this.actualizar('');
+    // this.actualizar('');
 
     // Asigno agenda
     this.agenda = agenda;
@@ -307,13 +297,13 @@ export class DarTurnosComponent implements OnInit {
             }
 
             let countBloques = [];
-            let programadosDisponibles = 0;
-            let gestionDisponibles = 0;
-            let delDiaDisponibles = 0;
+            this.programadosDisponibles = 0;
+            this.gestionDisponibles = 0;
+            this.delDiaDisponibles = 0;
             // let tiposTurnosSelect = [];
 
             // Si la agenda es de hoy, los turnos deberán sumarse al contador "delDia"
-            if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate() && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+            if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
 
               isDelDia = true;
               this.tiposTurnosSelect = 'delDia';
@@ -331,33 +321,33 @@ export class DarTurnosComponent implements OnInit {
 
                 bloque.turnos.forEach((turno) => {
 
-                  console.log(turno.tipoTurno);
-
-                  if (turno.estado === 'asignado') {
+                  console.log('tipoTurno', turno.tipoTurno);
+                  // Si el turno está asignado o está disponible pero ya paso la hora
+                  if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
                     switch (turno.tipoTurno) {
                       case ('delDia'):
                         countBloques[indexBloque].delDia--;
-                      break;
+                        break;
                       case ('programado'):
                         countBloques[indexBloque].delDia--;
-                      break;
+                        break;
                       case ('profesional'):
                         countBloques[indexBloque].profesional--;
-                      break;
+                        break;
                       case ('gestion'):
                         countBloques[indexBloque].gestion--;
-                      break;
+                        break;
+                      default:
+                        this.delDiaDisponibles--;
+                        break;
                     }
                   }
 
                 });
-
-                console.log(countBloques);
-
-                delDiaDisponibles = + countBloques[indexBloque].delDia;
+                this.delDiaDisponibles =  this.delDiaDisponibles + countBloques[indexBloque].delDia;
               });
               if (this.agenda.estado === 'Publicada') {
-                this.estadoT = (delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
+                this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
               }
 
             } else {
@@ -378,7 +368,7 @@ export class DarTurnosComponent implements OnInit {
                     switch (turno.tipoTurno) {
                       case ('delDia'):
                         countBloques[indexBloque].delDia--;
-                      break;
+                        break;
                       case ('programado'):
                         countBloques[indexBloque].programado--;
                         break;
@@ -391,14 +381,15 @@ export class DarTurnosComponent implements OnInit {
                     }
                   }
                 });
-                programadosDisponibles = + countBloques[indexBloque].programado;
-                gestionDisponibles = + countBloques[indexBloque].gestion;
+                this.delDiaDisponibles = countBloques[indexBloque].delDia;
+                this.programadosDisponibles = + countBloques[indexBloque].programado;
+                this.gestionDisponibles = + countBloques[indexBloque].gestion;
               });
               if (this.agenda.estado === 'Disponible') {
-                (gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
               }
               if (this.agenda.estado === 'Publicada') {
-                (programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
               }
             }
             // contador de turnos por Bloque
@@ -431,7 +422,7 @@ export class DarTurnosComponent implements OnInit {
                 fechaDesde: moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                 idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
                 idProfesional: this.opciones.profesional ? this.opciones.profesional.id : null,
-                estados: [ 'Disponible', 'Publicada' ]
+                estados: ['Disponible', 'Publicada']
               }).subscribe(alternativas => {
                 this.alternativas = alternativas;
                 this.reqfiltros = false;
@@ -471,12 +462,9 @@ export class DarTurnosComponent implements OnInit {
   }
 
   verAgenda(direccion: String) {
-
     if (this.agendas) {
-
       // Asegurar que no nos salimos del rango de agendas (agendas.length)
       let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
-
       if (enRango) {
         if (direccion === 'der') {
           this.indice++;
@@ -679,7 +667,7 @@ export class DarTurnosComponent implements OnInit {
 
   public tieneTurnos(bloque: IBloque): boolean {
     let turnos = bloque.turnos;
-    if (turnos.find(turno => turno.estado === 'disponible')) {
+    if (turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy)) {
       return true;
     } else {
       return false;
@@ -698,7 +686,6 @@ export class DarTurnosComponent implements OnInit {
   }
 
   onReturn(pacientes: IPaciente): void {
-    debugger;
     if (pacientes.id) {
       this.paciente = pacientes;
       this.verificarTelefono(this.paciente);

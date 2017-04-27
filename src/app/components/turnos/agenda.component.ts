@@ -402,7 +402,7 @@ export class AgendaComponent implements OnInit {
         // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.ServicioAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
+                this.ServicioAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
@@ -419,7 +419,7 @@ export class AgendaComponent implements OnInit {
         }
         // Verifica que el espacio fisico no esté ocupado en ese rango horario
         if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
-            this.ServicioAgenda.get({ 'espacioFisico': this.modelo.espacioFisico.id, 'rango': true, 'desde': iniAgenda, 'hasta': finAgenda }).
+            this.ServicioAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda }).
                 subscribe(agendas => {
                     let agds = agendas.filter(agenda => {
                         return agenda.id !== this.modelo.id || !this.modelo.id;

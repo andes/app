@@ -1,4 +1,3 @@
-
 <table *ngIf="calendario" class="table table-striped">
     <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" class="text-center td-calendario" title="{{ day.cantidadAgendas > 0 ? 'Cantidad de agendas: ' + day.cantidadAgendas : '' }}"
@@ -8,20 +7,13 @@
                 'text-danger'   : day.seleccionado && (day.estado === 'ocupado'),
                 'bg-info'       : !day.seleccionado && (day.estado === 'disponible'), 
                 'bg-danger'     : day.estado === 'ocupado', 
-                'bg-warning'    : day.finde,
+                'bg-warning'    : day.finde && !(day.estado === 'disponible'),
                 'hover'         : (day.estado !== 'vacio')
             }" (click)="seleccionar(day)">
             <div class="row">
                 <div class="col-12">{{ day.fecha | date:"d" }}</div>
                 <div class="col-12">{{ day.fecha | date:"EEE" | uppercase }}</div>
             </div>
-            <!--<div class="row">
-                <div class="col-12">
-                    <i *ngIf="day.seleccionado" class="mdi mdi-check-circle"></i>
-                    <i *ngIf="(!day.seleccionado) && (day.estado == 'disponible')" class="mdi mdi-plus-box"></i>
-                    <i *ngIf="(!day.seleccionado) && (day.estado == 'ocupado')" class="mdi mdi-close-box"></i>
-                </div>
-            </div>-->
             <span *ngIf="day.turnosDisponibles > 0 && day.estado != 'ocupado'" class="badge badge-success"> {{day.turnosDisponibles}} </span>
         </td>
     </tr>

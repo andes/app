@@ -7,6 +7,7 @@ export class CalendarioDia {
     public estado: Estado;
     public finde: boolean;
     public cantidadAgendas: number;
+    public hoy: Date;
     public turnosDisponibles: number;
 
     public programadosDisponibles = 0;
@@ -14,19 +15,17 @@ export class CalendarioDia {
     public delDiaDisponibles = 0;
 
     constructor(public fecha: Date, public agenda: any) {
-
+        this.hoy = new Date();
         if (!agenda) {
             this.estado = 'vacio';
             this.turnosDisponibles = 0;
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
-            this.turnosDisponibles = this.agenda.turnosDisponibles;
-
             if (disponible) {
                 let countBloques = [];
 
                 // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
-                if (this.agenda.horaInicio >= moment(new Date()).startOf('day').toDate() && this.agenda.horaInicio <= moment(new Date()).endOf('day').toDate()) {
+                if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
 
                     // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
@@ -37,34 +36,38 @@ export class CalendarioDia {
                         });
 
                         bloque.turnos.forEach((turno) => {
-                            if (turno.estado === 'asignado') {
+                            // Si el turno está asignado o está disponible pero ya paso la hora
+                            if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
 
                                 switch (turno.tipoTurno) {
                                     case ('delDia'):
                                         countBloques[indexBloque].delDia--;
-                                    break;
+                                        break;
                                     case ('programado'):
                                         countBloques[indexBloque].delDia--;
-                                    break;
+                                        break;
                                     case ('profesional'):
                                         countBloques[indexBloque].profesional--;
-                                    break;
+                                        break;
                                     case ('gestion'):
-                                        countBloques[indexBloque].reservadoGestion--;
-                                    break;
+                                        countBloques[indexBloque].gestion--;
+                                        break;
+                                    default:
+                                        this.delDiaDisponibles--;
+                                        break;
                                 }
 
                             }
                         });
-
-                        this.delDiaDisponibles  += countBloques[indexBloque].delDia;
+                        this.delDiaDisponibles += countBloques[indexBloque].delDia;
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                     });
                     // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
+                    this.turnosDisponibles = this.delDiaDisponibles + this.gestionDisponibles;
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
 
                 } else {
-                // En caso contrario, se calculan los contadores por separado
+                    // En caso contrario, se calculan los contadores por separado
 
                     // loopear turnos para sacar el tipo de turno!
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
@@ -84,9 +87,9 @@ export class CalendarioDia {
                                         break;
                                 }
                             }
-                            this.programadosDisponibles = + countBloques[indexBloque].programado;
-                            this.gestionDisponibles = + countBloques[indexBloque].gestion;
                         });
+                        this.programadosDisponibles = + countBloques[indexBloque].programado;
+                        this.gestionDisponibles = + countBloques[indexBloque].gestion;
                         if (this.agenda.estado === 'Disponible') {
                             this.estado = (this.gestionDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
@@ -94,6 +97,7 @@ export class CalendarioDia {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
                     });
+                    this.turnosDisponibles = this.programadosDisponibles + this.gestionDisponibles;
                 }
             } else {
                 this.estado = 'ocupado';

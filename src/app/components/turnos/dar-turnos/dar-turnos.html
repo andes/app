@@ -49,24 +49,24 @@
                       <div>Estado: <span class="text-success">{{ agenda.estado }}</span></div>
                       <div class="text-uppercase">{{semana[agenda.horaInicio.getDay()]}}</div>
                       <div class="box-content text-center" title="{{tipoPrestaciones}}">
-                          <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
-                              <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
-                              </tr>
-                          </table>
-                          <plex-accordion *ngIf="tipoPrestacionesArray.length > 1">
-                              <plex-panel class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
-                                <span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span>
-                              </plex-panel>
-                          </plex-accordion>
-                          <div *ngFor="let profesional of agenda.profesionales let i=index">
-                              <div class="" *ngIf="i<agenda.profesionales.length-1">
-                                  {{profesional.nombre}} {{profesional.apellido}},
-                              </div>
-                              <div class="" *ngIf="i>=agenda.profesionales.length-1">
-                                  {{profesional.nombre}} {{profesional.apellido}}
-                            </div>
+                        <table class="table table-condensed" *ngIf="tipoPrestacionesArray.length == 1">
+                          <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
+                            <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
+                          </tr>
+                        </table>
+                        <plex-accordion *ngIf="tipoPrestacionesArray.length > 1">
+                          <plex-panel class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of tipoPrestacionesArray">
+                            <span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span>
+                          </plex-panel>
+                        </plex-accordion>
+                        <div *ngFor="let profesional of agenda.profesionales let i=index">
+                          <div class="" *ngIf="i<agenda.profesionales.length-1">
+                            {{profesional.nombre}} {{profesional.apellido}},
                           </div>
+                          <div class="" *ngIf="i>=agenda.profesionales.length-1">
+                            {{profesional.nombre}} {{profesional.apellido}}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -84,30 +84,32 @@
                       </div>
                       <div class="container">
                         <div *ngFor="let turno of bloque.turnos; let i=index">
-                          <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                            <div *ngIf="turno.estado == 'disponible'" class="row">
-                              <div class="col col-md-12">
-                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                          <template [ngIf]="turno.horaInicio >= hoy">
+                            <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                              <div *ngIf="turno.estado == 'disponible'" class="row">
+                                <div class="col col-md-12">
+                                  <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}}</a>
+                                </div>
                               </div>
+                              <br *ngIf="turno.estado == 'disponible' && i+1<bloque.turnos.length">
                             </div>
-                            <br *ngIf="turno.estado == 'disponible' && i+1<bloque.turnos.length">
-                          </div>
-                          <div *ngIf="bloque.pacienteSimultaneos">
-                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                              <div class="col col-md-12">
-                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                            <div *ngIf="bloque.pacienteSimultaneos">
+                              <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
+                                <div class="col col-md-12">
+                                  <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                </div>
                               </div>
+                              <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
                             </div>
-                            <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
-                          </div>
-                          <div *ngIf="bloque.citarPorBloque">
-                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                              <div class="col col-md-12">
-                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                            <div *ngIf="bloque.citarPorBloque">
+                              <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
+                                <div class="col col-md-12">
+                                  <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                </div>
                               </div>
+                              <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
                             </div>
-                            <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
-                          </div>
+                          </template>
                         </div>
                         <!-- end ngFor turnos -->
                       </div>
@@ -128,9 +130,9 @@
                               </thead>
                               <tbody>
                                 <tr>
-                                  <td class="text-sm">{{countBloques[indiceBq].delDia}}</td>
-                                  <td class="text-sm">{{countBloques[indiceBq].programado}}</td>
-                                  <td class="text-sm">{{countBloques[indiceBq].gestion}}</td>
+                                  <td class="text-sm">{{delDiaDisponibles}}</td>
+                                  <td class="text-sm">{{programadosDisponibles}}</td>
+                                  <td class="text-sm">{{gestionDisponibles}}</td>
                                   <!--No se visualizan los turnos disponibles para profesionales-->
                                   <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
                                 </tr>
@@ -178,21 +180,21 @@
                     </div>
                     <div class="col-12">
                       <table class="table table-condensed" *ngIf="agenda.tipoPrestaciones.length == 1">
-                          <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
-                            <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
-                          </tr>
+                        <tr class="text-uppercase bloques-info-prestacion" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                          <td><span class="text-success text-sm">{{ tipoPrestacion.nombre }}</span></td>
+                        </tr>
                       </table>
-                        <div *ngFor="let profesional of agenda.profesionales let i=index">
-                          <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
-                          <div *ngIf="i>=agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
-                        </div>
+                      <div *ngFor="let profesional of agenda.profesionales let i=index">
+                        <div *ngIf="i<agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
+                        <div *ngIf="i>=agenda.profesionales.length-1">{{profesional.nombre}} {{profesional.apellido}}</div>
+                      </div>
                     </div>
                     <br>
                   </div>
                 </div>
                 <br>
                 <div *ngIf="alternativas.length > 0" class="list-group">
-                  
+
                   <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
                     <div class="row">
                       <div class="col col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: </label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
@@ -209,7 +211,9 @@
                 </div>
                 <div *ngIf="reqfiltros">
                   <div class="row">
-                    <div class="col col-md-12"><h5>No hay turnos disponibles en esta agenda</h5></div>
+                    <div class="col col-md-12">
+                      <h5>No hay turnos disponibles en esta agenda</h5>
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col col-md-12">Debe ingresar algún filtro para buscar alternativa</div>
