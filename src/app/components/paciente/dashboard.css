@@ -1,0 +1,31 @@
+ .top-block {
+        border-radius: 20px;
+        font-size: 22px;
+        text-align: center;
+        padding: 5px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        position: relative;
+        display: block;
+        line-height: 45px;
+        text-shadow: 0 0 1px #DDD;
+        text-decoration: none;
+        -webkit-box-shadow: inset 0 0 0 1px #FAFAFA;
+        -moz-box-shadow: inset 0 0 0 1px #FAFAFA;
+        box-shadow: inset 0 0 0 1px #FAFAFA;
+        background: -moz-linear-gradient(top, rgba(30, 87, 153, 0.2) 0%, rgba(125, 185, 232, 0) 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(30, 87, 153, 0.2)), color-stop(100%, rgba(125, 185, 232, 0)));
+        background: -webkit-linear-gradient(top, rgba(30, 87, 153, 0.2) 0%, rgba(125, 185, 232, 0) 100%);
+        background: -o-linear-gradient(top, rgba(30, 87, 153, 0.2) 0%, rgba(125, 185, 232, 0) 100%);
+        background: -ms-linear-gradient(top, rgba(30, 87, 153, 0.2) 0%, rgba(125, 185, 232, 0) 100%);
+        background: linear-gradient(to bottom, rgba(30, 87, 153, 0.2) 0%, rgba(125, 185, 232, 0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#331e5799', endColorstr='#007db9e8', GradientType=0);
+    }
+    
+    .blue {
+        color: #3986AC;
+    }
+    
+    .large {
+      font-size: xx-large;
+    }
