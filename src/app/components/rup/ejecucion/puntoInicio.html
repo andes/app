@@ -215,8 +215,9 @@
               <br>
               <h5 class="item-title"><strong>{{p.paciente.apellido}}, </strong>{{p.paciente.nombre}}</h5>
               <br>              
-
-              <span>DNI {{p.paciente.documento}}</span>
+              
+              <span>Horario: {{turnosPrestacion[p.id].horaInicio | date: 'HH:mm'}} hs. </span>
+              <small><span> | DNI {{p.paciente.documento}}</span></small>
 
               <small *ngFor="let dir of p.paciente.direccion">                 
                 <span *ngIf="dir.ubicacion && dir.ubicacion.localidad">              

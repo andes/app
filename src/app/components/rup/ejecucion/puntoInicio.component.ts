@@ -31,6 +31,8 @@ export class PuntoInicioComponent implements OnInit {
     public fechaActual = new Date();
     public bloqueSeleccionado: any;
 
+    public turnosPrestacion: any = [];
+
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
         public servicioAgenda: AgendaService, public auth: Auth,
@@ -67,6 +69,11 @@ export class PuntoInicioComponent implements OnInit {
         let turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id; });
         this.servicioPrestacion.get({ turnos: turnos }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
+            this.listaPrestaciones.forEach(prestacion => {
+                this.turnosPrestacion[prestacion.id.toString()] = this.bloqueSeleccionado.turnos.find(t => {
+                    return t.id === prestacion.solicitud.idTurno;
+                });
+            });
         });
     }
 
@@ -78,4 +85,4 @@ export class PuntoInicioComponent implements OnInit {
         this.router.navigate(['/rup']);
     }
 
-} // export class PuntoInicioComponent
+} // export class Punto Inicio Component
