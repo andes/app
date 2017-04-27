@@ -252,10 +252,10 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
-            if (permisos) {
-              this.mostrarNuevo = true;
-            }
+            /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
+             if (permisos) {*/
+            this.mostrarNuevo = true;
+            // }
           }, (err) => {
             this.loading = false;
           });
