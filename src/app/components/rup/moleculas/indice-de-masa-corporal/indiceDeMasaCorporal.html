@@ -1,18 +1,14 @@
-<!--<pre>{{prestacionesEjecucion | json}}</pre>-->
+<div *ngIf="!soloValores">
+<plex-float label="{{tipoPrestacion.nombre}}"  [(ngModel)]="data[tipoPrestacion.key]" name="imc" (keyup)="devolverValores()">
+</plex-float>
 
-<div class="row">
-    <div class="col-md-12">
-        <h4> <strong>{{tipoPrestacion.nombre}}</strong></h4>
-    </div>
+<p *ngIf="mensaje && mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+</p>
 </div>
-<div class="row">
-    <div class="col-sm-12">
-        <div class="form-group col-md-6" *ngIf="showAlertas">
-                {{data.alerta}}
-        </div>
-        <div class="form-group col-md-6" *ngIf="showIMC">
-            <label>IMC</label>
-            <input value="{{data.imc}}" name="talla" name="IMC" class="form-control">
-        </div>
-    </div>
-</div>
+<p *ngIf="soloValores">
+    <label><b>{{tipoPrestacion.nombre}}</b></label>
+    <br /> {{data[tipoPrestacion.key]}} 
+</p>

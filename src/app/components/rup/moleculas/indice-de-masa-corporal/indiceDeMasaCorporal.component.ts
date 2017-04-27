@@ -1,86 +1,33 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { PrestacionEjecucionComponent } from './../../ejecucion/prestacionEjecucion.component';
-import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { IPrestacionPaciente } from './../../../../interfaces/rup/IPrestacionPaciente';
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { Formula } from './../../core/formula.component';
+import { Component, OnInit } from '@angular/core';
 import { ObservarDatosService } from '../../../../services/rup/observarDatos.service';
 
 @Component({
   selector: 'rup-indice-de-masa-corporal',
   templateUrl: 'indiceDeMasaCorporal.html'
 })
-export class IndiceDeMasaCorporalComponent implements OnInit {
-
-  @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-  @Input('datosIngreso') datosIngreso: any;
-  @Input('tipoPrestacion') tipoPrestacion: any;
-  @Input('paciente') paciente: any;
-  // array de prestaciones que se estan ejecutando actualmente en el proceso
-  @Input('prestacionesEjecucion') prestacionesEjecucion: ITipoPrestacion;
-  // array de valores de las prestaciones que se estan ejecutando actualmente
-  @Input('valoresPrestacionEjecucion') valoresPrestacionEjecucion: any = [];
-  @Input() prestacion: IPrestacionPaciente;
-
-  // resultados a devolver
-  data: any = {};
-  prestacionesEnEjecucion: any = []; // Array de prestaciones en ejecucion
-  showMoleculas: boolean = false;
-  showIMC: boolean = false;
-  prestacionesPaciente;
-  showAlertas: boolean = false; // div de las alertas
-  prestacionTalla: IPrestacionPaciente = null;
-  changeLog: string[] = [];
-
-  constructor(private servicioTipoPrestacion: TipoPrestacionService,
-    private servicioObservarDatos: ObservarDatosService) {
-    // Nos suscribimos a los cambios de los átomo necesario para realizar el cálculo
-    servicioObservarDatos.getDato$('peso').subscribe(
-      peso => {
-        this.calculoIMC();
-      });
-    servicioObservarDatos.getDato$('talla').subscribe(
-      talla => {
-        this.calculoIMC();
-      });
-  }
-
+export class IndiceDeMasaCorporalComponent extends Formula {
 
   ngOnInit() {
-    this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
-      this.tipoPrestacion = tipoPrestacion;
-    });
+debugger;
+        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+   
+    this.servicioObservarDatos.getDato$('peso').subscribe(
+      peso => {
+        //this.data[this.tipoPrestacion.key] = null;
+        this.calculoIMC();
+      });
+    this.servicioObservarDatos.getDato$('talla').subscribe(
+      talla => {
+       // this.data[this.tipoPrestacion.key] = null;
+        this.calculoIMC();
+      });
 
-    // Recorremos todas las prestaciones en ejecucion y capturamos sus key
-    // let ejecucionKey;
-    // for (var elemento in this.prestacionesEjecucion) {
-    //   ejecucionKey = this.prestacionesEjecucion[elemento].solicitud.tipoPrestacion.id;
-    //   // vamos a capturar los componentes de las prestaciones activas con la key que recuperamos arriba.
-    //   this.servicioTipoPrestacion.getById(ejecucionKey).subscribe(prestacionesEjecucion => {
-    //     this.prestacionesEjecucion = prestacionesEjecucion;
-    //     prestacionesEjecucion.ejecucion.forEach(element => {
-    //       this.prestacionesEnEjecucion.push(element);
-    //     });
-    //   });
-    //
-    // }
-    // si vienen datos por input, los asignamos a nuestro objeto data
-    this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
-    this.calculoIMC();
-
-
+      this.calculoIMC();
+      //this.datosIngreso = this.data;
+      //     this.evtData.emit(this.data);
   }
-
-  onReturnComponent(obj: any, tipoPrestacion: any) {
-    if (obj[tipoPrestacion.key]) {
-      this.data[this.tipoPrestacion.key][tipoPrestacion.key] = obj[tipoPrestacion.key];
-
-    } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && obj[tipoPrestacion.key] == null) {
-      delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
-    }
-    this.evtData.emit(this.data);
-
-  }
+ 
 
   findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
     return this.findValuesHelper(obj, key, []);
@@ -113,6 +60,14 @@ export class IndiceDeMasaCorporalComponent implements OnInit {
     return list;
   }
 
+  //  ngDoCheck(){
+  //    debugger;
+  //    this.calculoIMC();
+    
+  // }
+ 
+  
+
 
   calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
     // calcula el imc y/o devuelve alertas al usuario.
@@ -122,24 +77,6 @@ export class IndiceDeMasaCorporalComponent implements OnInit {
     let key;
     let prestacionPeso = false;
     let prestacionTalla = false;
-    // let busquedaKey: String;
-    this.showIMC = false;
-    this.showAlertas = false;
-
-    // Busca las prestaciones en ejecucion de peso y de talla
-    // for (var elemento in this.prestacionesEnEjecucion) {
-    //   console.log(this.prestacionesEnEjecucion[elemento].key);
-    //   if (this.prestacionesEnEjecucion[elemento].key == 'peso') {
-    //     console.log('Tengo el peso');
-    //     prestacionPeso = true;
-    //   }
-    //   if (this.prestacionesEnEjecucion[elemento].key == 'talla') {
-    //     console.log('Tengo la talla');
-    //     prestacionTalla = true;
-    //   }
-    //
-    // }
-
     let arrayDePeso: any;
     let arrayDeTalla: any;
     // Aca va el valor del peso si es que esta en ejecucion..
@@ -156,7 +93,11 @@ export class IndiceDeMasaCorporalComponent implements OnInit {
       prestacionTalla = true;
       // console.log('TALLA usada para IMC', talla);
     }
-
+    console.log(prestacionPeso);
+    console.log('=#=#=#=#==#=#=#=#=#');
+    console.log(prestacionTalla);
+    debugger;
+  
     // Si encuentro las prestaciones que necesito. peso-talla
     if (prestacionPeso && prestacionTalla) {
       // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
@@ -165,41 +106,39 @@ export class IndiceDeMasaCorporalComponent implements OnInit {
         case (peso != null && talla != null):
           talla = talla / 100; // Paso a metros;
           imc = peso / Math.pow(talla, 2);
-          this.data.imc = imc;
-          this.showIMC = true;
+          this.mensaje.texto ="";
+          this.data[this.tipoPrestacion.key] = imc.toFixed(2);
+          this.evtData.emit(this.data);
           break;
         // Mostramos el  Alerta de talla
         case (peso != null && talla == null):
-          this.data.alerta = 'Falta completar el campo talla';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Falta completar el campo talla';
           break;
         // Mostramos alerta de peso.
         case (talla != null && peso == null):
-          this.data.alerta = 'Falta completar el campo peso';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Falta completar el campo peso';
           break;
         // Se muestra alerta de talla y de peso
         default:
-          this.data.alerta = 'Falta completar el campo talla y el campo peso';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Falta completar el campo talla y el campo peso';
           break;
       }
     } else {
       switch (true) {
         case (prestacionTalla && !prestacionPeso):
-          this.data.alerta = 'Agregar la prestacion de peso';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Agregar la prestacion de peso';
           break;
         case (prestacionPeso && !prestacionTalla):
-          this.data.alerta = 'Agregar la prestacion de talla';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Agregar la prestacion de talla';
           break;
         default:
-          this.data.alerta = 'Agregar valores a la prestacion de talla  y valores a la prestacion de peso';
-          this.showAlertas = true;
+          this.mensaje.texto = 'Agregar prestacion talla y peso';
           break;
       }
     }
-
+  // if(this.data[this.tipoPrestacion.key]){
+  //   this.mensaje.texto = "";
+  // }
   }
+
 }

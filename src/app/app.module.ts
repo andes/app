@@ -1,3 +1,4 @@
+import { Formula } from './components/rup/core/formula.component';
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
 import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
 import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
@@ -233,7 +234,8 @@ export const RUP_COMPONENTS = [
   Molecula,
   NinoSanoComponent,
   DatosPerinatalesComponent,
-  RegistrosVisitasComponent
+  RegistrosVisitasComponent,
+  Formula
 ];
 
 // Locales
