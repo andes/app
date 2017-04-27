@@ -27,6 +27,7 @@ export class ClonarAgendaComponent implements OnInit {
     private finMesDate;
     private original = true;
     private inicioAgenda: Date;
+    private finde: boolean;
 
     @Input('agenda')
     set agenda(value: any) {
@@ -67,7 +68,6 @@ export class ClonarAgendaComponent implements OnInit {
             params['espacioFisico'] = this.agenda.espacioFisico.id;
         }
         if (this.agenda.profesionales) {
-            // params['profesionales'] = JSON.stringify(this.agenda.profesionales.map(elem => { elem.id; return elem; }));
             params['profesionales'] = this.agenda.profesionales.map(elem => { return elem.id; });
         }
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
@@ -109,6 +109,7 @@ export class ClonarAgendaComponent implements OnInit {
                         original: false
                     };
                 }
+                dia.finde = this.inicioMesMoment.isoWeekday() === 6 || this.inicioMesMoment.isoWeekday() === 7 ? true : false;
                 week.push(dia);
             }
         }

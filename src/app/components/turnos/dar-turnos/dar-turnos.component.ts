@@ -172,8 +172,6 @@ export class DarTurnosComponent implements OnInit {
       // Filtro búsqueda
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
-        // fechaDesde: new Date().setHours(0, 0, 0, 0),
-        // fechaHasta: fechaHasta,
         rango: true, desde: new Date(), hasta: fechaHasta,
         idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
         idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
@@ -187,8 +185,6 @@ export class DarTurnosComponent implements OnInit {
 
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
-        // fechaDesde: new Date().setHours(0, 0, 0, 0),
-        // fechaHasta: fechaHasta,
         rango: true, desde: new Date(), hasta: fechaHasta,
         tipoPrestaciones: this.permisos,
         organizacion: this.auth.organizacion._id
@@ -227,7 +223,7 @@ export class DarTurnosComponent implements OnInit {
    */
   seleccionarAgenda(agenda) {
 
-    // Actualiza el calendario, para ver si no ho hubo cambios
+    // Actualiza el calendario, para ver si no hubo cambios
     // this.actualizar('');
 
     // Asigno agenda
