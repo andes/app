@@ -23,8 +23,8 @@ export class Atomo extends RupComponent {
     //     this.evtData.emit(this.data);
     // }
 
-    getMensajes() {
+    // getMensajes() {
 
 
-    }
+    // }
 }

@@ -1,4 +1,4 @@
-import { Atomo } from './atomoComponent';
+import { Atomo } from './../core/atomoComponent';
 import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';

@@ -1,8 +1,8 @@
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
 import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
 import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
-import { Molecula } from './components/rup/moleculas/molecula.component';
-import { Atomo } from './components/rup/atomos/atomoComponent';
+import { Molecula } from './components/rup/core/molecula.component';
+import { Atomo } from './components/rup/core/atomoComponent';
 
 /*
 @jgabriel | 04-03-2017

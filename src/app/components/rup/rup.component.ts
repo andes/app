@@ -90,13 +90,39 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  devolverValores() {
+  devolverValores(obj?: any, tipoPrestacion?: any) {
+    console.log('devolverValores');
+    //Es Atomo
+    if (this.tipoPrestacion.granularidad == 'atomos') {
+      console.log('atomo');
       if (this.data[this.tipoPrestacion.key] === null) {
-          this.data = {};
+        this.data = {};
       }
-      this.mensaje = this.getMensajes();
-      this.evtData.emit(this.data);
-      this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
+    }
+    //Molecula
+    else {
+      console.log('=#=#=#==#=#=#=#==#=#=====##Molecula#=#==#=#=#=#=#=#==#=#=#');
+      // valor: variable con el resultado qeu viene del input del formulario
+      let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
+      if (valor) {
+        if (!this.data[this.tipoPrestacion.key]) {
+          this.data[this.tipoPrestacion.key] = {};
+        }
+        if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
+          this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+        }
+        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
+      } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null) {
+        delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+      }
+      if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
+        this.data = {};
+      }
+    }
+    this.mensaje = this.getMensajes();
+    this.evtData.emit(this.data);
+    this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
+    
   }
 
   getMensajes() {
