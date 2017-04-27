@@ -29,7 +29,7 @@
 }
 
 
-.plex-box-content .h4{
+.plex-box-content .h4 {
     display: inline-block;
     height: 38px;
 }
@@ -37,6 +37,7 @@
 
 .td-calendario {
     position: relative;
+    border-right: 1px solid #eceeef;
 
     .badge {
         position: absolute;

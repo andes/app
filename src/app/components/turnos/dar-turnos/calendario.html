@@ -8,6 +8,7 @@
                 'text-danger'   : day.seleccionado && (day.estado === 'ocupado'),
                 'bg-info'       : !day.seleccionado && (day.estado === 'disponible'), 
                 'bg-danger'     : day.estado === 'ocupado', 
+                'bg-warning'    : day.finde,
                 'hover'         : (day.estado !== 'vacio')
             }" (click)="seleccionar(day)">
             <div class="row">

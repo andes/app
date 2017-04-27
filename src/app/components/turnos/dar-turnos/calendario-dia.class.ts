@@ -5,6 +5,7 @@ type Estado = 'vacio' | 'disponible' | 'ocupado';
 export class CalendarioDia {
     public seleccionado: boolean;
     public estado: Estado;
+    public finde: boolean;
     public cantidadAgendas: number;
     public turnosDisponibles: number;
 
@@ -98,14 +99,6 @@ export class CalendarioDia {
                 this.estado = 'ocupado';
             }
         }
-    }
-
-    getProgramadosDisponibles() {
-        return this.programadosDisponibles;
-    }
-
-    getGestionDisponibles() {
-        return this.gestionDisponibles;
     }
 
 }

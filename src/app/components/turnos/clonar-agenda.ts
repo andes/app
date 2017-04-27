@@ -209,7 +209,7 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        this.plex.confirm('Está seguro que desea realizar la clonación?').then(conf => {
+        this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
             if (conf) {
                 this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
                 this.seleccionados = [...this.seleccionados];
