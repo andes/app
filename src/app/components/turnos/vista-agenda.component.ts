@@ -13,6 +13,7 @@ export class VistaAgendaComponent implements OnInit {
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
+    @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
 
     private _agendasSeleccionadas: Array<any>;
 
@@ -56,15 +57,38 @@ export class VistaAgendaComponent implements OnInit {
                 // Si son múltiples, esperar a que todas se actualicen
                 if (alertCount === 0) {
                     if (this.cantSel === 1) {
-                        this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                        this.actualizarEstadoEmit.emit(true);
+
+                        if (estado === 'prePausada' && agenda.prePausada === 'Publicada') {
+                            this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                                if (!confirmado) {
+                                    return false;
+                                }
+                                this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                this.actualizarEstadoEmit.emit(true);
+                            });
+                        } else {
+                            this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                            this.actualizarEstadoEmit.emit(true);
+                        }
+
+
                     } else {
                         if (estado === 'prePausada') {
                             this.plex.alert('Las agendas cambiaron de estado');
                         } else {
-                            this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                            if (estado === 'prePausada' && agenda.prePausada === 'Publicada') {
+                                this.plex.confirm('¿Publicar Agendas?').then((confirmado) => {
+                                    if (!confirmado) {
+                                        return false;
+                                    }
+                                    this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                    this.actualizarEstadoEmit.emit(true);
+                                });
+                            } else {
+                                this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                this.actualizarEstadoEmit.emit(true);
+                            }
                         }
-                        this.actualizarEstadoEmit.emit(true);
                     }
                     alertCount++;
                 }
@@ -115,7 +139,9 @@ export class VistaAgendaComponent implements OnInit {
             cerrarAgenda: false,
             // Se pueden clonar todas las agendas, ya que sólo se usa como un blueprint
             clonarAgenda: (this.cantSel === 1),
-            // En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play"
+            // Agregar una nota relacionada a la Agenda
+            agregarNota: true,
+            // (En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play")
         };
     }
 
@@ -182,6 +208,12 @@ export class VistaAgendaComponent implements OnInit {
     // Botón clonar
     clonarAgenda(agenda: any) {
         this.clonarEmit.emit(agenda);
+    }
+
+    // Botón agregar nota a la agenda
+    // Sólo avisa que se va a agregar una nota
+    agregarNotaAgenda() {
+        this.agregarNotaAgendaEmit.emit(this.agendasSeleccionadas);
     }
 
     cancelar() {

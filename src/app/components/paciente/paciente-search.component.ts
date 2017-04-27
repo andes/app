@@ -28,7 +28,7 @@ export class PacienteSearchComponent implements OnInit {
   public cantPacientesValidados: number;
   public showCreateUpdate = false;
   public mostrarNuevo = false;
-  public autoFocus: number = 0;
+  public autoFocus = 0;
   private permisoAgendas = false;
 
   // Eventos

@@ -1,9 +1,46 @@
 <header>
-  <div title="Menú hamburguesa" class="hover float-right" style="background-color: #00a8e0; height: 100%; width: 85vw; right: 0; top: 10px; text-align: right; padding-top: 10px;">
-    <plex-dropdown class=" mdi-36px float-right" icon="food" type="link" [items]="items" style="background-color: #00a8e0;">
-    </plex-dropdown>
-  </div>
+  <!-- Barra de navegación -->
+  <nav class="friso">
+    <div class="row no-gutters">
+      <!-- Datos -->
+      <div class="col-9">
+        <div class="row data">
+        </div>
+      </div>
 
+      <!-- Datos usuario logeado-->
+      <div class="col-3 invert">
+        <div class="row">
+          <div class="col-2">
+            <i ng-reflect-class-name="account" class="mdi mdi-account"></i>
+          </div>
+          <div class="col-6 data-usuario">
+            <div class="list-inline-item">
+              <div class="row">
+                <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6>
+              </div>
+
+              <div class="row">
+                <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
+                  Especialidad: {{EspecialidadActiva?.descripcion}}
+                </h6>
+              </div>
+
+              <div class="row">
+                <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
+                  Matricula: {{EspecialidadActiva?.numero}}
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4 burger-container">
+            <i ng-reflect-class-name="menu" class="mdi mdi-menu"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
 </header>
 <section *ngIf="autorizado && showGestorAgendas" [formGroup]="searchForm">
   <div class="row">
@@ -36,15 +73,21 @@
               </plex-select>
             </div>
           </div>
-        </header>
-        <div class="container">
-          <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [agendasSeleccionadas]="agendasSeleccionadas"
-            (clonarEmit)="clonar()" (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
-          <span class="h4" *ngIf="agendas.length && hoy">Agendas de hoy</span>
-          <span class="h4" *ngIf="agendas.length && !hoy">Agendas</span>
-          <span class="h4" *ngIf="!agendas.length">No hay agendas que coincidan con los filtros de búsqueda.</span>
-          <div *ngIf="!showVistaAgendas"> </div>
-          <div *ngIf="agendas.length" class="row">
+          <div class="row">
+            <div class="col-6">
+                <span class="h5 agendas-title" *ngIf="agendas.length && hoy">Agendas de hoy</span>
+                <span class="h5 agendas-title" *ngIf="agendas.length && !hoy">Agendas</span>
+                <span class="h5 agendas-title" *ngIf="!agendas.length">No hay agendas que coincidan con los filtros de búsqueda.</span>
+            </div>
+            <div class="col-6">
+                <div *ngIf="!showVistaAgendas"> </div>
+                <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [agendasSeleccionadas]="agendasSeleccionadas"
+                (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (editarAgendaEmit)="editarAgenda($event)"
+                (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
+            </div>
+          </div>
+
+          <div class="row agendas-headings" *ngIf="agendas.length">
             <div class="col-1 text-center">&nbsp;</div>
             <div class="col-2 text-center"><strong>Fecha y Hora</strong></div>
             <div class="col-3 text-center"><strong>Prestaciones</strong></div>
@@ -52,6 +95,10 @@
             <div class="col text-center"><strong>Espacio Físico</strong></div>
             <div class="col-1 text-center"><strong>Estado</strong></div>
           </div>
+
+        </header>
+        <div class="container">
+          
           <table class="table table-striped">
             <tbody>
               <template ngFor let-agenda="$implicit" [ngForOf]="agendas" let-i="index">
@@ -64,7 +111,7 @@
                   </td>
 
                   <td class="col-2.5" (click)="verAgenda(agenda, false, $event)">
-                    <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs</span>
+                    <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="text-warning warning mdi mdi-message"></i></span></span>
                   </td>
 
                   <td class="col-3" (click)="verAgenda(agenda, false, $event)">
@@ -102,6 +149,7 @@
     </div>
     <div class="col-3">
       <plex-box>
+
         <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
           <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
         </div>
@@ -109,6 +157,14 @@
         <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
           <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
         </div>
+
+        <!-- Muestra el panel de Notas de Agendas -->
+        <div type="info" class="col-md-12" *ngIf="showAgregarNotaAgenda">
+          <div class="clear"></div>
+          <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
+            (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
+        </div>
+
       </plex-box>
     </div>
   </div>

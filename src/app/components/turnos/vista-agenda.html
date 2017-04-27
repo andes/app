@@ -27,4 +27,8 @@
         <plex-button icon="mdi mdi-play" (click)="actualizarEstado( 'prePausada' )" title="Reanudar Agenda">
         </plex-button>
     </span>
+    <span *ngIf="vistaBotones.agregarNota">
+        <plex-button icon="mdi mdi-message-text-outline" (click)="agregarNotaAgenda()" title="Agregar nota">
+        </plex-button>
+    </span>
 </span>

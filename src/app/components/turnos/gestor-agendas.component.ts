@@ -32,6 +32,7 @@ export class GestorAgendasComponent implements OnInit {
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
     public showInsertarAgenda: Boolean = false;
+    public showAgregarNotaAgenda: Boolean = false;
     public fechaDesde: any;
     public fechaHasta: any;
 
@@ -91,7 +92,7 @@ export class GestorAgendasComponent implements OnInit {
                 let fechaHasta = moment(value.fechaHasta).endOf('day');
                 let params = {};
 
-                if ( fechaDesde.isValid() && fechaHasta.isValid() ) {
+                if (fechaDesde.isValid() && fechaHasta.isValid()) {
                     params = {
                         fechaDesde: fechaDesde.format(),
                         fechaHasta: fechaHasta.format(),
@@ -134,6 +135,24 @@ export class GestorAgendasComponent implements OnInit {
 
     }
 
+    agregarNotaAgenda() {
+        this.showClonar = false;
+        this.showDarTurnos = false;
+        this.showEditarAgenda = false;
+        this.showEditarAgendaPanel = false;
+        this.showTurnos = false;
+        this.showAgregarNotaAgenda = true;
+    }
+
+    cancelaAgregarNotaAgenda() {
+        this.showTurnos = true;
+        this.showAgregarNotaAgenda = false;
+    }
+    saveAgregarNotaAgenda() {
+        this.showTurnos = true;
+        this.showAgregarNotaAgenda = false;
+    }
+
     clonar() {
         this.showGestorAgendas = false;
         this.showClonar = true;
@@ -144,14 +163,10 @@ export class GestorAgendasComponent implements OnInit {
         this.showGestorAgendas = true;
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
+        this.showAgregarNotaAgenda = false;
         this.showClonar = false;
         this.loadAgendas();
     }
-
-        // this.loadAgendas();
-        // this.showTurnos = false;
-        // this.showEditarAgenda = false;
-        // this.showEditarAgendaPanel = false;
 
     reasignaTurno(reasTurno) {
         this.reasignar = reasTurno;
@@ -162,6 +177,7 @@ export class GestorAgendasComponent implements OnInit {
     showVistaTurnos(showTurnos: Boolean) {
         this.showTurnos = showTurnos;
         this.showEditarAgendaPanel = false;
+        this.showAgregarNotaAgenda = false;
     }
 
     insertarAgenda() {
@@ -182,6 +198,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showEditarAgendaPanel = true;
             this.showTurnos = false;
         }
+        this.showAgregarNotaAgenda = false;
     }
 
     loadAgendas() {
@@ -212,16 +229,17 @@ export class GestorAgendasComponent implements OnInit {
             });
     }
 
+
     loadPrestaciones(event) {
         this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
-        if ( event.query ) {
+        if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.serviceProfesional.get( query ).subscribe(event.callback);
+            this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback([]);
         }
@@ -233,7 +251,7 @@ export class GestorAgendasComponent implements OnInit {
 
     loadEstados(event) {
         this.serviceAgenda.get({}).subscribe(agendas => {
-            if ( agendas.length > 0 ) {
+            if (agendas.length > 0) {
                 let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
                     return { id: estado, nombre: estado }; // return objeto compatible con plex-select
                 });
@@ -274,6 +292,7 @@ export class GestorAgendasComponent implements OnInit {
 
             // Reseteo el panel de la derecha
             this.showEditarAgendaPanel = false;
+            this.showAgregarNotaAgenda = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
         });
@@ -307,6 +326,8 @@ export class GestorAgendasComponent implements OnInit {
         this.showTurnos = false;
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
+        this.showAgregarNotaAgenda = false;
+
     }
 
 }

@@ -35,6 +35,22 @@
 }
 
 
+.agendas-headings {
+    width: 100%;
+    padding-top: 15px;
+}
+
+.agendas-titles {
+    position: relative;
+    top: 15px;
+    left: 5px;
+}
+
+// .agendas-list {
+//     position: relative;
+//     top: -15px;
+// }
+
 .td-calendario {
     position: relative;
     border-right: 1px solid #eceeef;
@@ -49,16 +65,42 @@
 
 }
 
-// temp Paciente header @ Dar turnos 
-.sub-friso {
-    background-color: $blue !important;
+.consulta {
+  color: white;
 }
-.header-paciente {
-    min-width: 600px;
-    background-color: $blue;
-    color: white;
 
-    .estado-paciente {
-        border-left: 1px solid white !important;
-    }
+.invert {
+    background-color: #002738;
+    color: white;
 }
+
+h5.nombre-paciente {
+ color: black;
+ font-weight: 300;
+}
+
+h6.subtitulo-paciente {
+  font-weight: normal;
+  line-height: 3px;
+}
+
+h5.nombre-usuario {
+ color: black;
+ font-weight: 300;
+}
+
+.contenedor-subdata {
+  border-left: solid 1px #111111;
+  padding-left: 15px; 
+  padding-right: 15px; 
+}
+
+h6.subdata-paciente {
+  font-weight: bolder;
+}
+
+h6.subdata-descripcion {
+  font-weight: 400;
+  line-height: 2px;
+}
+

@@ -1,0 +1,26 @@
+<div class="row" *ngIf="showAgregarNotaAgenda">
+    <plex-box>
+        <div class="row" *ngFor="let agenda of agendasSeleccionadas; let i = index">
+            <div class="col-md-12">
+                <label>Agenda: {{agenda.horaInicio | date: 'H:mm'}} a {{agenda.horaFin | date: 'H:mm'}} hs
+                </label>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <plex-text label="Ingrese Nota" name="nota" [(ngModel)]="agenda.nota">
+                        </plex-text>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarNota()" title="Guardar Nota">
+                </plex-button>
+                <plex-button icon="mdi mdi-arrow-left" label="Volver" (click)="cancelar()" title="Volver">
+                </plex-button>
+            </div>
+        </div>
+    </plex-box>
+</div>

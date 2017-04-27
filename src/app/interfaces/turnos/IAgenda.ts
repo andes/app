@@ -27,5 +27,6 @@ export interface IAgenda {
     organizacion: {
         id: String,
         nombre: String
-    }
+    },
+    nota: String;
 }

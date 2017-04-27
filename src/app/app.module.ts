@@ -92,6 +92,7 @@ import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.com
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+import { AgregarNotaAgendaComponent } from './components/turnos/nota-agenda.component';
 import { PanelAgendaComponent } from './components/turnos/panel-agenda.component';
 
 // Estos componentes utilizan ng-prime y deben ser actualizados
@@ -270,7 +271,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
-    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent,
     ...RUP_COMPONENTS
   ],

@@ -1,6 +1,50 @@
 <header *ngIf="showDarTurnos" class="header-paciente">
   <header-paciente [paciente]="paciente"></header-paciente>
 </header>
+<header *ngIf="!showDarTurnos">
+  <!-- Barra de navegación -->
+  <nav class="friso">
+    <div class="row no-gutters">
+      <!-- Datos -->
+      <div class="col-9">
+        <div class="row data">
+        </div>
+      </div>
+
+      <!-- Datos usuario logeado-->
+      <div class="col-3 invert">
+        <div class="row">
+          <div class="col-2">
+            <i ng-reflect-class-name="account" class="mdi mdi-account"></i>
+          </div>
+          <div class="col-6 data-usuario">
+            <div class="list-inline-item">
+              <div class="row">
+                <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6>
+              </div>
+
+              <div class="row">
+                <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
+                  Especialidad: {{EspecialidadActiva?.descripcion}}
+                </h6>
+              </div>
+
+              <div class="row">
+                <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
+                  Matricula: {{EspecialidadActiva?.numero}}
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4 burger-container">
+            <i ng-reflect-class-name="menu" class="mdi mdi-menu"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
 <section>
   <div class="row" *ngIf="autorizado && showDarTurnos">
     <!-- TODO: quitar showDarTurnos -->
