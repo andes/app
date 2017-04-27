@@ -93,7 +93,7 @@ export class PacienteSearchComponent implements OnInit {
     for (let key in DocumentoEscaneados) {
       if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
         // Loggea el documento escaneado para análisis
-        // this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
+        this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
         return DocumentoEscaneados[key];
       }
     }
