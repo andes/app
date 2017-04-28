@@ -108,49 +108,73 @@ export class PrestacionValidacionComponent implements OnInit {
             let cambioestado = {
             timestamp: new Date(),
             tipo: 'validada'
-        };
+            };
 
             if (resultado) {
-                console.log('Prestaciones Ejecutadas:', this.prestacionesEjecutadas);
                 this.prestacionesEjecutadas.forEach(prestacion => {
                     prestacion.estado.push(cambioestado);
-                    this.mensaje = 'Prestación validada correctamente';
-                    this.validaboton = 'habilitada';
                     this.updateEstado(prestacion);
                 });
+
+                    this.prestacion.estado.push(cambioestado);
+                    console.log('this.prestacion.estado:', this.prestacion.estado);
+
+                     let cambios = {
+                        'op': 'estado',
+                        'estado': this.prestacion.estado
+                    };
+
+                    this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+                        if (prestacion) {
+                            this.mensaje = 'La prestación ha sido validada correctamente';
+                            this.validaboton = 'deshabilitar';
+                        }
+                    });
+
+        //         let cambios = {
+        //       'op': 'estado',
+        //       'estado': this.prestacion.estado
+        // };
+        //         console.log('this.prestacion', this.prestacion);
+        //         this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+        //             if (prestacion) {
+        //             this.mensaje = 'La prestación ha sido validada correctamente';
+        //             this.validaboton = 'deshabilitar';
+        //         }
+        //         });
+
             }
         });
     }
 
 
-    updateEstado(prestacion) {
-
-        console.log('prestacion.estado:', prestacion.estado );
+    updateEstado(prestacionParm) {
 
         let cambios = {
               'op': 'estado',
-              'estado': prestacion.estado
+              'estado': prestacionParm.estado
         };
-        let listaFinal = [];
 
-        console.log('patch prestacion :', prestacion);
-        this.servicioPrestacion.patch(prestacion, cambios).subscribe( prestacion => {
-        listaFinal.push(prestacion);
-        if (listaFinal.length === this.prestacionesEjecutadas.length) {
-            this.prestacion.estado.push({
-                timestamp: new Date(),
-                tipo: 'validada'
-            });
+        // let listaFinal = [];
 
-            console.log('patch this.prestacion :', this.prestacion);
-            this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
-                if (prestacion) {
-                    this.mensaje = 'La prestación ha sido validada correctamente';
-                    this.validaboton = 'deshabilitar';
-                }
-            });
-        }
+        this.servicioPrestacion.patch(prestacionParm, cambios).subscribe( prest => {
+               // listaFinal.push(prest);
         });
+
+
+                // if (listaFinal.length === this.prestacionesEjecutadas.length) {
+                //     this.prestacion.estado.push({
+                //         timestamp: new Date(),
+                //         tipo: 'validada'
+                //     });
+
+                //     this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+                //         if (prestacion) {
+                //             this.mensaje = 'La prestación ha sido validada correctamente';
+                //             this.validaboton = 'deshabilitar';
+                //         }
+                //     });
+                // }
     }
 
 

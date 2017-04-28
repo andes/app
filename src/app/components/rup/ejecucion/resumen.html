@@ -99,8 +99,30 @@
                     <li class="list-group-item" *ngFor="let pendiente of prestacionesPendientes">                                                    
                         <div>                            
                             <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>
-                            <br>
+                            <br>                                 
                             <small>Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</small>
+                            <br>
+                            <div *ngFor="let problema of pendiente.solicitud.listaProblemas">
+                                <div class="row ">
+                                    <div class="col-12">
+                                        <div class="msg-problema">
+                                            <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>                    
+                            
+                        </div>                        
+                         <div *ngIf="prestacionesPendientes && prestacionesPendientes.solicitud && prestacionesPendientes.solicitud.listaProblemas && prestacionesPendientes.solicitud.listaProblemas.length">
+                            <div *ngFor="let problema of prestacionesPendientes.solicitud.listaProblemas">
+                                <div class="row ">
+                                    <div class="col-12">
+                                        <div class="msg-problema">
+                                            <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </li>
                 </ul>
