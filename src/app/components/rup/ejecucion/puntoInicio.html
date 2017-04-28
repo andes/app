@@ -208,17 +208,15 @@
           </div>
         </header>
 
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i=index" (click)="elegirPrestacion(p.id)">
+        <ul class="list-group">   
+          <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i = index" (click)="elegirPrestacion(p.id)">
             <div>
               <span class="badge badge-warning">{{p.estado[p.estado.length-1].tipo}}</span>
               <br>
               <h5 class="item-title"><strong>{{p.paciente.apellido}}, </strong>{{p.paciente.nombre}}</h5>
-              <br>              
-              
+              <br>                            
               <span>Horario: {{turnosPrestacion[p.id].horaInicio | date: 'HH:mm'}} hs. </span>
               <small><span> | DNI {{p.paciente.documento}}</span></small>
-
               <small *ngFor="let dir of p.paciente.direccion">                 
                 <span *ngIf="dir.ubicacion && dir.ubicacion.localidad">              
                    | {{dir.ubicacion.localidad.nombre}}

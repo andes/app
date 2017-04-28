@@ -105,12 +105,17 @@ export class PrestacionValidacionComponent implements OnInit {
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
 
+            let cambioestado = {
+            timestamp: new Date(),
+            tipo: 'validada'
+        };
+
             if (resultado) {
+                console.log('Prestaciones Ejecutadas:', this.prestacionesEjecutadas);
                 this.prestacionesEjecutadas.forEach(prestacion => {
-                    prestacion.estado.push({
-                        timestamp: new Date(),
-                        tipo: 'validada'
-                    });
+                    prestacion.estado.push(cambioestado);
+                    this.mensaje = 'Prestación validada correctamente';
+                    this.validaboton = 'habilitada';
                     this.updateEstado(prestacion);
                 });
             }
@@ -120,12 +125,15 @@ export class PrestacionValidacionComponent implements OnInit {
 
     updateEstado(prestacion) {
 
+        console.log('prestacion.estado:', prestacion.estado );
+
         let cambios = {
               'op': 'estado',
-              'estado': this.prestacion.estado
+              'estado': prestacion.estado
         };
         let listaFinal = [];
 
+        console.log('patch prestacion :', prestacion);
         this.servicioPrestacion.patch(prestacion, cambios).subscribe( prestacion => {
         listaFinal.push(prestacion);
         if (listaFinal.length === this.prestacionesEjecutadas.length) {
@@ -134,6 +142,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 tipo: 'validada'
             });
 
+            console.log('patch this.prestacion :', this.prestacion);
             this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
                 if (prestacion) {
                     this.mensaje = 'La prestación ha sido validada correctamente';
