@@ -1,4 +1,4 @@
-import { Molecula } from './../molecula.component';
+import { Molecula } from './../../core/molecula.component';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';

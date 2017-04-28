@@ -12,7 +12,7 @@ import { RUP_COMPONENTS } from '../../app.module';
 import {
   Component, ViewContainerRef, ComponentFactoryResolver,
   Output, Input,
-  OnInit, OnChanges, OnDestroy,
+  OnInit, OnChanges, OnDestroy,// DoCheck,
   EventEmitter
 } from '@angular/core';
 
@@ -87,16 +87,49 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-
+   // this.ngDoCheck()
   }
 
-  devolverValores() {
+
+  // ngDoCheck(){
+    
+  // }
+
+
+  devolverValores(obj?: any, tipoPrestacion?: any) {
+    console.log('devolverValores');
+    //Es Atomo
+    if (this.tipoPrestacion.granularidad == 'atomos' || this.tipoPrestacion.granularidad == 'formulas' ) {
+      console.log('atomo');
       if (this.data[this.tipoPrestacion.key] === null) {
-          this.data = {};
+        this.data = {};
       }
-      this.mensaje = this.getMensajes();
-      this.evtData.emit(this.data);
-      this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
+       
+    }
+    //Molecula
+    else {
+      console.log('=#=#=#==#=#=#=#==#=#=====##Molecula#=#==#=#=#=#=#=#==#=#=#');
+      // valor: variable con el resultado qeu viene del input del formulario
+      let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
+      if (valor) {
+        if (!this.data[this.tipoPrestacion.key]) {
+          this.data[this.tipoPrestacion.key] = {};
+        }
+        if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
+          this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+        }
+        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
+      } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null) {
+        delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+      }
+      if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
+        this.data = {};
+      }
+    }
+    this.mensaje = this.getMensajes();
+    this.evtData.emit(this.data);
+    this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
+    
   }
 
   getMensajes() {
@@ -166,10 +199,17 @@ export class RupComponent implements OnInit, OnChanges, OnDestroy {
       this.evtData.emit(this.componentReference.instance.data);
     }
 
+    debugger;
+    
     // devolvemos los datos
     datosComponente.evtData.subscribe(e => {
       this.evtData.emit(this.componentReference.instance.data);
     });
+
+    if (this.tipoPrestacion.granularidad == 'formulas') {
+       this.evtData.emit(this.componentReference.instance.data);
+    }
+
   }
 
 }

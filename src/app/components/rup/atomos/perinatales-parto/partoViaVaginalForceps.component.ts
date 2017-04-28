@@ -1,4 +1,4 @@
-import { Atomo } from './../atomoComponent';
+import { Atomo } from './../../core/atomoComponent';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 @Component({

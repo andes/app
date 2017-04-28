@@ -1,4 +1,4 @@
-import { Atomo } from './atomoComponent';
+import { Atomo } from './../core/atomoComponent';
 import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
@@ -8,7 +8,7 @@ import * as moment from 'moment';
 })
 export class PesoComponent extends Atomo{
     getMensajes() {
-        debugger;
+        // debugger;
         let peso = this.data[this.tipoPrestacion.key];
         let edadEnMeses;
         let sexo = this.paciente.sexo;

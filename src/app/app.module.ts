@@ -1,8 +1,4 @@
-import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
-import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
-import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
-import { Molecula } from './components/rup/moleculas/molecula.component';
-import { Atomo } from './components/rup/atomos/atomoComponent';
+
 
 /*
 @jgabriel | 04-03-2017
@@ -141,6 +137,12 @@ import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/d
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
 import { IndiceDeMasaCorporalComponent } from './components/rup/moleculas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+import { Formula } from './components/rup/core/formula.component';
+import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
+import { Molecula } from './components/rup/core/molecula.component';
+import { Atomo } from './components/rup/core/atomoComponent';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -233,7 +235,8 @@ export const RUP_COMPONENTS = [
   Molecula,
   NinoSanoComponent,
   DatosPerinatalesComponent,
-  RegistrosVisitasComponent
+  RegistrosVisitasComponent,
+  Formula
 ];
 
 // Locales
