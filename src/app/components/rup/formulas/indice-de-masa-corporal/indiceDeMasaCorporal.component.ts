@@ -9,25 +9,18 @@ import { ObservarDatosService } from '../../../../services/rup/observarDatos.ser
 export class IndiceDeMasaCorporalComponent extends Formula {
 
   ngOnInit() {
-debugger;
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-   
+    this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
     this.servicioObservarDatos.getDato$('peso').subscribe(
       peso => {
-        //this.data[this.tipoPrestacion.key] = null;
         this.calculoIMC();
       });
     this.servicioObservarDatos.getDato$('talla').subscribe(
       talla => {
-       // this.data[this.tipoPrestacion.key] = null;
         this.calculoIMC();
       });
-
-      this.calculoIMC();
-      //this.datosIngreso = this.data;
-      //     this.evtData.emit(this.data);
+    this.calculoIMC();
   }
- 
+
 
   findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
     return this.findValuesHelper(obj, key, []);
@@ -63,10 +56,8 @@ debugger;
   //  ngDoCheck(){
   //    debugger;
   //    this.calculoIMC();
-    
+
   // }
- 
-  
 
 
   calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
@@ -84,20 +75,14 @@ debugger;
     if (arrayDePeso.length > 0) {
       peso = arrayDePeso[0];
       prestacionPeso = true;
-      // console.log('PESO usado para IMC', peso);
     }
     // Aca va el valor de la talla si es que esta en ejecucion..
     arrayDeTalla = this.findValues(this.valoresPrestacionEjecucion, 'talla');
     if (arrayDeTalla.length > 0) {
       talla = arrayDeTalla[0];
       prestacionTalla = true;
-      // console.log('TALLA usada para IMC', talla);
     }
-    console.log(prestacionPeso);
-    console.log('=#=#=#=#==#=#=#=#=#');
-    console.log(prestacionTalla);
-    debugger;
-  
+
     // Si encuentro las prestaciones que necesito. peso-talla
     if (prestacionPeso && prestacionTalla) {
       // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
@@ -106,7 +91,7 @@ debugger;
         case (peso != null && talla != null):
           talla = talla / 100; // Paso a metros;
           imc = peso / Math.pow(talla, 2);
-          this.mensaje.texto ="";
+          this.mensaje.texto = "";
           this.data[this.tipoPrestacion.key] = imc.toFixed(2);
           this.evtData.emit(this.data);
           break;
@@ -136,9 +121,6 @@ debugger;
           break;
       }
     }
-  // if(this.data[this.tipoPrestacion.key]){
-  //   this.mensaje.texto = "";
-  // }
   }
 
 }
