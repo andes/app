@@ -43,6 +43,8 @@ import { GestorAgendasComponent } from './components/turnos/gestor-agendas.compo
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
+import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 
@@ -66,11 +68,12 @@ const appRoutes: Routes = [
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
 
   // RUP
-  { path: 'rup', component: PuntoInicioComponent },
-  { path: 'rup/dashboard/:id', component: ResumenComponent },
-  // { path: 'rup/:id?*/', component: DashboardComponent },
-  // { path: 'prestacion', component: PrestacionComponent },
-  // { path: 'atomos', component: PerinatalesGestacionMultipleComponent },
+  // Prestación Clínica General de Medicina
+  { path: 'rup', component: PuntoInicioComponent},
+  { path: 'rup/resumen/:id', component: ResumenComponent},
+  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent},
+  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent},
+  // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },

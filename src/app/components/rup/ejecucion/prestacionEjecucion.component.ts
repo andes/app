@@ -11,15 +11,18 @@ import { Plex } from '@andes/plex';
 import { DropdownItem } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IProfesional } from './../../../interfaces/IProfesional';
+// Rutas
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html'
 })
+
 export class PrestacionEjecucionComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    @Input() prestacion: IPrestacionPaciente;
+    prestacion: IPrestacionPaciente;
     public listaProblemas: IProblemaPaciente[] = [];
     public problemaBuscar: String = '';
     public error: String = '';
@@ -33,14 +36,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
     ];
     problemaItem: any;
+    data: Object = {};
 
     showEvolucionar = false;
     showTransformar = false;
-    showEnmendar = false;
-    showDetalles = false;
-    showEvolTodo = false;
-    showValidar = false;
-    data: Object = {};
+    showEnmendar    = false;
+    showDetalles    = false;
+    showEvolTodo    = false;
 
     // PRESTACIONES EN EJECUCION
     // tipos de prestaciones posibles a ejecutar durante la prestacion
@@ -49,7 +51,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // prestaciones que se ejecutan por defecto con la prestacion de origen
     // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
     prestacionesEjecucion: IPrestacionPaciente[] = [];
-    // // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
+    // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
     listaProblemaPrestacion = [];
     // id que se van ejecutando
     idPrestacionesEjecutadas = [];
@@ -60,15 +62,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     nuevaPrestacion: any;
     // array de opcioens seleccionadas
     listaProblemasPlan: any = [];
-    // // listado de prestaciones futuras a pedir en el plan
-    // prestacionesFuturas: IPrestacionPaciente[] = [];
+    // listado de prestaciones futuras a pedir en el plan
     valoresPrestaciones: {}[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex, public auth: Auth) {
+        public plex: Plex, public auth: Auth,
+        private router: Router, private route: ActivatedRoute) {
     }
 
     mostrarOpciones(problema) {
@@ -76,10 +78,17 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.cargarDatosPrestacion();
-        // obtenemos tipos de prestaciones posibles a ejecutarse
-        this.serviceTipoPrestacion.get({}).subscribe(tiposPrestaciones => {
-            this.tiposPrestacionesPosibles = tiposPrestaciones;
+        this.route.params.subscribe(params => {
+            let id = params['id'];
+            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.cargarDatosPrestacion();
+            });
+            // obtenemos tipos de prestaciones posibles a ejecutarse
+            this.serviceTipoPrestacion.get({}).subscribe(tiposPrestaciones => {
+                this.tiposPrestacionesPosibles = tiposPrestaciones;
+            });
         });
     }
 
@@ -94,14 +103,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     guardarProblema(nuevoProblema) {
 
-        delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select
-
+        delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
-            if (resultado) {
-                // asignamos el problema a la prestacion de origen
+            if (resultado) { // asignamos el problema a la prestacion de origen
                 this.listaProblemas.push(resultado);
-                // this.listaProblemas = this.listaProblemas.concat(resultado);//[... this.listaProblemas, resultado];
-                this.updatePrestacion();
+                this.updateListaProblemas(resultado.id);
             } else {
                 this.plex.alert('Error al intentar asociar el problema a la consulta');
             }
@@ -188,7 +194,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // asignamos el problema a la prestacion de origen
             this.listaProblemas = datos;
             this.prestacion.ejecucion.listaProblemas = datos;
-            this.updatePrestacion();
+            this.updateListaProblemas(datos);
         }
     }
 
@@ -199,7 +205,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return p.id !== datos.id;
             });
             this.prestacion.ejecucion.listaProblemas = this.listaProblemas;
-            this.updatePrestacion();
+            this.updateListaProblemas(this.listaProblemas);
         }
     }
 
@@ -327,21 +333,29 @@ export class PrestacionEjecucionComponent implements OnInit {
                             let tp; tp = _prestacion.solicitud.tipoPrestacion;
                             // Cargo el arreglo de prestaciones evoluciones
                             prestacion.ejecucion.evoluciones.push({valores: {[tp.key]: this.data[tp.key]}} );
+
                             // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
                             if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
-                                // recorremos array de problemas y asignamos a la nueva prestacion
+                                // recorremos array de problemas y los asignamos a la nueva prestacion
                                 this.listaProblemaPrestacion[tp.key].forEach(problema => {
-                                    prestacion.solicitud.listaProblemas.push(problema.id);
+                                    let find; // Verifico que no se repitan los problemas a vincular a la solicitud de la prestación
+                                    find = prestacion.solicitud.listaProblemas.find(p => {
+                                        return p.id === problema.id;
+                                    });
+                                    if (!find) {
+                                        prestacion.solicitud.listaProblemas.push(problema.id);
+                                    }
                                 });
                             } else {
-                                // si no agrego ningun problema, entonces por defecto se le agregan todos
+                                    // si no agrego ningun problema, entonces por defecto se le agregan todos
                                     this.listaProblemas.forEach(idProblema => {
                                         prestacion.solicitud.listaProblemas.push(idProblema);
                                     });
                             }
+
                             let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
-                            debugger;
-                            if (_prestacion.ejecucion.evoluciones.length < 1){
+
+                            if (_prestacion.ejecucion.evoluciones.length < 1) {
                                 alert('No hay evoluciones');
                             }
 
@@ -354,14 +368,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         return p.id === prestacionEjecutada.id;
                                     });
                                 }
-
                                 if (!find) {
                                     let id; id = prestacionEjecutada.id;
                                     this.prestacion.ejecucion.prestaciones.push(id);
                                 }
                                 // actualizamos la prestacion que estamos loopeando con los datos recien guardados
-                                _prestacion = prestacionEjecutada;
-                                // this.prestacionesFuturas.push(prestacionFutura);
                                 if (i === prestacionesGuardar.length) {
                                     this.plex.alert('Prestacion confirmada');
                                     this.updatePrestacion();
@@ -369,6 +380,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                                 i++;
                             }); // guardamos la nueva prestacion
+
                  }); // prestacionesGuardar.forEach
             }; // else Datos observables
      } else {
@@ -417,7 +429,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             // entonces asigno su id a la prestacion a guardar
             if (this.listaProblemasPlan && this.listaProblemasPlan.length > 0) {
                 // recorremos array de problemas y asignamos a la nueva prestacion
-                // for (let problema of this.listaProblemaPrestacion[tp.key]) {
                 this.listaProblemasPlan.forEach(problema => {
                     this.nuevaPrestacion.solicitud.listaProblemas.push(problema.id);
                 });
@@ -429,11 +440,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             // guardamos la nueva prestacion
             this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
                 if (prestacionFutura) {
-                    // this.prestacionesFuturas.push(prestacionFutura);
-
                     // asignamos la prestacion nueva al array de prestaciones futuras
                     this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
-
                     this.updatePrestacion();
                 }
             });
@@ -454,19 +462,33 @@ export class PrestacionEjecucionComponent implements OnInit {
     updatePrestacion() {
         // actualizamos la prestacion de origen
         this.servicioPrestacion.put(this.prestacion).subscribe(prestacionActualizada => {
-
-            // this.prestacion = prestacionActualizada;
             // buscamos la prestacion actualizada con los datos populados
             this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-
                 this.prestacion = prestacion;
                 this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
             });
         });
     }
 
+    updateListaProblemas(problemaid) {
+        // Transformar - Emendar - Gardar nuevo problema
+        let cambios = {
+              'op': 'listaProblemas',
+              'problema': problemaid
+        };
+
+        this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
+            // buscamos la prestacion actualizada con los datos populados
+            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+            });
+        });
+
+    }
+
     validarPrestacion() {
-        this.showValidar = true;
+        this.router.navigate(['rup/validacion', this.prestacion.id]);
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
@@ -481,8 +503,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
-    volver() {
-       this.showValidar = false;
-       this.evtData.emit(this.prestacion);
+    volver(ruta) {
+       this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
-}
+
+// tslint:disable-next-line:eofline
+} // PrestacionEjecucionComponent

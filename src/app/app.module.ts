@@ -1,5 +1,4 @@
-import { Molecula } from './components/rup/moleculas/molecula.component';
-import { Atomo } from './components/rup/atomos/atomoComponent';
+
 
 /*
 @jgabriel | 04-03-2017
@@ -31,7 +30,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 
-//Pipes
+// Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 
 // Servicios
@@ -60,6 +59,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+import { ObservarDatosService } from './services/rup/observarDatos.service';
 
 // Componentes
 // ... Tablas Maestras
@@ -137,7 +137,13 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
-import { IndiceDeMasaCorporalComponent } from './components/rup/moleculas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+import { Formula } from './components/rup/core/formula.component';
+import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
+import { Molecula } from './components/rup/core/molecula.component';
+import { Atomo } from './components/rup/core/atomoComponent';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -164,7 +170,6 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 // NIÑO SANO
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-
 
 
 export const RUP_COMPONENTS = [
@@ -228,9 +233,11 @@ export const RUP_COMPONENTS = [
   IndiceDeMasaCorporalComponent,
   FactoresDeRiesgoNinoSanoComponent,
   Atomo,
-  Molecula
-  
-
+  Molecula,
+  NinoSanoComponent,
+  DatosPerinatalesComponent,
+  RegistrosVisitasComponent,
+  Formula
 ];
 
 // Locales
@@ -308,6 +315,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
+    ObservarDatosService
   ]
 })
 

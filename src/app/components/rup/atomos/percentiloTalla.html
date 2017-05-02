@@ -1,8 +1,7 @@
 <plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="percentiloTalla" label="Percentilo Talla" suffix="" min="0" max="100" (change)="devolverValores()">
 </plex-int>
 
-<!--<p *ngIf="data.mensaje.texto">
-    <span class="badge {{data.mensaje.class}}">
-    {{data.mensaje.texto}}
-    </span>
-</p>-->
+<p *ngIf="soloValores">
+    <label>Percentilo Talla</label>
+    <br /> {{data[tipoPrestacion.key]}}
+</p>

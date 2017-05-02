@@ -1,3 +1,4 @@
+import { Atomo } from './../core/atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from "../../../interfaces/IPaciente";
 
@@ -6,36 +7,7 @@ import { IPaciente } from "../../../interfaces/IPaciente";
 	templateUrl: 'frecuenciaRespiratoria.html'
 })
 
-export class FrecuenciaRespiratoriaComponent implements OnInit {
-	@Input('datosIngreso') datosIngreso: any;
-	@Input('tipoPrestacion') tipoPrestacion: any;
-	@Input('paciente') paciente: IPaciente;
-	@Input('soloValores') soloValores: Boolean;
-
-	@Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-	data: any = {};
-	mensaje: any= {};
-
-
-	ngOnInit() {
-		this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
-
-		// si tengo valores cargados entonces devuelvo los resultados y mensajes
-		if (this.datosIngreso) {
-            this.devolverValores();
-        }
-	}
-
-	devolverValores() {
-		if (this.data[this.tipoPrestacion.key] === null) {
-            this.data = {};
-        }
-
-		this.mensaje = this.getMensajes();
-		this.evtData.emit(this.data);
-	}
-
+export class FrecuenciaRespiratoriaComponent extends Atomo {
 	getMensajes() {
 		let Edad;
 		let Sexo;
@@ -44,13 +16,10 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
 			texto: '',
 			class: 'danger'
 		};
-
 		Sexo = this.paciente.sexo
 		Edad = this.paciente.edad;
 		frecuenciaRespiratoria = this.data[this.tipoPrestacion.key];
-
 		if (frecuenciaRespiratoria) {
-
 			// agregar validaciones
 			// Ver validacines para NEO - Ver unidad de la edad 
 			// Ver validaciones - Falta definición para lograr identidicarlos                                                                   
@@ -97,12 +66,8 @@ export class FrecuenciaRespiratoriaComponent implements OnInit {
 					else { mensaje.texto = 'Adulto: Fuera de los parámetros normales' }
 				}
 			} // If Pacientes Años
-
 		}
-	
 		return mensaje;
 	}
-
-
 }
 

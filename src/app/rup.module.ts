@@ -1,3 +1,6 @@
+import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
 
 // import { RupComponent } from './components/rup/rup.component';
 // import { PacienteService } from './services/paciente.service';
@@ -84,7 +87,7 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
-import { IndiceDeMasaCorporalComponent } from './components/rup/moleculas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -230,7 +233,10 @@ export const RUP_COMPONENTS = [
     EstadoNutricionalComponent,
     OdontologiaComponent,
     IndiceDeMasaCorporalComponent,
-    FactoresDeRiesgoNinoSanoComponent
+    FactoresDeRiesgoNinoSanoComponent,
+    NinoSanoComponent,
+    DatosPerinatalesComponent,
+    RegistrosVisitasComponent
     //     // NO VAPacienteComponent
 ];
 

@@ -1,3 +1,10 @@
-<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="HallazgoRelacionaParto" [data]="selectHallazgoRelacionadoParto"
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="HallazgoRelacionaParto" [data]="selectHallazgoRelacionadoParto"
     label="Hallazgo relacionado con el Parto" (change)="devolverValores()" placeholder="Seleccionar método">
 </plex-select>
+
+
+<p *ngIf="soloValores">
+    <b>Hallazgo relacionado con el parto</b>
+    <br /> {{data[tipoPrestacion.key].nombre}}
+</p>
+

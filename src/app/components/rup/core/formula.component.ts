@@ -2,10 +2,10 @@ import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'Atomo',
-    templateUrl: 'atomo.html'
+    selector: 'formula',
+    templateUrl: 'formula.html'
 })
-export class Atomo extends RupComponent {
+export class Formula extends RupComponent {
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
@@ -14,17 +14,5 @@ export class Atomo extends RupComponent {
             this.devolverValores();
         }
     }
-    devolverValores() {
-
-        if (this.data[this.tipoPrestacion.key] === null) {
-            this.data = {};
-        }
-        this.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-    }
-
-    getMensajes() {
-
-
-    }
+   
 }

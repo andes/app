@@ -1,4 +1,14 @@
-<plex-bool [(ngModel)]="data[tipoPrestacion.key]" name="recibeAsistenciaEconómica" label="Recibe asistencia económica" type="slide" (change)="devolverValores()">
+<plex-bool *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="recibeAsistenciaEconómica" label="Recibe asistencia económica" type="slide" (change)="devolverValores()">
 </plex-bool>
 
-
+<div *ngIf="soloValores">
+    <b>Recibe asistencia económica</b>
+    <br />
+    <p *ngIf='data[tipoPrestacion.key]'>
+        Si
+    </p>
+    <p *ngIf='!data[tipoPrestacion.key]'>
+        No
+    </p>
+</div>
+    

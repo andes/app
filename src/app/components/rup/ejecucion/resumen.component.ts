@@ -2,40 +2,43 @@ import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
 import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-
 import { IPrestacionPaciente } from '../../../interfaces/rup/IPrestacionPaciente';
 import { IPaciente } from '../../../interfaces/IPaciente';
 import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
+// Rutas
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-resumen',
     templateUrl: 'resumen.html'
 })
+
 export class ResumenComponent implements OnInit {
 
-    @Input() prestacion: IPrestacionPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
+    prestacion: IPrestacionPaciente;
     paciente: IPaciente;
-    // prestacion: IPrestacionPaciente;
     idPrestacion: String;
     listaProblemas: IProblemaPaciente[] = [];
     prestacionesPendientes: IPrestacionPaciente[] = [];
     prestacionPeso: IPrestacionPaciente = null;
     prestacionTalla: IPrestacionPaciente = null;
 
-    showEjecucion = false;
-    showValidacion = false;
-
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
-        private servicioPrestacionPaciente: PrestacionPacienteService) {
-
-    }
+        private servicioPrestacionPaciente: PrestacionPacienteService,
+        private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
-        this.loadProblemas();
-        this.loadPrestacionesPendientes();
-        this.cargarIndicadores();
+
+            this.route.params.subscribe(params => {
+            let id = params['id'];
+            this.servicioPrestacionPaciente.getById(id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.loadProblemas();
+                this.loadPrestacionesPendientes();
+                this.cargarIndicadores();
+            });
+        });
     }
 
     loadProblemas() {
@@ -52,58 +55,73 @@ export class ResumenComponent implements OnInit {
     }
 
     cargarIndicadores() {
-
+        // Indicador de Peso
         this.servicioPrestacionPaciente.getByKey({ key: 'peso', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
-
-                console.log('peso/prestacion:', prestacion);
                 if (prestacion && prestacion.length > 0) {
                     this.prestacionPeso = prestacion[0];
                 }
             });
 
+
+
+        // Indicador de Talla
         this.servicioPrestacionPaciente.getByKey({ key: 'talla', idPaciente: this.prestacion.paciente.id })
             .subscribe(prestacion => {
-
-                console.log('Talla/prestacion:', prestacion);
                 if (prestacion && prestacion.length > 0) {
                      this.prestacionTalla = prestacion[0];
                 }
             });
     }
 
-    iniciarPrestacion() {
-        this.prestacion.estado.push({
+    iniciarPrestacion(id) {
+
+        let cambioestado = {
             timestamp: new Date(),
             tipo: 'ejecucion'
-        });
+        };
 
+        this.prestacion.estado.push(cambioestado);
         this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
-        this.servicioPrestacionPaciente.put(this.prestacion).subscribe(prestacion => {
-            // this.prestacion = prestacion;
-            this.showEjecucion = true;
-        });
+        this.update();
+        this.router.navigate(['/rup/ejecucion', id]);
 
     }
 
-    verPrestacion(){
-        this.showEjecucion = true;
+    update() {
+        let cambios = {
+              'op': 'estado',
+              'estado': this.prestacion.estado
+        };
+        this.servicioPrestacionPaciente.patch(this.prestacion, cambios ).subscribe(prestacion => { });
+
+        // Actualiza Lista Problemas en la prestación
+         let cambiosProblemas = {
+              'op': 'listaProblemas',
+              'problemas': this.prestacion.ejecucion.listaProblemas
+        };
+        this.servicioPrestacionPaciente.patch(this.prestacion, cambiosProblemas ).subscribe(prestacionAct => {});
     }
 
-    verResumen(){
-        this.showValidacion = true;
+
+    verPrestacion(id) {
+        // this.showEjecucion = true;
+         this.router.navigate(['/rup/ejecucion', id]);
     }
 
-    volver(){
-        this.showEjecucion = false;
-        this.evtData.emit(null);
+    verResumen(id) {
+        // this.showValidacion = true;
+        this.router.navigate(['rup/validacion', id]);
+    }
+
+    volver(ruta) {
+        this.router.navigate([ruta]);
     }
 
     onReturn(prestacion) {
-        this.showEjecucion = false;
         this.loadProblemas();
         this.loadPrestacionesPendientes();
         this.cargarIndicadores();
     }
 
-}
+} // export class ResumenComponent

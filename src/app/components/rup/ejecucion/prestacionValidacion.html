@@ -108,10 +108,21 @@
 
 </style>
 
-<section *ngIf="showEjecucion">
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion" ></header-paciente>
+    <!--<br/>
     <div class="row">
+        <div class="col-12">
+            <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
+        </div>
+    </div>-->
+</header>
 
-        <div class="col-8">
+<section>
+    <div class="row" *ngIf="prestacion">
+
+        <!--Problemas tratados en esta consulta-->
+        <div class="col-8"   >
             <plex-box>
                 <header>
                     <div class="row">
@@ -193,8 +204,8 @@
             </plex-box>
         </div>
 
-            <!--planes-->
-        <div class="col-4">
+        <!--planes-->
+        <div class="col-4" *ngIf="prestacion">
             <plex-box>
                 <header>
                     <div class="row">
@@ -228,26 +239,24 @@
     </div>
 </section>
 
-<footer *ngIf="!showPrestacionEjecucion">
+<footer class="plex-box-invert" >
     <div class="row">
-        <div class="col-3">
-            <plex-button title="Cancelar" icon="mdi mdi-arrow-left-bold" label="Cancelar" (click)="volver()" type="danger"></plex-button>
-        </div>
-        <div class="col-9 text-right">
-            <plex-button title="Validar" label="Validar" type="success" (click)="validarPrestacion()" *ngIf="showEjecucion && prestacion.estado[prestacion.estado.length-1].tipo != 'validada'"></plex-button>
-            <!--<a routerLink="/rup" routerLinkActive="active" class="btn btn-default">Cerrar</a>-->
-        </div>
-    </div>
 
-    <div class="row" *ngIf="showValidacion">
-        <div class="col">
-            <div class="alert alert-success" role="alert">
+        <div class="col-3">
+            <plex-button title="Cancelar" icon="mdi mdi-arrow-left-bold" label="Volver" (click)="volver('rup/ejecucion')" type="danger"></plex-button>
+        </div>
+
+     
+        <div class="col-6 text-center">            
+            <div *ngIf="mensaje" class="alert alert-success" role="alert">
                 {{mensaje}}
             </div>
         </div>
-    </div>
+        
+        <div class="col-3 text-right">        
+            <plex-button [disabled]="validaboton" title="Validar" label={{validarlabel}} type="success" (click)="validarPrestacion()" > </plex-button>
+        </div>
+
+    </div>    
 </footer>
 
-<div *ngIf="showPrestacionEjecucion">
-    <rup-prestacionEjecucion [prestacion]="prestacion"></rup-prestacionEjecucion>
-</div>

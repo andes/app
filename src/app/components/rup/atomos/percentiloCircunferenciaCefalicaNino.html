@@ -1,2 +1,6 @@
-<plex-int placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="percentiloCircunferenciaCefalicaNino" label="Percentilo circuferencia cefalica de niño Talla" suffix="" min="0" max="100" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="percentiloCircunferenciaCefalicaNino" label="Percentilo circuferencia cefalica de niño Talla" suffix="" min="0" max="100" (change)="devolverValores()">
 </plex-int>
+<p *ngIf="soloValores">
+    <label>Percentilo circuferencia cefalica de niño Talla</label>
+    <br /> {{data[tipoPrestacion.key]}}
+</p>

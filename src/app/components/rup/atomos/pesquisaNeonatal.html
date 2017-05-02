@@ -1,8 +1,19 @@
-<input id="pesquisaNeonatal" type="checkbox" [(ngModel)]="data[tipoPrestacion.key]" name="pesquisaNeonatal" (change)="devolverValores()" />
-<label for="pesquisaNeonatal">Pesquisa neonatal</label>
+<plex-bool *ngIf="!soloValores" label="Pesquisa neonatal" [(ngModel)]="data[tipoPrestacion.key]" name="pesquisaNeonatal" (change)="devolverValores()">
+</plex-bool>
+<div *ngIf="soloValores">
+    <b>Pesquisa neonatal</b>
+    <br />
+    <p *ngIf='data[tipoPrestacion.key]'>
+        Si
+    </p>
+    <p *ngIf='!data[tipoPrestacion.key]'>
+        No
+    </p>
+</div>
 
-<p *ngIf="data.mensaje.texto">
-    <span class="badge-{{data.mensaje.class}}">
-    {{data.mensaje.texto}}
+
+<p *ngIf="mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
     </span>
 </p>

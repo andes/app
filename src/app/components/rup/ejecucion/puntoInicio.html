@@ -107,8 +107,7 @@
   }
 </style>
 
-
-<header *ngIf="showPendientes">
+  <header>
   <!--<div class="row">
     <div class="col">
       <small>
@@ -157,8 +156,7 @@
   </div>
 </section>
 
-
-<section *ngIf="showPendientes">
+<section>
   <div class="row">
     <!--INICIO Agendas-->
     <div class="col-6">
@@ -210,16 +208,24 @@
           </div>
         </header>
 
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i=index" (click)="elegirPrestacion(p)">
+        <ul class="list-group">   
+          <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i = index" (click)="elegirPrestacion(p.id)">
             <div>
               <span class="badge badge-warning">{{p.estado[p.estado.length-1].tipo}}</span>
               <br>
               <h5 class="item-title"><strong>{{p.paciente.apellido}}, </strong>{{p.paciente.nombre}}</h5>
-              <br>
-              <small *ngFor="let dir of p.paciente.direccion">DNI {{p.paciente.documento}} | {{dir.ubicacion.localidad.nombre}}, {{dir.ubicacion.provincia.nombre}} | </small>
-
-              <small *ngFor="let tel of p.paciente.contacto">  {{tel.valor}}</small>
+              <br>                            
+              <span>Horario: {{turnosPrestacion[p.id].horaInicio | date: 'HH:mm'}} hs. </span>
+              <small><span> | DNI {{p.paciente.documento}}</span></small>
+              <small *ngFor="let dir of p.paciente.direccion">                 
+                <span *ngIf="dir.ubicacion && dir.ubicacion.localidad">              
+                   | {{dir.ubicacion.localidad.nombre}}
+                </span>
+                <span *ngIf="dir.ubicacion.provincia">              
+                , {{dir.ubicacion.provincia.nombre}}
+                </span>
+              </small>             
+              <small *ngFor="let tel of p.paciente.contacto">| {{tel.valor}}</small>
             </div>
           </li>
         </ul>
@@ -229,8 +235,3 @@
 
   </div>
 </section>
-
-
-<div *ngIf="showDashboard">
-  <rup-resumen [prestacion]="prestacionSeleccionada" (evtData)="onReturn()"></rup-resumen>
-</div>

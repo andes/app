@@ -1,21 +1,18 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
-
 import { Auth } from '@andes/auth';
-
 import { Plex } from '@andes/plex';
+// Rutas
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -23,58 +20,60 @@ import { Plex } from '@andes/plex';
 })
 export class PrestacionValidacionComponent implements OnInit {
 
-    @Input() prestacion: IPrestacionPaciente;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
+    prestacion: IPrestacionPaciente;
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
 
     // arreglo de prestaciones a mostrar por cada problema
     prestaciones: any[] = [];
     prestacionesPlan: any[] = [];
-
     cantidadPrestaciones: any[];
 
-    showEjecucion = true;
-    showValidacion = false;
-    showPrestacionEjecucion = false;
+    validarlabel: String = '';
+    validaboton = '';
     mensaje = '';
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
-        public plex: Plex, public auth: Auth) {
+        public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.loadPrestacionesEjacutadas();
-        console.log('validacion: ', this.prestacion);
+        this.route.params.subscribe(params => {
+            let id = params['id'];
+            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+                this.loadPrestacionesEjacutadas();
+                    if ( (this.prestacion.estado[this.prestacion.estado.length - 1].tipo) !== 'validada') {
+                        this.validarlabel = 'Validar';
+                    } else {
+                        this.validarlabel = 'Validada';
+                        this.validaboton = 'deshabilitar';
+                    };
+            });
+
+         });
     }
 
     loadPrestacionesEjacutadas() {
-        let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
-
+            let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
             this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
-
             // asignamos las prestaciones por problemas asi luego loopeamos
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
-
                 this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
-
             });
         });
-
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
             this.prestacionesSolicitadas = resultado;
-
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
-
                 this.prestacionesPlan[idProblema] = this.buscarPlanesPorProblema(_problema);
-
             });
         });
     }
@@ -88,7 +87,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
-        // return this.prestacionesEjecutadas.filter(data => {
         return this.prestacionesEjecutadas.filter(data => {
             if (data.solicitud.listaProblemas.find(p => p.id === problema.id)) {
                 return data;
@@ -106,42 +104,82 @@ export class PrestacionValidacionComponent implements OnInit {
 
     validarPrestacion() {
         this.plex.confirm('Está seguro que desea validar la prestación?').then(resultado => {
-            let listaFinal = [];
+
+            let cambioestado = {
+            timestamp: new Date(),
+            tipo: 'validada'
+            };
 
             if (resultado) {
                 this.prestacionesEjecutadas.forEach(prestacion => {
-                    prestacion.estado.push({
-                        timestamp: new Date(),
-                        tipo: 'validada'
-                    });
+                    prestacion.estado.push(cambioestado);
+                    this.updateEstado(prestacion);
+                });
 
-                    this.servicioPrestacion.put(prestacion).subscribe( prestacion => {
-                        listaFinal.push(prestacion);
-                        if (listaFinal.length === this.prestacionesEjecutadas.length) {
-                            this.prestacion.estado.push({
-                                timestamp: new Date(),
-                                tipo: 'validada'
-                            });
+                    this.prestacion.estado.push(cambioestado);
+                    console.log('this.prestacion.estado:', this.prestacion.estado);
 
-                            this.servicioPrestacion.put(this.prestacion).subscribe(prestacion => {
-                                if (prestacion) {
-                                    this.showEjecucion = false;
-                                    this.showValidacion = true;
-                                    this.mensaje = 'La prestación ha sido validada correctamente';
-                                }
-                            });
+                     let cambios = {
+                        'op': 'estado',
+                        'estado': this.prestacion.estado
+                    };
+
+                    this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+                        if (prestacion) {
+                            this.mensaje = 'La prestación ha sido validada correctamente';
+                            this.validaboton = 'deshabilitar';
                         }
                     });
-                });
+
+        //         let cambios = {
+        //       'op': 'estado',
+        //       'estado': this.prestacion.estado
+        // };
+        //         console.log('this.prestacion', this.prestacion);
+        //         this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+        //             if (prestacion) {
+        //             this.mensaje = 'La prestación ha sido validada correctamente';
+        //             this.validaboton = 'deshabilitar';
+        //         }
+        //         });
+
             }
         });
     }
 
-     volver() {
-       this.showEjecucion = false;
-       this.showValidacion = false;
-       this.showPrestacionEjecucion = true;
-       this.evtData.emit(this.prestacion);
+
+    updateEstado(prestacionParm) {
+
+        let cambios = {
+              'op': 'estado',
+              'estado': prestacionParm.estado
+        };
+
+        // let listaFinal = [];
+
+        this.servicioPrestacion.patch(prestacionParm, cambios).subscribe( prest => {
+               // listaFinal.push(prest);
+        });
+
+
+                // if (listaFinal.length === this.prestacionesEjecutadas.length) {
+                //     this.prestacion.estado.push({
+                //         timestamp: new Date(),
+                //         tipo: 'validada'
+                //     });
+
+                //     this.servicioPrestacion.patch(this.prestacion, cambios).subscribe( prestacion => {
+                //         if (prestacion) {
+                //             this.mensaje = 'La prestación ha sido validada correctamente';
+                //             this.validaboton = 'deshabilitar';
+                //         }
+                //     });
+                // }
     }
+
+
+     volver(ruta) {
+         this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+    };
 }
 

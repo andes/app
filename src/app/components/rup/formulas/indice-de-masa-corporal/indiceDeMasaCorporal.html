@@ -1,0 +1,14 @@
+<div *ngIf="!soloValores">
+<plex-float label="{{tipoPrestacion.nombre}}"  [(ngModel)]="data[tipoPrestacion.key]" name="imc" (keyup)="devolverValores()">
+</plex-float>
+
+<p *ngIf="mensaje && mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+</p>
+</div>
+<p *ngIf="soloValores">
+    <label><b>{{tipoPrestacion.nombre}}</b></label>
+    <br /> {{data[tipoPrestacion.key]}} 
+</p>
