@@ -99,11 +99,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   tipoComunicacion: any[];
   relacionTutores: any[];
 
-  // paises: IPais[] = [];
-  // localidades: ILocalidad[] = [];
-  // barrios: IBarrio[] = [];
-  // pacRelacionados = [];
-  // familiaresPacientes = [];
   provincias: IProvincia[] = [];
   obrasSociales: IFinanciador[] = [];
   pacientesSimilares = [];
@@ -120,6 +115,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   error = false;
   mensaje = '';
   validado = false;
+  noPoseeDNI = false;
+  noPoseeContacto = false;
   disableGuardar = false;
   enableIgnorarGuardar = false;
   sugerenciaAceptada = false;
@@ -375,9 +372,23 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
 
+  limpiarDocumento() {
+    if (this.noPoseeDNI) {
+      this.pacienteModel.documento = '';
+      this.plex.alert('Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
+    }
+  }
+
+  limpiarContacto() {
+    if (this.noPoseeContacto) {
+      this.pacienteModel.contacto[0].valor = '';
+    }
+  }
+
   save(valid) {
 
     if (valid.formValid) {
+
 
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -519,7 +530,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     if (this.pacienteModel.sexo) {
       this.completarGenero();
     }
-    
+
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
       && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
       if (!this.pacienteModel.id) {
