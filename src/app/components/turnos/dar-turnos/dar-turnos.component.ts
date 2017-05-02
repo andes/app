@@ -340,7 +340,7 @@ export class DarTurnosComponent implements OnInit {
                   }
 
                 });
-                this.delDiaDisponibles =  this.delDiaDisponibles + countBloques[indexBloque].delDia;
+                this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
               });
               if (this.agenda.estado === 'Publicada') {
                 this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
@@ -568,31 +568,31 @@ export class DarTurnosComponent implements OnInit {
         });
 
         // Guardar Prestación Paciente
-          let nuevaPrestacion;
-          nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-              tipoPrestacion: this.turnoTipoPrestacion,
-              fecha: new Date(),
-              listaProblemas: [],
-              idTurno: this.turno.id,
-            },
-            estado: {
-              timestamp: new Date(),
-              tipo: 'pendiente'
-            },
-            ejecucion: {
-              fecha: new Date(),
-              evoluciones: []
-            }
-          };
+        // let nuevaPrestacion;
+        // nuevaPrestacion = {
+        //   paciente: this.paciente,
+        //   solicitud: {
+        //     tipoPrestacion: this.turnoTipoPrestacion,
+        //     fecha: new Date(),
+        //     listaProblemas: [],
+        //     idTurno: this.turno.id,
+        //   },
+        //   estado: {
+        //     timestamp: new Date(),
+        //     tipo: 'pendiente'
+        //   },
+        //   ejecucion: {
+        //     fecha: new Date(),
+        //     evoluciones: []
+        //   }
+        // };
 
-          // TODO: Revisar alert
-          this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('prestacion paciente creada');
+        // // TODO: Revisar alert
+        // this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+        //   this.plex.alert('prestacion paciente creada');
 
 
-          });
+        // });
 
         // });
         // Si cambió el teléfono lo actualizo en el MPI
