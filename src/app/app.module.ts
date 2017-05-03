@@ -1,5 +1,3 @@
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -48,7 +46,6 @@ import { FinanciadorService } from './services/financiador.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 
 // ... Turnos
-import { TurnosComponent } from './components/turnos/turnos.component';
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { AgendaService } from './services/turnos/agenda.service';
 import { TurnoService } from './services/turnos/turno.service';
@@ -60,6 +57,9 @@ import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
+
+// ... Llaves
+import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
 // Componentes
 // ... Tablas Maestras
@@ -78,6 +78,7 @@ import { PacienteCreateUpdateComponent } from './components/paciente/paciente-cr
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 
 // ... Turnos
+import { TurnosComponent } from './components/turnos/turnos.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
@@ -94,11 +95,6 @@ import { EditEspacioFisicoComponent } from './components/turnos/configuracion/es
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/nota-agenda.component';
 import { PanelAgendaComponent } from './components/turnos/panel-agenda.component';
-
-// Estos componentes utilizan ng-prime y deben ser actualizados
-// import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
-// import { PrestacionCreateComponent } from './components/turnos/configuracion/prestacion/prestacion-create.component';
-// import { PrestacionUpdateComponent } from './components/turnos/configuracion/prestacion/prestacion-update.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -171,6 +167,8 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
+// Llaves
+import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -273,14 +271,14 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientFullNamePipe, patientRealAgePipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
-    // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent,
-    ...RUP_COMPONENTS
+    ...RUP_COMPONENTS,
+    LlavesTipoPrestacionComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
@@ -315,7 +313,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
-    ObservarDatosService
+    ObservarDatosService,
+    LlavesTipoPrestacionService
   ]
 })
 

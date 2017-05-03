@@ -48,6 +48,8 @@ import { PrestacionValidacionComponent } from './components/rup/ejecucion/presta
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 
+// ... Llaves
+import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -74,6 +76,9 @@ const appRoutes: Routes = [
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent},
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent},
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
+
+  // Llaves
+  { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },

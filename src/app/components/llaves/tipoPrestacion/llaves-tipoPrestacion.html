@@ -1,7 +1,7 @@
 <section *ngIf="!showcreate && !showupdate">
   <plex-box>
     <header>
-      <div class="row llaves-headings" *ngIf="llavesTP.length">
+      <div class="row llaves-headings" *ngIf="llavesTP?.length">
         <div class="col-1 text-center">&nbsp;</div>
         <div class="col text-center"><strong>Tipo de Prestación</strong></div>
         <div class="col text-center"><strong>Organización</strong></div>
@@ -16,39 +16,39 @@
 
       <table class="table table-striped">
         <tbody>
-          <template ngFor let-llave="$implicit" [ngForOf]="llavesTP" let-i="index">
+          <template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
 
-            <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llave)}">
+            <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(llaveTP)}">
 
-              <td class="col-1" (click)="verLlave(llave, true, $event)">
-                <i *ngIf="estaSeleccionada(llave)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(llave)}"></i>
-                <i *ngIf="!estaSeleccionada(llave)" class="mdi mdi-checkbox-blank-circle-outline"></i>
+              <td class="col-1" (click)="verLlave(llaveTP, true, $event)">
+                <i *ngIf="estaSeleccionada(llaveTP)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(llaveTP)}"></i>
+                <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline"></i>
               </td>
 
-              <td class="col-3" (click)="verllave(llave, false, $event)">
-                <span>{{llave.tipoPrestacion.nombre}}</span>
+              <td class="col-3" (click)="verllave(llaveTP, false, $event)">
+                <span>{{llaveTP.tipoPrestacion.nombre}}</span>
               </td>
 
-              <td class="col-2.5" (click)="verllave(llave, false, $event)">
-                <span>{{llave.organizacion.nombre}}</span>
+              <td class="col-2.5" (click)="verllave(llaveTP, false, $event)">
+                <span>{{llaveTP.organizacion.nombre}}</span>
               </td>
 
-              <td class="col" (click)="verllave(llave, false, $event)">
-                <span>{{llave.auditable}}</span>
+              <td class="col" (click)="verllave(llaveTP, false, $event)">
+                <span>{{llaveTP.auditable}}</span>
               </td>
 
-              <td class="col" (click)="verllave(llave, false, $event)">
-                <span>{{llave.edad?.desde}} a {{llave.edad?.hasta}}</span>
-                <span *ngIf="!llave.edad" class="text-danger">sin rango definido</span>
+              <td class="col" (click)="verllave(llaveTP, false, $event)">
+                <span>{{llaveTP.llave.edad?.desde}} a {{llaveTP.llave.edad?.hasta}}</span>
+                <span *ngIf="!llaveTP.llave.edad" class="text-danger">sin rango definido</span>
               </td>
 
-              <td class="col-1" (click)="verllave(llave, false, $event)">
-                <span>{{llave?.estado}}</span>
+              <td class="col" (click)="verllave(llaveTP, false, $event)">
+                <span>{{llaveTP.llave.sexo}}</span>
               </td>
-
-              <td class="col-1" (click)="verllave(llave, false, $event)">
-                <span *ngIf="llave.activa"><span class="mdi mdi-chackbox-marked-outlined"></span></span>
-                <span *ngIf="!llave.activa"><span class="mdi mdi-close-box-outlined"></span></span>
+              
+              <td class="col-1" (click)="verllave(llaveTP, false, $event)">
+                <span *ngIf="llaveTP.activa">activa<span class="mdi mdi-chackbox-marked-outlined"></span></span>
+                <span *ngIf="!llaveTP.activa">inactiva<span class="mdi mdi-close-box-outlined"></span></span>
               </td>
 
             </tr>
@@ -67,4 +67,4 @@
     </div>
   </div>
 </footer>
-<edit-espacio-fisico *ngIf="showupdate" [llaveTPSeleccionada]="llaveTPSeleccionada" (data)='onReturn($event)'></edit-espacio-fisico>
+<!--<edit-espacio-fisico *ngIf="showupdate" [llaveTPSeleccionada]="llaveTPSeleccionada" (data)='onReturn($event)'></edit-espacio-fisico>-->
