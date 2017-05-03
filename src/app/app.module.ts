@@ -1,5 +1,6 @@
 
 
+
 /*
 @jgabriel | 04-03-2017
 
@@ -32,6 +33,7 @@ import { MapsComponent } from './utils/mapsComponent';
 
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
+import { fromNowPipe } from './utils/date';
 
 // Servicios
 // ... Tablas Maestras
@@ -272,6 +274,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientFullNamePipe, patientRealAgePipe,
+    fromNowPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     // PrestacionComponent, PrestacionCreateComponent, PrestacionUpdateComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
