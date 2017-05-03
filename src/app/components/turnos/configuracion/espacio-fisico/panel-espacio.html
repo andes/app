@@ -37,7 +37,7 @@
                   <label>{{agendaF.horaInicio | date: 'dd/MM/yyyy'}} {{agendaF.horaInicio | date: 'HH:mm'}} a {{agendaF.horaFin | date: 'HH:mm'}} HS.</label>
                 </div>
                 <div class="col-md-10">
-                  <label> {{agendaF.profesionales[0].nombre}} {{agendaF.profesionales[0].apellido}} </label>
+                  <label> {{agendaF.profesionales[0]?.nombre}} {{agendaF.profesionales[0]?.apellido}} </label>
                 </div>
                 <div class="col-md-2">
                   <i *ngIf="agendaF.seleccionada" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agendaF.seleccionada}"></i>

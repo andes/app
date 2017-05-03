@@ -1,0 +1,70 @@
+<section *ngIf="!showcreate && !showupdate">
+  <plex-box>
+    <header>
+      <div class="row llaves-headings" *ngIf="llavesTP.length">
+        <div class="col-1 text-center">&nbsp;</div>
+        <div class="col text-center"><strong>Tipo de Prestación</strong></div>
+        <div class="col text-center"><strong>Organización</strong></div>
+        <div class="col text-center"><strong>Auditable</strong></div>
+        <div class="col text-center"><strong>Rango Edad</strong></div>
+        <div class="col text-center"><strong>Sexo</strong></div>
+        <div class="col-1 text-center"><strong>Activa</strong></div>
+      </div>
+    </header>
+
+    <div class="container">
+
+      <table class="table table-striped">
+        <tbody>
+          <template ngFor let-llave="$implicit" [ngForOf]="llavesTP" let-i="index">
+
+            <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llave)}">
+
+              <td class="col-1" (click)="verLlave(llave, true, $event)">
+                <i *ngIf="estaSeleccionada(llave)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(llave)}"></i>
+                <i *ngIf="!estaSeleccionada(llave)" class="mdi mdi-checkbox-blank-circle-outline"></i>
+              </td>
+
+              <td class="col-3" (click)="verllave(llave, false, $event)">
+                <span>{{llave.tipoPrestacion.nombre}}</span>
+              </td>
+
+              <td class="col-2.5" (click)="verllave(llave, false, $event)">
+                <span>{{llave.organizacion.nombre}}</span>
+              </td>
+
+              <td class="col" (click)="verllave(llave, false, $event)">
+                <span>{{llave.auditable}}</span>
+              </td>
+
+              <td class="col" (click)="verllave(llave, false, $event)">
+                <span>{{llave.edad?.desde}} a {{llave.edad?.hasta}}</span>
+                <span *ngIf="!llave.edad" class="text-danger">sin rango definido</span>
+              </td>
+
+              <td class="col-1" (click)="verllave(llave, false, $event)">
+                <span>{{llave?.estado}}</span>
+              </td>
+
+              <td class="col-1" (click)="verllave(llave, false, $event)">
+                <span *ngIf="llave.activa"><span class="mdi mdi-chackbox-marked-outlined"></span></span>
+                <span *ngIf="!llave.activa"><span class="mdi mdi-close-box-outlined"></span></span>
+              </td>
+
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+  </plex-box>
+</section>
+<footer *ngIf="!showcreate && !showupdate">
+  <div class="row">
+    <div class="col">
+      <plex-button type="primary" label="Nueva Configuración" title="Nueva Configuración" (click)="showupdate = !showupdate">
+      </plex-button>
+    </div>
+  </div>
+</footer>
+<edit-espacio-fisico *ngIf="showupdate" [llaveTPSeleccionada]="llaveTPSeleccionada" (data)='onReturn($event)'></edit-espacio-fisico>
