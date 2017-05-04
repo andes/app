@@ -24,19 +24,22 @@
         <div class="row">
             <div class="col-12">
                 <label>Rango edad:</label>
-            </div>
-            <div class="col-4">
-                <template [ngIf]="modelo.llave">
-                    <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
-                </template>
-            </div>
-            <div class="col">
-                a
-            </div>
-            <div class="col-4">
-                <template [ngIf]="modelo.llave">
-                    <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
-                </template>
+                <div class="row">
+                    <div class="col-4">
+                        <template [ngIf]="modelo.llave">
+                            <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
+                            <!--<plex-select></plex-select>-->
+                        </template>
+                    </div>
+                    <div class="col-1">
+                        a 
+                    </div>
+                    <div class="col-4">
+                        <template [ngIf]="modelo.llave">
+                            <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+                        </template>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
