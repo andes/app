@@ -169,6 +169,7 @@ import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutric
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
+import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -278,7 +279,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent,
     ...RUP_COMPONENTS,
-    LlavesTipoPrestacionComponent
+    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],

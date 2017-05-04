@@ -16,8 +16,12 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     public autorizado = false;
     showupdate = false;
     llavesTP: ILlavesTipoPrestacion[];
+    llaveTP: any = {};
     llavesTPSeleccionadas: ILlavesTipoPrestacion[] = [];
-    llaveTPSeleccionadas: ILlavesTipoPrestacion;
+    llaveTPSeleccionada: ILlavesTipoPrestacion;
+
+    showVistaLlavesTP = false;
+
     value: any;
     skip = 0;
     finScroll = false;
@@ -48,6 +52,56 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     estaSeleccionada(llaveTP: any) {
         return this.llavesTPSeleccionadas.find(x => x.id === llaveTP._id);
+    }
+
+    verLlave(llaveTP, multiple, e) {
+
+        this.showVistaLlavesTP = true;
+        // this.showTurnos = false;
+
+        this.llaveTipoPrestacionService.getById(llaveTP.id).subscribe(llave => {
+            // Actualizo la agenda local
+            llaveTP = llave;
+            // Actualizo la agenda global (modelo)
+            this.llaveTPSeleccionada = llave;
+
+            if (!multiple) {
+                this.llavesTPSeleccionadas = [];
+                this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas, llave];
+            } else {
+                let index;
+                if (this.estaSeleccionada(llaveTP)) {
+                    llaveTP.agendaSeleccionadaColor = 'success';
+                    index = this.llavesTPSeleccionadas.indexOf(llaveTP);
+                    this.llavesTPSeleccionadas.splice(index, 1);
+                    this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas];
+                } else {
+                    this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas, llave];
+                }
+            }
+
+            this.setColorEstadoAgenda(llave);
+
+            // // Reseteo el panel de la derecha
+            // this.showEditarAgendaPanel = false;
+            // this.showAgregarNotaAgenda = false;
+            // this.showVistaAgendas = true;
+            // this.showTurnos = true;
+        });
+
+
+    }
+
+    setColorEstadoAgenda(agenda) {
+        if (agenda.estado === 'Suspendida') {
+            agenda.agendaSeleccionadaColor = 'danger';
+        } else {
+            agenda.agendaSeleccionadaColor = 'success';
+        }
+    }
+
+    cancelaEditarLlaveTP() {
+        this.showVistaLlavesTP = false;
     }
 
     // onReturn(espacioFisico: IEspacioFisico): void {

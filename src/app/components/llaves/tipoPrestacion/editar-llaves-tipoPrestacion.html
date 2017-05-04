@@ -1,0 +1,62 @@
+<div class="row" *ngIf="llaveTPSeleccionada">
+    <plex-box>
+        <div class="row">
+            <div class="col-12">
+                <h5>Organización: {{ llaveTPSeleccionada?.organizacion?.nombre }}</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" *ngIf="llaveTPSeleccionada.tipoPrestacion">
+                <plex-select [(ngModel)]="llaveTPSeleccionada.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)" placeholder="Seleccione la Prestación" [required]="true"></plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-bool [(ngModel)]="llaveTPSeleccionada.auditable" name="auditable" label="Auditable"></plex-bool>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h5>Llaves</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label>Rango edad:</label>
+            </div>
+            <div >
+
+            </div>
+            <div class="col-4">
+                <plex-int [(ngModel)]="llaveTPSeleccionada.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
+            </div>
+            <div class="col">
+                -
+            </div>
+            <div class="col-4">
+                <plex-int [(ngModel)]="llaveTPSeleccionada.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="llaveTPSeleccionada.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo" [required]="true"></plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-bool [(ngModel)]="llaveTPSeleccionada.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool>
+                <div *ngIf="llaveTPSeleccionada.llave.solicitud.requerida">
+                    <plex-datetime type="date" [(ngModel)]="llaveTPSeleccionada.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarLlaveTP()" title="Guardar">
+                </plex-button>
+                <plex-button icon="mdi mdi-arrow-left" label="Volver" (click)="cancelar()" title="Volver">
+                </plex-button>
+            </div>
+        </div>
+    </plex-box>
+</div>

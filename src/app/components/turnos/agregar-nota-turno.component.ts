@@ -13,11 +13,8 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
 
-    // @Input() turnosSeleccionados: ITurno[];
-
     @Output() saveAgregarNotaTurno = new EventEmitter<IAgenda>();
     @Output() cancelaAgregarNota = new EventEmitter<boolean>();
-
 
     private _turnosSeleccionados: Array<any>;
 
@@ -28,8 +25,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
     get turnosSeleccionados(): any {
         return this._turnosSeleccionados;
     }
-
-    showAgregarNotaTurno: Boolean = true;
 
     public modelo: any;
     public resultado: any;

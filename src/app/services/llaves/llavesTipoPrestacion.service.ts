@@ -13,6 +13,14 @@ export class LlavesTipoPrestacionService {
         return this.server.get(this.llaveTPUrl, {params: params, showError: true});
     }
 
+    /**
+     * Metodo getById. Trae el objeto LlaveTipoPrestacion por su Id.
+     * @param {String} id Busca por Id
+     */
+    getById(id: String): Observable<ILlavesTipoPrestacion> {
+        return this.server.get(this.llaveTPUrl + "/" + id, null)
+    }
+
     post(llaveTP: ILlavesTipoPrestacion): Observable<ILlavesTipoPrestacion> {
         return this.server.post(this.llaveTPUrl, llaveTP);
     }

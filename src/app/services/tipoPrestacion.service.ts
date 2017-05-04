@@ -23,7 +23,7 @@ export class TipoPrestacionService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<ITipoPrestacion> {
-        return this.server.get(this.tipoPrestacionUrl + "/" + id, null)
+        return this.server.get(this.tipoPrestacionUrl + '/' + id, null)
     }
     /**
      * Metodo post. Inserta un objeto tipoPrestacion nuevo.
@@ -37,7 +37,7 @@ export class TipoPrestacionService {
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     put(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        return this.server.put(this.tipoPrestacionUrl + "/" + tipoPrestacion.id, tipoPrestacion)
+        return this.server.put(this.tipoPrestacionUrl + '/' + tipoPrestacion.id, tipoPrestacion)
     }
     /**
      * Metodo disable. deshabilita tipoPrestacion.
