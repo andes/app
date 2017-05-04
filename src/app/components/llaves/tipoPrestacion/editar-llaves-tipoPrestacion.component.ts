@@ -41,29 +41,25 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
     ngOnInit() {
 
+        this.modelo = {
+            organizacion: this.auth.organizacion,
+            llave: {
+                edad: {},
+                solicitud: {
+                    requerida: false
+                }
+            }
+        };
+
         this.sexos = enumerados.getObjSexos;
 
         if (this.llaveTPSeleccionada && typeof this.llaveTPSeleccionada !== 'undefined') {
             this.modelo = this.llaveTPSeleccionada;
-        } else {
-            console.log('this.llaveTPSeleccionada: ', this.llaveTPSeleccionada);
-            this.modelo = {
-                organizacion: this.auth.organizacion,
-                llave: {
-                    edad: {},
-                    solicitud: {
-                        requerida: false
-                    }
-                }
-            };
-            console.log('this.modelo: ', this.modelo);
         }
     }
 
+
     guardarLlaveTP() {
-
-        console.log(this.modelo.id);
-
 
         if (this.modelo.llave.sexo.id) {
             delete this.modelo.llave.sexo.$order;
@@ -74,9 +70,6 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
         // PUT/UPDATE
         if (this.modelo.id) {
-
-            delete this.modelo.createdBy;
-            delete this.modelo.createdAt;
 
             this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
                 this.saveLlaveTP.emit(resultado);

@@ -109,12 +109,14 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     limpiarModeloLlavesTP() {
         this.llaveTPSeleccionada = {
-                organizacion: this.auth.organizacion,
-                llave: {
-                    edad: {},
-                    solicitud: {}
-                }
-            };
+            organizacion: this.auth.organizacion,
+            llave: {
+                edad: {},
+                solicitud: {}
+            }
+        };
+
+        this.llavesTPSeleccionadas = [];
         this.showVistaLlavesTP = true;
     }
 
@@ -127,7 +129,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     }
 
     saveLlaveTP() {
-
+        this.loadLlavesTP();
     }
 
     cancelaEditarLlaveTP() {

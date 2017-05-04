@@ -15,6 +15,7 @@
                 <plex-bool [(ngModel)]="modelo.auditable" name="auditable" label="Auditable"></plex-bool>
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col-12">
                 <h5>Llaves</h5>
@@ -24,22 +25,25 @@
             <div class="col-12">
                 <label>Rango edad:</label>
             </div>
-            <div >
-
-            </div>
             <div class="col-4">
-                <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
+                <template [ngIf]="modelo.llave">
+                    <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
+                </template>
             </div>
             <div class="col">
-                -
+                a
             </div>
             <div class="col-4">
-                <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+                <template [ngIf]="modelo.llave">
+                    <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+                </template>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-select [(ngModel)]="modelo.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo"></plex-select>
+                <template [ngIf]="modelo.llave">
+                    <plex-select [(ngModel)]="modelo.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo"></plex-select>
+                </template>
             </div>
         </div>
         <div class="row">
