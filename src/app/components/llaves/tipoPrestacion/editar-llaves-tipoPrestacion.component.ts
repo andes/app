@@ -65,7 +65,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
         console.log(this.modelo.id);
 
 
-        if (this.modelo.llave.sexo) {
+        if (this.modelo.llave.sexo.id) {
             delete this.modelo.llave.sexo.$order;
             this.modelo.llave.sexo = this.modelo.llave.sexo.id;
         } else {
@@ -75,7 +75,6 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
         // PUT/UPDATE
         if (this.modelo.id) {
 
-            delete this.modelo.id;
             delete this.modelo.createdBy;
             delete this.modelo.createdAt;
 
@@ -83,11 +82,11 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 this.saveLlaveTP.emit(resultado);
                 this.plex.alert('La configuración de llaves se guardó correctamente');
             },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
 
         // POST/NEW
         } else {
@@ -96,11 +95,11 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 this.saveLlaveTP.emit(resultado);
                 this.plex.alert('La configuración de llaves se guardó correctamente');
             },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
         }
 
 
