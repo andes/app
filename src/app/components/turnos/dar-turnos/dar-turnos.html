@@ -196,11 +196,11 @@
               <div class="col" *ngIf="estadoT == 'noSeleccionada'">
                 <br>
                 <h5>Seleccione una agenda en el Calendario</h5><br>
-                <br>
                 <div *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
-                    <div *ngIf="busqueda.tipoPrestacion"><label>Tipo de Prestación: </label> <span>{{busqueda.tipoPrestacion.nombre}} </span><br></div>
-                    <div *ngIf="busqueda.profesional"><label>Profesional: </label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span><br></div>
+                    <div  class="col-12" >
+                      <label>Tipo de Prestación: </label> <span *ngIf="busqueda.tipoPrestacion">{{busqueda.tipoPrestacion.nombre}} </span><br>
+                      <label>Profesional: </label> <span *ngIf="busqueda.profesional">{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span></div>
                   </div>
                 </div>
                 <br>

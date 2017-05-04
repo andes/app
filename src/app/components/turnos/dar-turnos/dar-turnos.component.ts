@@ -128,7 +128,8 @@ export class DarTurnosComponent implements OnInit {
       };
       this.serviceProfesional.get(query).subscribe(event.callback);
     } else {
-      event.callback([]);
+      event.callback(this.opciones.profesional || []);
+      //event.callback([]);
     }
   }
 
@@ -506,7 +507,7 @@ export class DarTurnosComponent implements OnInit {
                   tipoPrestacion: turno.tipoPrestacion.nombre,
                   horaInicio: moment(turno.horaInicio).format('L'),
                   estado: turno.estado,
-                  organizacion: this.auth.organizacion._id,
+                  organizacion: agenda.organizacion.nombre,
                   profesionales: agenda.profesionales
                 });
               }
@@ -515,7 +516,6 @@ export class DarTurnosComponent implements OnInit {
         });
       });
     });
-    console.log('ULTIMOS TURNOS', ultimosTurnos);
     this.ultimosTurnos = ultimosTurnos;
   }
 
