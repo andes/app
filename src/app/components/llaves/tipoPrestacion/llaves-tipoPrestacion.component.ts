@@ -18,7 +18,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     llavesTP: ILlavesTipoPrestacion[];
     llaveTP: any = {};
     llavesTPSeleccionadas: ILlavesTipoPrestacion[] = [];
-    llaveTPSeleccionada: ILlavesTipoPrestacion;
+    llaveTPSeleccionada: any;
 
     showVistaLlavesTP = false;
 
@@ -32,6 +32,21 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     ngOnInit() {
        this.loadTipoPrestaciones();
+    }
+
+    loadLlavesTP() {
+        this.llaveTipoPrestacionService.get({
+            organizacion: this.auth.organizacion._id
+        }).subscribe(
+            llavesTP => {
+                this.llavesTP = llavesTP;
+                this.llavesTPSeleccionadas = [];
+            },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
     }
 
     loadTipoPrestaciones() {
@@ -71,7 +86,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
             } else {
                 let index;
                 if (this.estaSeleccionada(llaveTP)) {
-                    llaveTP.agendaSeleccionadaColor = 'success';
+                    // llaveTP.agendaSeleccionadaColor = 'success';
                     index = this.llavesTPSeleccionadas.indexOf(llaveTP);
                     this.llavesTPSeleccionadas.splice(index, 1);
                     this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas];
@@ -80,7 +95,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                 }
             }
 
-            this.setColorEstadoAgenda(llave);
+            // this.setColorEstadoAgenda(llave);
 
             // // Reseteo el panel de la derecha
             // this.showEditarAgendaPanel = false;
@@ -92,12 +107,27 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     }
 
+    limpiarModeloLlavesTP() {
+        this.llaveTPSeleccionada = {
+                organizacion: this.auth.organizacion,
+                llave: {
+                    edad: {},
+                    solicitud: {}
+                }
+            };
+        this.showVistaLlavesTP = true;
+    }
+
     setColorEstadoAgenda(agenda) {
-        if (agenda.estado === 'Suspendida') {
-            agenda.agendaSeleccionadaColor = 'danger';
-        } else {
-            agenda.agendaSeleccionadaColor = 'success';
-        }
+        // if (agenda.estado === 'Suspendida') {
+        //     agenda.agendaSeleccionadaColor = 'danger';
+        // } else {
+        //     agenda.agendaSeleccionadaColor = 'success';
+        // }
+    }
+
+    saveLlaveTP() {
+
     }
 
     cancelaEditarLlaveTP() {

@@ -22,46 +22,92 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     @Input('llaveTPSeleccionada')
     set llaveTPSeleccionada(value: any) {
         this._llaveTPSeleccionada = value;
-        this.showAgregarNotaTurno = true;
+        this.modelo = this._llaveTPSeleccionada;
     }
     get llaveTPSeleccionada(): any {
         return this._llaveTPSeleccionada;
     }
 
-    showAgregarNotaTurno: Boolean = false;
-
-    modelo: any;
+    modelo: any = {};
     tipoPrestaciones: any[];
     resultado: any;
     permisos = [];
 
     hoy = new Date();
 
+    sexos: any;
+
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
-        this.showAgregarNotaTurno = true;
+
+        this.sexos = enumerados.getObjSexos;
+
+        if (this.llaveTPSeleccionada && typeof this.llaveTPSeleccionada !== 'undefined') {
+            this.modelo = this.llaveTPSeleccionada;
+        } else {
+            console.log('this.llaveTPSeleccionada: ', this.llaveTPSeleccionada);
+            this.modelo = {
+                organizacion: this.auth.organizacion,
+                llave: {
+                    edad: {},
+                    solicitud: {
+                        requerida: false
+                    }
+                }
+            };
+            console.log('this.modelo: ', this.modelo);
+        }
     }
 
     guardarLlaveTP() {
 
-        this.llaveTipoPrestacionService.put(this.llaveTPSeleccionada).subscribe(resultado => {
+        console.log(this.modelo.id);
 
-            this.plex.alert('La configuración de llaves se guardó correctamente');
 
-            this.saveLlaveTP.emit(resultado);
-        },
-        err => {
-            if (err) {
-                console.log(err);
-            }
-        });
+        if (this.modelo.llave.sexo) {
+            delete this.modelo.llave.sexo.$order;
+            this.modelo.llave.sexo = this.modelo.llave.sexo.id;
+        } else {
+            delete this.modelo.llave.sexo;
+        }
+
+        // PUT/UPDATE
+        if (this.modelo.id) {
+
+            delete this.modelo.id;
+            delete this.modelo.createdBy;
+            delete this.modelo.createdAt;
+
+            this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
+                this.saveLlaveTP.emit(resultado);
+                this.plex.alert('La configuración de llaves se guardó correctamente');
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+        // POST/NEW
+        } else {
+
+            this.llaveTipoPrestacionService.post(this.modelo).subscribe(resultado => {
+                this.saveLlaveTP.emit(resultado);
+                this.plex.alert('La configuración de llaves se guardó correctamente');
+            },
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+        }
+
 
     }
 
     cancelar() {
         this.cancelaEditarLlaveTP.emit(true);
-        this.showAgregarNotaTurno = false;
     }
 
     loadTipoPrestaciones(event) {

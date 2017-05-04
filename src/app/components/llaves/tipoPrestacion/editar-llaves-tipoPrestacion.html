@@ -1,18 +1,18 @@
-<div class="row" *ngIf="llaveTPSeleccionada">
+<div class="row" *ngIf="modelo">
     <plex-box>
         <div class="row">
             <div class="col-12">
-                <h5>Organización: {{ llaveTPSeleccionada?.organizacion?.nombre }}</h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12" *ngIf="llaveTPSeleccionada.tipoPrestacion">
-                <plex-select [(ngModel)]="llaveTPSeleccionada.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)" placeholder="Seleccione la Prestación" [required]="true"></plex-select>
+                <h5>Organización: {{ modelo.organizacion?.nombre }}</h5>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-bool [(ngModel)]="llaveTPSeleccionada.auditable" name="auditable" label="Auditable"></plex-bool>
+                <plex-select [(ngModel)]="modelo.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)" placeholder="Seleccione la Prestación" [required]="true"></plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-bool [(ngModel)]="modelo.auditable" name="auditable" label="Auditable"></plex-bool>
             </div>
         </div>
         <div class="row">
@@ -28,34 +28,32 @@
 
             </div>
             <div class="col-4">
-                <plex-int [(ngModel)]="llaveTPSeleccionada.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
+                <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
             </div>
             <div class="col">
                 -
             </div>
             <div class="col-4">
-                <plex-int [(ngModel)]="llaveTPSeleccionada.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+                <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-select [(ngModel)]="llaveTPSeleccionada.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo" [required]="true"></plex-select>
+                <plex-select [(ngModel)]="modelo.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo"></plex-select>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-bool [(ngModel)]="llaveTPSeleccionada.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool>
-                <div *ngIf="llaveTPSeleccionada.llave.solicitud.requerida">
-                    <plex-datetime type="date" [(ngModel)]="llaveTPSeleccionada.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
+                <plex-bool [(ngModel)]="modelo.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool>
+                <div *ngIf="modelo.llave.solicitud.requerida">
+                    <plex-datetime type="date" [(ngModel)]="modelo.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarLlaveTP()" title="Guardar">
-                </plex-button>
-                <plex-button icon="mdi mdi-arrow-left" label="Volver" (click)="cancelar()" title="Volver">
-                </plex-button>
+                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarLlaveTP()" title="Guardar"></plex-button>
+                <plex-button icon="mdi mdi-arrow-left" label="Cancelar" (click)="cancelar()" title="Cancelar"></plex-button>
             </div>
         </div>
     </plex-box>
