@@ -60,6 +60,11 @@ import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 
+//AUDITORIA
+import { AuditoriaPorBloqueService } from './services/auditoria/auditoriaPorBloque.service';
+import { AuditoriaService } from './services/auditoria/auditoria.service';
+
+
 // Componentes
 // ... Tablas Maestras
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -164,6 +169,9 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
+// AUDITORIA
+import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 
 export const RUP_COMPONENTS = [
@@ -269,7 +277,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
-    PanelAgendaComponent,
+    PanelAgendaComponent, AuditoriaComponent,AuditoriaPorBloqueComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,
@@ -306,6 +314,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TipoProblemaService,
     TipoPrestacionService,
     LogService,
+    AuditoriaPorBloqueService,
+    AuditoriaService
   ]
 })
 

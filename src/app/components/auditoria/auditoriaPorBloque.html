@@ -1,0 +1,148 @@
+<plex-box type="success" title="Auditoría por Bloque">
+    <div class="row">
+        <div class="col-md-12">
+            <plex-select [data]="tiposClaves" [(ngModel)]="tipoClave" (change)="onClaveChange($event)" placeholder="Seleccione..." label="Usar Tipo Clave:">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <plex-button type="link" icon="skip-previous" (click)="verClave(false)"></plex-button>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">Clave de Bloque:</span>
+                <input type="text" id="claveActual" name="claveActual" class="form-control" [(ngModel)]="claveActual" (change)="onChageOneKey($event)">
+            </div>
+        </div>
+        <div class="col-md-1">
+            <plex-button type="link" icon="skip-next" (click)="verClave(true)"></plex-button>
+        </div>
+        <div class="col-md-6 text-right">
+            <plex-button type="success" (click)="validarSisa()" label="Validar con Sisa"></plex-button>
+            <plex-button type="success" (click)="validarSintys()" label="Validar con Sintys"></plex-button>
+        </div>
+
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row" *ngIf="pacientes.length<=0">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                No se registran pacientes en el bloque.
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let pacList of pacientes; let i = index">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="badge">{{i}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span><b>Paciente:</b> {{pacList.paciente.apellido}}, {{pacList.paciente.nombre}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span><b>DNI:</b> {{pacList.paciente.documento}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span><b>Sexo:</b> {{pacList.paciente.sexo}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span><b>Fecha Nacimiento:</b> {{pacList.paciente.fechaNacimiento | date: 'dd/MM/yyyy'}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span><b>Dirección:</b></span>
+                                    <span *ngFor="let dir of pacList.paciente.direccion">{{dir.valor}} ({{dir.ubicacion.localidad.nombre}} - {{dir.ubicacion.provincia.nombre}}) / </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span><b>Estado:</b> {{pacList.paciente.estado}}</span>
+                                </div>
+                                <div class="col-md-6" *ngIf="pacList.paciente.estado == 'validado'">
+                                    <span><b>Validado por:</b> </span>
+                                    <span *ngFor="let entidad of pacList.paciente.entidadesValidadoras">{{entidad}} / </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="pacList.matcheos">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <span><b>Matcheos:</b> 
+                            <span >
+                                {{pacList.matcheos.entidad}}: {{pacList.matcheos.matcheo}} % </span></span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="pacList.matcheos.datosPaciente">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span><b>Paciente Sisa:</b> {{pacList.matcheos.datosPaciente.apellido}}, {{pacList.matcheos.datosPaciente.nombre}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span><b>DNI:</b> {{pacList.matcheos.datosPaciente.documento}}</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span><b>Sexo:</b> {{pacList.matcheos.datosPaciente.sexo}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span><b>Fecha Nacimiento:</b> {{pacList.matcheos.datosPaciente.fechaNacimiento | date: 'dd/MM/yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span><b>Dirección:</b></span>
+                                                <span *ngFor="let dir of pacList.matcheos.datosPaciente.direccion">{{dir.valor}} ({{dir.ubicacion.localidad.nombre}} - Prov. {{dir.ubicacion.provincia.nombre}}) / </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <span *ngIf="pacList.paciente.estado != 'validado'">
+                                                    <plex-button type="success btn-sm" icon="account-check" (click)="validarPaciente(pacList.paciente,pacList.matcheos.entidad)" label="Validar"></plex-button>
+                                                    <span *ngIf="pacList.matcheos.entidad == 'Sisa'">
+                                                        <plex-button type="info btn-sm" icon="border-color" (click)="validarActualizarPaciente(pacList.paciente,pacList.matcheos.entidad,pacList.matcheos.datosPaciente)" label="Actualizar y Validar"></plex-button>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <div class="btn-group" role="toolbar">
+                                <span>Fusionar con: </span>
+                                <span *ngFor="let pc of pacientes; let j = index">
+                                <span *ngIf="i!=j" class="btn btn-sm btn-default btn-group"  (click)="fusionaPaciente(pc.paciente,pacList.paciente)">
+                                        {{j}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <plex-button type="danger" icon="close-circle" (click)="eliminarPaciente(pacList.paciente) " label="Eliminar "></plex-button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</plex-box>

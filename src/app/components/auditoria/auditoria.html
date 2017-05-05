@@ -1,0 +1,70 @@
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-md-7">
+      <plex-box type="danger" title="Pacientes que requieren revisión">
+        <!-- Search results -->
+        <div>
+          <div class="table">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Documento</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Fecha Nac.</th>
+                  <th>Sexo</th>
+                  <th>Estado</th>
+                  <th>% Sisa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="mostrarDatos(paciente)">
+                  <td>{{paciente.documento}}</td>
+                  <td>{{paciente.nombre| uppercase}}</td>
+                  <td>{{paciente.apellido| uppercase}}</td>
+                  <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                  <td>{{paciente.sexo}}</td>
+                  <td>{{paciente.estado}}</td>
+                  <td>{{paciente.matchSisa * 100}}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </plex-box>
+      <plex-loader *ngIf=loadingPrimaryTable></plex-loader>   
+    </div>
+ 
+    <!--fin de col-md-7 -->
+    <div class="col-md-5">
+      <plex-box *ngIf=mostrarPaciente type="info" title="Panel de operaciones">
+        <h2>{{pacienteSelected.nombre}} {{pacienteSelected.apellido}}</h2>
+        <hr>
+        <h4><b>Documento: </b>{{pacienteSelected.documento}}</h4>
+        <h4><b>Fecha Nac.: </b> {{pacienteSelected.fechaNacimiento | date:'dd-MM-yyyy'}}</h4>
+        <h4><b>Sexo: </b> {{pacienteSelected.sexo}}</h4>
+        <h4><b>Estado: </b>{{pacienteSelected.estado}}</h4>
+        <plex-button icon="account-search" type="primary" label="Consultar Sisa" (click)="onValidate(pacienteSelected)"></plex-button>
+      </plex-box>
+      <plex-loader *ngIf=loading></plex-loader>
+      <plex-box *ngIf=validate type="success" title="Información de fuente auténtica">
+        <h2>Pacientes encontrados <span class="badge">{{datosSisa.length}}</span> </h2>
+        <table class="table table-striped">
+          <tr *ngFor="let pacienteSisa of datosSisa">
+            <td><b>Nombre y Apellido:</b> {{pacienteSisa.nombre}} {{pacienteSisa.apellido}} </td>
+            <td><b>Documento:</b> {{pacienteSisa.documento}}</td>
+            <td><b>Fec de Nac.:</b> {{pacienteSisa.fechaNacimiento | date: 'dd-MM-yyyy'}} </td>
+            <td><b>Sexo:</b> {{pacienteSisa.sexo}} </td>
+            <td>
+              <plex-button icon="account-check" type="success" label="Validar" (click)="fusionar(pacienteSisa)"></plex-button>
+            </td>
+          </tr>
+        </table>
+        <div *ngIf=mensaje class="alert" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span> {{mensaje}}
+        </div>
+      </plex-box>
+    </div>
+  </div>
+</div>

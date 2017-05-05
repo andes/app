@@ -18,7 +18,7 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Global
 import { RoutingGuard } from './app.routings-guard.class';
-import {MapsComponent} from './utils/mapsComponent';
+import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
 // ... Tablas Maestras
@@ -39,7 +39,7 @@ import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 
-//MPI
+// MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... RUP
@@ -49,6 +49,9 @@ import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/molecula
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/tension-arterial/tensionArterial.component';
 
+// Auditoria
+import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -59,7 +62,7 @@ const appRoutes: Routes = [
   { path: 'espacio_fisico', component: EspacioFisicoComponent },
   { path: 'tipoprestaciones', component: TipoPrestacionComponent },
 
-    { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // Turnos
   { path: 'clonarAgenda', component: ClonarAgendaComponent },
@@ -69,6 +72,10 @@ const appRoutes: Routes = [
   { path: 'agenda', component: AgendaComponent },
   { path: 'turnos', component: DarTurnosComponent },
   { path: 'listaEspera', component: ListaEsperaComponent },
+
+  // Auditoria
+  { path: 'auditoria', component: AuditoriaComponent },
+  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent },
