@@ -15,7 +15,7 @@ import {
 } from '../../services/auditoria/auditoriaPorBloque.service';
 import {
   IPaciente
-} from '../../interfaces/auditoria/IPaciente';
+} from '../../interfaces/IPaciente';
 
 @Component({
   selector: 'auditoriaPorBloque',
