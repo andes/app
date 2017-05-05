@@ -1,3 +1,4 @@
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
@@ -11,6 +12,7 @@ import { Plex } from '@andes/plex';
 import { DropdownItem } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IProfesional } from './../../../interfaces/IProfesional';
+import { fromNowPipe  } from './../../../utils/date';
 // Rutas
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -29,6 +31,17 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tiposProblemas = [];
     public tipoProblema = null;
     public problemaTratar: any;
+    public searchForm: FormGroup;
+    // public skip: number = 0;
+    // public value: any;
+    // public finScroll: boolean = false;
+    // public tengoDatos: boolean = true;
+    // public datos: IProblemaPaciente[];
+    filtroEstado: String = '';
+    filtros: String = 'filtroTodos';
+    habilitaTransparencia: String = '';
+    listaproblemasMaestro: any = [];
+
     items = [
         { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
         { label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) },
@@ -70,7 +83,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex, public auth: Auth,
-        private router: Router, private route: ActivatedRoute) {
+        private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
     }
 
     mostrarOpciones(problema) {
@@ -78,6 +91,24 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        // Inicio - Filtro en Maestro de Problemas del Paciente
+            this.searchForm = this.formBuilder.group({
+                Problema: [''],
+            });
+            this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+                if (value.Problema) {
+                    this.habilitaTransparencia = 'habilitar';
+                    this.servicioTipoProblema.get({ nombre: value.Problema }).subscribe(listaTipoProblemas => {
+                        this.listaproblemasMaestro = listaTipoProblemas;
+                });
+
+                } else {
+                    this.habilitaTransparencia = 'inhabilitar';
+                }
+            });
+        // Fin - Filtro en Maestro de Problemas del Paciente
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
@@ -91,6 +122,22 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
         });
     }
+
+    FiltroestadoTodos() {
+        this.filtroEstado = '';
+        this.filtros = 'filtroTodos';
+    }
+
+    FiltroestadoActivo() {
+        this.filtroEstado = 'activo';
+        this.filtros = 'filtroActivo';
+    }
+
+    FiltroestadoInactivo() {
+        this.filtroEstado = 'inactivo';
+        this.filtros = 'filtroInactivo';
+    }
+
 
     loadTiposProblemas(event) {
         this.servicioTipoProblema.get({}).subscribe(event.callback);

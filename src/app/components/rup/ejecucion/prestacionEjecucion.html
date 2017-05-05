@@ -45,7 +45,23 @@
         box-shadow: none;
         border: none;
     }
+
+    .btn-group {
+        margin: 0 0 10px 0 ;        
+    }
     
+    .btn.btn-primary {
+        margin-top: 0px;        
+    }
+
+    .btn.btn-primary:hover {
+        background-color: #002738;
+    }
+
+    .btn-primary.active {
+        background-color: #002738;
+    }
+
     .list-inline>.list-inline-item {
         margin-bottom: 10px;
     }
@@ -70,7 +86,6 @@
         text-transform: uppercase;
         font-size: 0.75rem;
         font-weight: 500;
-        margin: 0px 10px 10px 0px;
         display: inline-block;
     }
     
@@ -101,6 +116,16 @@
         background: transparent;
         color: #00A8E0;
     }
+
+   .transparencia {
+
+     opacity: 0.4;
+   }     
+
+    .list-group-top {
+        margin-top: 5px;
+    }
+    
 </style>
 
 <header *ngIf="prestacion">
@@ -111,41 +136,81 @@
 <section>
     <div class="row">
 
-        <!--LISTA DE PROBLEMAS ACTIVOS-->
-        <div class="col-2">
+        <!--LISTA DE PROBLEMAS DEL PACIENTE-->
+        <div class="col-3">
             <plex-box>
+
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Lista de Problemas Activos</h5>
+                            <h5 class="box-title-principal">Lista de Problemas del paciente</h5>
                         </div>
                     </div>
-                </header>
+                </header>               
+                                                  
+                <!--FILTRO EN MAESTRO DE PROBLEMAS-->
+                <form [formGroup]="searchForm">                                   
+                    <div >
+                        <plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text>
+                    </div>                                                         
+                </form>               
 
-                <ul class="list-group">
-                    <ng-container *ngFor="let problema of listaProblemas">
-                        <li class="list-group-item" *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                            <div>
-                                <span class="badge badge-success">Activo</span>
-                                <br /> {{problema.tipoProblema.nombre}}
-                                <br />
-                                <small>
-                                    Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}
-                                </small>
-                            </div>
+                <!--BOTONES DE FILTRO-->
+               <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
+               </div>     
+
+                <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
+                <ul class="list-group" *ngIf="habilitaTransparencia =='habilitar'">
+                    <ng-container *ngFor="let problemaMaestro of this.listaproblemasMaestro">         
+                         <li class="list-group-item justify-content-between list-group-item-action">
+                             <span>{{problemaMaestro.nombre}}</span>
+                         </li>
+                    </ng-container>
+                </ul>              
+
+                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->              
+                <ul class="list-group list-group-top" [ngClass]="{transparencia: habilitaTransparencia == 'habilitar'}">
+                    <ng-container *ngFor="let problema of listaProblemas">                        
+                        <li class="list-group-item justify-content-between list-group-item-action" 
+                                    *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && 
+                                          (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) 
+                                                 || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))" >                                                                                                                     
+
+                            <span>{{problema.tipoProblema.nombre }} <small>  | {{ problema.fechaInicio | fromNow}}</small></span>  
+                            <div class="pull-right">   
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'"
+                                    class="badge badge-success">{{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span> 
+
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'"
+                                    class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span>       
+
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
+                                    class="badge badge-warning">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
+                                </span> 
+                            </div>                                                            
+
+                            <small>Última evolución realizada {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} 
+                                    | {{ this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}                                                
+                            </small>
                         </li>
                     </ng-container>
                 </ul>
+
             </plex-box>
         </div>
 
-        <!--LISTA DE PROBLEMAS TRATADOS EN ESTA CONSULTA-->
-        <div class="col-5">
+        <!--HALLAZGOS DE ESTA CONSULTA-->
+        <div class="col-6">
             <plex-box>
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Problemas tratados en esta consulta</h5>
+                            <h5 class="box-title-principal">Hallazgos de esta consulta</h5>
                         </div>
                     </div>
                 </header>
@@ -156,7 +221,7 @@
                         </plex-select>
                     </div>
                     <div class="col-1">
-                        <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="success"></plex-button>
+                        <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary"></plex-button>
                     </div>
                     <div class="col text-right">
                         <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
@@ -166,37 +231,32 @@
                 <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <li class="list-group-item">
-                                <div class="col-11">
-                                    <span class=" badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                                    Activo
-                                                </span>
-                                    <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
-                                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                                </span>
-                                    <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
-                                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                                </span>
-                                    <br>
-                                    <span>
-                                                    <h5 class="item-title">{{problema.tipoProblema.nombre}}</h5>
-                                                </span>
+                            <li class="list-group-item justify-content-between list-group-item-action">
+                                <!--<div class="col-11">-->
+                                    <span><h5 class="item-title">{{problema.tipoProblema.nombre}}</h5></span>
 
-                                    <br>
+                                    <div class="pull-right">
+                                        <span class=" badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                            Activo
+                                        </span>
+                                        <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                        </span>
+                                        <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
+                                        </span>
 
-                                    <span class="" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                                                                                                
+                                        <span class="pull-right">
+                                            <plex-dropdown [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
+                                        </span> 
+
+                                    </div>                                                                                                                                                                                                                
+                                        
+                                    <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                                         <strong> Última evolución: </strong> 
-                                        <small>
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].observacion}} |
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}} 
-                                        </small>                                       
-                                    </span>
-                                </div>
-                                <div class="col-1">
-                                    <span class="pull-right">
-                                        <plex-dropdown [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
-                                    </span>
-                                </div>
+                                        {{problema.evoluciones[problema.evoluciones.length - 1].observacion}} |
+                                        {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}} 
+                                    </small>                                                                                                     
                             </li>
                         </ul>
                     </div>
@@ -229,13 +289,13 @@
             </plex-box>
         </div>
 
-        <!--LISTA DE PRESTACIONES-->
-        <div class="col-5">
+        <!--REGISTROS DE ESTA CONSULTA-->
+        <div class="col-3">
             <plex-box *ngIf=" prestacion && prestacion.paciente">
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Lista de Prestaciones</h5>
+                            <h5 class="box-title-principal">Registros de esta consulta</h5>
                         </div>
                     </div>
                 </header>
@@ -247,14 +307,12 @@
                             </plex-select>
                         </div>
                         <div class="col-2">
-                            <plex-button title="Agregar" label="Agregar" type="success" (click)="agregarPrestacionEjecucion(prestacionAEjecutar)" class="pull-right"></plex-button>
+                            <plex-button title="Agregar"  icon="mdi mdi-plus" type="primary" (click)="agregarPrestacionEjecucion(prestacionAEjecutar)" class="pull-right"></plex-button>
                         </div>
                     </div>
                 </fieldset>
 
-<!--<pre>
-    {{data | json}}
-</pre>-->
+
 
                 <fieldset>
                     <!-- nuevas prestaciones ejecutadas en la consulta -->
