@@ -111,8 +111,19 @@ export class LlavesTipoPrestacionComponent implements OnInit {
         this.llaveTPSeleccionada = {
             organizacion: this.auth.organizacion,
             llave: {
-                edad: {},
-                solicitud: {}
+                edad: {
+                    desde: {
+                        valor: 0,
+                        hasta: ''
+                    },
+                    hasta: {
+                        valor: 0,
+                        hasta: ''
+                    }
+                },
+                solicitud: {
+                    requerida: false
+                }
             }
         };
 

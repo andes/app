@@ -43,12 +43,13 @@
                         </td>
 
                         <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span>{{llaveTP.llave.edad?.desde}} a {{llaveTP.llave.edad?.hasta}}</span>
+                            <span>{{llaveTP.llave.edad?.desde.valor + ' ' + llaveTP.llave.edad?.desde.unidad}} a los {{llaveTP.llave.edad?.hasta.valor + ' ' + llaveTP.llave.edad?.hasta.unidad}}</span>
                             <span *ngIf="!llaveTP.llave.edad" class="text-danger">sin rango definido</span>
                         </td>
 
                         <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span>{{llaveTP.llave.sexo}}</span>
+                            <span *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
+                            <span *ngIf="!llaveTP.llave.sexo">no aplica</span>
                         </td>
                         
                         <td class="col-1" (click)="verLlave(llaveTP, false, $event)">

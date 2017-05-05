@@ -2,7 +2,7 @@
     <plex-box>
         <div class="row">
             <div class="col-12">
-                <h5>Organización: {{ modelo.organizacion?.nombre }}</h5>
+                <h5>Organización: <br>{{ modelo.organizacion?.nombre }}</h5>
             </div>
         </div>
         <div class="row">
@@ -25,18 +25,19 @@
             <div class="col-12">
                 <label>Rango edad:</label>
                 <div class="row">
-                    <div class="col-4">
-                        <template [ngIf]="modelo.llave">
-                            <plex-int [(ngModel)]="modelo.llave.edad.desde" name="desde" placeholder="desde"></plex-int>
-                            <!--<plex-select></plex-select>-->
+                    <div class="col-5">
+                        <template [ngIf]="modelo.llave.edad">
+                            <plex-int [(ngModel)]="modelo.llave.edad.desde.valor" name="desde" placeholder="desde"></plex-int>
+                            <plex-select *ngIf="modelo.llave.edad.desde.valor" [(ngModel)]="modelo.llave.edad.desde.unidad" name="unidadEdadDesde" (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.desde.valor > 0"></plex-select>
                         </template>
                     </div>
                     <div class="col-1">
                         a 
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <template [ngIf]="modelo.llave">
-                            <plex-int [(ngModel)]="modelo.llave.edad.hasta" name="hasta" placeholder="hasta"></plex-int>
+                            <plex-int [(ngModel)]="modelo.llave.edad.hasta.valor" name="hasta" placeholder="hasta"></plex-int>
+                            <plex-select *ngIf="modelo.llave.edad.hasta.valor" [(ngModel)]="modelo.llave.edad.hasta.unidad" name="unidadEdadHasta" (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.hasta.valor > 0"></plex-select>
                         </template>
                     </div>
                 </div>
@@ -51,10 +52,12 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-bool [(ngModel)]="modelo.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool>
-                <div *ngIf="modelo.llave.solicitud.requerida">
-                    <plex-datetime type="date" [(ngModel)]="modelo.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
-                </div>
+                <template [ngIf]="modelo.llave.solicitud">
+                    <plex-bool [(ngModel)]="modelo.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool>
+                    <div *ngIf="modelo.llave?.solicitud?.requerida">
+                        <plex-datetime type="date" [(ngModel)]="modelo.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="row">

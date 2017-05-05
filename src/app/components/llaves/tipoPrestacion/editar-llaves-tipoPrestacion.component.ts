@@ -35,8 +35,6 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
     hoy = new Date();
 
-    sexos: any;
-
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -44,32 +42,61 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
         this.modelo = {
             organizacion: this.auth.organizacion,
             llave: {
-                edad: {},
+                edad: {
+                    desde: {
+                        valor: 0,
+                        unidad: ''
+                    },
+                    hasta: {
+                        valor: 0,
+                        unidad: ''
+                    }
+                },
                 solicitud: {
                     requerida: false
                 }
             }
         };
 
-        this.sexos = enumerados.getObjSexos;
-
         if (this.llaveTPSeleccionada && typeof this.llaveTPSeleccionada !== 'undefined') {
             this.modelo = this.llaveTPSeleccionada;
+            debugger;
+            if ( this.modelo.llave.solicitud ) {
+                this.modelo.llave.solicitud = {
+                    requerida: false
+                }
+            }
         }
     }
 
 
     guardarLlaveTP() {
 
-        if (this.modelo.llave.sexo.id) {
+        if (this.modelo.llave.sexo) {
             delete this.modelo.llave.sexo.$order;
             this.modelo.llave.sexo = this.modelo.llave.sexo.id;
         } else {
             delete this.modelo.llave.sexo;
         }
 
+        if (this.modelo.llave.edad.desde.unidad) {
+            delete this.modelo.llave.edad.desde.unidad.$order;
+            this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
+        } else {
+            delete this.modelo.llave.edad.desde;
+        }
+
+        if (this.modelo.llave.edad.hasta.unidad) {
+            delete this.modelo.llave.edad.hasta.unidad.$order;
+            this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
+        } else {
+            delete this.modelo.llave.edad.hasta;
+        }
+
         // PUT/UPDATE
         if (this.modelo.id) {
+
+            console.log(this.modelo);
 
             this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
                 this.saveLlaveTP.emit(resultado);
@@ -108,6 +135,10 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
     loadSexo(event) {
         event.callback(enumerados.getObjSexos());
+    }
+
+    loadUnidadesEdad(event) {
+        event.callback(enumerados.getObjUnidadesEdad())
     }
 
 }
