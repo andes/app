@@ -1,5 +1,5 @@
 import { IListaMatcheo } from '../../interfaces/auditoria/IListaMatcheo';
-import { IPaciente } from '../../interfaces/auditoria/IPaciente';
+import { IPaciente } from '../../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
