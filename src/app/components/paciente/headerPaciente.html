@@ -82,13 +82,13 @@
                         </div>
 
                         <div class="row">
-                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas">
+                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
                                 Especialidad: {{EspecialidadActiva.descripcion}}
                             </h6>
                         </div>
 
                         <div class="row">
-                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas">
+                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
                                 Matricula: {{EspecialidadActiva.numero}}
                             </h6>
                         </div>
