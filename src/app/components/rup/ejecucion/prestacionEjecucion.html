@@ -87,6 +87,7 @@
         font-size: 0.75rem;
         font-weight: 500;
         display: inline-block;
+        margin-right:15px ;
     }
     
     .badge-danger {
@@ -125,7 +126,16 @@
     .list-group-top {
         margin-top: 5px;
     }
-    
+
+    .dropdown-inline {
+    display : inline-block;
+}
+
+
+    .fieldsetMargin-top {
+        margin-top: 1px;
+    }
+
 </style>
 
 <header *ngIf="prestacion">
@@ -150,9 +160,7 @@
                                                   
                 <!--FILTRO EN MAESTRO DE PROBLEMAS-->
                 <form [formGroup]="searchForm">                                   
-                    <div >
-                        <plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text>
-                    </div>                                                         
+                    <div ><plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text></div>                                                         
                 </form>               
 
                 <!--BOTONES DE FILTRO-->
@@ -232,31 +240,28 @@
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             <li class="list-group-item justify-content-between list-group-item-action">
-                                <!--<div class="col-11">-->
-                                    <span><h5 class="item-title">{{problema.tipoProblema.nombre}}</h5></span>
 
-                                    <div class="pull-right">
-                                        <span class=" badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                            Activo
-                                        </span>
-                                        <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                    <span>
+                                        <h5 class="item-title">{{problema.tipoProblema.nombre}}</h5>
+                                        <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                            Última evolución {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}} |
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].observacion}}                                         
+                                        </small>
+                                    </span>
+
+                                    <div class="list-inline">
+                                        <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">Activo</span>
+                                        <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                         </span>
-                                        <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
+                                        <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                        </span>
-
-                                        <span class="pull-right">
-                                            <plex-dropdown [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"></plex-dropdown>
                                         </span> 
+                                        <span class="d-inline">
+                                        <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown> 
+                                        </span>
+                                    </div>    
 
-                                    </div>                                                                                                                                                                                                                
-                                        
-                                    <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                        <strong> Última evolución: </strong> 
-                                        {{problema.evoluciones[problema.evoluciones.length - 1].observacion}} |
-                                        {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}} 
-                                    </small>                                                                                                     
                             </li>
                         </ul>
                     </div>
@@ -312,9 +317,7 @@
                     </div>
                 </fieldset>
 
-
-
-                <fieldset>
+                <fieldset class="fieldsetMargin-top">
                     <!-- nuevas prestaciones ejecutadas en la consulta -->
                     <plex-accordion *ngIf="prestacionesEjecucion">
                         <div *ngFor="let _prestacion of prestacionesEjecucion">
