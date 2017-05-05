@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
+import { Auth } from '@andes/auth';
+
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 
@@ -20,7 +22,7 @@ export class EspacioFisicoComponent implements OnInit {
     tengoDatos = true;
     loader = false;
 
-    constructor(private formBuilder: FormBuilder, private espacioFisicoService: EspacioFisicoService) { }
+    constructor(private formBuilder: FormBuilder, private espacioFisicoService: EspacioFisicoService, public auth: Auth) { }
 
     ngOnInit() {
         // Crea el formulario reactivo
@@ -44,6 +46,7 @@ export class EspacioFisicoComponent implements OnInit {
             'descripcion': this.value && this.value.descripcion,
             'nombre': this.value && this.value.nombre,
             'activo': this.value && this.value.activo,
+            'organizacion': this.auth.organizacion._id,
             'skip': this.skip
         };
 
@@ -64,16 +67,6 @@ export class EspacioFisicoComponent implements OnInit {
                 this.loader = false;
             }); // Bind to view
     }
-
-    /*      this.espacioFisicoService.get(parametros)
-              .subscribe(
-              espaciosFisicos => this.espaciosFisicos = espaciosFisicos, // Bind to view
-              err => {
-                  if (err) {
-                      console.log(err);
-                  }
-              });
-      }*/
 
     onReturn(espacioFisico: IEspacioFisico): void {
         this.showupdate = false;

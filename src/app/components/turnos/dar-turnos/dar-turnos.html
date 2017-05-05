@@ -320,6 +320,26 @@
               <hr>
             </div>
           </plex-tab>
+
+          <!--TODO tab llaves-->
+          <plex-tab icon="key" class="text-center">
+            <br>
+            <h5>Llaves Activas del paciente</h5><br>
+            <div *ngFor="let turno of ultimosTurnos let i=index" class="text-left">
+              <a (click)="seleccionarBusqueda(i)" class="hover">
+                <h5>{{turno.organizacion}}</h5>
+                <p><strong>Fecha:</strong> {{turno.horaInicio}}</p>
+                <p><strong>Tipo de Prestación: </strong>{{turno.tipoPrestacion}}</p>
+                <p *ngFor="let profesional of turno.profesionales">
+                  <strong>Profesional:</strong> {{profesional.nombre}} {{profesional.apellido}}
+                </p>
+                <p><strong>Estado: </strong> {{turno.estado}}</p>
+              </a>
+              <hr>
+            </div>
+          </plex-tab>
+          <!--Fin TODO-->
+
         </plex-tabs>
       </plex-box>
     </div>

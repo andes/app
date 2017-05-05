@@ -523,7 +523,6 @@ export class DarTurnosComponent implements OnInit {
    *
    */
   onSave() {
-
     // Ver si cambió el estado de la agenda desde otro lado
     this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
