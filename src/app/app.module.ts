@@ -29,7 +29,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 
-//Pipes
+// Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 
 // Servicios
@@ -60,7 +60,7 @@ import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 
-//AUDITORIA
+// AUDITORIA
 import { AuditoriaPorBloqueService } from './services/auditoria/auditoriaPorBloque.service';
 import { AuditoriaService } from './services/auditoria/auditoria.service';
 
@@ -277,7 +277,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
-    PanelAgendaComponent, AuditoriaComponent,AuditoriaPorBloqueComponent,
+    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

@@ -28,28 +28,28 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   pacFusionar: Number = -1;
   tiposClaves = [{
     id: 0,
-    nombre: "Metafhone Apellido y Nombre"
+    nombre: 'Metafhone Apellido y Nombre'
   }, {
     id: 1,
-    nombre: "Metafhone Apellido"
+    nombre: 'Metafhone Apellido'
   }, {
     id: 2,
-    nombre: "Metafhone Nombre"
+    nombre: 'Metafhone Nombre'
   }, {
     id: 3,
-    nombre: "Soundex Apellido y Nombre"
+    nombre: 'Soundex Apellido y Nombre'
   }, {
     id: 4,
-    nombre: "Soundex Apellido"
+    nombre: 'Soundex Apellido'
   }, {
     id: 5,
-    nombre: "Cluster Dedupe"
+    nombre: 'Cluster Dedupe'
   }];
   tipoClave = {
     id: 5,
-    nombre: "Cluster Dedupe"
+    nombre: 'Cluster Dedupe'
   };
-  claveActual: String = "";
+  claveActual: String = '';
   indice: number = -1;
   pacientes: IListaMatcheo[] = [];
 
@@ -70,8 +70,8 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   loadClaves() {
     this.duplicadosService.getListaBloques(this.tipoClave.id).subscribe(resultado => {
       if (resultado) {
-        var lista;
-        lista = resultado
+        let lista;
+        lista = resultado;
 
         if (lista.length > 0) {
           lista = lista.sort(this.sortNumber);
@@ -80,12 +80,12 @@ export class AuditoriaPorBloqueComponent implements OnInit {
           this.indice = 0;
           this.numeroPacientes = [];
           this.pacFusionar = -1;
-          this.loadPacientedPorBloque()
+          this.loadPacientedPorBloque();
         } else {
           this.claves = [];
           this.numeroPacientes = [];
           this.pacFusionar = -1;
-          this.claveActual = "";
+          this.claveActual = '';
           this.indice = -1;
         }
       }
@@ -94,14 +94,15 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   }
 
   verClave(suma: boolean) {
-    debugger
+    debugger;
     if (this.claves) {
       var condiciones = suma ? ((this.indice + 1) < this.claves.length) : ((this.indice - 1) >= 0);
       if (condiciones) {
-        if (suma)
-          this.indice++
-        else
+        if (suma) {
+          this.indice++;
+        } else {
           this.indice--;
+        }
 
         this.claveActual = this.claves[this.indice];
         this.loadPacientedPorBloque()
@@ -113,7 +114,7 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   onChageOneKey() {
     debugger;
     if (this.claves) {
-      var index = this.claves.indexOf(this.claveActual);
+      let index = this.claves.indexOf(this.claveActual);
       if (index >= 0) {
         this.indice = index;
         this.loadPacientedPorBloque()

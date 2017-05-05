@@ -1,9 +1,5 @@
 import { Plex } from '@andes/plex';
-import {
-  Component,
-  OnInit,
-}
-  from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -34,7 +30,7 @@ export class AuditoriaComponent implements OnInit {
   pacienteSisa: any;
   mostrarPaciente: boolean;
   validate: boolean;
-  loading: boolean = false;
+  loading = false;
   datosSisa = [];
   mensaje = null;
   loadingPrimaryTable = false;
@@ -61,7 +57,7 @@ export class AuditoriaComponent implements OnInit {
       sexo: '',
       estado: '',
       matchSisa: ''
-    }
+    };
 
     this.pacienteSisa = {
       nombre: '',
@@ -69,7 +65,7 @@ export class AuditoriaComponent implements OnInit {
       documento: '',
       fechaNacimiento: '',
       sexo: ''
-    }
+    };
 
     this.mostrarPaciente = false;
     this.validate = false;
@@ -133,15 +129,16 @@ export class AuditoriaComponent implements OnInit {
       resultado => {
         this.loading = false;
         this.validate = true;
-        if (resultado.length <= 0)
-          this.mensaje = "No se han encontrado coincidencias en esta fuente auténtica"
+        if (resultado.length <= 0) {
+          this.mensaje = 'No se han encontrado coincidencias en esta fuente auténtica';
+        }
 
-        this.datosSisa = resultado
+        this.datosSisa = resultado;
 
       },
       err => {
         if (err) {
-          console.log(err)
+          console.log(err);
         }
       });
   }
@@ -157,9 +154,9 @@ export class AuditoriaComponent implements OnInit {
         this.pacienteSelected.documento = pacienteSisa.documento;
         this.pacienteSelected.fechaNacimiento = pacienteSisa.fechaNacimiento;
         this.pacienteSelected.sexo = pacienteSisa.sexo;
-        this.pacienteSelected.estado = "validado";
+        this.pacienteSelected.estado = 'validado';
         this.pacienteSelected.matchSisa = 1;
-        //Oculto los paneles
+        // Oculto los paneles
         this.validate = false;
         this.loading = true;
         this.mostrarPaciente = false;
