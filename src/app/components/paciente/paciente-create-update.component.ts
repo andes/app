@@ -559,7 +559,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.disableGuardar = true;
               }
             } else {
-              this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+              this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
               this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
               this.enableIgnorarGuardar = true;
               this.disableGuardar = true;
