@@ -25,16 +25,16 @@
                   <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                   <td>{{paciente.sexo}}</td>
                   <td>{{paciente.estado}}</td>
-                  <td>{{paciente.matchSisa * 100}}%</td>
+                  <td> <span *ngIf='paciente.matchSisa'> {{paciente.matchSisa * 100}}% </span></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </plex-box>
-      <plex-loader *ngIf=loadingPrimaryTable></plex-loader>   
+      <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
     </div>
- 
+
     <!--fin de col-md-7 -->
     <div class="col-md-5">
       <plex-box *ngIf=mostrarPaciente type="info" title="Panel de operaciones">
