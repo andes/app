@@ -300,13 +300,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
         if (!this.seleccion.reportarError) {
           this.seleccion.reportarError = false;
         }
-        this.pacienteModel = Object.assign({}, this.seleccion);
-        this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
       }
     } else {
       // Si no tenia dirección se le asigna el arreglo con el schema default
       this.seleccion.direccion = [this.direccion];
     }
+
+    this.pacienteModel = Object.assign({}, this.seleccion);
+    this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
   }
 
   loadProvincias(event, pais) {
