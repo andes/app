@@ -11,7 +11,10 @@ import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import {
   IAudit
 } from '../../interfaces/auditoria/IAudit';
-
+import {
+  PacienteService
+} from './../../services/paciente.service';
+import * as moment from 'moment';
 // import {
 //   AuditoriaPage
 // } from './../../e2e/app.po';
@@ -35,8 +38,14 @@ export class AuditoriaComponent implements OnInit {
   mensaje = null;
   loadingPrimaryTable = false;
   encontradosSisa = false;
+  pacientesSimilares = [];
 
-  constructor(private formBuilder: FormBuilder, private auditoriaService: AuditoriaService, private plex: Plex) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private auditoriaService: AuditoriaService,
+    private pacienteService: PacienteService,
+    private plex: Plex
+  ) { }
 
   ngOnInit() {
 
@@ -90,7 +99,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   mostrarDatos(paciente: any) {
-    this.mostrarPaciente = true;
+    debugger
     this.validate = false;
     this.pacienteSelected.id = paciente.id;
     this.pacienteSelected.apellido = paciente.apellido;
@@ -100,8 +109,35 @@ export class AuditoriaComponent implements OnInit {
     this.pacienteSelected.sexo = paciente.sexo;
     this.pacienteSelected.estado = paciente.estado;
     this.pacienteSelected.matchSisa = paciente.matchSisa;
+    this.mostrarCandidatos();
 
   }
+
+  mostrarCandidatos() {
+
+    if (this.pacienteSelected.nombre && this.pacienteSelected.apellido && this.pacienteSelected.documento
+      && this.pacienteSelected.fechaNacimiento && this.pacienteSelected.sexo) {
+      let dto: any = {
+        type: 'suggest',
+        claveBlocking: 'documento',
+        percentage: true,
+        apellido: this.pacienteSelected.apellido.toString(),
+        nombre: this.pacienteSelected.nombre.toString(),
+        documento: this.pacienteSelected.documento.toString(),
+        sexo: ((typeof this.pacienteSelected.sexo === 'string')) ? this.pacienteSelected.sexo : (Object(this.pacienteSelected.sexo).id),
+        fechaNacimiento: moment(this.pacienteSelected.fechaNacimiento).format('YYYY-MM-DD')
+      }; debugger
+      this.pacienteService.get(dto).subscribe(resultado => {
+        debugger
+        this.pacientesSimilares = resultado; debugger
+      });
+
+    }
+    this.mostrarPaciente = true;
+  }
+
+
+
 
 
   onValidate(paciente: any) {
@@ -124,24 +160,21 @@ export class AuditoriaComponent implements OnInit {
     /* Borrar hasta aca */
 
     /*Comento el servicio temporalmente para no gastar consumos*/
-    this.auditoriaService.patch(paciente.id, patch)
-      .subscribe(
-      resultado => {
-        this.loading = false;
-        this.validate = true;
-        if (resultado.length <= 0) {
-          this.mensaje = 'No se han encontrado coincidencias en esta fuente auténtica';
-        }
-
-        this.datosSisa = resultado;
-
-      },
+    this.auditoriaService.patch(paciente.id, patch).subscribe(resultado => {
+      this.loading = false;
+      this.validate = true;
+      if (resultado.length <= 0) {
+        this.mensaje = 'No se han encontrado coincidencias en esta fuente auténtica';
+      }
+      this.datosSisa = resultado;
+    },
       err => {
         if (err) {
           console.log(err);
         }
       });
   }
+
 
   fusionar(pacienteSisa: any) {
 
@@ -161,14 +194,12 @@ export class AuditoriaComponent implements OnInit {
         this.loading = true;
         this.mostrarPaciente = false;
 
-
-        this.auditoriaService.put(this.pacienteSelected).subscribe(
-          resultado => {
-            if (resultado) {
-              this.loadAuditorias();
-              this.loading = false;
-            }
+        this.auditoriaService.put(this.pacienteSelected).subscribe(resultado => {
+          if (resultado) {
+            this.loadAuditorias();
+            this.loading = false;
           }
+        }
         )
       }
     });
