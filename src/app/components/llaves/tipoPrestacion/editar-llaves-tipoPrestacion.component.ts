@@ -59,56 +59,69 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
 
-    guardarLlaveTP() {
+    guardarLlaveTP($event) {
 
-        if (this.modelo.llave.sexo) {
-            delete this.modelo.llave.sexo.$order;
-            this.modelo.llave.sexo = this.modelo.llave.sexo.id;
+        if ($event.formValid) {
+
+            if (this.modelo.llave.sexo) {
+                delete this.modelo.llave.sexo.$order;
+                this.modelo.llave.sexo = this.modelo.llave.sexo.id;
+            } else {
+                delete this.modelo.llave.sexo;
+            }
+
+            if (this.modelo.llave.edad.desde.unidad) {
+                delete this.modelo.llave.edad.desde.unidad.$order;
+                this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
+            } else {
+                delete this.modelo.llave.edad.desde;
+            }
+
+            if (this.modelo.llave.edad.hasta.unidad) {
+                delete this.modelo.llave.edad.hasta.unidad.$order;
+                this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
+            } else {
+                delete this.modelo.llave.edad.hasta;
+            }
+
+            if (this.modelo.llave.edad.desde && this.modelo.llave.edad.hasta) {
+                if ((this.modelo.llave.edad.desde.valor === this.modelo.llave.edad.hasta.valor) && (this.modelo.llave.edad.desde.unidad === this.modelo.llave.edad.hasta.unidad)) {
+                    $event.formValid = false;
+                    return;
+                }
+            }
+
+            // PUT/UPDATE
+            if (this.modelo.id) {
+
+                console.log(this.modelo);
+
+                this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
+                    this.saveLlaveTP.emit(resultado);
+                    this.plex.alert('La configuración de llaves se guardó correctamente');
+                },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+
+                // POST/NEW
+            } else {
+
+                this.llaveTipoPrestacionService.post(this.modelo).subscribe(resultado => {
+                    this.saveLlaveTP.emit(resultado);
+                    this.plex.alert('La configuración de llaves se guardó correctamente');
+                },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+            }
+
         } else {
-            delete this.modelo.llave.sexo;
-        }
-
-        if (this.modelo.llave.edad.desde.unidad) {
-            delete this.modelo.llave.edad.desde.unidad.$order;
-            this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
-        } else {
-            delete this.modelo.llave.edad.desde;
-        }
-
-        if (this.modelo.llave.edad.hasta.unidad) {
-            delete this.modelo.llave.edad.hasta.unidad.$order;
-            this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
-        } else {
-            delete this.modelo.llave.edad.hasta;
-        }
-
-        // PUT/UPDATE
-        if (this.modelo.id) {
-
-            console.log(this.modelo);
-
-            this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
-                this.saveLlaveTP.emit(resultado);
-                this.plex.alert('La configuración de llaves se guardó correctamente');
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-
-            // POST/NEW
-        } else {
-
-            this.llaveTipoPrestacionService.post(this.modelo).subscribe(resultado => {
-                this.saveLlaveTP.emit(resultado);
-                this.plex.alert('La configuración de llaves se guardó correctamente');
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
+            this.plex.alert('Debe completar los datos requeridos');
         }
 
 

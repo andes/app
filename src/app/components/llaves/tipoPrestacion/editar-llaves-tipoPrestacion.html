@@ -1,84 +1,89 @@
-<div class="row" *ngIf="modelo">
+<form>
+  <div class="row">
     <plex-box>
-        <div class="row">
-            <div class="col-12">
-                <h5>Organización: <br>{{ modelo.organizacion?.nombre }}</h5>
-            </div>
+      <div class="row">
+        <div class="col-12">
+          <h5>Organización: <br>{{ modelo.organizacion?.nombre }}</h5>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-select [(ngModel)]="modelo.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)" placeholder="Seleccione la Prestación" [required]="true"></plex-select>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <plex-select [(ngModel)]="modelo.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
+            placeholder="Seleccione la Prestación" [required]="true"></plex-select>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-bool [(ngModel)]="modelo.auditable" name="auditable" label="Auditable"></plex-bool>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <plex-bool [(ngModel)]="modelo.auditable" name="auditable" label="Auditable"></plex-bool>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-bool [(ngModel)]="modelo.activa" name="activa" label="Activa"></plex-bool>
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <plex-bool [(ngModel)]="modelo.activa" name="activa" label="Activa"></plex-bool>
         </div>
-        <hr>
-        <div class="row">
-            <div class="col-12">
-                <h5>Llaves</h5>
-                <!--<pre>{{ modelo | json }}</pre>-->
-            </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <h5>Llaves</h5>
+          <!--<pre>{{ modelo | json }}</pre>-->
         </div>
-        <div class="row">
-            <div class="col-12">
-                <label>Rango edad:</label>
-                <div class="row">
-                    <div class="col">
-                        <template [ngIf]="modelo.llave?.edad?.desde">
-                            <plex-int [(ngModel)]="modelo.llave.edad.desde.valor" name="desde" placeholder="desde"></plex-int>
-                        </template>
-                    </div>
-                    <div class="col">
-                        <template [ngIf]="modelo.llave?.edad">
-                            <plex-select *ngIf="modelo.llave.edad.desde.valor" [(ngModel)]="modelo.llave.edad.desde.unidad" name="unidadEdadDesde" (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.desde.valor > 0"></plex-select>
-                        </template>
-                    </div>
-                    <div class="col-1">
-                        a 
-                    </div>
-                    <div class="col">
-                        <template [ngIf]="modelo.llave?.edad?.hasta">
-                            <plex-int [(ngModel)]="modelo.llave.edad.hasta.valor" name="hasta" placeholder="hasta"></plex-int>
-                        </template>
-                    </div>
-                    <div class="col">
-                        <template [ngIf]="modelo.llave?.edad">
-                            <plex-select *ngIf="modelo.llave.edad.hasta.valor" [(ngModel)]="modelo.llave.edad.hasta.unidad" name="unidadEdadHasta" (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.hasta.valor > 0"></plex-select>
-                        </template>
-                    </div>
-                </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <label>Rango edad:</label>
+          <div class="row">
+            <div class="col-2 col-sm">
+              <template [ngIf]="modelo.llave?.edad?.desde">
+                <plex-int [(ngModel)]="modelo.llave.edad.desde.valor" name="desde" placeholder="desde"></plex-int>
+              </template>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <template [ngIf]="modelo.llave">
-                    <plex-select [(ngModel)]="modelo.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo"></plex-select>
-                </template>
+            <div class="col-3 col-sm">
+              <template [ngIf]="modelo.llave?.edad && modelo.llave.edad?.desde">
+                <plex-select [(ngModel)]="modelo.llave.edad.desde.unidad" name="unidadEdadDesde"
+                  (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.desde?.valor > 0"></plex-select>
+              </template>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <template [ngIf]="modelo.llave.solicitud">
-                    <plex-bool [(ngModel)]="modelo.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool><br>
-                    <div *ngIf="modelo.llave?.solicitud?.requerida">
-                        <plex-datetime type="date" [(ngModel)]="modelo.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
-                    </div>
-                </template>
+            <div class="col-1 col-sm">
+              a
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarLlaveTP()" title="Guardar"></plex-button>
-                <plex-button icon="mdi mdi-arrow-left" label="Cancelar" (click)="cancelar()" title="Cancelar"></plex-button>
+            <div class="col-2 col-sm">
+              <template [ngIf]="modelo.llave?.edad?.hasta || modelo.llave?.edad?.desde">
+                <plex-int [(ngModel)]="modelo.llave.edad.hasta.valor" name="hasta" placeholder="hasta"></plex-int>
+              </template>
             </div>
+            <div class="col-3 col-sm">
+              <template [ngIf]="modelo.llave?.edad && modelo.llave.edad?.hasta">
+                <plex-select [(ngModel)]="modelo.llave.edad.hasta.unidad" name="unidadEdadHasta"
+                  (getData)="loadUnidadesEdad($event)" [required]="modelo.llave.edad.hasta?.valor > 0"></plex-select>
+              </template>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <template [ngIf]="modelo.llave">
+            <plex-select [(ngModel)]="modelo.llave.sexo" name="sexo" label="Sexo" (getData)="loadSexo($event)" placeholder="Seleccione el sexo"></plex-select>
+          </template>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <template [ngIf]="modelo.llave.solicitud">
+            <plex-bool [(ngModel)]="modelo.llave.solicitud.requerida" name="solicitud" label="Requiere solicitud"></plex-bool><br>
+            <div *ngIf="modelo.llave?.solicitud?.requerida">
+              <plex-datetime type="date" [(ngModel)]="modelo.llave.solicitud.vencimiento" [min]="hoy" name="vencimiento" label="Vence el"></plex-datetime>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <plex-button icon="mdi mdi-content-save" label="Guardar" (click)="guardarLlaveTP($event)" title="Guardar" validateForm="true"></plex-button>
+          <plex-button icon="mdi mdi-arrow-left" label="Cancelar" (click)="cancelar()" title="Cancelar"></plex-button>
+        </div>
+      </div>
     </plex-box>
-</div>
+  </div>
+</form>

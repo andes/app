@@ -1,10 +1,8 @@
 <section *ngIf="!showcreate && !showupdate">
     <div class="row">
-        <div class="col-9">
+        <div class="col-8">
             <plex-box>
-
                 <header></header>
-
                 <div>
                 <table class="table" *ngIf="llavesTP?.length">
                     <tr class="row text-center">
@@ -24,40 +22,40 @@
 
                         <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llaveTP)}">
 
-                        <td class="col-1" (click)="verLlave(llaveTP, true, $event)">
-                            <i *ngIf="estaSeleccionada(llaveTP)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(llaveTP)}"></i>
-                            <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline"></i>
-                        </td>
+                            <td class="col-1" (click)="verLlave(llaveTP, true, $event)">
+                                <i *ngIf="estaSeleccionada(llaveTP)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(llaveTP)}"></i>
+                                <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline"></i>
+                            </td>
 
-                        <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
-                            <span>{{llaveTP.tipoPrestacion.nombre}}</span>
-                        </td>
+                            <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
+                                <span>{{llaveTP.tipoPrestacion.nombre}}</span>
+                            </td>
 
-                        <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
-                            <span>{{llaveTP.organizacion.nombre}}</span>
-                        </td>
+                            <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
+                                <span>{{llaveTP.organizacion.nombre}}</span>
+                            </td>
 
-                        <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <!--<span *ngIf="llaveTP.auditable">Si</span>
-                            <span *ngIf="!llaveTP.auditable">No</span>-->
-                            {{llaveTP.auditable}}
-                            <plex-bool type="slide" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable')"></plex-bool>
-                        </td>
+                            <td class="col" (click)="verLlave(llaveTP, false, $event)">
+                                <plex-bool type="slide" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable', !llaveTP.auditable)"></plex-bool>
+                            </td>
 
-                        <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span *ngIf="llaveTP.llave.edad">{{llaveTP.llave.edad?.desde.valor + ' ' + llaveTP.llave.edad?.desde.unidad}} a los {{llaveTP.llave.edad?.hasta.valor + ' ' + llaveTP.llave.edad?.hasta.unidad}}</span>
-                            <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
-                        </td>
+                            <td class="col" (click)="verLlave(llaveTP, false, $event)">
+                                <span *ngIf="llaveTP.llave.edad?.desde && !llaveTP.llave.edad?.hasta">Desde los</span> 
+                                <span *ngIf="llaveTP.llave.edad?.desde && llaveTP.llave.edad?.hasta">Hasta los</span> 
+                                <span *ngIf="llaveTP.llave.edad?.desde">{{llaveTP.llave.edad?.desde?.valor + ' ' + llaveTP.llave.edad?.desde?.unidad}}</span>
+                                <span *ngIf="llaveTP.llave.edad?.desde && llaveTP.llave.edad?.hasta">a los</span> 
+                                <span *ngIf="llaveTP.llave.edad?.hasta">{{llaveTP.llave.edad?.hasta?.valor + ' ' + llaveTP.llave.edad?.hasta?.unidad}}</span>
+                                <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
+                            </td>
 
-                        <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
-                            <span *ngIf="!llaveTP.llave.sexo">no aplica</span>
-                        </td>
-                        
-                        <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
-                            <span *ngIf="llaveTP.activa">Si</span>
-                            <span *ngIf="!llaveTP.activa">No</span>
-                        </td>
+                            <td class="col" (click)="verLlave(llaveTP, false, $event)">
+                                <span *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
+                                <span *ngIf="!llaveTP.llave.sexo">no aplica</span>
+                            </td>
+                            
+                            <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
+                                <plex-bool type="slide" [(ngModel)]="llaveTP.activa" name="activa" (click)="cambiarEstado(llaveTP, 'activa', !llaveTP.activa)"></plex-bool>
+                            </td>
 
                         </tr>
                     </template>
@@ -68,8 +66,9 @@
             </plex-box>
 
         </div>
-        <div class="col-3">
+        <div class="col-4">
         <plex-box>
+            <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 0" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
             <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
         </plex-box>
         </div>

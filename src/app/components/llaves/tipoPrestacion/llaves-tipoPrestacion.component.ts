@@ -90,6 +90,19 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                         valor: 0,
                         unidad: null
                     }
+                };
+            } else {
+                if (!this.llaveTPSeleccionada.llave.edad.desde) {
+                    this.llaveTPSeleccionada.llave.edad.desde = {
+                        valor: 0,
+                        unidad: null
+                    };
+                }
+                if (!this.llaveTPSeleccionada.llave.edad.hasta) {
+                    this.llaveTPSeleccionada.llave.edad.hasta = {
+                        valor: 0,
+                        unidad: null
+                    };
                 }
             }
 
@@ -119,10 +132,12 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     }
 
-    cambiarEstado(llaveTP:ILlavesTipoPrestacion, key: String) {
-        let patch = {};
-        console.log(llaveTP.auditable);
-        patch[String(key)] = !llaveTP.auditable;
+    cambiarEstado(llaveTP:ILlavesTipoPrestacion, key: String, value: any) {
+        let patch = {
+            key: key,
+            value: value
+        };
+
         this.llaveTipoPrestacionService.patch(llaveTP.id, patch).subscribe(llave => {
             this.llaveTPSeleccionada = llave;
         });
@@ -152,63 +167,13 @@ export class LlavesTipoPrestacionComponent implements OnInit {
         this.showVistaLlavesTP = true;
     }
 
-    setColorEstadoAgenda(agenda) {
-        // if (agenda.estado === 'Suspendida') {
-        //     agenda.agendaSeleccionadaColor = 'danger';
-        // } else {
-        //     agenda.agendaSeleccionadaColor = 'success';
-        // }
-    }
-
     saveLlaveTP() {
         this.loadLlavesTP();
+        this.showVistaLlavesTP = false;
     }
 
     cancelaEditarLlaveTP() {
         this.showVistaLlavesTP = false;
     }
-
-    // onReturn(espacioFisico: IEspacioFisico): void {
-    //     this.showupdate = false;
-    //     this.selectedEspacioFisico = null;
-    //     this.loadEspaciosFisicos();
-    // }
-
-    // onDisable(espacioFisico: IEspacioFisico) {
-    //     this.espacioFisicoService.disable(espacioFisico)
-    //         .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
-
-    // onEnable(espacioFisico: IEspacioFisico) {
-    //     this.espacioFisicoService.enable(espacioFisico)
-    //         .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
-
-    // activate(objEspacioFisico: IEspacioFisico) {
-
-    //     if (objEspacioFisico.activo) {
-
-    //         this.espacioFisicoService.disable(objEspacioFisico)
-    //             .subscribe(datos => this.loadEspaciosFisicos());  // Bind to view
-    //     } else {
-    //         this.espacioFisicoService.enable(objEspacioFisico)
-    //             .subscribe(datos => this.loadEspaciosFisicos());  // Bind to view
-    //     }
-    // }
-
-    // onEdit(espacioFisico: ILlavesTipoPrestacion) {
-    //     this.showupdate = true;
-    //     this.selectedEspacioFisico = espacioFisico;
-    // }
 
 }
