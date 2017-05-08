@@ -8,6 +8,6 @@ export interface ILlavesTipoPrestacion {
     };
     tipoPrestacion: ITipoPrestacion;
     llave: ILlave;
-    activa: Boolean;
     auditable: Boolean;
+    activa: Boolean;
 }

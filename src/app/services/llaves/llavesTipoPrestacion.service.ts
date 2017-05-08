@@ -28,4 +28,8 @@ export class LlavesTipoPrestacionService {
     put(llaveTP: ILlavesTipoPrestacion): Observable<ILlavesTipoPrestacion> {
         return this.server.put(this.llaveTPUrl + '/' + llaveTP.id, llaveTP);
     }
+
+    patch(id: String, cambios: any): Observable<ILlavesTipoPrestacion> {
+        return this.server.patch(this.llaveTPUrl + '/' + id, cambios);
+    }
 }

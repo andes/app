@@ -31,7 +31,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private llaveTipoPrestacionService: LlavesTipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
-       this.loadTipoPrestaciones();
+        this.loadTipoPrestaciones();
     }
 
     loadLlavesTP() {
@@ -72,7 +72,6 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     verLlave(llaveTP, multiple, e) {
 
         this.showVistaLlavesTP = true;
-        // this.showTurnos = false;
 
         this.llaveTipoPrestacionService.getById(llaveTP.id).subscribe(llave => {
             // Actualizo la agenda local
@@ -80,13 +79,33 @@ export class LlavesTipoPrestacionComponent implements OnInit {
             // Actualizo la agenda global (modelo)
             this.llaveTPSeleccionada = llave;
 
+            // Para que no rompa la validación, se asegura que no falten estas llaves
+            if (!this.llaveTPSeleccionada.llave.edad) {
+                this.llaveTPSeleccionada.llave.edad = {
+                    desde: {
+                        valor: 0,
+                        unidad: null
+                    },
+                    hasta: {
+                        valor: 0,
+                        unidad: null
+                    }
+                }
+            }
+
+            // Para que no rompa la validación, se asegura que no falten estas llaves
+            if (!this.llaveTPSeleccionada.llave.solicitud) {
+                this.llaveTPSeleccionada.llave.solicitud = {
+                    requerida: false
+                }
+            }
+
             if (!multiple) {
                 this.llavesTPSeleccionadas = [];
                 this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas, llave];
             } else {
                 let index;
                 if (this.estaSeleccionada(llaveTP)) {
-                    // llaveTP.agendaSeleccionadaColor = 'success';
                     index = this.llavesTPSeleccionadas.indexOf(llaveTP);
                     this.llavesTPSeleccionadas.splice(index, 1);
                     this.llavesTPSeleccionadas = [...this.llavesTPSeleccionadas];
@@ -95,16 +114,18 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                 }
             }
 
-            // this.setColorEstadoAgenda(llave);
-
-            // // Reseteo el panel de la derecha
-            // this.showEditarAgendaPanel = false;
-            // this.showAgregarNotaAgenda = false;
-            // this.showVistaAgendas = true;
-            // this.showTurnos = true;
         });
 
 
+    }
+
+    cambiarEstado(llaveTP:ILlavesTipoPrestacion, key: String) {
+        let patch = {};
+        console.log(llaveTP.auditable);
+        patch[String(key)] = !llaveTP.auditable;
+        this.llaveTipoPrestacionService.patch(llaveTP.id, patch).subscribe(llave => {
+            this.llaveTPSeleccionada = llave;
+        });
     }
 
     limpiarModeloLlavesTP() {

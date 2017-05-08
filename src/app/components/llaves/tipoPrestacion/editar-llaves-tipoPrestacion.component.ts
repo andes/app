@@ -38,31 +38,20 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
-
         this.modelo = {
             organizacion: this.auth.organizacion,
             llave: {
                 edad: {
                     desde: {
                         valor: 0,
-                        unidad: ''
+                        unidad: null
                     },
                     hasta: {
                         valor: 0,
-                        unidad: ''
+                        unidad: null
                     }
                 },
                 solicitud: {
-                    requerida: false
-                }
-            }
-        };
-
-        if (this.llaveTPSeleccionada && typeof this.llaveTPSeleccionada !== 'undefined') {
-            this.modelo = this.llaveTPSeleccionada;
-            debugger;
-            if ( this.modelo.llave.solicitud ) {
-                this.modelo.llave.solicitud = {
                     requerida: false
                 }
             }
@@ -102,24 +91,24 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 this.saveLlaveTP.emit(resultado);
                 this.plex.alert('La configuración de llaves se guardó correctamente');
             },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
 
-        // POST/NEW
+            // POST/NEW
         } else {
 
             this.llaveTipoPrestacionService.post(this.modelo).subscribe(resultado => {
                 this.saveLlaveTP.emit(resultado);
                 this.plex.alert('La configuración de llaves se guardó correctamente');
             },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+                err => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
         }
 
 

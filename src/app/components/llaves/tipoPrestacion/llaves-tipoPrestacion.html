@@ -38,13 +38,15 @@
                         </td>
 
                         <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span *ngIf="llaveTP.auditable">Si</span>
-                            <span *ngIf="!llaveTP.auditable">No</span>
+                            <!--<span *ngIf="llaveTP.auditable">Si</span>
+                            <span *ngIf="!llaveTP.auditable">No</span>-->
+                            {{llaveTP.auditable}}
+                            <plex-bool type="slide" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable')"></plex-bool>
                         </td>
 
                         <td class="col" (click)="verLlave(llaveTP, false, $event)">
-                            <span>{{llaveTP.llave.edad?.desde.valor + ' ' + llaveTP.llave.edad?.desde.unidad}} a los {{llaveTP.llave.edad?.hasta.valor + ' ' + llaveTP.llave.edad?.hasta.unidad}}</span>
-                            <span *ngIf="!llaveTP.llave.edad" class="text-danger">sin rango definido</span>
+                            <span *ngIf="llaveTP.llave.edad">{{llaveTP.llave.edad?.desde.valor + ' ' + llaveTP.llave.edad?.desde.unidad}} a los {{llaveTP.llave.edad?.hasta.valor + ' ' + llaveTP.llave.edad?.hasta.unidad}}</span>
+                            <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
                         </td>
 
                         <td class="col" (click)="verLlave(llaveTP, false, $event)">
@@ -68,7 +70,7 @@
         </div>
         <div class="col-3">
         <plex-box>
-            <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
+            <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
         </plex-box>
         </div>
     </div>
