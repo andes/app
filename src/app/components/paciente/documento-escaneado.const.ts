@@ -28,5 +28,16 @@ export const DocumentoEscaneados: DocumentoEscaneado[] = [
         grupoNombre: 2,
         grupoSexo: 3,
         grupoFechaNacimiento: 5
+    },
+
+    // QR ACTA DE NACIMIENTO
+    // Formato: INOSTROZA, Ramiro Daniel DNI: 54852844Tomo: 5Folio: 88Acta: 507Año: 2015Formato de archivo de imágen no reconocido
+    {
+        regEx: /([a-zA-ZñÑáéíóúÁÉÍÓÚÜü'\-\s]+),([a-zA-ZñÑáéíóúÁÉÍÓÚÜü'\-\s]+)([DNI: ]{5})([0-9]+)(.*)/i,
+        grupoNumeroDocumento: 4,
+        grupoApellido: 1,
+        grupoNombre: 2,
+        grupoSexo: 0,
+        grupoFechaNacimiento: 0
     }
 ];

@@ -300,13 +300,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
         if (!this.seleccion.reportarError) {
           this.seleccion.reportarError = false;
         }
-        this.pacienteModel = Object.assign({}, this.seleccion);
-        this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+
       }
     } else {
       // Si no tenia dirección se le asigna el arreglo con el schema default
       this.seleccion.direccion = [this.direccion];
     }
+
+    this.pacienteModel = Object.assign({}, this.seleccion);
+    this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
+    this.verificaPacienteRepetido();
   }
 
   loadProvincias(event, pais) {
@@ -450,81 +453,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.sugerenciaAceptada = true;
   }
 
-
-  /*addContacto(event) {
-    debugger;
-    // if (event.formValid) {
-    let cant = this.pacienteModel.contacto.length > 0 ? this.pacienteModel.contacto.length : 0;
-    let _unConct = {
-      tipo: '',
-      valor: '',
-      ranking: cant,
-      activo: true,
-      ultimaActualizacion: new Date()
-    };
-    this.pacienteModel.contacto.push(_unConct);
-    // } else {
-    //   this.plex.alert('Completar datos requeridos');
-    // }
-  }
-  removeContacto(i: number) {
-    const control = <FormArray>this.createForm.controls['contacto'];
-    control.removeAt(i);
-  }
-  addDireccion(unaDireccion?) {
-    // agrega una Direccion al array de direcciones
-    const control = <FormArray>this.createForm.controls['direccion'];
-    control.push(this.iniDireccion(control.length));
-  }
-  removeDireccion(indice: number) {
-    const control = <FormArray>this.createForm.controls['direccion'];
-    control.removeAt(indice);
-  }
-  addFinanciador() {
-    // agrega form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['financiador'];
-    control.push(this.iniFinanciador(control.length));
-  }
-  removeFinanciador(i: number) {
-    // elimina form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['financiador'];
-    control.removeAt(i);
-  }
-  addRelacion() {
-    // agrega form de relaciones familiares
-    const control = <FormArray>this.createForm.controls['relaciones'];
-    control.push(this.iniRelacion());
-  }
-  removeRelacion(i: number) {
-    // elimina form Financiador u obra Social
-    const control = <FormArray>this.createForm.controls['relaciones'];
-    control.removeAt(i);
-  }
-  addFamiliar(familiar, i) {
-    // Se agrean los datos del familiar a relaciones
-    let relaciones = this.createForm.value.relaciones;
-    let relacionFamiliar = relaciones[i];
-    relacionFamiliar.referencia = familiar.id;
-    relacionFamiliar.documento = familiar.documento;
-    relacionFamiliar.nombre = familiar.nombre;
-    relacionFamiliar.apellido = familiar.apellido;
-    // relacionFamiliar.relacion = relacionFamiliar.relacion.id;
-    relaciones[i] = relacionFamiliar;
-    this.createForm.patchValue({ relaciones: relaciones });
-    this.familiaresPacientes = [];
-
-  }
-  onSelect(paciente: IPaciente) {
-    this.seleccion = paciente;
-    if (this.seleccion.estado === 'validado') {
-      this.validado = true;
-    }
-    this.createForm.patchValue(this.seleccion);
-    this.disableGuardar = false;
-    this.sugerenciaAceptada = true;
-  }*/
-
-
   // Verifica paciente repetido y genera lista de candidatos
   verificaPacienteRepetido() {
     if (this.pacienteModel.sexo) {
@@ -533,43 +461,43 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
       && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      if (!this.pacienteModel.id) {
-        let dto: any = {
-          type: 'suggest',
-          claveBlocking: 'documento',
-          percentage: true,
-          apellido: this.pacienteModel.apellido.toString(),
-          nombre: this.pacienteModel.nombre.toString(),
-          documento: this.pacienteModel.documento.toString(),
-          sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
-          fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
-        };
-        this.pacienteService.get(dto).subscribe(resultado => {
-          this.pacientesSimilares = resultado;
-          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            if (this.pacientesSimilares[0].match >= 0.9) {
-              this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-              if (this.pacientesSimilares[0].match >= 1.0) {
-                this.onSelect(this.pacientesSimilares[0].paciente);
-                this.pacientesSimilares = null;
-                this.enableIgnorarGuardar = false;
-              } else {
-                this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
-                this.enableIgnorarGuardar = false;
-                this.disableGuardar = true;
-              }
+      /*if (!this.pacienteModel.id) {*/
+      let dto: any = {
+        type: 'suggest',
+        claveBlocking: 'documento',
+        percentage: true,
+        apellido: this.pacienteModel.apellido.toString(),
+        nombre: this.pacienteModel.nombre.toString(),
+        documento: this.pacienteModel.documento.toString(),
+        sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
+        fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
+      };
+      this.pacienteService.get(dto).subscribe(resultado => {
+        this.pacientesSimilares = resultado;
+        if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+          if (this.pacientesSimilares[0].match >= 0.9) {
+            this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+            if (this.pacientesSimilares[0].match >= 1.0) {
+              this.onSelect(this.pacientesSimilares[0].paciente);
+              this.pacientesSimilares = null;
+              this.enableIgnorarGuardar = false;
             } else {
-              this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-              this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-              this.enableIgnorarGuardar = true;
+              this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+              this.enableIgnorarGuardar = false;
               this.disableGuardar = true;
             }
           } else {
-            this.disableGuardar = false;
-            this.enableIgnorarGuardar = false;
+            this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+            this.enableIgnorarGuardar = true;
+            this.disableGuardar = true;
           }
-        });
-      }
+        } else {
+          this.disableGuardar = false;
+          this.enableIgnorarGuardar = false;
+        }
+      });
+      //}
     }
   }
 
