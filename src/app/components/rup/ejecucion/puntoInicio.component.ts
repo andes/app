@@ -30,8 +30,8 @@ export class PuntoInicioComponent implements OnInit {
     public agendas: any = [];
     public fechaActual = new Date();
     public bloqueSeleccionado: any;
-
     public turnosPrestacion: any = [];
+    public breadcrumbs: any;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -39,6 +39,9 @@ export class PuntoInicioComponent implements OnInit {
         private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
+        this.breadcrumbs = this.route.routeConfig.path;
+        console.log('pantalla:', this.breadcrumbs);
+
         this.loadAgendasXDia();
     }
 

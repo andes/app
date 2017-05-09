@@ -3,8 +3,10 @@
    .msg-problema {
         border: 1px solid #ff9900;
         color: #ff9900;
-        margin-bottom: 10px;
-        padding: 10px;
+        margin : 5px 5px 5px 5px;
+        padding: 5px;
+        text-transform: uppercase;
+        font-size: 0.75rem;
     }
 
    h5.box-title-principal {
@@ -66,8 +68,31 @@
     border-radius: 0px;
     background: transparent;
     color: #00A8E0;  
+    }
+     .list-inline>.list-inline-item {
+        margin-bottom: 10px;
+    }
+    
+    .list-group>.list-group-item {
+        border-color: #AAAAAA;
+        border-radius: 0px;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f9f9f9;
+        border: solid 1px #00A8E0;
+    }
+    
+    .list-group-item:active {
+        background-color: #f5f5f5;
+        border: solid 1px #AAAAAA;
+    }
+   .list-group-top {
+        margin-top: 5px;
+    }
 
-  }
+
+  
     
 </style>
 
@@ -82,92 +107,99 @@
 </header>
   
 
-<section >           
-    <div class="row">                                    
-        <!--ULTIMAS SOLICITUDES PENDIENTES-->
-        <div class="col-4">
+<section class="row">                                                
+        <!--Solicitudes Pendientes-->
+        <div class="col-3">
             <plex-box>
                 <header>                                                                
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Planes Pendientes</h5>                           
+                            <h5 class="box-title-principal">Solicitudes pendientes</h5>                           
                         </div>
                     </div>                   
                 </header>
 
                 <ul class="list-group">
-                    <li class="list-group-item" *ngFor="let pendiente of prestacionesPendientes">                                                    
-                        <div>                            
-                            <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>
-                            <br>                                 
-                            <small>Fecha Solicitud: {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</small>
-                            <br>
-                            <div *ngFor="let problema of pendiente.solicitud.listaProblemas">
-                                <div class="row ">
-                                    <div class="col-12">
-                                        <div class="msg-problema">
-                                            <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>                    
+                    <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">                                                    
+                       
+                        <span>
+                            <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>                                                          
+                            <small> | Solicitado el {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}                                   
+                            </small>
                             
-                        </div>                        
-                         <div *ngIf="prestacionesPendientes && prestacionesPendientes.solicitud && prestacionesPendientes.solicitud.listaProblemas && prestacionesPendientes.solicitud.listaProblemas.length">
-                            <div *ngFor="let problema of prestacionesPendientes.solicitud.listaProblemas">
-                                <div class="row ">
-                                    <div class="col-12">
-                                        <div class="msg-problema">
-                                            <i class="mdi mdi-link"> </i> Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                        </span>              
 
-            
+                        <div class="list-inline " *ngFor="let problema of pendiente.solicitud.listaProblemas">             
+                            <span Class="msg-problema">                                                 
+                            <i class="mdi mdi-link "></i > Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>  
+                            </span>
+                            <br>  
+                            <small> Profesional: {{problema.evoluciones[problema.evoluciones.length - 1].profesional}} </small>                                                                                                                   
+                            <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                                 <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                                    Activo
+                                 </span>
+                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                 </span>
+                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
+                                    class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
+                                 </span> 
+                            </div>                                                                                                                                                                      
+                        </div>                                                                                                                                                                                                                       
+                    </li>
+                </ul>            
             </plex-box>
         </div>       
 
-        <!--LISTA DE PROBLEMAS ACTIVOS-->
-        <div class="col-4">
+        <!--Hallazgos de la consulta-->
+        <div class="col-6">
             <plex-box> 
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Lista de Problemas</h5>
+                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                         </div>
                     </div>      
                 </header>      
 
                 <ul class="list-group" *ngIf="listaProblemas">
-                    <li class="list-group-item" *ngFor="let problema of listaProblemas">
-                        <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                            
-                            <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+                    <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">                        
+                        <span>                                
+                        <strong>{{problema.tipoProblema.nombre}} </strong>  |                                   
+                            <small>Iniciado {{problema.fechaInicio | fromNow}} |
+                                   Profesional: {{problema.evoluciones[problema.evoluciones.length - 1].profesional}}
+                            </small>
+                        </span>
+
+                          
+
+                        <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                            <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                 Activo
                             </span>
-                            <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                            <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
-                            <br />
-                                {{problema.tipoProblema.nombre}}
-                            <br />
-                            <small>Inicio: {{problema.fechaInicio | date: 'dd/MM/yyyy'}}</small>                                                      
-                        </div>
+
+                            <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
+                                    class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
+                            </span> 
+                             
+                        </div>         
+                                                                                                                                                               
                     </li>
                 </ul>
             </plex-box>      
         </div>
 
-        <!--INDICADORES-->
-        <div class="col-4">
+        <!--Registros de la consulta-->
+        <div class="col-3">
             <plex-box> 
                 <header>
                     <div class="row">
                         <div class="col">
-                        <h5 class="box-title-principal">Indicadores</h5>
+                        <h5 class="box-title-principal">Registros de la consulta</h5>
                         </div>
                     </div>      
                 </header>   
@@ -192,7 +224,6 @@
                 </div>
             </plex-box>
         </div>
-    </div>
 </section>
 
 <footer class="plex-box-invert" *ngIf="prestacion" >

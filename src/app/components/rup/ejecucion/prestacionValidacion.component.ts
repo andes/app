@@ -24,6 +24,7 @@ export class PrestacionValidacionComponent implements OnInit {
     prestacion: IPrestacionPaciente;
     prestacionesEjecutadas: IPrestacionPaciente[] = null;
     prestacionesSolicitadas: IPrestacionPaciente[] = null;
+    public breadcrumbs: any;
 
     // arreglo de prestaciones a mostrar por cada problema
     prestaciones: any[] = [];
@@ -42,6 +43,10 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.breadcrumbs = this.route.routeConfig.path;
+        console.log('pantalla:', this.breadcrumbs);
+
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación

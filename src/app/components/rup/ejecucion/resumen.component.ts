@@ -23,12 +23,17 @@ export class ResumenComponent implements OnInit {
     prestacionesPendientes: IPrestacionPaciente[] = [];
     prestacionPeso: IPrestacionPaciente = null;
     prestacionTalla: IPrestacionPaciente = null;
+    public breadcrumbs: any;
 
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService,
         private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit() {
+
+console.log('this.route:', this.route.pathFromRoot);
+          this.breadcrumbs = this.route.routeConfig.path;
+        console.log('pantalla:', this.breadcrumbs);
 
             this.route.params.subscribe(params => {
             let id = params['id'];

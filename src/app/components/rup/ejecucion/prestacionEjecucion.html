@@ -80,6 +80,14 @@
         background-color: #f5f5f5;
         border: solid 1px #AAAAAA;
     }
+
+    .list-group-top {
+        margin-top: 5px;
+    }
+
+    .dropdown-inline {
+    display : inline-block;
+    }
     /*Etiquetas*/
     
     .badge {
@@ -123,18 +131,15 @@
      opacity: 0.4;
    }     
 
-    .list-group-top {
-        margin-top: 5px;
-    }
-
-    .dropdown-inline {
-    display : inline-block;
-}
-
-
     .fieldsetMargin-top {
         margin-top: 1px;
     }
+
+    /*.Scroll {
+        overflow: scroll;
+        min-height: 500 px;
+
+    }*/
 
 </style>
 
@@ -143,9 +148,7 @@
 </header>
 
 
-<section>
-    <div class="row">
-
+<section class="row">
         <!--LISTA DE PROBLEMAS DEL PACIENTE-->
         <div class="col-3">
             <plex-box>
@@ -153,7 +156,7 @@
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Lista de Problemas del paciente</h5>
+                            <h5 class="box-title-principal">Lista de problemas del paciente</h5>
                         </div>
                     </div>
                 </header>               
@@ -203,7 +206,7 @@
                             </div>                                                            
 
                             <small>Última evolución realizada {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} 
-                                    | {{ this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}                                                
+                                    | Lambertucci, Leandro                                               
                             </small>
                         </li>
                     </ng-container>
@@ -218,7 +221,7 @@
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Hallazgos de esta consulta</h5>
+                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                         </div>
                     </div>
                 </header>
@@ -300,11 +303,36 @@
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Registros de esta consulta</h5>
+                            <h5 class="box-title-principal">Registros de la consulta</h5>
                         </div>
                     </div>
                 </header>
 
+                <!--FILTRO PRESTACIONES-->
+                <form>                                   
+                   <plex-text [(ngModel)]="nombrePrestacion" name="filtroNombrePrestacion" placeholder="Buscar Prestación" (change)="loadPrestacion('filtrosPrestacion')">
+                    </plex-text>                                                        
+                </form>               
+
+                <!--BOTONES DE FILTRO-->
+               <div class="btn-group" data-toggle="buttons">
+                   <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="MasFrec"  (click)="loadPrestacion('todos')">Todos</label>                   
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="Formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="Molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="Atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>                     
+               </div>     
+
+                <!--PRESTACIONES-->
+                <!--<div class="Scroll">-->
+                    <ul class="list-group" *ngIf="tiposPrestaciones">
+                        <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones">         
+                            <li class="list-group-item justify-content-between list-group-item-action">
+                                <span>{{tipoPrestacion.nombre}}</span>                                                    
+                            </li>
+                        </ng-container>
+                    </ul>   
+                <!--</div>                   -->
+<!--
                 <fieldset>
                     <div class="row">
                         <div class="col-10">
@@ -318,7 +346,7 @@
                 </fieldset>
 
                 <fieldset class="fieldsetMargin-top">
-                    <!-- nuevas prestaciones ejecutadas en la consulta -->
+                    
                     <plex-accordion *ngIf="prestacionesEjecucion">
                         <div *ngFor="let _prestacion of prestacionesEjecucion">
 
@@ -337,12 +365,9 @@
 
                         </div>
                     </plex-accordion>
-                    <!--nuevas prestaciones ejecutadas en la consulta -->
-                </fieldset>
-
-                <br />
-
-                <fieldset>
+                                  
+-->
+                <!--<fieldset>
                     <h5 class="box-title-secundario">Lista de Planes</h5>
                     <div class="row">
                         <div class="col-5">
@@ -379,13 +404,12 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
+                </fieldset>-->
 
             </plex-box>
         </div>
-
-    </div>
 </section>
+
 
 <footer class="plex-box-invert" >
     <div class="row">

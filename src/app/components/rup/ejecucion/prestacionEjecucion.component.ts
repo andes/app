@@ -16,6 +16,8 @@ import { fromNowPipe  } from './../../../utils/date';
 // Rutas
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
+const limit = 10;
+
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html'
@@ -32,15 +34,21 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tipoProblema = null;
     public problemaTratar: any;
     public searchForm: FormGroup;
-    // public skip: number = 0;
-    // public value: any;
-    // public finScroll: boolean = false;
-    // public tengoDatos: boolean = true;
-    // public datos: IProblemaPaciente[];
-    filtroEstado: String = '';
-    filtros: String = 'filtroTodos';
-    habilitaTransparencia: String = '';
-    listaproblemasMaestro: any = [];
+    public breadcrumbs: any;
+
+
+    // Filtro Problemas
+        filtroEstado: String = '';
+        filtros: String = 'filtroTodos';
+        habilitaTransparencia: String = '';
+        listaproblemasMaestro: any = [];
+
+    // Filtro Prestaciones
+        filtrosPrestacion: String = 'todos';
+        nombrePrestacion: String = '';
+        skip: number = 0;
+        finScroll: boolean = false;
+        tiposPrestaciones: ITipoPrestacion[] = [];
 
     items = [
         { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -56,6 +64,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     showEnmendar    = false;
     showDetalles    = false;
     showEvolTodo    = false;
+
 
     // PRESTACIONES EN EJECUCION
     // tipos de prestaciones posibles a ejecutar durante la prestacion
@@ -91,6 +100,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
+    //  this.breadcrumbs = this.route.routeConfig.path;
+    //     console.log('pantalla:', this.breadcrumbs);
+
 
         // Inicio - Filtro en Maestro de Problemas del Paciente
             this.searchForm = this.formBuilder.group({
@@ -107,7 +119,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.habilitaTransparencia = 'inhabilitar';
                 }
             });
-        // Fin - Filtro en Maestro de Problemas del Paciente
+       // Fin- Filtro en Maestro de Problemas del Paciente
+
+       // Cargo por defecto todas las prestaciones
+       this.loadPrestacion(this.filtrosPrestacion);
+       // Cargo por defecto todas las prestaciones
 
         this.route.params.subscribe(params => {
             let id = params['id'];
@@ -123,20 +139,49 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    FiltroestadoTodos() {
-        this.filtroEstado = '';
-        this.filtros = 'filtroTodos';
-    }
+    // FILTROS MAESTRO DE PROBLEMAS
+        FiltroestadoTodos() {
+            this.filtroEstado = '';
+            this.filtros = 'filtroTodos';
+        }
+        FiltroestadoActivo() {
+            this.filtroEstado = 'activo';
+            this.filtros = 'filtroActivo';
+        }
+        FiltroestadoInactivo() {
+            this.filtroEstado = 'inactivo';
+            this.filtros = 'filtroInactivo';
+        }
+    // FILTROS MAESTRO DE PROBLEMAS
 
-    FiltroestadoActivo() {
-        this.filtroEstado = 'activo';
-        this.filtros = 'filtroActivo';
-    }
 
-    FiltroestadoInactivo() {
-        this.filtroEstado = 'inactivo';
-        this.filtros = 'filtroInactivo';
-    }
+    // Inicio - FILTRO DE PRESTACIONES
+        loadPrestacion(prestacionFiltros) {
+                let parametros;
+                this.filtrosPrestacion = prestacionFiltros; // Se setea como activo el filtro en pantalla - [ngClass]="{active}"
+
+                if (prestacionFiltros === 'todos') {
+                    parametros = {
+                        'nombre': this.nombrePrestacion,
+                        'skip': this.skip,
+                        'limit': limit,
+                    };
+                }else {
+                     parametros = {
+                        'nombre': this.nombrePrestacion,
+                        'granularidad': prestacionFiltros,
+                        'skip': this.skip,
+                        'limit': limit,
+                    };
+                }
+
+                this.serviceTipoPrestacion.get(parametros).subscribe(
+                            datos => {
+                                this.tiposPrestaciones = datos;
+                                this.finScroll = false;
+                            });
+        }
+    // Fin - FILTRO DE PRESTACIONES
 
 
     loadTiposProblemas(event) {
