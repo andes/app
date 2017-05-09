@@ -15,7 +15,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     public autorizado = false;
     showupdate = false;
-    llavesTP: ILlavesTipoPrestacion[];
+    llavesTP: any[];
     llaveTP: any = {};
     llavesTPSeleccionadas: ILlavesTipoPrestacion[] = [];
     llaveTPSeleccionada: any;
@@ -71,13 +71,12 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     verLlave(llaveTP, multiple, e) {
 
-        this.showVistaLlavesTP = true;
-
         this.llaveTipoPrestacionService.getById(llaveTP.id).subscribe(llave => {
-            // Actualizo la agenda local
-            llaveTP = llave;
-            // Actualizo la agenda global (modelo)
-            this.llaveTPSeleccionada = llave;
+
+            // Actualizo la llave global (modelo) y local
+            this.llaveTPSeleccionada = llaveTP = llave;
+
+            this.showVistaLlavesTP = true;
 
             // Para que no rompa la validación, se asegura que no falten estas llaves
             if (!this.llaveTPSeleccionada.llave.edad) {
@@ -106,6 +105,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                 }
             }
 
+
             // Para que no rompa la validación, se asegura que no falten estas llaves
             if (!this.llaveTPSeleccionada.llave.solicitud) {
                 this.llaveTPSeleccionada.llave.solicitud = {
@@ -129,21 +129,27 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
         });
 
-
     }
 
-    cambiarEstado(llaveTP:ILlavesTipoPrestacion, key: String, value: any) {
+    cambiarEstado(llaveTP: ILlavesTipoPrestacion, key: String, value: any) {
         let patch = {
             key: key,
             value: value
         };
 
+        this.showVistaLlavesTP = false;
         this.llaveTipoPrestacionService.patch(llaveTP.id, patch).subscribe(llave => {
             this.llaveTPSeleccionada = llave;
         });
     }
 
-    limpiarModeloLlavesTP() {
+    saveLlaveTP() {
+        this.showVistaLlavesTP = false;
+        this.loadLlavesTP();
+    }
+
+    // Botón "Nueva configuración"
+    nuevaConfigLlavesTP() {
         this.llaveTPSeleccionada = {
             organizacion: this.auth.organizacion,
             llave: {
@@ -165,11 +171,6 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
         this.llavesTPSeleccionadas = [];
         this.showVistaLlavesTP = true;
-    }
-
-    saveLlaveTP() {
-        this.loadLlavesTP();
-        this.showVistaLlavesTP = false;
     }
 
     cancelaEditarLlaveTP() {

@@ -22,46 +22,33 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     @Input('llaveTPSeleccionada')
     set llaveTPSeleccionada(value: any) {
         this._llaveTPSeleccionada = value;
-        this.modelo = this._llaveTPSeleccionada;
+        this.modelo = value;
     }
     get llaveTPSeleccionada(): any {
         return this._llaveTPSeleccionada;
     }
 
     modelo: any = {};
-    tipoPrestaciones: any[];
-    resultado: any;
     permisos = [];
-
-    hoy = new Date();
+    showEditarLlave = false;
+    unidadesValidas = false;
 
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
-        this.modelo = {
-            organizacion: this.auth.organizacion,
-            llave: {
-                edad: {
-                    desde: {
-                        valor: 0,
-                        unidad: null
-                    },
-                    hasta: {
-                        valor: 0,
-                        unidad: null
-                    }
-                },
-                solicitud: {
-                    requerida: false
-                }
-            }
-        }
+        this.modelo = this.llaveTPSeleccionada;
+        this.showEditarLlave = true;
     }
-
 
     guardarLlaveTP($event) {
 
+        if ( !this.unidadesValidas ) {
+            $event.formValid = false;
+        }
+
         if ($event.formValid) {
+
+            this.showEditarLlave = false;
 
             if (this.modelo.llave.sexo) {
                 delete this.modelo.llave.sexo.$order;
@@ -71,34 +58,29 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
             }
 
             if (this.modelo.llave.edad.desde.unidad) {
-                delete this.modelo.llave.edad.desde.unidad.$order;
-                this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
+                if (this.modelo.llave.edad.desde.unidad.$order) {
+                    delete this.modelo.llave.edad.desde.unidad.$order;
+                    this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
+                }
             } else {
                 delete this.modelo.llave.edad.desde;
             }
 
             if (this.modelo.llave.edad.hasta.unidad) {
-                delete this.modelo.llave.edad.hasta.unidad.$order;
-                this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
+                if (this.modelo.llave.edad.hasta.unidad.$order) {
+                    delete this.modelo.llave.edad.hasta.unidad.$order;
+                    this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
+                }
             } else {
                 delete this.modelo.llave.edad.hasta;
-            }
-
-            if (this.modelo.llave.edad.desde && this.modelo.llave.edad.hasta) {
-                if ((this.modelo.llave.edad.desde.valor === this.modelo.llave.edad.hasta.valor) && (this.modelo.llave.edad.desde.unidad === this.modelo.llave.edad.hasta.unidad)) {
-                    $event.formValid = false;
-                    return;
-                }
             }
 
             // PUT/UPDATE
             if (this.modelo.id) {
 
-                console.log(this.modelo);
-
                 this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
                     this.saveLlaveTP.emit(resultado);
-                    this.plex.alert('La configuración de llaves se guardó correctamente');
+                    this.plex.alert('La configuración de llaves se actualizó correctamente');
                 },
                     err => {
                         if (err) {
@@ -127,10 +109,20 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
     }
 
+    comprobarUnidades() {
+        if (this.modelo.llave.edad.desde.unidad.$order > this.modelo.llave.edad.hasta.unidad.$order) {
+            this.unidadesValidas = false;
+        } else {
+            this.unidadesValidas = true;
+        }
+    }
+
     cancelar() {
         this.cancelaEditarLlaveTP.emit(true);
     }
 
+
+    // Select inputs
     loadTipoPrestaciones(event) {
         this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
@@ -140,7 +132,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     loadUnidadesEdad(event) {
-        event.callback(enumerados.getObjUnidadesEdad())
+        event.callback(enumerados.getObjUnidadesEdad());
     }
 
 }

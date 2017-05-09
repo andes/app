@@ -74,6 +74,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     cancelar() {
         this.cancelaAgregarNota.emit(true);
+        this.turnosSeleccionados = [];
     }
 
 }

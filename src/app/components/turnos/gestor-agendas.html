@@ -75,18 +75,18 @@
           </div>
           <div class="row">
             <div class="col-6">
-                <span class="h5 agendas-title" *ngIf="agendas.length && hoy">Agendas de hoy</span>
-                <span class="h5 agendas-title" *ngIf="agendas.length && !hoy">Agendas</span>
-                <span class="h5 agendas-title" *ngIf="!agendas.length">No hay agendas que coincidan con los filtros de búsqueda.</span>
+              <span class="h5 agendas-title" *ngIf="agendas.length && hoy">Agendas de hoy</span>
+              <span class="h5 agendas-title" *ngIf="agendas.length && !hoy">Agendas</span>
+              <span class="h5 agendas-title" *ngIf="!agendas.length">No hay agendas que coincidan con los filtros de búsqueda.</span>
             </div>
             <div class="col-6">
-                <div *ngIf="!showVistaAgendas"> </div>
-                <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [agendasSeleccionadas]="agendasSeleccionadas"
+              <div *ngIf="!showVistaAgendas"> </div>
+              <vista-agenda class="float-right" *ngIf="agendasSeleccionadas.length > 0 && agendas.length" [agendasSeleccionadas]="agendasSeleccionadas"
                 (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (editarAgendaEmit)="editarAgenda($event)"
                 (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
             </div>
           </div>
-
+          <!--
           <div class="row agendas-headings" *ngIf="agendas.length">
             <div class="col-1 text-center">&nbsp;</div>
             <div class="col-2 text-center"><strong>Fecha y Hora</strong></div>
@@ -94,16 +94,28 @@
             <div class="col text-center"><strong>Profesionales</strong></div>
             <div class="col text-center"><strong>Espacio Físico</strong></div>
             <div class="col-1 text-center"><strong>Estado</strong></div>
+          </div>-->
+          <div class="list-headings">
+            <table class="table" *ngIf="agendas.length">
+              <tr class="row text-center">
+                <td class="col-1"><i class="mdi"></i></td>
+                <td class="col-2 text-center"><strong>Fecha y Hora</strong></td>
+                <td class="col-3 text-center"><strong>Prestaciones</strong></td>
+                <td class="col text-center"><strong>Profesionales</strong></td>
+                <td class="col text-center"><strong>Espacio Físico</strong></td>
+                <td class="col text-center"><strong>Estado</strong></td>
+              </tr>
+            </table>
           </div>
 
         </header>
-        <div class="">
-          
+        <div>
+
           <table class="table table-striped">
             <tbody>
               <template ngFor let-agenda="$implicit" [ngForOf]="agendas" let-i="index">
 
-                <tr class="row" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.agenda)}">
+                <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.agenda)}">
 
                   <td class="col-1 text-center" (click)="verAgenda(agenda, true, $event)">
                     <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(agenda)}"></i>
@@ -136,7 +148,7 @@
                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">sin espacio asignado</span>
                   </td>
 
-                  <td class="col-1 text-center" (click)="verAgenda(agenda, false, $event)">
+                  <td class="col text-center" (click)="verAgenda(agenda, false, $event)">
                     <span>{{agenda?.estado}}</span>
                   </td>
 
