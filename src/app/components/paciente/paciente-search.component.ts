@@ -109,12 +109,22 @@ export class PacienteSearchComponent implements OnInit {
    */
   private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
     let datos = this.textoLibre.match(documento.regEx);
+    let sexo = "";
+    if (documento.grupoSexo > 0) {
+      sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
+    }
+
+    let fechaNacimiento = null;
+    if (documento.grupoFechaNacimiento > 0) {
+      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+    }
+
     return {
       documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
       apellido: datos[documento.grupoApellido],
       nombre: datos[documento.grupoNombre],
-      sexo: (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino',
-      fechaNacimiento: moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+      sexo: sexo,
+      fechaNacimiento: fechaNacimiento
     };
   }
 
