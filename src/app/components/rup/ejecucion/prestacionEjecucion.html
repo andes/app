@@ -175,21 +175,21 @@
 
                 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
                 <ul class="list-group" *ngIf="habilitaTransparencia =='habilitar'">
-                    <ng-container *ngFor="let problemaMaestro of this.listaproblemasMaestro">         
-                         <li class="list-group-item justify-content-between list-group-item-action">
+                    <!--<ng-container draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro">         -->
+                         <li draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro" class="list-group-item justify-content-between list-group-item-action">
                              <span>{{problemaMaestro.nombre}}</span>
                          </li>
-                    </ng-container>
+                    <!--</ng-container>-->
                 </ul>              
 
-                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->              
-                <ul class="list-group list-group-top" [ngClass]="{transparencia: habilitaTransparencia == 'habilitar'}">
-                    <ng-container *ngFor="let problema of listaProblemas">                        
-                        <li class="list-group-item justify-content-between list-group-item-action" 
+                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->
+                 <div droppable  [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event)">            
+                <ul  class="list-group list-group-top"> <!--[ngClass]="{transparencia: habilitaTransparencia == 'habilitar'}">-->
+                    <ng-container *ngFor="let problema of listaProblemasPaciente">                        
+                        <li draggable [dragData]="problema" class="list-group-item justify-content-between list-group-item-action" 
                                     *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && 
                                           (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) 
                                                  || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))" >                                                                                                                     
-
                             <span>{{problema.tipoProblema.nombre }} <small>  | {{ problema.fechaInicio | fromNow}}</small></span>  
                             <div class="pull-right">   
                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'"
@@ -211,6 +211,9 @@
                         </li>
                     </ng-container>
                 </ul>
+                 </div>
+
+
 
             </plex-box>
         </div>
@@ -219,7 +222,7 @@
         <div class="col-6">
             <plex-box>
                 <header>
-                    <div class="row">
+                    <div droppable  [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" class="row">
                         <div class="col">
                             <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                         </div>
@@ -238,9 +241,9 @@
                         <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
                     </div>
                 </div>
-
+                
                 <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
-                    <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
+                    <div  *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             <li class="list-group-item justify-content-between list-group-item-action">
 
