@@ -42,7 +42,7 @@
   padding-top: 15px;
 }
 
-.agendas-titles {
+.main-titles {
   position: relative;
   top: 15px;
   left: 5px;
@@ -101,4 +101,13 @@ h6.subdata-paciente {
 h6.subdata-descripcion {
   font-weight: 400;
   line-height: 2px;
+}
+
+h5.page-title {
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+table.titles {
+    margin: 0;
 }

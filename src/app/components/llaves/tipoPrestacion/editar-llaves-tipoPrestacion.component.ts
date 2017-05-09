@@ -23,6 +23,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     set llaveTPSeleccionada(value: any) {
         this._llaveTPSeleccionada = value;
         this.modelo = value;
+        this.comprobarUnidades();
     }
     get llaveTPSeleccionada(): any {
         return this._llaveTPSeleccionada;
@@ -31,7 +32,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     modelo: any = {};
     permisos = [];
     showEditarLlave = false;
-    unidadesValidas = false;
+    unidadesValidas = true;
 
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
@@ -42,7 +43,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
     guardarLlaveTP($event) {
 
-        if ( !this.unidadesValidas ) {
+        if (!this.unidadesValidas) {
             $event.formValid = false;
         }
 
@@ -110,10 +111,12 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     comprobarUnidades() {
-        if (this.modelo.llave.edad.desde.unidad.$order > this.modelo.llave.edad.hasta.unidad.$order) {
-            this.unidadesValidas = false;
-        } else {
-            this.unidadesValidas = true;
+        if (this.modelo.llave.edad.desde.unidad && this.modelo.llave.edad.hasta.unidad) {
+            if (this.modelo.llave.edad.desde.unidad.$order < this.modelo.llave.edad.hasta.unidad.$order) {
+                this.unidadesValidas = false;
+            } else {
+                this.unidadesValidas = true;
+            }
         }
     }
 
@@ -123,8 +126,10 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
 
     // Select inputs
-    loadTipoPrestaciones(event) {
-        this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe(event.callback);
+    loadTipoPrestaciones($event) {
+        this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe($event.callback, () => {
+            console.log($event.callback);
+        });
     }
 
     loadSexo(event) {
