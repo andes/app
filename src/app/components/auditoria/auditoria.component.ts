@@ -39,6 +39,7 @@ export class AuditoriaComponent implements OnInit {
   loadingPrimaryTable = false;
   encontradosSisa = false;
   pacientesSimilares = [];
+  verDuplicados = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -109,12 +110,13 @@ export class AuditoriaComponent implements OnInit {
     this.pacienteSelected.sexo = paciente.sexo;
     this.pacienteSelected.estado = paciente.estado;
     this.pacienteSelected.matchSisa = paciente.matchSisa;
+
+    this.mostrarPaciente = true;
     this.mostrarCandidatos();
 
   }
 
   mostrarCandidatos() {
-
     if (this.pacienteSelected.nombre && this.pacienteSelected.apellido && this.pacienteSelected.documento
       && this.pacienteSelected.fechaNacimiento && this.pacienteSelected.sexo) {
       let dto: any = {
@@ -126,18 +128,15 @@ export class AuditoriaComponent implements OnInit {
         documento: this.pacienteSelected.documento.toString(),
         sexo: ((typeof this.pacienteSelected.sexo === 'string')) ? this.pacienteSelected.sexo : (Object(this.pacienteSelected.sexo).id),
         fechaNacimiento: moment(this.pacienteSelected.fechaNacimiento).format('YYYY-MM-DD')
-      }; debugger
+      };
       this.pacienteService.get(dto).subscribe(resultado => {
-        debugger
-        this.pacientesSimilares = resultado; debugger
+        this.pacientesSimilares = resultado;
       });
-
+      if (this.pacientesSimilares.length > 0) {
+        this.verDuplicados = true;
+      }
     }
-    this.mostrarPaciente = true;
   }
-
-
-
 
 
   onValidate(paciente: any) {

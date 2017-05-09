@@ -171,6 +171,8 @@ import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutric
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+import { Auditoria1Component } from './components/auditoria/auditoria1.component';
+import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 
@@ -277,7 +279,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent,
-    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent,
+    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS
   ],
   entryComponents: RUP_COMPONENTS,

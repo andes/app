@@ -45,32 +45,6 @@
         <h4><b>Sexo: </b> {{pacienteSelected.sexo}}</h4>
         <h4><b>Estado: </b>{{pacienteSelected.estado}}</h4>
         <plex-button icon="account-search" type="primary" label="Consultar Sisa" (click)="onValidate(pacienteSelected)"></plex-button>
-        <div class="row">&nbsp;</div>
-        <div type="inverted" title="Pacientes Candidatos">
-          <header>
-            <h4>Pacientes Candidatos</h4>
-          </header>
-          <div class="row">
-            <div class="col">
-              <div class="hover">
-                <ul class="list-group">
-                  <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                    <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
-                      <br>
-                      <small>
-                          Documento: {{elem.paciente.documento}} <br>
-                          fecha de Nacimiento: {{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}<br>
-                          Sexo: {{elem.paciente.sexo}}
-                      </small>
-                    </h4>
-                    <h4>Similitud: {{elem.match * 100}} %
-                    </h4>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
       </plex-box>
       <plex-loader *ngIf=loading></plex-loader>
       <plex-box *ngIf=validate type="success" title="Información de fuente auténtica">
@@ -91,7 +65,7 @@
           <span class="sr-only">Error:</span> {{mensaje}}
         </div>
 
-        
+
       </plex-box>
     </div>
 
