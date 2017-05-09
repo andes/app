@@ -30,7 +30,7 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
-
+import {Ng2DragDropModule} from "ng2-drag-drop";
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 import { fromNowPipe } from './utils/date';
@@ -258,6 +258,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     FormsModule,
     HttpModule,
     PlexModule,
+    Ng2DragDropModule,
     routing,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'

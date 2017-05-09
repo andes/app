@@ -36,6 +36,7 @@
     "angular-confirmation-popover": "^2.1.2",
     "angular2-google-maps": "^0.17.0",
     "core-js": "^2.4.1",
+    "ng2-drag-drop": "^1.5.1",
     "rxjs": "5.1.1",
     "zone.js": "0.7.7"
   },
