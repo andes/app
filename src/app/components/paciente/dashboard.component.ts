@@ -10,6 +10,7 @@ import { Server } from '@andes/shared';
     styleUrls: ['dashboard.css']
 })
 
+
 export class DashboardComponent implements OnInit {
 
     private dashboardData: any;
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
     private insert = 0;
     private update = 0;
     private query = 0;
+    private loading = true;
 
     constructor(
         private plex: Plex,
@@ -37,8 +39,8 @@ export class DashboardComponent implements OnInit {
     private getDashboard() {
         this.pacienteService.getDashboard()
             .subscribe(data => {
+                this.loading = false;
                 this.dashboardData = data;
-                console.log(this.dashboardData);
                 this.loadPatientData();
                 this.loadLogData();
             });

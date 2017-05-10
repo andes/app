@@ -3,57 +3,105 @@
 </header>-->
 
 <section>
-    <div class="row">
-        <div class="col">
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h1>Dashboard MPI</h1>
-                    </div>
-                </div>
-            </header>
-            <br>
-            <hr>
-
-            <div class=" row">
-                <div class="col-3">
-                    <a class="well top-block success">
-                        <i class="mdi mdi-account-check large"></i>
-                        <div>{{validados}}</div>
-                        <div>Pacientes validados</div>
-
-                    </a>
-                </div>
-
-                <div class="col-3">
-                    <a class="well top-block info">
-                        <i class="mdi mdi-account-remove large"></i>
-                        <div>{{temporales}}</div>
-                        <div>Pacientes temporales</div>
-
-                    </a>
-                </div>
-
-                <div class="col-3">
-                    <a class="well top-block info">
-                        <i class="mdi mdi-barcode-scan large"></i>
-                        <div>{{scan}}</div>
-                        <div>Cantidad de escaneos</div>
-
-
-                    </a>
-                </div>
-
-                <div class="col-3">
-                    <a class="well top-block warning">
-                        <i class="mdi mdi-credit-card-off large"></i>
-                        <div>{{scansFallidos}}</div>
-                        <div>Cantidad de escaneos erróneos</div>
-
-                    </a>
-                </div>
-            </div>
-
+  <div class="row">
+    <div class="col">
+      <header>
+        <div class="row">
+          <div class="col">
+            <h1>Dashboard MPI</h1>
+          </div>
         </div>
+      </header>
+      <br>
+      <hr>
+      <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+      <div class=" row" *ngIf="!loading">
+
+        <div class="col-3">
+          <div class="tarjeta">
+            <div class="patient"></div>
+            <div class="contenedor">
+              <h2>{{validados}} </h2>
+              <h3>Pacientes validados</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="tarjeta">
+            <div class="patientTemp"></div>
+            <div class="contenedor">
+              <h2>{{temporales}} </h2>
+              <h3>Pacientes temporales</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="tarjeta">
+            <div class="qrCode"></div>
+            <div class="contenedor">
+              <h2>{{scan}}</h2>
+              <h3>Escaneos correctos</h3>
+            </div>
+          </div>
+        </div>
+
+       <div class="col-3">
+          <div class="tarjeta">
+            <div class="qrCodeFail"></div>
+            <div class="contenedor">
+              <h2>{{scansFallidos}}</h2>
+              <h3>Escaneos incorrectos</h3>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <!--<div class="col-6">
+            <div class="card card-outline-success mb-3 text-center">
+              <div class="card-block">
+                <div style="font-size:180%">
+                  <i class="mdi mdi-account-check large"></i>
+                </div>
+                <h2>{{validados}} </h2>
+                <h3>Pacientes validados</h3>
+              </div>
+            </div>
+          </div>-->
+      <!--<div class="col-6">
+          <div class="card card-outline-warning mb-3 text-center">
+            <div class="card-block">
+              <i class="mdi mdi-account-alert large"></i>
+              <h2>{{temporales}}</h2>
+              <h3>Pacientes temporales</h3>
+            </div>
+          </div>
+        </div>
+      </div>-->
+      <!--<div class=" row" *ngIf="!loading">
+        <div class="col-6">
+          <div class="card card-outline-success mb-3 text-center">
+            <div class="card-block">
+              <i class="mdi mdi-barcode-scan large"></i>
+              <h2>{{scan}}</h2>
+              <h3>Cantidad de escaneos correctos</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card card-outline-danger mb-3 text-center">
+            <div class="card-block">
+              <i class="mdi mdi-credit-card-off large"></i>
+              <h2>{{scansFallidos}}</h2>
+              <h3>Cantidad de escaneos erróneos</h3>
+            </div>
+          </div>
+        </div>
+      </div>-->
     </div>
+  </div>
 </section>
