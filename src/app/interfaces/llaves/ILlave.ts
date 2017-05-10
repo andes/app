@@ -1,8 +1,14 @@
 export interface ILlave {
     id: String;
     edad: {
-        desde: Number,
-        hasta: Number
+        desde: {
+            valor:  Number,
+            unidad: String
+        },
+        hasta: {
+            valor:  Number,
+            unidad: String
+        }
     };
     sexo: String;
     solicitud: {

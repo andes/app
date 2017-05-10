@@ -1,18 +1,18 @@
-<header *ngIf="showDarTurnos" class="header-paciente">
+<!--<header *ngIf="showDarTurnos" class="header-paciente">
   <header-paciente [paciente]="paciente"></header-paciente>
-</header>
-<header *ngIf="!showDarTurnos">
+</header>-->
+<!--<header *ngIf="!showDarTurnos">-->
   <!-- Barra de navegación -->
-  <nav class="friso">
-    <div class="row no-gutters">
+  <!--<nav class="friso">
+    <div class="row no-gutters">-->
       <!-- Datos -->
-      <div class="col-9">
+      <!--<div class="col-9">
         <div class="row data">
         </div>
-      </div>
+      </div>-->
 
       <!-- Datos usuario logeado-->
-      <div class="col-3 invert">
+      <!--<div class="col-3 invert">
         <div class="row">
           <div class="col-2">
             <i ng-reflect-class-name="account" class="mdi mdi-account"></i>
@@ -44,7 +44,7 @@
       </div>
     </div>
   </nav>
-</header>
+</header>-->
 <section>
   <div class="row" *ngIf="autorizado && showDarTurnos">
     <!-- TODO: quitar showDarTurnos -->
@@ -198,9 +198,12 @@
                 <h5>Seleccione una agenda en el Calendario</h5><br>
                 <div *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
-                    <div  class="col-12" >
-                      <label>Tipo de Prestación: </label> <span *ngIf="busqueda.tipoPrestacion">{{busqueda.tipoPrestacion.nombre}} </span><br>
-                      <label>Profesional: </label> <span *ngIf="busqueda.profesional">{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span></div>
+                    <div *ngIf="busqueda.tipoPrestacion" class="col-6">
+                      <label>Tipo de Prestación: </label> <span >{{busqueda.tipoPrestacion.nombre}} </span><br>
+                    </div>
+                    <div *ngIf="busqueda.profesional" class="col-6">
+                      <label>Profesional: </label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span>
+                    </div>
                   </div>
                 </div>
                 <br>

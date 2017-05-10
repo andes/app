@@ -18,7 +18,7 @@ export class LlavesTipoPrestacionService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<ILlavesTipoPrestacion> {
-        return this.server.get(this.llaveTPUrl + "/" + id, null)
+        return this.server.get(this.llaveTPUrl + '/' + id, null)
     }
 
     post(llaveTP: ILlavesTipoPrestacion): Observable<ILlavesTipoPrestacion> {

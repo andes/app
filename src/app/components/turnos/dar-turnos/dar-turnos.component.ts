@@ -1,18 +1,21 @@
-
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { Observable } from 'rxjs/Rx';
+import * as moment from 'moment';
+
+// Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
+
 import { CalendarioDia } from './calendario-dia.class';
-import * as moment from 'moment';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -21,6 +24,12 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
+
+import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
+
+import { patientRealAgePipe } from './../../../utils/patientPipe';
+import { Pipe, PipeTransform } from '@angular/core';
+
 const size = 4;
 
 @Component({
@@ -30,6 +39,7 @@ const size = 4;
 
 export class DarTurnosComponent implements OnInit {
   private _reasignaTurnos: any;
+  llaveTP: ILlavesTipoPrestacion;
 
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
@@ -87,6 +97,7 @@ export class DarTurnosComponent implements OnInit {
   tipoTurno: string;
   tiposTurnosSelect: String;
   tiposTurnosLabel: String;
+  public filtradas: any = [];
   hoy: Date;
   constructor(
     public serviceProfesional: ProfesionalService,
@@ -96,6 +107,7 @@ export class DarTurnosComponent implements OnInit {
     public servicePaciente: PacienteService,
     public servicioTipoPrestacion: TipoPrestacionService,
     public servicioPrestacionPaciente: PrestacionPacienteService,
+    private llaveTipoPrestacionService: LlavesTipoPrestacionService,
     public plex: Plex,
     public auth: Auth,
     private router: Router) { }
@@ -111,13 +123,77 @@ export class DarTurnosComponent implements OnInit {
     }
     // Fresh start
     // En este punto debería tener paciente ya seleccionado
-    this.actualizar('sinFiltro');
+
+    // this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+    // this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+    //   let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+    //   let data2 = this.verificarLlaves(dataF, event);
+    //   // event.callback(dataF);
+    // });
+
+    // this.actualizar('sinFiltro');
   }
 
   loadTipoPrestaciones(event) {
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-      let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
+      let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+      let data2 = this.verificarLlaves(dataF, event);
+      // event.callback(dataF);
+    });
+    // event.callback(this.filtradas);
+  }
+
+  public verificarLlaves(tipoPrestaciones: any[], event) {
+    tipoPrestaciones.forEach((tipoPrestacion, index) => {
+      let band = true;
+      this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
+        llaves => {
+          this.llaveTP = llaves[0];
+          if (!this.llaveTP) {
+            band = true;
+          } else {
+            // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
+            if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
+              let edad = new patientRealAgePipe().transform(this.paciente, []);
+              // Edad desde
+              if (this.llaveTP.llave.edad.desde) {
+                let edadDesde = String(this.llaveTP.llave.edad.desde.valor) + ' ' + this.llaveTP.llave.edad.desde.unidad;
+                if (edad < edadDesde) {
+                  band = false;
+                }
+              }
+              // Edad hasta
+              if (this.llaveTP.llave.edad.hasta) {
+                let edadHasta = String(this.llaveTP.llave.edad.hasta.valor) + ' ' + this.llaveTP.llave.edad.hasta.unidad;
+                if (edad > edadHasta) {
+                  band = false;
+                }
+              }
+            }
+            // Verifico que si la llave tiene seteado sexo, el sexo del paciente coincida
+            if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente) {
+              if (this.llaveTP.llave.sexo !== this.paciente.sexo) {
+                band = false;
+              }
+            }
+          }
+          if (band) {
+            this.filtradas.push(tipoPrestacion);
+          }
+        },
+        err => {
+          if (err) {
+            console.log(err);
+            band = false;
+          }
+        }, () => {
+          if (tipoPrestaciones.length - 1 === index) {
+            console.log('funcion loca', this.filtradas);
+            event.callback(this.filtradas);
+            this.actualizar('sinFiltro');
+          }
+        });
     });
   }
 
@@ -129,7 +205,6 @@ export class DarTurnosComponent implements OnInit {
       this.serviceProfesional.get(query).subscribe(event.callback);
     } else {
       event.callback(this.opciones.profesional || []);
-      //event.callback([]);
     }
   }
 
@@ -183,11 +258,12 @@ export class DarTurnosComponent implements OnInit {
       // Resetear opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
-
+      console.log('filtradas ', this.filtradas.map((f) => {return f.id;}));
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
         rango: true, desde: new Date(), hasta: fechaHasta,
-        tipoPrestaciones: this.permisos,
+        // tipoPrestaciones: this.permisos,
+        tipoPrestaciones: this.filtradas.map((f) => {return f.id;}),
         organizacion: this.auth.organizacion._id
       };
 
