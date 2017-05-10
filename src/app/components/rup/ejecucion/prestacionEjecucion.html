@@ -5,38 +5,38 @@
         margin-bottom: 10px;
         padding: 10px;
     }
-    
+
     small {
         color: grey;
         font-weight: 400;
         font-size: 0.85rem;
     }
-    
+
     .linea-sup {
         border-top: 1px solid #ccc;
     }
-    
+
     .gris {
         color: #999999;
     }
-    
+
     .msg-problema i {
         color: #ff9900;
     }
-    
+
     h5.box-title-principal {
         color: #00A8E0;
         font-weight: 350;
         padding-bottom: 5px;
     }
-    
+
     h5.box-title-secundario {
         color: #00A8E0;
         font-weight: 350;
         padding-bottom: 5px;
         border-bottom: solid black 1px;
     }
-    
+
     .btn-contextual {
         font-size: 1.5em;
         color: #AAAAAA;
@@ -47,11 +47,11 @@
     }
 
     .btn-group {
-        margin: 0 0 10px 0 ;        
+        margin: 0 0 10px 0;
     }
-    
+
     .btn.btn-primary {
-        margin-top: 0px;        
+        margin-top: 0px;
     }
 
     .btn.btn-primary:hover {
@@ -65,17 +65,17 @@
     .list-inline>.list-inline-item {
         margin-bottom: 10px;
     }
-    
+
     .list-group>.list-group-item {
         border-color: #AAAAAA;
         border-radius: 0px;
     }
-    
+
     .list-group-item:hover {
         background-color: #f9f9f9;
         border: solid 1px #00A8E0;
     }
-    
+
     .list-group-item:active {
         background-color: #f5f5f5;
         border: solid 1px #AAAAAA;
@@ -86,39 +86,39 @@
     }
 
     .dropdown-inline {
-    display : inline-block;
+        display: inline-block;
     }
     /*Etiquetas*/
-    
+
     .badge {
         text-transform: uppercase;
         font-size: 0.75rem;
         font-weight: 500;
         display: inline-block;
-        margin-right:15px ;
+        margin-right: 15px;
     }
-    
+
     .badge-danger {
         border: 1.5px solid #dd4b39;
         border-radius: 0px;
         background: transparent;
         color: #dd4b39;
     }
-    
+
     .badge-success {
         border: 1.5px solid #8CC63F;
         border-radius: 0px;
         background: transparent;
         color: #8CC63F;
     }
-    
+
     .badge-warning {
         border: 1.5px solid #ff8d22;
         border-radius: 0px;
         background: transparent;
         color: #ff8d22;
     }
-    
+
     .badge-info {
         border: 1.5px solid #00A8E0;
         border-radius: 0px;
@@ -126,21 +126,19 @@
         color: #00A8E0;
     }
 
-   .transparencia {
+    .transparencia {
 
-     opacity: 0.4;
-   }     
+        opacity: 0.4;
+    }
 
     .fieldsetMargin-top {
         margin-top: 1px;
     }
-
     /*.Scroll {
         overflow: scroll;
         min-height: 500 px;
 
     }*/
-
 </style>
 
 <header *ngIf="prestacion">
@@ -149,16 +147,16 @@
 
 
 <section class="row">
-        <!--LISTA DE PROBLEMAS DEL PACIENTE-->
-        <div class="col-3">
-            <plex-box>
+    <!--LISTA DE PROBLEMAS DEL PACIENTE-->
+    <div class="col-3">
+        <plex-box>
 
-                <header>
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="box-title-principal">Lista de problemas del paciente</h5>
-                        </div>
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <h5 class="box-title-principal">Lista de problemas del paciente</h5>
                     </div>
+<<<<<<< HEAD
                 </header>               
                                                   
                 <!--FILTRO EN MAESTRO DE PROBLEMAS-->
@@ -181,29 +179,53 @@
                          </li>
                     </ng-container>
                 </ul>              
+=======
+                </div>
+            </header>
+>>>>>>> c58d32ff24423f6d2a3a355911937a0c9db303c8
 
-                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->              
-                <ul class="list-group list-group-top" [ngClass]="{transparencia: habilitaTransparencia == 'habilitar'}">
-                    <ng-container *ngFor="let problema of listaProblemas">                        
-                        <li class="list-group-item justify-content-between list-group-item-action" 
-                                    *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && 
+            <!--FILTRO EN MAESTRO DE PROBLEMAS-->
+            <form [formGroup]="searchForm">
+                <div>
+                    <plex-text formControlName="Problema" placeholder="Buscar Problema"></plex-text>
+                </div>
+            </form>
+
+            <!--BOTONES DE FILTRO-->
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
+                <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
+                <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
+            </div>
+
+            <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
+            <ul class="list-group" *ngIf="habilitaTransparencia =='habilitar'">
+                <!--<ng-container draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro">         -->
+                <li draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro" [dragData]="problemaMaestro" class="list-group-item justify-content-between list-group-item-action">
+                    <span>{{problemaMaestro.nombre}}</span>
+                </li>
+                <!--</ng-container>-->
+            </ul>
+
+            <!--PROBLEMAS DEL PACIENTE - DB: problema-->
+            <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event)">
+                <ul class="list-group list-group-top">
+                    <!--[ngClass]="{transparencia: habilitaTransparencia == 'habilitar'}">-->
+                    <ng-container *ngFor="let problema of listaProblemasPaciente">
+                        <li draggable [dragData]="problema" class="list-group-item justify-content-between list-group-item-action" *ngIf="problema.evoluciones && problema.evoluciones.length > 0 && 
                                           (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) 
-                                                 || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))" >                                                                                                                     
+                                                 || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))">
+                            <span>{{problema.tipoProblema.nombre }} <small>  | {{ problema.fechaInicio | fromNow}}</small></span>
+                            <div class="pull-right">
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'" class="badge badge-success">{{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span>
 
-                            <span>{{problema.tipoProblema.nombre }} <small>  | {{ problema.fechaInicio | fromNow}}</small></span>  
-                            <div class="pull-right">   
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'"
-                                    class="badge badge-success">{{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                </span> 
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'" class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                </span>
 
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'"
-                                    class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                </span>       
-
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
-                                    class="badge badge-warning">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
-                                </span> 
-                            </div>                                                            
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'" class="badge badge-warning">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
+                                </span>
+                            </div>
 
                             <small>Última evolución realizada {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} 
                                     | Lambertucci, Leandro                                               
@@ -211,40 +233,43 @@
                         </li>
                     </ng-container>
                 </ul>
+            </div>
 
-            </plex-box>
-        </div>
 
-        <!--HALLAZGOS DE ESTA CONSULTA-->
-        <div class="col-6">
-            <plex-box>
-                <header>
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
-                        </div>
-                    </div>
-                </header>
 
-                <div class="row" *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar && !showDetalles">
-                    <div class="col-8">
-                        <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" placeholder="Agregar Problema">
-                        </plex-select>
-                    </div>
-                    <div class="col-1">
-                        <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary"></plex-button>
-                    </div>
-                    <div class="col text-right">
-                        <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
+        </plex-box>
+    </div>
+
+    <!--HALLAZGOS DE ESTA CONSULTA-->
+    <div class="col-6">
+        <plex-box>
+            <header>
+                <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" class="row">
+                    <div class="col">
+                        <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                     </div>
                 </div>
+            </header>
 
-                <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
-                    <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
-                        <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <li class="list-group-item justify-content-between list-group-item-action">
+            <div class="row" *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar && !showDetalles">
+                <div class="col-8">
+                    <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" placeholder="Agregar Problema">
+                    </plex-select>
+                </div>
+                <div class="col-1">
+                    <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary"></plex-button>
+                </div>
+                <div class="col text-right">
+                    <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
+                </div>
+            </div>
 
-                                    <span>
+            <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
+                <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
+                    <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                        <li class="list-group-item justify-content-between list-group-item-action">
+
+                            <span>
                                         <h5 class="item-title">{{problema.tipoProblema.nombre}}</h5>
                                         <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                                             Última evolución {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}} |
@@ -252,45 +277,82 @@
                                         </small>
                                     </span>
 
-                                    <div class="list-inline">
-                                        <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">Activo</span>
-                                        <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                            <div class="list-inline">
+                                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">Activo</span>
+                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                         </span>
-                                        <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
+                                <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                                        </span> 
-                                        <span class="d-inline">
+                                        </span>
+                                <span class="d-inline">
                                         <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown> 
                                         </span>
-                                    </div>    
+                            </div>
 
-                            </li>
-                        </ul>
+                        </li>
+                        <!--Prestaciones para el problema-->
+                        <div class="col-md-12" droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event)">
+
+                            hola <br> hola <br> hola <br> hola <br> hola <br> hola <br>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <br/>
+                    <div *ngIf="showEvolucionar && !showEvolTodo">
+                        <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
+                    </div>
+                    <br/>
+                    <div *ngIf="showTransformar">
+                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                    </div>
+                    <br/>
+                    <div *ngIf="showEnmendar">
+                        <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
+                    </div>
+                    <br/>
+                    <div *ngIf="showDetalles">
+                        <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
                     </div>
                 </div>
+            </div>
 
+            <div *ngIf="!showEvolucionar && showEvolTodo">
+                <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
+            </div>
+        </plex-box>
+    </div>
+
+    <!--REGISTROS DE ESTA CONSULTA-->
+    <div class="col-3">
+        <plex-box *ngIf=" prestacion && prestacion.paciente">
+            <header>
                 <div class="row">
                     <div class="col">
-                        <br/>
-                        <div *ngIf="showEvolucionar && !showEvolTodo">
-                            <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
-                        </div>
-                        <br/>
-                        <div *ngIf="showTransformar">
-                            <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
-                        </div>
-                        <br/>
-                        <div *ngIf="showEnmendar">
-                            <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
-                        </div>
-                        <br/>
-                        <div *ngIf="showDetalles">
-                            <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
-                        </div>
+                        <h5 class="box-title-principal">Registros de la consulta</h5>
                     </div>
                 </div>
+            </header>
 
+            <!--FILTRO PRESTACIONES-->
+            <form>
+                <plex-text [(ngModel)]="nombrePrestacion" name="filtroNombrePrestacion" placeholder="Buscar Prestación" (change)="loadPrestacion('filtrosPrestacion')">
+                </plex-text>
+            </form>
+
+            <!--BOTONES DE FILTRO-->
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="MasFrec"  (click)="loadPrestacion('todos')">Todos</label>
+                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="Formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
+                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="Molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
+                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="Atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>
+            </div>
+
+<<<<<<< HEAD
                 <div *ngIf="!showEvolucionar && showEvolTodo">
                     <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
                 </div>
@@ -332,6 +394,19 @@
                     </ul>   
                 <!--</div>                   -->
 <!--
+=======
+            <!--PRESTACIONES-->
+            <!--<div class="Scroll">-->
+            <ul class="list-group" *ngIf="tiposPrestaciones">
+                <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones" >
+                    <li draggable [dragData]="tipoPrestacion"  class="list-group-item justify-content-between list-group-item-action">
+                        <span>{{tipoPrestacion.nombre}}</span>
+                    </li>
+                </ng-container>
+            </ul>
+            <!--</div>                   -->
+            <!--
+>>>>>>> c58d32ff24423f6d2a3a355911937a0c9db303c8
                 <fieldset>
                     <div class="row">
                         <div class="col-10">
@@ -366,7 +441,7 @@
                     </plex-accordion>
                                   
 -->
-                <!--<fieldset>
+            <!--<fieldset>
                     <h5 class="box-title-secundario">Lista de Planes</h5>
                     <div class="row">
                         <div class="col-5">
@@ -405,12 +480,12 @@
                     </div>
                 </fieldset>-->
 
-            </plex-box>
-        </div>
+        </plex-box>
+    </div>
 </section>
 
 
-<footer class="plex-box-invert" >
+<footer class="plex-box-invert">
     <div class="row">
         <div class="col-3">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
