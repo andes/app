@@ -72,7 +72,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     // este tipo de prestaciones se le van quitando opciones a medida que ejecuto una nueva
     tiposPrestacionesPosibles: ITipoPrestacion[] = [];
     // prestaciones que se ejecutan por defecto con la prestacion de origen
-<<<<<<< HEAD
     prestacionesEjecucion: IPrestacionPaciente[] = [];  // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
     listaProblemaPrestacion = []; // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
     idPrestacionesEjecutadas = []; // id que se van ejecutando
@@ -80,25 +79,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     nuevaPrestacion: any;  // prestacion a pedir a futuro
     listaProblemasPlan: any = [];  // array de opcioens seleccionadas
     valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
-=======
-    // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
-    prestacionesEjecucion: IPrestacionPaciente[] = [];
-    // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
-    listaProblemaPrestacion = [];
-    // id que se van ejecutando
-    idPrestacionesEjecutadas = [];
-    // PRESTACIONES FUTURAS
-    // utilizado para el select de tipos de prestaciones a ejecutar en un plan
-    nuevoTipoPrestacion: ITipoPrestacion;
-    // prestacion a pedir a futuro
-    nuevaPrestacion: any;
-    // array de opcioens seleccionadas
-    listaProblemasPlan: any = [];
-    // listado de prestaciones futuras a pedir en el plan
-    valoresPrestaciones: {}[] = [];
     // listado de problemas del paciente
     listaProblemasPaciente: any[] = [];
->>>>>>> c58d32ff24423f6d2a3a355911937a0c9db303c8
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -208,15 +190,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     onPrestacionDrop(e: any) {
 
     }
-    
-    
+
+
     removeItem(item: any, list: Array<any>) {
         let index = list.map((e) => {
-            return e.name
+            return e.name;
         }).indexOf(item.name);
         list.splice(index, 1);
     }
-    //fin  Drag and drop ng2
+    // fin  Drag and drop ng2
 
 
 
@@ -282,7 +264,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
         this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
             if (resultado) { // asignamos el problema a la prestacion de origen
-                //this.listaProblemas.push(resultado);
+                // this.listaProblemas.push(resultado);
                 this.listaProblemasPaciente.push(resultado);
                 // this.updateListaProblemas(resultado.id);
             } else {
@@ -466,7 +448,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (lista){
                 this.listaProblemasPaciente = lista;
             }
-            
+
         });
     }
 
@@ -668,7 +650,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // buscamos la prestacion actualizada con los datos populados
             this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
                 this.prestacion = prestacion;
-                //this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+                // this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
             });
         });
 

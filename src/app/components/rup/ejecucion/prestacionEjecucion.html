@@ -156,33 +156,8 @@
                     <div class="col">
                         <h5 class="box-title-principal">Lista de problemas del paciente</h5>
                     </div>
-<<<<<<< HEAD
-                </header>               
-                                                  
-                <!--FILTRO EN MAESTRO DE PROBLEMAS-->
-                <form [formGroup]="searchForm">                                   
-                    <plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text>                                                        
-                </form>               
-
-                <!--BOTONES DE FILTRO-->
-               <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
-               </div>     
-
-                <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-                <ul class="list-group" *ngIf="habilitaTransparencia =='habilitar'">
-                    <ng-container *ngFor="let problemaMaestro of this.listaproblemasMaestro">         
-                         <li class="list-group-item justify-content-between list-group-item-action">
-                             <span>{{problemaMaestro.nombre}}</span>
-                         </li>
-                    </ng-container>
-                </ul>              
-=======
                 </div>
             </header>
->>>>>>> c58d32ff24423f6d2a3a355911937a0c9db303c8
 
             <!--FILTRO EN MAESTRO DE PROBLEMAS-->
             <form [formGroup]="searchForm">
@@ -326,40 +301,9 @@
             </div>
         </plex-box>
     </div>
+               
 
     <!--REGISTROS DE ESTA CONSULTA-->
-    <div class="col-3">
-        <plex-box *ngIf=" prestacion && prestacion.paciente">
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Registros de la consulta</h5>
-                    </div>
-                </div>
-            </header>
-
-            <!--FILTRO PRESTACIONES-->
-            <form>
-                <plex-text [(ngModel)]="nombrePrestacion" name="filtroNombrePrestacion" placeholder="Buscar Prestación" (change)="loadPrestacion('filtrosPrestacion')">
-                </plex-text>
-            </form>
-
-            <!--BOTONES DE FILTRO-->
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="MasFrec"  (click)="loadPrestacion('todos')">Todos</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="Formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="Molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="Atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>
-            </div>
-
-<<<<<<< HEAD
-                <div *ngIf="!showEvolucionar && showEvolTodo">
-                    <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
-                </div>
-            </plex-box>
-        </div>
-
-        <!--REGISTROS DE ESTA CONSULTA-->
         <div class="col-3">
             <plex-box *ngIf=" prestacion && prestacion.paciente">
                 <header>
@@ -377,36 +321,23 @@
 
                 <!--BOTONES DE FILTRO-->
                <div class="btn-group" data-toggle="buttons">
-                   <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="MasFrec"  (click)="loadPrestacion('todos')">Todos</label>                   
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="Formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="Molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="Atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>                     
+                   <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="todos"  (click)="loadPrestacion('todos')">Todos</label>                   
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>                     
                </div>     
 
-                <!--PRESTACIONES-->
-                <!--<div class="Scroll">-->
-                    <ul class="list-group" *ngIf="tiposPrestaciones">
-                        <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones">         
-                            <li class="list-group-item justify-content-between list-group-item-action">
-                                <span>{{tipoPrestacion.nombre}}</span>                                                    
-                            </li>
-                        </ng-container>
-                    </ul>   
-                <!--</div>                   -->
-<!--
-=======
-            <!--PRESTACIONES-->
-            <!--<div class="Scroll">-->
-            <ul class="list-group" *ngIf="tiposPrestaciones">
-                <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones" >
-                    <li draggable [dragData]="tipoPrestacion"  class="list-group-item justify-content-between list-group-item-action">
-                        <span>{{tipoPrestacion.nombre}}</span>
-                    </li>
-                </ng-container>
-            </ul>
-            <!--</div>                   -->
+     
+                <!--PRESTACIONES-->          
+                <ul class="list-group" *ngIf="tiposPrestaciones">
+                    <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones" >
+                        <li draggable [dragData]="tipoPrestacion"  class="list-group-item justify-content-between list-group-item-action">
+                            <span>{{tipoPrestacion.nombre}}</span>
+                        </li>
+                    </ng-container>
+                </ul>
+      
             <!--
->>>>>>> c58d32ff24423f6d2a3a355911937a0c9db303c8
                 <fieldset>
                     <div class="row">
                         <div class="col-10">
