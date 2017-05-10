@@ -10,6 +10,7 @@ import { Server } from '@andes/shared';
     styleUrls: ['dashboard.css']
 })
 
+
 export class DashboardComponent implements OnInit {
 
     private dashboardData: any;
