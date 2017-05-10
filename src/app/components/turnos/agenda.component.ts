@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -15,6 +15,9 @@ import { ProfesionalService } from './../../services/profesional.service';
     templateUrl: 'agenda.html',
 })
 export class AgendaComponent implements OnInit {
+    // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true;
+
     private _editarAgenda: any;
     @Input('editaAgenda')
     set editaAgenda(value: any) {
@@ -31,7 +34,6 @@ export class AgendaComponent implements OnInit {
     public elementoActivo: any = { descripcion: null };
     public alertas: String[] = [];
     public fecha: Date;
-    public permisos = [];
     public autorizado = false;
     showClonar = false;
     showAgenda = true;
@@ -59,9 +61,8 @@ export class AgendaComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.permisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            let dataF = data.filter((x) => { return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id); });
             event.callback(dataF);
         });
     }
@@ -148,7 +149,7 @@ export class AgendaComponent implements OnInit {
         const longitud = this.modelo.bloques.length;
         this.modelo.bloques.push({
             indice: longitud,
-            'descripcion': 'Nombre Bloque',
+            // 'descripcion': `Bloque {longitud + 1}°`,
             'cantidadTurnos': null,
             'horaInicio': null,
             'horaFin': null,
@@ -341,8 +342,7 @@ export class AgendaComponent implements OnInit {
     xor(seleccion) {
         if (seleccion === 'simultaneos') {
             if (this.elementoActivo.citarPorBloque) {
-                console.log('acaa');
-                this.plex.alert('No puede haber pacientes simultáneos y citación por segmento al mismo tiempo');
+                this.plex.info('warning', 'No puede haber pacientes simultáneos y citación por segmento al mismo tiempo');
                 this.elementoActivo.pacienteSimultaneos = false;
             }
         }
@@ -512,18 +512,6 @@ export class AgendaComponent implements OnInit {
         } else {
             return null;
         }
-    }
-
-    mostrarAlertas() {
-        let texto = '';
-        this.alertas.forEach((alerta, indice) => {
-            if (indice === this.alertas.length - 1) {
-                texto = texto + alerta;
-            } else {
-                texto = texto + alerta + '; ';
-            }
-        });
-        this.plex.alert(texto);
     }
 
     onSave($event, clonar) {

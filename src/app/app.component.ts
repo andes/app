@@ -12,24 +12,23 @@ export class AppComponent {
     constructor(public plex: Plex, public server: Server) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
-     }
 
-    // ngOnInit() {
-        // const items = [
-        //     new MenuItem({ label: 'Inicio', icon: 'creation', route: '/inicio' }),
-        //     new MenuItem({ label: 'Organizacion', icon: 'hospital-building', route: '/organizacion' }),
-        //     new MenuItem({ label: 'Profesional', icon: 'account-circle', route: '/profesional' }),
-        //     new MenuItem({ label: 'Especialidad', icon: 'certificate', route: '/especialidad' }),
-        //     new MenuItem({ label: 'Paciente', icon: 'seat-recline-normal', route: '/paciente' }),
-        //     new MenuItem({ label: 'Espacio Físico', icon: 'view-agenda', route: '/espacio_fisico' }),
-        //     new MenuItem({ label: 'Prestacion', icon: 'blur', route: '/prestacion' }),
-        //     new MenuItem({ label: 'Agendas', icon: 'calendar', route: '/agenda' }),
-        //     new MenuItem({ label: 'Turnos', icon: 'calendar-check', route: '/turnos' }),
-        //     new MenuItem({ label: 'Lista de Espera', icon: 'calendar-check', route: '/listaEspera' }),
-        //     new MenuItem({ label: 'Gestor Agendas', icon: 'calendar-check', route: '/gestor_agendas' }),
-        //     new MenuItem({ label: 'rup Prestaciones', icon: 'calendar-check', route: '/rup' }),
-        //     new MenuItem({ label: 'Tipo de Prestaciones', icon: 'blur', route: '/tipoprestaciones' }),
-        // ];
-        // this.plex.initStaticItems(items);
-    // }
+        // Inicializa la vista
+        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+
+        // Inicializa el chequeo de conectividad
+        setInterval(() => {
+            server.get('/core/status', { params: null, showError: false })
+                .subscribe(
+                (data) => this.plex.updateStatus(data),
+                (err) => this.plex.updateStatus({ API: 'Error' })
+                );
+        }, 2000);
+        // this.plex.updateMenu([
+        //     { label: 'Ir a inicio', icon: 'dna', route: '/incio' },
+        //     { label: 'Ir a ruta inexistente', icon: 'flag', route: '/ruta-rota' },
+        //     { divider: true },
+        //     { label: 'Item con handler', icon: 'wrench', handler: (() => { alert('Este es un handler'); }) }
+        // ]);
+    }
 }
