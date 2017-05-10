@@ -81,6 +81,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
     // listado de problemas del paciente
     listaProblemasPaciente: any[] = [];
+    listaProblemaPrestaciones: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -167,8 +168,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
 
-
-
     // Drag and drop ng2
     onProblemaDrop(e: any) {
         debugger;
@@ -183,12 +182,21 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onHallazgoDrop(e: any) {
           console.log(e.dragData);
+          //Se carga listaProblemaPrestaciones;
           this.updateListaProblemas(e.dragData.id);
 
     }
 
     onPrestacionDrop(e: any) {
+      debugger;
+      // Se crea la nueva prestacion
+      // Se verifica que sea un tipo de prestacion
+      console.log(this.listaProblemaPrestacion);
+      this.agregarPrestacionEjecucion(e.dragData);
+      //Se vincula al problema
+     //listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
 
+      console.log(this.prestacionesEjecucion);
     }
 
 
