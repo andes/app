@@ -1,12 +1,21 @@
 export interface ILlave {
     id: String;
     edad: {
-        desde: Number,
-        hasta: Number
+        desde: {
+            valor: Number,
+            unidad: String
+        },
+        hasta: {
+            valor: Number,
+            unidad: String
+        }
     };
     sexo: String;
     solicitud: {
         requerida: Boolean;
-        vencimiento: Date
+        vencimiento: {
+            valor: Number,
+            unidad: String
+        }
     };
 }

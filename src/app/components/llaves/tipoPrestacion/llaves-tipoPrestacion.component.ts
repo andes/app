@@ -35,9 +35,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
     }
 
     loadLlavesTP() {
-        this.llaveTipoPrestacionService.get({
-            organizacion: this.auth.organizacion._id
-        }).subscribe(
+        this.llaveTipoPrestacionService.get({}).subscribe(
             llavesTP => {
                 this.llavesTP = llavesTP;
                 this.llavesTPSeleccionadas = [];
@@ -51,9 +49,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     loadTipoPrestaciones() {
 
-        this.llaveTipoPrestacionService.get({
-            organizacion: this.auth.organizacion._id,
-        }).subscribe(
+        this.llaveTipoPrestacionService.get({}).subscribe(
             llaves => {
                 this.llavesTP = llaves;
                 this.llavesTPSeleccionadas = [];
@@ -78,8 +74,10 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
             this.showVistaLlavesTP = true;
 
+            console.log(this.llaveTPSeleccionada);
+
             // Para que no rompa la validación, se asegura que no falten estas llaves
-            if (!this.llaveTPSeleccionada.llave.edad) {
+            if (typeof this.llaveTPSeleccionada.llave === 'undefined') {
                 this.llaveTPSeleccionada.llave.edad = {
                     desde: {
                         valor: 0,
@@ -110,7 +108,14 @@ export class LlavesTipoPrestacionComponent implements OnInit {
             if (!this.llaveTPSeleccionada.llave.solicitud) {
                 this.llaveTPSeleccionada.llave.solicitud = {
                     requerida: false
-                }
+                };
+                this.llaveTPSeleccionada.llave.solicitud.vencimiento = {
+                    valor: 0,
+                    unidad: null
+                };
+            }
+
+            if (!this.llaveTPSeleccionada.llave.solicitud.requerida) {
             }
 
             if (!multiple) {
@@ -164,7 +169,11 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                     }
                 },
                 solicitud: {
-                    requerida: false
+                    requerida: false,
+                    vencimiento: {
+                        valor: 0,
+                        unidad: null
+                    }
                 }
             }
         };
@@ -175,6 +184,7 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
     cancelaEditarLlaveTP() {
         this.showVistaLlavesTP = false;
+        this.llavesTPSeleccionadas = [];
     }
 
 }
