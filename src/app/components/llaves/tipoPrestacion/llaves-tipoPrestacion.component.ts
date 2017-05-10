@@ -89,13 +89,12 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                     }
                 };
             } else {
-                if (!this.llaveTPSeleccionada.llave.edad.desde) {
+                if (typeof this.llaveTPSeleccionada.llave.edad === 'undefined') {
+                    this.llaveTPSeleccionada.llave.edad = {};
                     this.llaveTPSeleccionada.llave.edad.desde = {
                         valor: 0,
                         unidad: null
                     };
-                }
-                if (!this.llaveTPSeleccionada.llave.edad.hasta) {
                     this.llaveTPSeleccionada.llave.edad.hasta = {
                         valor: 0,
                         unidad: null

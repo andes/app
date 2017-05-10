@@ -24,12 +24,19 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
         this._llaveTPSeleccionada = value;
         this.modelo = value;
         this.comprobarUnidades();
+        if (this.modelo.id) {
+            this.llaveSelect = {
+                id: this.modelo.tipoPrestacion.id,
+                nombre: this.modelo.tipoPrestacion.nombre
+            };
+        }
     }
     get llaveTPSeleccionada(): any {
         return this._llaveTPSeleccionada;
     }
 
     modelo: any = {};
+    llaveSelect: any = {};
     permisos = [];
     showEditarLlave = false;
     unidadesValidas = true;
@@ -134,6 +141,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     loadTipoPrestaciones($event) {
+
         let llavesFiltradas = [];
         this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe((tiposPrestaciones) => {
 
@@ -147,7 +155,6 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 });
 
                 $event.callback(tiposPrestaciones);
-                
 
             });
 

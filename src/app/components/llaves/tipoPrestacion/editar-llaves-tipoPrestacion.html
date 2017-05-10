@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-12">
           <plex-select [(ngModel)]="modelo.tipoPrestacion" name="tipoPrestacion" label="Tipo de Prestación" (getData)="loadTipoPrestaciones($event)"
-            placeholder="Seleccione la Prestación" [required]="true"></plex-select>
+            placeholder="Seleccione la Prestación" [required]="true" [readonly]="modelo.id"></plex-select>
         </div>
       </div>
       <div class="row">
@@ -58,7 +58,7 @@
               </template>
             </div>
             <div class="col-3">
-              <template [ngIf]="modelo.llave?.edad && modelo.llave.edad?.hasta.valor > 0">
+              <template [ngIf]="modelo.llave?.edad && modelo.llave.edad?.hasta?.valor > 0">
                 <plex-select [(ngModel)]="modelo.llave.edad.hasta.unidad" name="unidadEdadHasta" (getData)="loadUnidadesEdad($event)" [required]="true"
                   (change)="comprobarUnidades()"></plex-select>
               </template>
@@ -87,7 +87,9 @@
                         <plex-select [(ngModel)]="modelo.llave.solicitud.vencimiento.unidad" name="vencimientoUnidad" (getData)="loadUnidadesEdad($event)" [required]="true"></plex-select>
                     </template>
                 </div>
-                <div class="col">a partir de la fecha de Solicitud</div>
+                <div class="col" *ngIf="modelo.llave?.solicitud.vencimiento && modelo.llave.solicitud.vencimiento?.valor > 0">
+                    a partir de la fecha de Solicitud
+                </div>
             </div>
           </template>
         </div>
