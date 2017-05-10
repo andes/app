@@ -8,11 +8,10 @@
                         <table class="table titles" *ngIf="llavesTP?.length">
                             <tr class="row text-center">
                                 <td class="col-1"><i class="mdi"></i></td>
-                                <td class="col-3"><strong>Tipo de Prestación</strong></td>
-                                <td class="col-3"><strong>Organización</strong></td>
+                                <td class="col-4"><strong>Tipo de Prestación</strong></td>
                                 <td class="col-1"><strong>Auditable</strong></td>
-                                <td class="col-2"><strong>Rango Edad</strong></td>
-                                <td class="col-1"><strong>Sexo</strong></td>
+                                <td class="col-3"><strong>Rango Edad</strong></td>
+                                <td class="col-2"><strong>Sexo</strong></td>
                                 <td class="col-1"><strong>Activa</strong></td>
                             </tr>
                         </table>
@@ -31,19 +30,15 @@
                                 <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline btn btn-sm"></i>
                             </td>
 
-                            <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
+                            <td class="col-4" (click)="verLlave(llaveTP, false, $event)">
                                 <span class="btn btn-sm">{{llaveTP.tipoPrestacion.nombre}}</span>
-                            </td>
-
-                            <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
-                                <span class="btn btn-sm">{{llaveTP.organizacion.nombre}}</span>
                             </td>
 
                             <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
                                 <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable', !llaveTP.auditable)"></plex-bool>
                             </td>
 
-                            <td class="col-2" (click)="verLlave(llaveTP, false, $event)">
+                            <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
                                 <span *ngIf="llaveTP.llave.edad?.desde && !llaveTP.llave.edad?.hasta">Desde los</span> 
                                 <span *ngIf="llaveTP.llave.edad?.desde">{{llaveTP.llave.edad?.desde?.valor + ' ' + llaveTP.llave.edad?.desde?.unidad}}</span>
                                 <span *ngIf="llaveTP.llave.edad?.desde && llaveTP.llave.edad?.hasta">hasta los</span> 
@@ -51,7 +46,7 @@
                                 <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
                             </td>
 
-                            <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
+                            <td class="col-2" (click)="verLlave(llaveTP, false, $event)">
                                 <span class="btn btn-sm" *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
                                 <span class="btn btn-sm" *ngIf="!llaveTP.llave.sexo">no aplica</span>
                             </td>

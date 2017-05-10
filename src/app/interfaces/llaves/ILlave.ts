@@ -8,11 +8,14 @@ export interface ILlave {
         hasta: {
             valor:  Number,
             unidad: String
-        }
+        },
     };
     sexo: String;
     solicitud: {
         requerida: Boolean;
-        vencimiento: Date
+        vencimiento: {
+            valor: Number,
+            unidad: String
+        }
     };
 }

@@ -76,6 +76,15 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 delete this.modelo.llave.edad.hasta;
             }
 
+            if (this.modelo.llave.solicitud.vencimiento.unidad) {
+                if (this.modelo.llave.solicitud.vencimiento.unidad.$order) {
+                    delete this.modelo.llave.solicitud.vencimiento.unidad.$order;
+                    this.modelo.llave.solicitud.vencimiento.unidad = this.modelo.llave.solicitud.vencimiento.unidad.id;
+                }
+            } else {
+                delete this.modelo.llave.edad.vencimiento;
+            }
+
             // PUT/UPDATE
             if (this.modelo.id) {
 
@@ -111,7 +120,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     comprobarUnidades() {
-        if (this.modelo.llave.edad.desde.unidad && this.modelo.llave.edad.hasta.unidad) {
+        if (this.modelo.llave.edad && this.modelo.llave.edad.desde.unidad && this.modelo.llave.edad.hasta.unidad) {
             if (this.modelo.llave.edad.desde.unidad.$order < this.modelo.llave.edad.hasta.unidad.$order) {
                 this.unidadesValidas = false;
             } else {
@@ -124,11 +133,24 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
         this.cancelaEditarLlaveTP.emit(true);
     }
 
-
-    // Select inputs
     loadTipoPrestaciones($event) {
-        this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe($event.callback, () => {
-            console.log($event.callback);
+        let llavesFiltradas = [];
+        this.serviceTipoPrestacion.get({ turneable: 1 }).subscribe((tiposPrestaciones) => {
+
+            this.llaveTipoPrestacionService.get({}).subscribe((llavesTP) => {
+
+                llavesTP.forEach((llave, index) => {
+                    let existe = this.existeEnArray(tiposPrestaciones, llave.tipoPrestacion);
+                    let idx = tiposPrestaciones.indexOf(existe);
+                    tiposPrestaciones.splice(idx, 1);
+                    tiposPrestaciones = [...tiposPrestaciones];
+                });
+
+                $event.callback(tiposPrestaciones);
+                
+
+            });
+
         });
     }
 
@@ -139,5 +161,11 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     loadUnidadesEdad(event) {
         event.callback(enumerados.getObjUnidadesEdad());
     }
+
+    // UTILS
+    existeEnArray(arr, objeto: any) {
+        return arr.find(x => x.id === objeto.id);
+    }
+
 
 }
