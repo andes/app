@@ -223,21 +223,21 @@
                     <div class="col">
                         <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                     </div>
+                    <div class="col text-right">
+                    <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
+                </div>
                 </div>
             </header>
 
-            <div class="row" *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar && !showDetalles">
+            <!--<div class="row" *ngIf="!showEvolucionar && !showEvolTodo && !showTransformar && !showEnmendar && !showDetalles">
                 <div class="col-8">
                     <plex-select [(ngModel)]="tipoProblema" (getData)="loadTiposProblemas($event)" placeholder="Agregar Problema">
                     </plex-select>
                 </div>
                 <div class="col-1">
                     <plex-button title="Cargar Problema" icon="mdi mdi-plus" (click)="agregarProblema()" type="primary"></plex-button>
-                </div>
-                <div class="col text-right">
-                    <plex-button title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
-                </div>
-            </div>
+                </div>                
+            </div>-->
 
             <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
@@ -372,7 +372,8 @@
                     </plex-accordion>
                                   
 -->
-            <!--<fieldset>
+            <br>
+            <fieldset>
                     <h5 class="box-title-secundario">Lista de Planes</h5>
                     <div class="row">
                         <div class="col-5">
@@ -409,7 +410,7 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>-->
+                </fieldset>
 
         </plex-box>
     </div>
