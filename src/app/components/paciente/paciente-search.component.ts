@@ -234,7 +234,7 @@ export class PacienteSearchComponent implements OnInit {
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                     } else {
                       if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
-                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                        //this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       }
                       this.seleccionarPaciente(pacienteEscaneado);
                     }

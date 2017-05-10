@@ -123,6 +123,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   entidadValidadora = '';
   viveEnNeuquen = false;
   viveProvNeuquen = false;
+  posibleDuplicado = false;
+  altoMacheo = false;
 
 
   contacto: IContacto = {
@@ -189,6 +191,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private financiadorService: FinanciadorService, public plex: Plex, private server: Server) { }
 
   ngOnInit() {
+
+
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
@@ -392,7 +396,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     if (valid.formValid) {
 
-
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
       pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
@@ -414,6 +417,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.viveEnNeuquen) {
         pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
       }
+
+      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
 
       let operacionPac: Observable<IPaciente>;
 
@@ -455,6 +460,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   // Verifica paciente repetido y genera lista de candidatos
   verificaPacienteRepetido() {
+    debugger;
+    this.posibleDuplicado = false;
+    this.altoMacheo = false;
+
     if (this.pacienteModel.sexo) {
       this.completarGenero();
     }
@@ -476,7 +485,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacientesSimilares = resultado;
         if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
           if (this.pacientesSimilares[0].match >= 0.9) {
-            this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+            this.altoMacheo = true;
+            //this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
             if (this.pacientesSimilares[0].match >= 1.0) {
               this.onSelect(this.pacientesSimilares[0].paciente);
               this.pacientesSimilares = null;
@@ -487,19 +497,32 @@ export class PacienteCreateUpdateComponent implements OnInit {
               this.disableGuardar = true;
             }
           } else {
-            this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+            //this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+            this.posibleDuplicado = true;
             this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
             this.enableIgnorarGuardar = true;
             this.disableGuardar = true;
           }
+          return false;
         } else {
           this.disableGuardar = false;
           this.enableIgnorarGuardar = false;
+          return true;
         }
       });
       //}
+    } else {
+      return false;
     }
   }
+
+
+  preSave(valid) {
+    if (valid.formValid) {
+
+    }
+  }
+
 
 
 }
