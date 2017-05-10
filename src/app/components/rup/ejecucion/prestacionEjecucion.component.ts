@@ -34,6 +34,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tipoProblema = null;
     public problemaTratar: any;
     public searchForm: FormGroup;
+    public searchForm2: FormGroup;
     public breadcrumbs: any;
 
 
@@ -71,21 +72,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     // este tipo de prestaciones se le van quitando opciones a medida que ejecuto una nueva
     tiposPrestacionesPosibles: ITipoPrestacion[] = [];
     // prestaciones que se ejecutan por defecto con la prestacion de origen
-    // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
-    prestacionesEjecucion: IPrestacionPaciente[] = [];
-    // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
-    listaProblemaPrestacion = [];
-    // id que se van ejecutando
-    idPrestacionesEjecutadas = [];
-    // PRESTACIONES FUTURAS
-    // utilizado para el select de tipos de prestaciones a ejecutar en un plan
-    nuevoTipoPrestacion: ITipoPrestacion;
-    // prestacion a pedir a futuro
-    nuevaPrestacion: any;
-    // array de opcioens seleccionadas
-    listaProblemasPlan: any = [];
-    // listado de prestaciones futuras a pedir en el plan
-    valoresPrestaciones: {}[] = [];
+    prestacionesEjecucion: IPrestacionPaciente[] = [];  // tambien almacenamos las que vamos agregando en la ejecucion de la prestacion de origen
+    listaProblemaPrestacion = []; // lista de problemas posibles en la ejecucion/evolucion de las prestaciones
+    idPrestacionesEjecutadas = []; // id que se van ejecutando
+    nuevoTipoPrestacion: ITipoPrestacion;   // PRESTACIONES FUTURAS // utilizado para el select de tipos de prestaciones a ejecutar en un plan
+    nuevaPrestacion: any;  // prestacion a pedir a futuro
+    listaProblemasPlan: any = [];  // array de opcioens seleccionadas
+    valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -120,6 +113,35 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             });
        // Fin- Filtro en Maestro de Problemas del Paciente
+
+       this.searchForm2 = this.formBuilder.group({
+                Prestacion: [''],
+            });
+
+
+       this.searchForm2.valueChanges.debounceTime(200).subscribe((value) => {
+           console.log('value.Prestacion:', value.Prestacion);
+           console.log('this.filtrosPrestacion:', this.filtrosPrestacion);
+            if (value.Prestacion) {
+                this.nombrePrestacion = value.Prestacion;
+                this.loadPrestacion(this.filtrosPrestacion);
+            }else {
+                let parametros;
+                 parametros = {
+                        'granularidad': this.filtrosPrestacion,
+                        'skip': this.skip,
+                        'limit': limit,
+                    };
+                this.serviceTipoPrestacion.get(parametros).subscribe(
+                            datos => {
+                                this.tiposPrestaciones = datos;
+                                this.finScroll = false;
+                            });
+            }
+       });
+
+
+
 
        // Cargo por defecto todas las prestaciones
        this.loadPrestacion(this.filtrosPrestacion);
@@ -159,6 +181,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         loadPrestacion(prestacionFiltros) {
                 let parametros;
                 this.filtrosPrestacion = prestacionFiltros; // Se setea como activo el filtro en pantalla - [ngClass]="{active}"
+
+                this.filtrosPrestacion = '';
+
 
                 if (prestacionFiltros === 'todos') {
                     parametros = {

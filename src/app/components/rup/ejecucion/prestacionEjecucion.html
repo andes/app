@@ -163,7 +163,7 @@
                                                   
                 <!--FILTRO EN MAESTRO DE PROBLEMAS-->
                 <form [formGroup]="searchForm">                                   
-                    <div ><plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text></div>                                                         
+                    <plex-text formControlName="Problema"  placeholder="Buscar Problema"></plex-text>                                                        
                 </form>               
 
                 <!--BOTONES DE FILTRO-->
@@ -309,9 +309,8 @@
                 </header>
 
                 <!--FILTRO PRESTACIONES-->
-                <form>                                   
-                   <plex-text [(ngModel)]="nombrePrestacion" name="filtroNombrePrestacion" placeholder="Buscar Prestación" (change)="loadPrestacion('filtrosPrestacion')">
-                    </plex-text>                                                        
+                <form [formGroup]="searchForm2">                                   
+                   <plex-text formControlName="Prestacion"  placeholder="Buscar Prestación" ></plex-text>                                                                                                
                 </form>               
 
                 <!--BOTONES DE FILTRO-->
