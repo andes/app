@@ -45,7 +45,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   searchProblema: String;
   isDraggingProblem: Boolean = false;
+  isDraggingProblemList: Boolean = false;
   isDraggingPlan: Boolean = false;
+
 
   // Filtro Prestaciones
   filtrosPrestacion: String = 'todos';
@@ -135,10 +137,16 @@ export class PrestacionEjecucionComponent implements OnInit {
   arrastrandoProblema(dragging) {
     this.isDraggingProblem = dragging;
   }
+
+    arrastrandoProblemaLista(dragging) {
+    this.isDraggingProblemList = dragging;
+
+  }
   //Para planes
   arrastrandoPlan(dragging) {
     this.isDraggingPlan = dragging;
-  }
+}
+
 
   buscarPrestacion(e) {
     if (e.value) {
@@ -335,6 +343,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.listaProblemas.push(resultado);
         return resultado;
         // this.updateListaProblemas(resultado.id);
+
+        // this.plex.toast('success', 'Problema asociado', '', 2000);
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
         return null;
