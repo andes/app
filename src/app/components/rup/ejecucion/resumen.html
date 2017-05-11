@@ -120,45 +120,35 @@
                 </header>
 
                 <ul class="list-group">
-                    <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">                                                    
-                       
-                        <span>
-                            <strong>{{pendiente.solicitud.tipoPrestacion.nombre}}</strong>                                                          
-                            <small> | Solicitado el {{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}                                   
-                            </small>
-                            
-                        </span>              
+                     <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">
 
-                        <div class="list-inline " *ngFor="let problema of pendiente.solicitud.listaProblemas">             
-                            <span Class="msg-problema">                                                 
-                            <i class="mdi mdi-link "></i > Prestacion asignada a <b>{{problema.tipoProblema.nombre}}</b>  
-                            </span>
-                            <br>  
-                            <small> Profesional: {{problema.evoluciones[problema.evoluciones.length - 1].profesional}} </small>                                                                                                                   
-                            <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                 <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                    Activo
-                                 </span>
-                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                 </span>
-                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
-                                    class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
-                                 </span> 
-                            </div>                                                                                                                                                                      
-                        </div>                                                                                                                                                                                                                       
-                    </li>
+
+            <h5 class="item-title d-inline text-left">{{pendiente.solicitud.tipoPrestacion.nombre}}</h5>
+            <small> Solicitado el <strong>{{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</strong>
+                    por (vincular profesional a la solicitud)) </small>
+
+            <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
+                <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">                    
+                    <plex-tooltip text='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'>
+                        <span class="badge badge-info  mdi mdi-link"></span>
+                    </plex-tooltip>
+                </div>
+            </ng-container>
+            
+
+
+        </li>
                 </ul>            
             </plex-box>
         </div>       
 
-        <!--Hallazgos de la consulta-->
+        <!--Problemas del paciente-->
         <div class="col-6">
             <plex-box> 
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
+                            <h5 class="box-title-principal">Problemas del paciente</h5>
                         </div>
                     </div>      
                 </header>      
@@ -167,8 +157,8 @@
                     <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">                        
                         <span>                                
                         <strong>{{problema.tipoProblema.nombre}} </strong>  |                                   
-                            <small>Iniciado {{problema.fechaInicio | fromNow}} |
-                                   Profesional: {{problema.evoluciones[problema.evoluciones.length - 1].profesional}}
+                            <small>Iniciado <strong>{{problema.fechaInicio | fromNow}}</strong> por
+                                   el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
                             </small>
                         </span>
 
@@ -178,11 +168,13 @@
                             <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                 Activo
                             </span>
-                            <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                            <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
-
-                            <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
+                             <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
+                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                            </span>
+                            <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"
                                     class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
                             </span> 
                              

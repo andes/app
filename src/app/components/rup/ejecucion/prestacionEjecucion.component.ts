@@ -17,6 +17,7 @@ import { fromNowPipe } from './../../../utils/date';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 const limit = 10;
+const skip = 0;
 
 @Component({
   selector: 'rup-prestacionEjecucion',
@@ -50,16 +51,17 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   // Filtro Prestaciones
-  filtrosPrestacion: String = 'todos';
+  filtrosPrestacion: String = '';
   nombrePrestacion: String = '';
-  skip: number = 0;
   finScroll: boolean = false;
   tiposPrestaciones: ITipoPrestacion[] = [];
   searchPrestacion: String;
 
-  //Busqueda planes
+
+  // Busqueda planes
   searchPlanes: String;
   planes: ITipoPrestacion[] = [];
+
 
   items = [
     { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -110,9 +112,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     //  this.breadcrumbs = this.route.routeConfig.path;
     //     console.log('pantalla:', this.breadcrumbs);
 
-    // Cargo por defecto todas las prestaciones
-    this.loadPrestacion(this.filtrosPrestacion);
-
 
     this.route.params.subscribe(params => {
       let id = params['id'];
@@ -142,7 +141,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.isDraggingProblemList = dragging;
 
   }
-  //Para planes
+  // Para planes
   arrastrandoPlan(dragging) {
     this.isDraggingPlan = dragging;
   }
@@ -156,7 +155,8 @@ export class PrestacionEjecucionComponent implements OnInit {
       let parametros;
       parametros = {
         'granularidad': this.filtrosPrestacion,
-        'skip': this.skip,
+        'autonoma': true,
+        'skip': skip,
         'limit': limit,
       };
       this.serviceTipoPrestacion.get(parametros).subscribe(
@@ -184,8 +184,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   }
 
-  //Buscador de planes del paciente..
-  buscarPlanes(e) {
+
+  // Buscador de planes del paciente..
+   buscarPlanes(e) {
     let query = {
       query: e.value,
       turneable: true
@@ -290,6 +291,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.filtroEstado = 'inactivo';
     this.filtros = 'filtroInactivo';
   }
+
+  FiltroestadoResuelto() {
+    this.filtroEstado = 'resuelto';
+    this.filtros = 'filtroResuelto';
+  }
   // FILTROS MAESTRO DE PROBLEMAS
 
 
@@ -305,14 +311,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     if (prestacionFiltros === 'todos') {
       parametros = {
         'nombre': this.nombrePrestacion,
-        'skip': this.skip,
+        'autonoma': true,
+        'skip': skip,
         'limit': limit,
       };
     } else {
       parametros = {
         'nombre': this.nombrePrestacion,
         'granularidad': prestacionFiltros,
-        'skip': this.skip,
+        'autonoma': true,
+        'skip': skip,
         'limit': limit,
       };
     }
