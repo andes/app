@@ -145,19 +145,19 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.isDraggingProblemList = dragging;
 
   }
-   // Para planes
+  // Para planes
   arrastrandoPlan(dragging) {
     this.isDraggingPlan = dragging;
   }
 
 
-   arrastrandoPlanSeleccion(dragging) {
-        this.isDraggingPlanSeleccion = dragging;
-    }
-    onPlanSelecionDrop(e: any){
-      this.PlanesSeleccionados.push(e.dragData);
+  arrastrandoPlanSeleccion(dragging) {
+    this.isDraggingPlanSeleccion = dragging;
+  }
+  onPlanSelecionDrop(e: any) {
+    this.PlanesSeleccionados.push(e.dragData);
 
-    }
+  }
 
   buscarPrestacion(e) {
     if (e.value) {
@@ -199,13 +199,18 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // Buscador de planes del paciente..
   buscarPlanes(e) {
-    let query = {
-      query: e.value,
-      turneable: true
-    };
-    this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
-      this.planes = listaPlanes;
-    });
+    if (e.value) {
+
+      let query = {
+        nombre: e.value,
+        turneable: true
+      };
+      this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
+        this.planes = listaPlanes;
+      });
+    } else {
+      this.planes = [];
+    }
   }
 
   limpiarBusqueda() {
@@ -280,39 +285,39 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
 
-    
-    onPlanDrop(e: any, idProblema) {
-        debugger;
-        console.log(e.dragData);
-        console.log(idProblema);
 
-    }
+  onPlanDrop(e: any, idProblema) {
+    debugger;
+    console.log(e.dragData);
+    console.log(idProblema);
 
-    //Mover la funcion luego!! 
+  }
 
-    // agregamos la prestacion al plan
-    agregarPlanDePrestacionFutura() {
+  //Mover la funcion luego!! 
 
-        if (this.nuevoTipoPrestacion) {
-            // asignamos valores a la nueva prestacion
-            this.nuevaPrestacion = {
-                idPrestacionOrigen: this.prestacion.id,
-                paciente: this.prestacion.paciente,
-                solicitud: {
-                    tipoPrestacion: this.nuevoTipoPrestacion,
-                    fecha: new Date(),
-                    listaProblemas: []
-                },
-                estado: {
-                    timestamp: Date(),
-                    tipo: 'pendiente'
-                },
-                ejecucion: {
-                    evoluciones: []
-                }
-            };
+  // agregamos la prestacion al plan
+  agregarPlanDePrestacionFutura() {
+
+    if (this.nuevoTipoPrestacion) {
+      // asignamos valores a la nueva prestacion
+      this.nuevaPrestacion = {
+        idPrestacionOrigen: this.prestacion.id,
+        paciente: this.prestacion.paciente,
+        solicitud: {
+          tipoPrestacion: this.nuevoTipoPrestacion,
+          fecha: new Date(),
+          listaProblemas: []
+        },
+        estado: {
+          timestamp: Date(),
+          tipo: 'pendiente'
+        },
+        ejecucion: {
+          evoluciones: []
         }
+      };
     }
+  }
 
   removeItem(item: any, list: Array<any>) {
     let index = list.map((e) => {

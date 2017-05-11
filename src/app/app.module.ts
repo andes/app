@@ -1,6 +1,3 @@
-
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -146,6 +143,10 @@ import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/
 import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
 import { Molecula } from './components/rup/core/molecula.component';
 import { Atomo } from './components/rup/core/atomoComponent';
+import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
+import { InterconsultaComponent } from './components/rup/moleculas/interconsulta.component';
+import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
+import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -239,7 +240,11 @@ export const RUP_COMPONENTS = [
   NinoSanoComponent,
   DatosPerinatalesComponent,
   RegistrosVisitasComponent,
-  Formula
+  Formula,
+  EcografiaComponent,
+  InterconsultaComponent,
+  LaboratorioComponent,
+  RadiografiaComponent
 ];
 
 // Locales
