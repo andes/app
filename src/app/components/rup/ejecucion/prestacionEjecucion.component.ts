@@ -45,6 +45,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   searchProblema: String;
   isDraggingProblem: Boolean = false;
+  isDraggingPlan: Boolean = false;
 
   // Filtro Prestaciones
   filtrosPrestacion: String = 'todos';
@@ -53,6 +54,10 @@ export class PrestacionEjecucionComponent implements OnInit {
   finScroll: boolean = false;
   tiposPrestaciones: ITipoPrestacion[] = [];
   searchPrestacion: String;
+
+   //Busqueda planes
+   searchPlanes: String;
+   planes: ITipoPrestacion[] = [];
 
   items = [
     { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -130,6 +135,10 @@ export class PrestacionEjecucionComponent implements OnInit {
   arrastrandoProblema(dragging) {
     this.isDraggingProblem = dragging;
   }
+  //Para planes
+  arrastrandoPlan(dragging) {
+    this.isDraggingPlan = dragging;
+  }
 
   buscarPrestacion(e) {
     if (e.value) {
@@ -165,6 +174,17 @@ export class PrestacionEjecucionComponent implements OnInit {
       this.listaproblemasMaestro = [];
     }
 
+  }
+
+  //Buscador de planes del paciente..
+   buscarPlanes(e) {
+    let query = {
+      query: e.value,
+      turneable: true
+    };
+   this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
+         this.planes = listaPlanes;
+      });
   }
 
   limpiarBusqueda() {
@@ -215,6 +235,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   }
 
+  
+  onPlanDrop(e: any) {
+    debugger;
+
+  }
 
   removeItem(item: any, list: Array<any>) {
     let index = list.map((e) => {
