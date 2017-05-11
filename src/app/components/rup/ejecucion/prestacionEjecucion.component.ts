@@ -20,7 +20,30 @@ const limit = 10;
 
 @Component({
     selector: 'rup-prestacionEjecucion',
-    templateUrl: 'prestacionEjecucion.html'
+    templateUrl: 'prestacionEjecucion.html',
+    styles: [`
+    div.scroll-list {
+      overflow: auto;
+      max-height: 70vh;
+    }
+    
+    .drag-over-border {
+      border: #ff525b dashed 2px;
+    }
+    
+    .drag-target-border {
+       border: #00bfff dashed 2px;
+    }
+
+    .drag-target-border-green {
+       border: #3c763d dashed 2px;
+    }
+
+    .drag-handle {
+        cursor: move;
+    }
+   `
+    ]
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
@@ -33,23 +56,26 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tiposProblemas = [];
     public tipoProblema = null;
     public problemaTratar: any;
-    public searchForm: FormGroup;
-    public searchForm2: FormGroup;
     public breadcrumbs: any;
 
 
     // Filtro Problemas
-        filtroEstado: String = '';
-        filtros: String = 'filtroTodos';
-        habilitaTransparencia: String = '';
-        listaproblemasMaestro: any = [];
+    filtroEstado: String = '';
+    filtros: String = 'filtroTodos';
+    habilitaTransparencia: String = '';
+    listaproblemasMaestro: any = [];
+    search: String = '';
+
+    searchProblema: String;
+    isDraggingProblem: Boolean = false;
 
     // Filtro Prestaciones
-        filtrosPrestacion: String = 'todos';
-        nombrePrestacion: String = '';
-        skip: number = 0;
-        finScroll: boolean = false;
-        tiposPrestaciones: ITipoPrestacion[] = [];
+    filtrosPrestacion: String = 'todos';
+    nombrePrestacion: String = '';
+    skip: number = 0;
+    finScroll: boolean = false;
+    tiposPrestaciones: ITipoPrestacion[] = [];
+    searchPrestacion: String;
 
     items = [
         { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -82,6 +108,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // listado de problemas del paciente
     listaProblemasPaciente: any[] = [];
     listaProblemaPrestaciones: any[] = [];
+    
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
@@ -95,60 +122,14 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.problemaItem = problema;
     }
 
+
     ngOnInit() {
-    //  this.breadcrumbs = this.route.routeConfig.path;
-    //     console.log('pantalla:', this.breadcrumbs);
+        //  this.breadcrumbs = this.route.routeConfig.path;
+        //     console.log('pantalla:', this.breadcrumbs);
 
+        // Cargo por defecto todas las prestaciones
+        this.loadPrestacion(this.filtrosPrestacion);
 
-        // Inicio - Filtro en Maestro de Problemas del Paciente
-        this.searchForm = this.formBuilder.group({
-            Problema: [''],
-        });
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
-            if (value.Problema) {
-                this.habilitaTransparencia = 'habilitar';
-                this.servicioTipoProblema.get({ nombre: value.Problema }).subscribe(listaTipoProblemas => {
-                    this.listaproblemasMaestro = listaTipoProblemas;
-                });
-
-                } else {
-                    this.habilitaTransparencia = 'inhabilitar';
-                }
-            });
-       // Fin- Filtro en Maestro de Problemas del Paciente
-
-       this.searchForm2 = this.formBuilder.group({
-                Prestacion: [''],
-            });
-
-
-       this.searchForm2.valueChanges.debounceTime(200).subscribe((value) => {
-           console.log('value.Prestacion:', value.Prestacion);
-           console.log('this.filtrosPrestacion:', this.filtrosPrestacion);
-            if (value.Prestacion) {
-                this.nombrePrestacion = value.Prestacion;
-                this.loadPrestacion(this.filtrosPrestacion);
-            }else {
-                let parametros;
-                 parametros = {
-                        'granularidad': this.filtrosPrestacion,
-                        'skip': this.skip,
-                        'limit': limit,
-                    };
-                this.serviceTipoPrestacion.get(parametros).subscribe(
-                            datos => {
-                                this.tiposPrestaciones = datos;
-                                this.finScroll = false;
-                            });
-            }
-       });
-
-
-
-
-       // Cargo por defecto todas las prestaciones
-       this.loadPrestacion(this.filtrosPrestacion);
-       // Cargo por defecto todas las prestaciones
 
         this.route.params.subscribe(params => {
             let id = params['id'];
@@ -163,9 +144,59 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.tiposPrestacionesPosibles = tiposPrestaciones;
             });
         });
+    }
 
+    dropeado(e, string) {
+        alert(string);
+        console.log(e);
+    }
+
+    arrastrandoProblema(dragging) {
+        this.isDraggingProblem = dragging;
+    }
+
+    buscarPrestacion(e) {
+        if (e.value) {
+            this.nombrePrestacion = e.value;
+            this.loadPrestacion(this.filtrosPrestacion);
+        } else {
+            let parametros;
+            parametros = {
+                'granularidad': this.filtrosPrestacion,
+                'skip': this.skip,
+                'limit': limit,
+            };
+            this.serviceTipoPrestacion.get(parametros).subscribe(
+                datos => {
+                    this.tiposPrestaciones = datos;
+                    this.finScroll = false;
+                });
+        }
+    }
+
+    // Inicio - Filtro en Maestro de Problemas del Paciente
+    buscarProblemas(e) {
+        this.habilitaTransparencia = 'inhabilitar';
+
+        if (e.value) {
+            this.habilitaTransparencia = 'habilitar';
+            this.servicioTipoProblema.get({ nombre: e.value }).debounceTime(1000).subscribe(listaTipoProblemas => {
+                this.listaproblemasMaestro = listaTipoProblemas;
+            });
+
+        } else {
+
+            this.listaproblemasMaestro = [];
+        }
 
     }
+
+    limpiarBusqueda() {
+        this.searchProblema = '';
+        this.listaproblemasMaestro = [];
+    }
+    // Fin- Filtro en Maestro de Problemas del Paciente
+
 
 
     // Drag and drop ng2
@@ -181,29 +212,31 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     onHallazgoDrop(e: any) {
-          console.log(e.dragData);
-          //Se carga listaProblemaPrestaciones;
-          this.updateListaProblemas(e.dragData.id);
+
+        console.log(e.dragData);
+        //Se carga listaProblemaPrestaciones;
+        this.updateListaProblemas(e.dragData.id);
+
 
     }
 
     onPrestacionDrop(e: any, idProblema) {
-      debugger;
-      // Se crea la nueva prestacion
-      // Se verifica que sea un tipo de prestacion
-      this.agregarPrestacionEjecucion(e.dragData);
-      console.log(this.data[e.dragData.key]);
+        debugger;
+        // Se crea la nueva prestacion
+        // Se verifica que sea un tipo de prestacion
+        this.agregarPrestacionEjecucion(e.dragData);
+        console.log(this.data[e.dragData.key]);
 
-     // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
-      // Se vincula al problema
-      let pos = this.prestacionesEjecucion.length;
-      if (this.prestacionesEjecucion[pos - 1]) {
-        this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(idProblema);
-      }
-      //this.valoresPrestaciones[e.dragData.key.toString()] = {};
+        // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
+        // Se vincula al problema
+        let pos = this.prestacionesEjecucion.length;
+        if (this.prestacionesEjecucion[pos - 1]) {
+            this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(idProblema);
+        }
+        //this.valoresPrestaciones[e.dragData.key.toString()] = {};
 
-      // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
-      console.log(this.data[e.dragData.key]);
+        // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
+        console.log(this.data[e.dragData.key]);
 
     }
 
@@ -219,50 +252,52 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     // FILTROS MAESTRO DE PROBLEMAS
-        FiltroestadoTodos() {
-            this.filtroEstado = '';
-            this.filtros = 'filtroTodos';
-        }
-        FiltroestadoActivo() {
-            this.filtroEstado = 'activo';
-            this.filtros = 'filtroActivo';
-        }
-        FiltroestadoInactivo() {
-            this.filtroEstado = 'inactivo';
-            this.filtros = 'filtroInactivo';
-        }
+    FiltroestadoTodos() {
+        this.filtroEstado = '';
+        this.filtros = 'filtroTodos';
+    }
+    FiltroestadoActivo() {
+        this.filtroEstado = 'activo';
+        this.filtros = 'filtroActivo';
+    }
+    FiltroestadoInactivo() {
+        this.filtroEstado = 'inactivo';
+        this.filtros = 'filtroInactivo';
+    }
     // FILTROS MAESTRO DE PROBLEMAS
 
 
     // Inicio - FILTRO DE PRESTACIONES
-        loadPrestacion(prestacionFiltros) {
-                let parametros;
-                this.filtrosPrestacion = prestacionFiltros; // Se setea como activo el filtro en pantalla - [ngClass]="{active}"
 
-                this.filtrosPrestacion = '';
+    loadPrestacion(prestacionFiltros) {
+        let parametros;
+        this.filtrosPrestacion = prestacionFiltros; // Se setea como activo el filtro en pantalla - [ngClass]="{active}"
+
+        this.filtrosPrestacion = '';
 
 
-                if (prestacionFiltros === 'todos') {
-                    parametros = {
-                        'nombre': this.nombrePrestacion,
-                        'skip': this.skip,
-                        'limit': limit,
-                    };
-                }else {
-                     parametros = {
-                        'nombre': this.nombrePrestacion,
-                        'granularidad': prestacionFiltros,
-                        'skip': this.skip,
-                        'limit': limit,
-                    };
-                }
-
-                this.serviceTipoPrestacion.get(parametros).subscribe(
-                            datos => {
-                                this.tiposPrestaciones = datos;
-                                this.finScroll = false;
-                            });
+        if (prestacionFiltros === 'todos') {
+            parametros = {
+                'nombre': this.nombrePrestacion,
+                'skip': this.skip,
+                'limit': limit,
+            };
+        } else {
+            parametros = {
+                'nombre': this.nombrePrestacion,
+                'granularidad': prestacionFiltros,
+                'skip': this.skip,
+                'limit': limit,
+            };
         }
+
+        this.serviceTipoPrestacion.get(parametros).subscribe(
+            datos => {
+                this.tiposPrestaciones = datos;
+                this.finScroll = false;
+            });
+
+    }
     // Fin - FILTRO DE PRESTACIONES
 
 
@@ -462,7 +497,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargarProblemasPaciente() {
         this.servicioProblemaPac.get({ idPaciente: this.prestacion.paciente.id }
         ).subscribe(lista => {
-            if (lista){
+            if (lista) {
                 this.listaProblemasPaciente = lista;
             }
 
@@ -678,7 +713,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-      debugger;
+        debugger;
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         } else {
