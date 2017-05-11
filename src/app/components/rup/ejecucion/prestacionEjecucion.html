@@ -237,6 +237,7 @@
                     <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
                     <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
                     <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
+                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroResuelto'}"><input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> Resuelto</label>
                 </div>
 
                 <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
@@ -245,22 +246,22 @@
                         <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
                             (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
                             <span>
-                                <b>{{problema.tipoProblema.nombre }}</b>
-                                <small>  | {{ problema.fechaInicio | fromNow}}</small>
+                                <b>{{problema.tipoProblema.nombre }}</b>                                
                             </span>
                             <div class="pull-right">
                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'" class="badge badge-success">{{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                     </span>
 
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'" class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'" class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}                                    
                                     </span>
-
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'" class="badge badge-warning">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'" class="badge badge-danger"> {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                    </span>
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'" class="badge badge-warning">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
                                     </span>
                             </div>
 
-                            <small>Última evolución realizada {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} 
-                                        | {{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}                  
+                            <small>Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
+                                       por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}   </strong>               
                                 </small>
                         </li>
                     </ng-container>
@@ -303,17 +304,20 @@
                             <span>
                                         <h5 class="item-title">{{problema.tipoProblema.nombre}}</h5>
                                         <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                            Última evolución {{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}} |
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].observacion}}
+                                            Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}}</strong>
+                                            por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional}}</strong>
                                         </small>
                                     </span>
 
                             <div class="list-inline">
                                 <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">Activo</span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                         </span>
-                                <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'">
+                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                        </span>
+                                <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
                                         </span>
                                 <span class="d-inline">

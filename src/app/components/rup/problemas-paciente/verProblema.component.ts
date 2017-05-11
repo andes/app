@@ -29,6 +29,14 @@ export class verProblemaComponent implements OnInit {
                 this.problema = problema;
             });
 
+            this.problema.evoluciones.sort(function(a, b){
+                if ( a.fecha > b.fecha )
+                    return -1;
+                if ( a.fecha < b.fecha )
+                    return 1;
+                return 0;
+            });
+
     }
 
     cerrar() {
