@@ -18,15 +18,15 @@
 
                     <div class="row">
                         <div class="col-4">
-                            <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" [readonly]="validado || noPoseeDNI" [max]="9999999999" name="documento" [required]="!noPoseeDNI" (focusout)="verificaPacienteRepetido()" placeholder="Ingresar DNI...">
+                            <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [readonly]="validado || noPoseeDNI" [max]="9999999999" name="documento" [required]="!noPoseeDNI" placeholder="Ingresar DNI...">
                             </plex-int>
                         </div>
                         <div class="col-4">
-                            <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" [required]="true" [readonly]="validado" (focusout)="verificaPacienteRepetido()" placeholder="Ingrese nombre...">
+                            <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
                             </plex-text>
                         </div>
                         <div class="col-4">
-                            <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" [required]="true" [readonly]="validado" (focusout)="verificaPacienteRepetido()" placeholder="Ingrese apellido...">
+                            <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
                             </plex-text>
                         </div>
                     </div>
@@ -37,11 +37,11 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" [(ngModel)]="pacienteModel.fechaNacimiento" (focusout)="verificaPacienteRepetido()" name="fechaNacimiento" [required]="!noPoseeDNI">
+                            <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
                             </plex-datetime>
                         </div>
                         <div class="col-4">
-                            <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="verificaPacienteRepetido()" placeholder="Seleccione..." [required]="true" label="Sexo">
+                            <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero();disableGuardar = false; ; enableIgnorarGuardar = false;" placeholder="Seleccione..." [required]="true" label="Sexo">
                             </plex-select>
                         </div>
                         <div class="col-4" title="Genero autopercibido">
@@ -230,7 +230,7 @@
                     <div class="row">&nbsp;</div>
 
                     <div class="row">&nbsp;</div>
-                    <div type="inverted" *ngIf="disableGuardar" title="Pacientes Candidatos">
+                    <div type="inverted" *ngIf="pacientesSimilares" title="Pacientes Candidatos">
                         <header>
                             <h4>Pacientes Candidatos</h4>
                         </header>
@@ -263,7 +263,7 @@
     </section>
     <br>
     <footer>
-        <plex-button *ngIf="!disableGuardar" title="Guardar" icon="content-save" label="Guardar" type="success" validateForm="true" (click)="save($event)">
+        <plex-button *ngIf="!disableGuardar" title="Guardar" icon="content-save" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">
         </plex-button>
         <plex-button *ngIf="enableIgnorarGuardar" title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" validateForm="true" type="success" (click)="save($event)">
         </plex-button>

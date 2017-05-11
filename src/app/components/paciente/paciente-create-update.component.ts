@@ -1,3 +1,4 @@
+import { DocumentoEscaneado } from './documento-escaneado.const';
 import { Server } from '@andes/shared';
 import {
   IUbicacion
@@ -313,7 +314,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     this.pacienteModel = Object.assign({}, this.seleccion);
     this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
-    this.verificaPacienteRepetido();
+
   }
 
   loadProvincias(event, pais) {
@@ -395,7 +396,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   save(valid) {
 
     if (valid.formValid) {
-
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
       pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
@@ -418,7 +418,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
         pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
       }
 
-      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+      if (this.altoMacheo) {
+        this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+      }
+
+      if (this.posibleDuplicado) {
+        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+      }
 
       let operacionPac: Observable<IPaciente>;
 
@@ -455,71 +461,100 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.seleccion = Object.assign({}, paciente);
     this.actualizarDatosPaciente();
     this.disableGuardar = false;
+    this.enableIgnorarGuardar = false;
     this.sugerenciaAceptada = true;
   }
 
+
   // Verifica paciente repetido y genera lista de candidatos
   verificaPacienteRepetido() {
-    debugger;
     this.posibleDuplicado = false;
     this.altoMacheo = false;
 
-    if (this.pacienteModel.sexo) {
-      this.completarGenero();
-    }
+    return new Promise((resolve, reject) => {
+      if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
+        && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
+        /*if (!this.pacienteModel.id) {*/
+        let dto: any = {
+          type: 'suggest',
+          claveBlocking: 'documento',
+          percentage: true,
+          apellido: this.pacienteModel.apellido.toString(),
+          nombre: this.pacienteModel.nombre.toString(),
+          documento: this.pacienteModel.documento.toString(),
+          sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
+          fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
+        };
 
-    if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
-      && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-      /*if (!this.pacienteModel.id) {*/
-      let dto: any = {
-        type: 'suggest',
-        claveBlocking: 'documento',
-        percentage: true,
-        apellido: this.pacienteModel.apellido.toString(),
-        nombre: this.pacienteModel.nombre.toString(),
-        documento: this.pacienteModel.documento.toString(),
-        sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
-        fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
-      };
-      this.pacienteService.get(dto).subscribe(resultado => {
-        this.pacientesSimilares = resultado;
-        if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-          if (this.pacientesSimilares[0].match >= 0.9) {
-            this.altoMacheo = true;
-            //this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteForm: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-            if (this.pacientesSimilares[0].match >= 1.0) {
-              this.onSelect(this.pacientesSimilares[0].paciente);
-              this.pacientesSimilares = null;
-              this.enableIgnorarGuardar = false;
+        this.pacienteService.get(dto).subscribe(resultado => {
+          this.pacientesSimilares = resultado;
+          if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
+            debugger;
+            if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
+              resolve(false);
+
             } else {
-              this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
-              this.enableIgnorarGuardar = false;
-              this.disableGuardar = true;
+
+
+              if (this.pacientesSimilares[0].match >= 0.9) {
+                if (this.pacientesSimilares[0].match >= 1.0) {
+                  this.onSelect(this.pacientesSimilares[0].paciente);
+                  this.pacientesSimilares = null;
+                  this.enableIgnorarGuardar = false;
+                } else {
+                  this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+                  this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+                  this.enableIgnorarGuardar = false;
+                  this.disableGuardar = true;
+                }
+              } else {
+                if (!this.verificarDNISexo(this.pacientesSimilares)) {
+                  this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+                  this.posibleDuplicado = true;
+                  this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+                  this.enableIgnorarGuardar = true;
+                  this.disableGuardar = true;
+                } else {
+                  resolve(true);
+                }
+              }
+              resolve(true);
             }
           } else {
-            //this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-            this.posibleDuplicado = true;
-            this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-            this.enableIgnorarGuardar = true;
-            this.disableGuardar = true;
+            this.disableGuardar = false;
+            this.enableIgnorarGuardar = false;
+            resolve(false);
           }
-          return false;
-        } else {
-          this.disableGuardar = false;
-          this.enableIgnorarGuardar = false;
-          return true;
-        }
-      });
-      //}
-    } else {
-      return false;
+        });
+      } else {
+        resolve(false);
+      }
+    });
+  }
+
+
+  verificarDNISexo(listaSimilares) {
+    let i = 0;
+    let cond = false;
+    let sexoPac = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
+    while (i < listaSimilares.length && !cond) {
+      if ((listaSimilares[i].paciente.documento == this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo == sexoPac)) {
+        this.enableIgnorarGuardar = false;
+        cond = true;
+      }
+      i++;
     }
+    return cond;
   }
 
 
   preSave(valid) {
     if (valid.formValid) {
-
+      this.verificaPacienteRepetido().then((resultado) => {
+        if (!resultado) {
+          this.save(valid);
+        }
+      });
     }
   }
 
