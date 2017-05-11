@@ -294,7 +294,8 @@
             <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas && !isDraggingProblem && !isDraggingProblemList">
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
-                    <div droppable [dropScope]="'planes-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event) " [hidden]="!isDraggingPlan" class="droppable">
+                     <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " 
+                        [hidden]="!isDraggingPlan" class="droppable">
                         Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
                     </div>
 
@@ -440,9 +441,31 @@
 
 
                 <ul class="results list-group" *ngIf="planes">
-                    <li draggable [dragScope]="'planes-paciente'" [dragOverClass]="'drag-over-border'" *ngFor="let plan of planes" class="list-group-item justify-content-between list-group-item-action" [dragData]="plan" (onDragStart)="arrastrandoPlan(true)" (onDragEnd)="arrastrandoPlan(false)">
+                         <li draggable [dragScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-over-border'" *ngFor="let plan of planes"
+                        class="list-group-item justify-content-between list-group-item-action" [dragData]="plan" (onDragStart)="arrastrandoPlanSeleccion(true)"
+                        (onDragEnd)="arrastrandoPlanSeleccion(false)">
                         <span> {{plan.nombre}}</span>
 
+                    </li>
+                </ul>
+                 
+
+                          <!--Div para cargar los planes dropeables-->
+
+                <div droppable [dropScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanSelecionDrop($event) "
+                    [hidden]="!isDraggingPlanSeleccion" class="droppable">
+                    Arrastre aquí 
+
+                </div>
+
+
+                <ul class="results list-group" *ngIf="PlanesSeleccionados" >
+
+                    <li draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let planSelecion of PlanesSeleccionados"
+                        class="list-group-item justify-content-between list-group-item-action" [dragData]="planSelecion" (onDragStart)="arrastrandoPlan(true)"
+                        (onDragEnd)="arrastrandoPlan(false)">
+                   
+                        <span> {{planSelecion.nombre}}</span>
                     </li>
                 </ul>
 

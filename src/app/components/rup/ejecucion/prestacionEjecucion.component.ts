@@ -60,7 +60,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // Busqueda planes
   searchPlanes: String;
-  planes: ITipoPrestacion[] = [];
+  planes: ITipoPrestacion[] = []; //Todos los planes que encuentra en el metodo de busqueda..! 
+  PlanesSeleccionados: ITipoPrestacion[] = []; //Lista de planes que quedan seleccionados y listos para dragearse a los Problemas.
+  //Se le va a poder agregar un texto en esta seccion.. Ver eso.
+  isDraggingPlanSeleccion: Boolean = false;
+
 
 
   items = [
@@ -141,11 +145,19 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.isDraggingProblemList = dragging;
 
   }
-  // Para planes
+   // Para planes
   arrastrandoPlan(dragging) {
     this.isDraggingPlan = dragging;
   }
 
+
+   arrastrandoPlanSeleccion(dragging) {
+        this.isDraggingPlanSeleccion = dragging;
+    }
+    onPlanSelecionDrop(e: any){
+      this.PlanesSeleccionados.push(e.dragData);
+
+    }
 
   buscarPrestacion(e) {
     if (e.value) {
@@ -186,7 +198,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   // Buscador de planes del paciente..
-   buscarPlanes(e) {
+  buscarPlanes(e) {
     let query = {
       query: e.value,
       turneable: true
@@ -265,10 +277,42 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
 
-  onPlanDrop(e: any) {
-    debugger;
 
-  }
+
+
+    
+    onPlanDrop(e: any, idProblema) {
+        debugger;
+        console.log(e.dragData);
+        console.log(idProblema);
+
+    }
+
+    //Mover la funcion luego!! 
+
+    // agregamos la prestacion al plan
+    agregarPlanDePrestacionFutura() {
+
+        if (this.nuevoTipoPrestacion) {
+            // asignamos valores a la nueva prestacion
+            this.nuevaPrestacion = {
+                idPrestacionOrigen: this.prestacion.id,
+                paciente: this.prestacion.paciente,
+                solicitud: {
+                    tipoPrestacion: this.nuevoTipoPrestacion,
+                    fecha: new Date(),
+                    listaProblemas: []
+                },
+                estado: {
+                    timestamp: Date(),
+                    tipo: 'pendiente'
+                },
+                ejecucion: {
+                    evoluciones: []
+                }
+            };
+        }
+    }
 
   removeItem(item: any, list: Array<any>) {
     let index = list.map((e) => {
