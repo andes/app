@@ -175,8 +175,8 @@
         cursor: -webkit-grab;
     }
 </style>
-
 <header *ngIf="prestacion">
+    {{prestacion.paciente.id}}
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
@@ -223,7 +223,7 @@
             </ul>
             <!--{{isDraggingProblem}}-->
             <!--PROBLEMAS DEL PACIENTE - DB: problema-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " onDragLeave="arrastrandoProblema(false)" [hidden]="!isDraggingProblem" class="droppable">
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " [hidden]="!isDraggingProblem" class="droppable">
                 Arrastre aquí para vincularlos al paciente
             </div>
 
@@ -239,7 +239,8 @@
                 <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
                     <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
                     <ng-container *ngFor="let problema of listaProblemasPaciente ">
-                        <li draggable [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))">
+                        <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
+                            (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
                             <span>
                                 <b>{{problema.tipoProblema.nombre }}</b>
                                 <small>  | {{ problema.fechaInicio | fromNow}}</small>
@@ -280,7 +281,7 @@
                 </div>
             </header>
 
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" [hidden]="!isDraggingProblem" class="droppable">
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" [hidden]="!isDraggingProblem && !isDraggingProblemList" class="droppable">
                 Arrastre aquí para vincularlos a esta consulta
             </div>
 
