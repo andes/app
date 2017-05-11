@@ -291,7 +291,7 @@
             </div>
 
 
-            <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
+            <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas && !isDraggingProblem && !isDraggingProblemList">
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
                     <div droppable [dropScope]="'planes-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event) " [hidden]="!isDraggingPlan" class="droppable">

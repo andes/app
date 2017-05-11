@@ -155,7 +155,7 @@ export class PrestacionEjecucionComponent implements OnInit {
       let parametros;
       parametros = {
         'granularidad': this.filtrosPrestacion,
-        'autonoma': true,
+        'autonoma': false,
         'skip': skip,
         'limit': limit,
       };
@@ -260,6 +260,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
     console.log(this.data[e.dragData.key]);
 
+    this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
+
   }
 
 
@@ -311,7 +313,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     if (prestacionFiltros === 'todos') {
       parametros = {
         'nombre': this.nombrePrestacion,
-        'autonoma': true,
+        'autonoma': false,
         'skip': skip,
         'limit': limit,
       };
@@ -319,7 +321,7 @@ export class PrestacionEjecucionComponent implements OnInit {
       parametros = {
         'nombre': this.nombrePrestacion,
         'granularidad': prestacionFiltros,
-        'autonoma': true,
+        'autonoma': false,
         'skip': skip,
         'limit': limit,
       };
@@ -355,10 +357,14 @@ export class PrestacionEjecucionComponent implements OnInit {
       if (resultado) { // asignamos el problema a la prestacion de origen
         // this.listaProblemas.push(resultado);
         this.listaProblemasPaciente.push(resultado);
+
         //this.listaProblemas.push(resultado);
         if (actualizarPrestacion) {
           this.updateListaProblemas(resultado.id);
         }
+
+        this.plex.toast('success', 'El problema fue asociado correctamente', 'Problema asociado', 4000);
+
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
       }
