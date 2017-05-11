@@ -211,9 +211,24 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   onHallazgoDrop(e: any) {
-
-    console.log(e.dragData);
-    this.updateListaProblemas(e.dragData.id);
+    debugger;
+    let nuevoProblema;
+    // Verifica si es un problema o un tipo Problema
+    if ((e.dragData.nombre || e.dragData.tipoProblema)) {
+      nuevoProblema = e.dragData;
+      if (e.dragData.nombre) {
+        // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
+        this.tipoProblema = e.dragData;
+        nuevoProblema = this.agregarProblema();
+        if (nuevoProblema) {
+          this.removeItem(e.dragData, this.listaproblemasMaestro);
+        }
+      }
+      // Se asocia el ultimo problema a la prestacion
+      if (nuevoProblema) {
+        this.updateListaProblemas(nuevoProblema.id);
+      }
+    }
 
   }
 
@@ -315,9 +330,12 @@ export class PrestacionEjecucionComponent implements OnInit {
       if (resultado) { // asignamos el problema a la prestacion de origen
         // this.listaProblemas.push(resultado);
         this.listaProblemasPaciente.push(resultado);
+        this.listaProblemas.push(resultado);
+        return resultado;
         // this.updateListaProblemas(resultado.id);
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
+        return null;
       }
     });
   }
@@ -343,10 +361,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         ]
       };
 
-      this.guardarProblema(nuevoProblema);
+      return this.guardarProblema(nuevoProblema);
 
     } else {
       this.plex.alert('EL problema ya existe para esta consulta');
+      return null;
     }
   }
 
