@@ -92,6 +92,10 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 delete this.modelo.llave.edad.vencimiento;
             }
 
+            if (this.modelo.llave.solicitud.requerida === false) {
+                delete this.modelo.llave.solicitud;
+            }
+
             // PUT/UPDATE
             if (this.modelo.id) {
 
