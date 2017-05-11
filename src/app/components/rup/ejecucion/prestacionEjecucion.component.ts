@@ -256,6 +256,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
     console.log(this.data[e.dragData.key]);
 
+    this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
+
   }
 
   
@@ -341,10 +343,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         // this.listaProblemas.push(resultado);
         this.listaProblemasPaciente.push(resultado);
         this.listaProblemas.push(resultado);
-        return resultado;
         // this.updateListaProblemas(resultado.id);
 
-        // this.plex.toast('success', 'Problema asociado', '', 2000);
+        this.plex.toast('success', 'El problema fue asociado correctamente', 'Problema asociado', 4000);
+
+        return resultado;
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
         return null;
