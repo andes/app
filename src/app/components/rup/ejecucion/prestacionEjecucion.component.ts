@@ -187,16 +187,24 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    onPrestacionDrop(e: any) {
+    onPrestacionDrop(e: any, idProblema) {
       debugger;
       // Se crea la nueva prestacion
       // Se verifica que sea un tipo de prestacion
-      console.log(this.listaProblemaPrestacion);
       this.agregarPrestacionEjecucion(e.dragData);
-      //Se vincula al problema
-     //listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
+      console.log(this.data[e.dragData.key]);
 
-      console.log(this.prestacionesEjecucion);
+     // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
+      // Se vincula al problema
+      let pos = this.prestacionesEjecucion.length;
+      if (this.prestacionesEjecucion[pos - 1]) {
+        this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(idProblema);
+      }
+      //this.valoresPrestaciones[e.dragData.key.toString()] = {};
+
+      // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
+      console.log(this.data[e.dragData.key]);
+
     }
 
 
@@ -443,7 +451,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             },
             ejecucion: {
                 fecha: new Date(),
-                evoluciones: []
+                evoluciones: [],
+                listaProblemas: []
             }
         };
         this.listaProblemaPrestacion[tipoPrestacion.key] = [];
@@ -477,7 +486,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     evolucionarPrestacion() {
-
+        debugger;
         if (this.prestacion.ejecucion.listaProblemas.length > 0) {
             this.error = '';
             let i = 1;
@@ -669,7 +678,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onReturnComponent(datos, tipoPrestacionActual) {
-
+      debugger;
         if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
             delete this.data[tipoPrestacionActual.key];
         } else {
