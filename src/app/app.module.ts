@@ -62,8 +62,9 @@ import { ObservarDatosService } from './services/rup/observarDatos.service';
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
 // Componentes
-// ... Tablas Maestras
+import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+// ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
@@ -265,7 +266,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
   ],
 
   declarations: [
-    AppComponent, InicioComponent,
+    AppComponent, InicioComponent, LoginComponent,
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,

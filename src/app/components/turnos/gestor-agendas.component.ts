@@ -55,13 +55,11 @@ export class GestorAgendasComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
-
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
 
         // No está autorizado para ver esta pantalla?
         if (!this.autorizado) {
-            this.redirect('incio');
-
+            this.redirect('inicio');
         } else {
 
             this.items = [

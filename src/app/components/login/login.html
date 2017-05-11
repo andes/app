@@ -1,0 +1,29 @@
+<div class="login-container">
+    <div class="login-form">
+        <form>
+            <div class="row login-header">
+                <div class="col">
+                    <div class="onelogin"></div>
+                    <div class="andes"></div>
+                </div>
+            </div>
+            <div class="row login-content">
+                <div class="col">
+                    <plex-int label="Ingrese su usuario provincial OneLogin" prefix="<i class='mdi mdi-account-key'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
+                    </plex-int>
+                    <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-dialpad'></i>" [(ngModel)]="password" name="password" [password]="true" [required]="true">
+                    </plex-text>
+                    <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
+                    </plex-select>
+                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" (click)="login($event)"></plex-button>
+                </div>
+            </div>
+            <div class="row login-footer">
+                <div class="col">
+                    <div class="redTICS"></div>
+                    <div class="ministerio"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
