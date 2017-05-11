@@ -46,6 +46,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   searchProblema: String;
   isDraggingProblem: Boolean = false;
+  isDraggingPrestacion: Boolean = false;
   isDraggingProblemList: Boolean = false;
   isDraggingPlan: Boolean = false;
 
@@ -150,6 +151,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.isDraggingPlan = dragging;
   }
 
+  arrastrandoPrestacion(dragging) {
+    this.isDraggingPrestacion = dragging;
+  }
 
   arrastrandoPlanSeleccion(dragging) {
     this.isDraggingPlanSeleccion = dragging;
@@ -255,6 +259,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
       }
 
+    }
+  }
+
+  // agregamos prestacion en todos los problemas
+  onTodosProblemasDrop(e: any) {
+    if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
+      this.prestacion.ejecucion.listaProblemas.forEach(problema => {
+        this.onPrestacionDrop(e, problema.id);
+      });
     }
   }
 

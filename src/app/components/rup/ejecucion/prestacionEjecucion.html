@@ -290,12 +290,15 @@
                 Arrastre aquí para vincularlos a esta consulta
             </div>
 
+            <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " [hidden]="!isDraggingPrestacion" class="droppable">
+                Arrastre aquí para vincularlo a todos los problemas
+            </div>
+
 
             <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas && !isDraggingProblem && !isDraggingProblemList">
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
-                     <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " 
-                        [hidden]="!isDraggingPlan" class="droppable">
+                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " [hidden]="!isDraggingPlan" class="droppable">
                         Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
                     </div>
 
@@ -347,9 +350,6 @@
                                 </div>
                             </div>
                         </li>
-
-
-
                     </ul>
                 </div>
             </div>
@@ -412,7 +412,7 @@
 
             <!--PRESTACIONES-->
             <plex-accordion *ngIf="tiposPrestaciones">
-                <div draggable [dragData]="tipoPrestacion" *ngFor="let tipoPrestacion of tiposPrestaciones">
+                <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)" *ngFor="let tipoPrestacion of tiposPrestaciones">
 
                     <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
                         <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion" (evtData)="onReturnComponent($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null">
@@ -441,30 +441,27 @@
 
 
                 <ul class="results list-group" *ngIf="planes">
-                         <li draggable [dragScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-over-border'" *ngFor="let plan of planes"
-                        class="list-group-item justify-content-between list-group-item-action" [dragData]="plan" (onDragStart)="arrastrandoPlanSeleccion(true)"
+                    <li draggable [dragScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-over-border'" *ngFor="let plan of planes" class="list-group-item justify-content-between list-group-item-action" [dragData]="plan" (onDragStart)="arrastrandoPlanSeleccion(true)"
                         (onDragEnd)="arrastrandoPlanSeleccion(false)">
                         <span> {{plan.nombre}}</span>
 
                     </li>
                 </ul>
-                 
 
-                          <!--Div para cargar los planes dropeables-->
 
-                <div droppable [dropScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanSelecionDrop($event) "
-                    [hidden]="!isDraggingPlanSeleccion" class="droppable">
-                    Arrastre aquí 
+                <!--Div para cargar los planes dropeables-->
+
+                <div droppable [dropScope]="'planes-paciente-seleccionados'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanSelecionDrop($event) " [hidden]="!isDraggingPlanSeleccion" class="droppable">
+                    Arrastre aquí
 
                 </div>
 
 
-                <ul class="results list-group" *ngIf="PlanesSeleccionados" >
+                <ul class="results list-group" *ngIf="PlanesSeleccionados">
 
-                    <li draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let planSelecion of PlanesSeleccionados"
-                        class="list-group-item justify-content-between list-group-item-action" [dragData]="planSelecion" (onDragStart)="arrastrandoPlan(true)"
+                    <li draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let planSelecion of PlanesSeleccionados" class="list-group-item justify-content-between list-group-item-action" [dragData]="planSelecion" (onDragStart)="arrastrandoPlan(true)"
                         (onDragEnd)="arrastrandoPlan(false)">
-                   
+
                         <span> {{planSelecion.nombre}}</span>
                     </li>
                 </ul>
