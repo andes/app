@@ -142,7 +142,10 @@
                                  <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
                                     {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                                  </span>
-                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'Resuelto'"
+                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                 </span>
+                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"
                                     class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
                                  </span> 
                             </div>                                                                                                                                                                      
@@ -158,7 +161,7 @@
                 <header>
                     <div class="row">
                         <div class="col">
-                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
+                            <h5 class="box-title-principal">Problemas del paciente</h5>
                         </div>
                     </div>      
                 </header>      
