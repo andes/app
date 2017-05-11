@@ -57,9 +57,9 @@ export class PrestacionEjecucionComponent implements OnInit {
   tiposPrestaciones: ITipoPrestacion[] = [];
   searchPrestacion: String;
 
-   //Busqueda planes
-   searchPlanes: String;
-   planes: ITipoPrestacion[] = [];
+  //Busqueda planes
+  searchPlanes: String;
+  planes: ITipoPrestacion[] = [];
 
   items = [
     { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -138,14 +138,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.isDraggingProblem = dragging;
   }
 
-    arrastrandoProblemaLista(dragging) {
+  arrastrandoProblemaLista(dragging) {
     this.isDraggingProblemList = dragging;
 
   }
   //Para planes
   arrastrandoPlan(dragging) {
     this.isDraggingPlan = dragging;
-}
+  }
 
 
   buscarPrestacion(e) {
@@ -185,14 +185,14 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   //Buscador de planes del paciente..
-   buscarPlanes(e) {
+  buscarPlanes(e) {
     let query = {
       query: e.value,
       turneable: true
     };
-   this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
-         this.planes = listaPlanes;
-      });
+    this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
+      this.planes = listaPlanes;
+    });
   }
 
   limpiarBusqueda() {
@@ -206,12 +206,13 @@ export class PrestacionEjecucionComponent implements OnInit {
   // Drag and drop ng2
   onProblemaDrop(e: any) {
     debugger;
-
     this.tipoProblema = e.dragData;
-    this.agregarProblema();
-    this.removeItem(e.dragData, this.listaproblemasMaestro);
-    console.log(this.listaProblemas);
-    console.log(this.listaproblemasMaestro);
+    if (!this.existeProblema(this.tipoProblema)) {
+      this.agregarProblema(false);
+      this.removeItem(e.dragData, this.listaproblemasMaestro);
+    } else {
+      this.plex.alert('El problema ya existe para el paciente');
+    }
   }
 
 
@@ -224,17 +225,19 @@ export class PrestacionEjecucionComponent implements OnInit {
       if (e.dragData.nombre) {
         // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
         this.tipoProblema = e.dragData;
-        nuevoProblema = this.agregarProblema();
-        if (nuevoProblema) {
-          this.removeItem(e.dragData, this.listaproblemasMaestro);
-        }
+        this.agregarProblema(true);
+        this.removeItem(e.dragData, this.listaproblemasMaestro);
       }
       // Se asocia el ultimo problema a la prestacion
-      if (nuevoProblema) {
-        this.updateListaProblemas(nuevoProblema.id);
+      if (e.dragData.tipoProblema) {
+        if (!this.existeProblemaConsulta(e.dragData)) {
+          this.updateListaProblemas(nuevoProblema.id);
+        } else {
+          this.plex.alert('El problema ya existe para la consulta');
+        }
       }
-    }
 
+    }
   }
 
   onPrestacionDrop(e: any, idProblema) {
@@ -258,7 +261,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   }
 
-  
+
   onPlanDrop(e: any) {
     debugger;
 
@@ -330,29 +333,31 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // lista de problemas
   existeProblema(tipoProblema: ITipoProblema) {
-    return this.listaProblemas.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre);
+    return this.listaProblemasPaciente.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre);
   }
 
-  guardarProblema(nuevoProblema) {
+  existeProblemaConsulta(problema: IProblemaPaciente) {
+    return this.prestacion.ejecucion.listaProblemas.find(elem => elem.id === problema.id);
+  }
+
+  guardarProblema(nuevoProblema, actualizarPrestacion?: boolean) {
 
     delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
     this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
       if (resultado) { // asignamos el problema a la prestacion de origen
         // this.listaProblemas.push(resultado);
         this.listaProblemasPaciente.push(resultado);
-        this.listaProblemas.push(resultado);
-        return resultado;
-        // this.updateListaProblemas(resultado.id);
-
-        // this.plex.toast('success', 'Problema asociado', '', 2000);
+        //this.listaProblemas.push(resultado);
+        if (actualizarPrestacion) {
+          this.updateListaProblemas(resultado.id);
+        }
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
-        return null;
       }
     });
   }
 
-  agregarProblema() {
+  agregarProblema(actualizarPrestacion?: boolean) {
     if (!this.existeProblema(this.tipoProblema)) {
       let nuevoProblema = {
         id: null,
@@ -373,11 +378,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         ]
       };
 
-      return this.guardarProblema(nuevoProblema);
+      this.guardarProblema(nuevoProblema, actualizarPrestacion);
 
     } else {
-      this.plex.alert('EL problema ya existe para esta consulta');
-      return null;
+      this.plex.alert('El problema ya existe para esta consulta');
     }
   }
 
@@ -582,7 +586,7 @@ export class PrestacionEjecucionComponent implements OnInit {
           let prestacion; prestacion = _prestacion;
           let tp; tp = _prestacion.solicitud.tipoPrestacion;
           // Cargo el arreglo de prestaciones evoluciones
-          prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
+          //prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
 
           // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
           if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
