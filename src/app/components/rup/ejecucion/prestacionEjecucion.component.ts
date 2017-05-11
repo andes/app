@@ -20,30 +20,7 @@ const limit = 10;
 
 @Component({
   selector: 'rup-prestacionEjecucion',
-  templateUrl: 'prestacionEjecucion.html',
-  styles: [`
-    div.scroll-list {
-      overflow: auto;
-      max-height: 70vh;
-    }
-
-    .drag-over-border {
-      border: #ff525b dashed 2px;
-    }
-
-    .drag-target-border {
-       border: #00bfff dashed 2px;
-    }
-
-    .drag-target-border-green {
-       border: #3c763d dashed 2px;
-    }
-
-    .drag-handle {
-        cursor: move;
-    }
-   `
-  ]
+  templateUrl: 'prestacionEjecucion.html'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {

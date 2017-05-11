@@ -1,4 +1,32 @@
 <style>
+    div.scroll-list {
+        overflow: auto;
+        max-height: 70vh;
+    }
+    
+    .drag-over-border {
+        border: #ff525b dashed 2px;
+    }
+    
+    .droppable.drag-target-border {
+        border: #00bfff dashed 2px;
+    }
+    
+    .drag-handle {
+        cursor: move;
+    }
+    
+    .droppable {
+        width: 100%;
+        height: auto;
+        border: 2px dashed #eee;
+        padding: 10px 0;
+        margin: 20px 0;
+        text-align: center;
+        text-transform: uppercase;
+        color: #999999;
+    }
+    
     .msg-problema {
         border: 1px solid #ff9900;
         color: #ff9900;
@@ -47,7 +75,7 @@
     }
     
     .btn-group {
-        margin: 0 0 10px 0;
+        margin: 10px 0;
     }
     
     .btn.btn-primary {
@@ -86,7 +114,7 @@
     }
     
     .list-group-top {
-        margin-top: 5px;
+        /*margin-top: 5px;*/
     }
     
     .dropdown-inline {
@@ -146,10 +174,6 @@
         padding: 5px;
         cursor: -webkit-grab;
     }
-    
-    .drag-over-border {
-        border: 2px solid red;
-    }
 </style>
 
 <header *ngIf="prestacion">
@@ -182,10 +206,11 @@
             <div *ngIf="searchProblema && listaproblemasMaestro.length === 0">
                 No se han encontrado problemas
             </div>
-            <ul class="results list-group" *ngIf="habilitaTransparencia =='habilitar'">
+            <ul class="results list-group">
+                <!--*ngIf="habilitaTransparencia =='habilitar'"-->
                 <!--<ng-container draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro">         -->
-                <li draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro" [dragData]="problemaMaestro" class="list-group-item justify-content-between list-group-item-action" [dragOverClass]="'drag-over-border'" (onDragStart)="arrastrandoProblema(true)"
-                    (onDragEnd)="arrastrandoProblema(false)">
+                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" (onDragEnd)="arrastrandoProblema(false)"
+                    (onDragStart)="arrastrandoProblema(true)">
 
                     <span>{{problemaMaestro.nombre}}</span>
                 </li>
@@ -198,8 +223,7 @@
             </ul>
             <!--{{isDraggingProblem}}-->
             <!--PROBLEMAS DEL PACIENTE - DB: problema-->
-            <div droppable [hidden]="!isDraggingProblem" [dragOverClass]="drag-target-border" (onDrop)="onProblemaDrop($event) " style="width: 100%; height: auto; border: 2px dashed #eee; padding: 10px 0; margin: 20px 0; text-align: center; text-transform: uppercase; color: #999999; "
-                onDragLeave="arrastrandoProblema(false)">
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " onDragLeave="arrastrandoProblema(false)" [hidden]="!isDraggingProblem" class="droppable">
                 Arrastre aquí para vincularlos al paciente
             </div>
 
@@ -246,7 +270,7 @@
     <div class="col-6">
         <plex-box>
             <header>
-                <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" class="row">
+                <div class="row">
                     <div class="col">
                         <h5 class="box-title-principal">Hallazgos de la consulta</h5>
                     </div>
@@ -256,6 +280,9 @@
                 </div>
             </header>
 
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" [hidden]="!isDraggingProblem" class="droppable">
+                Arrastre aquí para vincularlos a esta consulta
+            </div>
 
             <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas">
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
@@ -283,26 +310,28 @@
                                         </span>
                             </div>
 
-                        </li>
-                        <!--Prestaciones para el problema-->
-                        <div class="col-md-12">
-                            <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
-                                <div *ngIf="prestacionesProblema.ejecucion.listaProblemas && prestacionesProblema.ejecucion.listaProblemas.length">
-                                    <div *ngFor="let idproblema of prestacionesProblema.ejecucion.listaProblemas">
-                                        <div *ngIf="idproblema == problema.id">
-                                            <plex-accordion>
-                                                <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
-                                                    <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion" (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                        [paciente]="prestacionesProblema.paciente" [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null">
-                                                    </rup>
 
-                                                </plex-panel>
-                                            </plex-accordion>
+                            <!--Prestaciones para el problema-->
+                            <div class="col-md-12">
+                                <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
+                                    <div *ngIf="prestacionesProblema.ejecucion.listaProblemas && prestacionesProblema.ejecucion.listaProblemas.length">
+                                        <div *ngFor="let idproblema of prestacionesProblema.ejecucion.listaProblemas">
+                                            <div *ngIf="idproblema == problema.id">
+                                                <plex-accordion>
+                                                    <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
+                                                        <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion" (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)"
+                                                            [paciente]="prestacionesProblema.paciente" [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null">
+                                                        </rup>
+
+                                                    </plex-panel>
+                                                </plex-accordion>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </li>
+
 
 
                     </ul>
