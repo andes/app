@@ -51,6 +51,9 @@ import { PrestacionValidacionComponent } from './components/rup/ejecucion/presta
 // ... Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 
+// ... Auditoría RUP (prestacionPaciente)
+import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -79,6 +82,9 @@ const appRoutes: Routes = [
 
   // Llaves
   { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
+
+  // Auditoría RUP (prestacionPaciente)
+  { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },
