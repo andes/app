@@ -1,6 +1,6 @@
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
-import { InterconsultaComponent } from './components/rup/moleculas/interconsulta.component';
+import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
 import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
@@ -243,7 +243,7 @@ export const RUP_COMPONENTS = [
     DatosPerinatalesComponent,
     RegistrosVisitasComponent,
     EcografiaComponent,
-    InterconsultaComponent,
+    InterConsultaComponent,
     LaboratorioComponent,
     RadiografiaComponent
     //     // NO VAPacienteComponent

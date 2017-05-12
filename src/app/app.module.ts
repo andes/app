@@ -144,7 +144,7 @@ import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano
 import { Molecula } from './components/rup/core/molecula.component';
 import { Atomo } from './components/rup/core/atomoComponent';
 import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
-import { InterconsultaComponent } from './components/rup/moleculas/interconsulta.component';
+import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
 
@@ -242,7 +242,7 @@ export const RUP_COMPONENTS = [
   RegistrosVisitasComponent,
   Formula,
   EcografiaComponent,
-  InterconsultaComponent,
+  InterConsultaComponent,
   LaboratorioComponent,
   RadiografiaComponent
 ];
