@@ -1,18 +1,18 @@
-<!--<header *ngIf="showDarTurnos" class="header-paciente">
+<header *ngIf="showDarTurnos" class="header-paciente">
   <header-paciente [paciente]="paciente"></header-paciente>
-</header>-->
+</header>
 <!--<header *ngIf="!showDarTurnos">-->
-  <!-- Barra de navegación -->
-  <!--<nav class="friso">
+<!-- Barra de navegación -->
+<!--<nav class="friso">
     <div class="row no-gutters">-->
-      <!-- Datos -->
-      <!--<div class="col-9">
+<!-- Datos -->
+<!--<div class="col-9">
         <div class="row data">
         </div>
       </div>-->
 
-      <!-- Datos usuario logeado-->
-      <!--<div class="col-3 invert">
+<!-- Datos usuario logeado-->
+<!--<div class="col-3 invert">
         <div class="row">
           <div class="col-2">
             <i ng-reflect-class-name="account" class="mdi mdi-account"></i>
@@ -79,7 +79,7 @@
     <div class="col-4">
       <plex-box>
         <plex-tabs>
-          <plex-tab icon="history">
+          <plex-tab icon="clock">
             <div class="row">
               <div class="col" *ngIf="estadoT == 'seleccionada'">
                 <div class="row">
@@ -199,7 +199,7 @@
                 <div *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" (click)="seleccionarBusqueda(i)">
                   <div class="row">
                     <div *ngIf="busqueda.tipoPrestacion" class="col-6">
-                      <label>Tipo de Prestación: </label> <span >{{busqueda.tipoPrestacion.nombre}} </span><br>
+                      <label>Tipo de Prestación: </label> <span>{{busqueda.tipoPrestacion.nombre}} </span><br>
                     </div>
                     <div *ngIf="busqueda.profesional" class="col-6">
                       <label>Profesional: </label> <span>{{busqueda.profesional.nombre}} {{busqueda.profesional.apellido}}</span>
@@ -327,17 +327,25 @@
           <!--TODO tab llaves-->
           <plex-tab icon="key" class="text-center">
             <br>
-            <h5>Llaves Activas del paciente</h5><br>
-            <div *ngFor="let turno of ultimosTurnos let i=index" class="text-left">
-              <a (click)="seleccionarBusqueda(i)" class="hover">
-                <h5>{{turno.organizacion}}</h5>
-                <p><strong>Fecha:</strong> {{turno.horaInicio}}</p>
-                <p><strong>Tipo de Prestación: </strong>{{turno.tipoPrestacion}}</p>
-                <p *ngFor="let profesional of turno.profesionales">
-                  <strong>Profesional:</strong> {{profesional.nombre}} {{profesional.apellido}}
-                </p>
-                <p><strong>Estado: </strong> {{turno.estado}}</p>
-              </a>
+            <h5 *ngIf="llaves.length > 0">Llaves Activas del paciente</h5><br>
+            <h5 *ngIf="llaves.length <= 0" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> El paciente no tiene llaves activas</h5><br>
+            <div *ngFor="let llave of llaves let i=index" class="text-left">
+              <template [ngIf]="llave.solicitudVigente">
+                <a (click)="seleccionarLlave(i)" class="hover">
+                  <h5><strong>Tipo Prestación: </strong>{{llave.tipoPrestacion.nombre}}</h5>
+                  <p *ngIf="llave.profesional"><strong>Profesional Solicitante: </strong>{{llave.profesional.nombre}} {{llave.profesional.apellido}}</p>
+                  <p *ngIf="llave.prestacionOrigen"><strong>Tipo Prestación Origen: </strong>{{llave.prestacionOrigen}}</p>
+                  <p *ngIf="llave.fechaSolicitud"><strong>Fecha Solicitud:</strong> {{llave.fechaSolicitud | date: 'dd/MM/yyyy'}} </p>
+                  <!--<span *ngIf="llave.solicitudVigente" class="text-sm text-danger">  La solicitud está vencida</span>-->
+                </a>
+              </template>
+              <template [ngIf]="!llave.solicitudVigente">
+                <h5><strong>Tipo Prestación: </strong>{{llave.tipoPrestacion.nombre}}</h5>
+                <p *ngIf="llave.profesional"><strong>Profesional Solicitante: </strong>{{llave.profesional.nombre}} {{llave.profesional.apellido}}</p>
+                <p *ngIf="llave.prestacionOrigen"><strong>Tipo Prestación Origen: </strong>{{llave.prestacionOrigen}}</p>
+                <p *ngIf="llave.fechaSolicitud"><strong>Fecha Solicitud:</strong> {{llave.fechaSolicitud | date: 'dd/MM/yyyy'}} </p>
+                <span class="text-sm text-danger">  La solicitud está vencida</span>
+              </template>
               <hr>
             </div>
           </plex-tab>
