@@ -247,19 +247,21 @@ export class PrestacionEjecucionComponent implements OnInit {
     // Se verifica que sea un tipo de prestacion
     // Se crea la nueva prestacion
     this.agregarPrestacionEjecucion(e.dragData);
-    console.log(this.data[e.dragData.key]);
 
     // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
+    // Se busca el problema y se vincula
+    let problema = this.listaProblemasPaciente.find(elem => elem.id === idProblema);
     // Se vincula al problema
     let pos = this.prestacionesEjecucion.length;
     if (this.prestacionesEjecucion[pos - 1]) {
-      this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(idProblema);
+      this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(problema);
     }
 
     // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
     this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
-    console.log(this.data[e.dragData.key]);
 
+    // Se asocia la prestacion y el problema
+    this.listaProblemaPrestacion[e.dragData.key].push(problema);
     this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
 
   }
@@ -472,7 +474,9 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   cargarDatosPrestacion() {
+    debugger;
     this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
+    this.listaProblemasPaciente = this.prestacion.ejecucion.listaProblemas;
     // loopeamos las prestaciones que se deben cargar por defecto
     // y las inicializamos como una prestacion nueva a ejecutarse
     if (this.prestacion.solicitud) {
@@ -597,10 +601,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.error = '';
         // recorremos todas las prestaciones que hemos ejecutado
         prestacionesGuardar.forEach(_prestacion => {
+          debugger;
           let prestacion; prestacion = _prestacion;
           let tp; tp = _prestacion.solicitud.tipoPrestacion;
           // Cargo el arreglo de prestaciones evoluciones
-          //prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
+          prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
 
           // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
           if (this.listaProblemaPrestacion[tp.key] && this.listaProblemaPrestacion[tp.key].length > 0) {
@@ -616,9 +621,9 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
           } else {
             // si no agrego ningun problema, entonces por defecto se le agregan todos
-            this.listaProblemas.forEach(idProblema => {
-              prestacion.solicitud.listaProblemas.push(idProblema);
-            });
+            // this.listaProblemas.forEach(idProblema => {
+            //   prestacion.solicitud.listaProblemas.push(idProblema);
+            // });
           }
 
           let method = (_prestacion.id) ? this.servicioPrestacion.put(_prestacion) : this.servicioPrestacion.post(_prestacion);
@@ -626,7 +631,7 @@ export class PrestacionEjecucionComponent implements OnInit {
           if (_prestacion.ejecucion.evoluciones.length < 1) {
             alert('No hay evoluciones');
           }
-
+          debugger;
           // guardamos la nueva prestacion
           method.subscribe(prestacionEjecutada => {
             // asignamos la prestacion nueva al array de prestaciones ejecutadas
