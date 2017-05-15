@@ -330,14 +330,14 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
-<<<<<<< HEAD
+
     ObservarDatosService,
-    LlavesTipoPrestacionService
-=======
+    LlavesTipoPrestacionService,
+
     LogService,
     AuditoriaPorBloqueService,
     AuditoriaService
->>>>>>> mpi
+
   ]
 })
 
