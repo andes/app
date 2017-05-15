@@ -1,4 +1,4 @@
-<form class="plex-layout">
+<form class="plex-layout" #form="ngForm">
     <section *ngIf="autorizado && showAgenda">
         <div class="row">
             <!-- Header de la agenda-->
@@ -210,9 +210,9 @@
             <div class="col text-right">
                 <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length" icon="content-save" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)" title="Guardar">
+                <plex-button *ngIf="!alertas.length && form.valid" icon="content-save" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)" title="Guardar">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
+                <plex-button *ngIf="!alertas.length && form.valid" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
                 </plex-button>
             </div>
         </div>

@@ -15,8 +15,7 @@ import { ProfesionalService } from './../../services/profesional.service';
     templateUrl: 'agenda.html',
 })
 export class AgendaComponent implements OnInit {
-    // Permite el uso de flex-box en el componente
-    @HostBinding('class.plex-layout') layout = true;
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
     @Input('editaAgenda')
@@ -579,17 +578,16 @@ export class AgendaComponent implements OnInit {
             });
             espOperation = this.ServicioAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
-                this.plex.alert('La Agenda se guardó correctamente').then(guardo => {
-                    this.modelo.id = resultado.id;
-                    if (clonar) {
-                        this.showClonar = true;
-                        this.showAgenda = false;
-                    } else {
-                        this.modelo = {};
-                        this.showAgenda = false;
-                        this.volverAlGestor.emit(true);
-                    }
-                });
+                this.plex.toast('success', 'La agenda se guardó correctamente');
+                this.modelo.id = resultado.id;
+                if (clonar) {
+                    this.showClonar = true;
+                    this.showAgenda = false;
+                } else {
+                    this.modelo = {};
+                    this.showAgenda = false;
+                    this.volverAlGestor.emit(true);
+                }
             });
         } else {
             this.plex.alert('Debe completar los datos requeridos');
