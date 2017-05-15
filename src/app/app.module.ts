@@ -61,6 +61,9 @@ import { ObservarDatosService } from './services/rup/observarDatos.service';
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
+// Auditoría
+import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -172,6 +175,10 @@ import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutric
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
+// ... Auditoría RUP (prestacionPaciente)
+import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
+
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
   SignosVitalesComponent,
@@ -248,6 +255,7 @@ import { routing, appRoutingProviders } from './app.routing';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 
+
 // Main module
 @NgModule({
   imports: [
@@ -280,7 +288,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent,
     ...RUP_COMPONENTS,
-    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent
+    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
@@ -316,7 +325,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TipoProblemaService,
     TipoPrestacionService,
     ObservarDatosService,
-    LlavesTipoPrestacionService
+    LlavesTipoPrestacionService,
+    AuditoriaPrestacionPacienteService
   ]
 })
 
