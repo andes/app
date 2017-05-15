@@ -1,19 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
-@Pipe({name: 'fullName'})
+@Pipe({ name: 'fullName' })
 export class patientFullNamePipe implements PipeTransform {
   transform(value: any, args: string[]): any {
     debugger;
     let fullName;
     if (value.alias) {
-        fullName = value.apellido + ' ' + value.alias;
+      fullName = value.apellido + ' ' + value.alias;
     }
     else {
-        fullName = value.apellido + ' ' + value.nombre;
+      fullName = value.apellido + ' ' + value.nombre;
     }
 
-    if (args[0]){
+    if (args[0]) {
       fullName = fullName.toUpperCase();
     }
 
@@ -21,7 +21,7 @@ export class patientFullNamePipe implements PipeTransform {
 
   }
 }
-@Pipe({name: 'realAge'})
+@Pipe({ name: 'realAge' })
 export class patientRealAgePipe implements PipeTransform {
   transform(value: any, args: string[]): any {
 
@@ -44,12 +44,13 @@ export class patientRealAgePipe implements PipeTransform {
 
     if (difAnios !== 0) { edad = { valor: difAnios, unidad: 'Años' } }
     else
-        if (difMeses !== 0) { edad = { valor: difMeses, unidad: 'Meses' } }
+      if (difMeses !== 0) { edad = { valor: difMeses, unidad: 'Meses' } }
+      else
+        if (difDias !== 0) { edad = { valor: difDias, unidad: 'Dias' } }
         else
-            if (difDias !== 0) { edad = { valor: difDias, unidad: 'Dias' } }
-            else
-                if (difHs !== 0) { edad = { valor: difHs, unidad: 'Horas' } }
-    return (edad.valor + ' ' + edad.unidad); 
+          if (difHs !== 0) { edad = { valor: difHs, unidad: 'Horas' } }
+
+    return (edad.valor + ' ' + edad.unidad);
 
   }
 }

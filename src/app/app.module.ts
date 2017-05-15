@@ -44,6 +44,7 @@ import { TipoEstablecimientoService } from './services/tipoEstablecimiento.servi
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
+import { LogService } from './services/log.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -61,6 +62,11 @@ import { ObservarDatosService } from './services/rup/observarDatos.service';
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
 
+// AUDITORIA
+import { AuditoriaPorBloqueService } from './services/auditoria/auditoriaPorBloque.service';
+import { AuditoriaService } from './services/auditoria/auditoria.service';
+
+
 // Componentes
 // ... Tablas Maestras
 import { InicioComponent } from './components/inicio/inicio.component';
@@ -76,6 +82,7 @@ import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
+import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/turnos.component';
@@ -169,6 +176,13 @@ import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutric
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
+
+// AUDITORIA
+import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+import { Auditoria1Component } from './components/auditoria/auditoria1.component';
+import { Auditoria2Component } from './components/auditoria/auditoria2.component';
+import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -269,16 +283,19 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent, MapsComponent, patientFullNamePipe, patientRealAgePipe,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
+
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent,
+    PanelAgendaComponent,AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent
+
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
@@ -313,8 +330,14 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProblemaPacienteService,
     TipoProblemaService,
     TipoPrestacionService,
+<<<<<<< HEAD
     ObservarDatosService,
     LlavesTipoPrestacionService
+=======
+    LogService,
+    AuditoriaPorBloqueService,
+    AuditoriaService
+>>>>>>> mpi
   ]
 })
 

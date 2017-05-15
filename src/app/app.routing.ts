@@ -18,7 +18,7 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Global
 import { RoutingGuard } from './app.routings-guard.class';
-import {MapsComponent} from './utils/mapsComponent';
+import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
 // ... Tablas Maestras
@@ -39,6 +39,9 @@ import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 
+// MPI
+import { DashboardComponent } from './components/paciente/dashboard.component';
+
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
@@ -50,6 +53,11 @@ import { PrestacionValidacionComponent } from './components/rup/ejecucion/presta
 
 // ... Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
+// Auditoria
+import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+import { AuditoriaComponent } from './components/auditoria/auditoria.component';
+import { Auditoria1Component } from './components/auditoria/auditoria1.component';
+import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -60,6 +68,8 @@ const appRoutes: Routes = [
   { path: 'espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
   { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
 
+  { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+
   // Turnos
   { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
@@ -68,6 +78,12 @@ const appRoutes: Routes = [
   { path: 'agenda', component: AgendaComponent, canActivate: [RoutingGuard] },
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+
+  // Auditoria
+  { path: 'auditoria', component: AuditoriaComponent },
+  { path: 'auditoria1', component: Auditoria1Component },
+  { path: 'auditoria2', component: Auditoria2Component },
+  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
 
   // RUP
   // Prestación Clínica General de Medicina
@@ -82,7 +98,9 @@ const appRoutes: Routes = [
 
   // Login, etc.
   { path: 'inicio', component: InicioComponent },
-  { path: '**', redirectTo: 'inicio' }
+  { path: '**', redirectTo: 'inicio' },
+
+
 ];
 
 export const appRoutingProviders: any[] = [];

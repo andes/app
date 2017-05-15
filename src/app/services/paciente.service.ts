@@ -27,6 +27,10 @@ export class PacienteService {
     return this.server.get(this.pacienteUrl, { params: params, showError: true });
   }
 
+  getDashboard(): Observable<IPaciente[]> {
+    return this.server.get(this.pacienteUrl + '/dashboard/', null);
+  }
+
   /**
    * Metodo post. Inserta un objeto paciente nuevo.
    * @param {IPaciente} paciente Recibe IPaciente

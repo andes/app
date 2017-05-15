@@ -36,7 +36,9 @@ export class PacienteSearchComponent implements OnInit {
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
 
+
   constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
+
     this.actualizarContadores();
   }
 
@@ -111,12 +113,22 @@ export class PacienteSearchComponent implements OnInit {
    */
   private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
     let datos = this.textoLibre.match(documento.regEx);
+    let sexo = "";
+    if (documento.grupoSexo > 0) {
+      sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
+    }
+
+    let fechaNacimiento = null;
+    if (documento.grupoFechaNacimiento > 0) {
+      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+    }
+
     return {
       documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
       apellido: datos[documento.grupoApellido],
       nombre: datos[documento.grupoNombre],
-      sexo: (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino',
-      fechaNacimiento: moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+      sexo: sexo,
+      fechaNacimiento: fechaNacimiento
     };
   }
 
@@ -156,7 +168,7 @@ export class PacienteSearchComponent implements OnInit {
     if (!this.controlarScanner()) {
       return;
     }
-    // debugger;
+
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {
       this.timeoutHandle = window.setTimeout(() => {
@@ -199,7 +211,6 @@ export class PacienteSearchComponent implements OnInit {
                 fechaNacimiento: pacienteEscaneado.fechaNacimiento,
                 escaneado: true
               }).subscribe(resultSuggest => {
-                debugger;
                 this.pacientesSimilares = resultSuggest;
                 if (this.pacientesSimilares.length > 0) {
 
@@ -256,7 +267,10 @@ export class PacienteSearchComponent implements OnInit {
             this.loading = false;
             this.resultado = resultado;
             this.esEscaneado = false;
-            //this.mostrarNuevo = true;
+            /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
+             if (permisos) {*/
+            this.mostrarNuevo = true;
+            // }
           }, (err) => {
             this.loading = false;
           });
