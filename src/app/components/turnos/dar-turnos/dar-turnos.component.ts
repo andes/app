@@ -141,6 +141,7 @@ export class DarTurnosComponent implements OnInit {
       let band = true;
       this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
         llaves => {
+          console.log('llaves ',llaves);
           this.llaveTP = llaves[0];
           if (!this.llaveTP) {
             band = true;
@@ -198,6 +199,7 @@ export class DarTurnosComponent implements OnInit {
   cargarDatosLlaves(event) {
     this.llaves.forEach((cadaLlave, indiceLlave) => {
       console.log(cadaLlave);
+      let solicitudVigente = false;
       // TODO si la llave requiere solicitud, verificar en prestacionPaciente la fecha de solicitud
       if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
         // TODO: Buscar si hay una solicitud para ese paciente y ese tipo de prestación. Si tiene vencimiento verificar que no esté vencida
@@ -215,7 +217,7 @@ export class DarTurnosComponent implements OnInit {
                   this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
                   this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
                   let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
-                  let solicitudVigente = moment().isBefore(end);
+                  solicitudVigente = moment().isBefore(end);
                   console.log('fecha ', end.toDate(), 'condicion ', solicitudVigente);
                   this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
                   this.llaves[indiceLlave].prestacionOrigen = 'Consulta de medicina general';
