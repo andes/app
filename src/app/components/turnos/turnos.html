@@ -1,11 +1,13 @@
 <div class="row" style="" *ngIf="showTurnos">
     <div class="col-12">
-        <strong class="h5">Turnos: <span class="h6">{{ horaInicio }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} </span></strong><br>
+        <strong class="h6">Estado: <span class="h6">{{ agenda.estado }} </span></strong><br>
+        <strong class="h6">Fecha inicio: <span class="h6">{{ horaInicio }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} </span></strong><br>
+        <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
     </div>
     <div class="col-12">
-        <div *ngIf="cantSel === 0" style="height: 38px"></div>
+        <div *ngIf="turnosSeleccionados.length === 0" style="height: 38px"></div>
         <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
-        <div *ngIf="cantSel > 0" class="float-right">
+        <div *ngIf="turnosSeleccionados.length > 0" class="float-right">
             
             <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'sacarAsistencia' )">
                 <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
@@ -53,7 +55,7 @@
                 </button>
             </span>
 
-            <span *ngIf="botones.nota">
+            <span *ngIf="botones.nota && turnosSeleccionados.length > 0">
                 <button class="btn btn-default hover" (click)="agregarNotaTurno()"><i title="Agregar Nota" class="mdi mdi-message-text-outline"></i></button>
             </span>
 

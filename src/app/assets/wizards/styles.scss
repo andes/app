@@ -1,0 +1,26 @@
+.wizard {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    // Turnos
+    &-turnos {
+        &-1 {
+            background-image: url('agenda2.svg');
+        }
+        &-2 {
+            background-image: url('agenda.svg');
+        }
+        &-3 {
+            background-image: url('checklist.svg');
+        }
+        &-4 {
+            background-image: url('recepcion.svg');
+        }
+        &-5 {
+            background-image: url('profesionales.svg');
+        }
+        &-6 {
+            background-image: url('agenda.svg');
+        }
+    }
+}

@@ -66,10 +66,13 @@ import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestac
 import { AuditoriaPorBloqueService } from './services/auditoria/auditoriaPorBloque.service';
 import { AuditoriaService } from './services/auditoria/auditoria.service';
 
+// Auditoría
+import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
 
 // Componentes
-// ... Tablas Maestras
+import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+// ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
@@ -176,6 +179,11 @@ import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutric
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
+import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
+
+// ... Auditoría RUP (prestacionPaciente)
+import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -260,6 +268,7 @@ import { routing, appRoutingProviders } from './app.routing';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 
+
 // Main module
 @NgModule({
   imports: [
@@ -278,7 +287,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
   ],
 
   declarations: [
-    AppComponent, InicioComponent,
+    AppComponent, InicioComponent, LoginComponent,
     OrganizacionComponent, OrganizacionCreateUpdateComponent,
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
@@ -294,8 +303,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent,AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
-    LlavesTipoPrestacionComponent
-
+    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
@@ -336,8 +345,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     LogService,
     AuditoriaPorBloqueService,
-    AuditoriaService
+    AuditoriaService,
 
+    AuditoriaPrestacionPacienteService
   ]
 })
 

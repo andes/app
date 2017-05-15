@@ -1,18 +1,21 @@
-
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { Observable } from 'rxjs/Rx';
+import * as moment from 'moment';
+
+// Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
+
 import { CalendarioDia } from './calendario-dia.class';
-import * as moment from 'moment';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -21,6 +24,12 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
+
+import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
+
+import { patientRealAgePipe } from './../../../utils/patientPipe';
+import { Pipe, PipeTransform } from '@angular/core';
+
 const size = 4;
 
 @Component({
@@ -30,6 +39,7 @@ const size = 4;
 
 export class DarTurnosComponent implements OnInit {
   private _reasignaTurnos: any;
+  llaveTP: any;
 
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
@@ -87,6 +97,8 @@ export class DarTurnosComponent implements OnInit {
   tipoTurno: string;
   tiposTurnosSelect: String;
   tiposTurnosLabel: String;
+  public filtradas: any = [];
+  public llaves: any = [];
   hoy: Date;
   constructor(
     public serviceProfesional: ProfesionalService,
@@ -96,6 +108,7 @@ export class DarTurnosComponent implements OnInit {
     public servicePaciente: PacienteService,
     public servicioTipoPrestacion: TipoPrestacionService,
     public servicioPrestacionPaciente: PrestacionPacienteService,
+    private llaveTipoPrestacionService: LlavesTipoPrestacionService,
     public plex: Plex,
     public auth: Auth,
     private router: Router) { }
@@ -109,15 +122,147 @@ export class DarTurnosComponent implements OnInit {
       this.paciente = this._reasignaTurnos.paciente;
       this.telefono = this.turno.paciente.telefono;
     }
-    // Fresh start
-    // En este punto debería tener paciente ya seleccionado
-    this.actualizar('sinFiltro');
+
+    this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+    // this.actualizar('sinFiltro');
   }
 
   loadTipoPrestaciones(event) {
-    this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-      let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; }); event.callback(dataF);
+      console.log('permisos ', this.permisos);
+      let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+      let data2 = this.verificarLlaves(dataF, event);
+    });
+  }
+
+  public verificarLlaves(tipoPrestaciones: any[], event) {
+    console.log('tipoPrestaciones ', tipoPrestaciones);
+    tipoPrestaciones.forEach((tipoPrestacion, index) => {
+      let band = true;
+      this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
+        llaves => {
+          console.log('llaves ',llaves);
+          this.llaveTP = llaves[0];
+          if (!this.llaveTP) {
+            band = true;
+          } else {
+            // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
+            if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
+              let edad = new patientRealAgePipe().transform(this.paciente, []);
+              // Edad desde
+              if (this.llaveTP.llave.edad.desde) {
+                let edadDesde = String(this.llaveTP.llave.edad.desde.valor) + ' ' + this.llaveTP.llave.edad.desde.unidad;
+                if (edad < edadDesde) {
+                  band = false;
+                }
+              }
+              // Edad hasta
+              if (this.llaveTP.llave.edad.hasta) {
+                let edadHasta = String(this.llaveTP.llave.edad.hasta.valor) + ' ' + this.llaveTP.llave.edad.hasta.unidad;
+                if (edad > edadHasta) {
+                  band = false;
+                }
+              }
+            }
+            // Verifico que si la llave tiene seteado sexo, el sexo del paciente coincida
+            if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente) {
+              if (this.llaveTP.llave.sexo !== this.paciente.sexo) {
+                band = false;
+              }
+            }
+          }
+          if (band) {
+            this.filtradas.push(tipoPrestacion);
+            if (this.llaveTP) {
+              this.llaves = [...this.llaves, this.llaveTP];
+              // this.llaves.push(this.llaveTP);
+            }
+          }
+        },
+        err => {
+          if (err) {
+            console.log(err);
+            band = false;
+          }
+        }, () => {
+          if (tipoPrestaciones.length - 1 === index) {
+            // console.log('funcion loca', this.filtradas);
+            // console.log('Llaves', this.llaves);
+            // event.callback(this.filtradas);
+            // Se actualiza el calendario con las agendas filtradas por permisos y llaves
+            this.cargarDatosLlaves(event);
+          }
+        });
+    });
+  }
+
+  cargarDatosLlaves(event) {
+    this.llaves.forEach((cadaLlave, indiceLlave) => {
+      console.log(cadaLlave);
+      let solicitudVigente = false;
+      // TODO si la llave requiere solicitud, verificar en prestacionPaciente la fecha de solicitud
+      if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
+        // TODO: Buscar si hay una solicitud para ese paciente y ese tipo de prestación. Si tiene vencimiento verificar que no esté vencida
+        let params = {
+          estado: 'pendiente',
+          idPaciente: this.paciente.id,
+          idTipoPrestacion: cadaLlave.tipoPrestacion.id
+        };
+        this.servicioPrestacionPaciente.get(params).subscribe(
+          prestacionPaciente => {
+            if (prestacionPaciente.length > 0) {
+              console.log('prestacionPaciente', prestacionPaciente[0].solicitud.profesional);
+              if (cadaLlave.llave.solicitud.vencimiento) {
+                if (cadaLlave.llave.solicitud.vencimiento.unidad === 'Días') {
+                  this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
+                  this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
+                  let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
+                  solicitudVigente = moment().isBefore(end);
+                  console.log('fecha ', end.toDate(), 'condicion ', solicitudVigente);
+                  this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
+                  this.llaves[indiceLlave].prestacionOrigen = 'Consulta de medicina general';
+                  if (!solicitudVigente) {
+                    let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+                    this.filtradas.splice(indiceFiltradas, 1);
+                    this.filtradas = [...this.filtradas];
+                  }
+                }
+              }
+            } else {
+              // Si no existe una solicitud para el paciente y el tipo de prestacion, saco la llave de la lista y saco la prestacion del select
+              this.llaves.splice(indiceLlave, 1);
+              this.llaves = [...this.llaves];
+
+              let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+              this.filtradas.splice(indiceFiltradas, 1);
+              this.filtradas = [...this.filtradas];
+              console.log('0__0', this.llaves);
+            }
+          },
+          err => {
+            if (err) {
+              console.log(err);
+            }
+          },
+          () => {
+            console.log('yesss', this.llaves);
+            event.callback(this.filtradas);
+            this.actualizar('sinFiltro');
+          }
+        );
+
+      } else {
+        // Elimino la llave del arreglo
+        let ind = this.llaves.indexOf(cadaLlave);
+        this.llaves.splice(ind, 1);
+        this.llaves = [...this.llaves];
+
+        let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+        this.filtradas.splice(indiceFiltradas, 1);
+        this.filtradas = [...this.filtradas];
+
+        console.log('noooou dsdsadsda', this.llaves);
+      }
     });
   }
 
@@ -128,7 +273,7 @@ export class DarTurnosComponent implements OnInit {
       };
       this.serviceProfesional.get(query).subscribe(event.callback);
     } else {
-      event.callback([]);
+      event.callback(this.opciones.profesional || []);
     }
   }
 
@@ -182,11 +327,12 @@ export class DarTurnosComponent implements OnInit {
       // Resetear opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
-
+      console.log('filtradas ', this.filtradas.map((f) => { return f.id; }));
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
         rango: true, desde: new Date(), hasta: fechaHasta,
-        tipoPrestaciones: this.permisos,
+        // tipoPrestaciones: this.permisos,
+        tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
         organizacion: this.auth.organizacion._id
       };
 
@@ -222,10 +368,6 @@ export class DarTurnosComponent implements OnInit {
    * @param agenda: objeto con una agenda completa
    */
   seleccionarAgenda(agenda) {
-
-    // Actualiza el calendario, para ver si no hubo cambios
-    // this.actualizar('');
-
     // Asigno agenda
     this.agenda = agenda;
 
@@ -457,6 +599,11 @@ export class DarTurnosComponent implements OnInit {
     this.seleccionarAgenda(this.alternativas[indice]);
   }
 
+  seleccionarLlave(indice: number) {
+    this.opciones.tipoPrestacion = this.llaves[indice].tipoPrestacion;
+    this.actualizar('');
+  }
+
   verAgenda(direccion: String) {
     if (this.agendas) {
       // Asegurar que no nos salimos del rango de agendas (agendas.length)
@@ -506,7 +653,7 @@ export class DarTurnosComponent implements OnInit {
                   tipoPrestacion: turno.tipoPrestacion.nombre,
                   horaInicio: moment(turno.horaInicio).format('L'),
                   estado: turno.estado,
-                  organizacion: this.auth.organizacion._id,
+                  organizacion: agenda.organizacion.nombre,
                   profesionales: agenda.profesionales
                 });
               }
@@ -515,7 +662,6 @@ export class DarTurnosComponent implements OnInit {
         });
       });
     });
-    console.log('ULTIMOS TURNOS', ultimosTurnos);
     this.ultimosTurnos = ultimosTurnos;
   }
 
@@ -523,7 +669,6 @@ export class DarTurnosComponent implements OnInit {
    *
    */
   onSave() {
-
     // Ver si cambió el estado de la agenda desde otro lado
     this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 

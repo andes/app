@@ -27,6 +27,7 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
@@ -59,6 +60,9 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
+// ... Auditoría RUP (prestacionPaciente)
+import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -87,20 +91,23 @@ const appRoutes: Routes = [
 
   // RUP
   // Prestación Clínica General de Medicina
-  { path: 'rup', component: PuntoInicioComponent},
-  { path: 'rup/resumen/:id', component: ResumenComponent},
-  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent},
-  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent},
+  { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
+
+// Auditoría RUP (prestacionPaciente)
+  { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
 
   // Llaves
   { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
 
-  // Login, etc.
-  { path: 'inicio', component: InicioComponent },
-  { path: '**', redirectTo: 'inicio' },
-
-
+  // Principal
+  { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', redirectTo: 'login', },
+  { path: '**', redirectTo: 'inicio' }
 ];
 
 export const appRoutingProviders: any[] = [];

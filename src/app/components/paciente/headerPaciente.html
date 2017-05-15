@@ -32,25 +32,25 @@
                             </h6>
                         </div>
                         <!--Si posee teléfono tomo el primero-->
-                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length>0">
+                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto?.length>0">
                             <h6 class="subdata-paciente consulta">Teléfonos</h6>
                             <h6 class="subdata-descripcion" *ngFor="let tel of paciente.contacto | slice:0:1;">
                                 {{tel.valor}}
                             </h6>
                         </div>
                         <!--Si no posee telefono muestro un nro. genérico-->
-                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto.length<1">
+                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto?.length<1">
                             <h6 class="subdata-paciente consulta">Contacto</h6>
                             <h6 class="subdata-descripcion">...</h6>
                         </div>
 
-                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length>0">
+                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador?.length>0">
                             <h6 class="subdata-paciente consulta">Obra social</h6>
                             <h6 class="subdata-descripcion" *ngFor="let financiador of paciente.financiador">
                                 {{financiador.nombre}}
                             </h6>
                         </div>
-                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador.length<1">
+                        <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador?.length<1">
                             <h6 class="subdata-paciente consulta">Obra social</h6>
                             <h6 class="subdata-descripcion">...</h6>
                         </div>
@@ -82,13 +82,13 @@
                         </div>
 
                         <div class="row">
-                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas">
+                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
                                 Especialidad: {{EspecialidadActiva.descripcion}}
                             </h6>
                         </div>
 
                         <div class="row">
-                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional.matriculas">
+                            <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
                                 Matricula: {{EspecialidadActiva.numero}}
                             </h6>
                         </div>
