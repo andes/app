@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -16,6 +16,7 @@ import * as moment from 'moment';
 })
 
 export class GestorAgendasComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     public autorizado = false;
 
