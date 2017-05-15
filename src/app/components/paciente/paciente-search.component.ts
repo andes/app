@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, HostBinding } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -14,6 +14,7 @@ import { Auth } from '@andes/auth';
 })
 
 export class PacienteSearchComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
   private timeoutHandle: number;
 

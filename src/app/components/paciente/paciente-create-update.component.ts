@@ -35,7 +35,8 @@ import {
   OnInit,
   Output,
   Input,
-  EventEmitter
+  EventEmitter,
+  HostBinding
 } from '@angular/core';
 import {
   FormBuilder,
@@ -87,7 +88,7 @@ import {
   templateUrl: 'paciente-create-update.html'
 })
 export class PacienteCreateUpdateComponent implements OnInit {
-
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
   @Input('seleccion') seleccion: IPaciente;
   @Input('isScan') isScan: IPaciente;
   @Input('escaneado') escaneado: Boolean;
