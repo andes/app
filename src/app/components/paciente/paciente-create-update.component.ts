@@ -550,6 +550,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
 
   preSave(valid) {
+    debugger
     if (valid.formValid) {
       this.verificaPacienteRepetido().then((resultado) => {
         if (!resultado) {
