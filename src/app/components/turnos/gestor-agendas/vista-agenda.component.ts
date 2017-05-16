@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
-import { AgendaService } from '../../services/turnos/agenda.service';
+import { AgendaService } from '../../../services/turnos/agenda.service';
 
 @Component({
     selector: 'vista-agenda',
@@ -63,29 +63,29 @@ export class VistaAgendaComponent implements OnInit {
                                 if (!confirmado) {
                                     return false;
                                 }
-                                this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                                 this.actualizarEstadoEmit.emit(true);
                             });
                         } else {
-                            this.plex.alert('La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                            this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                             this.actualizarEstadoEmit.emit(true);
                         }
 
 
                     } else {
                         if (estado === 'prePausada') {
-                            this.plex.alert('Las agendas cambiaron de estado');
+                            this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado');
                         } else {
                             if (estado === 'prePausada' && agenda.prePausada === 'Publicada') {
                                 this.plex.confirm('¿Publicar Agendas?').then((confirmado) => {
                                     if (!confirmado) {
                                         return false;
                                     }
-                                    this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                    this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                                     this.actualizarEstadoEmit.emit(true);
                                 });
                             } else {
-                                this.plex.alert('Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                                this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                                 this.actualizarEstadoEmit.emit(true);
                             }
                         }

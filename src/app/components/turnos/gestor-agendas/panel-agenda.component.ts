@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { AgendaService } from '../../services/turnos/agenda.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from './../../services/profesional.service';
+import { AgendaService } from '../../../services/turnos/agenda.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { ProfesionalService } from './../../../services/profesional.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -63,7 +63,7 @@ export class PanelAgendaComponent implements OnInit {
 
                 this.showEditarAgenda = false;
 
-                this.plex.alert('La agenda se guardó correctamente ');
+                this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
                 this.actualizarEstadoEmit.emit(true);
             });
         }
@@ -77,11 +77,11 @@ export class PanelAgendaComponent implements OnInit {
 
 
     loadProfesionales(event) {
-        if ( event.query ) {
+        if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get( query ).subscribe(event.callback);
+            this.servicioProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.modelo.profesionales || []);
         }
@@ -137,8 +137,6 @@ export class PanelAgendaComponent implements OnInit {
                         this.alertas = [... this.alertas, 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
                     }
                 });
-
         }
     }
-
 }
