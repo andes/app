@@ -1,10 +1,9 @@
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TurnoService } from './../../../services/turnos/turno.service';
 import * as moment from 'moment';
 
 // Interfaces
@@ -24,7 +23,8 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
-
+import { SmsService } from './../../../services/turnos/sms.service';
+import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
 
 import { patientRealAgePipe } from './../../../utils/patientPipe';
@@ -38,6 +38,7 @@ const size = 4;
 })
 
 export class DarTurnosComponent implements OnInit {
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
   private _reasignaTurnos: any;
   llaveTP: any;
 
@@ -79,6 +80,7 @@ export class DarTurnosComponent implements OnInit {
   private gestionDisponibles: number;
   countBloques: any[];
   countTurnos: any = {};
+  resultado: any;
 
   public seleccion = null;
   public esEscaneado = false;
@@ -109,6 +111,7 @@ export class DarTurnosComponent implements OnInit {
     public servicioTipoPrestacion: TipoPrestacionService,
     public servicioPrestacionPaciente: PrestacionPacienteService,
     private llaveTipoPrestacionService: LlavesTipoPrestacionService,
+    public smsService: SmsService,
     public plex: Plex,
     public auth: Auth,
     private router: Router) { }
@@ -141,7 +144,7 @@ export class DarTurnosComponent implements OnInit {
       let band = true;
       this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
         llaves => {
-          console.log('llaves ',llaves);
+          console.log('llaves ', llaves);
           this.llaveTP = llaves[0];
           if (!this.llaveTP) {
             band = true;
@@ -665,6 +668,8 @@ export class DarTurnosComponent implements OnInit {
     this.ultimosTurnos = ultimosTurnos;
   }
 
+ 
+
   /**
    *
    */
@@ -710,6 +715,8 @@ export class DarTurnosComponent implements OnInit {
           this.actualizar('sinFiltro');
           this.borrarTurnoAnterior();
           this.plex.alert('El turno se asignó correctamente');
+          let mensaje = 'Usted tiene un turno para ' + this.turnoTipoPrestacion.nombre;
+          this.enviarSMS(pacienteSave, mensaje);
         });
 
         // Guardar Prestación Paciente
@@ -783,6 +790,30 @@ export class DarTurnosComponent implements OnInit {
       }
     });
     this.buscarPaciente();
+  }
+
+   enviarSMS(paciente: any, mensaje) {
+    let smsParams = {
+      telefono: paciente.telefono,
+      mensaje: mensaje,
+    };
+    console.log('smsParams ', smsParams);
+    this.smsService.enviarSms(smsParams).subscribe(
+      sms => {
+        this.resultado = sms;
+        // this.smsLoader = false;
+        debugger;
+        // if (resultado === '0') {
+        //     this.turnosSeleccionados[x].smsEnviado = true;
+        // } else {
+        //     this.turnosSeleccionados[x].smsEnviado = false;
+        // }
+      },
+      err => {
+        if (err) {
+          console.log(err);
+        }
+      });
   }
 
   borrarTurnoAnterior() {
