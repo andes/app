@@ -715,7 +715,9 @@ export class DarTurnosComponent implements OnInit {
           this.actualizar('sinFiltro');
           this.borrarTurnoAnterior();
           this.plex.alert('El turno se asignó correctamente');
-          let mensaje = 'Usted tiene un turno para ' + this.turnoTipoPrestacion.nombre;
+          let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+          let tm = moment(this.turno.horaInicio).format('HH:mm');
+          let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
           this.enviarSMS(pacienteSave, mensaje);
         });
 
