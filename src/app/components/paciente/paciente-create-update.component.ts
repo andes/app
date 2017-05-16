@@ -556,6 +556,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.save(valid);
         }
       });
+    } else {
+      this.plex.alert('Debe completar los datos obligatorios');
     }
   }
 
