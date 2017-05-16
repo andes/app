@@ -43,11 +43,15 @@ export class EvolucionTodosProblemasComponent implements OnInit {
     }
 
     evolucionar(event) {
+      let problema;
         if (event.formValid) {
             this.unaEvolucion.duracion = this.duracion.id;
             this.unaEvolucion.vigencia = this.vigencia.id;
             let cant = this.problemas.length;
             for (let i = 0; i < cant; i++) {
+              problema = this.problemas[i];
+              delete problema.$order;
+              this.problemas[i] = problema;
                 this.problemas[i].evoluciones.push(this.unaEvolucion);
             }
 

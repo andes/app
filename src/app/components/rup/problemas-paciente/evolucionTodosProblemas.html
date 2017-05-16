@@ -73,22 +73,28 @@
             <div class="col-md-12">
                 <h3> Evolucionar problemas de la consulta</h3>
             </div>
-        </div>
+        </div>        
         <div class="row">
-            <div class="col-md-12">
-                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-                </plex-text>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración">
-                </plex-select>
-            </div>
-            <div class="col-md-6">
+              <div class="col-md-6">
                 <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" placeholder="Ingrese Vigencia">
                 </plex-select>
             </div>
+            <div class="col-md-6" *ngIf="vigencia && vigencia.id != 'resuelto'">
+                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" placeholder="Ingrese duración" 
+                             >
+                </plex-select>
+            </div>
+          
+        </div>
+        <div class="row">
+            <!--<div class="col-md-12">
+                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
+                </plex-text>
+            </div>-->
+                <div class="form-group col-md-12">
+                    <label for="comment">Observaciones</label>
+                    <textarea class="form-control" rows="5" id="comment" [(ngModel)]="unaEvolucion.observacion" [required]="true" name="observacion" placeholder="Ingrese una observación"></textarea>
+                </div>
         </div>
         <div class="row">
             <div class="col-md-12 text-right">

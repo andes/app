@@ -1,3 +1,7 @@
+import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
+import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
+import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
+import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
 import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
 import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
@@ -115,6 +119,7 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 import { HeaderPacienteComponent } from "./components/paciente/headerPaciente.component";
+
 
 // // Servicios RUP //
 // import { TipoPrestacionService } from './services/tipoPrestacion.service';
@@ -236,7 +241,11 @@ export const RUP_COMPONENTS = [
     FactoresDeRiesgoNinoSanoComponent,
     NinoSanoComponent,
     DatosPerinatalesComponent,
-    RegistrosVisitasComponent
+    RegistrosVisitasComponent,
+    EcografiaComponent,
+    InterConsultaComponent,
+    LaboratorioComponent,
+    RadiografiaComponent
     //     // NO VAPacienteComponent
 ];
 

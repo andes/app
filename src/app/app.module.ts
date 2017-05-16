@@ -27,9 +27,10 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
-
+import {Ng2DragDropModule} from 'ng2-drag-drop';
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
+import { fromNowPipe } from './utils/date';
 
 // Servicios
 // ... Tablas Maestras
@@ -150,6 +151,10 @@ import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/
 import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
 import { Molecula } from './components/rup/core/molecula.component';
 import { Atomo } from './components/rup/core/atomoComponent';
+import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
+import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
+import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
+import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -257,7 +262,11 @@ export const RUP_COMPONENTS = [
   NinoSanoComponent,
   DatosPerinatalesComponent,
   RegistrosVisitasComponent,
-  Formula
+  Formula,
+  EcografiaComponent,
+  InterConsultaComponent,
+  LaboratorioComponent,
+  RadiografiaComponent
 ];
 
 // Locales
@@ -277,6 +286,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     FormsModule,
     HttpModule,
     PlexModule,
+    Ng2DragDropModule,
     routing,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
@@ -294,6 +304,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
     MapsComponent, patientFullNamePipe, patientRealAgePipe,
+    fromNowPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,

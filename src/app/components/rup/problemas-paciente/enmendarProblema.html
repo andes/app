@@ -74,10 +74,10 @@
                 <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                     Activo
                 </span>
-                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'activo'">
+                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
                     {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                 </span>
-                <span class="badge badge-warning">
+                <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'">
                     {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
                 </span>
             </div>
@@ -91,8 +91,13 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
-                </plex-text>
+                <!--<plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones">
+                </plex-text>-->
+                 <div class="form-group">
+                    <label for="comment">Observaciones</label>
+                    <textarea class="form-control" rows="5" id="comment" [(ngModel)]="unaEvolucion.observacion" [required]="true" name="observacion" placeholder="Ingrese una observación"></textarea>
+                </div>  
+
             </div>
         </div>
         <div class="row">

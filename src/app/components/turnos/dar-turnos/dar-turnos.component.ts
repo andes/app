@@ -715,29 +715,27 @@ export class DarTurnosComponent implements OnInit {
         // Guardar Prestación Paciente
         // let nuevaPrestacion;
         // nuevaPrestacion = {
-        //   paciente: this.paciente,
-        //   solicitud: {
-        //     tipoPrestacion: this.turnoTipoPrestacion,
-        //     fecha: new Date(),
-        //     listaProblemas: [],
-        //     idTurno: this.turno.id,
-        //   },
-        //   estado: {
-        //     timestamp: new Date(),
-        //     tipo: 'pendiente'
-        //   },
-        //   ejecucion: {
-        //     fecha: new Date(),
-        //     evoluciones: []
-        //   }
+        //     paciente: this.paciente,
+        //     solicitud: {
+        //       tipoPrestacion: this.turnoTipoPrestacion,
+        //       fecha: new Date(),
+        //       listaProblemas: [],
+        //       idTurno: this.turno.id,
+        //     },
+        //     estado: {
+        //       timestamp: new Date(),
+        //       tipo: 'pendiente'
+        //     },
+        //     ejecucion: {
+        //       fecha: new Date(),
+        //       evoluciones: []
+        //     }
         // };
 
         // // TODO: Revisar alert
-        // this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-        //   this.plex.alert('prestacion paciente creada');
-
-
-        // });
+        //  this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+        //    this.plex.alert('prestacion paciente creada');
+        //  });
 
         // });
         // Si cambió el teléfono lo actualizo en el MPI
@@ -780,7 +778,7 @@ export class DarTurnosComponent implements OnInit {
           });
 
         }
-      }
+      };
     });
     this.buscarPaciente();
   }

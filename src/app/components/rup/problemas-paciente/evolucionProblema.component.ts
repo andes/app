@@ -38,8 +38,8 @@ export class EvolucionProblemaComponent implements OnInit {
 
     public profesional: IProfesional;
 
-    opcionesDuracion = [{ id: 'Crónico', nombre: 'Crónico' }, { id: 'agudo', nombre: 'Agudo' }];
-    opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'Inactivo', nombre: 'Inactivo' }, { id: 'Resuelto', nombre: 'Resuelto' }];
+    opcionesDuracion = [{ id: 'cronico', nombre: 'Crónico' }, { id: 'agudo', nombre: 'Agudo' }];
+    opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'resuelto', nombre: 'Resuelto' }];
 
     constructor(private servProbPaciente: ProblemaPacienteService,
         public plex: Plex, public auth: Auth) { }
