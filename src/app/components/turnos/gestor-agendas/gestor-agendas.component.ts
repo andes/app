@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { ProfesionalService } from './../../services/profesional.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { AgendaService } from './../../services/turnos/agenda.service';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import * as moment from 'moment';
 
 @Component({
@@ -17,11 +17,6 @@ import * as moment from 'moment';
 
 export class GestorAgendasComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
-
-    public autorizado = false;
-
-    public agendas: any = [];
-    public agenda: any = {};
 
     agendasSeleccionadas: IAgenda[] = [];
 
@@ -36,10 +31,12 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarNotaAgenda: Boolean = false;
     public fechaDesde: any;
     public fechaHasta: any;
-
+    public agendas: any = [];
+    public agenda: any = {};
     public modelo: any = {};
-
     public hoy = false;
+    public autorizado = false;
+    public mostrarMasOpciones = false;
 
     searchForm: FormGroup;
 

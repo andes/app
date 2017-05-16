@@ -92,9 +92,7 @@ import { TurnosComponent } from './components/turnos/turnos.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
-import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
-import { VistaAgendaComponent } from './components/turnos/vista-agenda.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
@@ -103,8 +101,10 @@ import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.com
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
-import { AgregarNotaAgendaComponent } from './components/turnos/nota-agenda.component';
-import { PanelAgendaComponent } from './components/turnos/panel-agenda.component';
+import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
+import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
+import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';

@@ -8,7 +8,7 @@
         <div *ngIf="turnosSeleccionados.length === 0" style="height: 38px"></div>
         <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
         <div *ngIf="turnosSeleccionados.length > 0" class="float-right">
-            
+
             <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'sacarAsistencia' )">
                 <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
             </button>
@@ -34,7 +34,7 @@
                     <i title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" class="mdi mdi-account-restore"></i>
                 </button>
             </span>
-            
+
             <span *ngIf="botones.suspenderTurno">
                 <button id="suspenderTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
                     placement="bottom" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
@@ -78,8 +78,8 @@
             <table class="table table-striped">
                 <tr *ngFor="let turno of bloque.turnos; let i=index"  style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionado(bloque.turnos[i])}">
                     <td (click)="seleccionarTurno(turno, true)">
-                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-check-circle"></i>
-                        <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-circle-outline"></i>
+                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
+                        <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i])">
                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -111,20 +111,17 @@
 <!-- Muestra el panel de Liberar turno -->
 <div type="info" class="col-md-12" *ngIf="showLiberarTurno">
     <div class="clear"></div>
-    <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)"
-        (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"></liberar-turno>
+    <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"></liberar-turno>
 </div>
 
 <!-- Muestra el panel de Suspender turno -->
 <div type="info" class="col-md-12" *ngIf="showSuspenderTurno">
     <div class="clear"></div>
-    <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
-        (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"></suspender-turno>
+    <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"></suspender-turno>
 </div>
 
 <!-- Muestra el panel de Nota -->
 <div type="info" class="col-md-12" *ngIf="showAgregarNotaTurno">
     <div class="clear"></div>
-    <agregar-nota-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
-        (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
+    <agregar-nota-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
 </div>
