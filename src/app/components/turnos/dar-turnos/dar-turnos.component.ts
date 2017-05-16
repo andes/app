@@ -1,5 +1,5 @@
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -38,6 +38,7 @@ const size = 4;
 })
 
 export class DarTurnosComponent implements OnInit {
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
   private _reasignaTurnos: any;
   llaveTP: any;
 
