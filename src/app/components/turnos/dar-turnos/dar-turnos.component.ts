@@ -1,9 +1,9 @@
 type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
 
 // Interfaces
@@ -13,7 +13,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
-
+import { patientRealAgePipe } from './../../../utils/patientPipe';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
@@ -26,9 +26,6 @@ import { PrestacionPacienteService } from '../../../services/rup/prestacionPacie
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
-
-import { patientRealAgePipe } from './../../../utils/patientPipe';
-import { Pipe, PipeTransform } from '@angular/core';
 
 const size = 4;
 
@@ -178,7 +175,6 @@ export class DarTurnosComponent implements OnInit {
             this.filtradas.push(tipoPrestacion);
             if (this.llaveTP) {
               this.llaves = [...this.llaves, this.llaveTP];
-              // this.llaves.push(this.llaveTP);
             }
           }
         },
@@ -189,8 +185,6 @@ export class DarTurnosComponent implements OnInit {
           }
         }, () => {
           if (tipoPrestaciones.length - 1 === index) {
-            // console.log('funcion loca', this.filtradas);
-            // console.log('Llaves', this.llaves);
             // event.callback(this.filtradas);
             // Se actualiza el calendario con las agendas filtradas por permisos y llaves
             this.cargarDatosLlaves(event);
@@ -203,9 +197,8 @@ export class DarTurnosComponent implements OnInit {
     this.llaves.forEach((cadaLlave, indiceLlave) => {
       console.log(cadaLlave);
       let solicitudVigente = false;
-      // TODO si la llave requiere solicitud, verificar en prestacionPaciente la fecha de solicitud
+      // Si la llave requiere solicitud, verificamos en prestacionPaciente la fecha de solicitud
       if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
-        // TODO: Buscar si hay una solicitud para ese paciente y ese tipo de prestación. Si tiene vencimiento verificar que no esté vencida
         let params = {
           estado: 'pendiente',
           idPaciente: this.paciente.id,
@@ -263,8 +256,7 @@ export class DarTurnosComponent implements OnInit {
         let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
         this.filtradas.splice(indiceFiltradas, 1);
         this.filtradas = [...this.filtradas];
-
-        console.log('noooou dsdsadsda', this.llaves);
+        // console.log('noooou dsdsadsda', this.llaves);
       }
     });
   }
@@ -667,8 +659,6 @@ export class DarTurnosComponent implements OnInit {
     });
     this.ultimosTurnos = ultimosTurnos;
   }
-
- 
 
   /**
    *
