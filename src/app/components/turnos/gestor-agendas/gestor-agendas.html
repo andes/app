@@ -4,6 +4,7 @@
         <div class="col">
             <plex-box>
                 <header>
+                    <!--Botones / Acciones-->
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
                         <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
@@ -42,12 +43,6 @@
                             </plex-select>
                         </div>
                     </div>
-
-                    <!--Botones / Acciones-->
-                    <div class="row">
-                        <div class="col-12">
-                        </div>
-                    </div>
                 </header>
 
                 <!--Resultados-->
@@ -71,7 +66,7 @@
                             <td (click)="verAgenda(agenda, false, $event)">
                                 <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="text-warning warning mdi mdi-message"></i></span></span>
                                 <div>
-                                    <span>{{agenda?.espacioFisico?.nombre}}</span>
+                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>
@@ -136,7 +131,7 @@
         </div>
 
         <!--Panel de Turnos-->
-        <div class="col-4">
+        <div *ngIf="agendasSeleccionadas.length > 0" class="col-4">
             <plex-box>
                 <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
                     <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>

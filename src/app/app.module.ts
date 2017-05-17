@@ -88,7 +88,7 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... Turnos
-import { TurnosComponent } from './components/turnos/turnos.component';
+import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { AgendaComponent } from './components/turnos/agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';

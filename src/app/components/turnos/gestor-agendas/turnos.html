@@ -1,9 +1,59 @@
-<div class="row" style="" *ngIf="showTurnos">
+<!--Header de agenda-->
+<div class="row" *ngIf="showTurnos">
     <div class="col-12">
-        <strong class="h6">Estado: <span class="h6">{{ agenda.estado }} </span></strong><br>
-        <strong class="h6">Fecha inicio: <span class="h6">{{ horaInicio }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} </span></strong><br>
-        <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
+        <fieldset>
+            <legend>
+                <div class="row">
+                    <div class="col-6">
+                        Bloques y Turnos
+                    </div>
+                    <div class="col-6 text-right">
+                        <span class="badge-success">{{ agenda.estado }}</span>
+                    </div>
+                </div>
+            </legend>
+            <div class="alert alert-default">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                    </div>
+                    <div class="col-6">
+                        <label>Horario</label> {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Tipos de prestación</label>
+                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Profesionales</label>
+                        <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                        <ng-container *ngIf="agenda.profesionales">
+                            <div *ngFor="let profesional of agenda.profesionales">{{profesional.apellido}}, {{profesional.nombre}}</div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Espacio físico</label>
+                        <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+
+                        <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
     </div>
+</div>
+<div class="row" *ngIf="showTurnos">
     <div class="col-12">
         <div *ngIf="turnosSeleccionados.length === 0" style="height: 38px"></div>
         <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
