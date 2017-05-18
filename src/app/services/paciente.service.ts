@@ -35,7 +35,7 @@ export class PacienteService {
     return this.server.get(this.pacienteUrl + '/dashboard/', null);
   }
 
-  getNroCarpeta(params: any): Observable<ICarpetaPaciente[]> {
+  getNroCarpeta(params: any): Observable<any> {
     return this.server.get(this.carpetaUrl, { params: params, showError: true });
   }
 
