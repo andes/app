@@ -548,8 +548,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     return cond;
   }
 
-
   preSave(valid) {
+    debugger
     if (valid.formValid) {
       this.verificaPacienteRepetido().then((resultado) => {
         if (!resultado) {
@@ -557,8 +557,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
       });
     }
+     this.plex.alert('Debe completar los datos obligatorios');
   }
-
-
 
 }

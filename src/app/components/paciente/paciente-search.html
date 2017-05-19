@@ -1,5 +1,5 @@
-<section>
-    <div *ngIf="!showCreateUpdate" class="row">
+<section *ngIf="!showCreateUpdate">
+    <div class="row">
         <!--Panel central-->
         <div class="col-8">
             <plex-box type="primary">
@@ -83,11 +83,9 @@
             </plex-box>
         </div>
     </div>
-    <!--Componente de Alta/Modificación-->
-    <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
 </section>
 <footer *ngIf="!showCreateUpdate">
     <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
-    <!--boton provisorio hasta tener el menu desplegable-->
-    <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
 </footer>
+<!--Componente de Alta/Modificación-->
+<paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
