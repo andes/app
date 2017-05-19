@@ -27,6 +27,7 @@ export class GestorAgendasComponent implements OnInit {
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
+    public showListado: Boolean = false;
     public showInsertarAgenda: Boolean = false;
     public showAgregarNotaAgenda: Boolean = false;
     public fechaDesde: any;
@@ -64,7 +65,7 @@ export class GestorAgendasComponent implements OnInit {
                 { label: 'Inicio', route: '/inicio' },
                 { label: 'MPI', route: '/' },
                 { label: 'Agendas', route: '/gestor_agendas' }
-            ]
+            ];
 
             // Por defecto cargar/mostrar agendas de hoy
             this.hoy = true;
@@ -137,6 +138,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
+        this.showListado = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -195,6 +197,15 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
+        this.showListado = false;
+    }
+
+    listarTurnos(agenda) {
+        this.showGestorAgendas = true;
+        this.showEditarAgenda = false;
+        this.showEditarAgendaPanel = false;
+        this.showTurnos = false;
+        this.showListado = true;
     }
 
     loadAgendas() {
@@ -262,6 +273,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showVistaAgendas = false;
         this.showTurnos = false;
+        this.showListado = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
@@ -293,7 +305,6 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = true;
         });
 
-
     }
 
     estaSeleccionada(agenda: any) {
@@ -323,7 +334,6 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
-
     }
 
 }

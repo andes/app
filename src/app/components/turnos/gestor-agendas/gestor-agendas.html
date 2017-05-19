@@ -6,7 +6,13 @@
                 <header>
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
-                        <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></vista-agenda>
+                        <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" 
+                            (clonarEmit)="clonar()" 
+                            (agregarNotaAgendaEmit)="agregarNotaAgenda()" 
+                            (editarAgendaEmit)="editarAgenda($event)" 
+                            (actualizarEstadoEmit)="actualizarEstadoEmit($event)" 
+                            (listarTurnosEmit)="listarTurnos($event)">
+                        </vista-agenda>
                     </div>
 
                     <!--Filtros-->
@@ -148,6 +154,10 @@
                 <div type="info" class="col-md-12" *ngIf="showAgregarNotaAgenda">
                     <div class="clear"></div>
                     <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)" (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
+                </div>
+                <!-- Muestra el listado de turnos con el número de carpeta (HC) -->
+                <div *ngIf="showListado && agendasSeleccionadas.length == 1" type="info">
+                    <lista-turnos [agenda]="agendasSeleccionadas[0]"></lista-turnos>
                 </div>
             </plex-box>
         </div>

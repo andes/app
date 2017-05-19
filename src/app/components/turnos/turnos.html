@@ -1,4 +1,4 @@
-<div class="row" style="" *ngIf="showTurnos">
+<div *ngIf="showTurnos" class="row">
     <div class="col-12">
         <strong class="h6">Estado: <span class="h6">{{ agenda.estado }} </span></strong><br>
         <strong class="h6">Fecha inicio: <span class="h6">{{ horaInicio }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} </span></strong><br>
@@ -86,13 +86,15 @@
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
                         <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
+                        <div *ngIf="turno.paciente">{{turno.paciente.documento}}</div>
                         <span *ngIf="turno.estado === 'disponible'">Disponible</span>
-                        <span [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</span>
+                        <!--<span [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</span>-->
                         <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
                         <strong [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado' && turno.asistencia}" *ngIf="turno.asistencia && turno.paciente">Recepcionado</strong>
                         <strong [ngClass]="{'text-warning': turno.paciente && turno.estado !== 'bloqueado' && !turno.asistencia}" *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Recepcionado</strong>
+                        <strong [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</strong>
                         <strong *ngIf="!turno.paciente"> </strong>
                     </td>
                     <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">

@@ -12,6 +12,7 @@ export class VistaAgendaComponent implements OnInit {
 
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
+    @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
 
@@ -142,6 +143,7 @@ export class VistaAgendaComponent implements OnInit {
             // Agregar una nota relacionada a la Agenda
             agregarNota: true,
             // (En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play")
+            listarTurnos: (this.cantSel === 1 && this.puedoListar()),
         };
     }
 
@@ -181,6 +183,11 @@ export class VistaAgendaComponent implements OnInit {
         }).length <= 0;
     }
 
+    // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
+    puedoListar() {
+        return true;
+    }
+
     haySoloTurnosReservados() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
@@ -214,6 +221,11 @@ export class VistaAgendaComponent implements OnInit {
     // Sólo avisa que se va a agregar una nota
     agregarNotaAgenda() {
         this.agregarNotaAgendaEmit.emit(this.agendasSeleccionadas);
+    }
+
+    // Listado de turnos con carpetas
+    listarTurnos() {
+        this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
     }
 
     cancelar() {

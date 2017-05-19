@@ -105,6 +105,8 @@ import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gesto
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
 import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
+import { ListaTurnosComponent } from './components/turnos/gestor-agendas/lista-turnos.component';
+
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -297,7 +299,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
+    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent, ListaTurnosComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,

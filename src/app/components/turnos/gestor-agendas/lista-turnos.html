@@ -1,0 +1,21 @@
+<template ngFor let-bloque="$implicit" [ngForOf]="bloques" let-i="index">
+  <table class="table table-striped">
+    <thead>
+      <th><strong>Bloque: </strong>{{bloque.descripcion}}</th>
+      <th></th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let turno of bloque.turnos; let i=index" style="cursor: pointer; pointer-events: all">
+        <td>
+          <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+        </td>
+        <td>
+          <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
+          <div>{{turno.paciente.documento}}</div>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</template>

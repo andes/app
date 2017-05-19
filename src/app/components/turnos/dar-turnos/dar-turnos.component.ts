@@ -745,7 +745,7 @@ export class DarTurnosComponent implements OnInit {
           let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
           let tm = moment(this.turno.horaInicio).format('HH:mm');
           let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-          this.enviarSMS(pacienteSave, mensaje);
+          // this.enviarSMS(pacienteSave, mensaje);
         });
 
         // Guardar Prestación Paciente
@@ -816,7 +816,7 @@ export class DarTurnosComponent implements OnInit {
           });
 
         }
-        debugger;
+        debugger; 
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
         if (this.paciente.carpetaEfectores) {
           let carpetaEfector = null;

@@ -1,11 +1,13 @@
 <section>
   <div class="row">
     <div class="col" text-align="center">
-      <h4>
+      <plex-box>
+      <header>
         <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
         {{ fecha | date: "MMM yy" | uppercase}}
         <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
-      </h4>
+      </header>
+      </plex-box>
     </div>
   </div>
   <div class="row">
