@@ -1,62 +1,57 @@
 <!--Header de agenda-->
-<div class="row" *ngIf="showTurnos">
-    <div class="col-12">
-        <fieldset>
-            <legend>
-                <div class="row">
-                    <div class="col-6">
-                        Bloques y Turnos
+<header>
+    <div class="row" *ngIf="showTurnos">
+        <div class="col-12">
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">Bloques y Turnos</span>
+                        <span class="badge-success float-right">{{ agenda.estado }}</span>
                     </div>
-                    <div class="col-6 text-right">
-                        <span class="badge-success">{{ agenda.estado }}</span>
+                </legend>
+                <!--Header de la agenda-->
+                <div class="alert alert-default small">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                        </div>
                     </div>
-                </div>
-            </legend>
-            <div class="alert alert-default">
-                <div class="row">
-                    <div class="col-6">
-                        <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Tipos de prestación</label>
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label>Horario</label> {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Profesionales</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <ng-container *ngIf="agenda.profesionales">
+                                <div *ngFor="let profesional of agenda.profesionales">{{profesional.apellido}}, {{profesional.nombre}}</div>
+                            </ng-container>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label>Tipos de prestación</label>
-                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Espacio físico</label>
+                            <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label>Profesionales</label>
-                        <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
-                        <ng-container *ngIf="agenda.profesionales">
-                            <div *ngFor="let profesional of agenda.profesionales">{{profesional.apellido}}, {{profesional.nombre}}</div>
-                        </ng-container>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label>Espacio físico</label>
-                        <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-
-                        <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
+                    <div class="row">
+                        <div class="col-12">
+                            <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
+        </div>
     </div>
-</div>
+</header>
+<!--Listado de turnos-->
 <div class="row" *ngIf="showTurnos">
     <div class="col-12">
-        <div *ngIf="turnosSeleccionados.length === 0" style="height: 38px"></div>
-        <strong class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-danger"><i class="mdi mdi-alarm"></i> Agenda en ejecución</strong>
+        <div class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-info"><i class="mdi mdi-alarm"></i> Agenda en ejecución</div>
         <div *ngIf="turnosSeleccionados.length > 0" class="float-right">
 
             <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'sacarAsistencia' )">
@@ -126,7 +121,7 @@
                 </tr>
             </table>
             <table class="table table-striped">
-                <tr *ngFor="let turno of bloque.turnos; let i=index"  style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionado(bloque.turnos[i])}">
+                <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                     <td (click)="seleccionarTurno(turno, true)">
                         <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
                         <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
