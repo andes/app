@@ -548,7 +548,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     return cond;
   }
 
-
   preSave(valid) {
     debugger
     if (valid.formValid) {
@@ -558,8 +557,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
       });
     }
+     this.plex.alert('Debe completar los datos obligatorios');
   }
-
-
 
 }
