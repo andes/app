@@ -12,10 +12,6 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 export class AgregarNotaAgendaComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-
-    @Output() saveAgregarNotaAgenda = new EventEmitter<IAgenda>();
-    @Output() cancelaAgregarNotaAgenda = new EventEmitter<boolean>();
-
     private _agendasSeleccionadas: Array<any>;
 
     @Input('agendasSeleccionadas')
@@ -25,6 +21,9 @@ export class AgregarNotaAgendaComponent implements OnInit {
     get agendasSeleccionadas(): any {
         return this._agendasSeleccionadas;
     }
+
+    @Output() saveAgregarNotaAgenda = new EventEmitter<IAgenda>();
+    @Output() cancelaAgregarNotaAgenda = new EventEmitter<boolean>();
 
     showAgregarNotaAgenda: Boolean = true;
 
@@ -38,10 +37,8 @@ export class AgregarNotaAgendaComponent implements OnInit {
     }
 
     guardarNota() {
-
         let alertCount = 0;
         this.agendasSeleccionadas.forEach((agenda, index) => {
-
             let patch = {
                 'op': 'notaAgenda',
                 'nota': agenda.nota
@@ -51,9 +48,9 @@ export class AgregarNotaAgendaComponent implements OnInit {
 
                 if ( alertCount === 0 ) {
                     if ( this.agendasSeleccionadas.length === 1 ) {
-                        this.plex.alert('La Nota se guardó correctamente');
+                        this.plex.toast('success', 'La Nota se guardó correctamente');
                     } else {
-                        this.plex.alert('Las Notas se guardaron correctamente');
+                        this.plex.toast('success', 'Las Notas se guardaron correctamente');
                     }
                     alertCount++;
                 }
@@ -75,5 +72,4 @@ export class AgregarNotaAgendaComponent implements OnInit {
     cancelar() {
         this.cancelaAgregarNotaAgenda.emit(true);
     }
-
 }

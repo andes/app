@@ -104,8 +104,8 @@
                     <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
                 </div>
                 <!-- Muestra el panel de Notas de Agendas -->
-                <div type="info" class="col-md-12" *ngIf="showAgregarNotaAgenda">
-                    <div class="clear"></div>
+                <div *ngIf="showAgregarNotaAgenda">
+                    <!--<div class="clear"></div>-->
                     <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)" (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                 </div>
                 <!-- Muestra el listado de turnos con el número de carpeta (HC) -->
