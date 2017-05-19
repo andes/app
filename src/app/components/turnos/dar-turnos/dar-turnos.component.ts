@@ -635,39 +635,50 @@ export class DarTurnosComponent implements OnInit {
         && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
   }
 
-  actualizarCarpetaPaciente(pacienteSave, listaCarpetas) {
+  actualizarCarpetaPaciente(pacienteActualizar) {
     // Se busca el número de carpeta de la Historia Clínica del paciente
     // a partir del documento y del efector
-    let params = {
-      documento: this.paciente.documento,
-      organizacion: this.auth.organizacion._id
-    };
+    let carpetaEfector = null;
+    let listaCarpetas = [];
+    debugger;
+    // Verifico que tenga nro de carpeta de Historia clínica en el efector
+    if (this.paciente.carpetaEfectores) {
+      carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
+        return (data.organizacion.id === this.auth.organizacion.id);
+      });
+      listaCarpetas = this.paciente.carpetaEfectores;
+    }
 
-    this.servicePaciente.getNroCarpeta(params).subscribe(carpetas => {
-      if (carpetas && carpetas.length > 0) {
-        // Se asigna el número de carpeta de historia clínica al paciente
-        let carpetaEfector;
-        carpetaEfector = carpetas[0].carpetaEfectores.find((data) => {
-          return (data.organizacion.id === this.auth.organizacion.id);
-        });
-        // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
-        let nuevaCarpeta = {
-          organizacion: carpetaEfector.organizacion,
-          nroCarpeta: carpetaEfector.nroCarpeta
-        };
-        listaCarpetas.push(nuevaCarpeta);
-        let cambios = {
-          'op': 'updateCarpetaEfectores',
-          'carpetaEfectores': listaCarpetas
-        };
-        this.servicePaciente.patch(pacienteSave.id, cambios).subscribe(resultado => {
-          if (resultado) {
-            console.log(resultado);
-          }
-        });
+    if (!this.paciente.carpetaEfectores || !carpetaEfector) {
+      let params = {
+        documento: this.paciente.documento,
+        organizacion: this.auth.organizacion._id
+      };
 
-      }
-    });
+      this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
+        if (carpeta !== {}) {
+          debugger;
+          // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
+          let nuevaCarpeta = {
+            organizacion: carpeta.organizacion,
+            nroCarpeta: carpeta.nroCarpeta
+          };
+          listaCarpetas.push(nuevaCarpeta);
+          let cambios = {
+            'op': 'updateCarpetaEfectores',
+            'carpetaEfectores': listaCarpetas
+          };
+          this.servicePaciente.patch(pacienteActualizar.id, cambios).subscribe(resultado => {
+            if (resultado) {
+              console.log(resultado);
+            }
+          });
+
+        }
+      });
+
+    }
+
 
 
   }
@@ -746,6 +757,7 @@ export class DarTurnosComponent implements OnInit {
           let tm = moment(this.turno.horaInicio).format('HH:mm');
           let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
           // this.enviarSMS(pacienteSave, mensaje);
+          this.actualizarCarpetaPaciente(pacienteSave);
         });
 
         // Guardar Prestación Paciente
@@ -816,22 +828,6 @@ export class DarTurnosComponent implements OnInit {
           });
 
         }
-        debugger; 
-        // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores) {
-          let carpetaEfector = null;
-          carpetaEfector = this.paciente.carpetaEfectores.filter((data) => {
-            return (data.organizacion.id === this.auth.organizacion.id);
-          });
-          if (!carpetaEfector) {
-            // Se busca el número de carpeta y se actualiza el número en el paciente
-            this.actualizarCarpetaPaciente(pacienteSave, this.paciente.carpetaEfectores);
-          }
-        } else {
-          // Se busca el número de carpeta y se actualiza el número en el paciente
-          this.actualizarCarpetaPaciente(pacienteSave, []);
-        }
-
       }
     });
     this.buscarPaciente();

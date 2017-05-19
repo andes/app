@@ -1,2 +1,14 @@
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';
+[class^="badge-"],
+[class^="label-"] {
+    margin: 0px !important;
+}
+
+.plex-box header {
+    padding-bottom: 10px;
+}
+
+legend {
+    padding-bottom: 10px;
+}

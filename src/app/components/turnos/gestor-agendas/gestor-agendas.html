@@ -4,6 +4,7 @@
         <div class="col">
             <plex-box>
                 <header>
+                    <!--Botones / Acciones-->
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
                         <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" 
@@ -48,12 +49,6 @@
                             </plex-select>
                         </div>
                     </div>
-
-                    <!--Botones / Acciones-->
-                    <div class="row">
-                        <div class="col-12">
-                        </div>
-                    </div>
                 </header>
 
                 <!--Resultados-->
@@ -77,7 +72,7 @@
                             <td (click)="verAgenda(agenda, false, $event)">
                                 <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="text-warning warning mdi mdi-message"></i></span></span>
                                 <div>
-                                    <span>{{agenda?.espacioFisico?.nombre}}</span>
+                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>
@@ -94,55 +89,13 @@
                                 <span>{{agenda?.estado}}</span>
                             </td>
                         </tr>
-
-                        <!--<template ngFor let-agenda="$implicit" [ngForOf]="agendas" let-i="index">
-
-                <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.agenda)}">
-
-                  <td class="col-1 text-center" (click)="verAgenda(agenda, true, $event)">
-                    <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-check-circle" [ngClass]="{'text-success': estaSeleccionada(agenda)}"></i>
-                        <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-circle-outline"></i>
-                        </td>
-
-                        <td class="col-2 text-center" (click)="verAgenda(agenda, false, $event)">
-                            <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="text-warning warning mdi mdi-message"></i></span></span>
-                        </td>
-
-                        <td class="col-3 text-center" (click)="verAgenda(agenda, false, $event)">
-                            <template [ngIf]="agenda.tipoPrestaciones">
-                      <template ngFor let-tipoPrestacion="$implicit" [ngForOf]="agenda.tipoPrestaciones" let-i="index">
-                        <span>{{tipoPrestacion.nombre}}</span>
-                      </template>
-                            </template>
-                            </td>
-
-                            <td class="col text-center" (click)="verAgenda(agenda, false, $event)">
-                                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">sin profesional asignado</span>
-                                <template [ngIf]="agenda.profesionales?.length">
-                      <template ngFor let-profesional="$implicit" [ngForOf]="agenda.profesionales" let-i="index">
-                        <span class="nav-pills">{{profesional.nombre}} {{profesional.apellido}}</span> <span> </span>
-                      </template>
-                                </template>
-                            </td>
-
-                            <td class="col text-center" (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda?.espacioFisico?.nombre}}</span>
-                                <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">sin espacio asignado</span>
-                            </td>
-
-                            <td class="col text-center" (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda?.estado}}</span>
-                            </td>
-
-                            </tr>
-                            </template>-->
                     </tbody>
                 </table>
             </plex-box>
         </div>
 
         <!--Panel de Turnos-->
-        <div class="col-4">
+        <div *ngIf="agendasSeleccionadas.length > 0" class="col-4">
             <plex-box>
                 <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
                     <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
