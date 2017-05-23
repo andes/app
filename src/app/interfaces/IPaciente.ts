@@ -49,4 +49,9 @@ export interface IPaciente {
     scan: String;
     reportarError: Boolean;
     notaError: String;
+    notas?: [{
+        fecha: Date,
+        nota: String,
+        destacada: Boolean
+    }];
 }
