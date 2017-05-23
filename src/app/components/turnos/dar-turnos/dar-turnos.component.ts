@@ -712,30 +712,30 @@ export class DarTurnosComponent implements OnInit {
           this.plex.alert('El turno se asignó correctamente');
         });
 
-        // Guardar Prestación Paciente
-        // let nuevaPrestacion;
-        // nuevaPrestacion = {
-        //     paciente: this.paciente,
-        //     solicitud: {
-        //       tipoPrestacion: this.turnoTipoPrestacion,
-        //       fecha: new Date(),
-        //       listaProblemas: [],
-        //       idTurno: this.turno.id,
-        //     },
-        //     estado: {
-        //       timestamp: new Date(),
-        //       tipo: 'pendiente'
-        //     },
-        //     ejecucion: {
-        //       fecha: new Date(),
-        //       evoluciones: []
-        //     }
-        // };
+       // Guardar Prestación Paciente
+        let nuevaPrestacion;
+        nuevaPrestacion = {
+            paciente: this.paciente,
+            solicitud: {
+              tipoPrestacion: this.turnoTipoPrestacion,
+              fecha: new Date(),
+              listaProblemas: [],
+              idTurno: this.turno.id,
+            },
+            estado: {
+              timestamp: new Date(),
+              tipo: 'pendiente'
+            },
+            ejecucion: {
+              fecha: new Date(),
+              evoluciones: []
+            }
+        };
 
-        // // TODO: Revisar alert
-        //  this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-        //    this.plex.alert('prestacion paciente creada');
-        //  });
+        // TODO: Revisar alert
+         this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+           this.plex.alert('prestacion paciente creada');
+         });
 
         // });
         // Si cambió el teléfono lo actualizo en el MPI
