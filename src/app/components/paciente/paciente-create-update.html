@@ -268,7 +268,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" *ngFor="let _unaNota of pacienteModel.notas; let l = index">
                                         <div class="row">
-                                            <div class="col"> {{_unaNota.nota}}
+                                            <div class="col">{{_unaNota.nota}} <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
                                             </div>
                                             <div class="col-2 text-right">
                                                 <h2 class="text-warning">
@@ -334,7 +334,7 @@
                     </div>
                     <div class="row" *ngIf="pacienteModel.fechaNacimiento">
                         <div class="col-md-12">
-                             <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | fecha }} </h4>
+                            <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | fecha }} </h4>
                         </div>
                     </div>
 
@@ -365,7 +365,7 @@
                     <div class="row">&nbsp;</div>
 
                     <div class="row">&nbsp;</div>
-                    <div type="inverted" *ngIf="pacientesSimilares" title="Pacientes Candidatos">
+                    <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">
                         <header>
                             <h4>Pacientes Candidatos</h4>
                         </header>
