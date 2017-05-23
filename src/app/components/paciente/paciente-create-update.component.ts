@@ -1,4 +1,4 @@
-import { DocumentoEscaneado } from './documento-escaneado.const';
+import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Server } from '@andes/shared';
 import {
   IUbicacion
@@ -127,7 +127,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
   viveProvNeuquen = false;
   posibleDuplicado = false;
   altoMacheo = false;
-
+  buscarPacRel = '';
+  timeoutHandle: number;
+  PacientesRel = null;
+  loading = false;
+  esEscaneado = false;
+  nuevaNota = '';
 
   contacto: IContacto = {
     tipo: 'celular',
@@ -390,12 +395,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
   limpiarContacto() {
     if (this.noPoseeContacto) {
-      this.pacienteModel.contacto[0].valor = '';
+      this.pacienteModel.contacto = [this.contacto];
     }
   }
 
   save(valid) {
-
+    debugger;
     if (valid.formValid) {
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -406,6 +411,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
       pacienteGuardar.contacto.map(elem => {
         elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
         return elem;
+      });
+
+      pacienteGuardar.relaciones.map(rel => {
+        rel.relacion = ((typeof rel.relacion === 'string') ? rel.relacion : (Object(rel.relacion).id));
+        return rel.relacion;
       });
 
       // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
@@ -560,6 +570,261 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
 
+
+
+  addContacto() {
+    let nuevoContacto = Object.assign({}, this.contacto);
+    this.pacienteModel.contacto.push(nuevoContacto);
+  }
+
+  removeContacto(i) {
+    if (i >= 0) {
+      this.pacienteModel.contacto.splice(i, 1);
+    }
+  }
+
+
+  addFinanciador() {
+    let nuevoFinanciador = {
+      entidad: null,
+      codigo: '',
+      activo: true,
+      fechaAlta: null,
+      fechaBaja: null,
+      ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
+    };
+
+    if (this.pacienteModel.financiador) {
+      this.pacienteModel.financiador.push(nuevoFinanciador);
+    } else {
+      this.pacienteModel.financiador = [nuevoFinanciador];
+    }
+
+
+  }
+
+  removeFinanciador(i) {
+    if (i >= 0) {
+      this.pacienteModel.financiador.splice(i, 1);
+    }
+  }
+
+
+  private comprobarDocumentoEscaneado(): DocumentoEscaneado {
+    for (let key in DocumentoEscaneados) {
+      if (DocumentoEscaneados[key].regEx.test(this.buscarPacRel)) {
+        // Loggea el documento escaneado para análisis
+        this.server.post('/core/log/mpi/scan', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { })
+        return DocumentoEscaneados[key];
+      }
+    }
+    if (this.buscarPacRel.length > 30) {
+      this.server.post('/core/log/mpi/scanFail', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { })
+    }
+    return null;
+  }
+
+  /**
+   * Parsea el texto libre en un objeto paciente
+   *
+   * @param {DocumentoEscaneado} documento documento escaneado
+   * @returns {*} Datos del paciente
+   */
+  private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
+    let datos = this.buscarPacRel.match(documento.regEx);
+    let sexo = '';
+    if (documento.grupoSexo > 0) {
+      sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
+    }
+
+    let fechaNacimiento = null;
+    if (documento.grupoFechaNacimiento > 0) {
+      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+    }
+
+    return {
+      documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
+      apellido: datos[documento.grupoApellido],
+      nombre: datos[documento.grupoNombre],
+      sexo: sexo,
+      fechaNacimiento: fechaNacimiento
+    };
+  }
+
+
+  public buscar() {
+    // Cancela la búsqueda anterior
+    if (this.timeoutHandle) {
+      window.clearTimeout(this.timeoutHandle);
+    }
+
+    // Limpia los resultados de la búsqueda anterior
+    this.PacientesRel = null;
+
+    // Inicia búsqueda
+    if (this.buscarPacRel && this.buscarPacRel.trim()) {
+      this.timeoutHandle = window.setTimeout(() => {
+        this.timeoutHandle = null;
+
+        // Si matchea una expresión regular, busca inmediatamente el paciente
+        let documentoEscaneado = this.comprobarDocumentoEscaneado();
+        if (documentoEscaneado) {
+          this.loading = true;
+          let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
+          // Consulta API
+          this.pacienteService.get({
+            type: 'simplequery',
+            apellido: pacienteEscaneado.apellido.toString(),
+            nombre: pacienteEscaneado.nombre.toString(),
+            documento: pacienteEscaneado.documento.toString(),
+            sexo: pacienteEscaneado.sexo.toString(),
+            escaneado: true
+          }).subscribe(resultado => {
+            this.loading = false;
+            this.PacientesRel = resultado;
+            this.esEscaneado = true;
+            // Encontramos un matcheo al 100%
+            if (resultado.length) {
+              resultado[0].scan = pacienteEscaneado.scan;
+              this.seleccionarPacienteRelacionado(resultado.length ? resultado[0] : pacienteEscaneado, true);
+            } else {
+              // Realizamos una busqueda por Suggest
+              this.pacienteService.get({
+                type: 'suggest',
+                claveBlocking: 'documento',
+                percentage: true,
+                apellido: pacienteEscaneado.apellido.toString(),
+                nombre: pacienteEscaneado.nombre.toString(),
+                documento: pacienteEscaneado.documento.toString(),
+                sexo: pacienteEscaneado.sexo.toString(),
+                fechaNacimiento: pacienteEscaneado.fechaNacimiento,
+                escaneado: true
+              }).subscribe(resultSuggest => {
+                this.PacientesRel = resultSuggest;
+                if (this.PacientesRel.length > 0) {
+
+                  let pacienteEncontrado = this.PacientesRel.find(valuePac => {
+                    if (valuePac.paciente.scan && valuePac.paciente.scan === this.buscarPacRel) {
+                      return valuePac.paciente;
+                    }
+                  });
+
+                  let datoDB = {
+                    id: this.PacientesRel[0].paciente.id,
+                    apellido: this.PacientesRel[0].paciente.apellido,
+                    nombre: this.PacientesRel[0].paciente.nombre,
+                    documento: this.PacientesRel[0].paciente.documento,
+                    sexo: this.PacientesRel[0].paciente.sexo,
+                    fechaNacimiento: this.PacientesRel[0].paciente.fechaNacimiento,
+                    match: this.PacientesRel[0].match
+                  };
+
+                  if (pacienteEncontrado) {
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                    this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
+                  } else {
+                    if (this.PacientesRel[0].match >= 0.90) {
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
+                    } else {
+                      if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.90) {
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      }
+                      this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
+                    }
+                  }
+
+                } else {
+                  this.PacientesRel = null;
+                  this.seleccionarPacienteRelacionado(pacienteEscaneado, false);
+                }
+              });
+
+            }
+
+          }, (err) => {
+            this.loading = false;
+          });
+
+
+        } else {
+          // Si no es un documento escaneado, hace una búsqueda multimatch
+          this.pacienteService.get({
+            type: 'multimatch',
+            cadenaInput: this.buscarPacRel
+          }).subscribe(resultado => {
+            this.loading = false;
+            this.PacientesRel = resultado;
+            this.esEscaneado = false;
+            // }
+          }, (err) => {
+            this.loading = false;
+          });
+        }
+      }, 200);
+    }
+  }
+
+
+  seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
+    this.buscarPacRel = '';
+    let unaRelacion = Object.assign({}, {
+      relacion: null,
+      referencia: null,
+      nombre: '',
+      apellido: '',
+      documento: ''
+    });
+
+    if (pacienteEncontrado) {
+      if (esReferencia) {
+        unaRelacion.relacion = pacienteEncontrado.id;
+      }
+      unaRelacion.documento = pacienteEncontrado.documento;
+      unaRelacion.apellido = pacienteEncontrado.apellido;
+      unaRelacion.nombre = pacienteEncontrado.nombre;
+
+    }
+    debugger;
+    if (this.pacienteModel.relaciones) {
+      this.pacienteModel.relaciones.push(unaRelacion);
+    } else {
+      this.pacienteModel.relaciones = [unaRelacion];
+    }
+  }
+
+
+  removeRelacion(i) {
+    if (i >= 0) {
+      this.pacienteModel.relaciones.splice(i, 1);
+    }
+  }
+
+
+  addNota() {
+    let nuevaNota = {
+      'fecha': new Date(),
+      'nota': '',
+      'destacada': false
+    };
+
+    if (this.nuevaNota) {
+      nuevaNota.nota = this.nuevaNota;
+
+      if (this.pacienteModel.notas) {
+        this.pacienteModel.notas.push(nuevaNota);
+      } else {
+        this.pacienteModel.notas = [nuevaNota];
+      }
+
+    }
+  }
+
+
+  destacarNota(indice: any) {
+    debugger;
+    this.pacienteModel.notas[indice].destacada = !this.pacienteModel.notas[indice].destacada;
+  }
 
 
 }

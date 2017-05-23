@@ -14,7 +14,7 @@ import { Auth } from '@andes/auth';
 })
 
 export class PacienteSearchComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
   private timeoutHandle: number;
 
@@ -229,7 +229,7 @@ export class PacienteSearchComponent implements OnInit {
                     sexo: this.pacientesSimilares[0].paciente.sexo,
                     fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
                     match: this.pacientesSimilares[0].match
-                  }
+                  };
 
                   if (pacienteEncontrado) {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
