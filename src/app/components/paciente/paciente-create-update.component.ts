@@ -486,7 +486,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
           nombre: this.pacienteModel.nombre.toString(),
           documento: this.pacienteModel.documento.toString(),
           sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
-          fechaNacimiento: moment(this.pacienteModel.fechaNacimiento).format('YYYY-MM-DD')
+          fechaNacimiento: this.pacienteModel.fechaNacimiento
         };
 
         this.pacienteService.get(dto).subscribe(resultado => {
@@ -550,7 +550,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     return cond;
   }
 
-
   preSave(valid) {
     debugger
     if (valid.formValid) {
@@ -560,8 +559,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
       });
     }
+     this.plex.alert('Debe completar los datos obligatorios');
   }
-
-
 
 }
