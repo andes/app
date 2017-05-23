@@ -81,6 +81,9 @@ import {
   patientFullNamePipe,
   patientRealAgePipe
 } from './../../utils/patientPipe';
+import {
+  fechaPipe
+} from './../../utils/datePipe';
 
 
 @Component({
@@ -432,7 +435,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
       if (this.sugerenciaAceptada) {
         operacionPac = this.pacienteService.save(pacienteGuardar);
         operacionPac.subscribe(result => {
-
           this.plex.alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
         });

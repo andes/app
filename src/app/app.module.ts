@@ -30,7 +30,7 @@ import { MapsComponent } from './utils/mapsComponent';
 
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
-
+import { fechaPipe } from './utils/datePipe';
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -293,7 +293,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe, fechaPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,

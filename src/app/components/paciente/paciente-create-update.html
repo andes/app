@@ -184,8 +184,8 @@
                         </h3>
                     </header>
 
-                    <!--// Ejemplo de Uso
-                    <div>
+                    <!--// Ejemplo de Uso-->
+                    <!--<div>
                         {{pacienteModel | fullName: 'Mayusculas'}}
                         {{ pacienteModel | realAge }}                     
                     </div>-->
@@ -205,7 +205,7 @@
                     </div>
                     <div class="row" *ngIf="pacienteModel.fechaNacimiento">
                         <div class="col-md-12">
-                            <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | date: 'dd/MM/yyyy'}}</h4>
+                             <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | fecha }} </h4>
                         </div>
                     </div>
 
@@ -247,7 +247,7 @@
                                         <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
                                             <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
                                                 <br>
-                                                <small>Documento: {{elem.paciente.documento}} <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}<br>
+                                                <small>Documento: {{elem.paciente.documento}} <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}<br>
                                             Sexo: {{elem.paciente.sexo}}
                                             </small>
                                             </h4>
