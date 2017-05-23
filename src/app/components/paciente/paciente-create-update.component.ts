@@ -569,12 +569,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
       });
     }
-     this.plex.alert('Debe completar los datos obligatorios');
+    this.plex.alert('Debe completar los datos obligatorios');
   }
-
-<<<<<<< HEAD
-=======
-
 
   addContacto() {
     let nuevoContacto = Object.assign({}, this.contacto);
@@ -829,7 +825,4 @@ export class PacienteCreateUpdateComponent implements OnInit {
     debugger;
     this.pacienteModel.notas[indice].destacada = !this.pacienteModel.notas[indice].destacada;
   }
-
-
->>>>>>> empadronamiento
 }
