@@ -223,7 +223,7 @@ export class TurnosComponent implements OnInit {
             // Bloquear turno: está "disponible" pero sin paciente ==> el estado pasa a "suspendido"
             bloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
             // Desbloquear turno: está "suspendido" pero sin paciente ==> el estado pasa a "disponible"
-            desbloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('suspendido') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
+            desbloquearTurno: this.agendaNoSuspendida() && this.todosConEstado('suspendido') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
             // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
 
             // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
