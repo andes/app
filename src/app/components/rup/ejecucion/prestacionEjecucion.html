@@ -299,10 +299,10 @@
             <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " [hidden]="!isDraggingPrestacion" class="droppable">
                 Arrastre aquí para vincularlo a todos los problemas
             </div>
-     
-            <div *ngIf="prestacion?.solicitud && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
-                        && ( showNuevo==false && showEvolucionar==false && showEnmendar==false && showDetalles==false && showTransformar==false)">
-                
+           
+            <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
+                        && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false)">
+                        
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
                     <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " 

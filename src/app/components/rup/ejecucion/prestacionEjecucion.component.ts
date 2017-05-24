@@ -35,6 +35,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   public tipoProblema = null;
   public problemaTratar: any;
   public breadcrumbs: any;
+  public cargarEnconsulta = false;
 
 
   // Filtro Problemas
@@ -49,7 +50,6 @@ export class PrestacionEjecucionComponent implements OnInit {
   isDraggingPrestacion: Boolean = false;
   isDraggingProblemList: Boolean = false;
   isDraggingPlan: Boolean = false;
-
 
   // Filtro Prestaciones
   filtrosPrestacion: String = '';
@@ -77,7 +77,6 @@ export class PrestacionEjecucionComponent implements OnInit {
   showEvolucionar = false;
   showTransformar = false;
   showEnmendar = false;
-  showDetalles = false;
   showEvolTodo = false;
   showNuevo = false;
 
@@ -110,11 +109,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.problemaItem = problema;
   }
 
-
   ngOnInit() {
     //  this.breadcrumbs = this.route.routeConfig.path;
     //     console.log('pantalla:', this.breadcrumbs);
-
 
     this.route.params.subscribe(params => {
       let id = params['id'];
@@ -228,9 +225,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     // debugger;
     this.tipoProblema = e.dragData;
     if (!this.existeProblema(this.tipoProblema)) {
-      // this.agregarProblema(false);
-      // this.removeItem(e.dragData);
         this.showNuevo = true;
+        this.cargarEnconsulta = false;
+        this.problemaTratar = this.tipoProblema;
     } else {
       this.plex.alert('El problema ya existe para el paciente');
     }
@@ -238,8 +235,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   onHallazgoDrop(e: any) {
-
-
     let nuevoProblema;
     // Verifica si es un problema o un tipo Problema
     if ((e.dragData.nombre || e.dragData.tipoProblema)) {
@@ -249,7 +244,10 @@ export class PrestacionEjecucionComponent implements OnInit {
           // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
           this.tipoProblema = e.dragData;
            if (!this.existeProblema(this.tipoProblema)) {
-                this.nuevoProblema(this.tipoProblema); // llama a la pantalla de nuevo problema
+                // llama a la pantalla de nuevo problema
+                  this.showNuevo = true;
+                                    this.cargarEnconsulta = true;
+                  this.problemaTratar = this.tipoProblema;
            } else {
                 this.plex.alert('El problema ya existe para la consulta');
              }
@@ -257,12 +255,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Se dropea desde la "lista de problemas del paciente" hacia los "hallazgos de la consulta"
         if (e.dragData.tipoProblema) {
           if (!this.existeProblemaConsulta(e.dragData)) {
-            this.updateListaProblemas(nuevoProblema);
+                this.updateListaProblemas(nuevoProblema);
           } else {
                 this.plex.alert('El problema ya existe para la consulta');
             }
         }
-
     }
 }
 
@@ -400,22 +397,22 @@ export class PrestacionEjecucionComponent implements OnInit {
     return this.prestacion.ejecucion.listaProblemas.find(elem => elem.id === problema.id);
   }
 
-  guardarProblema(nuevoProblema, actualizarPrestacion?: boolean) {
+  // guardarProblema(nuevoProblema, actualizarPrestacion?: boolean) {
 
-    delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
-    this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
-      if (resultado) { // asignamos el problema a la prestacion de origen
-        this.listaProblemasPaciente.push(resultado);
-        //this.listaProblemas.push(resultado);
-        if (actualizarPrestacion) {
-          this.updateListaProblemas(resultado.id);
-        }
-        this.plex.toast('success', 'El problema fue asociado correctamente', 'Problema asociado', 4000);
-      } else {
-        this.plex.alert('Error al intentar asociar el problema a la consulta');
-      }
-    });
-  }
+  //   delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
+  //   this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
+  //     if (resultado) { // asignamos el problema a la prestacion de origen
+  //       this.listaProblemasPaciente.push(resultado);
+  //       //this.listaProblemas.push(resultado);
+  //       if (actualizarPrestacion) {
+  //         this.updateListaProblemas(resultado.id);
+  //       }
+  //       this.plex.toast('success', 'El problema fue asociado correctamente', 'Problema asociado', 4000);
+  //     } else {
+  //       this.plex.alert('Error al intentar asociar el problema a la consulta');
+  //     }
+  //   });
+  // }
 
   eliminarProblema(problema: IProblemaPaciente) {
     this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
@@ -424,12 +421,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     });
   }
 
-  nuevoProblema(problema) {
-    this.showNuevo = true;
-    delete problema.$order; // Se debe comentar luego de que funcione el plex select
-    this.problemaTratar = problema;
+  // nuevoProblema(problema) {
+  //   this.showNuevo = true;
+  //   delete problema.$order; // Se debe comentar luego de que funcione el plex select
+  //   this.problemaTratar = problema;
 
-  }
+  // }
 
   evolucionarProblema(problema) {
     this.showEvolucionar = true;
@@ -452,11 +449,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.problemaTratar = problema;
   }
 
-  verDetalles(problema) {
-    this.showDetalles = true;
-    delete problema.$order; // Se debe comentar luego de que funcione el plex select
-    this.problemaTratar = problema;
-  }
+  // verDetalles(problema) {
+  //   delete problema.$order; // Se debe comentar luego de que funcione el plex select
+  //   this.problemaTratar = problema;
+  // }
 
   evolucionarTodo() {
     this.showEvolucionar = false;
@@ -467,20 +463,22 @@ export class PrestacionEjecucionComponent implements OnInit {
   onReturn(dato: IProblemaPaciente) {
     this.showEvolucionar = false;
     this.showEnmendar = false;
-    this.showDetalles = false;
   }
 
   onReturnNvoProblema(dato: any) {
 
      this.showEvolucionar = false;
      this.showEnmendar = false;
-     // this.showDetalles = false;
-     this.showEvolucionar = false;
      this.showNuevo = false;
+
      if (dato) {
-     this.updateListaProblemas(dato);
-      this.plex.toast('success', 'El problema fue asociado correctamente a la lista de problemas de la prestación.', 'Problema asociado', 4000);
-    }
+       if (this.cargarEnconsulta) {
+          this.updateListaProblemas(dato);
+       }
+        
+        this.cargarProblemasPaciente();
+        this.plex.toast('success', 'Problema asociado a la prestación', 'Problema asociado.', 4000);
+     }
 
   }
 
@@ -774,26 +772,23 @@ export class PrestacionEjecucionComponent implements OnInit {
       // buscamos la prestacion actualizada con los datos populados
       this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
         this.prestacion = prestacion;
-        this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
       });
     });
   }
 
   updateListaProblemas(problemaid) {
-    // Transformar - Emendar - Gardar nuevo problema
-    let cambios = {
-      'op': 'listaProblemas',
-      'problema': problemaid
-    };
 
-    this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
-      // buscamos la prestacion actualizada con los datos populados
-      this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-        this.prestacion = prestacion;
-        // this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
-      });
-    });
+      let cambios = {
+        'op': 'listaProblemas',
+        'problema': problemaid
+      };
 
+      this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
+      //No devuelve la prestacion actualizada pero si la graba en mongo el patch
+            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+          });
+     });
   }
 
   validarPrestacion() {
