@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -122,6 +123,7 @@ import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitale
 import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
+import { NuevoProblemaComponent } from './components/rup/problemas-paciente/nuevoProblema.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
@@ -210,6 +212,7 @@ export const RUP_COMPONENTS = [
   TensionDiastolicaComponent,
   ObservacionesComponent,
   ConsultaGeneralClinicaMedicaComponent,
+  NuevoProblemaComponent,
   EvolucionProblemaComponent,
   EvolucionTodosProblemasComponent,
   PuntoInicioComponent,

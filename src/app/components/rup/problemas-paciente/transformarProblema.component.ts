@@ -25,13 +25,13 @@ export class TransformarProblemaComponent implements OnInit {
     @Input() listaProblemas: IProblemaPaciente[];
     @Input() problema: IProblemaPaciente;
     @Input() paciente: IPaciente;
-    vigencia = null;
-    duracion = null;
+    cronico = null;
+    estado = null;
     tipoProblema = null;
     nuevoProblemaPaciente: IProblemaPaciente;
     observacion = '';
 
-    opcionesDuracion = [{ id: 'cronico', nombre: 'Crónico' }, { id: 'agudo', nombre: 'Agudo' }];
+    opcionesDuracion = true;
     opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'Inactivo', nombre: 'Inactivo' }, { id: 'Resuelto', nombre: 'Resuelto' }];
 
 
@@ -59,8 +59,8 @@ export class TransformarProblemaComponent implements OnInit {
             observacion: this.observacion,
             profesional: null,
             organizacion: null,
-            duracion: this.duracion.id,
-            vigencia: 'activo',
+            cronico: this.cronico,
+            estado: 'activo',
             segundaOpinion: null
         };
 
@@ -91,9 +91,11 @@ export class TransformarProblemaComponent implements OnInit {
                     problemasOrigen.push(this.problema.id);
                     let nuevoProblema: IProblemaPaciente = {
                         id: null,
-                        tipoProblema: this.tipoProblema.id,
+                        tipoProblema: this.tipoProblema,
                         idProblemaOrigen: problemasOrigen,
                         paciente: this.paciente.id,
+                        fechaIdentificacion: null, //ver despues
+                        descripcion: null, //ver despues
                         fechaInicio: new Date(),
                         evoluciones: [unaEvolucion]
                     };
@@ -121,8 +123,8 @@ export class TransformarProblemaComponent implements OnInit {
                 observacion: 'Problema Transformado',
                 profesional: null,
                 organizacion: null,
-                duracion: this.problema.evoluciones[this.problema.evoluciones.length - 1].duracion,
-                vigencia: 'transformado',
+                cronico: this.problema.evoluciones[this.problema.evoluciones.length - 1].cronico,
+                estado: 'transformado',
                 segundaOpinion: null
             };
             this.problema.evoluciones.push(unaEvolucion);

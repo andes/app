@@ -177,6 +177,7 @@
         cursor: -webkit-grab;
     }
 </style>
+
 <header *ngIf="prestacion">
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
@@ -210,10 +211,10 @@
             <ul class="results list-group">
                 <!--*ngIf="habilitaTransparencia =='habilitar'"-->
                 <!--<ng-container draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro">         -->
-                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" (onDragEnd)="arrastrandoProblema(false)"
-                    (onDragStart)="arrastrandoProblema(true)">
-
-                    <span>{{problemaMaestro.nombre}}</span>
+                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" 
+                              *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" 
+                              (onDragEnd)="arrastrandoProblema(false)" (onDragStart)="arrastrandoProblema(true)">
+                              <span>{{problemaMaestro.nombre}}</span>
                 </li>
                 <li class="text-right" *ngIf="listaproblemasMaestro.length">
                     <a href="javascript:void(0);" (click)="limpiarBusqueda()">
@@ -224,14 +225,12 @@
             </ul>
             <!--{{isDraggingProblem}}-->
             <!--PROBLEMAS DEL PACIENTE - DB: problema-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " [hidden]="!isDraggingProblem" class="droppable">
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " 
+                           [hidden]="!isDraggingProblem" class="droppable">
                 Arrastre aquí para vincularlos al paciente
             </div>
 
-
-
-            <div *ngIf="listaproblemasMaestro.length === 0">
-
+            <div *ngIf="listaproblemasMaestro?.length === 0">
                 <!--BOTONES DE FILTRO-->
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
@@ -243,32 +242,32 @@
                 <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
                     <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
                     <ng-container *ngFor="let problema of listaProblemasPaciente ">
-                        <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].vigencia == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
+                        <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
                             (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
-                            <span>
-                                <b>{{problema.tipoProblema.nombre }}</b>
+                            <span *ngIf="problema?.tipoProblema?.nombre">
+                                <!--<b>{{problema.tipoProblema.nombre }}</b>-->
+                                <h6>{{problema.tipoProblema.nombre }}</h6>
                             </span>
                             <div class="pull-right">
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'" class="badge badge-success">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'" class="badge badge-success">
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                 </span>
 
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'" class="badge badge-danger"> 
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge badge-danger"> 
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                 </span>
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'" class="badge badge-danger"> 
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                                </span>
-                                <!--
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'" class="badge badge-warning">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
-                                </span>
-                                -->
+                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge badge-danger"> 
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
+                                </span>            
                             </div>
-
-                            <small>Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
-                                       por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}   </strong>
-                                </small>
+                            
+                            
+                            <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
+                                    Última evolución realizada                                    
+                                    <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
+                                    por el profesional 
+                                    <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
+                            </small>
                         </li>
                     </ng-container>
                 </ul>
@@ -279,8 +278,8 @@
 
     <!--HALLAZGOS DE ESTA CONSULTA-->
     <div class="col-6">
-        <plex-box>
-            <header>
+        <plex-box>           
+            <header *ngIf="showNuevo==false && showEvolucionar==false">
                 <div class="row">
                     <div class="col">
                         <h5 class="box-title-principal">Hallazgos de la consulta</h5>
@@ -292,47 +291,46 @@
             </header>
 
             <!--Div para los problemas paciente-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" [hidden]="!isDraggingProblem && !isDraggingProblemList" class="droppable">
-                Arrastre aquí para vincularlos a esta consulta
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" 
+                 [hidden]="!isDraggingProblem && !isDraggingProblemList" class="droppable">
+                 Arrastre aquí para vincularlos a esta consulta
             </div>
 
             <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " [hidden]="!isDraggingPrestacion" class="droppable">
                 Arrastre aquí para vincularlo a todos los problemas
             </div>
-
-
-            <div *ngIf="prestacion && prestacion.solicitud && prestacion.ejecucion.listaProblemas && !isDraggingProblem && !isDraggingProblemList">
+     
+            <div *ngIf="prestacion?.solicitud && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
+                        && ( showNuevo==false && showEvolucionar==false && showEnmendar==false && showDetalles==false && showTransformar==false)">
+                
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
-                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " [hidden]="!isDraggingPlan" class="droppable">
+                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " 
+                                   [hidden]="!isDraggingPlan" class="droppable">
                         Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
                     </div>
 
                     <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                        <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
-
-                            <span>
-                                        <h5 class="item-title">{{problema.tipoProblema.nombre}}</h5>
-                                        <small *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                                            Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}}</strong>
-                                            por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombre}}</strong>
-                                            <b>Manuel Urbano</b>
-                                        </small>
-                                    </span>
+                        <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" 
+                                      class="list-group-item justify-content-between list-group-item-action">                        
+                          <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
+                            <h5 class="item-title">{{problema.tipoProblema.nombre}} | 
+                            <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5> 
+                            <small *ngIf="problema?.evoluciones?.length > 0">
+                                Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}}</strong>
+                                por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>                                                                                                                   
+                            </small>
+                          </span>
 
                             <div class="list-inline">
-                                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">Activo</span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</span>
+                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
+                                            {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
-                                <!--
-                                <span class="badge badge-warning d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'">
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
-                                </span>
-                                -->
+  
                                 <span class="d-inline">
                                         <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
                                         </span>
@@ -342,7 +340,7 @@
                             <!--Prestaciones para el problema-->
                             <div class="col-md-12">
                                 <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
-                                    <div *ngIf="prestacionesProblema.ejecucion.listaProblemas && prestacionesProblema.ejecucion.listaProblemas.length">
+                                    <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
                                         <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas">
                                             <div *ngIf="problemaP.id == problema.id">
                                                 <plex-accordion>
@@ -364,23 +362,28 @@
             </div>
 
             <div class="row">
-                <div class="col">
-                    <br/>
+                <div class="col">  
+                    <div *ngIf="showNuevo">
+                        <rup-nuevoProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" [prestacion]="prestacion" 
+                                           [tipoProblema]="tipoProblema" (evtData)="onReturnNvoProblema($event)"></rup-nuevoProblema>
+                    </div>
+
                     <div *ngIf="showEvolucionar && !showEvolTodo">
                         <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
                     </div>
                     <br/>
                     <div *ngIf="showTransformar">
-                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" 
+                                                 (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
                     </div>
                     <br/>
                     <div *ngIf="showEnmendar">
                         <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
                     </div>
-                    <br/>
+                    <!--<br/>
                     <div *ngIf="showDetalles">
                         <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -499,7 +502,7 @@
                             <plex-button title="Eliminar " label=" " icon="close " type="danger " (click)="borrarPrestacionFutura(i)"></plex-button>
                         </div>
                     </div>
-                    <div *ngIf="prestacionFutura && prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
+                    <div *ngIf="prestacionFutura?.solicitud?.listaProblemas?.length">
                         <div *ngFor="let problema of prestacionFutura.solicitud.listaProblemas">
                             <div class="row ">
                                 <div class="col-12">

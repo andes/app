@@ -58,21 +58,18 @@ export class PrestacionEjecucionComponent implements OnInit {
   tiposPrestaciones: ITipoPrestacion[] = [];
   searchPrestacion: String;
 
-
   // Busqueda planes
   searchPlanes: String;
-  planes: ITipoPrestacion[] = []; //Todos los planes que encuentra en el metodo de busqueda..! 
-  PlanesSeleccionados: ITipoPrestacion[] = []; //Lista de planes que quedan seleccionados y listos para dragearse a los Problemas.
-  //Se le va a poder agregar un texto en esta seccion.. Ver eso.
+  planes: ITipoPrestacion[] = []; // Todos los planes que encuentra en el metodo de busqueda..!
+  PlanesSeleccionados: ITipoPrestacion[] = []; // Lista de planes que quedan seleccionados y listos para dragearse a los Problemas.
+  // Se le va a poder agregar un texto en esta seccion.. Ver eso.
   isDraggingPlanSeleccion: Boolean = false;
-
-
 
   items = [
     { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
     { label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) },
     { label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) },
-    { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
+    // { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
   ];
   problemaItem: any;
   data: Object = {};
@@ -82,6 +79,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   showEnmendar = false;
   showDetalles = false;
   showEvolTodo = false;
+  showNuevo = false;
 
 
   // PRESTACIONES EN EJECUCION
@@ -227,11 +225,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // Drag and drop ng2
   onProblemaDrop(e: any) {
-    debugger;
+    // debugger;
     this.tipoProblema = e.dragData;
     if (!this.existeProblema(this.tipoProblema)) {
-      this.agregarProblema(false);
-      this.removeItem(e.dragData, this.listaproblemasMaestro);
+      // this.agregarProblema(false);
+      // this.removeItem(e.dragData);
+        this.showNuevo = true;
     } else {
       this.plex.alert('El problema ya existe para el paciente');
     }
@@ -239,28 +238,34 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   onHallazgoDrop(e: any) {
-    debugger;
+
+
     let nuevoProblema;
     // Verifica si es un problema o un tipo Problema
     if ((e.dragData.nombre || e.dragData.tipoProblema)) {
-      nuevoProblema = e.dragData;
-      if (e.dragData.nombre) {
-        // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
-        this.tipoProblema = e.dragData;
-        this.agregarProblema(true);
-        this.removeItem(e.dragData, this.listaproblemasMaestro);
-      }
-      // Se asocia el ultimo problema a la prestacion
-      if (e.dragData.tipoProblema) {
-        if (!this.existeProblemaConsulta(e.dragData)) {
-          this.updateListaProblemas(nuevoProblema.id);
-        } else {
-          this.plex.alert('El problema ya existe para la consulta');
+        nuevoProblema = e.dragData;
+
+        if (e.dragData.nombre) {
+          // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
+          this.tipoProblema = e.dragData;
+           if (!this.existeProblema(this.tipoProblema)) {
+                this.nuevoProblema(this.tipoProblema); // llama a la pantalla de nuevo problema
+           } else {
+                this.plex.alert('El problema ya existe para la consulta');
+             }
+           }
+        // Se dropea desde la "lista de problemas del paciente" hacia los "hallazgos de la consulta"
+        if (e.dragData.tipoProblema) {
+          if (!this.existeProblemaConsulta(e.dragData)) {
+            this.updateListaProblemas(nuevoProblema);
+          } else {
+                this.plex.alert('El problema ya existe para la consulta');
+            }
         }
-      }
 
     }
-  }
+}
+
 
   // agregamos prestacion en todos los problemas
   onTodosProblemasDrop(e: any) {
@@ -272,7 +277,6 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   onPrestacionDrop(e: any, idProblema) {
-    debugger;
 
     // Se verifica que sea un tipo de prestacion
     // Se crea la nueva prestacion
@@ -296,20 +300,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   }
 
-
-
-
-
-
   onPlanDrop(e: any, idProblema) {
-    debugger;
     console.log(e.dragData);
     console.log(idProblema);
-
   }
 
   //Mover la funcion luego!! 
-
   // agregamos la prestacion al plan
   agregarPlanDePrestacionFutura() {
 
@@ -333,16 +329,6 @@ export class PrestacionEjecucionComponent implements OnInit {
       };
     }
   }
-
-  removeItem(item: any, list: Array<any>) {
-    let index = list.map((e) => {
-      return e.name;
-    }).indexOf(item.name);
-    list.splice(index, 1);
-  }
-  // fin  Drag and drop ng2
-
-
 
   // FILTROS MAESTRO DE PROBLEMAS
   FiltroestadoTodos() {
@@ -406,8 +392,8 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   // lista de problemas
-  existeProblema(tipoProblema: ITipoProblema) {
-    return this.listaProblemasPaciente.find(elem => elem.tipoProblema.nombre === tipoProblema.nombre);
+  existeProblema(tipoProblema: ITipoProblema) {    
+    return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.nombre === tipoProblema.nombre);
   }
 
   existeProblemaConsulta(problema: IProblemaPaciente) {
@@ -419,48 +405,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     delete nuevoProblema.tipoProblema.$order; // Se debe comentar luego de que funcione el plex select (Error de Plex - $order)
     this.servicioProblemaPac.post(nuevoProblema).subscribe(resultado => {
       if (resultado) { // asignamos el problema a la prestacion de origen
-        // this.listaProblemas.push(resultado);
         this.listaProblemasPaciente.push(resultado);
-
         //this.listaProblemas.push(resultado);
         if (actualizarPrestacion) {
           this.updateListaProblemas(resultado.id);
         }
-
         this.plex.toast('success', 'El problema fue asociado correctamente', 'Problema asociado', 4000);
-
       } else {
         this.plex.alert('Error al intentar asociar el problema a la consulta');
       }
     });
-  }
-
-  agregarProblema(actualizarPrestacion?: boolean) {
-    if (!this.existeProblema(this.tipoProblema)) {
-      let nuevoProblema = {
-        id: null,
-        tipoProblema: this.tipoProblema,
-        idProblemaOrigen: null,
-        paciente: this.prestacion.paciente.id,
-        fechaInicio: new Date(),
-        evoluciones: [
-          {
-            fecha: new Date(),
-            observacion: 'Inicio del Problema',
-            profesional: this.auth.profesional.id,
-            organizacion: this.auth.organizacion.id,
-            duracion: 'agudo',
-            vigencia: 'activo',
-            segundaOpinion: null
-          }
-        ]
-      };
-
-      this.guardarProblema(nuevoProblema, actualizarPrestacion);
-
-    } else {
-      this.plex.alert('El problema ya existe para esta consulta');
-    }
   }
 
   eliminarProblema(problema: IProblemaPaciente) {
@@ -468,6 +422,13 @@ export class PrestacionEjecucionComponent implements OnInit {
       if (resultado) {
       }
     });
+  }
+
+  nuevoProblema(problema) {
+    this.showNuevo = true;
+    delete problema.$order; // Se debe comentar luego de que funcione el plex select
+    this.problemaTratar = problema;
+
   }
 
   evolucionarProblema(problema) {
@@ -509,6 +470,20 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.showDetalles = false;
   }
 
+  onReturnNvoProblema(dato: any) {
+
+     this.showEvolucionar = false;
+     this.showEnmendar = false;
+     // this.showDetalles = false;
+     this.showEvolucionar = false;
+     this.showNuevo = false;
+     if (dato) {
+     this.updateListaProblemas(dato);
+      this.plex.toast('success', 'El problema fue asociado correctamente a la lista de problemas de la prestación.', 'Problema asociado', 4000);
+    }
+
+  }
+
   onReturnTransformar(datos: IProblemaPaciente[]) {
     this.showTransformar = false;
     if (datos) {
@@ -536,7 +511,6 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   cargarDatosPrestacion() {
-    debugger;
     this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
     this.listaProblemasPaciente = this.prestacion.ejecucion.listaProblemas;
     // loopeamos las prestaciones que se deben cargar por defecto
@@ -634,7 +608,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   evolucionarPrestacion() {
-    debugger;
+
     if (this.prestacion.ejecucion.listaProblemas.length > 0) {
       this.error = '';
       let i = 1;
@@ -827,7 +801,8 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   onReturnComponent(datos, tipoPrestacionActual) {
-    debugger;
+
+
     if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
       delete this.data[tipoPrestacionActual.key];
     } else {
@@ -841,6 +816,4 @@ export class PrestacionEjecucionComponent implements OnInit {
   volver(ruta) {
     this.router.navigate(['rup/resumen', this.prestacion.id]);
   }
-
-  // tslint:disable-next-line:eofline
 } // PrestacionEjecucionComponent
