@@ -640,7 +640,6 @@ export class DarTurnosComponent implements OnInit {
     // a partir del documento y del efector
     let carpetaEfector = null;
     let listaCarpetas = [];
-    debugger;
     // Verifico que tenga nro de carpeta de Historia clínica en el efector
     if (this.paciente.carpetaEfectores) {
       carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
@@ -657,7 +656,6 @@ export class DarTurnosComponent implements OnInit {
 
       this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
         if (carpeta !== {}) {
-          debugger;
           // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
           let nuevaCarpeta = {
             organizacion: carpeta.organizacion,
@@ -843,7 +841,6 @@ export class DarTurnosComponent implements OnInit {
       sms => {
         this.resultado = sms;
         // this.smsLoader = false;
-        debugger;
         // if (resultado === '0') {
         //     this.turnosSeleccionados[x].smsEnviado = true;
         // } else {

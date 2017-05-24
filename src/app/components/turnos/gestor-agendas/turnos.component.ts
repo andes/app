@@ -6,6 +6,7 @@ import { PacienteService } from './../../../services/paciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
+import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
 
 @Component({
@@ -14,17 +15,8 @@ import * as moment from 'moment';
 })
 
 export class TurnosComponent implements OnInit {
-
-    /*Propiedades del PopOver para confirmar acciones en Turnos*/
-    public titleLiberarTurno: String = 'Liberar Turno';
-    public titleSuspenderTurno: String = 'Suspender Turno';
-    public messageLiberarTurno: String = 'Está seguro que desea Liberar el Turno? </br> Un SMS se enviará automáticamente al paciente.';
-    public messageSuspenderTurno: String = 'Está seguro que desea Suspender el Turno? </br> Un SMS se enviará automáticamente al paciente.';
-    public confirmaLiberarTurno: Boolean = false;
-    public confirmaSuspenderTurno: Boolean = false;
-    public cancelClicked: Boolean = false;
-
     private _agenda: IAgenda;
+    // Parámetros
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -43,37 +35,58 @@ export class TurnosComponent implements OnInit {
     @Input() reasturnos: IAgenda;
     @Output() reasignaTurno = new EventEmitter<boolean>();
 
-    showTurnos: Boolean = true;
-    showLiberarTurno: Boolean = false;
-    showSuspenderTurno: Boolean = false;
-    showAgregarNotaTurno: Boolean = false;
-
+    // Propiedades públicas
+    showTurnos = true;
+    showLiberarTurno = false;
+    showSuspenderTurno = false;
+    showAgregarNotaTurno = false;
     smsEnviado: Boolean = false;
     smsLoader: Boolean = false;
-
     turnos = [];
     turnosSeleccionados: any[] = [];
     turno: ITurno;
     cantSel: number;
-    todos: Boolean = false;
+    todos = false;
     reasignar: any = {};
     horaInicio: any;
-
     bloques = [];
+    botones: any = {}; // Contiene el cálculo de la visualización de botones
+    public estadosAgenda = EstadosAgenda;
+    public mostrarHeaderCompleto = false;
 
-    // Contiene el cálculo de la visualización de botones
-    botones: any = {};
+    // showTurnos: Boolean = true;
+    // showLiberarTurno: Boolean = false;
+    // showSuspenderTurno: Boolean = false;
+    // showAgregarNotaTurno: Boolean = false;
 
+    // smsEnviado: Boolean = false;
+    // smsLoader: Boolean = false;
+
+    // turnos = [];
+    // turnosSeleccionados: any[] = [];
+    // turno: ITurno;
+    // cantSel: number;
+    // todos: Boolean = false;
+    // reasignar: any = {};
+    // horaInicio: any;
+
+    // bloques = [];
+
+
+    // // Contiene el cálculo de la visualización de botones
+    // botones: any = {};
+
+    // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService) { }
-
 
     ngOnInit() {
         this.turnosSeleccionados = [];
         this.actualizarBotones();
     }
 
-    seleccionarTurno(turno, multiple = false) {
+    // Métodos públicos
 
+    seleccionarTurno(turno, multiple = false) {
         if (!multiple) {
             this.turnosSeleccionados = [];
             this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
@@ -85,7 +98,6 @@ export class TurnosComponent implements OnInit {
                 this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
             }
         }
-
 
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
@@ -111,7 +123,6 @@ export class TurnosComponent implements OnInit {
     }
 
     seleccionarTodos() {
-
         this.turnosSeleccionados = [];
 
         for (let a = 0; a < this.agenda.bloques.length; a++) {
@@ -200,9 +211,7 @@ export class TurnosComponent implements OnInit {
 
     actualizarBotones() {
 
-        // TODO: Refactor nombres métodos ningunoConEstado y todosConEstado
         this.botones = {
-
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
             darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.hayTurnosTarde(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
@@ -215,6 +224,8 @@ export class TurnosComponent implements OnInit {
             bloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
             // Desbloquear turno: está "suspendido" pero sin paciente ==> el estado pasa a "disponible"
             desbloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('suspendido') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
+            // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
+
             // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
             // reasignarTurno: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
             reasignarTurno: false,
@@ -222,7 +233,9 @@ export class TurnosComponent implements OnInit {
             listaDeEspera: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
             // Enviar SMS
             sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
+
             smsNoEnviado: false,
+
             nota: this.turnosSeleccionados.length > 0,
 
         };
@@ -230,17 +243,11 @@ export class TurnosComponent implements OnInit {
     }
 
     liberarTurno() {
-
-        this.confirmaLiberarTurno = false;
-
         this.showTurnos = false;
         this.showLiberarTurno = true;
     }
 
     suspenderTurno() {
-
-        this.confirmaSuspenderTurno = false;
-
         this.showTurnos = false;
         this.showSuspenderTurno = true;
     }
@@ -250,26 +257,14 @@ export class TurnosComponent implements OnInit {
         this.showAgregarNotaTurno = true;
     }
 
-    eventosTurno(opcion) {
-
+    eventosTurno(operacion) {
         let patch: any = {
-            op: opcion,
+            op: operacion,
             turnos: this.turnosSeleccionados
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
-
-            resultado => {
-                this.agenda = resultado;
-            },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            }
-
-        );
+        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
 
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
@@ -283,24 +278,20 @@ export class TurnosComponent implements OnInit {
 
     reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
         this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
-
         this.reasignaTurno.emit(this.reasignar);
     }
 
     reasignarTurnoLiberado(turnoLiberado) {
         this.reasignar = { 'paciente': turnoLiberado.paciente, 'idTurno': turnoLiberado.idTurno, 'idAgenda': turnoLiberado.idAgenda };
-
         this.reasignaTurno.emit(this.reasignar);
     }
 
     reasignarTurnoSuspendido(turnoSuspendido) {
         this.reasignar = { 'paciente': turnoSuspendido.paciente, 'idTurno': turnoSuspendido.idTurno, 'idAgenda': turnoSuspendido.idAgenda };
-
         this.reasignaTurno.emit(this.reasignar);
     }
 
     agregarPacienteListaEspera(agenda: any) {
-
         let patch: any = {};
         let pacienteListaEspera = {};
 
@@ -315,11 +306,8 @@ export class TurnosComponent implements OnInit {
         // Bag of cats
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             this.agenda = resultado;
-
             this.plex.alert('El paciente pasó a Lista de Espera');
-
             this.enviarSMS();
-
         });
     }
 

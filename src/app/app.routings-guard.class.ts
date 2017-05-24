@@ -13,7 +13,6 @@ export class RoutingGuard implements CanActivate {
             this.plex.updateUserInfo({ usuario: this.auth.usuario, organizacion: this.auth.organizacion });
             return true;
         } else {
-            debugger;
             this.router.navigate(['login']);
             return false;
         }
