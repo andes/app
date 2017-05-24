@@ -1,114 +1,125 @@
+<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>
+
+
+<!-- [][][]'concepto-snomed'" [dragOverClass]="'drag-over-border'" [dragData]="item"-->
+<div droppable [dropScope]="'concepto-snomed'" [dragOverClass]="'drag-target-border'" (onDrop)="conceptoDropeado($event) " class="droppable">
+    Arrastre aquí para el concepto
+</div>
+
+<ng-container *ngIf="conceptos">
+    <p *ngFor="let concepto of conceptos">{{concepto.fsn}}</p>
+</ng-container>
 <style>
-  h5.box-title-principal {
-    color: #00A8E0;
-    font-weight: 350;
-    padding-bottom: 5px;
-  }
-  
-  h5.titulo-item-lista {
-    display: inline-block;
-    font-weight: 400;
-    line-height: 1;
-  }
-  
-  small {
-    color: grey;
-    font-weight: 400;
-    font-size: 0.85rem;
-  }
-  /*Etiquetas*/
-  
-  .badge {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin: 0px 10px 10px 0px;
-    display: inline-block;
-  }
-  
-  .badge-danger {
-    border: 1.5px solid #dd4b39;
-    border-radius: 0px;
-    background: transparent;
-    color: #dd4b39;
-  }
-  
-  .badge-success {
-    border: 1.5px solid #8CC63F;
-    border-radius: 0px;
-    background: transparent;
-    color: #8CC63F;
-  }
-  
-  .badge-warning {
-    border: 1.5px solid #ff8d22;
-    border-radius: 0px;
-    background: transparent;
-    color: #ff8d22;
-  }
-  
-  .badge-info {
-    border: 1.5px solid #00A8E0;
-    border-radius: 0px;
-    background: transparent;
-    color: #00A8E0;
-  }
-  /* Item lista */
-  
-  h5.item-title {
-    display: inline-block;
-    font-weight: 600;
-    line-height: 1;
-  }
-  
-  h5.item-title:hover {
-    color: #00A8E0;
-  }
-  
-  .list-group-item-hora {
-    border: solid 1px #00c0ef;
-    color: #00c0ef;
-    font-weight: 500;
-    padding: 2.5rem;
-    text-align: center;
-  }
-  
-  .btn-contextual {
-    font-size: 1.5em;
-    color: #AAAAAA;
-    background-color: white;
-    border-color: none;
-    box-shadow: none;
-    border: none;
-  }
-  
-  .list-inline>.list-inline-item {
-    margin-bottom: 10px;
-  }
-  
-  .list-group>.list-group-item {
-    border-color: #AAAAAA;
-    border-radius: 0px;
-  }
-  
-  .list-group-item:hover {
-    background-color: #f9f9f9;
-    border: solid 1px #00A8E0;
-  }
-  
-  .list-group-item:active {
-    background-color: #f5f5f5;
-    border: solid 1px #AAAAAA;
-  }
-  
-  .icono {
-    margin-right: 10px;
-    float: right;
-  }
+    h5.box-title-principal {
+        color: #00A8E0;
+        font-weight: 350;
+        padding-bottom: 5px;
+    }
+    
+    h5.titulo-item-lista {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1;
+    }
+    
+    small {
+        color: grey;
+        font-weight: 400;
+        font-size: 0.85rem;
+    }
+    /*Etiquetas*/
+    
+    .badge {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 0px 10px 10px 0px;
+        display: inline-block;
+    }
+    
+    .badge-danger {
+        border: 1.5px solid #dd4b39;
+        border-radius: 0px;
+        background: transparent;
+        color: #dd4b39;
+    }
+    
+    .badge-success {
+        border: 1.5px solid #8CC63F;
+        border-radius: 0px;
+        background: transparent;
+        color: #8CC63F;
+    }
+    
+    .badge-warning {
+        border: 1.5px solid #ff8d22;
+        border-radius: 0px;
+        background: transparent;
+        color: #ff8d22;
+    }
+    
+    .badge-info {
+        border: 1.5px solid #00A8E0;
+        border-radius: 0px;
+        background: transparent;
+        color: #00A8E0;
+    }
+    /* Item lista */
+    
+    h5.item-title {
+        display: inline-block;
+        font-weight: 600;
+        line-height: 1;
+    }
+    
+    h5.item-title:hover {
+        color: #00A8E0;
+    }
+    
+    .list-group-item-hora {
+        border: solid 1px #00c0ef;
+        color: #00c0ef;
+        font-weight: 500;
+        padding: 2.5rem;
+        text-align: center;
+    }
+    
+    .btn-contextual {
+        font-size: 1.5em;
+        color: #AAAAAA;
+        background-color: white;
+        border-color: none;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .list-inline>.list-inline-item {
+        margin-bottom: 10px;
+    }
+    
+    .list-group>.list-group-item {
+        border-color: #AAAAAA;
+        border-radius: 0px;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f9f9f9;
+        border: solid 1px #00A8E0;
+    }
+    
+    .list-group-item:active {
+        background-color: #f5f5f5;
+        border: solid 1px #AAAAAA;
+    }
+    
+    .icono {
+        margin-right: 10px;
+        float: right;
+    }
 </style>
 
-  <header>
-  <!--<div class="row">
+<header>
+    <!--<div class="row">
     <div class="col">
       <small>
       <b>Profesional:</b> {{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}
@@ -134,105 +145,105 @@
     </div>
   </div>-->
 
-  <!--<div class="row">
+    <!--<div class="row">
     <div class="col">
       {{fechaActual | date: 'dd/MM/yyyy'}}
     </div>
   </div>-->
- 
-  </header>
+
+</header>
 
 
 <section *ngIf="alerta">
-  <div class="row">
-    <div class="col-12">
-      <plex-box type="info" title="">
-        <div class=" col-12 text-center ">
-          <div class="alert alert-danger " role="alert ">
-            No se encontraron agendas para el profesional.
-          </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-box type="info" title="">
+                <div class=" col-12 text-center ">
+                    <div class="alert alert-danger " role="alert ">
+                        No se encontraron agendas para el profesional.
+                    </div>
+                </div>
+            </plex-box>
         </div>
-      </plex-box>
     </div>
-  </div>
 </section>
 
 <section>
-  <div class="row">
-    <!--INICIO Agendas-->
-    <div class="col-6">
-      <plex-box>
-        <header>
-          <div class="row">
-            <div class="col">
-              <h5 class="box-title-principal">Agendas</h5>
-            </div>
-          </div>
-        </header>
+    <div class="row">
+        <!--INICIO Agendas-->
+        <div class="col-6">
+            <plex-box>
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="box-title-principal">Agendas</h5>
+                        </div>
+                    </div>
+                </header>
 
-        <ul class="list-group" *ngFor="let agenda of agendas; let i = index">
-          <li class="row no-gutters" *ngFor="let bloque of agenda.bloques; let i=index">
-            <div class="col-3">
-              <div class="list-group-item-hora">
-                <h5> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</h5>
-              </div>
-            </div>
+                <ul class="list-group" *ngFor="let agenda of agendas; let i = index">
+                    <li class="row no-gutters" *ngFor="let bloque of agenda.bloques; let i=index">
+                        <div class="col-3">
+                            <div class="list-group-item-hora">
+                                <h5> {{bloque.horaInicio | date: 'HH:mm'}} - {{bloque.horaFin | date: 'HH:mm'}} hs.</h5>
+                            </div>
+                        </div>
 
-            <div class="col-9 list-group-item">
-              <div class="col-9">
-                <span class="badge badge-warning" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{agenda.estado ? agenda.estado:''}}</span>
-                <br>
-                <h5 class="item-title" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} .</h5>
-                <br>
-                <small> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</small>
-              </div>
+                        <div class="col-9 list-group-item">
+                            <div class="col-9">
+                                <span class="badge badge-warning" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{agenda.estado ? agenda.estado:''}}</span>
+                                <br>
+                                <h5 class="item-title" *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre ? tipoPrestacion.nombre:''}} .</h5>
+                                <br>
+                                <small> {{agenda.espacioFisico ? agenda.espacioFisico.nombre:''}}</small>
+                            </div>
 
-              <span class="col-1">
+                            <span class="col-1">
                         <plex-button  icon="magnify" (click)="listadoTurnos(bloque)" title="Listar Turnos" class="btn-contextual"></plex-button>
                     </span>
-            </div>
-          </li>
-        </ul>
+                        </div>
+                    </li>
+                </ul>
 
-      </plex-box>
-    </div>
-    <!--FIN gendas -->
+            </plex-box>
+        </div>
+        <!--FIN gendas -->
 
-    <!--INICIO Turnos - Pacientes-->
-    <div class="col-6" *ngIf="bloqueSeleccionado">
-      <plex-box>
-        <header>
-          <div class="row">
-            <div class="col">
-              <h5 class="box-title-principal">Listado de Pacientes</h5>
-            </div>
-          </div>
-        </header>
+        <!--INICIO Turnos - Pacientes-->
+        <div class="col-6" *ngIf="bloqueSeleccionado">
+            <plex-box>
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="box-title-principal">Listado de Pacientes</h5>
+                        </div>
+                    </div>
+                </header>
 
-        <ul class="list-group">   
-          <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i = index" (click)="elegirPrestacion(p.id)">
-            <div>
-              <span class="badge badge-warning">{{p.estado[p.estado.length-1].tipo}}</span>
-              <br>
-              <h5 class="item-title"><strong>{{p.paciente.apellido}}, </strong>{{p.paciente.nombre}}</h5>
-              <br>                            
-              <span>Horario: {{turnosPrestacion[p.id].horaInicio | date: 'HH:mm'}} hs. </span>
-              <small><span> | DNI {{p.paciente.documento}}</span></small>
-              <small *ngFor="let dir of p.paciente.direccion">                 
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let p of listaPrestaciones; let i = index" (click)="elegirPrestacion(p.id)">
+                        <div>
+                            <span class="badge badge-warning">{{p.estado[p.estado.length-1].tipo}}</span>
+                            <br>
+                            <h5 class="item-title"><strong>{{p.paciente.apellido}}, </strong>{{p.paciente.nombre}}</h5>
+                            <br>
+                            <span>Horario: {{turnosPrestacion[p.id].horaInicio | date: 'HH:mm'}} hs. </span>
+                            <small><span> | DNI {{p.paciente.documento}}</span></small>
+                            <small *ngFor="let dir of p.paciente.direccion">                 
                 <span *ngIf="dir.ubicacion && dir.ubicacion.localidad">              
                    | {{dir.ubicacion.localidad.nombre}}
                 </span>
                 <span *ngIf="dir.ubicacion.provincia">              
                 , {{dir.ubicacion.provincia.nombre}}
                 </span>
-              </small>             
-              <small *ngFor="let tel of p.paciente.contacto">| {{tel.valor}}</small>
-            </div>
-          </li>
-        </ul>
-      </plex-box>
-    </div>
-    <!--FIN Paciente-->
+              </small>
+                            <small *ngFor="let tel of p.paciente.contacto">| {{tel.valor}}</small>
+                        </div>
+                    </li>
+                </ul>
+            </plex-box>
+        </div>
+        <!--FIN Paciente-->
 
-  </div>
+    </div>
 </section>

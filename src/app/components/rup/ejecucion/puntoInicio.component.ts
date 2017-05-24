@@ -38,6 +38,19 @@ export class PuntoInicioComponent implements OnInit {
         public servicioAgenda: AgendaService, public auth: Auth,
         private router: Router, private route: ActivatedRoute) {}
 
+        public conceptos = [];
+        conceptoSnomed($e) {
+
+            console.log($e);
+        }
+        arrastrandoProblema(a) {
+            console.log(a);
+        }
+        conceptoDropeado($e) {
+            this.conceptos.push($e.dragData);
+            console.log($e);
+        }
+
     ngOnInit() {
         this.breadcrumbs = this.route.routeConfig.path;
         console.log('pantalla:', this.breadcrumbs);

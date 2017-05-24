@@ -17,13 +17,13 @@ export class AppComponent {
         this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
 
         // Inicializa el chequeo de conectividad
-        setInterval(() => {
-            server.get('/core/status', { params: null, showError: false })
-                .subscribe(
-                (data) => this.plex.updateStatus(data),
-                (err) => this.plex.updateStatus({ API: 'Error' })
-                );
-        }, 2000);
+        // setInterval(() => {
+        //     server.get('/core/status', { params: null, showError: false })
+        //         .subscribe(
+        //         (data) => this.plex.updateStatus(data),
+        //         (err) => this.plex.updateStatus({ API: 'Error' })
+        //         );
+        // }, 2000);
         // this.plex.updateMenu([
         //     { label: 'Ir a inicio', icon: 'dna', route: '/incio' },
         //     { label: 'Ir a ruta inexistente', icon: 'flag', route: '/ruta-rota' },
