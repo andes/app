@@ -11,7 +11,17 @@ import { Observable } from 'rxjs/Rx';
     // creamos un handler para cuando se realiza un click
     host: {
         '(document:click)': 'handleClick($event)'
+    },
+    styles: [`
+    .results {
+        margin-top: 0;
     }
+    
+    .results.list-group>.list-group-item {
+        padding: 5px;
+        cursor: -webkit-grab;
+    }`
+    ]
 })
 
 export class SnomedBuscarComponent implements OnInit {

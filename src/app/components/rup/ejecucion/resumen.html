@@ -116,7 +116,7 @@
                 </div>
             </header>
 
-            <ul class="list-group">
+            <ul class="results list-group">
                 <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">
 
 
@@ -126,9 +126,10 @@
 
                     <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
                         <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <plex-tooltip text='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'>
+                            <!--<plex-tooltip text='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'>
                                 <span class="badge badge-info  mdi mdi-link"></span>
-                            </plex-tooltip>
+                            </plex-tooltip>-->
+                            <!--<span class="badge badge-info  mdi mdi-link" tooltip='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
                         </div>
                     </ng-container>
 

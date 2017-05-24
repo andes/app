@@ -177,11 +177,9 @@
         cursor: -webkit-grab;
     }
 </style>
-
 <header *ngIf="prestacion">
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
-
 
 <section class="row">
 
@@ -198,35 +196,32 @@
             </header>
 
             <!--FILTRO EN MAESTRO DE PROBLEMAS-->
-            <form>
+            <snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'problemas-paciente'"></snomed-buscar>
+            <!--<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>-->
+
+            <!--<form>
                 <div>
                     <plex-text [(ngModel)]="searchProblema" name="searchProblema" (change)="buscarProblemas($event)" placeholder="Buscar Problema"></plex-text>
                 </div>
-            </form>
-
+            </form>-->
             <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-            <div *ngIf="searchProblema && listaproblemasMaestro.length === 0">
+            <!--<div *ngIf="searchProblema && listaproblemasMaestro.length === 0">
                 No se han encontrado problemas
             </div>
             <ul class="results list-group">
-                <!--*ngIf="habilitaTransparencia =='habilitar'"-->
-                <!--<ng-container draggable *ngFor="let problemaMaestro of this.listaproblemasMaestro"  [dragData]="problemaMaestro">         -->
-                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" 
-                              *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" 
-                              (onDragEnd)="arrastrandoProblema(false)" (onDragStart)="arrastrandoProblema(true)">
-                              <span>{{problemaMaestro.nombre}}</span>
+                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" (onDragEnd)="arrastrandoProblema(false)"
+                    (onDragStart)="arrastrandoProblema(true)">
+                    <span>{{problemaMaestro.nombre}}</span>
                 </li>
                 <li class="text-right" *ngIf="listaproblemasMaestro.length">
                     <a href="javascript:void(0);" (click)="limpiarBusqueda()">
                         Limpiar búsqueda
                     </a>
                 </li>
-                <!--</ng-container>-->
-            </ul>
-            <!--{{isDraggingProblem}}-->
+            </ul>-->
+
             <!--PROBLEMAS DEL PACIENTE - DB: problema-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " 
-                           [hidden]="!isDraggingProblem" class="droppable">
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " [hidden]="!isDraggingProblem" class="droppable">
                 Arrastre aquí para vincularlos al paciente
             </div>
 
@@ -258,10 +253,10 @@
                                 </span>
                                 <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge badge-danger"> 
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                </span>            
+                                </span>
                             </div>
-                            
-                            
+
+
                             <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
                                     Última evolución realizada                                    
                                     <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
@@ -278,7 +273,7 @@
 
     <!--HALLAZGOS DE ESTA CONSULTA-->
     <div class="col-6">
-        <plex-box>           
+        <plex-box>
             <header *ngIf="showNuevo==false && showEvolucionar==false">
                 <div class="row">
                     <div class="col">
@@ -291,29 +286,26 @@
             </header>
 
             <!--Div para los problemas paciente-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" 
-                 [hidden]="!isDraggingProblem && !isDraggingProblemList" class="droppable">
-                 Arrastre aquí para vincularlos a esta consulta
+            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" [hidden]="!isDraggingProblem && !isDraggingProblemList" class="droppable">
+                Arrastre aquí para vincularlos a esta consulta
             </div>
 
             <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " [hidden]="!isDraggingPrestacion" class="droppable">
                 Arrastre aquí para vincularlo a todos los problemas
             </div>
-           
+
             <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
                         && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false)">
-                        
+
                 <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
                     <!--Div para los planes-->
-                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " 
-                                   [hidden]="!isDraggingPlan" class="droppable">
+                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " [hidden]="!isDraggingPlan" class="droppable">
                         Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
                     </div>
 
                     <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                        <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" 
-                                      class="list-group-item justify-content-between list-group-item-action">                        
-                          <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
+                        <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
+                            <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
                             <h5 class="item-title">{{problema.tipoProblema.nombre}} | 
                             <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5> 
                             <small *ngIf="problema?.evoluciones?.length > 0">
@@ -330,7 +322,7 @@
                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
-  
+
                                 <span class="d-inline">
                                         <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
                                         </span>
@@ -362,10 +354,9 @@
             </div>
 
             <div class="row">
-                <div class="col">  
+                <div class="col">
                     <div *ngIf="showNuevo">
-                        <rup-nuevoProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" [prestacion]="prestacion" 
-                                           [tipoProblema]="tipoProblema" (evtData)="onReturnNvoProblema($event)"></rup-nuevoProblema>
+                        <rup-nuevoProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" [prestacion]="prestacion" [tipoProblema]="tipoProblema" (evtData)="onReturnNvoProblema($event)"></rup-nuevoProblema>
                     </div>
 
                     <div *ngIf="showEvolucionar && !showEvolTodo">
@@ -373,8 +364,7 @@
                     </div>
                     <br/>
                     <div *ngIf="showTransformar">
-                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" 
-                                                 (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
                     </div>
                     <br/>
                     <div *ngIf="showEnmendar">
