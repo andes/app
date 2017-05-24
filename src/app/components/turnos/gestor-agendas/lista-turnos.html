@@ -12,8 +12,33 @@
         </td>
         <td>
           <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
-          <div>{{turno.paciente.documento}}</div>
+          <small><span> | DNI {{turno.paciente.documento|number}}</span></small>
+          <small><span *ngIf="turno.paciente.carpetaEfectores?.length>0"> | Nro Carpeta
+              <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
+                  {{carpeta.nroCarpeta}}
+                    <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
+              </span>
+          </span></small>
         </td>
+        <td>
+          <span *ngIf="turno.updatedBy && turno.updatedAt">
+            <!-- <button class="btn btn-default hover" mwlConfirmationPopover [title]="titleInfoTurno" [message]="messageInfoTurno"
+            placement="bottom" hideConfirmButton="false" hideCancelButton="false" (isOpenChange)="datosInfoUsuarios(turno)">
+            <i title="Información del Turno" class="mdi mdi-clipboard-account"></i>
+          </button> -->
+          <!-- <i class="mdi mdi-clipboard-account"></i>
+          <div class="pop-over-content">
+                  <h3 class="popover-title bg-success text-white text-center">Información del turno</h3>
+                  <div class="popover-content">
+                      <p>El turno fue otorgado por {{turno.updatedBy.nombreCompleto}} el día {{turno.updatedAt | date:'dd/MM/yyyy HH:mm'}} </p>
+                  </div>
+              </div> -->
+              <popover-audit title="Información del Turno" placement="left" [data]="turno" >
+              </popover-audit>
+          </span>
+        </td>
+
+
         <td></td>
       </tr>
     </tbody>
