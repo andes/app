@@ -9,15 +9,17 @@ export interface IProblemaPaciente {
     tipoProblema: ITipoProblema;
     idProblemaOrigen: String[];
     paciente: String;
+    fechaIdentificacion: Date;
     fechaInicio: Date;
+    descripcion: String;
     evoluciones: [{
         fecha: Date,
         observacion: String,
         profesional: IProfesional,
         organizacion: IOrganizacion,
         // ambito: // TODO
-        duracion: String,
-        vigencia: String,
+        cronico: Boolean,
+        estado: String,
         // campo destinado a segundas opiniones o auditorias de las prestaciones
         segundaOpinion: String[]
         // ambito: // TODO
