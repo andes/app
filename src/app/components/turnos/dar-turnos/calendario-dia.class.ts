@@ -90,10 +90,10 @@ export class CalendarioDia {
                         });
                         this.programadosDisponibles = + countBloques[indexBloque].programado;
                         this.gestionDisponibles = + countBloques[indexBloque].gestion;
-                        if (this.agenda.estado === 'Disponible') {
+                        if (this.agenda.estado === 'disponible') {
                             this.estado = (this.gestionDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
-                        if (this.agenda.estado === 'Publicada') {
+                        if (this.agenda.estado === 'publicada') {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
                     });

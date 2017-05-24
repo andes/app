@@ -346,9 +346,9 @@ export class DarTurnosComponent implements OnInit {
       // Sólo traer agendas disponibles o publicadas
       this.agendas = agendas.filter((data) => {
         if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
-          return (data.estado === 'Publicada');
+          return (data.estado === 'publicada');
         } else {
-          return (data.estado === 'Disponible' || data.estado === 'Publicada');
+          return (data.estado === 'disponible' || data.estado === 'publicada');
         }
       });
 
@@ -378,7 +378,7 @@ export class DarTurnosComponent implements OnInit {
     this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
       // Si cambió el estado y ya no está Disponible ni Publicada, mostrar un alerta y cancelar cualquier operación
-      if (a.estado !== 'Disponible' && a.estado !== 'Publicada') {
+      if (a.estado !== 'disponible' && a.estado !== 'publicada') {
 
         this.plex.alert('Esta agenda ya no está disponible.');
         return false;
@@ -427,12 +427,12 @@ export class DarTurnosComponent implements OnInit {
           /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
           if (cal.estado !== 'ocupado') {
 
-            if (this.agenda.estado === 'Disponible') {
+            if (this.agenda.estado === 'disponible') {
               this.tiposTurnosSelect = 'gestion';
               this.tiposTurnosLabel = 'Para gestión de pacientes';
             }
 
-            if (this.agenda.estado === 'Publicada') {
+            if (this.agenda.estado === 'publicada') {
               this.tiposTurnosSelect = 'programado';
               this.tiposTurnosLabel = 'Programado';
             }
@@ -487,7 +487,7 @@ export class DarTurnosComponent implements OnInit {
                 });
                 this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
               });
-              if (this.agenda.estado === 'Publicada') {
+              if (this.agenda.estado === 'publicada') {
                 this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
               }
 
@@ -526,10 +526,10 @@ export class DarTurnosComponent implements OnInit {
                 this.programadosDisponibles = + countBloques[indexBloque].programado;
                 this.gestionDisponibles = + countBloques[indexBloque].gestion;
               });
-              if (this.agenda.estado === 'Disponible') {
+              if (this.agenda.estado === 'disponible') {
                 (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
               }
-              if (this.agenda.estado === 'Publicada') {
+              if (this.agenda.estado === 'publicada') {
                 (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
               }
             }
@@ -563,7 +563,7 @@ export class DarTurnosComponent implements OnInit {
                 fechaDesde: moment(this.agenda.horaInicio).add(1, 'day').toDate(),
                 idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
                 idProfesional: this.opciones.profesional ? this.opciones.profesional.id : null,
-                estados: ['Disponible', 'Publicada']
+                estados: ['disponible', 'publicada']
               }).subscribe(alternativas => {
                 this.alternativas = alternativas;
                 this.reqfiltros = false;
@@ -677,7 +677,7 @@ export class DarTurnosComponent implements OnInit {
     // Ver si cambió el estado de la agenda desde otro lado
     this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
-      if (a.estado !== 'Disponible' && a.estado !== 'Publicada') {
+      if (a.estado !== 'disponible' && a.estado !== 'publicada') {
 
         this.plex.alert('Esta agenda ya no está disponible.');
         this.actualizar('sinFiltro');

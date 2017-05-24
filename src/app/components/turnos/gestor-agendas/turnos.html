@@ -6,23 +6,34 @@
                 <legend>
                     <div class="clearfix">
                         <span class="float-left">Bloques y Turnos</span>
-                        <span class="badge-success float-right">{{ agenda.estado }}</span>
+                        <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
                     </div>
                 </legend>
                 <!--Header de la agenda-->
-                <div class="alert alert-default small">
-                    <div class="row">
+                <div class="alert alert-default mb-0">
+                    <div class="float-right">
+                        <plex-button type="default" title="Mostrar detalle de la agenda" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'" (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
+                    </div>
+                    <!--Header pequeño-->
+                    <div *ngIf="!mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                         </div>
                     </div>
-                    <div class="row">
+                    <!--Header completo-->
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                        </div>
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
                             <label>Tipos de prestación</label>
                             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
                             <label>Profesionales</label>
                             <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
@@ -31,18 +42,17 @@
                             </ng-container>
                         </div>
                     </div>
-                    <div class="row">
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
                             <label>Espacio físico</label>
                             <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                             <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <strong class="h6" *ngIf="agenda.nota">Nota: <span class="h6">{{ agenda.nota }} </span></strong>
-                        </div>
-                    </div>
+                </div>
+                <!--Nota-->
+                <div *ngIf="agenda.nota" class="alert alert-info">
+                    <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
                 </div>
             </fieldset>
         </div>
@@ -51,76 +61,68 @@
 <!--Listado de turnos-->
 <div class="row" *ngIf="showTurnos">
     <div class="col-12">
-        <div class="float-left" *ngIf="hayTurnosTarde()" class="text-sm text-info"><i class="mdi mdi-alarm"></i> Agenda en ejecución</div>
-        <div *ngIf="turnosSeleccionados.length > 0" class="float-right">
-
-            <button *ngIf="botones.sacarAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'sacarAsistencia' )">
-                <span><i title="Sacar Asistencia" class="mdi mdi-account-remove"></i></span>
-            </button>
-
-            <button *ngIf="botones.darAsistencia" class="btn btn-default hover" (click)="eventosTurno( 'darAsistencia' )">
-                <span><i title="Dar Asistencia" class="mdi mdi-account-check"></i></span>
-            </button>
+        <!--Botones / Acciones-->
+        <table class="table mb-0">
+            <tr>
+                <td>
+                    <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos"></i>
+                    <i *ngIf="!this.todos" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"></i>
+                </td>
+                <td colspan="3" class="text-right">
+                    <div *ngIf="turnosSeleccionados.length > 0">
+                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove" (click)="eventosTurno('sacarAsistencia')" title="Registrar inasistencia"></plex-button>
+                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')" title="Registrar asistencia"></plex-button>
+                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" title="Reasignar turno"></plex-button>
+                        <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
+                        <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
+                        <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno"></plex-button>
+                        <!--
 
             <span *ngIf="botones.liberarTurno">
-                <button id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
+                <button id="liberarTurno" class="btn btn-default" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
                     placement="bottom" (confirm)="liberarTurno(agenda, confirmaLiberarTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                     <i title="Liberar Turno" class="mdi mdi-account-minus"></i>
                 </button>
-            </span>
+            </span>-->
 
-            <span *ngIf="botones.listaDeEspera">
-                <button class="btn btn-default hover" (click)="agregarPacienteListaEspera(agenda)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-account-alert"></i></button>
-            </span>
-
-            <span *ngIf="botones.reasignarTurno">
-                <button class="btn btn-default hover">
-                    <i title="Reasignar Turno" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" class="mdi mdi-account-restore"></i>
+                        <plex-button *ngIf="botones.desbloquearTurno" type="success" icon="mdi mdi-play" title="Reanudar turno"></plex-button>
+                        <!--<span *ngIf="botones.desbloquearTurno">
+                <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
+                    <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
                 </button>
-            </span>
-
-            <span *ngIf="botones.suspenderTurno">
-                <button id="suspenderTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
+            </span>-->
+                        <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop" title="Suspender turno"></plex-button>
+                        <!--<span *ngIf="botones.suspenderTurno">
+                <button id="suspenderTurno" class="btn btn-default" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
                     placement="bottom" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
                     <i title="Suspender Turno" class="mdi mdi-power"></i>
                 </button>
-            </span>
-
+            </span>-->
+                        <!--
             <span *ngIf="botones.bloquearTurno">
-                <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
+                <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
                     <i title="Desbloquear Turno" class="mdi mdi-lock-open-outline"></i>
                 </button>
-            </span>
+            </span>-->
+                        <!--<span *ngIf="botones.listaDeEspera">
+                <button class="btn btn-default" (click)="agregarPacienteListaEspera(agenda)"><i title="Agregar Paciente a Lista Espera" class="mdi mdi-account-alert"></i></button>
+            </span>-->
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-            <span *ngIf="botones.desbloquearTurno">
-                <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
-                    <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
-                </button>
-            </span>
-
-            <span *ngIf="botones.nota && turnosSeleccionados.length > 0">
-                <button class="btn btn-default hover" (click)="agregarNotaTurno()"><i title="Agregar Nota" class="mdi mdi-message-text-outline"></i></button>
-            </span>
-
-            <span *ngIf="botones.sms">
-                <button class="btn btn-default hover" (click)="enviarSMS()"><i title="Enviar SMS" class="mdi mdi-email-outline"></i></button>
-            </span>
-
-        </div>
-        <template ngFor let-bloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
-            <table *ngIf="agenda" class="table">
+        <!--Turnos-->
+        <table *ngFor="let bloque of agenda.bloques" class="table table-striped">
+            <thead *ngIf="bloque.descripcion">
                 <tr>
-                    <td colspan="1">
-                        <input type="checkbox" [(ngModel)]="this.todos" name="todos" (click)="seleccionarTodos()">
-                    </td>
-                    <td colspan="4">
-                        <strong>Bloque: </strong>{{bloque.descripcion}}
-                    </td>
+                    <th colspan="4">{{bloque.descripcion}}
+                    </th>
                 </tr>
-            </table>
-            <table class="table table-striped">
+            </thead>
+            <tbody>
                 <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                     <td (click)="seleccionarTurno(turno, true)">
                         <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
@@ -132,15 +134,14 @@
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
                         <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
                         <span *ngIf="turno.estado === 'disponible'">Disponible</span>
-                        <span [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</span>
+                        <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno.estado === 'suspendido'">No Disponible</span>
                         <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
-                        <strong [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado' && turno.asistencia}" *ngIf="turno.asistencia && turno.paciente">Recepcionado</strong>
-                        <strong [ngClass]="{'text-warning': turno.paciente && turno.estado !== 'bloqueado' && !turno.asistencia}" *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Recepcionado</strong>
-                        <strong *ngIf="!turno.paciente"> </strong>
+                        <div *ngIf="turno.paciente && turno.asistencia" class="badge-success">Asistió</div>
+                        <div *ngIf="turno.paciente && turno.asistencia === false" class="badge-danger">No asistió</div>
                     </td>
-                    <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido'}">
                         <i *ngIf="turno.botones?.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
                         <i *ngIf="turno.botones?.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
                         <div>
@@ -148,8 +149,8 @@
                         </div>
                     </td>
                 </tr>
-            </table>
-        </template>
+            </tbody>
+        </table>
     </div>
 </div>
 
