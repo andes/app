@@ -72,8 +72,8 @@
     /*padding: 2.5rem;*/
     text-align: center;
   }
-
   /*.Estilos Tabla*/
+
   table {
     margin-top: 20px;
   }
@@ -105,6 +105,7 @@
   .btn-primary {
     margin-top: 5px;
   }
+
   .list-inline>.list-inline-item {
     margin-bottom: 10px;
   }
@@ -128,7 +129,6 @@
     margin-right: 10px;
     float: right;
   }
-
 
 </style>
 
@@ -178,30 +178,52 @@
               <h1>Lista de pacientes</h1>
             </div>
             <div class="col-6">
-              <plex-text suffix="<i class='btn btn-info mdi mdi-account-search'></i>" [(ngModel)]="searchPaciente" name="searchPaciente" (change)="buscarPaciente($event)" placeholder="Buscar Paciente"></plex-text>
+              <!--<plex-text suffix="<i class='btn btn-info mdi mdi-account-search'></i>" [(ngModel)]="searchPaciente" name="searchPaciente" (change)="buscarPaciente($event)" placeholder="Buscar Paciente"></plex-text>-->
             </div>
           </div>
         </header>
+        <div class="row" *ngIf="mostrarPacientesSearch">
+          <div class="col">
+            <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false"></pacientesSearch>
+          </div>
+        </div>
+        <div class="row" *ngIf="paciente">
+          <div class="col">
+            <header-paciente [paciente]="paciente"></header-paciente>
+          </div>
+        </div>
         <div class="row">
+          <div class="col">
+            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)"
+              (change)="filtraPorPrestacion()">
+            </plex-select>
+          </div>
+        </div>
+        <div class="row" *ngIf="paciente && prestacionSeleccion">
+          <div class="col">
+            <plex-button icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Solicitud" type="success"></plex-button>
+          </div>
+        </div>
+        <div class="row" *ngIf="mostrarLista">
           <div class="col-3">
             <fieldset>
               <!--<legend>Filtrar por fecha</legend>-->
             </fieldset>
             <div class="row">
               <div class="col-6">
-                <plex-datetime type="date" [(ngModel)]="fechaDesde" name="horaInicio" label="Desde">
+                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="filtrarPorFecha()" name="horaInicio" label="Desde">
                 </plex-datetime>
               </div>
               <div class="col-6">
-                <plex-datetime type="date" [(ngModel)]="fechaHasta" name="horaInicio" label="Hasta">
+                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="filtrarPorFecha()" name="horaInicio" label="Hasta">
                 </plex-datetime>
               </div>
             </div>
           </div>
           <div class="col-3">
-              <label class="form-control-label">Filtrar por paciente</label>
+            <label class="form-control-label">Filtrar por paciente</label>
 
-              <!--Agregar las clases active ngclass-->
+            <!--Agregar las clases active ngclass-->
             <div class="btn-group" data-toggle="buttons">
               <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}">
                   <input type="radio"name="options" id="inactivo"  (click)="soloPacientesProfesional()">
@@ -227,39 +249,39 @@
             </plex-select>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="mostrarLista">
           <div class="col 12">
-              <table class="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th><strong>Fecha</strong></th>
-                    <th><strong>Paciente</strong></th>
-                    <th><strong>Profesional</strong></th>
-                    <th><strong>Estado</strong></th>
-                    <th><strong>Tipo de prestacion</strong></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                  <tr class="item" *ngFor="let pacientes of PacientesPresentes" (click)="elegirPrestacion(pacientes.idPrestacion)">
-                    <th class="list-group-item-hora">
-                      Fecha acaaa.
-                    </th>
-                    <th>
-                      {{pacientes.paciente.nombre}} | {{pacientes.paciente.apellido}}
-                    </th>
-                    <th>
-                      {{pacientes.profesionales.nombre}} | {{pacientes.profesionales.apellido}}
-                    </th>
-                    <th>
-                      {{pacientes.estado}}
-                    </th>
-                    <th>
-                      {{pacientes.nombrePrestacion}}
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+            <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th><strong>Fecha</strong></th>
+                  <th><strong>Paciente</strong></th>
+                  <th><strong>Profesional</strong></th>
+                  <th><strong>Estado</strong></th>
+                  <th><strong>Tipo de prestacion</strong></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr class="item" *ngFor="let pacientes of PacientesPresentes" (click)="elegirPrestacion(pacientes.idPrestacion)">
+                  <th class="list-group-item-hora">
+                    Fecha acaaa.
+                  </th>
+                  <th>
+                    {{pacientes.paciente.nombre}} | {{pacientes.paciente.apellido}}
+                  </th>
+                  <th>
+                    {{pacientes.profesionales.nombre}} | {{pacientes.profesionales.apellido}}
+                  </th>
+                  <th>
+                    {{pacientes.estado}}
+                  </th>
+                  <th>
+                    {{pacientes.nombrePrestacion}}
+                  </th>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </plex-box>

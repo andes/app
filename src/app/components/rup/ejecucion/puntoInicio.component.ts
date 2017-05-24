@@ -3,6 +3,7 @@ import { IOrganizacion } from './../../../interfaces/IOrganizacion';
 import { OrganizacionComponent } from './../../organizacion/organizacion.component';
 import { IProfesional } from './../../../interfaces/IProfesional';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import { AgendaService } from './../../../services/turnos/agenda.service';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
@@ -14,6 +15,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
 // Rutas
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -21,8 +23,10 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 
 export class PuntoInicioComponent implements OnInit {
+    paciente: IPaciente;
 
     @HostBinding('class.plex-layout') layout = true;
+
     public profesional: IProfesional;
     public usuario: IPaciente;
     public listaPrestaciones: IPrestacionPaciente[] = [];
@@ -34,12 +38,15 @@ export class PuntoInicioComponent implements OnInit {
     public bloqueSeleccionado: any;
     public turnosPrestacion: any = [];
     public breadcrumbs: any;
+    public mostrarLista = true;
+    public mostrarPacientesSearch = true;
 
     public ConjuntoDePrestaciones: any = [];
     public PacientesPresentes: any = [];
     public unPacientePresente: any = {};
     public TodasLasPrestaciones: any = [];
     public fechaDesde: Date;
+    public fechaHasta: Date;
     public prestacionSeleccion: any;
     public estadoSeleccion: any;
     public selectPrestacionesProfesional: any = [];
@@ -48,33 +55,33 @@ export class PuntoInicioComponent implements OnInit {
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
         public servicioAgenda: AgendaService, public auth: Auth,
-        private router: Router, private route: ActivatedRoute) { }
+        private router: Router, private route: ActivatedRoute,
+        private plex: Plex) { }
 
     ngOnInit() {
         this.breadcrumbs = this.route.routeConfig.path;
         console.log('pantalla:', this.breadcrumbs);
 
-        this.loadAgendasXDia();
+        let hoy = {
+            fechaDesde: moment().startOf('day').format(),
+            fechaHasta: moment().endOf('day').format()
+        }
+
+        this.loadAgendasXDia(hoy);
 
     }
 
-    loadAgendasXDia() {
+    loadAgendasXDia(params) {
         if (this.auth.profesional) {
-            let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
-            let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
-            this.servicioAgenda.get({
-                fechaDesde: fechaDesde,
-                fechaHasta: fechaHasta,
-                //idProfesional: this.auth.profesional.id,
-                organizacion: this.auth.organizacion.id
-            }).subscribe(
+
+            // let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
+            // let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
+            this.servicioAgenda.get(params).subscribe(
                 agendas => {
                     this.agendas = agendas;
                     // console.log(this.agendas[2].bloques[0].turnos);
                     this.CreaConjuntoPrestacionesProfesional();
                     this.TraeTodasLasPrestacionesFiltradas();
-                    
-
                 },
                 err => {
                     if (err) {
@@ -88,6 +95,12 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
+    onPacienteSelected(paciente: IPaciente): void {
+        this.paciente = paciente;
+        this.mostrarLista = false;
+        // this.mostrarPrestacionSelect = true;
+        this.mostrarPacientesSearch = false;
+    }
 
     listadoTurnos(bloque) {
         this.bloqueSeleccionado = bloque;
@@ -114,7 +127,7 @@ export class PuntoInicioComponent implements OnInit {
         }).subscribe(resultado => {
             resultado.forEach(element => {
                 console.log(element);
-                this.TodasLasPrestaciones.push(element); 
+                this.TodasLasPrestaciones.push(element);
             });
             //console.log(this.TodasLasPrestaciones);
             this.cargaPacientesDelDia();
@@ -128,7 +141,7 @@ export class PuntoInicioComponent implements OnInit {
         this.PacientesPresentes = [];
         this.agendas.forEach(element => {
             let turnos: any = [];
-            //Recorremos los bloques de una agenda para sacar los turnos.
+            // Recorremos los bloques de una agenda para sacar los turnos.
             for (let i in element.bloques) {
                 for (let e in element.bloques[i].turnos) {
                     turnos.push(element.bloques[i].turnos[e]);
@@ -163,12 +176,14 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
-    //Creo el conjunto de prestaciones del profesional..
+    // Creo el conjunto de prestaciones del profesional..
     CreaConjuntoPrestacionesProfesional() {
         this.agendas.forEach(element => {
-            let agregar: boolean = true;
-            for (let i in this.ConjuntoDePrestaciones) {//Recorro para no agregar dos veces la misma
-                if (this.ConjuntoDePrestaciones[i] == element.tipoPrestaciones[0].id) {
+            let agregar = true;
+
+            // Recorro para no agregar dos veces la misma
+            for (let i in this.ConjuntoDePrestaciones) {
+                if (this.ConjuntoDePrestaciones[i] === element.tipoPrestaciones[0].id) {
                     agregar = false;
                 }
             }
@@ -185,14 +200,10 @@ export class PuntoInicioComponent implements OnInit {
 
 
 
-
-
     //Va a cargar todos lo pacientes con un turnos pendientes.
     PacientesPendientes() {
 
     }
-
-
 
     elegirPrestacion(id) {
         this.router.navigate(['/rup/resumen', id]);
@@ -253,8 +264,49 @@ export class PuntoInicioComponent implements OnInit {
         }
     }
 
-    buscarPaciente($event) {
+    filtrarPorFecha() {
+        let fechaDesde = moment(this.fechaDesde).startOf('day');
+        let fechaHasta = moment(this.fechaHasta).endOf('month');
 
+        if (fechaDesde.isValid() && fechaHasta.isValid()) {
+            let params = {
+                fechaDesde: fechaDesde.format(),
+                fechaHasta: fechaHasta.format(),
+                //idProfesional: this.auth.profesional.id,
+                organizacion: this.auth.organizacion.id
+            };
+            this.loadAgendasXDia(params);
+        } else {
+            // Demos tiempo para que seleccionen una fecha válida, claro papá
+            return;
+        }
+    }
+
+    crearPrestacionVacia(tipoPrestacion) {
+        let nuevaPrestacion;
+        nuevaPrestacion = {
+            paciente: this.paciente,
+            solicitud: {
+                tipoPrestacion: tipoPrestacion,
+                fecha: new Date(),
+                listaProblemas: [],
+                idTurno: null,
+            },
+            estado: {
+                timestamp: new Date(),
+                tipo: 'pendiente'
+            },
+            ejecucion: {
+                fecha: null,
+                evoluciones: []
+            }
+        };
+
+        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+            this.plex.alert('Prestación paciente creada.').then(() => {
+                this.router.navigate(['/rup/resumen', prestacion.id]);
+            });
+        });
     }
 
 } // export class Punto Inicio Component
