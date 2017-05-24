@@ -1,14 +1,3 @@
-<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>
-
-
-<!-- [][][]'concepto-snomed'" [dragOverClass]="'drag-over-border'" [dragData]="item"-->
-<div droppable [dropScope]="'concepto-snomed'" [dragOverClass]="'drag-target-border'" (onDrop)="conceptoDropeado($event) " class="droppable">
-    Arrastre aquí para el concepto
-</div>
-
-<ng-container *ngIf="conceptos">
-    <p *ngFor="let concepto of conceptos">{{concepto.fsn}}</p>
-</ng-container>
 <style>
     h5.box-title-principal {
         color: #00A8E0;
