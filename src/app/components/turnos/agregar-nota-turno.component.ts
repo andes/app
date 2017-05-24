@@ -28,10 +28,18 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     public modelo: any;
     public resultado: any;
+    public nota = '';
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
     ngOnInit() {
+        this.turnosSeleccionados.forEach((turno, index) => {
+            if (this.nota === '' || turno.nota === this.nota) {
+                this.nota = turno.nota;
+            } else {
+                this.nota = null;
+            }
+        });
         console.log('this.turnosSeleccionados: ', this.turnosSeleccionados);
     }
 
@@ -44,21 +52,24 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 'op': 'guardarNotaTurno',
                 'idAgenda': this.agenda.id,
                 'idTurno': turno.id,
-                'textoNota': turno.nota
+                'textoNota': this.nota
             };
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
 
-                if ( alertCount === 0 ) {
-                    if ( this.turnosSeleccionados.length === 1 ) {
-                        this.plex.alert('La Nota se guardó correctamente');
+                if (alertCount === 0) {
+                    if (this.turnosSeleccionados.length === 1) {
+                        this.plex.toast('success', 'La Nota se guardó correctamente');
                     } else {
-                        this.plex.alert('Las Notas se guardaron correctamente');
+                        this.plex.toast('success', 'Las Notas se guardaron correctamente');
                     }
                     alertCount++;
                 }
 
                 this.agenda = resultado;
+                if (index === this.turnosSeleccionados.length - 1) {
+                    this.saveAgregarNotaTurno.emit();
+                }
             },
                 err => {
                     if (err) {
@@ -66,9 +77,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
                     }
                 });
 
-            if ( index === this.turnosSeleccionados.length - 1 ) {
-                this.saveAgregarNotaTurno.emit(this.agenda);
-            }
         });
     }
 

@@ -17,6 +17,7 @@ export class LiberarTurnoComponent implements OnInit {
 
     @Output() saveLiberarTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
+    @Output() cancelaLiberarTurno = new EventEmitter<boolean>();
 
     pacientes: any = [];
 
@@ -25,26 +26,29 @@ export class LiberarTurnoComponent implements OnInit {
     public reasignar: any = {};
 
     ngOnInit() {
-        debugger;
         this.pacientes = this.turnosSeleccionados;
     }
 
     liberarTurno() {
-        for (let x = 0; x < this.pacientes.length; x++) {
-            let patch = {
-                'op': 'liberarTurno',
-                'idTurno': this.pacientes[x].id
-            };
+        let alertCount = 0;
+        // for (let x = 0; x < this.pacientes.length; x++) {
+        let patch = {
+            'op': 'liberarTurno',
+            'idTurno': this.pacientes[0].id
+        };
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+            this.plex.toast('success', 'El turno seleccionado fue liberado');
 
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-        }
+            this.saveLiberarTurno.emit(this.agenda);
+        },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+        // }
     }
 
     agregarPacienteListaEspera() {
@@ -71,11 +75,17 @@ export class LiberarTurnoComponent implements OnInit {
     }
 
     reasignarTurno(paciente: any) {
-        this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
+        // TODO: redirección con el paciente a Dar turnos ?
+        // this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
 
-        this.liberarTurno();
+        // this.liberarTurno();
 
-        this.reasignarTurnoLiberado.emit(this.reasignar);
+        // this.reasignarTurnoLiberado.emit(this.reasignar);
+    }
+
+    cancelar() {
+        this.cancelaLiberarTurno.emit(true);
+        this.pacientes = [];
     }
 
     constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }

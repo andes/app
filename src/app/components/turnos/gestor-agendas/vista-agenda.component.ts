@@ -59,7 +59,7 @@ export class VistaAgendaComponent implements OnInit {
                 if (alertCount === 0) {
                     if (this.cantSel === 1) {
 
-                        if (estado === 'prePausada' && agenda.prePausada === 'Publicada') {
+                        if (estado === 'prePausada' && agenda.prePausada === 'publicada') {
                             this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
                                 if (!confirmado) {
                                     return false;
@@ -77,7 +77,7 @@ export class VistaAgendaComponent implements OnInit {
                         if (estado === 'prePausada') {
                             this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado');
                         } else {
-                            if (estado === 'prePausada' && agenda.prePausada === 'Publicada') {
+                            if (estado === 'prePausada' && agenda.prePausada === 'publicada') {
                                 this.plex.confirm('¿Publicar Agendas?').then((confirmado) => {
                                     if (!confirmado) {
                                         return false;
@@ -86,6 +86,7 @@ export class VistaAgendaComponent implements OnInit {
                                     this.actualizarEstadoEmit.emit(true);
                                 });
                             } else {
+                                console.log('aca');
                                 this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                                 this.actualizarEstadoEmit.emit(true);
                             }
@@ -100,7 +101,7 @@ export class VistaAgendaComponent implements OnInit {
     // Actualiza estado de las Agendas seleccionadas
     actualizarEstado(estado) {
 
-        if (estado === 'Publicada') {
+        if (estado === 'publicada') {
             this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
                 if (!confirmado) {
                     return false;
@@ -108,7 +109,7 @@ export class VistaAgendaComponent implements OnInit {
                     this.confirmarEstado(estado);
                 }
             });
-        } else if (estado === 'Suspendida') {
+        } else if (estado === 'suspendida') {
             this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
                 if (!confirmado) {
                     return false;
@@ -124,17 +125,17 @@ export class VistaAgendaComponent implements OnInit {
     // Muestra/oculta botones según una combinación de criterios
     actualizarBotones() {
         this.vistaBotones = {
-            // Se puede editar sólo una agenda que esté en estado Planificacion o Disponible
+            // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar(),
-            // Se pueden suspender agendas que estén en estado Disponible o Publicada...
+            // Se pueden suspender agendas que estén en estado disponible o publicada...
             suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender()),
-            // Se pueden pasar a Disponible cualquier agenda en estado Planificacion
+            // Se pueden pasar a disponible cualquier agenda en estado planificacion
             pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer()),
-            // Se pueden publicar todas las agendas que estén en estado Planificacion, o si estado Disponible y no tiene *sólo* turnos reservados
+            // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
             publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados(),
-            // Se pueden cambiar a estado Pausada todas las agendas que no estén en estado Planificacion
+            // Se pueden cambiar a estado pausada todas las agendas que no estén en estado planificacion
             pausarAgenda: (this.cantSel > 0 && this.puedoPausar()),
-            // Se pueden reanudar las agendas en estado Pausada
+            // Se pueden reanudar las agendas en estado pausada
             reanudarAgenda: (this.cantSel > 0 && this.puedoReanudar()),
             // Se puede cerrar cualquier agenda [TODO: ver qué onda]
             cerrarAgenda: false,
@@ -149,37 +150,37 @@ export class VistaAgendaComponent implements OnInit {
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'Pausada' || agenda.estado === 'Suspendida';
+            return agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
     puedoSuspender() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'Disponible' && agenda.estado !== 'Publicada';
+            return agenda.estado !== 'disponible' && agenda.estado !== 'publicada';
         }).length <= 0;
     }
 
     puedoDisponer() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'Planificacion';
+            return agenda.estado !== 'planificacion';
         }).length <= 0;
     }
 
     puedoPublicar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'Planificacion' && agenda.estado !== 'Disponible';
+            return agenda.estado !== 'planificacion' && agenda.estado !== 'disponible';
         }).length <= 0;
     }
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'Planificacion' || agenda.estado === 'Pausada' || agenda.estado === 'Suspendida';
+            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
     puedoReanudar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'Pausada';
+            return agenda.estado !== 'pausada';
         }).length <= 0;
     }
 

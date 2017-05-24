@@ -29,10 +29,18 @@ export class AgregarNotaAgendaComponent implements OnInit {
 
     public modelo: any;
     public resultado: any;
+    public nota = '';
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
     ngOnInit() {
+        this.agendasSeleccionadas.forEach((agenda, index) => {
+            if (this.nota === '' || agenda.nota === this.nota) {
+                this.nota = agenda.nota;
+            } else {
+                this.nota = null;
+            }
+        });
         console.log('this.agendasSeleccionadas: ', this.agendasSeleccionadas);
     }
 
@@ -41,13 +49,13 @@ export class AgregarNotaAgendaComponent implements OnInit {
         this.agendasSeleccionadas.forEach((agenda, index) => {
             let patch = {
                 'op': 'notaAgenda',
-                'nota': agenda.nota
+                // 'nota': agenda.nota
+                'nota': this.nota
             };
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-
-                if ( alertCount === 0 ) {
-                    if ( this.agendasSeleccionadas.length === 1 ) {
+                if (alertCount === 0) {
+                    if (this.agendasSeleccionadas.length === 1) {
                         this.plex.toast('success', 'La Nota se guardó correctamente');
                     } else {
                         this.plex.toast('success', 'Las Notas se guardaron correctamente');
@@ -56,6 +64,9 @@ export class AgregarNotaAgendaComponent implements OnInit {
                 }
 
                 agenda = resultado;
+                if (index === this.agendasSeleccionadas.length - 1) {
+                    this.saveAgregarNotaAgenda.emit(agenda);
+                }
             },
                 err => {
                     if (err) {
@@ -63,9 +74,6 @@ export class AgregarNotaAgendaComponent implements OnInit {
                     }
                 });
 
-            if ( index === this.agendasSeleccionadas.length - 1 ) {
-                this.saveAgregarNotaAgenda.emit(agenda);
-            }
         });
     }
 

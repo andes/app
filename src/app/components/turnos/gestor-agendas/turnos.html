@@ -63,9 +63,12 @@
             </button>
 
             <span *ngIf="botones.liberarTurno">
-                <button id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
+                <!--<button id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
                     placement="bottom" (confirm)="liberarTurno(agenda, confirmaLiberarTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
+                    <i title="Liberar Turno" class="mdi mdi-account-minus"></i>
+                </button>-->
+                <button id="liberarTurno" class="btn btn-default hover" (click)="liberarTurno(agenda)">
                     <i title="Liberar Turno" class="mdi mdi-account-minus"></i>
                 </button>
             </span>
@@ -81,9 +84,12 @@
             </span>
 
             <span *ngIf="botones.suspenderTurno">
-                <button id="suspenderTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
+                <!--<button id="suspenderTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
                     placement="bottom" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
                     (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
+                    <i title="Suspender Turno" class="mdi mdi-power"></i>
+                </button>-->
+                <button id="suspenderTurno" class="btn btn-default hover" (click)="suspenderTurno(agenda)">
                     <i title="Suspender Turno" class="mdi mdi-power"></i>
                 </button>
             </span>
@@ -101,7 +107,7 @@
             </span>
 
             <span *ngIf="botones.nota && turnosSeleccionados.length > 0">
-                <button class="btn btn-default hover" (click)="agregarNotaTurno()"><i title="Agregar Nota" class="mdi mdi-message-text-outline"></i></button>
+                <button class="btn btn-default hover" (click)="agregarNotaTurno()"><i title="Agregar Nota" class="mdi mdi-comment-outline"></i></button>
             </span>
 
             <span *ngIf="botones.sms">
@@ -132,17 +138,17 @@
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
                         <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
                         <div *ngIf="turno.paciente">{{turno.paciente.documento}}</div>
-                        <span *ngIf="turno.estado === 'disponible'">Disponible</span>
-                        <!--<span [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</span>-->
+                        <span *ngIf="turno.estado === 'disponible'">disponible</span>
+                        <!--<span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno.estado === 'suspendido'">No disponible</span>-->
                         <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false)">
-                        <strong [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado' && turno.asistencia}" *ngIf="turno.asistencia && turno.paciente">Recepcionado</strong>
-                        <strong [ngClass]="{'text-warning': turno.paciente && turno.estado !== 'bloqueado' && !turno.asistencia}" *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'bloqueado'">No Recepcionado</strong>
-                        <strong [ngClass]="{'text-danger': turno.estado === 'bloqueado'}" *ngIf="turno.estado === 'bloqueado'">No Disponible</strong>
+                        <strong [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido' && turno.asistencia}" *ngIf="turno.asistencia && turno.paciente">Recepcionado</strong>
+                        <strong [ngClass]="{'text-warning': turno.paciente && turno.estado !== 'suspendido' && !turno.asistencia}" *ngIf="!turno.asistencia && turno.paciente && turno.estado !== 'suspendido'">No Recepcionado</strong>
+                        <strong [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno.estado === 'suspendido'">Suspendido</strong>
                         <strong *ngIf="!turno.paciente"> </strong>
                     </td>
-                    <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'bloqueado'}">
+                    <td class="text-center" *ngIf="turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido'}">
                         <i *ngIf="turno.botones?.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
                         <i *ngIf="turno.botones?.smsEnviado" title="SMS Enviado" class="text-success success mdi mdi-checkbox-marked-circle-outline"></i>
                         <div>
@@ -158,13 +164,13 @@
 <!-- Muestra el panel de Liberar turno -->
 <div type="info" class="col-md-12" *ngIf="showLiberarTurno">
     <div class="clear"></div>
-    <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)"></liberar-turno>
+    <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)" (cancelaLiberarTurno)="cancelaLiberarTurno($event)"></liberar-turno>
 </div>
 
 <!-- Muestra el panel de Suspender turno -->
 <div type="info" class="col-md-12" *ngIf="showSuspenderTurno">
     <div class="clear"></div>
-    <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)"></suspender-turno>
+    <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)"></suspender-turno>
 </div>
 
 <!-- Muestra el panel de Nota -->

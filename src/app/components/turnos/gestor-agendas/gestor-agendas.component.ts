@@ -147,6 +147,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
     }
     saveAgregarNotaAgenda() {
+        this.loadAgendas();
         this.showTurnos = true;
         this.showAgregarNotaAgenda = false;
     }
@@ -186,7 +187,7 @@ export class GestorAgendasComponent implements OnInit {
     editarAgenda(agenda) {
         this.editaAgenda = agenda;
 
-        if (this.editaAgenda.estado === 'Planificacion') {
+        if (this.editaAgenda.estado === 'planificacion') {
             this.showGestorAgendas = false;
             this.showEditarAgenda = true;
             this.showEditarAgendaPanel = false;
@@ -235,7 +236,6 @@ export class GestorAgendasComponent implements OnInit {
                 }
             });
     }
-
 
     loadPrestaciones(event) {
         this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
@@ -312,7 +312,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     setColorEstadoAgenda(agenda) {
-        if (agenda.estado === 'Suspendida') {
+        if (agenda.estado === 'suspendida') {
             agenda.agendaSeleccionadaColor = 'danger';
         } else {
             agenda.agendaSeleccionadaColor = 'success';
