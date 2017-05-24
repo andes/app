@@ -174,14 +174,13 @@
       <plex-box title="Pantalla inicio">
         <header>
           <div class="row">
-            <div class="col-6">
+            <div class="col">
               <h1>Lista de pacientes</h1>
-            </div>
-            <div class="col-6">
-              <!--<plex-text suffix="<i class='btn btn-info mdi mdi-account-search'></i>" [(ngModel)]="searchPaciente" name="searchPaciente" (change)="buscarPaciente($event)" placeholder="Buscar Paciente"></plex-text>-->
             </div>
           </div>
         </header>
+
+        <!-- Buscador de Pacientes MPI -->
         <div class="row" *ngIf="mostrarPacientesSearch">
           <div class="col">
             <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false"></pacientesSearch>
@@ -192,7 +191,7 @@
             <header-paciente [paciente]="paciente"></header-paciente>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="paciente">
           <div class="col">
             <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)"
               (change)="filtraPorPrestacion()">
@@ -201,9 +200,11 @@
         </div>
         <div class="row" *ngIf="paciente && prestacionSeleccion">
           <div class="col">
-            <plex-button icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Solicitud" type="success"></plex-button>
+            <plex-button icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Prestación" type="success"></plex-button>
           </div>
         </div>
+
+        <!-- La Lista de Pacientes -->
         <div class="row" *ngIf="mostrarLista">
           <div class="col-3">
             <fieldset>
@@ -244,7 +245,7 @@
             <fieldset>
               <!--<legend>Filtro tipo de prestacion</legend>-->
             </fieldset>
-            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciónes" (getData)="loadPrestacionesProfesional($event)"
+            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)"
               (change)="filtraPorPrestacion()">
             </plex-select>
           </div>
