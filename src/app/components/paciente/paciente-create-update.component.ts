@@ -403,7 +403,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   save(valid) {
-    debugger;
     if (valid.formValid) {
       let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -502,7 +501,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            debugger;
             if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
               resolve(false);
 
@@ -551,7 +549,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     let cond = false;
     let sexoPac = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
     while (i < listaSimilares.length && !cond) {
-      if ((listaSimilares[i].paciente.documento == this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo == sexoPac)) {
+      if ((listaSimilares[i].paciente.documento === this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo === sexoPac)) {
         this.enableIgnorarGuardar = false;
         cond = true;
       }
@@ -561,7 +559,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
   }
 
   preSave(valid) {
-    debugger
     if (valid.formValid) {
       this.verificaPacienteRepetido().then((resultado) => {
         if (!resultado) {
@@ -614,12 +611,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
     for (let key in DocumentoEscaneados) {
       if (DocumentoEscaneados[key].regEx.test(this.buscarPacRel)) {
         // Loggea el documento escaneado para análisis
-        this.server.post('/core/log/mpi/scan', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { })
+        this.server.post('/core/log/mpi/scan', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { });
         return DocumentoEscaneados[key];
       }
     }
     if (this.buscarPacRel.length > 30) {
-      this.server.post('/core/log/mpi/scanFail', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { })
+      this.server.post('/core/log/mpi/scanFail', { data: this.buscarPacRel }, { params: null, showError: false }).subscribe(() => { });
     }
     return null;
   }
@@ -639,7 +636,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     let fechaNacimiento = null;
     if (documento.grupoFechaNacimiento > 0) {
-      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
     }
 
     return {
@@ -720,15 +717,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
                   };
 
                   if (pacienteEncontrado) {
-                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                     this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                   } else {
                     if (this.PacientesRel[0].match >= 0.90) {
-                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                     } else {
                       if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.90) {
-                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       }
                       this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
                     }
@@ -785,14 +782,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
       unaRelacion.nombre = pacienteEncontrado.nombre;
 
     }
-    debugger;
     if (this.pacienteModel.relaciones) {
       this.pacienteModel.relaciones.push(unaRelacion);
     } else {
       this.pacienteModel.relaciones = [unaRelacion];
     }
   }
-
 
   removeRelacion(i) {
     if (i >= 0) {
@@ -807,16 +802,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
       'nota': '',
       'destacada': false
     };
-
     if (this.nuevaNota) {
       nuevaNota.nota = this.nuevaNota;
-
       if (this.pacienteModel.notas) {
         this.pacienteModel.notas.push(nuevaNota);
       } else {
         this.pacienteModel.notas = [nuevaNota];
       }
-
       if (this.pacienteModel.notas.length > 1) {
         this.pacienteModel.notas.sort((a, b) => {
           return (a.fecha.getDate() > b.fecha.getDate() ? 1 : (b.fecha.getDate() > a.fecha.getDate() ? -1 : 0));
@@ -829,11 +821,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.pacienteModel.notas[indice].destacada = !this.pacienteModel.notas[indice].destacada;
     if (this.pacienteModel.notas.length > 1) {
       this.pacienteModel.notas.sort((a, b) => {
-        let resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0))
+        let resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0));
         return resultado;
       });
     }
   }
-
 
 }
