@@ -83,8 +83,10 @@ export interface IPrestacionPaciente {
     estado: [
         {
             timestamp: Date,
-            tipo: String
+            tipo: String,
+            profesional: IProfesional
         }
+       
     ];
 // tslint:disable-next-line:eofline
 }

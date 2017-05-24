@@ -19,6 +19,8 @@
           <tr>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Edificio</th>
+            <th>Ubicación</th>
             <th>Activo</th>
             <th></th>
           </tr>
@@ -27,8 +29,10 @@
           <tr *ngFor="let espacioFisico of espaciosFisicos">
             <td>{{espacioFisico.nombre}}</td>
             <td>{{espacioFisico.descripcion}}</td>
+            <td>{{espacioFisico.edificio?.descripcion}}</td>
+            <td>{{espacioFisico.detalle}}</td>
             <td>
-              <plex-bool type="slide" [(ngModel)]="espacioFisico.activo" label="" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
+              <plex-bool [(ngModel)]="espacioFisico.activo" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
             </td>
             <td>
               <plex-button type="primary" label="Actualizar" (click)="onEdit(espacioFisico)"> </plex-button>

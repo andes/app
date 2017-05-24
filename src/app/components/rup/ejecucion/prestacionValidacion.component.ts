@@ -112,7 +112,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
             let cambioestado = {
             timestamp: new Date(),
-            tipo: 'validada'
+            tipo: 'validada',
+            profesional: this.auth.profesional
             };
 
             if (resultado) {

@@ -1,3 +1,4 @@
+import { Auth } from '@andes/auth';
 import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
 import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
@@ -14,6 +15,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 
 export class ResumenComponent implements OnInit {
+    
+    
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     prestacion: IPrestacionPaciente;
@@ -27,10 +30,11 @@ export class ResumenComponent implements OnInit {
 
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService,
-        private router: Router, private route: ActivatedRoute) {}
+        private router: Router, private route: ActivatedRoute,
+        public auth: Auth) {}
 
     ngOnInit() {
-
+        console.log(this.auth.profesional);
 console.log('this.route:', this.route.pathFromRoot);
           this.breadcrumbs = this.route.routeConfig.path;
         console.log('pantalla:', this.breadcrumbs);
@@ -83,7 +87,8 @@ console.log('this.route:', this.route.pathFromRoot);
 
         let cambioestado = {
             timestamp: new Date(),
-            tipo: 'ejecucion'
+            tipo: 'ejecucion',
+            profesional: this.auth.profesional
         };
 
         this.prestacion.estado.push(cambioestado);
@@ -96,7 +101,7 @@ console.log('this.route:', this.route.pathFromRoot);
     update() {
         let cambios = {
               'op': 'estado',
-              'estado': this.prestacion.estado
+              'estado': this.prestacion.estado,
         };
         this.servicioPrestacionPaciente.patch(this.prestacion, cambios ).subscribe(prestacion => { });
 
