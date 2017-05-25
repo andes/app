@@ -655,7 +655,8 @@ export class DarTurnosComponent implements OnInit {
       };
 
       this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-        if (carpeta !== {}) {
+        debugger;
+        if (carpeta.nroCarpeta) {
           // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
           let nuevaCarpeta = {
             organizacion: carpeta.organizacion,

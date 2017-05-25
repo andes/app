@@ -11,9 +11,9 @@
           <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
         </td>
         <td>
-          <span *ngIf="turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
-          <small><span> | DNI {{turno.paciente.documento|number}}</span></small>
-          <small><span *ngIf="turno.paciente.carpetaEfectores?.length>0"> | Nro Carpeta
+          <span *ngIf="turno && turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
+          <small><span ngIf="turno && turno.paciente"> | DNI {{turno.paciente.documento|number}}</span></small>
+          <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
               <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
                   {{carpeta.nroCarpeta}}
                     <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
@@ -21,7 +21,7 @@
           </span></small>
         </td>
         <td>
-          <span *ngIf="turno.updatedBy && turno.updatedAt">
+          <span *ngIf="turno && turno.updatedBy && turno.updatedAt">
             <!-- <button class="btn btn-default hover" mwlConfirmationPopover [title]="titleInfoTurno" [message]="messageInfoTurno"
             placement="bottom" hideConfirmButton="false" hideCancelButton="false" (isOpenChange)="datosInfoUsuarios(turno)">
             <i title="Información del Turno" class="mdi mdi-clipboard-account"></i>
