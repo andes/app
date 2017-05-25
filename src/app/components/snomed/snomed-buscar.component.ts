@@ -30,7 +30,11 @@ export class SnomedBuscarComponent implements OnInit {
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
     // @Input() _dragData: String;
-    @Input() _onDragEnd: String;
+
+    // methods
+    @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
+    @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
 
     // [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro"  
     // (onDragEnd)="arrastrandoProblema(false)" (onDragStart)="arrastrandoProblema(true)"
@@ -39,7 +43,7 @@ export class SnomedBuscarComponent implements OnInit {
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
 
-    public hideLista : Boolean = false;
+    public hideLista: Boolean = false;
     public listaProblemasMaestro = [];
     public elementRef;
 
@@ -53,6 +57,14 @@ export class SnomedBuscarComponent implements OnInit {
     }
 
     ngOnInit() { }
+
+    dragStart(e) {
+        this._onDragStart.emit(e);
+    }
+
+    dragEnd(e) {
+        this._onDragEnd.emit(e);
+    }
 
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
@@ -132,7 +144,7 @@ export class SnomedBuscarComponent implements OnInit {
         } while (clickedComponent);
 
         // si no estamos en el componente, limpiamos lista de problemas
-        if (!inside) {
+        if (!inside && !this._draggable) {
             // this.listaProblemasMaestro = [];
             this.hideLista = true;
         }

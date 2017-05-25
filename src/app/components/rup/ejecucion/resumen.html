@@ -126,10 +126,8 @@
 
                     <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
                         <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <!--<plex-tooltip text='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'>
-                                <span class="badge badge-info  mdi mdi-link"></span>
-                            </plex-tooltip>-->
-                            <!--<span class="badge badge-info  mdi mdi-link" tooltip='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
+                            <!--<span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
+                            <span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.term}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>
                         </div>
                     </ng-container>
 
@@ -154,7 +152,8 @@
             <ul class="list-group" *ngIf="listaProblemas">
                 <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">
                     <span>                                
-                        <strong>{{problema.tipoProblema.nombre}} </strong>  |                                   
+                        <!--<strong>{{problema.tipoProblema.nombre}} </strong>  |                                   TODO: Cambio de interfaz anterior-->
+                        <strong>{{problema.tipoProblema.term}} </strong>  |
                             <small>Iniciado <strong>{{problema.fechaInicio | fromNow}}</strong> por
                                    el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
                             </small>
