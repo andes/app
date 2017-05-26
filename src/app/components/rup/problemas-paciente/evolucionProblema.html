@@ -88,6 +88,22 @@
         padding: 20px;       
     }
 
+   .list-group-item-invert {
+       background-color: #002738; 
+   }
+
+   .list-group-invert {
+       background-color: #002738; 
+   }
+
+    .card {
+      background-color: #002738;  
+    }
+
+    .collapseshow {
+         background-color: #002738;
+    }
+
 </style>
 
 
@@ -95,7 +111,7 @@
 
     <header>
         <div class="row">
-            <div class="col-10">
+            <div class="col-12">
                 <h5 class="box-title-principal">Evolucionar Problema| <span class="invert">{{problema.tipoProblema.nombre}}</span></h5>
                 <small class="invert"> Profesional: {{auth.profesional.nombre}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
             </div>
@@ -154,18 +170,19 @@
 
         <hr>
         
-        <plex-accordion>
-            <plex-panel class="card-header-invert" tituloPrincipal="Evoluciones realizadas">
-                <div class="row box-title-secundario box-title-secundario" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+        <plex-accordion class="form-control-invert collapseshow">
+            <plex-panel class=" box-title-secundario" tituloPrincipal="Evoluciones realizadas">
+                <div class="row box-title-secundario" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                     <div class="col-md-12">
-                        <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let ev of problema.evoluciones">                                                  
+                        <ul class="list-group .list-group-invert">
+                            <li class="list-group-item list-group-item-invert" *ngFor="let ev of problema.evoluciones">                                                  
                                 <div class="row"> 
                                     <span *ngIf="ev.profesional">Profesional {{ev.profesioanl}} 
                                                                         | {{ev.fecha| fromNow}}
-                                    </span>                          
-                                    <br />  
-                                    <span>{{ev.observacion}}</span>                                                                                                                                                                                                                                                                                                      
+                                    </span>                                                                                                                                                                                                                                                                                                                                                            
+                                </div>
+                                <div class="row"> 
+                                    <span>{{ev.observacion}}</span>  
                                 </div>
                             </li>
                         </ul>
