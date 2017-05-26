@@ -88,35 +88,22 @@
         padding: 20px;       
     }
 
-   .list-group-item-invert {
-       background-color: #002738; 
-   }
-
-   .list-group-invert {
-       background-color: #002738; 
-   }
-
-    .card {
-      background-color: #002738;  
-    }
-
-    .collapseshow {
-         background-color: #002738;
+    .plex-accordion-espacio {
+        padding: 20px;
     }
 
 </style>
 
 
 <div class="plex-box-invert">
-
     <header>
         <div class="row">
-            <div class="col-12">
+            <div class="col-10">           
                 <h5 class="box-title-principal">Evolucionar Problema| <span class="invert">{{problema.tipoProblema.nombre}}</span></h5>
-                <small class="invert"> Profesional: {{auth.profesional.nombre}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
+                <small class="invert"> Profesional: {{auth.usuario.nombreCompleto}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
             </div>
             <div class="col-2 pull-right">
-                    <span class="badge badge-warning pull-right" *ngIf="cronicohtml">{{cronicohtml}}</span>                                
+                <span class="badge badge-warning pull-right" *ngIf="cronicohtml">{{cronicohtml}}</span>                                
             </div>            
         </div>    
          <hr>         
@@ -159,31 +146,35 @@
             </div>
         </div>
 
+        <br>
+
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">                
             <div class="col-12">
-                <label class="box-title-secundario" for="comment">Evolución del problema</label>
+                <label class="box-title-secundario" for="comment">Evolución</label>
                 <hr>
-                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment"  name="observacion" placeholder="Ingrese una observación"></textarea>
+                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment"  name="observacion" placeholder="Ingrese una evolución"></textarea>
             </div>
         </div>
-
-        <hr>
+ 
         
-        <plex-accordion class="form-control-invert collapseshow">
-            <plex-panel class=" box-title-secundario" tituloPrincipal="Evoluciones realizadas">
+        <plex-accordion class="plex-accordion-espacio">
+            <plex-panel class=" box-title-secundario" tituloPrincipal="Historial de Evoluciones">
                 <div class="row box-title-secundario" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                     <div class="col-md-12">
-                        <ul class="list-group .list-group-invert">
-                            <li class="list-group-item list-group-item-invert" *ngFor="let ev of problema.evoluciones">                                                  
-                                <div class="row"> 
-                                    <span *ngIf="ev.profesional">Profesional {{ev.profesioanl}} 
-                                                                        | {{ev.fecha| fromNow}}
-                                    </span>                                                                                                                                                                                                                                                                                                                                                            
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let ev of problema.evoluciones">                                                                                   
+                                <div class="row">                                   
+                                    <span *ngIf="ev.observacion"> Evolución: {{ev.observacion}}</span>
                                 </div>
-                                <div class="row"> 
-                                    <span>{{ev.observacion}}</span>  
-                                </div>
+
+                                <div class="row">    
+                                    <small> 
+                                        <span *ngIf="ev.profesional">Realizada por                                          
+                                            <strong>{{ev.profesional.nombre}}, {{ev.profesional.apellido}} |</strong> {{ev.fecha| fromNow}}.                                                                                       
+                                        </span> 
+                                    </small>                                                                                                                                                                                                                                                                                                                                                                                           
+                                </div>                                                     
                             </li>
                         </ul>
                     </div>
