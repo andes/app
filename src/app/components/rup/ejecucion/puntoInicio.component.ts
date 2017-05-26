@@ -121,8 +121,8 @@ export class PuntoInicioComponent implements OnInit {
         let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
         this.servicioPrestacion.get({
             fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta
-            // idProfesional: this.auth.profesional.id,
+            fechaHasta: fechaHasta,
+            idProfesional: this.auth.profesional.id,
             // idTipoPrestacion: this.ConjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
             resultado.forEach(element => {
@@ -148,8 +148,9 @@ export class PuntoInicioComponent implements OnInit {
                 }
             }
             turnos.forEach(elemento => { //Falta ver en ejecucion y validad
-                if (elemento.estado === 'asignado' && elemento.asistencia == true) {
+                if (elemento.estado === 'asignado' && elemento.asistencia === true) {
                     this.unPacientePresente.estado = 'En espera';
+                    this.unPacientePresente.fecha = moment().format();
                     this.TodasLasPrestaciones.forEach(prestacion => {
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
@@ -220,8 +221,11 @@ export class PuntoInicioComponent implements OnInit {
 
     soloPacientesProfesional() { //Filtra los pacientes del profesional
         let misPacientes: any = [];
+        console.log('PacientesPresentes: ', this.PacientesPresentes);
+        console.log('PROFESIONAL: ', this.auth.profesional.id);
         this.PacientesPresentes.forEach(paciente => {
-            if (paciente.profesionales.id == this.auth.profesional.id) {
+
+            if (paciente.profesionales.id === this.auth.profesional.id) {
                 misPacientes.push(paciente);
             }
         });
@@ -269,7 +273,7 @@ export class PuntoInicioComponent implements OnInit {
             let params = {
                 fechaDesde: fechaDesde.format(),
                 fechaHasta: fechaHasta.format(),
-                //idProfesional: this.auth.profesional.id,
+                idProfesional: this.auth.profesional.id,
                 organizacion: this.auth.organizacion.id
             };
             this.loadAgendasXDia(params);
