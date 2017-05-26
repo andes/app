@@ -204,9 +204,9 @@ const skip = 0;
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-conceptoSnomed($e) {
-  console.log($e);
-}
+  conceptoSnomed($e) {
+    console.log($e);
+  }
   @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
   prestacion: IPrestacionPaciente;
   public listaProblemas: IProblemaPaciente[] = [];

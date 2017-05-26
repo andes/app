@@ -17,27 +17,6 @@
             </header>
 
             <!--FILTRO EN MAESTRO DE PROBLEMAS-->
-            <!--<form>
-                <div>
-                    <plex-text [(ngModel)]="searchProblema" name="searchProblema" (change)="buscarProblemas($event)" placeholder="Buscar Problema"></plex-text>
-                </div>
-            </form>-->
-            <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-            <!--<div *ngIf="searchProblema && listaproblemasMaestro.length === 0">
-                No se han encontrado problemas
-            </div>
-            <ul class="results list-group">
-                <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro" *ngFor="let problemaMaestro of this.listaproblemasMaestro" class="list-group-item justify-content-between list-group-item-action" (onDragEnd)="arrastrandoProblema(false)"
-                    (onDragStart)="arrastrandoProblema(true)">
-                    <span>{{problemaMaestro.nombre}}</span>
-                </li>
-                <li class="text-right" *ngIf="listaproblemasMaestro.length">
-                    <a href="javascript:void(0);" (click)="limpiarBusqueda()">
-                        Limpiar búsqueda
-                    </a>
-                </li>
-            </ul>-->
-
             <snomed-buscar [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"></snomed-buscar>
             <!--<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>-->
 
@@ -142,15 +121,15 @@
                             <div class="list-inline">
                                 <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</span>
                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                        </span>
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
+                                </span>
                                 <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
-                                            {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                        </span>
+                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
+                                </span>
 
                                 <span class="d-inline">
-                                        <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
-                                        </span>
+                                    <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
+                                </span>
                             </div>
 
 
@@ -292,19 +271,6 @@
                         <span> {{planSelecion.nombre}}</span>
                     </li>
                 </ul>
-
-
-                <!--<div class="row">
-                    <div class="col-5">
-                        <plex-select [(ngModel)]="nuevoTipoPrestacion" name="nuevaPrestacion" (getData)="buscarTipoPrestacion($event)" placeholder="Seleccione prestación"></plex-select>
-                    </div>
-                    <div class="col-5">
-                        <plex-select [(ngModel)]="listaProblemasPlan" name="nuevaPrestacionProblemas" (getData)="$event.callback(listaProblemas)" labelField="tipoProblema.term" [multiple]="true" placeholder="Seleccione problema(s)"></plex-select>
-                    </div>
-                    <div class="col-2">
-                        <plex-button title="Agregar al plan" label="" icon="mdi mdi-plus" type="primary " (click)="agregarPrestacionFutura()"></plex-button>
-                    </div>
-                </div>-->
 
                 <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;" style="padding: 10px; border: 1px solid #999; margin-bottom: 20px;">
                     <div class="row" style="margin-bottom: 20px;" *ngIf="prestacionFutura.solicitud">
