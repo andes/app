@@ -148,18 +148,12 @@ export class PuntoInicioComponent implements OnInit {
                 }
             }
             turnos.forEach(elemento => { //Falta ver en ejecucion y validad
-                // console.log(this.TodasLasPrestaciones);
-                console.log("prestacion");
                 if (elemento.estado === 'asignado' && elemento.asistencia == true) {
                     this.unPacientePresente.estado = 'En espera';
-                    // console.log(this.TodasLasPrestaciones);
                     this.TodasLasPrestaciones.forEach(prestacion => {
-                        console.log(prestacion);
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
                             prestacion.estado.forEach(estado => {
-                                console.log(estado);
-
                                 this.unPacientePresente.estado = estado.tipo;
                                 this.unPacientePresente.fecha = estado.timestamp;
                             });
@@ -306,7 +300,7 @@ export class PuntoInicioComponent implements OnInit {
         };
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('Prestación paciente creada.').then(() => {
+            this.plex.alert('Prestación creada.').then(() => {
                 this.router.navigate(['/rup/resumen', prestacion.id]);
             });
         });
