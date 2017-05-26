@@ -117,12 +117,13 @@ export class PuntoInicioComponent implements OnInit {
 
 
     TraeTodasLasPrestacionesFiltradas() {
+
         let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
         this.servicioPrestacion.get({
             fechaDesde: fechaDesde,
             fechaHasta: fechaHasta,
-            idProfesional: this.auth.profesional.id,
+            // idProfesional: this.auth.profesional.id,
             // idTipoPrestacion: this.ConjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
             resultado.forEach(element => {

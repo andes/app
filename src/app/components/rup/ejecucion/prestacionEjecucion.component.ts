@@ -199,10 +199,13 @@ const skip = 0;
     padding: 5px;
     cursor: -webkit-grab;
   }`]
+
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-
+  conceptoSnomed($e) {
+    console.log($e);
+  }
   @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
   prestacion: IPrestacionPaciente;
   public listaProblemas: IProblemaPaciente[] = [];
@@ -423,10 +426,12 @@ export class PrestacionEjecucionComponent implements OnInit {
   onHallazgoDrop(e: any) {
     let nuevoProblema;
     // Verifica si es un problema o un tipo Problema
-    if ((e.dragData.nombre || e.dragData.tipoProblema)) {
+    if ((e.dragData.tipoProblema || e.dragData.term)) {
       nuevoProblema = e.dragData;
 
-      if (e.dragData.nombre) {
+      // si tiene -term- viene desde la lista de snomed
+      // con lo cual no existe aun en la lista de problemas maestra del paciente
+      if (e.dragData.term) {
         // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
         this.tipoProblema = e.dragData;
         if (!this.existeProblema(this.tipoProblema)) {
@@ -436,6 +441,7 @@ export class PrestacionEjecucionComponent implements OnInit {
           this.problemaTratar = this.tipoProblema;
         } else {
           this.plex.alert('El problema ya existe para la consulta');
+
         }
       }
       // Se dropea desde la "lista de problemas del paciente" hacia los "hallazgos de la consulta"
@@ -665,7 +671,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // lista de problemas
   existeProblema(tipoProblema: ITipoProblema) {
-    return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.nombre === tipoProblema.nombre);
+    // return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.term === tipoProblema.term);
+    return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.term === tipoProblema.term);
   }
 
   existeProblemaConsulta(problema: IProblemaPaciente) {
@@ -690,7 +697,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   // }
 
   eliminarProblema(problema: IProblemaPaciente) {
-    this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
+    this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.term + ' de la consulta actual?').then(resultado => {
       if (resultado) {
       }
     });
