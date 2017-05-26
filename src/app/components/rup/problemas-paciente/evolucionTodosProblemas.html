@@ -87,21 +87,9 @@
         background-color: #002738; 
         padding: 20px;       
     }
-
-   .list-group-item-invert {
-       background-color: #002738; 
-   }
-
-   .list-group-invert {
-       background-color: #002738; 
-   }
-
-    .card {
-      background-color: #002738;  
-    }
-
-    .collapseshow {
-         background-color: #002738;
+    
+    .plex-accordion-espacio {
+        padding: 20px;
     }
 
 </style>
@@ -109,48 +97,48 @@
 <div class="plex-box-invert">
 
     <header>
-    <div class="row">
-        <div class="col-12">
-            <h5 class="box-title-principal">Evolucionar Todos Los Problemas</h5>
-            <small class="invert"> Profesional: {{auth.profesional.nombre}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
-        </div>
-    </div>  
-     <hr>            
+        <div class="row">
+            <div class="col-12">
+                <h5 class="box-title-principal">Evolucionar Todos Los Problemas</h5>
+                <small class="invert"> Profesional: {{auth.usuario.nombreCompleto}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
+            </div>
+        </div>  
+        <hr>            
     </header>
 
     <form>
-
-        <!--INICIO ESTIMADO DEL PROBLEMA-->
-
-        <div class="row" >    
-            <!--FECHA ESTIMADA-->            
+        
+        <!--INICIO ESTIMADO DEL PROBLEMA
+        <div class="row" >                         
             <div class="col-6 list-inline">                    
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
                     <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"></plex-int>
                     <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"></plex-select>             
                 </div>
-            </div>
-            <!--ESTADO DEL PROBLEMA-->
+            </div>          
             <div class="col-2">
                 <label class="box-title-secundario">Estado actual</label>
                 <plex-select [(ngModel)]="estadoActual" name="estadoActual" [data]="estados" [required]="true">
                 </plex-select>
-            </div>   
-            <!--ES CRONICO?-->
+            </div>               
             <div class="col-4">                
                 <plex-bool [(ngModel)]="cronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
             </div>
         </div>
+        <br>
+        -->
         
         <!--EVOLUCION DEL PROBLEMA-->
-        <div class="row">                
+        <div class="row ">                
             <div class="col-12">
-                <label class="box-title-secundario" for="comment">Evolución del problema</label>
+                <label class="box-title-secundario" for="comment">Evolución</label>
                 <hr>
-                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment"  name="observacion" placeholder="Ingrese una observación"></textarea>
+                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment"  name="observacion" placeholder="Ingrese una evolución"></textarea>
             </div>
         </div>
+
+        <br>
 
          <!--ACCIONES-->
         <div class="row">
