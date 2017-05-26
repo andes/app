@@ -21,7 +21,184 @@ const skip = 0;
 
 @Component({
   selector: 'rup-prestacionEjecucion',
-  templateUrl: 'prestacionEjecucion.html'
+  templateUrl: 'prestacionEjecucion.html',
+  styles: [`div.scroll-list {
+    overflow: auto;
+    max-height: 70vh;
+  }
+
+  .drag-over-border {
+    border: #ff525b dashed 2px;
+  }
+
+  .droppable.drag-target-border,
+  .list-group>.list-group-item.drag-target-border,
+  .drag-target-border {
+    border: #00bfff dashed 2px;
+  }
+
+  .drag-handle {
+    cursor: move;
+  }
+
+  .droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #999999;
+  }
+
+  .msg-problema {
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  small {
+    color: grey;
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+
+  .linea-sup {
+    border-top: 1px solid #ccc;
+  }
+
+  .gris {
+    color: #999999;
+  }
+
+  .msg-problema i {
+    color: #ff9900;
+  }
+
+  h5.box-title-principal {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+  }
+
+  h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid black 1px;
+  }
+
+  .btn-contextual {
+    font-size: 1.5em;
+    color: #AAAAAA;
+    background-color: white;
+    border-color: none;
+    box-shadow: none;
+    border: none;
+  }
+
+  .btn-group {
+    margin: 10px 0;
+  }
+
+  .btn.btn-primary {
+    margin-top: 0px;
+  }
+
+  .btn.btn-primary:hover {
+    background-color: #002738;
+  }
+
+  .btn-primary.active {
+    background-color: #002738;
+  }
+
+  .btn-evolucionartodos {
+    margin-bottom: 5px;
+  }
+
+  .list-inline>.list-inline-item {
+    margin-bottom: 10px;
+  }
+
+  .list-group>.list-group-item {
+    border-color: #AAAAAA;
+    border-radius: 0px;
+  }
+
+  .list-group-item:hover {
+    background-color: #f9f9f9;
+    border: solid 1px #00A8E0;
+  }
+
+  .list-group-item:active {
+    background-color: #f5f5f5;
+    border: solid 1px #AAAAAA;
+  }
+
+  .list-group-top {
+    /*margin-top: 5px;*/
+  }
+
+  .dropdown-inline {
+    display: inline-block;
+  }
+  /*Etiquetas*/
+
+  .badge {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-block;
+    margin-right: 15px;
+  }
+
+  .badge-danger {
+    border: 1.5px solid #dd4b39;
+    border-radius: 0px;
+    background: transparent;
+    color: #dd4b39;
+  }
+
+  .badge-success {
+    border: 1.5px solid #8CC63F;
+    border-radius: 0px;
+    background: transparent;
+    color: #8CC63F;
+  }
+
+  .badge-warning {
+    border: 1.5px solid #ff8d22;
+    border-radius: 0px;
+    background: transparent;
+    color: #ff8d22;
+  }
+
+  .badge-info {
+    border: 1.5px solid #00A8E0;
+    border-radius: 0px;
+    background: transparent;
+    color: #00A8E0;
+  }
+
+  .transparencia {
+    opacity: 0.4;
+  }
+
+  .fieldsetMargin-top {
+    margin-top: 1px;
+  }
+
+  .results {
+    margin-top: 0;
+  }
+
+  .results.list-group>.list-group-item {
+    padding: 5px;
+    cursor: -webkit-grab;
+  }`]
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
@@ -95,6 +272,11 @@ export class PrestacionEjecucionComponent implements OnInit {
   valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
   // listado de problemas del paciente
   listaProblemasPaciente: any[] = [];
+  //Funciones de planes
+  motivoSolicitud: String;
+  showMotivoSolicitud: boolean = false;
+  planSelecionado: any;
+  listaPlanesProblemas: any = []; //array de todos los planes que se van a mostrar vinculados a los problemas..
 
 
   todas: any[] = [];
@@ -120,6 +302,7 @@ export class PrestacionEjecucionComponent implements OnInit {
       let id = params['id'];
       // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
       this.servicioPrestacion.getById(id).subscribe(prestacion => {
+        this.listaPlanesProblemas.push(prestacion);
         this.prestacion = prestacion;
         this.cargarDatosPrestacion();
         this.cargarProblemasPaciente();
@@ -340,58 +523,83 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
 
-  // onPrestacionDrop(e: any, idProblema) {
+  setearMotivoPlan(plan) {
+    this.showMotivoSolicitud = true;
+    this.planSelecionado = plan;
+  }
 
-  //   // Se verifica que sea un tipo de prestacion
-  //   // Se crea la nueva prestacion
-  //   this.agregarPrestacionEjecucion(e.dragData);
-
-  //   // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
-  //   // Se busca el problema y se vincula
-  //   let problema = this.listaProblemasPaciente.find(elem => elem.id === idProblema);
-  //   // Se vincula al problema
-  //   let pos = this.prestacionesEjecucion.length;
-  //   if (this.prestacionesEjecucion[pos - 1]) {
-  //     this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(problema);
-  //   }
 
   //   // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
   //   this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
 
-  //   // Se asocia la prestacion y el problema
-  //   this.listaProblemaPrestacion[e.dragData.key].push(problema);
-  //   this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
-
-  // }
-
-  onPlanDrop(e: any, idProblema) {
-    console.log(e.dragData);
-    console.log(idProblema);
+  guardarUnPlanConMotivo() { //Boton guardar
+    this.agregarPlanDePrestacionFutura(this.planSelecionado, this.motivoSolicitud);
+    this.PlanesSeleccionados.push(this.planSelecionado);
+    this.showMotivoSolicitud = false;
+    this.plex.toast('success', 'El plan se cargo correctamente', 'Plan Cargado', 4000);
+    this.searchPlanes = '';
+    this.planes = [];
   }
 
-  //Mover la funcion luego!! 
-  // agregamos la prestacion al plan
-  agregarPlanDePrestacionFutura() {
+  cancelarUnPlanConMotivo() {
+    this.showMotivoSolicitud = false;
+  }
+  onPlanDrop(e: any, idProblema) {
 
-    if (this.nuevoTipoPrestacion) {
-      // asignamos valores a la nueva prestacion
-      this.nuevaPrestacion = {
-        idPrestacionOrigen: this.prestacion.id,
-        paciente: this.prestacion.paciente,
-        solicitud: {
-          tipoPrestacion: this.nuevoTipoPrestacion,
-          fecha: new Date(),
-          listaProblemas: []
-        },
-        estado: {
-          timestamp: Date(),
-          tipo: 'pendiente'
-        },
-        ejecucion: {
-          evoluciones: []
-        }
-      };
+    let cambios = {
+      'op': 'listaProblemasSolicitud',
+      'problema': idProblema
+    };
+    let prestacion = e.dragData;
+
+    this.servicioPrestacion.patch(prestacion, cambios).subscribe(prestacionActualizada => {
+      // buscamos la prestacion principal actualizada con los datos populados
+      this.route.params.subscribe(params => {
+        let id = params['id'];
+        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+        this.servicioPrestacion.getById(id).subscribe(prestacion => {
+          this.listaPlanesProblemas = [];
+          this.listaPlanesProblemas.push(prestacion);
+        });
+      });
+
+    });
+
+  }
+  onPlanTodosLosProblemasDrop($event) { //Carga plan en todos los problemas
+    if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
+      this.prestacion.ejecucion.listaProblemas.forEach(problema => {
+        this.onPlanDrop($event, problema.id);
+      });
     }
+  }
+
+  // agregamos la prestacion al plan
+  agregarPlanDePrestacionFutura(prestacionFutura, textoMotivoSolicitud) {
+    // asignamos valores a la nueva prestacion
+    this.nuevaPrestacion = {
+      idPrestacionOrigen: this.prestacion.id,
+      paciente: this.prestacion.paciente,
+      solicitud: {
+        motivoSolicitud: textoMotivoSolicitud,
+        tipoPrestacion: prestacionFutura,
+        fecha: new Date(),
+        listaProblemas: []
+      },
+      estado: {
+        timestamp: Date(),
+        tipo: 'pendiente'
+      },
+      ejecucion: {
+        evoluciones: []
+      }
+    };
+    // guardamos la nueva prestacion
+    this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+      this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+      this.updatePrestacion();
+    });
+
   }
 
   // FILTROS MAESTRO DE PROBLEMAS
