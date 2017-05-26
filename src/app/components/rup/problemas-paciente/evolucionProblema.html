@@ -1,93 +1,93 @@
-<style>    
-   /* Estilo expandidos*/
-  .small {
-    color: grey;
-    font-weight: 400;
-    font-size: 0.85rem;
-  }
-   
- .form-control-invert {
-  background-color: #002738;
-  border-color: solid 1px #FFFFFF;
-  border-radius: 0px;
-  color: #FFFFFF;
-  height: 100px;
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  overflow: scroll;
-  }
-
+<style>
+    /* Estilo expandidos*/
+    
+    .small {
+        color: grey;
+        font-weight: 400;
+        font-size: 0.85rem;
+    }
+    
+    .form-control-invert {
+        background-color: #002738;
+        border-color: solid 1px #FFFFFF;
+        border-radius: 0px;
+        color: #FFFFFF;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        overflow: scroll;
+    }
+    
     .box-title-principal {
         color: #00A8E0;
         font-weight: 350;
         padding-bottom: 5px;
     }
-
-   .box-title-secundario {
+    
+    .box-title-secundario {
         color: #00A8E0;
         font-size: 1rem;
         font-weight: 400;
     }
-
+    
     .border {
         border: solid 1px white;
-  }
-
+    }
+    
     hr {
         display: block;
         height: 1px;
         border: 0;
         border-top: 1px solid white;
         margin: 1em 0;
-        padding: 0; 
+        padding: 0;
     }
-
-   /*Etiquetas*/
-  
-  .badge {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin: 0px 10px 10px 0px;
-    display: inline-block;
-  }
-  
-  .badge-danger {
-    border: 1.5px solid #dd4b39;
-    border-radius: 0px;
-    background: transparent;
-    color: #dd4b39;
-  }
-  
-  .badge-success {
-    border: 1.5px solid #8CC63F;
-    border-radius: 0px;
-    background: transparent;
-    color: #8CC63F;
-  }
-  .badge-warning {
-    border: 1.5px solid #ff8d22;
-    border-radius: 0px;
-    background: transparent;
-    color: #ff8d22;
-  }
-
-  /*Estilos Invertidos*/
+    /*Etiquetas*/
+    
+    .badge {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 0px 10px 10px 0px;
+        display: inline-block;
+    }
+    
+    .badge-danger {
+        border: 1.5px solid #dd4b39;
+        border-radius: 0px;
+        background: transparent;
+        color: #dd4b39;
+    }
+    
+    .badge-success {
+        border: 1.5px solid #8CC63F;
+        border-radius: 0px;
+        background: transparent;
+        color: #8CC63F;
+    }
+    
+    .badge-warning {
+        border: 1.5px solid #ff8d22;
+        border-radius: 0px;
+        background: transparent;
+        color: #ff8d22;
+    }
+    /*Estilos Invertidos*/
+    
     .invert {
-    color: #FFFFFF;
+        color: #FFFFFF;
     }
-
+    
     .invertDatosReadonly {
-        opacity: 0.8;        
+        opacity: 0.8;
     }
-
-   .plex-box-invert {
+    
+    .plex-box-invert {
         color: white;
-        background-color: #002738; 
-        padding: 20px;       
+        background-color: #002738;
+        padding: 20px;
     }
-
 </style>
 
 
@@ -96,19 +96,19 @@
     <header>
         <div class="row">
             <div class="col-10">
-                <h5 class="box-title-principal">Evolucionar Problema| <span class="invert">{{problema.tipoProblema.nombre}}</span></h5>
-                <small class="invert"> Profesional: {{auth.profesional.nombre}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>                            
+                <h5 class="box-title-principal">Evolucionar Problema | <span class="invert">{{problema.tipoProblema.term}}</span></h5>
+                <small class="invert"> Profesional: {{auth.profesional.nombre}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>
             </div>
             <div class="col-2 pull-right">
-                    <span class="badge badge-warning pull-right" *ngIf="cronicohtml">{{cronicohtml}}</span>                                
-            </div>            
-        </div>    
-         <hr>         
+                <span class="badge badge-warning pull-right" *ngIf="cronicohtml">{{cronicohtml}}</span>
+            </div>
+        </div>
+        <hr>
     </header>
 
     <form>
-        
-        <div class="row invertDatosReadonly">                  
+
+        <div class="row invertDatosReadonly">
             <!--ESTADO DEL PROBLEMA-->
             <div class="col-6">
                 <label class="box-title-secundario">Estado actual</label>
@@ -117,18 +117,18 @@
             <div class="col-6">
                 <label class="box-title-secundario">Inicio estimado del problema</label>
                 <span>{{problema.fechaInicio | fromNow}}</span>
-            </div>                                                      
-        </div>       
-        
+            </div>
+        </div>
+
         <!--INICIO ESTIMADO DEL PROBLEMA-->
-        <hr>                                                     
-        <div class="row" >    
-            <!--FECHA ESTIMADA-->            
-            <div class="col-6 list-inline">                    
+        <hr>
+        <div class="row">
+            <!--FECHA ESTIMADA-->
+            <div class="col-6 list-inline">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
                     <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"></plex-select>             
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"></plex-select>
                 </div>
             </div>
             <!--ESTADO DEL PROBLEMA-->
@@ -136,36 +136,36 @@
                 <label class="box-title-secundario">Estado actual</label>
                 <plex-select [(ngModel)]="estadoActual" name="estadoActual" [data]="estados" [required]="true">
                 </plex-select>
-            </div>   
+            </div>
             <!--ES CRONICO?-->
-            <div class="col-4">                
+            <div class="col-4">
                 <plex-bool [(ngModel)]="cronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
             </div>
         </div>
 
         <!--EVOLUCION DEL PROBLEMA-->
-        <div class="row">                
+        <div class="row">
             <div class="col-12">
                 <label class="box-title-secundario" for="comment">Evolución del problema</label>
                 <hr>
-                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment"  name="observacion" placeholder="Ingrese una observación"></textarea>
+                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment" name="observacion" placeholder="Ingrese una observación"></textarea>
             </div>
         </div>
 
         <hr>
-        
+
         <plex-accordion>
             <plex-panel class="card-header-invert" tituloPrincipal="Evoluciones realizadas">
                 <div class="row box-title-secundario box-title-secundario" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                     <div class="col-md-12">
                         <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let ev of problema.evoluciones">                                                  
-                                <div class="row"> 
+                            <li class="list-group-item" *ngFor="let ev of problema.evoluciones">
+                                <div class="row">
                                     <span *ngIf="ev.profesional">Profesional {{ev.profesioanl}} 
                                                                         | {{ev.fecha| fromNow}}
-                                    </span>                          
-                                    <br />  
-                                    <span>{{ev.observacion}}</span>                                                                                                                                                                                                                                                                                                      
+                                    </span>
+                                    <br />
+                                    <span>{{ev.observacion}}</span>
                                 </div>
                             </li>
                         </ul>
@@ -174,7 +174,7 @@
             </plex-panel>
         </plex-accordion>
 
-       
+
 
 
 
