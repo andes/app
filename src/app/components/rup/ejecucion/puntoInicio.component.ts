@@ -117,11 +117,12 @@ export class PuntoInicioComponent implements OnInit {
 
 
     TraeTodasLasPrestacionesFiltradas() {
+
         let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
         this.servicioPrestacion.get({
             fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta
+            fechaHasta: fechaHasta,
             // idProfesional: this.auth.profesional.id,
             // idTipoPrestacion: this.ConjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
@@ -148,18 +149,13 @@ export class PuntoInicioComponent implements OnInit {
                 }
             }
             turnos.forEach(elemento => { //Falta ver en ejecucion y validad
-                // console.log(this.TodasLasPrestaciones);
-                console.log("prestacion");
-                if (elemento.estado === 'asignado' && elemento.asistencia == true) {
+                if (elemento.estado === 'asignado' && elemento.asistencia === true) {
                     this.unPacientePresente.estado = 'En espera';
-                    // console.log(this.TodasLasPrestaciones);
+                    this.unPacientePresente.fecha = moment().format();
                     this.TodasLasPrestaciones.forEach(prestacion => {
-                        console.log(prestacion);
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
                             prestacion.estado.forEach(estado => {
-                                console.log(estado);
-
                                 this.unPacientePresente.estado = estado.tipo;
                                 this.unPacientePresente.fecha = estado.timestamp;
                             });
@@ -226,8 +222,11 @@ export class PuntoInicioComponent implements OnInit {
 
     soloPacientesProfesional() { //Filtra los pacientes del profesional
         let misPacientes: any = [];
+        console.log('PacientesPresentes: ', this.PacientesPresentes);
+        console.log('PROFESIONAL: ', this.auth.profesional.id);
         this.PacientesPresentes.forEach(paciente => {
-            if (paciente.profesionales.id == this.auth.profesional.id) {
+
+            if (paciente.profesionales.id === this.auth.profesional.id) {
                 misPacientes.push(paciente);
             }
         });
@@ -275,7 +274,7 @@ export class PuntoInicioComponent implements OnInit {
             let params = {
                 fechaDesde: fechaDesde.format(),
                 fechaHasta: fechaHasta.format(),
-                //idProfesional: this.auth.profesional.id,
+                idProfesional: this.auth.profesional.id,
                 organizacion: this.auth.organizacion.id
             };
             this.loadAgendasXDia(params);
@@ -306,7 +305,7 @@ export class PuntoInicioComponent implements OnInit {
         };
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('Prestación paciente creada.').then(() => {
+            this.plex.alert('Prestación creada.').then(() => {
                 this.router.navigate(['/rup/resumen', prestacion.id]);
             });
         });

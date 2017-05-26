@@ -21,11 +21,191 @@ const skip = 0;
 
 @Component({
   selector: 'rup-prestacionEjecucion',
-  templateUrl: 'prestacionEjecucion.html'
+  templateUrl: 'prestacionEjecucion.html',
+  styles: [`div.scroll-list {
+    overflow: auto;
+    max-height: 70vh;
+  }
+
+  .drag-over-border {
+    border: #ff525b dashed 2px;
+  }
+
+  .droppable.drag-target-border,
+  .list-group>.list-group-item.drag-target-border,
+  .drag-target-border {
+    border: #00bfff dashed 2px;
+  }
+
+  .drag-handle {
+    cursor: move;
+  }
+
+  .droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #999999;
+  }
+
+  .msg-problema {
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  small {
+    color: grey;
+    font-weight: 400;
+    font-size: 0.85rem;
+  }
+
+  .linea-sup {
+    border-top: 1px solid #ccc;
+  }
+
+  .gris {
+    color: #999999;
+  }
+
+  .msg-problema i {
+    color: #ff9900;
+  }
+
+  h5.box-title-principal {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+  }
+
+  h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid black 1px;
+  }
+
+  .btn-contextual {
+    font-size: 1.5em;
+    color: #AAAAAA;
+    background-color: white;
+    border-color: none;
+    box-shadow: none;
+    border: none;
+  }
+
+  .btn-group {
+    margin: 10px 0;
+  }
+
+  .btn.btn-primary {
+    margin-top: 0px;
+  }
+
+  .btn.btn-primary:hover {
+    background-color: #002738;
+  }
+
+  .btn-primary.active {
+    background-color: #002738;
+  }
+
+  .btn-evolucionartodos {
+    margin-bottom: 5px;
+  }
+
+  .list-inline>.list-inline-item {
+    margin-bottom: 10px;
+  }
+
+  .list-group>.list-group-item {
+    border-color: #AAAAAA;
+    border-radius: 0px;
+  }
+
+  .list-group-item:hover {
+    background-color: #f9f9f9;
+    border: solid 1px #00A8E0;
+  }
+
+  .list-group-item:active {
+    background-color: #f5f5f5;
+    border: solid 1px #AAAAAA;
+  }
+
+  .list-group-top {
+    /*margin-top: 5px;*/
+  }
+
+  .dropdown-inline {
+    display: inline-block;
+  }
+  /*Etiquetas*/
+
+  .badge {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-block;
+    margin-right: 15px;
+  }
+
+  .badge-danger {
+    border: 1.5px solid #dd4b39;
+    border-radius: 0px;
+    background: transparent;
+    color: #dd4b39;
+  }
+
+  .badge-success {
+    border: 1.5px solid #8CC63F;
+    border-radius: 0px;
+    background: transparent;
+    color: #8CC63F;
+  }
+
+  .badge-warning {
+    border: 1.5px solid #ff8d22;
+    border-radius: 0px;
+    background: transparent;
+    color: #ff8d22;
+  }
+
+  .badge-info {
+    border: 1.5px solid #00A8E0;
+    border-radius: 0px;
+    background: transparent;
+    color: #00A8E0;
+  }
+
+  .transparencia {
+    opacity: 0.4;
+  }
+
+  .fieldsetMargin-top {
+    margin-top: 1px;
+  }
+
+  .results {
+    margin-top: 0;
+  }
+
+  .results.list-group>.list-group-item {
+    padding: 5px;
+    cursor: -webkit-grab;
+  }`]
+
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-
+  conceptoSnomed($e) {
+    console.log($e);
+  }
   @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
   prestacion: IPrestacionPaciente;
   public listaProblemas: IProblemaPaciente[] = [];
@@ -46,15 +226,15 @@ export class PrestacionEjecucionComponent implements OnInit {
   search: String = '';
 
   searchProblema: String;
-  isDraggingProblem: Boolean = false;
-  isDraggingPrestacion: Boolean = false;
-  isDraggingProblemList: Boolean = false;
-  isDraggingPlan: Boolean = false;
+  isDraggingProblem = false;
+  isDraggingPrestacion = false;
+  isDraggingProblemList = false;
+  isDraggingPlan = false;
 
   // Filtro Prestaciones
   filtrosPrestacion: String = '';
   nombrePrestacion: String = '';
-  finScroll: boolean = false;
+  finScroll = false;
   tiposPrestaciones: ITipoPrestacion[] = [];
   searchPrestacion: String;
 
@@ -63,7 +243,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   planes: ITipoPrestacion[] = []; // Todos los planes que encuentra en el metodo de busqueda..!
   PlanesSeleccionados: ITipoPrestacion[] = []; // Lista de planes que quedan seleccionados y listos para dragearse a los Problemas.
   // Se le va a poder agregar un texto en esta seccion.. Ver eso.
-  isDraggingPlanSeleccion: Boolean = false;
+  isDraggingPlanSeleccion = false;
 
   items = [
     { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
@@ -95,7 +275,15 @@ export class PrestacionEjecucionComponent implements OnInit {
   valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
   // listado de problemas del paciente
   listaProblemasPaciente: any[] = [];
+  //Funciones de planes
+  motivoSolicitud: String;
+  showMotivoSolicitud: boolean = false;
+  planSelecionado: any;
+  listaPlanesProblemas: any = []; //array de todos los planes que se van a mostrar vinculados a los problemas..
 
+
+  todas: any[] = [];
+  paraTodas = false;
 
   constructor(private servicioPrestacion: PrestacionPacienteService,
     private serviceTipoPrestacion: TipoPrestacionService,
@@ -117,6 +305,7 @@ export class PrestacionEjecucionComponent implements OnInit {
       let id = params['id'];
       // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
       this.servicioPrestacion.getById(id).subscribe(prestacion => {
+        this.listaPlanesProblemas.push(prestacion);
         this.prestacion = prestacion;
         this.cargarDatosPrestacion();
         this.cargarProblemasPaciente();
@@ -225,9 +414,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     // debugger;
     this.tipoProblema = e.dragData;
     if (!this.existeProblema(this.tipoProblema)) {
-        this.showNuevo = true;
-        this.cargarEnconsulta = false;
-        this.problemaTratar = this.tipoProblema;
+      this.showNuevo = true;
+      this.cargarEnconsulta = false;
+      this.problemaTratar = this.tipoProblema;
     } else {
       this.plex.alert('El problema ya existe para el paciente');
     }
@@ -237,58 +426,100 @@ export class PrestacionEjecucionComponent implements OnInit {
   onHallazgoDrop(e: any) {
     let nuevoProblema;
     // Verifica si es un problema o un tipo Problema
-    if ((e.dragData.nombre || e.dragData.tipoProblema)) {
-        nuevoProblema = e.dragData;
+    if ((e.dragData.tipoProblema || e.dragData.term)) {
+      nuevoProblema = e.dragData;
 
-        if (e.dragData.nombre) {
-          // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
-          this.tipoProblema = e.dragData;
-           if (!this.existeProblema(this.tipoProblema)) {
-                // llama a la pantalla de nuevo problema
-                  this.showNuevo = true;
-                                    this.cargarEnconsulta = true;
-                  this.problemaTratar = this.tipoProblema;
-           } else {
-                this.plex.alert('El problema ya existe para la consulta');
-             }
-           }
-        // Se dropea desde la "lista de problemas del paciente" hacia los "hallazgos de la consulta"
-        if (e.dragData.tipoProblema) {
-          if (!this.existeProblemaConsulta(e.dragData)) {
-                this.updateListaProblemas(nuevoProblema);
-          } else {
-                this.plex.alert('El problema ya existe para la consulta');
-            }
+      // si tiene -term- viene desde la lista de snomed
+      // con lo cual no existe aun en la lista de problemas maestra del paciente
+      if (e.dragData.term) {
+        // Es un tipo de problema, se debe crear el problema y asociar a la prestacion
+        this.tipoProblema = e.dragData;
+        if (!this.existeProblema(this.tipoProblema)) {
+          // llama a la pantalla de nuevo problema
+          this.showNuevo = true;
+          this.cargarEnconsulta = true;
+          this.problemaTratar = this.tipoProblema;
+        } else {
+          this.plex.alert('El problema ya existe para la consulta');
+
         }
-    }
-}
-
-
-  // agregamos prestacion en todos los problemas
-  onTodosProblemasDrop(e: any) {
-    if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
-      this.prestacion.ejecucion.listaProblemas.forEach(problema => {
-        this.onPrestacionDrop(e, problema.id);
-      });
+      }
+      // Se dropea desde la "lista de problemas del paciente" hacia los "hallazgos de la consulta"
+      if (e.dragData.tipoProblema) {
+        if (!this.existeProblemaConsulta(e.dragData)) {
+          this.updateListaProblemas(nuevoProblema);
+        } else {
+          this.plex.alert('El problema ya existe para la consulta');
+        }
+      }
     }
   }
 
+
+  onReturnComponent(datos, tipoPrestacionActual) {
+
+    if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
+      delete this.data[tipoPrestacionActual.key];
+    } else {
+      if (!this.data[tipoPrestacionActual.key]) {
+        this.data[tipoPrestacionActual.key] = {};
+      }
+      this.data[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
+    }
+
+    if (this.paraTodas) {
+      this.todas[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
+    }
+
+  }
+
+  // Agregamos prestación en todos los problemas
+  onTodosProblemasDrop(prestacionEvent: any) {
+
+    this.paraTodas = true;
+
+    if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
+
+      this.agregarPrestacionEjecucion(prestacionEvent.dragData);
+
+      this.prestacion.ejecucion.listaProblemas.forEach(problema => {
+        // this.onPrestacionDrop(prestacionEvent, problema.id);
+
+        // Se vincula al problema
+        let pos = this.prestacionesEjecucion.length - 1;
+        if (this.prestacionesEjecucion[pos]) {
+          this.listaProblemaPrestacion[prestacionEvent.dragData.key].push(problema);
+          this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
+          // this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(this.listaProblemaPrestacion[prestacionEvent.dragData.key][pos]);
+        }
+
+      });
+
+      this.todas = prestacionEvent.dragData;
+
+    }
+  }
+
+
   onPrestacionDrop(e: any, idProblema) {
 
-    // Se verifica que sea un tipo de prestacion
+    // 
+    this.paraTodas = false;
+
+    // Se verifica que sea un tipo de prestación
     // Se crea la nueva prestacion
     this.agregarPrestacionEjecucion(e.dragData);
 
-    // listaProblemaPrestacion[_prestacion.solicitud.tipoPrestacion.key]
-    // Se busca el problema y se vincula
+    // Se busca el problema a vincular
     let problema = this.listaProblemasPaciente.find(elem => elem.id === idProblema);
+
     // Se vincula al problema
     let pos = this.prestacionesEjecucion.length;
     if (this.prestacionesEjecucion[pos - 1]) {
       this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(problema);
     }
 
-    // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
+    // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evolución
     this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
 
     // Se asocia la prestacion y el problema
@@ -297,34 +528,84 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   }
 
-  onPlanDrop(e: any, idProblema) {
-    console.log(e.dragData);
-    console.log(idProblema);
+
+  setearMotivoPlan(plan) {
+    this.showMotivoSolicitud = true;
+    this.planSelecionado = plan;
   }
 
-  //Mover la funcion luego!! 
-  // agregamos la prestacion al plan
-  agregarPlanDePrestacionFutura() {
 
-    if (this.nuevoTipoPrestacion) {
-      // asignamos valores a la nueva prestacion
-      this.nuevaPrestacion = {
-        idPrestacionOrigen: this.prestacion.id,
-        paciente: this.prestacion.paciente,
-        solicitud: {
-          tipoPrestacion: this.nuevoTipoPrestacion,
-          fecha: new Date(),
-          listaProblemas: []
-        },
-        estado: {
-          timestamp: Date(),
-          tipo: 'pendiente'
-        },
-        ejecucion: {
-          evoluciones: []
-        }
-      };
+  //   // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
+  //   this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
+
+  guardarUnPlanConMotivo() { //Boton guardar
+    this.agregarPlanDePrestacionFutura(this.planSelecionado, this.motivoSolicitud);
+    this.PlanesSeleccionados.push(this.planSelecionado);
+    this.showMotivoSolicitud = false;
+    this.plex.toast('success', 'El plan se cargo correctamente', 'Plan Cargado', 4000);
+    this.searchPlanes = '';
+    this.planes = [];
+  }
+
+  cancelarUnPlanConMotivo() {
+    this.showMotivoSolicitud = false;
+  }
+  onPlanDrop(e: any, idProblema) {
+
+    let cambios = {
+      'op': 'listaProblemasSolicitud',
+      'problema': idProblema
+    };
+    let prestacion = e.dragData;
+
+    this.servicioPrestacion.patch(prestacion, cambios).subscribe(prestacionActualizada => {
+      // buscamos la prestacion principal actualizada con los datos populados
+      this.route.params.subscribe(params => {
+        let id = params['id'];
+        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+        this.servicioPrestacion.getById(id).subscribe(prestacion => {
+          this.listaPlanesProblemas = [];
+          this.listaPlanesProblemas.push(prestacion);
+        });
+      });
+
+    });
+
+  }
+  onPlanTodosLosProblemasDrop($event) { //Carga plan en todos los problemas
+    if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
+      this.prestacion.ejecucion.listaProblemas.forEach(problema => {
+        this.onPlanDrop($event, problema.id);
+      });
     }
+  }
+
+  // agregamos la prestacion al plan
+  agregarPlanDePrestacionFutura(prestacionFutura, textoMotivoSolicitud) {
+    // asignamos valores a la nueva prestacion
+    this.nuevaPrestacion = {
+      idPrestacionOrigen: this.prestacion.id,
+      paciente: this.prestacion.paciente,
+      solicitud: {
+        motivoSolicitud: textoMotivoSolicitud,
+        tipoPrestacion: prestacionFutura,
+        fecha: new Date(),
+        listaProblemas: []
+      },
+      estado: {
+        timestamp: Date(),
+        tipo: 'pendiente'
+      },
+      ejecucion: {
+        evoluciones: []
+      }
+    };
+    // guardamos la nueva prestacion
+    this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+      this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+      this.updatePrestacion();
+    });
+
   }
 
   // FILTROS MAESTRO DE PROBLEMAS
@@ -389,8 +670,9 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   // lista de problemas
-  existeProblema(tipoProblema: ITipoProblema) {    
-    return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.nombre === tipoProblema.nombre);
+  existeProblema(tipoProblema: ITipoProblema) {
+    // return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.term === tipoProblema.term);
+    return this.listaProblemasPaciente.find(elem => elem.tipoProblema && elem.tipoProblema.term === tipoProblema.term);
   }
 
   existeProblemaConsulta(problema: IProblemaPaciente) {
@@ -415,7 +697,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   // }
 
   eliminarProblema(problema: IProblemaPaciente) {
-    this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.nombre + ' de la consulta actual?').then(resultado => {
+    this.plex.confirm('Está seguro que desea eliminar el problema: ' + problema.tipoProblema.term + ' de la consulta actual?').then(resultado => {
       if (resultado) {
       }
     });
@@ -467,18 +749,18 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   onReturnNvoProblema(dato: any) {
 
-     this.showEvolucionar = false;
-     this.showEnmendar = false;
-     this.showNuevo = false;
+    this.showEvolucionar = false;
+    this.showEnmendar = false;
+    this.showNuevo = false;
 
-     if (dato) {
-       if (this.cargarEnconsulta) {
-          this.updateListaProblemas(dato);
-       }
-        
-        this.cargarProblemasPaciente();
-        this.plex.toast('success', 'Problema asociado a la prestación', 'Problema asociado.', 4000);
-     }
+    if (dato) {
+      if (this.cargarEnconsulta) {
+        this.updateListaProblemas(dato);
+      }
+
+      this.cargarProblemasPaciente();
+      this.plex.toast('success', 'Problema asociado a la prestación', 'Problema asociado.', 4000);
+    }
 
   }
 
@@ -778,34 +1060,21 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   updateListaProblemas(problemaid) {
 
-      let cambios = {
-        'op': 'listaProblemas',
-        'problema': problemaid
-      };
+    let cambios = {
+      'op': 'listaProblemas',
+      'problema': problemaid
+    };
 
-      this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
+    this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
       //No devuelve la prestacion actualizada pero si la graba en mongo el patch
-            this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-          });
-     });
+      this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
+        this.prestacion = prestacion;
+      });
+    });
   }
 
   validarPrestacion() {
     this.router.navigate(['rup/validacion', this.prestacion.id]);
-  }
-
-  onReturnComponent(datos, tipoPrestacionActual) {
-
-
-    if (this.data[tipoPrestacionActual.key] && !Object.keys(datos).length) {
-      delete this.data[tipoPrestacionActual.key];
-    } else {
-      if (!this.data[tipoPrestacionActual.key]) {
-        this.data[tipoPrestacionActual.key] = {};
-      }
-      this.data[tipoPrestacionActual.key] = datos[tipoPrestacionActual.key];
-    }
   }
 
   volver(ruta) {
