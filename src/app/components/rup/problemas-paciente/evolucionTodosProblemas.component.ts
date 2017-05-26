@@ -70,8 +70,6 @@ export class EvolucionTodosProblemasComponent implements OnInit {
             };
             let cant = this.problemas.length;
 
-            console.log('Problemas:', this.problemas);
-            console.log('Evolucion: ', unaEvolucion);
             for (let i = 0; i < cant; i++) {
               problema = this.problemas[i];
               delete problema.$order;
@@ -79,8 +77,6 @@ export class EvolucionTodosProblemasComponent implements OnInit {
               this.problemas[i].evoluciones.push(unaEvolucion);
             }
 
-            console.log(' Antes de hacer el putAll - this.problemas', this.problemas);
-            
             this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
                 if (resultado) {
                      this.plex.toast('success', 'Los datos se han modificado correctamente', 'Información', 4000);
@@ -91,7 +87,7 @@ export class EvolucionTodosProblemasComponent implements OnInit {
             });
 
         } else {
-            this.plex.alert('Completar datos requeridos');
+            this.plex.alert('Completar los campos requeridos');
         }
     }
 
