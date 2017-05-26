@@ -49,7 +49,7 @@ export class TransformarProblemaComponent implements OnInit {
     }
 
     existeProblema(tipoProblema: ITipoProblema) {
-        return this.listaProblemas.find(elem => elem.tipoProblema.id === tipoProblema.id);
+        return this.listaProblemas.find(elem => elem.tipoProblema.fsn === tipoProblema.fsn);
     }
 
     agregarProblema() {

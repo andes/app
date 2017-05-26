@@ -1,119 +1,124 @@
 <header *ngIf="prestacion">
-    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+  <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
 <section class="row">
 
-    <!--LISTA DE PROBLEMAS DEL PACIENTE-->
-    <div class="col-3">
-        <plex-box>
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Lista de problemas del paciente</h5>
-                    </div>
-                </div>
-            </header>
+  <!--LISTA DE PROBLEMAS DEL PACIENTE-->
+  <div class="col-3">
+    <plex-box>
+      <header>
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Lista de problemas del paciente</h5>
+          </div>
+        </div>
+      </header>
 
 
-            <!--FILTRO EN MAESTRO DE PROBLEMAS-->
-            <snomed-buscar [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"></snomed-buscar>
-            <!--<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>-->
+      <!--FILTRO EN MAESTRO DE PROBLEMAS-->
+      <snomed-buscar [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"></snomed-buscar>
+      <!--<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>-->
 
-            <!--PROBLEMAS DEL PACIENTE - DB: problema-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " class="droppable" [hidden]="!isDraggingProblem">
-                <!--
+      <!--PROBLEMAS DEL PACIENTE - DB: problema-->
+      <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) "
+        class="droppable" [hidden]="!isDraggingProblem">
+        <!--
               TODO: agregar
             -->
-                Arrastre aquí para vincularlos al paciente
-            </div>
+        Arrastre aquí para vincularlos al paciente
+      </div>
 
-            <div *ngIf="listaproblemasMaestro?.length === 0">
-                <!--BOTONES DE FILTRO-->
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
-                    <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroResuelto'}"><input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> Resuelto</label>
-                </div>
+      <div *ngIf="listaproblemasMaestro?.length === 0">
+        <!--BOTONES DE FILTRO-->
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
+          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
+          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
+          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroResuelto'}"><input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> Resuelto</label>
+        </div>
 
-                <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
-                    <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
-                    <ng-container *ngFor="let problema of listaProblemasPaciente ">
-                        <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
-                            (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
-                            <span *ngIf="problema?.tipoProblema?.term">
+        <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
+          <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
+          <ng-container *ngFor="let problema of listaProblemasPaciente ">
+            <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action "
+              *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
+              (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
+              <span *ngIf="problema?.tipoProblema?.term">
                                 <!--<h6>{{problema.tipoProblema.term }}</h6>TODO: cambio de interface-->
                                 <h6>{{problema.tipoProblema.term }}</h6>
 
                             </span>
-                            <div class="pull-right">
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'" class="badge badge-success">
+              <div class="pull-right">
+                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'" class="badge badge-success">
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                               </span>
 
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge badge-danger"> 
+                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge badge-danger"> 
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                               </span>
-                                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge badge-danger"> 
+                <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge badge-danger"> 
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                 </span>
 
-                            </div>
+              </div>
 
 
-                            <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
+              <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
 
                                     Última evolución realizada                                    
                                     <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
                                     por el profesional 
                                     <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
                             </small>
-                        </li>
-                    </ng-container>
-                </ul>
-            </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
 
-        </plex-box>
-    </div>
+    </plex-box>
+  </div>
 
-    <!--HALLAZGOS DE ESTA CONSULTA-->
-    <div class="col-6">
-        <plex-box>
-            <header *ngIf="showNuevo==false && showEvolucionar==false">
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Hallazgos de la consulta</h5>
-                    </div>
-                    <div class="col text-right">
-                        <plex-button class="btn-evolucionartodos" title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
-                    </div>
-                </div>
-            </header>
+  <!--HALLAZGOS DE ESTA CONSULTA-->
+  <div class="col-6">
+    <plex-box>
+      <header *ngIf="showNuevo==false && showEvolucionar==false">
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
+          </div>
+          <div class="col text-right">
+            <plex-button class="btn-evolucionartodos" title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()"
+              type="primary"></plex-button>
+          </div>
+        </div>
+      </header>
 
 
-            <!--Div para los problemas paciente-->
-            <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)" class="droppable" [hidden]="!isDraggingProblem && !isDraggingProblemList">
-                Arrastre aquí para vincularlos a esta consulta
-            </div>
+      <!--Div para los problemas paciente-->
+      <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)"
+        class="droppable" [hidden]="!isDraggingProblem && !isDraggingProblemList">
+        Arrastre aquí para vincularlos a esta consulta
+      </div>
 
-            <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " class="droppable" [hidden]="!isDraggingPrestacion">
-                Arrastre aquí para vincularlo a todos los problemas
-            </div>
+      <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " class="droppable" [hidden]="!isDraggingPrestacion">
+        Arrastre aquí para vincularlo a todos los problemas
+      </div>
 
-            <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
+      <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
                         && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false)">
 
-                <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
+        <div *ngFor="let problema of prestacion.ejecucion.listaProblemas">
 
-                    <!--Div para TODOS los planes-->
-                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanTodosLosProblemasDrop($event) " [hidden]="!isDraggingPlan" class="droppable">
-                        Arrastre aquí para vincularlo a todos los problemas
-                    </div>
+          <!--Div para TODOS los planes-->
+          <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanTodosLosProblemasDrop($event) "
+            [hidden]="!isDraggingPlan" class="droppable">
+            Arrastre aquí para vincularlo a todos los problemas
+          </div>
 
-                    <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                        <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
-                            <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
+          <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+            <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
+              <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
                             <h5 class="item-title">{{problema.tipoProblema.term}} | 
                             <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5> 
                             <small *ngIf="problema?.evoluciones?.length > 0">
@@ -122,219 +127,225 @@
                             </small>
                           </span>
 
-                            <div class="list-inline">
-                                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
+              <div class="list-inline">
+                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</span>
+                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                 </span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
+                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                 </span>
 
-                                <span class="d-inline">
+                <span class="d-inline">
                                     <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
                                 </span>
-                            </div>
+              </div>
 
-                            <!--Planes Futuros para el problema-->
-                            <div *ngIf="listaPlanesProblemas && listaPlanesProblemas.length">
-                                <div *ngFor="let prestacion of listaPlanesProblemas">
-                                    <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas">
-                                        <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
-                                            <div *ngFor="let problemaP of prestacionFutura.solicitud.listaProblemas">
-                                                <div *ngIf="problemaP._id == problema.id">
-                                                    <plex-accordion>
-                                                        <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
-                                                            <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
-                                                        </plex-panel>
-                                                    </plex-accordion>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Prestaciones para el problema-->
-                            <div class="col-md-12">
-                                <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
-                                    <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
-                                        <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas">
-                                            <div *ngIf="problemaP.id == problema.id">
-                                                <plex-accordion>
-                                                    <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
-                                                        <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion" (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                            [paciente]="prestacionesProblema.paciente" [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null">
-                                                        </rup>
-
-                                                    </plex-panel>
-                                                </plex-accordion>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <!--Div para un plan-->
-                    <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) " [hidden]="!isDraggingPlan" class="droppable">
-                        Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
+              <!--Planes Futuros para el problema-->
+              <div *ngIf="listaPlanesProblemas && listaPlanesProblemas.length">
+                <div *ngFor="let prestacion of listaPlanesProblemas">
+                  <div *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas">
+                    <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
+                      <div *ngFor="let problemaP of prestacionFutura.solicitud.listaProblemas">
+                        <div *ngIf="problemaP._id == problema.id">
+                          <plex-accordion>
+                            <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
+                              <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
+                            </plex-panel>
+                          </plex-accordion>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
+
+              <!--Prestaciones para el problema-->
+              <div class="col-md-12">
+                <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
+                  <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
+                    <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas">
+                      <div *ngIf="problemaP.id == problema.id">
+                        <plex-accordion>
+                          <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
+                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
+                              (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)" [paciente]="prestacionesProblema.paciente"
+                              [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null">
+                            </rup>
+
+                          </plex-panel>
+                        </plex-accordion>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <!--Div para un plan-->
+          <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) "
+            [hidden]="!isDraggingPlan" class="droppable">
+            Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
+          </div>
+        </div>
+      </div>
 
 
-            <div class="row">
-                <div class="col">
-                    <div *ngIf="showNuevo">
-                        <rup-nuevoProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" [prestacion]="prestacion" [tipoProblema]="tipoProblema" (evtData)="onReturnNvoProblema($event)"></rup-nuevoProblema>
-                    </div>
+      <div class="row">
+        <div class="col">
+          <div *ngIf="showNuevo">
+            <rup-nuevoProblema [problema]="problemaTratar" [paciente]="prestacion.paciente" [prestacion]="prestacion" [tipoProblema]="tipoProblema"
+              (evtData)="onReturnNvoProblema($event)"></rup-nuevoProblema>
+          </div>
 
-                    <div *ngIf="showEvolucionar && !showEvolTodo">
-                        <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
-                    </div>
-                    <br/>
-                    <div *ngIf="showTransformar">
-                        <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
-                    </div>
-                    <br/>
-                    <div *ngIf="showEnmendar">
-                        <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
-                    </div>
-                    <!--<br/>
+          <div *ngIf="showEvolucionar && !showEvolTodo">
+            <rup-evolucionaProblema [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-evolucionaProblema>
+          </div>
+
+          <div *ngIf="showTransformar">
+            <rup-transformarProblema [problema]="problemaTratar" [listaProblemas]="listaProblemas" [paciente]="prestacion.paciente" (evtData)="onReturnTransformar($event)"></rup-transformarProblema>
+          </div>
+
+          <div *ngIf="showEnmendar">
+            <rup-enmendarProblema [problema]="problemaTratar" (evtData)="onReturnEnmendar($event)"></rup-enmendarProblema>
+          </div>
+          <!--<br/>
                           <div *ngIf="showDetalles">
                               <rup-verProblemaPaciente [problema]="problemaTratar" (evtData)="onReturn($event)"></rup-verProblemaPaciente>
                           </div>-->
-                </div>
+        </div>
+      </div>
+
+      <div *ngIf="!showEvolucionar && showEvolTodo">
+        <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
+      </div>
+    </plex-box>
+  </div>
+
+
+  <!--REGISTROS DE ESTA CONSULTA-->
+  <div class="col-3">
+    <plex-box *ngIf=" prestacion && prestacion.paciente">
+      <header>
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Registros de la consulta</h5>
+          </div>
+        </div>
+
+      </header>
+
+      <!--FILTRO PRESTACIONES-->
+      <form>
+        <div>
+          <plex-text [(ngModel)]="searchPrestacion" name="searchPrestacion" (change)="buscarPrestacion($event)" placeholder="Buscar Prestación"></plex-text>
+        </div>
+      </form>
+
+      <!--BOTONES DE FILTRO-->
+      <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="todos"  (click)="loadPrestacion('todos')">Todos</label>
+        <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
+        <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
+        <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>
+      </div>
+
+
+      <!--PRESTACIONES-->
+      <plex-accordion *ngIf="tiposPrestaciones">
+        <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)"
+          *ngFor="let tipoPrestacion of tiposPrestaciones">
+
+          <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
+            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
+              (evtData)="onReturnComponent($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null">
+            </rup>
+
+
+          </plex-panel>
+        </div>
+      </plex-accordion>
+      <div *ngIf="searchPrestacion && tiposPrestaciones.length === 0">
+        No se han encontrado prestaciones
+      </div>
+
+      <br>
+      <fieldset>
+        <div *ngIf="!showMotivoSolicitud">
+          <!--BUSQUEDA PLANES-->
+          <h5 class="box-title-secundario">Lista de Planes</h5>
+          <form>
+            <div>
+              <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscarPlanes($event)" placeholder="Buscar planes"></plex-text>
+            </div>
+          </form>
+
+
+
+
+          <ul class="results list-group" *ngIf="planes">
+            <li *ngFor="let plan of planes" class="list-group-item justify-content-between list-group-item-action" (click)="setearMotivoPlan(plan)">
+              <span> {{plan.nombre}}</span>
+
+            </li>
+          </ul>
+
+
+          <plex-accordion class="results list-group" *ngIf="PlanesSeleccionados">
+
+            <div draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;"
+              [dragData]="prestacionFutura" (onDragStart)="arrastrandoPlan(true)" (onDragEnd)="arrastrandoPlan(false)">
+              <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.tipoPrestacion">
+                <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
+
+                  <div class="row">
+                    <div class="col-12"><b>Motivo de la consulta</b></div>
+                    <div class="col-12"><span>{{prestacionFutura.solicitud.motivoSolicitud}}</span></div>
+                  </div>
+                </plex-panel>
+              </div>
             </div>
 
-            <div *ngIf="!showEvolucionar && showEvolTodo">
-                <rup-evolucionaProblemasTodos [problemas]="listaProblemas" (evtData)="onReturnTodos($event)"></rup-evolucionaProblemasTodos>
+
+          </plex-accordion>
+
+        </div>
+        <!--div para escribir el texto en los planes textomotivo-->
+        <div class="row" *ngIf="showMotivoSolicitud">
+          <div class="col-12">
+            <span>Escriba el motivo de la solicitud</span>
+            <textarea [(ngModel)]="motivoSolicitud"> Escriba el motivo de la solicitud </textarea>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <plex-button title="Cancelar" label="Cancelar" type="danger " (click)="cancelarUnPlanConMotivo()"></plex-button>
             </div>
-        </plex-box>
-    </div>
-
-
-    <!--REGISTROS DE ESTA CONSULTA-->
-    <div class="col-3">
-        <plex-box *ngIf=" prestacion && prestacion.paciente">
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Registros de la consulta</h5>
-                    </div>
-                </div>
-
-            </header>
-
-            <!--FILTRO PRESTACIONES-->
-            <form>
-                <div>
-                    <plex-text [(ngModel)]="searchPrestacion" name="searchPrestacion" (change)="buscarPrestacion($event)" placeholder="Buscar Prestación"></plex-text>
-                </div>
-            </form>
-
-            <!--BOTONES DE FILTRO-->
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="todos"  (click)="loadPrestacion('todos')">Todos</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
-                <label class="btn btn-primary hover" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>
+            <div class="col-6">
+              <plex-button title="Guardar" label="Guardar" type="primary " (click)="guardarUnPlanConMotivo()"></plex-button>
             </div>
+          </div>
+        </div>
+
+      </fieldset>
 
 
-            <!--PRESTACIONES-->
-            <plex-accordion *ngIf="tiposPrestaciones">
-                <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)" *ngFor="let tipoPrestacion of tiposPrestaciones">
-
-                    <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
-                        <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion" (evtData)="onReturnComponent($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null">
-                        </rup>
-
-
-                    </plex-panel>
-                </div>
-            </plex-accordion>
-            <div *ngIf="searchPrestacion && tiposPrestaciones.length === 0">
-                No se han encontrado prestaciones
-            </div>
-
-            <br>
-            <fieldset>
-                <div *ngIf="!showMotivoSolicitud">
-                    <!--BUSQUEDA PLANES-->
-                    <h5 class="box-title-secundario">Lista de Planes</h5>
-                    <form>
-                        <div>
-                            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscarPlanes($event)" placeholder="Buscar planes"></plex-text>
-                        </div>
-                    </form>
-
-
-
-
-                    <ul class="results list-group" *ngIf="planes">
-                        <li *ngFor="let plan of planes" class="list-group-item justify-content-between list-group-item-action" (click)="setearMotivoPlan(plan)">
-                            <span> {{plan.nombre}}</span>
-
-                        </li>
-                    </ul>
-
-
-                    <plex-accordion class="results list-group" *ngIf="PlanesSeleccionados">
-
-                        <div draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;" [dragData]="prestacionFutura" (onDragStart)="arrastrandoPlan(true)" (onDragEnd)="arrastrandoPlan(false)">
-                            <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.tipoPrestacion">
-                                <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
-
-                                    <div class="row">
-                                        <div class="col-12"><b>Motivo de la consulta</b></div>
-                                        <div class="col-12"><span>{{prestacionFutura.solicitud.motivoSolicitud}}</span></div>
-                                    </div>
-                                </plex-panel>
-                            </div>
-                        </div>
-
-
-                    </plex-accordion>
-
-                </div>
-                <!--div para escribir el texto en los planes textomotivo-->
-                <div class="row" *ngIf="showMotivoSolicitud">
-                    <div class="col-12">
-                        <span>Escriba el motivo de la solicitud</span>
-                        <textarea [(ngModel)]="motivoSolicitud"> Escriba el motivo de la solicitud </textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <plex-button title="Cancelar" label="Cancelar" type="danger " (click)="cancelarUnPlanConMotivo()"></plex-button>
-                        </div>
-                        <div class="col-6">
-                            <plex-button title="Guardar" label="Guardar" type="primary " (click)="guardarUnPlanConMotivo()"></plex-button>
-                        </div>
-                    </div>
-                </div>
-
-            </fieldset>
-
-
-        </plex-box>
-    </div>
+    </plex-box>
+  </div>
 </section>
 
 
 <footer class="plex-box-invert">
-    <div class="row">
-        <div class="col-3">
-            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
-        </div>
-        <div class=" col-6 text-center">
-            <div *ngIf="error !=0 " class="alert alert-danger " role="alert">
-                {{error}}
-            </div>
-        </div>
-        <div class="col-3 text-right ">
-            <plex-button title="Guardar " label="GUARDAR " (click)="evolucionarPrestacion('rup/validacion')" type="success"></plex-button>
-        </div>
+  <div class="row">
+    <div class="col-3">
+      <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
     </div>
+    <div class=" col-6 text-center">
+      <div *ngIf="error !=0 " class="alert alert-danger " role="alert">
+        {{error}}
+      </div>
+    </div>
+    <div class="col-3 text-right ">
+      <plex-button title="Guardar " label="GUARDAR " (click)="evolucionarPrestacion('rup/validacion')" type="success"></plex-button>
+    </div>
+  </div>
 </footer>
