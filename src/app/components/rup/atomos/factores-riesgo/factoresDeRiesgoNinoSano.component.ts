@@ -49,11 +49,11 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
                 this.tipoProblemas = tiposProblemas;
 
                  tiposProblemas.forEach(_tp => {
-                    let indice = _tp.id.toString();
+                    let indice = _tp.fsn.toString();
                     // this.data[this.tipoPrestacion.key][indice].push({idTipoProblema: _tp.id, activo: false});
 
                     // agregamos a data
-                    this.data[this.tipoPrestacion.key].push({ idTipoProblema: _tp.id, activo: false });
+                    this.data[this.tipoPrestacion.key].push({ idTipoProblema: _tp.fsn, activo: false });
 
                 });
 
@@ -99,7 +99,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
 
     existeProblema(idTipoProblema) {
         let find = this.problemasPaciente.find(problema => {
-            return problema.tipoProblema.id === idTipoProblema;
+            return problema.tipoProblema.fsn === idTipoProblema;
         });
 
         if (find) {
