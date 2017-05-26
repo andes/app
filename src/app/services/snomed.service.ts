@@ -20,9 +20,9 @@ export class SnomedService {
     //     return this.server.get(this.snomedURL, { params: params, showError: true });
     // }
 
-    // private snomedURL = 'http://mongolito:3000/snomed/es-edition/v20160430/descriptions';
+    private snomedURL = 'http://mongolito:3000/snomed/es-edition/v20160430/descriptions';
     //http://127.0.0.1:3000/snomed/es-edition/v20160430/concepts/
-    private snomedURL = 'http://127.0.0.1:3000/snomed/es-edition/v20160430/descriptions';
+    // private snomedURL = 'http://127.0.0.1:3000/snomed/es-edition/v20160430/descriptions';
 
     constructor(private http: Http) { }
 
