@@ -38,7 +38,7 @@ import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.co
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
 import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
-import { GestorAgendasComponent } from './components/turnos/gestor-agendas.component';
+import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';

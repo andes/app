@@ -14,12 +14,13 @@ import { SmsService } from './../../services/turnos/sms.service';
 export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() turnosSeleccionados: ITurno;
+    @Input() turnosSeleccionados: ITurno[];
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
+    @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
 
-    pacientes: any = [];
+    turnos: any = [];
     showSuspenderTurno: Boolean = true;
     resultado: any;
 
@@ -27,52 +28,105 @@ export class SuspenderTurnoComponent implements OnInit {
 
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
+    public seleccionadosSMS = [];
+    public suspendio = false;
 
     ngOnInit() {
-        this.pacientes = this.turnosSeleccionados;
+        this.turnos = this.turnosSeleccionados;
 
         this.motivoSuspension = [{
             id: 1,
-            nombre: 'Edilicia'
+            nombre: 'edilicia'
         }, {
             id: 2,
-            nombre: 'Profesional'
+            nombre: 'profesional'
         },
         {
             id: 3,
-            nombre: 'Organizacion'
+            nombre: 'organizacion'
         }];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        this.turnos.forEach((turno) => {
+            this.seleccionarTurno(turno);
+        });
+    }
+
+    seleccionarTurno(turno) {
+        let indice = this.seleccionadosSMS.indexOf(turno);
+        if (indice === -1) {
+            if (turno.paciente) {
+                this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+            }
+        } else {
+            this.seleccionadosSMS.splice(indice, 1);
+            this.seleccionadosSMS = [...this.seleccionadosSMS];
+        }
+    }
+
+    estaSeleccionado(turno) {
+        // console.log('turno.paciente ', turno.paciente);
+        if (this.seleccionadosSMS.indexOf(turno) >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    fueEnviado(turno) {
+        return this.estaSeleccionado(turno) && turno.paciente && this.smsEnviado(turno) === 'enviado';
+    }
+
+    estaPendiente(turno) {
+        return this.estaSeleccionado(turno) && turno.paciente && this.smsEnviado(turno) === 'pendiente';
+    }
+
+    tienePaciente(turno) {
+        return turno.paciente != null;
     }
 
     suspenderTurno() {
+        let patch: any = {
+            op: 'suspenderTurno',
+            turnos: this.turnos,
+            motivoSuspension: this.motivoSuspensionSelect.select.nombre
+        };
 
-        for (let x = 0; x < this.pacientes.length; x++) {
-            let patch = {
-                'op': 'suspenderTurno',
-                'idTurno': this.pacientes[x].id,
-                'motivoSuspension': this.motivoSuspensionSelect.select.nombre
-            };
+        // Patchea los turnosSeleccionados (1 o más turnos)
+        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
 
-            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-
-            },
-                err => {
-                    if (err) {
-                        console.log(err);
+            resultado => {
+                this.agenda = resultado;
+                if (this.turnos.length === 1) {
+                    this.plex.toast('warning', 'El turno seleccionado fue suspendido');
+                } else {
+                    this.plex.toast('warning', 'Los turnos seleccionados fueron suspendidos');
+                }
+                this.suspendio = true;
+                // TODO: Descomentar para que envíe SMS
+                for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+                    this.enviarSMS(this.seleccionadosSMS[x], 'Su turno fue suspendido');
+                    if (x === this.enviarSMS.length - 1) {
+                        console.log('recorrio todo ', this.seleccionadosSMS);
                     }
-                });
-        }
+                };
+            },
+            err => {
+                if (err) {
+                    console.log(err);
+                }
+            }
+
+        );
     }
 
     agregarPacienteListaEspera() {
 
-        for (let x = 0; x < this.pacientes.length; x++) {
+        for (let x = 0; x < this.turnos.length; x++) {
             let patch = {
                 'op': 'listaEsperaSuspensionAgenda',
                 'idAgenda': this.agenda.id,
-                'pacientes': this.pacientes[x]
+                'pacientes': this.turnos[x]
             };
 
             this.suspenderTurno();
@@ -85,7 +139,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
                     this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
 
-                    this.enviarSMS(this.pacientes[x], 'Su turno fue cancelado, queda en lista de espera');
+                    this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
 
                 });
             });
@@ -102,30 +156,58 @@ export class SuspenderTurnoComponent implements OnInit {
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
-    enviarSMS(paciente: any, mensaje) {
+    enviarSMS(turno: any, mensaje) {
         // this.smsLoader = true;
 
+        // console.log('paciente ', paciente);
+
         let smsParams = {
-            telefono: paciente.paciente.telefono,
+            telefono: turno.paciente.telefono,
             mensaje: mensaje,
-        }
+        };
+        let indice = this.seleccionadosSMS.indexOf(turno);
 
         this.smsService.enviarSms(smsParams).subscribe(
             resultado => {
                 this.resultado = resultado;
                 // this.smsLoader = false;
-                debugger;
-                // if (resultado === '0') {
-                //     this.turnosSeleccionados[x].smsEnviado = true;
-                // } else {
-                //     this.turnosSeleccionados[x].smsEnviado = false;
-                // }
+                if (resultado === '0') {
+                    this.seleccionadosSMS[indice].smsEnviado = true;
+                } else {
+                    this.seleccionadosSMS[indice].smsEnviado = false;
+                }
             },
             err => {
                 if (err) {
                     console.log(err);
                 }
             });
+    }
+
+    smsEnviado(turno) {
+        let ind = this.seleccionadosSMS.indexOf(turno);
+        if (ind >= 0) {
+            if (this.seleccionadosSMS[ind].smsEnviado === undefined) {
+                return 'no enviado';
+            } else {
+                if (this.seleccionadosSMS[ind].smsEnviado === true) {
+                    return 'enviado';
+                } else {
+                    return 'pendiente';
+                }
+            }
+        } else {
+            return 'no seleccionado';
+        }
+    }
+
+    cancelar() {
+        this.cancelaSuspenderTurno.emit(true);
+        this.turnos = [];
+    }
+
+    cerrar() {
+        this.saveSuspenderTurno.emit(this.agenda);
     }
 
     constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }

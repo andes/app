@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
@@ -13,6 +13,7 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 })
 
 export class ClonarAgendaComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
     public autorizado = false;
     public hoy: Date = new Date();
