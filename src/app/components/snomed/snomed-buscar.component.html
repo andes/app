@@ -1,0 +1,46 @@
+<form>
+    <div>
+        <plex-text [(ngModel)]="searchSnomed" name="searchSnomed" (change)="buscar($event)" placeholder="Buscar Problema"></plex-text>
+        <!--<plex-text [formControl]="searchSnomed" name="searchSnomed" (keyup)='keyUp.next($event)' placeholder="Buscar Problema"></plex-text>-->
+    </div>
+</form>
+
+<!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
+<div *ngIf="searchProblema && listaProblemasMaestro && listaProblemasMaestro.length === 0">
+    No se han encontrado problemas
+</div>
+
+<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+<ul class="results list-group">
+    <ng-container *ngFor="let item of listaProblemasMaestro">
+        <li class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista">
+
+            <a draggable href="javascript: void(0)" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)" *ngIf="_draggable">
+                {{item.term}}
+                <br />
+                <div>
+                    <small class="text-left">
+                        {{item.fsn}}
+                    </small>
+                </div>
+            </a>
+
+            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)" *ngIf="!_draggable">
+                {{item.term}}
+                <br />
+                <div>
+                    <small class="text-left">
+                        {{item.fsn}}
+                    </small>
+                </div>
+            </a>
+
+
+            <!--
+                (onDragEnd)="arrastrandoProblema(false)"
+                (onDragStart)="arrastrandoProblema(true)"
+            -->
+        </li>
+    </ng-container>
+</ul>

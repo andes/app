@@ -1,47 +1,47 @@
-<section *ngIf="!showCreateUpdate">
-    <div class="row">
+<section>
+    <div *ngIf="!showCreateUpdate" class="row">
         <!--Panel central-->
-        <div class="col-8">
-            <plex-box type="primary">
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="💳" placeholder="Escanee un DNI digital para registrar al paciente">
-                </plex-text>
-                <!--Loader-->
-                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-
-                <!--Alerta si no se encontró ningun paciente-->
-                <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
-                </div>
+        <div class="col">
+            <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escanee un DNI digital para registrar al paciente">
+            </plex-text>
+            <!--Loader-->
+            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
 
-                <!--Tabla de resultados por SimpleQuery -->
-                <table *ngIf="resultado && resultado.length" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Sexo</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="hover" *ngFor="let paciente of resultado">
-                            <td>{{paciente.documento}}</td>
-                            <td>{{paciente.apellido}}</td>
-                            <td>{{paciente.nombre}}</td>
-                            <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                            <td>{{paciente.sexo}}</td>
-                            <td>
-                                <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!--Alerta si no se encontró ningun paciente-->
+            <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
+            </div>
 
-                <!--Tabla de resultados por Suggest -->
-                <!--<table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
+
+            <!--Tabla de resultados por SimpleQuery -->
+            <table *ngIf="resultado && resultado.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let paciente of resultado">
+                        <td>{{paciente.documento}}</td>
+                        <td>{{paciente.apellido}}</td>
+                        <td>{{paciente.nombre}}</td>
+                        <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                        <td>{{paciente.sexo}}</td>
+                        <td>
+                            <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!--Tabla de resultados por Suggest -->
+            <!--<table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
 
                     <thead>
                         <tr>
@@ -69,11 +69,10 @@
                         </tr>
                     </tbody>
                 </table>-->
-
-            </plex-box>
         </div>
+
         <!--Panel lateral-->
-        <div class="col">
+        <div class="col" *ngIf="modoCompleto">
             <plex-box type="primary">
                 <header>
                     <h3>Validación digital de pacientes</h3>
@@ -83,9 +82,11 @@
             </plex-box>
         </div>
     </div>
+    <!--Componente de Alta/Modificación-->
+    <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
 </section>
-<footer *ngIf="!showCreateUpdate">
+<footer *ngIf="!showCreateUpdate && modoCompleto">
     <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+    <!--boton provisorio hasta tener el menu desplegable-->
+    <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
 </footer>
-<!--Componente de Alta/Modificación-->
-<paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>

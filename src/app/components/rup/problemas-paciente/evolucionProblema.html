@@ -1,119 +1,192 @@
-<style>    
-
-      small {
-    color: grey;
-    font-weight: 400;
-    font-size: 0.85rem;
-  }
-   
-     h5.box-title-principal {
-    color: #00A8E0;
-    font-weight: 350;
-    padding-bottom: 5px;
-  }
-
-   h5.box-title-secundario {
-    color: #00A8E0;
-    font-weight: 350;
-    padding-bottom: 5px;
-    border-bottom: solid white 1px;
-  }
-
-   /*Etiquetas*/
-  
-  .badge {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin: 0px 10px 10px 0px;
-    display: inline-block;
-  }
-  
-  .badge-danger {
-    border: 1.5px solid #dd4b39;
-    border-radius: 0px;
-    background: transparent;
-    color: #dd4b39;
-  }
-  
-  .badge-success {
-    border: 1.5px solid #8CC63F;
-    border-radius: 0px;
-    background: transparent;
-    color: #8CC63F;
-  }
-  .badge-warning {
-    border: 1.5px solid #ff8d22;
-    border-radius: 0px;
-    background: transparent;
-    color: #ff8d22;
-  }
-
-   .plex-box-invert {
-        color: white;
-        background-color: #002738; 
-        padding: 20px;       
+<style>
+    /* Estilo expandidos*/
+    
+    .small {
+        color: grey;
+        font-weight: 400;
+        font-size: 0.85rem;
     }
-  
+    
+    .form-control-invert {
+        background-color: #002738;
+        border-color: solid 1px #FFFFFF;
+        border-radius: 0px;
+        color: #FFFFFF;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        overflow: scroll;
+    }
+    
+    .box-title-principal {
+        color: #00A8E0;
+        font-weight: 350;
+        padding-bottom: 5px;
+    }
+    
+    .box-title-secundario {
+        color: #00A8E0;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    
+    .border {
+        border: solid 1px white;
+    }
+    
+    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid white;
+        margin: 1em 0;
+        padding: 0;
+    }
+    /*Etiquetas*/
+    
+    .badge {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 0px 10px 10px 0px;
+        display: inline-block;
+    }
+    
+    .badge-danger {
+        border: 1.5px solid #dd4b39;
+        border-radius: 0px;
+        background: transparent;
+        color: #dd4b39;
+    }
+    
+    .badge-success {
+        border: 1.5px solid #8CC63F;
+        border-radius: 0px;
+        background: transparent;
+        color: #8CC63F;
+    }
+    
+    .badge-warning {
+        border: 1.5px solid #ff8d22;
+        border-radius: 0px;
+        background: transparent;
+        color: #ff8d22;
+    }
+    /*Estilos Invertidos*/
+    
+    .invert {
+        color: #FFFFFF;
+    }
+    
+    .invertDatosReadonly {
+        opacity: 0.8;
+    }
+    
+    .plex-box-invert {
+        color: white;
+        background-color: #002738;
+        padding: 20px;
+    }
+    
+    .plex-accordion-espacio {
+        padding: 20px;
+    }
 </style>
 
 
 <div class="plex-box-invert">
-
     <header>
         <div class="row">
-            <div class="col">
-                <h5 class="box-title-secundario">Evolucionar Problema</h5>
+            <div class="col-10">
+                <h5 class="box-title-principal">Evolucionar Problema| <span class="invert">{{problema.tipoProblema.term}}</span></h5>
+                <small class="invert"> Profesional: {{auth.usuario.nombreCompleto}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>
             </div>
-        </div>             
+            <div class="col-2 pull-right">
+                <span class="badge badge-warning pull-right" *ngIf="cronicohtml">{{cronicohtml}}</span>
+            </div>
+        </div>
+        <hr>
     </header>
 
-        <form>
-        <div class="row" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-            <div class="col-md-12">      
-                <span class="badge badge-success" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                    Activo
-                </span>
-                <span class="badge badge-danger" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
-                    {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                </span>
-                <span class="badge badge-warning" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'">
-                    {{problema.evoluciones[problema.evoluciones.length - 1].duracion}} 
-                </span>
+    <form>
+
+        <div class="row invertDatosReadonly">
+            <!--ESTADO DEL PROBLEMA-->
+            <div class="col-6">
+                <label class="box-title-secundario">Estado actual</label>
+                <span>{{problema.evoluciones[problema.evoluciones.length - 1].estado}}</span>
+            </div>
+            <div class="col-6">
+                <label class="box-title-secundario">Inicio estimado del problema</label>
+                <span>{{problema.fechaInicio | fromNow}}</span>
             </div>
         </div>
 
+        <!--INICIO ESTIMADO DEL PROBLEMA-->
+        <hr>
         <div class="row">
-            <div class="col-md-12">
-                <strong><h3>{{problema.tipoProblema.nombre}}</h3></strong>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="vigencia" name="vigencia" [data]="opcionesVigencia" [required]="true" label="Vigencia" 
-                        placeholder="Ingrese Vigencia">
-                </plex-select>
-            </div>
-            <div class="col-md-6">
-                <plex-select [(ngModel)]="duracion" name="duracion" [data]="opcionesDuracion" [required]="true" label="Duración" 
-                        placeholder="Ingrese duración" *ngIf="vigencia && vigencia.id != 'resuelto'">
-                </plex-select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <!--<plex-text [(ngModel)]="unaEvolucion.observacion" name="observacion" [required]="true" label="Observaciones"
-                    placeholder="Ingrese una observación" >
-                </plex-text>-->
-                <div class="form-group">
-                    <label for="comment">Observaciones</label>
-                    <textarea class="form-control" rows="5" id="comment" [(ngModel)]="unaEvolucion.observacion" [required]="true" name="observacion" placeholder="Ingrese una observación"></textarea>
+            <!--FECHA ESTIMADA-->
+            <div class="col-6 list-inline">
+                <label class="box-title-secundario">Fecha estimada</label>
+                <div class="row">
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"></plex-select>
                 </div>
             </div>
+            <!--ESTADO DEL PROBLEMA-->
+            <div class="col-2">
+                <label class="box-title-secundario">Estado actual</label>
+                <plex-select [(ngModel)]="estadoActual" name="estadoActual" [data]="estados" [required]="true">
+                </plex-select>
+            </div>
+            <!--ES CRONICO?-->
+            <div class="col-4">
+                <plex-bool [(ngModel)]="cronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
+            </div>
         </div>
 
+        <br>
+
+        <!--EVOLUCION DEL PROBLEMA-->
+        <div class="row">
+            <div class="col-12">
+                <label class="box-title-secundario" for="comment">Evolución</label>
+                <hr>
+                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment" name="observacion" placeholder="Ingrese una evolución"></textarea>
+            </div>
+        </div>
+
+
+        <plex-accordion class="plex-accordion-espacio">
+            <plex-panel class=" box-title-secundario" tituloPrincipal="Historial de Evoluciones">
+                <div class="row box-title-secundario" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                    <div class="col-md-12">
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let ev of problema.evoluciones">
+                                <div class="row">
+                                    <span *ngIf="ev.observacion"> Evolución: {{ev.observacion}}</span>
+                                </div>
+
+                                <div class="row">
+                                    <small> 
+                                        <span *ngIf="ev.profesional">Realizada por                                          
+                                            <strong>{{ev.profesional.nombre}}, {{ev.profesional.apellido}} |</strong> {{ev.fecha| fromNow}}.                                                                                       
+                                        </span> 
+                                    </small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </plex-panel>
+        </plex-accordion>
+
+
+
+
+
+        <!--ACCIONES-->
         <div class="row">
             <div class="col-md-12 text-right">
                 <plex-button title="Evolucionar Problema " label="Evolucionar " validateForm="true" (click)="evolucionarProblema($event)" type="success"></plex-button>
@@ -121,5 +194,5 @@
             </div>
         </div>
 
-        </form>
+    </form>
 </div>

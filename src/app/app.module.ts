@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -59,6 +60,9 @@ import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
+
+// SNOMED
+import { SnomedService } from './services/snomed.service';
 
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
@@ -122,6 +126,7 @@ import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitale
 import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
+import { NuevoProblemaComponent } from './components/rup/problemas-paciente/nuevoProblema.component';
 import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
@@ -155,6 +160,9 @@ import { EcografiaComponent } from './components/rup/moleculas/ecografia.compone
 import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
+
+// snomed
+import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -210,6 +218,7 @@ export const RUP_COMPONENTS = [
   TensionDiastolicaComponent,
   ObservacionesComponent,
   ConsultaGeneralClinicaMedicaComponent,
+  NuevoProblemaComponent,
   EvolucionProblemaComponent,
   EvolucionTodosProblemasComponent,
   PuntoInicioComponent,
@@ -266,7 +275,8 @@ export const RUP_COMPONENTS = [
   EcografiaComponent,
   InterConsultaComponent,
   LaboratorioComponent,
-  RadiografiaComponent
+  RadiografiaComponent,
+  SnomedBuscarComponent
 ];
 
 // Locales
@@ -358,7 +368,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     AuditoriaPorBloqueService,
     AuditoriaService,
 
-    AuditoriaPrestacionPacienteService
+    AuditoriaPrestacionPacienteService,
+
+    SnomedService
   ]
 })
 

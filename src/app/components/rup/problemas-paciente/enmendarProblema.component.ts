@@ -28,8 +28,8 @@ export class EnmendarProblemaComponent implements OnInit {
         observacion: '',
         profesional: this.auth.profesional.id,
         organizacion: this.auth.organizacion.id,
-        duracion: '',
-        vigencia: '',
+        cronico: '',
+        estado: '',
         segundaOpinion: null
     };
 
@@ -43,8 +43,8 @@ export class EnmendarProblemaComponent implements OnInit {
 
     enmendarProblema(event) {
         if (event.formValid) {
-            this.unaEvolucion.duracion = this.problema.evoluciones[this.problema.evoluciones.length - 1].duracion;
-            this.unaEvolucion.vigencia = 'enmendado';
+            this.unaEvolucion.duracion = this.problema.evoluciones[this.problema.evoluciones.length - 1].cronico;
+            this.unaEvolucion.estado = 'enmendado';
             this.problema.evoluciones.push(this.unaEvolucion);
 
             this.servProbPaciente.put(this.problema).subscribe(resultado => {
