@@ -148,10 +148,13 @@ export class PuntoInicioComponent implements OnInit {
                     turnos.push(element.bloques[i].turnos[e]);
                 }
             }
+
             turnos.forEach(elemento => { //Falta ver en ejecucion y validad
                 if (elemento.estado === 'asignado' && elemento.asistencia === true) {
+
                     this.unPacientePresente.estado = 'En espera';
                     this.unPacientePresente.fecha = moment().format();
+
                     this.TodasLasPrestaciones.forEach(prestacion => {
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
@@ -303,6 +306,8 @@ export class PuntoInicioComponent implements OnInit {
                 evoluciones: []
             }
         };
+
+        nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {

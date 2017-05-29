@@ -716,6 +716,7 @@ export class DarTurnosComponent implements OnInit {
         // Guardar Prestación Paciente
 
         let nuevaPrestacion;
+        this.paciente['_id'] = this.paciente.id;
         nuevaPrestacion = {
             paciente: this.paciente,
             solicitud: {
