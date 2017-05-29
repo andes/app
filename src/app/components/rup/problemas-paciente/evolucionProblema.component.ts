@@ -42,6 +42,26 @@ export class EvolucionProblemaComponent implements OnInit {
         } else {
             this.cronicohtml = '';
          }
+
+
+         this.servProbPaciente.getById(this.problema.id)
+            .subscribe(problema => {
+                this.problema = problema;
+                this.problema.evoluciones.sort(function(a, b){
+                    if ( a.fecha > b.fecha ) {
+                        return -1;
+                    }
+
+                    if ( a.fecha < b.fecha ) {
+                        return 1;
+                    }
+
+                    return 0;
+                });
+            });
+
+
+
     }
 
     evolucionarProblema(event) {
