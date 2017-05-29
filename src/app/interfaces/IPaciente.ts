@@ -24,7 +24,11 @@ export interface IPaciente {
     estadoCivil: EstadoCivil;
     foto: String;
     relaciones: [{
-        relacion: String;
+        relacion: {
+            id: String,
+            nombre: String,
+            opuesto: String
+        };
         referencia: String;
         nombre: String;
         apellido: String;

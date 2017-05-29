@@ -1,3 +1,4 @@
+import { ParentescoService } from './../../services/parentesco.service';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Server } from '@andes/shared';
 import {
@@ -198,6 +199,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     private localidadService: LocalidadService,
     private barrioService: BarrioService,
     private pacienteService: PacienteService,
+    private parentescoService: ParentescoService,
     private financiadorService: FinanciadorService, public plex: Plex, private server: Server) { }
 
   ngOnInit() {
@@ -206,6 +208,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
     // Se cargan los combos
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
+    });
+
+    // Se cargan los parentescos para las relaciones
+    this.parentescoService.get().subscribe(resultado => {
+      this.relacionTutores = resultado;
     });
 
     // Set País Argentina
@@ -239,7 +246,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.estadosCiviles = enumerados.getObjEstadoCivil();
     this.tipoComunicacion = enumerados.getObjTipoComunicacion();
     this.estados = enumerados.getEstados();
-    this.relacionTutores = enumerados.getObjRelacionTutor();
+    /*this.relacionTutores = enumerados.getObjRelacionTutor();*/
 
     if (this.seleccion) {
       this.actualizarDatosPaciente();
@@ -402,6 +409,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
 
+
+
+
   save(valid) {
     debugger;
     if (valid.formValid) {
@@ -414,11 +424,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
       pacienteGuardar.contacto.map(elem => {
         elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
         return elem;
-      });
-
-      pacienteGuardar.relaciones.map(rel => {
-        rel.relacion = ((typeof rel.relacion === 'string') ? rel.relacion : (Object(rel.relacion).id));
-        return rel.relacion;
       });
 
       // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
@@ -442,24 +447,48 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
       let operacionPac: Observable<IPaciente>;
 
-      if (this.sugerenciaAceptada) {
-        operacionPac = this.pacienteService.save(pacienteGuardar);
-        operacionPac.subscribe(result => {
+      // if (this.sugerenciaAceptada) {
+      //   operacionPac = this.pacienteService.save(pacienteGuardar);
+      //   operacionPac.subscribe(result => {
+
+
+
+      //     this.plex.alert('Los datos se actualizaron correctamente');
+      //     this.data.emit(result);
+      //   });
+      // } else {
+      operacionPac = this.pacienteService.save(pacienteGuardar);
+      operacionPac.subscribe(result => {
+
+        if (result) {
+          debugger;
+          if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
+            pacienteGuardar.relaciones.forEach(rel => {
+              debugger;
+              let relOp = this.relacionTutores.find((elem) => {
+                if (elem.nombre = rel.relacion.opuesto) {
+                  return elem;
+                }
+              });
+              let dto = {
+                relacion: relOp,
+                referencia: pacienteGuardar.id,
+                nombre: pacienteGuardar.nombre,
+                apellido: pacienteGuardar.apellido,
+                documento: pacienteGuardar.documento
+              };
+              this.pacienteService.patch(pacienteGuardar.id, {
+                'op': 'updateRelacion', 'dto': dto
+              });
+            });
+          }
           this.plex.alert('Los datos se actualizaron correctamente');
           this.data.emit(result);
-        });
-      } else {
-        operacionPac = this.pacienteService.save(pacienteGuardar);
-        operacionPac.subscribe(result => {
-
-          if (result) {
-            this.plex.alert('Los datos se actualizaron correctamente');
-            this.data.emit(result);
-          } else {
-            this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
-          }
-        });
-      }
+        } else {
+          this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
+        }
+      });
+      //}
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }
@@ -568,8 +597,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.save(valid);
         }
       });
+    } else {
+      this.plex.alert('Debe completar los datos obligatorios');
     }
-    this.plex.alert('Debe completar los datos obligatorios');
   }
 
   addContacto() {
@@ -660,7 +690,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     // Limpia los resultados de la búsqueda anterior
     this.PacientesRel = null;
-
     // Inicia búsqueda
     if (this.buscarPacRel && this.buscarPacRel.trim()) {
       this.timeoutHandle = window.setTimeout(() => {
@@ -680,6 +709,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             sexo: pacienteEscaneado.sexo.toString(),
             escaneado: true
           }).subscribe(resultado => {
+            debugger;
             this.loading = false;
             this.PacientesRel = resultado;
             this.esEscaneado = true;
@@ -702,7 +732,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
               }).subscribe(resultSuggest => {
                 this.PacientesRel = resultSuggest;
                 if (this.PacientesRel.length > 0) {
-
+                  this.buscarPacRel = '';
                   let pacienteEncontrado = this.PacientesRel.find(valuePac => {
                     if (valuePac.paciente.scan && valuePac.paciente.scan === this.buscarPacRel) {
                       return valuePac.paciente;
@@ -713,7 +743,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     id: this.PacientesRel[0].paciente.id,
                     apellido: this.PacientesRel[0].paciente.apellido,
                     nombre: this.PacientesRel[0].paciente.nombre,
-                    documento: this.PacientesRel[0].paciente.documento,
+                    documento: this.PacientesRel[0].documento,
                     sexo: this.PacientesRel[0].paciente.sexo,
                     fechaNacimiento: this.PacientesRel[0].paciente.fechaNacimiento,
                     match: this.PacientesRel[0].match
@@ -721,22 +751,61 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
                   if (pacienteEncontrado) {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
-                    this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
+                    //this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                   } else {
                     if (this.PacientesRel[0].match >= 0.90) {
                       this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
-                      this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
+                      //this.seleccionarPacienteRelacionado(this.PacientesRel[0].paciente, true);
                     } else {
                       if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.90) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       }
-                      this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
+                      //this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
                     }
                   }
 
                 } else {
+                  ///Cargar como paciente validado pq está escaneado
+                  this.buscarPacRel = '';
                   this.PacientesRel = null;
-                  this.seleccionarPacienteRelacionado(pacienteEscaneado, false);
+                  let pacienteGuardar: any = {
+                    activo: true,
+                    apellido: pacienteEscaneado.apellido.toString(),
+                    nombre: pacienteEscaneado.nombre.toString(),
+                    documento: pacienteEscaneado.documento.toString(),
+                    sexo: pacienteEscaneado.sexo.toString(),
+                    fechaNacimiento: pacienteEscaneado.fechaNacimiento,
+                    genero: pacienteEscaneado.sexo.toString(),
+                    estado: 'validado',
+                    contacto: null,
+                    estadoCivil: null,
+                    entidadesValidadoras: ['RENAPER'],
+                    scan: this.buscarPacRel,
+                    financiador: null,
+                    identificadores: null,
+                    direccion: null,
+                    reportarError: false,
+                    notaError: '',
+                    nombreCompleto: '',
+                    alias: '',
+                    edad: null,
+                    edadReal: null,
+                    fechaFallecimiento: null,
+                    foto: '',
+                    relaciones: [],
+                    claveBlocking: null,
+                  };
+
+
+                  let operacionPac = this.pacienteService.save(pacienteGuardar);
+                  operacionPac.subscribe(result => {
+                    if (result) {
+                      this.seleccionarPacienteRelacionado(result, true);
+                    }
+                  });
+
+
+
                 }
               });
 
@@ -778,7 +847,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     if (pacienteEncontrado) {
       if (esReferencia) {
-        unaRelacion.relacion = pacienteEncontrado.id;
+        unaRelacion.referencia = pacienteEncontrado.id;
       }
       unaRelacion.documento = pacienteEncontrado.documento;
       unaRelacion.apellido = pacienteEncontrado.apellido;
