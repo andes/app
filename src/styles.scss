@@ -93,14 +93,17 @@ h6.subdata-paciente {
 h6.subdata-descripcion {
   font-weight: 400;
   line-height: 2px;
-  [class^="badge-"],
-  [class^="label-"] {
-    margin: 0px !important;
-  }
-  .plex-box header {
-    padding-bottom: 10px;
-  }
-  legend {
-    padding-bottom: 10px;
-  }
+}
+
+[class^="badge-"],
+[class^="label-"] {
+  margin: 0px !important;
+}
+
+.plex-box header {
+  padding-bottom: 10px;
+}
+
+legend {
+  padding-bottom: 10px;
 }
