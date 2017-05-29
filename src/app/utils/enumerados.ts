@@ -64,7 +64,7 @@ export function getObjSexos() {
 export function getObjUnidadesEdad() {
     let arrUnidadEdad = Object.keys(UnidadEdad);
     arrUnidadEdad = arrUnidadEdad.slice(arrUnidadEdad.length / 2);
-    let salida = arrUnidadEdad.map(elem => { 
+    let salida = arrUnidadEdad.map(elem => {
         return { id: elem, nombre: titleCase(elem) }
     });
     return salida;

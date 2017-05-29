@@ -28,11 +28,11 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
-import {Ng2DragDropModule} from 'ng2-drag-drop';
+import { Ng2DragDropModule } from 'ng2-drag-drop';
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 import { fromNowPipe } from './utils/date';
-
+import { fechaPipe } from './utils/datePipe';
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -45,6 +45,7 @@ import { PacienteService } from './services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
+import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 
@@ -318,8 +319,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe,
-    fromNowPipe,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe, fechaPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -327,7 +327,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverComponent, PopoverContentComponent, PopoverAuditComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent,AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
@@ -351,6 +351,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BarrioService,
     PacienteService,
     FinanciadorService,
+    ParentescoService,
     appRoutingProviders,
     ConfigPrestacionService,
     AgendaComponent,

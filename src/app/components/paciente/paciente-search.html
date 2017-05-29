@@ -6,14 +6,10 @@
             </plex-text>
             <!--Loader-->
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-
-
             <!--Alerta si no se encontró ningun paciente-->
             <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
             </div>
-
-
             <!--Tabla de resultados por SimpleQuery -->
             <table *ngIf="resultado && resultado.length" class="table table-striped">
                 <thead>
@@ -39,38 +35,7 @@
                     </tr>
                 </tbody>
             </table>
-
-            <!--Tabla de resultados por Suggest -->
-            <!--<table *ngIf="pacientesSimilares && pacientesSimilares.length" class="table table-striped">
-
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Sexo</th>
-                            <th>% Similitud</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="hover" *ngFor="let elem of pacientesSimilares">
-
-                            <td>{{elem.paciente.documento}}</td>
-                            <td>{{elem.paciente.apellido}}</td>
-                            <td>{{elem.paciente.nombre}}</td>
-                            <td>{{elem.paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                            <td>{{elem.paciente.sexo}}</td>
-                            <td>{{elem.match * 100}} %</td>
-                            <td>
-                                <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(elem.paciente)"></plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>-->
         </div>
-
         <!--Panel lateral-->
         <div class="col-4" *ngIf="modoCompleto">
             <plex-box type="primary">
