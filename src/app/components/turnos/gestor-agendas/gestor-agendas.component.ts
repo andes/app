@@ -8,6 +8,9 @@ import { ProfesionalService } from './../../../services/profesional.service';
 import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
 import { AgendaService } from './../../../services/turnos/agenda.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+
+import * as enumerado from './../enums';
+// import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
 
 @Component({
@@ -38,6 +41,8 @@ export class GestorAgendasComponent implements OnInit {
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
+    public estadosAgenda = enumerado.EstadosAgenda;
+
 
     searchForm: FormGroup;
 
@@ -257,16 +262,17 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEstados(event) {
-        this.serviceAgenda.get({}).subscribe(agendas => {
-            if (agendas.length > 0) {
-                let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
-                    return { id: estado, nombre: estado }; // return objeto compatible con plex-select
-                });
-                event.callback(estadosAgendas);
-            } else {
-                event.callback([]);
-            }
-        });
+        event.callback(enumerado.getEstados());
+        // this.serviceAgenda.get({}).subscribe(agendas => {
+        //     if (agendas.length > 0) {
+        //         let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
+        //             return { id: estado, nombre: estado }; // return objeto compatible con plex-select
+        //         });
+        //         event.callback(estadosAgendas);
+        //     } else {
+        //         event.callback([]);
+        //     }
+        // });
     }
 
     verAgenda(agenda, multiple, e) {

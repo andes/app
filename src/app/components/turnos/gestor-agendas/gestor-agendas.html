@@ -86,7 +86,7 @@
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda?.estado}}</span>
+                                <span>{{estadosAgenda[agenda.estado].nombre}}</span>
                             </td>
                         </tr>
                     </tbody>
