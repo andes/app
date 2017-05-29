@@ -886,12 +886,23 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteModel.notas = [nuevaNota];
       }
 
+      if (this.pacienteModel.notas.length > 1) {
+        this.pacienteModel.notas.sort((a, b) => {
+          return (a.fecha.getDate() > b.fecha.getDate() ? 1 : (b.fecha.getDate() > a.fecha.getDate() ? -1 : 0));
+        });
+      }
+    }
+  }
+
+  destacarNota(indice: any) {
+    this.pacienteModel.notas[indice].destacada = !this.pacienteModel.notas[indice].destacada;
+    if (this.pacienteModel.notas.length > 1) {
+      this.pacienteModel.notas.sort((a, b) => {
+        let resultado = (a.destacada && !b.destacada ? -1 : (b.destacada && !a.destacada ? 1 : 0))
+        return resultado;
+      });
     }
   }
 
 
-  destacarNota(indice: any) {
-    debugger;
-    this.pacienteModel.notas[indice].destacada = !this.pacienteModel.notas[indice].destacada;
-  }
 }

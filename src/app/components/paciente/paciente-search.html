@@ -31,7 +31,7 @@
                             <td>{{paciente.documento}}</td>
                             <td>{{paciente.apellido}}</td>
                             <td>{{paciente.nombre}}</td>
-                            <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                            <td>{{paciente.fechaNacimiento | fecha}}</td>
                             <td>{{paciente.sexo}}</td>
                             <td>
                                 <plex-button title="Seleccinar Paciente" icon="pencil" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
