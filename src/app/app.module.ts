@@ -319,7 +319,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, fechaPipe,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe, fromNowPipe, fechaPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,

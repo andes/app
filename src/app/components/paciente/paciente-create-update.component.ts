@@ -89,7 +89,8 @@ import {
 
 @Component({
   selector: 'paciente-create-update',
-  templateUrl: 'paciente-create-update.html'
+  templateUrl: 'paciente-create-update.html',
+  styleUrls: ['paciente-create-update.css']
 })
 export class PacienteCreateUpdateComponent implements OnInit {
   @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente

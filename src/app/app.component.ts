@@ -11,7 +11,7 @@ import { Server } from '@andes/shared';
 export class AppComponent {
     private initStatusCheck() {
         setTimeout(() => {
-            this.server.get('/core/status', { showError: false })
+            this.server.get('/core/status', { params: null, showError: false })
                 .finally(() => this.initStatusCheck())
                 .subscribe(
                 (data) => this.plex.updateStatus(data),
