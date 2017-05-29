@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, HostBinding } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, HostBinding, Input } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -14,7 +14,7 @@ import { Auth } from '@andes/auth';
 })
 
 export class PacienteSearchComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
   private timeoutHandle: number;
 
@@ -31,6 +31,7 @@ export class PacienteSearchComponent implements OnInit {
   public mostrarNuevo = false;
   public autoFocus = 0;
   private permisoAgendas = false;
+  @Input() modoCompleto = true; // muestra/oculta panel derecho
 
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();

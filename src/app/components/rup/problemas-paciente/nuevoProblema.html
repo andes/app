@@ -1,0 +1,171 @@
+<style>
+    /* Estilo expandidos*/
+    
+    .small {
+        color: grey;
+        font-weight: 400;
+        font-size: 0.85rem;
+    }
+    
+    .form-control-invert {
+        background-color: #002738;
+        border-color: solid 1px #FFFFFF;
+        border-radius: 0px;
+        color: #FFFFFF;
+        height: 100px;
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        overflow: scroll;
+    }
+    
+    .box-title-principal {
+        color: #00A8E0;
+        font-weight: 350;
+        padding-bottom: 5px;
+    }
+    
+    .box-title-secundario {
+        color: #00A8E0;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    
+    .border {
+        border: solid 1px white;
+    }
+    
+    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid white;
+        margin: 1em 0;
+        padding: 0;
+    }
+    /*Etiquetas*/
+    
+    .badge {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin: 0px 10px 10px 0px;
+        display: inline-block;
+    }
+    
+    .badge-danger {
+        border: 1.5px solid #dd4b39;
+        border-radius: 0px;
+        background: transparent;
+        color: #dd4b39;
+    }
+    
+    .badge-success {
+        border: 1.5px solid #8CC63F;
+        border-radius: 0px;
+        background: transparent;
+        color: #8CC63F;
+    }
+    
+    .badge-warning {
+        border: 1.5px solid #ff8d22;
+        border-radius: 0px;
+        background: transparent;
+        color: #ff8d22;
+    }
+    /*Estilos Invertidos*/
+    
+    .invert {
+        color: #FFFFFF;
+    }
+    
+    .plex-box-invert {
+        color: white;
+        background-color: #002738;
+        padding: 20px;
+    }
+</style>
+
+<div class="plex-box-invert">
+
+    <header>
+        <div class="row">
+            <div class="col-12">
+                <h5 class="box-title-principal">Nuevo Problema | <span class="invert">{{problema.term}}</span></h5>
+                <small class="invert"> Profesional: {{auth.profesional.id}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>
+                <hr>
+            </div>
+        </div>
+    </header>
+
+    <form>
+        <div class="row">
+            <!--DESCRIPCION ALTA PROBLEMA-->
+            <div class="col-12">
+                <label class="box-title-secundario" for="comment">Descripción</label>
+                <small class="invert">Examen físico, intensidad, frecuencia, parte del cuerpo afectada, síntomas y otras observaciones</small>
+                <hr>
+                <textarea class="form-control-invert" rows="4" id="descripcion" [(ngModel)]="descripcion" [required]="true" name="descripcion" placeholder="Escriba sólo detalles permanentes/semipermanentes del problema">
+                </textarea>
+            </div>
+        </div>
+
+        <!--FECHA IDENTIFICACION DEL PROBLEMA-->
+        <div class="row">
+
+            <div class="col-6">
+                <label class="box-title-secundario">Fecha identificación del problema </label>
+                <hr>
+                <plex-datetime type="date" [(ngModel)]="fechaIdentificacion" [required]="true" name="fechaIdentificacion">
+                </plex-datetime>
+            </div>
+
+            <!--INICIO ESTIMADO DEL PROBLEMA-->
+            <div class="col-6">
+                <label class="box-title-secundario">Inicio estimado del problema </label>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-int [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"></plex-int>
+                    </div>
+                    <div class="col-6">
+                        <plex-select [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true">
+                        </plex-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!--ESTADO DEL PROBLEMA-->
+            <div class="col-6">
+                <label class="box-title-secundario">Estado actual</label>
+                <plex-select [(ngModel)]="estadoActual" name="estadoActual" [data]="estados" [required]="true">
+                </plex-select>
+            </div>
+            <!--ES CRONICO?-->
+            <div class="col-6">
+                <plex-bool [(ngModel)]="cronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
+            </div>
+        </div>
+
+        <div class="row">
+            <!--EVOLUCION DEL PROBLEMA-->
+            <div class="col-12">
+                <label class="box-title-secundario" for="comment">Evolución del problema</label>
+                <hr>
+                <textarea class="form-control-invert" [(ngModel)]="observacion" rows="4" id="comment" name="observacion" placeholder="Ingrese una observación"></textarea>
+            </div>
+        </div>
+
+
+        <!--ACCIONES-->
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <plex-button title="Guardar" label="Guardar" validateForm="true" (click)="guardarProblema($event)" type="success"></plex-button>
+                <plex-button title="Cerrar" label="Cerrar" (click)="cerrar()" type="danger"></plex-button>
+            </div>
+        </div>
+
+    </form>
+</div>

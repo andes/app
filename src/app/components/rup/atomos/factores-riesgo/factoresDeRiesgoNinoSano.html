@@ -1,18 +1,18 @@
 <div *ngIf="tipoProblemas">
     <div *ngFor="let tipoProblema of tipoProblemas; let i = index">
 
-        <label for="problema-{{tipoProblema.id}}">
+        <label for="problema-{{tipoProblema.fsn}}">
 
         <input 
-            id="problema-{{tipoProblema.id}}" 
+            id="problema-{{tipoProblema.fsn}}" 
             type="checkbox" 
             [checked]="data[tipoPrestacion.key][i].activo"
             [(ngModel)]="data[tipoPrestacion.key][i].activo" 
             (click)="devolverValores()"
-            *ngIf="!existeProblema(tipoProblema.id)"
+            *ngIf="!existeProblema(tipoProblema.fsn)"
             >
             
-            {{tipoProblema.nombre}} <span *ngIf="existeProblema(tipoProblema.id)" class="label label-default">Problema existente</span>
+            {{tipoProblema.nombre}} <span *ngIf="existeProblema(tipoProblema.fsn)" class="label label-default">Problema existente</span>
         </label>
 
     </div>
