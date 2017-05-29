@@ -191,15 +191,15 @@
                                     <li class="list-group-item" *ngFor="let _unaRel of pacienteModel.relaciones; let k = index">
                                         <div class="row">
                                             <div class="col">
-                                                <plex-text label="Documento" [(ngModel)]="_unaRel.documento" name="DocumentoPar-{{k}}" [required]="true" placeholder="Ingrese documento...">
+                                                <plex-text label="Documento" [(ngModel)]="_unaRel.documento" name="DocumentoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese documento...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-text label="Apellido" [(ngModel)]="_unaRel.apellido" name="apellidoPar-{{k}}" [required]="true" placeholder="Ingrese apellido...">
+                                                <plex-text label="Apellido" [(ngModel)]="_unaRel.apellido" name="apellidoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese apellido...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-text label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" placeholder="Ingrese nombre...">
+                                                <plex-text label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese nombre...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
@@ -240,14 +240,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="hover" *ngFor="let paciente of PacientesRel">
-                                            <td>{{paciente.documento}}</td>
-                                            <td>{{paciente.apellido}}</td>
-                                            <td>{{paciente.nombre}}</td>
-                                            <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                                            <td>{{paciente.sexo}}</td>
+                                        <tr class="hover" *ngFor="let pac of PacientesRel">
                                             <td>
-                                                <plex-button title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(paciente, true)"></plex-button>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.documento}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.documento}}</span>
+                                            </td>
+                                            <td><span *ngIf="pac.paciente">{{pac.paciente.apellido}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.apellido}}</span></td>
+                                            <td><span *ngIf="pac.paciente">{{pac.paciente.nombre}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.nombre}}</span></td>
+                                            <td><span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento | fecha}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha}}</span></td>
+                                            <td><span *ngIf="pac.paciente">{{pac.paciente.sexo}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.sexo}}</span></td>
+                                            <td>
+                                                <plex-button *ngIf="!pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac, true)"></plex-button>
+                                                <plex-button *ngIf="pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac.paciente, true)"></plex-button>
                                             </td>
                                         </tr>
                                     </tbody>

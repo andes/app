@@ -43,6 +43,7 @@ import { PacienteService } from './services/paciente.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
+import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 
@@ -301,7 +302,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent,AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
@@ -325,6 +326,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     BarrioService,
     PacienteService,
     FinanciadorService,
+    ParentescoService,
     appRoutingProviders,
     ConfigPrestacionService,
     AgendaComponent,
