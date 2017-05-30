@@ -69,31 +69,10 @@ export class TurnosComponent implements OnInit {
     reasignar: any = {};
     horaInicio: any;
     bloques = [];
-    botones: any = {}; // Contiene el cálculo de la visualización de botones
+    // Contiene el cálculo de la visualización de botones
+    botones: any = {};
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
-
-    // showTurnos: Boolean = true;
-    // showLiberarTurno: Boolean = false;
-    // showSuspenderTurno: Boolean = false;
-    // showAgregarNotaTurno: Boolean = false;
-
-    // smsEnviado: Boolean = false;
-    // smsLoader: Boolean = false;
-
-    // turnos = [];
-    // turnosSeleccionados: any[] = [];
-    // turno: ITurno;
-    // cantSel: number;
-    // todos: Boolean = false;
-    // reasignar: any = {};
-    // horaInicio: any;
-
-    // bloques = [];
-
-
-    // // Contiene el cálculo de la visualización de botones
-    // botones: any = {};
 
     // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
@@ -119,8 +98,7 @@ export class TurnosComponent implements OnInit {
                             carpetaEfector = paciente.carpetaEfectores.filter((data) => {
                                 return (data.organizacion.id === this.auth.organizacion.id);
                             });
-                            //this.turnos[t].paciente.carpetaEfectores = new Object();
-                            debugger;
+                            // this.turnos[t].paciente.carpetaEfectores = new Object();
                             turno.paciente.carpetaEfectores = carpetaEfector;
                             return turno;
                         }

@@ -10,8 +10,8 @@ import { AgendaService } from './../../../services/turnos/agenda.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 import * as enumerado from './../enums';
-// import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
+import {enumToArray} from '../../../utils/enums';
 
 @Component({
     selector: 'gestor-agendas',
@@ -41,8 +41,7 @@ export class GestorAgendasComponent implements OnInit {
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
-    public estadosAgenda = enumerado.EstadosAgenda;
-
+    public estadosAgenda =  enumToArray(enumerado.EstadosAgenda);
 
     searchForm: FormGroup;
 
@@ -261,18 +260,8 @@ export class GestorAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
-    loadEstados(event) {
-        event.callback(enumerado.getEstados());
-        // this.serviceAgenda.get({}).subscribe(agendas => {
-        //     if (agendas.length > 0) {
-        //         let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
-        //             return { id: estado, nombre: estado }; // return objeto compatible con plex-select
-        //         });
-        //         event.callback(estadosAgendas);
-        //     } else {
-        //         event.callback([]);
-        //     }
-        // });
+    buscarEstado(estado) {
+        return  this.estadosAgenda.find(x => x.id === estado);
     }
 
     verAgenda(agenda, multiple, e) {
@@ -335,11 +324,11 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit() {
-        this.loadAgendas();
         this.showTurnos = false;
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        this.loadAgendas();
     }
 
 }
