@@ -324,11 +324,11 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit() {
-        this.loadAgendas();
         this.showTurnos = false;
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        this.loadAgendas();
     }
 
 }

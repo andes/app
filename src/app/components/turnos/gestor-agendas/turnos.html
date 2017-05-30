@@ -89,18 +89,6 @@
                 </button>
             </span>-->
             <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop" title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
-            <!--
-            <span *ngIf="botones.bloquearTurno">
-                <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
-                    <i title="Desbloquear Turno" class="mdi mdi-lock-open-outline"></i>
-                </button>
-            </span>-->
-
-            <!--<span *ngIf="botones.desbloquearTurno">
-                <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
-                    <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
-                </button>
-            </span>-->
 
             <!--<span *ngIf="botones.sms">
                 <button class="btn btn-default hover" (click)="enviarSMS()"><i title="Enviar SMS" class="mdi mdi-email-outline"></i></button>
