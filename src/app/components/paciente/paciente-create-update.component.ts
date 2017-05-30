@@ -442,22 +442,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
       let operacionPac: Observable<IPaciente>;
 
-      // if (this.sugerenciaAceptada) {
-      //   operacionPac = this.pacienteService.save(pacienteGuardar);
-      //   operacionPac.subscribe(result => {
-
-
-
-      //     this.plex.alert('Los datos se actualizaron correctamente');
-      //     this.data.emit(result);
-      //   });
-      // } else {
       operacionPac = this.pacienteService.save(pacienteGuardar);
       operacionPac.subscribe(result => {
 
         if (result) {
           if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
             pacienteGuardar.relaciones.forEach(rel => {
+              
               let relOp = this.relacionTutores.find((elem) => {
                 if (elem.nombre = rel.relacion.opuesto) {
                   return elem;
@@ -470,9 +461,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 apellido: pacienteGuardar.apellido,
                 documento: pacienteGuardar.documento
               };
-              this.pacienteService.patch(pacienteGuardar.id, {
-                'op': 'updateRelacion', 'dto': dto
-              });
+              if (rel.relacion.id) {
+                this.pacienteService.patch(rel.referencia, {
+                  'op': 'updateRelacion', 'dto': dto
+                })
+              }
             });
           }
           this.plex.alert('Los datos se actualizaron correctamente');
@@ -682,7 +675,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             sexo: pacienteEscaneado.sexo.toString(),
             escaneado: true
           }).subscribe(resultado => {
-            debugger;
             this.loading = false;
             this.PacientesRel = resultado;
             this.esEscaneado = true;
