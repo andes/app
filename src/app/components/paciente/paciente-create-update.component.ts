@@ -138,6 +138,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   loading = false;
   esEscaneado = false;
   nuevaNota = '';
+  autoFocus = 0;
+
 
   contacto: IContacto = {
     tipo: 'celular',
@@ -824,6 +826,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     } else {
       this.pacienteModel.relaciones = [unaRelacion];
     }
+    this.autoFocus = this.autoFocus + 1;
   }
   removeRelacion(i) {
     if (i >= 0) {
