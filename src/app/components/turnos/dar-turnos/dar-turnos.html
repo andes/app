@@ -275,7 +275,8 @@
               <div class="col" *ngIf="estadoT == 'confirmacion'">
                 <div class="row">
                   <div class="col">
-                    <label>Paciente: </label>{{this.paciente.nombre}} {{this.paciente.apellido}} <br>
+                    <!-- <label>Paciente: </label>{{this.paciente.nombre}} {{this.paciente.apellido}} <br> -->
+                    <label>Paciente: </label>{{this.paciente | fullName: 'Mayusculas' }} <br>
                     <label>Documento: </label>{{this.paciente.documento}} <br>
                     <label>Tipo de turno: </label>{{this.tiposTurnosLabel}} <br>
                     <plex-phone label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
