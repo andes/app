@@ -230,7 +230,7 @@ export class PacienteSearchComponent implements OnInit {
                     sexo: this.pacientesSimilares[0].paciente.sexo,
                     fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
                     match: this.pacientesSimilares[0].match
-                  }
+                  };
 
                   if (pacienteEncontrado) {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })

@@ -275,11 +275,11 @@ export class PrestacionEjecucionComponent implements OnInit {
   valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
   // listado de problemas del paciente
   listaProblemasPaciente: any[] = [];
-  //Funciones de planes
+  // Funciones de planes
   motivoSolicitud: String;
   showMotivoSolicitud: boolean = false;
   planSelecionado: any;
-  listaPlanesProblemas: any = []; //array de todos los planes que se van a mostrar vinculados a los problemas..
+  listaPlanesProblemas: any = []; // array de todos los planes que se van a mostrar vinculados a los problemas..
 
 
   todas: any[] = [];
@@ -503,7 +503,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   onPrestacionDrop(e: any, idProblema) {
 
-    // 
+    //
     this.paraTodas = false;
 
     // Se verifica que sea un tipo de prestación
@@ -538,7 +538,7 @@ export class PrestacionEjecucionComponent implements OnInit {
   //   // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evoluciones
   //   this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
 
-  guardarUnPlanConMotivo() { //Boton guardar
+  guardarUnPlanConMotivo() { // Boton guardar
     this.agregarPlanDePrestacionFutura(this.planSelecionado, this.motivoSolicitud);
     this.PlanesSeleccionados.push(this.planSelecionado);
     this.showMotivoSolicitud = false;
@@ -572,7 +572,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     });
 
   }
-  onPlanTodosLosProblemasDrop($event) { //Carga plan en todos los problemas
+  onPlanTodosLosProblemasDrop($event) { // Carga plan en todos los problemas
     if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
       this.prestacion.ejecucion.listaProblemas.forEach(problema => {
         this.onPlanDrop($event, problema.id);
@@ -745,6 +745,16 @@ export class PrestacionEjecucionComponent implements OnInit {
   onReturn(dato: IProblemaPaciente) {
     this.showEvolucionar = false;
     this.showEnmendar = false;
+
+    if (dato) {
+       this.cargarProblemasPaciente();
+       this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+        this.prestacion = prestacion;
+      });
+
+      this.plex.toast('success', 'El problema fue evolucionado correctamente.', 'Información', 4000);
+    }
+
   }
 
   onReturnNvoProblema(dato: any) {
@@ -757,7 +767,6 @@ export class PrestacionEjecucionComponent implements OnInit {
       if (this.cargarEnconsulta) {
         this.updateListaProblemas(dato);
       }
-
       this.cargarProblemasPaciente();
       this.plex.toast('success', 'Problema asociado a la prestación', 'Problema asociado.', 4000);
     }
@@ -785,9 +794,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
   }
 
-  onReturnTodos(dato: IProblemaPaciente[]) {
+  onReturnTodos(datos: IProblemaPaciente[]) {
     this.showEvolucionar = false;
     this.showEvolTodo = false;
+   if (datos) {
+       this.cargarProblemasPaciente();
+       this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+        this.prestacion = prestacion;
+      });
+      this.plex.toast('success', 'Los problemas fueron evolucionados correctamente.', 'Información', 4000);
+    }
   }
 
   cargarDatosPrestacion() {
@@ -1066,7 +1082,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     };
 
     this.servicioPrestacion.patch(this.prestacion, cambios).subscribe(prestacionActualizada => {
-      //No devuelve la prestacion actualizada pero si la graba en mongo el patch
+      // No devuelve la prestacion actualizada pero si la graba en mongo el patch
       this.servicioPrestacion.getById(prestacionActualizada.id).subscribe(prestacion => {
         this.prestacion = prestacion;
       });

@@ -24,7 +24,11 @@ export interface IPaciente {
     estadoCivil: EstadoCivil;
     foto: String;
     relaciones: [{
-        relacion: String;
+        relacion: {
+            id: String,
+            nombre: String,
+            opuesto: String
+        };
         referencia: String;
         nombre: String;
         apellido: String;
@@ -49,4 +53,16 @@ export interface IPaciente {
     scan: String;
     reportarError: Boolean;
     notaError: String;
+    carpetaEfectores?: [{
+        organizacion: {
+            id: String,
+            nombre: String
+        },
+        nroCarpeta: String
+    }];
+    notas?: [{
+        fecha: Date,
+        nota: String,
+        destacada: Boolean
+    }];
 }

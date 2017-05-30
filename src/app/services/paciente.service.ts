@@ -4,11 +4,15 @@ import { IPaciente } from './../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
+import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
 
 @Injectable()
 export class PacienteService {
 
   private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
+  private carpetaUrl = '/modules/turnos/carpetasPacientes';
+
+
   constructor(private server: Server) { }
 
   getConsultas(filtro: String): Observable<number> {
@@ -29,6 +33,14 @@ export class PacienteService {
 
   getDashboard(): Observable<IPaciente[]> {
     return this.server.get(this.pacienteUrl + '/dashboard/', null);
+  }
+
+  getNroCarpeta(params: any): Observable<any> {
+    return this.server.get(this.carpetaUrl, { params: params, showError: true });
+  }
+
+  getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
+      return this.server.get(this.carpetaUrl + '/' + id, null);
   }
 
   /**

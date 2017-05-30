@@ -3,11 +3,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { ProfesionalService } from './../../services/profesional.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { AgendaService } from './../../services/turnos/agenda.service';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+
+import * as enumerado from './../enums';
+// import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
 
 @Component({
@@ -18,11 +21,6 @@ import * as moment from 'moment';
 export class GestorAgendasComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
-    public autorizado = false;
-
-    public agendas: any = [];
-    public agenda: any = {};
-
     agendasSeleccionadas: IAgenda[] = [];
 
     public showGestorAgendas: Boolean = true;
@@ -32,14 +30,19 @@ export class GestorAgendasComponent implements OnInit {
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
+    public showListado: Boolean = false;
     public showInsertarAgenda: Boolean = false;
     public showAgregarNotaAgenda: Boolean = false;
     public fechaDesde: any;
     public fechaHasta: any;
-
+    public agendas: any = [];
+    public agenda: any = {};
     public modelo: any = {};
-
     public hoy = false;
+    public autorizado = false;
+    public mostrarMasOpciones = false;
+    public estadosAgenda = enumerado.EstadosAgenda;
+
 
     searchForm: FormGroup;
 
@@ -67,7 +70,7 @@ export class GestorAgendasComponent implements OnInit {
                 { label: 'Inicio', route: '/inicio' },
                 { label: 'MPI', route: '/' },
                 { label: 'Agendas', route: '/gestor_agendas' }
-            ]
+            ];
 
             // Por defecto cargar/mostrar agendas de hoy
             this.hoy = true;
@@ -140,6 +143,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
+        this.showListado = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -148,6 +152,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
     }
     saveAgregarNotaAgenda() {
+        this.loadAgendas();
         this.showTurnos = true;
         this.showAgregarNotaAgenda = false;
     }
@@ -187,7 +192,7 @@ export class GestorAgendasComponent implements OnInit {
     editarAgenda(agenda) {
         this.editaAgenda = agenda;
 
-        if (this.editaAgenda.estado === 'Planificacion') {
+        if (this.editaAgenda.estado === 'planificacion') {
             this.showGestorAgendas = false;
             this.showEditarAgenda = true;
             this.showEditarAgendaPanel = false;
@@ -198,6 +203,15 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
+        this.showListado = false;
+    }
+
+    listarTurnos(agenda) {
+        this.showGestorAgendas = true;
+        this.showEditarAgenda = false;
+        this.showEditarAgendaPanel = false;
+        this.showTurnos = false;
+        this.showListado = true;
     }
 
     loadAgendas() {
@@ -228,7 +242,6 @@ export class GestorAgendasComponent implements OnInit {
             });
     }
 
-
     loadPrestaciones(event) {
         this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
     }
@@ -249,22 +262,24 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEstados(event) {
-        this.serviceAgenda.get({}).subscribe(agendas => {
-            if (agendas.length > 0) {
-                let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
-                    return { id: estado, nombre: estado }; // return objeto compatible con plex-select
-                });
-                event.callback(estadosAgendas);
-            } else {
-                event.callback([]);
-            }
-        });
+        event.callback(enumerado.getEstados());
+        // this.serviceAgenda.get({}).subscribe(agendas => {
+        //     if (agendas.length > 0) {
+        //         let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
+        //             return { id: estado, nombre: estado }; // return objeto compatible con plex-select
+        //         });
+        //         event.callback(estadosAgendas);
+        //     } else {
+        //         event.callback([]);
+        //     }
+        // });
     }
 
     verAgenda(agenda, multiple, e) {
 
         this.showVistaAgendas = false;
         this.showTurnos = false;
+        this.showListado = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
@@ -296,7 +311,6 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = true;
         });
 
-
     }
 
     estaSeleccionada(agenda: any) {
@@ -304,7 +318,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     setColorEstadoAgenda(agenda) {
-        if (agenda.estado === 'Suspendida') {
+        if (agenda.estado === 'suspendida') {
             agenda.agendaSeleccionadaColor = 'danger';
         } else {
             agenda.agendaSeleccionadaColor = 'success';
@@ -326,7 +340,6 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
-
     }
 
 }

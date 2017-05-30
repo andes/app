@@ -149,7 +149,7 @@ export class PuntoInicioComponent implements OnInit {
                 }
             }
 
-            turnos.forEach(elemento => { //Falta ver en ejecucion y validad
+            turnos.forEach(elemento => { // Falta ver en ejecucion y validad
                 if (elemento.estado === 'asignado' && elemento.asistencia === true) {
 
                     this.unPacientePresente.estado = 'En espera';
@@ -164,11 +164,11 @@ export class PuntoInicioComponent implements OnInit {
                             });
                         }
                     });
-                    //cargo un objeto con el profesional.
-                    this.unPacientePresente.profesionales = element.profesionales[0];//Recorrer los profesionales si los tuviera
-                    //Cargo el tipo de prestacion
-                    this.unPacientePresente.nombrePrestacion = element.tipoPrestaciones[0].nombre;//Recorrer las prestaciones si tiene mas de una
-                    //Recorro agenda saco el estados
+                    // Cargo un objeto con el profesional.
+                    this.unPacientePresente.profesionales = element.profesionales[0]; // Recorrer los profesionales si los tuviera
+                    // Cargo el tipo de prestacion
+                    this.unPacientePresente.nombrePrestacion = element.tipoPrestaciones[0].nombre; // Recorrer las prestaciones si tiene mas de una
+                    // Recorro agenda saco el estados
                     this.unPacientePresente.paciente = elemento.paciente;
                     this.PacientesPresentes.push(this.unPacientePresente);
                     this.unPacientePresente = {};
@@ -202,7 +202,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
 
-    //Va a cargar todos lo pacientes con un turnos pendientes.
+    // Va a cargar todos lo pacientes con un turnos pendientes.
     PacientesPendientes() {
 
     }
