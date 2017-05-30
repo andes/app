@@ -1,6 +1,7 @@
 <fieldset>
     <legend>Editar agenda</legend>
-    <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)" placeholder="Seleccione los profesionales" [multiple]="true" labelField="nombre + ' ' + apellido" (change)="validarSolapamientos('profesionales')">
+    <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)" 
+    placeholder="Seleccione los profesionales" [multiple]="true" labelField="apellido+' '+nombre" (change)="validarSolapamientos('profesionales')">
     </plex-select>
 
     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Seleccione un espacio" (change)="validarSolapamientos('espacioFisico')">

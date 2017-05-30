@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -31,6 +30,7 @@ import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
+import { ProfesionalFullNamePipe } from './pipe/profesionalPipe';
 import { fromNowPipe } from './utils/date';
 import { fechaPipe } from './utils/datePipe';
 // Servicios
@@ -316,7 +316,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, fromNowPipe, fechaPipe,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe, ProfesionalFullNamePipe, fromNowPipe, fechaPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
