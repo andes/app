@@ -141,7 +141,6 @@ export class TurnosComponent implements OnInit {
         this.cantSel = this.turnosSeleccionados.length;
 
         this.actualizarBotones();
-
     }
 
     estaSeleccionado(turno: any) {
@@ -235,11 +234,15 @@ export class TurnosComponent implements OnInit {
         }
     }
 
+    agendaHoy(){
+        return moment(this.agenda.horaInicio).startOf('day').format() >= moment().startOf('day').format();
+    }
+
     actualizarBotones() {
 
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.hayTurnosTarde(),
+            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
             sacarAsistencia: (this.tienenAsistencia()) && this.tienenPacientes(),
             // Suspender turno: El turno no está asignado ==> el estado pasa a "suspendido"
@@ -250,8 +253,6 @@ export class TurnosComponent implements OnInit {
             bloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
             // Desbloquear turno: está "suspendido" pero sin paciente ==> el estado pasa a "disponible"
             desbloquearTurno: this.agendaNoSuspendida() && this.todosConEstado('suspendido') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
-            // TODO: Refactor nombres métodos hayTurnosConEstado y noHayTurnosConEstado
-
             // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
             // reasignarTurno: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
             reasignarTurno: false,
