@@ -155,8 +155,8 @@
             </div>
           </td>
           <td>
-            <span *ngIf="turno && turno.updatedBy && turno.updatedAt">
-              <popover-audit title="Información del Turno" placement="left" [data]="turno" >
+          <span *ngIf="turno">
+              <popover-audit placement="left" [data]="turno" >
               </popover-audit>
           </span>
           </td>
