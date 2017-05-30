@@ -1,21 +1,19 @@
 <fieldset>
   <legend>Agregar Nota</legend>
-  <div class="alert alert-default small">
-    <div class="row">
-      <div class="col-4">
-        <label>Hora Turno</label>
-      </div>
-      <div class="col-8">
-        <label>Paciente</label>
-      </div>
+  <div class="row">
+    <div class="col-4">
+      <label>Hora Turno</label>
     </div>
-    <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-      <div class="col-4">
-        {{turno.horaInicio | date: 'H:mm'}} hs
-      </div>
-       <div class="col-8">
-            <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
-      </div>
+    <div class="col-8">
+      <label>Paciente</label>
+    </div>
+  </div>
+  <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+    <div class="col-4">
+      {{turno.horaInicio | date: 'H:mm'}} hs
+    </div>
+    <div class="col-8">
+      <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
     </div>
   </div>
   <div class="row">

@@ -45,7 +45,8 @@
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select formControlName="estado" (getData)="loadEstados($event)" label="Estado">
+                            <plex-select formControlName="estado" [data]="estadosAgenda" label="Estado">
+                                
                             </plex-select>
                         </div>
                     </div>
@@ -85,8 +86,10 @@
                                     </ng-container>
                                 </div>
                             </td>
-                            <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{estadosAgenda[agenda.estado].nombre}}</span>
+                            <td>
+                                <span class="badge-{{buscarEstado(agenda.estado).class}}" (click)="verAgenda(agenda, false, $event)">
+                                    {{buscarEstado(agenda.estado).nombre}}
+                                </span>
                             </td>
                         </tr>
                     </tbody>

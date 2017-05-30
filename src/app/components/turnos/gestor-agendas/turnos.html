@@ -12,19 +12,22 @@
         <!--Header de la agenda-->
         <div class="alert alert-default mb-0">
           <div class="float-right">
-            <plex-button type="default" title="Mostrar detalle de la agenda" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'" (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
+            <plex-button type="default" title="Mostrar detalle de la agenda" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'"
+              (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
           </div>
           <!--Header pequeño-->
           <div *ngIf="!mostrarHeaderCompleto" class="row">
             <div class="col-12">
-              {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+              {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+              'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
               <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
             </div>
           </div>
           <!--Header completo-->
           <div *ngIf="mostrarHeaderCompleto" class="row">
             <div class="col-12">
-              <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+              <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}},
+              {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
             </div>
           </div>
           <div *ngIf="mostrarHeaderCompleto" class="row">
@@ -70,25 +73,15 @@
         </td>
         <td colspan="3" class="text-right">
           <div *ngIf="turnosSeleccionados.length > 0">
-            <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove" (click)="eventosTurno('sacarAsistencia')" title="Registrar inasistencia"></plex-button>
-            <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')" title="Registrar asistencia"></plex-button>
-            <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" title="Reasignar turno"></plex-button>
+            <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove" (click)="eventosTurno('sacarAsistencia')"
+              title="Registrar inasistencia"></plex-button>
+            <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')"
+              title="Registrar asistencia"></plex-button>
+            <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
+              title="Reasignar turno"></plex-button>
             <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
             <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
             <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
-            <!--
-
-            <span *ngIf="botones.liberarTurno">
-                <!--<button id="liberarTurno" class="btn btn-default hover" mwlConfirmationPopover [title]="titleLiberarTurno" [message]="messageLiberarTurno"
-                    placement="bottom" (confirm)="liberarTurno(agenda, confirmaLiberarTurno = true)"
-                    (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
-                    <i title="Liberar Turno" class="mdi mdi-account-minus"></i>
-                </button>
-                <button id="liberarTurno" class="btn btn-default hover" (click)="liberarTurno(agenda)">
-                    <i title="Liberar Turno" class="mdi mdi-account-minus"></i>
-                </button>
-            </span>-->
-
             <plex-button *ngIf="botones.desbloquearTurno" type="success" icon="mdi mdi-play" title="Reanudar turno"></plex-button>
             <!--<span *ngIf="botones.desbloquearTurno">
                 <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
@@ -96,14 +89,6 @@
                 </button>
             </span>-->
             <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop" title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
-            <!--<span *ngIf="botones.suspenderTurno">
-                <button id="suspenderTurno" class="btn btn-default" mwlConfirmationPopover [title]="titleSuspenderTurno" [message]="messageSuspenderTurno"
-                    placement="bottom" (confirm)="suspenderTurno(agenda, confirmaSuspenderTurno = true)"
-                    (cancel)="cancelClicked = true" confirmText="Confirmar" cancelText="Cancelar">
-                    <i title="Suspender Turno" class="mdi mdi-power"></i>
-                </button>
-
-            </span>-->
             <!--
             <span *ngIf="botones.bloquearTurno">
                 <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
@@ -115,10 +100,6 @@
                 <button class="btn btn-default hover" (click)="eventosTurno( 'bloquearTurno' )">
                     <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
                 </button>
-            </span>-->
-
-            <!--<span *ngIf="botones.nota && turnosSeleccionados.length > 0">
-                <button class="btn btn-default hover" (click)="agregarNotaTurno()"><i title="Agregar Nota" class="mdi mdi-comment-outline"></i></button>
             </span>-->
 
             <!--<span *ngIf="botones.sms">
@@ -186,11 +167,11 @@
             </div>
           </td>
           <td>
-          <span *ngIf="turno && turno.updatedBy && turno.updatedAt">
+            <span *ngIf="turno && turno.updatedBy && turno.updatedAt">
               <popover-audit title="Información del Turno" placement="left" [data]="turno" >
               </popover-audit>
           </span>
-        </td>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -198,19 +179,19 @@
 </div>
 
 <!-- Muestra el panel de Liberar turno -->
-<div type="info" class="col-md-12" *ngIf="showLiberarTurno">
-  <div class="clear"></div>
-  <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)" (cancelaLiberarTurno)="cancelaLiberarTurno($event)"></liberar-turno>
-</div>
+<div class="clear"></div>
+<liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)"
+  (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)" (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
+</liberar-turno>
 
 <!-- Muestra el panel de Suspender turno -->
-<div type="info" class="col-md-12" *ngIf="showSuspenderTurno">
-  <div class="clear"></div>
-  <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)"></suspender-turno>
-</div>
+<div class="clear"></div>
+<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
+  (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
+</suspender-turno>
 
 <!-- Muestra el panel de Nota -->
-<div type="info" class="col-md-12" *ngIf="showAgregarNotaTurno">
-  <div class="clear"></div>
-  <agregar-nota-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)"></agregar-nota-turno>
-</div>
+<div class="clear"></div>
+<agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
+  (cancelaAgregarNota)="cancelaAgregarNota($event)">
+</agregar-nota-turno>
