@@ -41,7 +41,7 @@
               <label>Profesionales</label>
               <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
               <ng-container *ngIf="agenda.profesionales">
-                <div *ngFor="let profesional of agenda.profesionales">{{profesional.apellido}}, {{profesional.nombre}}</div>
+                <div *ngFor="let profesional of agenda.profesionales">{{profesional | fullNameProfesional}}</div>
               </ng-container>
             </div>
           </div>
