@@ -120,7 +120,7 @@
             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
           </td>
           <td (click)="seleccionarTurno(bloque.turnos[i], false)">
-            <span *ngIf="turno && turno.paciente">{{ turno.paciente.apellido }} {{ turno.paciente.nombre }} </span>
+            <span *ngIf="turno && turno.paciente">{{ turno.paciente  | fullName: 'Mayusculas' }} </span>
             <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
             <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
                 <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
