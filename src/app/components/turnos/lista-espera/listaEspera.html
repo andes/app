@@ -37,7 +37,7 @@
                     <tbody>
                         <tr *ngFor="let listaEspera of datos">
                             <td nowrap >{{listaEspera.paciente.documento}}</td>
-                            <td>{{listaEspera.paciente.nombre}} {{listaEspera.paciente.apellido}}</td>
+                            <td>{{listaEspera.paciente  | fullName: 'Mayusculas'}}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
                             <td>
                                 <span *ngIf="listaEspera.profesional">{{listaEspera.profesional | fullNameProfesional}}</span>

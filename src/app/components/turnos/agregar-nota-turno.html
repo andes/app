@@ -13,7 +13,8 @@
       {{turno.horaInicio | date: 'H:mm'}} hs
     </div>
     <div class="col-8">
-      <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span>
+      <!-- <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span> -->
+      <span *ngIf="turno.paciente">{{turno.paciente | fullName: 'Mayusculas'}}</span>
     </div>
   </div>
   <div class="row">
