@@ -111,9 +111,6 @@ import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gesto
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
 import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
-import { ListaTurnosComponent } from './components/turnos/gestor-agendas/lista-turnos.component';
-import { PopoverComponent } from './components/popover-audit/popover.component';
-import { PopoverContentComponent } from './components/popover-audit/popover-content.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 
 
@@ -323,8 +320,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent, ListaTurnosComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverComponent, PopoverContentComponent, PopoverAuditComponent,
+    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverAuditComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
