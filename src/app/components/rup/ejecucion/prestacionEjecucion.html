@@ -123,17 +123,17 @@
                           </span>
 
                             <div class="list-inline">
-                                <span class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
+                                <div class=" badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'">Activo</div>
+                                <div class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'">
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                </span>
-                                <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
+                                </div>
+                                <div class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
                                     {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                </span>
+                                </div>
 
-                                <span class="d-inline">
+                                <div class="d-inline float-right">
                                     <plex-dropdown class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)" [items]="items"  ></plex-dropdown>
-                                </span>
+                                </div>
                             </div>
 
                             <!--Planes Futuros para el problema-->

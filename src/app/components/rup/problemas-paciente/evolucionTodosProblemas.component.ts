@@ -79,7 +79,6 @@ export class EvolucionTodosProblemasComponent implements OnInit {
 
             this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
                 if (resultado) {
-                     this.plex.toast('success', 'Los datos se han modificado correctamente.', 'Información', 4000);
                     this.evtData.emit(this.problemas);
                 } else {
                     this.plex.alert('Ha ocurrido un error al almacenar la evolución de los problemas.');
