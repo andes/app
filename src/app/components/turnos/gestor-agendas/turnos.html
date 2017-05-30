@@ -155,7 +155,7 @@
             </div>
           </td>
           <td>
-          <span *ngIf="turno">
+          <span *ngIf="turno && turno.estado !== 'disponible'">
               <popover-audit placement="left" [data]="turno" >
               </popover-audit>
           </span>
