@@ -452,7 +452,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             pacienteGuardar.relaciones.forEach(rel => {
               
               let relOp = this.relacionTutores.find((elem) => {
-                if (elem.nombre = rel.relacion.opuesto) {
+                if (elem.nombre === rel.relacion.opuesto) {
                   return elem;
                 }
               });
@@ -463,10 +463,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 apellido: pacienteGuardar.apellido,
                 documento: pacienteGuardar.documento
               };
-              if (rel.relacion.id) {
+              debugger
+              if (rel.referencia) {
                 this.pacienteService.patch(rel.referencia, {
                   'op': 'updateRelacion', 'dto': dto
-                })
+                }).subscribe(result => {
+                  console.log("RESULT PATCH--------",result);
+                });
               }
             });
           }
