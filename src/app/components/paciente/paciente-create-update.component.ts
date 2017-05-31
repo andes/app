@@ -267,6 +267,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
           });
       }
+      if (this.seleccion.notas.length > 0) {
+        this.mostrarNotas();
+      }
     }
   }
 
@@ -334,6 +337,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.pacienteModel = Object.assign({}, this.seleccion);
     this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
 
+  }
+
+  mostrarNotas() {
+    let texto: any;
+    this.seleccion.notas.forEach(nota => {
+      texto = nota.nota;
+      if (nota.destacada) {
+        this.plex.toast('info', texto);
+      }
+    });
   }
 
   loadProvincias(event, pais) {
@@ -450,7 +463,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         if (result) {
           if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
             pacienteGuardar.relaciones.forEach(rel => {
-              
+
               let relOp = this.relacionTutores.find((elem) => {
                 if (elem.nombre === rel.relacion.opuesto) {
                   return elem;
@@ -468,7 +481,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.pacienteService.patch(rel.referencia, {
                   'op': 'updateRelacion', 'dto': dto
                 }).subscribe(result => {
-                  console.log("RESULT PATCH--------",result);
+                  console.log("RESULT PATCH--------", result);
                 });
               }
             });
