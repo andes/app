@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
 import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
@@ -22,187 +22,12 @@ const skip = 0;
 @Component({
   selector: 'rup-prestacionEjecucion',
   templateUrl: 'prestacionEjecucion.html',
-  styles: [`div.scroll-list {
-    overflow: auto;
-    max-height: 70vh;
-  }
-
-  .drag-over-border {
-    border: #ff525b dashed 2px;
-  }
-
-  .droppable.drag-target-border,
-  .list-group>.list-group-item.drag-target-border,
-  .drag-target-border {
-    border: #00bfff dashed 2px;
-  }
-
-  .drag-handle {
-    cursor: move;
-  }
-
-  .droppable {
-    width: 100%;
-    height: auto;
-    border: 2px dashed #eee;
-    padding: 10px 0;
-    margin: 20px 0;
-    text-align: center;
-    text-transform: uppercase;
-    color: #999999;
-  }
-
-  .msg-problema {
-    border: 1px solid #ff9900;
-    color: #ff9900;
-    margin-bottom: 10px;
-    padding: 10px;
-  }
-
-  small {
-    color: grey;
-    font-weight: 400;
-    font-size: 0.85rem;
-  }
-
-  .linea-sup {
-    border-top: 1px solid #ccc;
-  }
-
-  .gris {
-    color: #999999;
-  }
-
-  .msg-problema i {
-    color: #ff9900;
-  }
-
-  h5.box-title-principal {
-    color: #00A8E0;
-    font-weight: 350;
-    padding-bottom: 5px;
-  }
-
-  h5.box-title-secundario {
-    color: #00A8E0;
-    font-weight: 350;
-    padding-bottom: 5px;
-    border-bottom: solid black 1px;
-  }
-
-  .btn-contextual {
-    font-size: 1.5em;
-    color: #AAAAAA;
-    background-color: white;
-    border-color: none;
-    box-shadow: none;
-    border: none;
-  }
-
-  .btn-group {
-    margin: 10px 0;
-  }
-
-  .btn.btn-primary {
-    margin-top: 0px;
-  }
-
-  .btn.btn-primary:hover {
-    background-color: #002738;
-  }
-
-  .btn-primary.active {
-    background-color: #002738;
-  }
-
-  .btn-evolucionartodos {
-    margin-bottom: 5px;
-  }
-
-  .list-inline>.list-inline-item {
-    margin-bottom: 10px;
-  }
-
-  .list-group>.list-group-item {
-    border-color: #AAAAAA;
-    border-radius: 0px;
-  }
-
-  .list-group-item:hover {
-    background-color: #f9f9f9;
-    border: solid 1px #00A8E0;
-  }
-
-  .list-group-item:active {
-    background-color: #f5f5f5;
-    border: solid 1px #AAAAAA;
-  }
-
-  .list-group-top {
-    /*margin-top: 5px;*/
-  }
-
-  .dropdown-inline {
-    display: inline-block;
-  }
-  /*Etiquetas*/
-
-  .badge {
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 500;
-    display: inline-block;
-    margin-right: 15px;
-  }
-
-  .badge-danger {
-    border: 1.5px solid #dd4b39;
-    border-radius: 0px;
-    background: transparent;
-    color: #dd4b39;
-  }
-
-  .badge-success {
-    border: 1.5px solid #8CC63F;
-    border-radius: 0px;
-    background: transparent;
-    color: #8CC63F;
-  }
-
-  .badge-warning {
-    border: 1.5px solid #ff8d22;
-    border-radius: 0px;
-    background: transparent;
-    color: #ff8d22;
-  }
-
-  .badge-info {
-    border: 1.5px solid #00A8E0;
-    border-radius: 0px;
-    background: transparent;
-    color: #00A8E0;
-  }
-
-  .transparencia {
-    opacity: 0.4;
-  }
-
-  .fieldsetMargin-top {
-    margin-top: 1px;
-  }
-
-  .results {
-    margin-top: 0;
-  }
-
-  .results.list-group>.list-group-item {
-    padding: 5px;
-    cursor: -webkit-grab;
-  }`]
+  styleUrls: ['prestacionEjecucion.css']
 
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
   conceptoSnomed($e) {
     console.log($e);
   }
@@ -393,6 +218,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         nombre: e.value,
         turneable: true
       };
+
       this.serviceTipoPrestacion.get(query).debounceTime(1000).subscribe(listaPlanes => {
         this.planes = listaPlanes;
       });
@@ -747,8 +573,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.showEnmendar = false;
 
     if (dato) {
-       this.cargarProblemasPaciente();
-       this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+      this.cargarProblemasPaciente();
+      this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
         this.prestacion = prestacion;
       });
 
@@ -797,9 +623,9 @@ export class PrestacionEjecucionComponent implements OnInit {
   onReturnTodos(datos: IProblemaPaciente[]) {
     this.showEvolucionar = false;
     this.showEvolTodo = false;
-   if (datos) {
-       this.cargarProblemasPaciente();
-       this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+    if (datos) {
+      this.cargarProblemasPaciente();
+      this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
         this.prestacion = prestacion;
       });
       this.plex.toast('success', 'Los problemas fueron evolucionados correctamente.', 'Información', 4000);
