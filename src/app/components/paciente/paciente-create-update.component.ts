@@ -267,7 +267,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
           });
       }
-      if (this.seleccion.notas.length > 0) {
+      if (this.seleccion.notas && this.seleccion.notas.length) {
         this.mostrarNotas();
       }
     }
