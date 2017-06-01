@@ -52,14 +52,13 @@
       </div>
       <div class="col-3">
         <label class="form-control-label">Filtrar por paciente</label>
-
         <!--Agregar las clases active ngclass-->
         <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}">
+          <label class="btn btn-primary hover" [ngClass]="{active: filtrosPacientes == true}">
                   <input type="radio"name="options" id="inactivo"  (click)="soloPacientesProfesional()">
                    Solo mis pacientes
               </label>
-          <label class="btn btn-primary hover" [ngClass]="{active: filtros == 'filtroInactivo'}">
+          <label class="btn btn-primary hover" [ngClass]="{active: filtrosPacientes == false}">
                   <input type="radio"name="options" id="inactivo"  (click)="todosLosPacientes()">
                    Todos los pacientes
               </label>

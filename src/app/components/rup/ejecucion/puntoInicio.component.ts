@@ -51,6 +51,7 @@ export class PuntoInicioComponent implements OnInit {
     public estadoSeleccion: any;
     public selectPrestacionesProfesional: any = [];
     public searchPaciente: any;
+    public filtrosPacientes: boolean = true;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -120,14 +121,16 @@ export class PuntoInicioComponent implements OnInit {
 
         let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
+
         this.servicioPrestacion.get({
+            // turneable: true
             fechaDesde: fechaDesde,
             fechaHasta: fechaHasta,
             // idProfesional: this.auth.profesional.id,
             // idTipoPrestacion: this.ConjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
             resultado.forEach(element => {
-                console.log(element);
+                //console.log(element);
                 this.TodasLasPrestaciones.push(element);
             });
             //console.log(this.TodasLasPrestaciones);
@@ -158,9 +161,12 @@ export class PuntoInicioComponent implements OnInit {
                     this.TodasLasPrestaciones.forEach(prestacion => {
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
+                            console.log(prestacion);
                             prestacion.estado.forEach(estado => {
-                                this.unPacientePresente.estado = estado.tipo;
-                                this.unPacientePresente.fecha = estado.timestamp;
+                                if (estado.tipo != 'pendiente') {
+                                    this.unPacientePresente.estado = estado.tipo;
+                                    this.unPacientePresente.fecha = estado.timestamp;
+                                }
                             });
                         }
                     });
@@ -174,6 +180,33 @@ export class PuntoInicioComponent implements OnInit {
                     this.unPacientePresente = {};
                 }
             });
+        });
+        //Buscamos los que solo tienen prestacion y no tienen turno
+
+        console.log(this.TodasLasPrestaciones);
+
+        this.TodasLasPrestaciones.forEach(prestacion => {
+            // console.log(prestacion.solicitud);
+            if (prestacion.solicitud.idTurno == null) {
+                // console.log('dentreoo');
+                // console.log(prestacion.solicitud.tipoPrestacion);
+                // this.unPacientePresente.estado = 'Sin turno';
+                // this.unPacientePresente.fecha = moment().format();
+                prestacion.estado.forEach(estado => {
+                    this.unPacientePresente.estado = estado.tipo;
+                    this.unPacientePresente.fecha = estado.timestamp;
+                });
+                this.unPacientePresente.idPrestacion = prestacion.id;
+                // this.unPacientePresente.idPrestacion = prestacion.id;
+                // //cargo un objeto con el profesional.
+                this.unPacientePresente.profesionales = {};//Recorrer los profesionales si los tuviera
+                // //Cargo el tipo de prestacion
+                this.unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre;//Recorrer las prestaciones si tiene mas de una
+                // //Recorro agenda saco el estados
+                this.unPacientePresente.paciente = prestacion.paciente;
+                this.PacientesPresentes.push(this.unPacientePresente);
+                this.unPacientePresente = {};
+            }
         });
 
     }
@@ -224,9 +257,10 @@ export class PuntoInicioComponent implements OnInit {
 
 
     soloPacientesProfesional() { //Filtra los pacientes del profesional
+        this.filtrosPacientes = true;
         let misPacientes: any = [];
-        console.log('PacientesPresentes: ', this.PacientesPresentes);
-        console.log('PROFESIONAL: ', this.auth.profesional.id);
+        // console.log('PacientesPresentes: ', this.PacientesPresentes);
+        // console.log('PROFESIONAL: ', this.auth.profesional.id);
         this.PacientesPresentes.forEach(paciente => {
 
             if (paciente.profesionales.id === this.auth.profesional.id) {
@@ -238,6 +272,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
     todosLosPacientes() { //trae todos los pacientes
+        this.filtrosPacientes = false;
         this.cargaPacientesDelDia();
     }
 
@@ -247,7 +282,7 @@ export class PuntoInicioComponent implements OnInit {
         let misPacientesEstado: any = [];
         if (this.estadoSeleccion) {
             this.PacientesPresentes.forEach(paciente => {
-                console.log(this.estadoSeleccion.id);
+                // console.log(this.estadoSeleccion.id);
                 if (paciente.estado == this.estadoSeleccion.id) {
                     misPacientesEstado.push(paciente);
                 }
@@ -288,7 +323,12 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     crearPrestacionVacia(tipoPrestacion) {
+        console.log(tipoPrestacion);
+        console.log('tipoPrestacion');
+
         let nuevaPrestacion;
+
+        tipoPrestacion['turneable'] = true;
         nuevaPrestacion = {
             paciente: this.paciente,
             solicitud: {
@@ -302,8 +342,9 @@ export class PuntoInicioComponent implements OnInit {
                 tipo: 'pendiente'
             },
             ejecucion: {
-                fecha: null,
-                evoluciones: []
+                fecha: new Date(),
+                evoluciones: [],
+                // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
             }
         };
 
