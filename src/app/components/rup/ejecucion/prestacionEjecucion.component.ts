@@ -340,9 +340,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     let problema = this.listaProblemasPaciente.find(elem => elem.id === idProblema);
 
     // Se vincula al problema
-    let pos = this.prestacionesEjecucion.length;
-    if (this.prestacionesEjecucion[pos - 1]) {
-      this.prestacionesEjecucion[pos - 1].ejecucion.listaProblemas.push(problema);
+    let pos = this.prestacionesEjecucion.length - 1;
+    console.log('this.prestacionesEjecucion: ', this.prestacionesEjecucion);
+
+    if (this.prestacionesEjecucion[pos]) {
+
+      this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
+
     }
 
     // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evolución
@@ -377,25 +381,40 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.showMotivoSolicitud = false;
   }
   onPlanDrop(e: any, idProblema) {
-
+    let planExistente = false;
     let cambios = {
       'op': 'listaProblemasSolicitud',
       'problema': idProblema
     };
     let prestacion = e.dragData;
-
-    this.servicioPrestacion.patch(prestacion, cambios).subscribe(prestacionActualizada => {
-      // buscamos la prestacion principal actualizada con los datos populados
-      this.route.params.subscribe(params => {
-        let id = params['id'];
-        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-        this.servicioPrestacion.getById(id).subscribe(prestacion => {
-          this.listaPlanesProblemas = [];
-          this.listaPlanesProblemas.push(prestacion);
-        });
+    //Traigo la prestacion actualizada..
+    this.servicioPrestacion.getById(e.dragData.id).subscribe(prestacionActual => {
+      prestacion = prestacionActual;
+      // Recorre la prestacion actual y se fija si el id del problema ya existe
+      prestacion.solicitud.listaProblemas.forEach(unProblema => {
+        if (unProblema.id == idProblema) {
+          planExistente = true;
+        }
       });
-
+       // si plan existe entonces muestro un alerta
+      if (planExistente) {
+        this.plex.alert('El plan ya esta asociado al problema');
+      }
+      else {
+        this.servicioPrestacion.patch(prestacion, cambios).subscribe(prestacionActualizada => {
+          // buscamos la prestacion principal actualizada con los datos populados
+          this.route.params.subscribe(params => {
+            let id = params['id'];
+            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+              this.listaPlanesProblemas = [];
+              this.listaPlanesProblemas.push(prestacion);
+            });
+          });
+        });
+      }
     });
+   
 
   }
   onPlanTodosLosProblemasDrop($event) { // Carga plan en todos los problemas
@@ -726,7 +745,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // quitamos del array de opciones
     this.tiposPrestacionesPosibles.splice(posicion, 1);
-    this.prestacionesEjecucion.push(nuevaPrestacion);
+    this.prestacionesEjecucion = [...this.prestacionesEjecucion, nuevaPrestacion];
   }
 
   evolucionarPrestacion() {
