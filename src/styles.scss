@@ -15,11 +15,6 @@
 //     padding: 0 25px;
 // }
 
-/*** IMPORTS DE MÓDULOS **/
-
-// RUP
-@import './src/app/styles/rup/rup';
-
 /** OTROS **/
 
 .table-striped {
@@ -115,3 +110,9 @@ h6.subdata-descripcion {
 legend {
   padding-bottom: 10px;
 }
+
+
+/*** IMPORTS DE MÓDULOS **/
+
+// RUP
+@import './src/app/styles/rup/rup';
