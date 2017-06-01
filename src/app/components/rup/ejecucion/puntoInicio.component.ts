@@ -51,6 +51,7 @@ export class PuntoInicioComponent implements OnInit {
     public estadoSeleccion: any;
     public selectPrestacionesProfesional: any = [];
     public searchPaciente: any;
+    public filtrosPacientes: boolean = true;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -160,8 +161,9 @@ export class PuntoInicioComponent implements OnInit {
                     this.TodasLasPrestaciones.forEach(prestacion => {
                         if (elemento.id === prestacion.solicitud.idTurno) {
                             this.unPacientePresente.idPrestacion = prestacion.id;
+                            console.log(prestacion);
                             prestacion.estado.forEach(estado => {
-                                if (prestacion.estado.lengt > 1) {
+                                if (estado.tipo != 'pendiente') {
                                     this.unPacientePresente.estado = estado.tipo;
                                     this.unPacientePresente.fecha = estado.timestamp;
                                 }
@@ -255,6 +257,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
     soloPacientesProfesional() { //Filtra los pacientes del profesional
+        this.filtrosPacientes = true;
         let misPacientes: any = [];
         // console.log('PacientesPresentes: ', this.PacientesPresentes);
         // console.log('PROFESIONAL: ', this.auth.profesional.id);
@@ -269,6 +272,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
     todosLosPacientes() { //trae todos los pacientes
+        this.filtrosPacientes = false;
         this.cargaPacientesDelDia();
     }
 
