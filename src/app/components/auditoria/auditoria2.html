@@ -6,34 +6,31 @@
                     <div class="page-title">Pacientes que requieren revisión</div>
                 </header>
                 <!-- Search results -->
-                <div>
-                    <div class="table">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Documento</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Fecha Nac.</th>
-                                    <th>Sexo</th>
-                                    <th>Estado</th>
-                                    <th>% Sisa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="mostrarPaciente=true; pacienteSelected = paciente;verDuplicados=false;validate=false">
-                                    <td>{{paciente.datosOperacion.pacienteScan.documento}}</td>
-                                    <td>{{paciente.datosOperacion.pacienteScan.nombre| uppercase}}</td>
-                                    <td>{{paciente.datosOperacion.pacienteScan.apellido| uppercase}}</td>
-                                    <td>{{paciente.datosOperacion.pacienteScan.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                                    <td>{{paciente.datosOperacion.pacienteScan.sexo}}</td>
-                                    <td>{{paciente.datosOperacion.pacienteScan.estado}}</td>
-                                    <td> {{paciente.datosOperacion.pacienteScan.matchSisa * 100}}%</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Estado</th>
+                            <!--<th>% Sisa</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="verificaPaciente(paciente.datosOperacion.pacienteScan);mostrarPaciente=true;">
+                            <td>{{paciente.datosOperacion.pacienteScan.documento}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.nombre| uppercase}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.apellido| uppercase}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.sexo}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.estado}}</td>
+                            <!--<td> {{paciente.datosOperacion.pacienteScan.matchSisa * 100}}%</td>-->
+                        </tr>
+                    </tbody>
+                </table>
             </plex-box>
             <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
         </div>

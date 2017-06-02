@@ -33,8 +33,7 @@ export class Auditoria2Component implements OnInit {
     verDuplicados = false;
     posiblesDuplicados: any[];
     pacientesAudit: any[];
-
-
+    pacientesSimilares: any[];
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
@@ -48,8 +47,34 @@ export class Auditoria2Component implements OnInit {
             'op': 'posibleDuplicado'
         }
         this.logService.get('mpi', dto).subscribe(resultado => {
-            debugger
             this.pacientesAudit = resultado;
         });
+    }
+
+    verificaPaciente(paciente) {
+        if (paciente.nombre && paciente.apellido && paciente.documento && paciente.fechaNacimiento && paciente.sexo) {
+
+            let dto: any = {
+                type: 'suggest',
+                claveBlocking: 'documento',
+                percentage: true,
+                apellido: paciente.apellido.toString(),
+                nombre: paciente.nombre.toString(),
+                documento: paciente.documento.toString(),
+                sexo: ((typeof paciente.sexo === 'string')) ? paciente.sexo : (Object(paciente.sexo).id),
+                fechaNacimiento: paciente.fechaNacimiento
+            };
+
+            this.pacienteService.get(dto).subscribe(resultado => {
+                this.pacientesSimilares = resultado;
+                console.log(this.pacientesSimilares);
+                // res.forEach(pac => {
+                //     if (pac.match >= 0.7) {
+                //         this.posiblesDuplicados.push(pac);
+                //     }
+                // });
+
+            });
+        }
     }
 }
