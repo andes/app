@@ -11,7 +11,7 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 import * as enumerado from './../enums';
 import * as moment from 'moment';
-import {enumToArray} from '../../../utils/enums';
+import { enumToArray } from '../../../utils/enums';
 
 @Component({
     selector: 'gestor-agendas',
@@ -30,9 +30,9 @@ export class GestorAgendasComponent implements OnInit {
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
-    public showListado: Boolean = false;
     public showInsertarAgenda: Boolean = false;
-    public showAgregarNotaAgenda: Boolean = false;
+    private showAgregarNotaAgenda = false;
+    private showAgregarSobreturno = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -41,7 +41,7 @@ export class GestorAgendasComponent implements OnInit {
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
-    public estadosAgenda =  enumToArray(enumerado.EstadosAgenda);
+    public estadosAgenda = enumToArray(enumerado.EstadosAgenda);
 
     searchForm: FormGroup;
 
@@ -142,14 +142,19 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
-        this.showListado = false;
         this.showAgregarNotaAgenda = true;
+    }
+
+    agregarSobreturno() {
+        this.showGestorAgendas = false;
+        this.showAgregarSobreturno = true;
     }
 
     cancelaAgregarNotaAgenda() {
         this.showTurnos = true;
         this.showAgregarNotaAgenda = false;
     }
+
     saveAgregarNotaAgenda() {
         this.loadAgendas();
         this.showTurnos = true;
@@ -167,6 +172,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
+        this.showAgregarSobreturno = false;
         this.showClonar = false;
         this.loadAgendas();
     }
@@ -202,15 +208,6 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
-        this.showListado = false;
-    }
-
-    listarTurnos(agenda) {
-        this.showGestorAgendas = true;
-        this.showEditarAgenda = false;
-        this.showEditarAgendaPanel = false;
-        this.showTurnos = false;
-        this.showListado = true;
     }
 
     loadAgendas() {
@@ -261,14 +258,13 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     buscarEstado(estado) {
-        return  this.estadosAgenda.find(x => x.id === estado);
+        return this.estadosAgenda.find(x => x.id === estado);
     }
 
     verAgenda(agenda, multiple, e) {
 
         this.showVistaAgendas = false;
         this.showTurnos = false;
-        this.showListado = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
@@ -296,6 +292,7 @@ export class GestorAgendasComponent implements OnInit {
             // Reseteo el panel de la derecha
             this.showEditarAgendaPanel = false;
             this.showAgregarNotaAgenda = false;
+            this.showAgregarSobreturno = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
         });
@@ -328,7 +325,24 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        let temporal = this.agendasSeleccionadas;
+        console.log('temporal ', temporal);
         this.loadAgendas();
+        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
+        this.agendasSeleccionadas = temporal;
+        this.agendasSeleccionadas.forEach((as) => {
+            if (this.agendasSeleccionadas.length === 1) {
+                this.verAgenda(as, false, null);
+            } else {
+                this.verAgenda(as, true, null);
+            }
+        });
+        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
+
+        if (this.agendasSeleccionadas.length === 1) {
+            this.showTurnos = true;
+        }
+
     }
 
 }

@@ -10,6 +10,7 @@
                         <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
                             (clonarEmit)="clonar()"
                             (agregarNotaAgendaEmit)="agregarNotaAgenda()"
+                            (agregarSobreturnoEmit)="agregarSobreturno()"
                             (editarAgendaEmit)="editarAgenda($event)"
                             (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
                             (listarTurnosEmit)="listarTurnos($event)">
@@ -108,13 +109,8 @@
                 </div>
                 <!-- Muestra el panel de Notas de Agendas -->
                 <div *ngIf="showAgregarNotaAgenda">
-                    <!--<div class="clear"></div>-->
                     <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)" (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                 </div>
-                <!-- Muestra el listado de turnos con el número de carpeta (HC) -->
-                <!-- <div *ngIf="showListado && agendasSeleccionadas.length == 1" type="info">
-                    <lista-turnos [agenda]="agendasSeleccionadas[0]"></lista-turnos>
-                </div> -->
             </plex-box>
         </div>
     </div>
@@ -129,5 +125,7 @@
 <!--Componentes-->
 <clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
 <dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
+<sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
+
 <agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></agenda>
 <agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></agenda>

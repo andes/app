@@ -15,6 +15,7 @@ export class VistaAgendaComponent implements OnInit {
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
+    @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
 
     private _agendasSeleccionadas: Array<any>;
 
@@ -86,7 +87,6 @@ export class VistaAgendaComponent implements OnInit {
                                     this.actualizarEstadoEmit.emit(true);
                                 });
                             } else {
-                                console.log('aca');
                                 this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
                                 this.actualizarEstadoEmit.emit(true);
                             }
@@ -143,8 +143,8 @@ export class VistaAgendaComponent implements OnInit {
             clonarAgenda: (this.cantSel === 1),
             // Agregar una nota relacionada a la Agenda
             agregarNota: true,
-            // (En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play")
-            listarTurnos: (this.cantSel === 1 && this.puedoListar()),
+            // Agregar un sobreturno
+            agregarSobreturno:  (this.cantSel === 1) && this.puedoAgregar(),
         };
     }
 
@@ -184,9 +184,9 @@ export class VistaAgendaComponent implements OnInit {
         }).length <= 0;
     }
 
-    // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
-    puedoListar() {
-        return true;
+    puedoAgregar() {
+        let agenda = this.agendasSeleccionadas[0];
+        return agenda.estado === 'disponible' || agenda.estado === 'publicada';
     }
 
     haySoloTurnosReservados() {
@@ -213,20 +213,19 @@ export class VistaAgendaComponent implements OnInit {
         this.editarAgendaEmit.emit(this.agendasSeleccionadas[0]);
     }
 
-    // Botón clonar
+    // Botón clonar, emite que se va a clonar la agenda
     clonarAgenda(agenda: any) {
         this.clonarEmit.emit(agenda);
     }
 
-    // Botón agregar nota a la agenda
-    // Sólo avisa que se va a agregar una nota
+    // Botón agregar nota a la agenda, emite que se va a agregar la nota
     agregarNotaAgenda() {
         this.agregarNotaAgendaEmit.emit(this.agendasSeleccionadas);
     }
 
-    // Listado de turnos con carpetas
-    listarTurnos() {
-        this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    // Boton agregar sobreturno, emite que se va a agregar un sobreturno
+    agregarSobreturno() {
+        this.agregarSobreturnoEmit.emit(this.agendasSeleccionadas[0]);
     }
 
     cancelar() {
