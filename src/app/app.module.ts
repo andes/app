@@ -109,6 +109,7 @@ import { EditEspacioFisicoComponent } from './components/turnos/configuracion/es
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
+import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/sobreturno.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
 import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
@@ -289,8 +290,6 @@ import { routing, appRoutingProviders } from './app.routing';
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
-
-
 // Main module
 @NgModule({
   imports: [
@@ -324,7 +323,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverAuditComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    AgregarSobreturnoComponent, PanelAgendaComponent,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
