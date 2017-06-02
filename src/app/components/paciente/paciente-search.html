@@ -1,7 +1,7 @@
 <section *ngIf="!showCreateUpdate">
     <div class="row">
         <!--Panel central-->
-        <div class="col-8">
+        <div class="col">
             <plex-box type="primary">
                 <header>
                     <div class="page-title">Búsqueda de Pacientes</div>
@@ -42,7 +42,7 @@
                             <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                             <td>{{paciente.sexo}}</td>
                             <td>
-                                <plex-button title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
+                                <plex-button title="Seleccionar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -50,7 +50,7 @@
             </plex-box>
         </div>
         <!--Panel lateral-->
-        <div class="col" *ngIf="modoCompleto">
+        <div class="col-4" *ngIf="modoCompleto">
             <plex-box type="primary">
                 <header>
                     <h3>Validación digital de pacientes</h3>
