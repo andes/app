@@ -75,6 +75,8 @@ export class DarTurnosComponent implements OnInit {
   private delDiaDisponibles: number;
   private programadosDisponibles: number;
   private gestionDisponibles: number;
+  private permitirTurnoDoble = false;
+  private turnoDoble = false;
   countBloques: any[];
   countTurnos: any = {};
   resultado: any;
@@ -134,6 +136,23 @@ export class DarTurnosComponent implements OnInit {
       let data2 = this.verificarLlaves(dataF, event);
     });
   }
+
+  habilitarTurnoDoble() {
+  // Si el siguiente turno está disponible, se habilita la opción de turno doble
+  let cantidadTurnos;
+  this.permitirTurnoDoble = false;
+  if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
+    cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+    cantidadTurnos--;
+    if (this.indiceTurno < cantidadTurnos) {
+      // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
+      if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
+        this.permitirTurnoDoble = true;
+      }
+    }
+  }
+}
+
 
   public verificarLlaves(tipoPrestaciones: any[], event) {
     console.log('tipoPrestaciones ', tipoPrestaciones);
@@ -578,6 +597,7 @@ export class DarTurnosComponent implements OnInit {
       if (this.bloque.tipoPrestaciones.length === 1) {
         this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
       }
+      this.habilitarTurnoDoble();
       this.estadoT = 'confirmacion';
     } else {
       this.plex.alert('Seleccione un paciente');
@@ -734,7 +754,8 @@ export class DarTurnosComponent implements OnInit {
 
         this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-
+        let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+        let agendaid = this.agenda.id;
         let datosTurno = {
           idAgenda: this.agenda.id,
           idTurno: this.turno.id,
@@ -747,16 +768,31 @@ export class DarTurnosComponent implements OnInit {
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
         operacion.subscribe(resultado => {
-          this.estadoT = 'noSeleccionada';
-          this.agenda = null;
-          this.actualizar('sinFiltro');
-          this.borrarTurnoAnterior();
-          this.plex.alert('El turno se asignó correctamente');
-          let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-          let tm = moment(this.turno.horaInicio).format('HH:mm');
-          let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-          // this.enviarSMS(pacienteSave, mensaje);
-          this.actualizarCarpetaPaciente(pacienteSave);
+          debugger;
+          if (this.turnoDoble) {
+            if (turnoSiguiente.estado === 'disponible'){
+              let patch: any = {
+                  op: 'darTurnoDoble',
+                  turnos: [turnoSiguiente]
+              };
+              // Patchea el turno doble
+              this.serviceAgenda.patchMultiple(agendaid, patch).subscribe(resultado => {
+
+               });
+               this.estadoT = 'noSeleccionada';
+               this.agenda = null;
+               this.actualizar('sinFiltro');
+               this.borrarTurnoAnterior();
+               this.plex.alert('El turno se asignó correctamente');
+
+               let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+               let tm = moment(this.turno.horaInicio).format('HH:mm');
+               let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+               // this.enviarSMS(pacienteSave, mensaje);
+               this.actualizarCarpetaPaciente(pacienteSave);
+            }
+          }
+
         });
 
 
@@ -765,27 +801,27 @@ export class DarTurnosComponent implements OnInit {
         let nuevaPrestacion;
         this.paciente['_id'] = this.paciente.id;
         nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-              tipoPrestacion: this.turnoTipoPrestacion,
-              fecha: new Date(),
-              listaProblemas: [],
-              idTurno: this.turno.id,
-            },
-            estado: {
-              timestamp: new Date(),
-              tipo: 'pendiente'
-            },
-            ejecucion: {
-              fecha: new Date(),
-              evoluciones: []
-            }
+          paciente: this.paciente,
+          solicitud: {
+            tipoPrestacion: this.turnoTipoPrestacion,
+            fecha: new Date(),
+            listaProblemas: [],
+            idTurno: this.turno.id,
+          },
+          estado: {
+            timestamp: new Date(),
+            tipo: 'pendiente'
+          },
+          ejecucion: {
+            fecha: new Date(),
+            evoluciones: []
+          }
         };
 
         // TODO: Revisar alert
-         this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-           this.plex.alert('prestacion paciente creada');
-         });
+        this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
+          this.plex.alert('prestacion paciente creada');
+        });
 
         // });
         // Si cambió el teléfono lo actualizo en el MPI

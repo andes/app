@@ -53,13 +53,11 @@
         <header>
           <div class="row align-items-center">
             <div class="col">
-              <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
-                (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col">
-              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="nombre + ' ' + apellido"
-                (change)="filtrar()">
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="nombre + ' ' + apellido" (change)="filtrar()">
               </plex-select>
             </div>
             <div class="col offset-1 justify-content-center">
@@ -279,6 +277,10 @@
                     <label>Paciente: </label>{{this.paciente | fullName: 'Mayusculas' }} <br>
                     <label>Documento: </label>{{this.paciente.documento}} <br>
                     <label>Tipo de turno: </label>{{this.tiposTurnosLabel}} <br>
+                    <div *ngIf="permitirTurnoDoble">
+                      <label>Turno doble: </label>
+                      <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool> <br>
+                    </div>
                     <plex-phone label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                     <label>Fecha: </label>{{agenda.horaInicio | date: 'dd/MM/yyyy'}}<br>
                     <label>Hora: </label>{{turno.horaInicio | date: 'HH:mm'}}<br>
