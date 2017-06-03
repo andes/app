@@ -1,10 +1,11 @@
-type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
+import { EdadPipe } from './../../../pipes/edad.pipe';
+import { EstadosDarTurnos } from './enums';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -13,7 +14,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
-import { patientRealAgePipe } from './../../../utils/patientPipe';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
@@ -26,8 +26,6 @@ import { PrestacionPacienteService } from '../../../services/rup/prestacionPacie
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
-
-const size = 4;
 
 @Component({
   selector: 'dar-turnos',
@@ -59,7 +57,7 @@ export class DarTurnosComponent implements OnInit {
   };
 
   paciente: IPaciente;
-  public estadoT: Estado;
+  public estadoT: EstadosDarTurnos;
   private turno: ITurno;
   private bloque: IBloque;
   private bloques: IBloque[];
@@ -125,6 +123,9 @@ export class DarTurnosComponent implements OnInit {
 
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     // this.actualizar('sinFiltro');
+
+    let paciente = {"createdBy":{"organizacion":{"id":"57e9670e52df311059bc8964","nombre":"HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON","_id":"57e9670e52df311059bc8964"},"documento":26108063,"username":26108063,"apellido":"26108063","nombre":"26108063","nombreCompleto":"26108063 26108063"},"createdAt":"2017-05-16T16:54:23.680Z","documento":"29410428","apellido":"CELESTE","nombre":"CAROLINA SOLEDAD","sexo":"femenino","fechaNacimiento":"1982-03-30T03:00:00.000Z","scan":"carolina","estado":"validado","genero":"femenino","estadoCivil":null,"entidadesValidadoras":["RENAPER"],"claveBlocking":["ZLSTKRL","ZLST","KRLNSL","454349564533","4543"],"financiador":[],"relaciones":[],"direccion":[{"valor":"","codigoPostal":"","ubicacion":{"pais":{"nombre":"Argentina","_id":"57f3b5c469fe79a598e6281f","id":"57f3b5c469fe79a598e6281f"},"provincia":null,"localidad":null,"barrio":null,"_id":"591b2ebf816f8e62048802ec","id":"591b2ebf816f8e62048802ec"},"ranking":0,"geoReferencia":null,"ultimaActualizacion":"2017-05-16T16:54:11.079Z","_id":"591b2ebf816f8e62048802eb","activo":true,"id":"591b2ebf816f8e62048802eb"}],"contacto":[{"tipo":"celular","valor":"2995573273","ranking":0,"ultimaActualizacion":"2017-05-16T16:54:11.079Z","_id":"591b2ebf816f8e62048802ee","activo":true,"id":"591b2ebf816f8e62048802ee"}],"identificadores":[],"edadReal":{"unidad":"Años","valor":35},"edad":35,"nombreCompleto":"CAROLINA SOLEDAD CELESTE","id":"591b2ebf816f8e62048802ea"};
+    this.onReturn(paciente as any);
   }
 
   loadTipoPrestaciones(event) {
@@ -148,7 +149,7 @@ export class DarTurnosComponent implements OnInit {
           } else {
             // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
             if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
-              let edad = new patientRealAgePipe().transform(this.paciente, []);
+              let edad = new EdadPipe().transform(this.paciente, []);
               // Edad desde
               if (this.llaveTP.llave.edad.desde) {
                 let edadDesde = String(this.llaveTP.llave.edad.desde.valor) + ' ' + this.llaveTP.llave.edad.desde.unidad;
@@ -277,7 +278,7 @@ export class DarTurnosComponent implements OnInit {
       'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
       'profesional': this.opciones.profesional ? this.opciones.profesional : null
     };
-    if (this.busquedas.length === size) {
+    if (this.busquedas.length === 4) {
       this.busquedas.shift();
     }
 

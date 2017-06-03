@@ -78,14 +78,6 @@ import {
 import {
   MapsComponent
 } from './../../utils/mapsComponent';
-import {
-  patientFullNamePipe,
-  patientRealAgePipe
-} from './../../utils/patientPipe';
-import {
-  fechaPipe
-} from './../../utils/datePipe';
-
 
 @Component({
   selector: 'paciente-create-update',

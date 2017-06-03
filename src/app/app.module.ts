@@ -29,10 +29,11 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 // Pipes
-import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
-import { ProfesionalFullNamePipe } from './pipe/profesionalPipe';
-import { fromNowPipe } from './utils/date';
-import { fechaPipe } from './utils/datePipe';
+import { EdadPipe } from './pipes/edad.pipe';
+import { ProfesionalPipe } from './pipes/profesional.pipe';
+import { FromNowPipe } from './pipes/fromNow.pipe';
+import { FechaPipe } from './pipes/fecha.pipe';
+import { PacientePipe } from './pipes/paciente.pipe';
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -316,7 +317,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, ProfesionalFullNamePipe, fromNowPipe, fechaPipe,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,

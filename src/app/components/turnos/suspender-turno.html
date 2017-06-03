@@ -1,46 +1,45 @@
 <fieldset *ngIf="showSuspenderTurno">
-  <legend>Suspender Turno</legend>
-  <!--<div class="alert alert-default small">-->
-  <div class="row">
-    <div class="col-3">
-      <label>Hora</label>
+    <legend>Suspender Turno</legend>
+    <!--<div class="alert alert-default small">-->
+    <div class="row">
+        <div class="col-3">
+            <label>Hora</label>
+        </div>
+        <div class="col-7">
+            <label>Paciente</label>
+        </div>
+        <div class="col-2">
+            <label>SMS</label>
+        </div>
     </div>
-    <div class="col-7">
-      <label>Paciente</label>
-    </div>
-    <div class="col-2">
-      <label>SMS</label>
-    </div>
-  </div>
 
-  <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-    <div class="col-3">
-      {{turno.horaInicio | date: 'H:mm'}} hs
-    </div>
-    <div class="col-7">
-      <span *ngIf="turno.paciente">{{turno.paciente  | fullName: 'Mayusculas'}}</span>
-    </div>
-    <div class="col-2" (click)="seleccionarTurno(turno)">
-      <span *ngIf="estaSeleccionado(turno)">
+    <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+        <div class="col-3">
+            {{turno.horaInicio | date: 'H:mm'}} hs
+        </div>
+        <div class="col-7">
+            <span *ngIf="turno.paciente">{{turno.paciente  | paciente}}</span>
+        </div>
+        <div class="col-2" (click)="seleccionarTurno(turno)">
+            <span *ngIf="estaSeleccionado(turno)">
           <i *ngIf="turno.paciente && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
           <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
           <i *ngIf="estaPendiente(turno)">Pendiente</i>
         </span>
-      <span *ngIf="!estaSeleccionado(turno) && turno.paciente"><i class="mdi mdi-checkbox-blank-outline"></i></span>
+            <span *ngIf="!estaSeleccionado(turno) && turno.paciente"><i class="mdi mdi-checkbox-blank-outline"></i></span>
+        </div>
+        <!--TODO: Agregar botón para reintento de envío-->
     </div>
-    <!--TODO: Agregar botón para reintento de envío-->
-  </div>
-  <!--</div>-->
+    <!--</div>-->
 
-  <div class="row">
-    <div class="col-md-12">
-      <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
-        placeholder="Seleccione un espacio">
-      </plex-select>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión" placeholder="Seleccione un espacio">
+            </plex-select>
+        </div>
     </div>
-  </div>
 
-  <!--<div class="row">
+    <!--<div class="row">
       <div class="col-md-8">
         <label>Enviar paciente a Lista de Espera</label>
       </div>
@@ -49,7 +48,7 @@
         </plex-button>
       </div>
     </div>-->
-  <!--<div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+    <!--<div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
       <div class="col-md-8">
         <label>Reprogramar Turno de {{turno.paciente.nombre}} {{turno.paciente.apellido}}</label>
       </div>
@@ -59,15 +58,15 @@
       </div>
     </div>-->
 
-  <div class="mt-3 float-right">
-    <plex-button *ngIf="!suspendio" type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
-    </plex-button>
-    <plex-button *ngIf="!suspendio" type="success" icon="mdi-content-save" label="Suspender" (click)="suspenderTurno()" title="Suspender turno">
-    </plex-button>
-    <plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprog" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
-    </plex-button>
-    <!--TODO: cheuquear que todos los mensajes a enviar tuvieron una respuesta-->
-    <plex-button *ngIf="suspendio" type="info" icon="close-circle-outline" label="Cerrar" (click)="cerrar()" title="Cerrar">
-    </plex-button>
-  </div>
+    <div class="mt-3 float-right">
+        <plex-button *ngIf="!suspendio" type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button *ngIf="!suspendio" type="success" icon="mdi-content-save" label="Suspender" (click)="suspenderTurno()" title="Suspender turno">
+        </plex-button>
+        <plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprog" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
+        </plex-button>
+        <!--TODO: cheuquear que todos los mensajes a enviar tuvieron una respuesta-->
+        <plex-button *ngIf="suspendio" type="info" icon="close-circle-outline" label="Cerrar" (click)="cerrar()" title="Cerrar">
+        </plex-button>
+    </div>
 </fieldset>

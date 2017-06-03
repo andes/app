@@ -36,14 +36,14 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let listaEspera of datos">
-                            <td nowrap >{{listaEspera.paciente.documento}}</td>
-                            <td>{{listaEspera.paciente  | fullName: 'Mayusculas'}}</td>
+                            <td nowrap>{{listaEspera.paciente.documento}}</td>
+                            <td>{{listaEspera.paciente | paciente}}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
                             <td>
-                                <span *ngIf="listaEspera.profesional">{{listaEspera.profesional | fullNameProfesional}}</span>
+                                <span *ngIf="listaEspera.profesional">{{listaEspera.profesional | profesional}}</span>
                             </td>
                             <td>{{listaEspera.estado}}</td>
-                            <td nowrap >{{listaEspera.fecha | date:"dd-MM-yy" }}</td>
+                            <td nowrap>{{listaEspera.fecha | date:"dd-MM-yy" }}</td>
                             <td>
                                 <plex-button type="primary" icon="magnify" label="Ver más"></plex-button>
                             </td>

@@ -1,22 +1,22 @@
 <fieldset *ngIf="showLiberarTurno">
-  <legend>Liberar Turnos</legend>
-  <div class="row">
-    <div class="col-4">
-      <label>Hora Turno</label>
+    <legend>Liberar Turnos</legend>
+    <div class="row">
+        <div class="col-4">
+            <label>Hora Turno</label>
+        </div>
+        <div class="col-8">
+            <label>Paciente</label>
+        </div>
     </div>
-    <div class="col-8">
-      <label>Paciente</label>
+    <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+        <div class="col-4">
+            {{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs
+        </div>
+        <div class="col-8">
+            <span *ngIf="turnosSeleccionados[0].paciente">{{turnosSeleccionados[0].paciente  | paciente }}</span>
+        </div>
     </div>
-  </div>
-  <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-    <div class="col-4">
-      {{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs
-    </div>
-    <div class="col-8">
-      <span *ngIf="turnosSeleccionados[0].paciente">{{turnosSeleccionados[0].paciente  | fullName: 'Mayusculas' }}</span>
-    </div>
-  </div>
-  <!--<div class="row">
+    <!--<div class="row">
     <div class="col-md-12" *ngFor="let turno of turnosSeleccionados; let i = index">
       <label>El turno de {{turno.paciente.apellido}} {{turno.paciente.nombre}} va a ser Liberado!</label>
     </div>
@@ -41,13 +41,13 @@
       </div>
     </div>
   </div>-->
-  <br>
-  <div class="mt-3 float-right">
-    <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
-    </plex-button>
-    <plex-button type="success" icon="mdi-content-save" label="Liberar" (click)="liberarTurno()" title="Guardar Nota">
-    </plex-button>
-    <plex-button icon="mdi mdi-backup-restore" label="Reprog" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
-    </plex-button>
-  </div>
+    <br>
+    <div class="mt-3 float-right">
+        <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" icon="mdi-content-save" label="Liberar" (click)="liberarTurno()" title="Guardar Nota">
+        </plex-button>
+        <plex-button icon="mdi mdi-backup-restore" label="Reprog" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
+        </plex-button>
+    </div>
 </fieldset>

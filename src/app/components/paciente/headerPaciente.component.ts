@@ -6,7 +6,7 @@ import { Auth } from '@andes/auth';
 @Component({
     selector: 'header-paciente',
     templateUrl: 'headerPaciente.html',
-      styleUrls: ['headerPaciente.css']
+      styleUrls: ['headerPaciente.scss']
 })
 export class HeaderPacienteComponent implements OnInit {
 

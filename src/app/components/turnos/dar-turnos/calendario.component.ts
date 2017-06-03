@@ -6,6 +6,7 @@ import * as moment from 'moment';
 @Component({
     selector: 'app-calendario',
     templateUrl: 'calendario.html',
+    styleUrls: ['calendario.scss']
 })
 export class CalendarioComponent {
     private _agenda: any;
@@ -13,7 +14,6 @@ export class CalendarioComponent {
     private _estado: String;
     private calendario: any = [];
     private diaSeleccionado: CalendarioDia;
-    private finde: boolean;
 
     // Propiedades
     @Output('agendaChanged') agendaChanged = new EventEmitter();
@@ -90,7 +90,7 @@ export class CalendarioComponent {
                     }
                     let dia = new CalendarioDia(inicio.toDate(), ag);
                     dia.cantidadAgendas = ags.length;
-                    dia.finde = inicio.isoWeekday() === 6 || inicio.isoWeekday() === 7 ? true : false;
+                    dia.weekend = inicio.isoWeekday() >= 6;
                     week.push(dia);
 
                     // ¿Hay una agenda seleccionada?

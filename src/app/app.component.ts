@@ -11,7 +11,7 @@ import { Server } from '@andes/shared';
 export class AppComponent {
     private initStatusCheck() {
         setTimeout(() => {
-            this.server.get('/core/status', { params: null, showError: false })
+            this.server.get('/core/status', { params: null, showError: false, showLoader: false })
                 .finally(() => this.initStatusCheck())
                 .subscribe(
                 (data) => this.plex.updateStatus(data),
@@ -28,15 +28,7 @@ export class AppComponent {
         this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
 
         // Inicializa el chequeo de conectividad
-        // setInterval(() => {
-        //     server.get('/core/status', { params: null, showError: false })
-        //         .subscribe(
-        //         (data) => this.plex.updateStatus(data),
-        //         (err) => this.plex.updateStatus({ API: 'Error' })
-        //         );
-        // }, 2000);
-
-        // this.initStatusCheck();
+        this.initStatusCheck();
 
         // this.plex.updateMenu([
         //     { label: 'Ir a inicio', icon: 'dna', route: '/incio' },
