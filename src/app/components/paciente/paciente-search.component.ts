@@ -59,7 +59,9 @@ export class PacienteSearchComponent implements OnInit {
   public seleccionarPaciente(paciente: any) {
     if (paciente) {
       this.seleccion = paciente;
-      this.seleccion.scan = this.textoLibre;
+      if (this.esEscaneado) {
+        this.seleccion.scan = this.textoLibre;
+      }
       this.selected.emit(paciente);
       this.escaneado.emit(this.esEscaneado);
     } else {
@@ -195,9 +197,6 @@ export class PacienteSearchComponent implements OnInit {
             this.esEscaneado = true;
             // Encontramos un matcheo al 100%
             if (resultado.length) {
-
-              resultado[0].scan = pacienteEscaneado.scan;
-
               this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
               this.showCreateUpdate = true;
             } else {
@@ -236,11 +235,12 @@ export class PacienteSearchComponent implements OnInit {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                     this.seleccionarPaciente(pacienteEncontrado);
                   } else {
-                    if (this.pacientesSimilares[0].match >= 0.90) {
+                    debugger
+                    if (this.pacientesSimilares[0].match >= 0.94) {
                       this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                     } else {
-                      if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.90) {
+                      if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
                       }
                       this.seleccionarPaciente(pacienteEscaneado);
