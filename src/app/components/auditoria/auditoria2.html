@@ -1,57 +1,43 @@
-<style>
-    h3 {
-        text-align: center;
-    }
-
-    h2 {
-        text-align: center;
-    }
-</style>
-
-
 <section>
     <div class="row">
         <div *ngIf="!verDuplicados" class="col-7">
             <plex-box type="danger">
                 <header>
-                    <h3>Pacientes que requieren revisión</h3>
+                    <div class="page-title">Pacientes que requieren revisión</div>
                 </header>
                 <!-- Search results -->
-                <div>
-                    <div class="table">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Documento</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Fecha Nac.</th>
-                                    <th>Sexo</th>
-                                    <th>Estado</th>
-                                    <th>% Sisa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="mostrarPaciente=true; pacienteSelected = paciente;verDuplicados=false;validate=false">
-                                    <td>{{paciente.documento}}</td>
-                                    <td>{{paciente.nombre| uppercase}}</td>
-                                    <td>{{paciente.apellido| uppercase}}</td>
-                                    <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                                    <td>{{paciente.sexo}}</td>
-                                    <td>{{paciente.estado}}</td>
-                                    <td> {{paciente.matchSisa * 100}}%</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Documento</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Estado</th>
+                            <!--<th>% Sisa</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="verificaPaciente(paciente.datosOperacion.pacienteScan);mostrarPaciente=true;">
+                            <td>{{paciente.datosOperacion.pacienteScan.documento}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.nombre| uppercase}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.apellido| uppercase}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.sexo}}</td>
+                            <td>{{paciente.datosOperacion.pacienteScan.estado}}</td>
+                            <!--<td> {{paciente.datosOperacion.pacienteScan.matchSisa * 100}}%</td>-->
+                        </tr>
+                    </tbody>
+                </table>
             </plex-box>
             <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
         </div>
         <div *ngIf="verDuplicados" class="col-7">
             <plex-box *ngIf=verDuplicados>
                 <header>
-                    <h2>Posibles duplicados</h2>
+                    <div class="page-title">Posibles duplicados</div>
                 </header>
                 <div class="row">
                     <div class="col">
@@ -59,7 +45,7 @@
                             <table class="table table-striped table-bordered ">
                                 <thead class="thead-inverse">
                                     <tr>
-                                        <th>-</th>
+                                        <th>&nbsp;</th>
                                         <th>Documento</th>
                                         <th>Nombre</th>
                                         <th>Apellido</th>
@@ -70,7 +56,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="hover" *ngFor="let paciente of candidatos" style="cursor: pointer;">
+                                    <tr class="hover" *ngFor="let paciente of posiblesDuplicados" style="cursor: pointer;">
                                         <td (click)="paciente.seleccionado = !paciente.seleccionado">
                                             <i *ngIf="paciente.seleccionado" class="mdi mdi-check-circle"></i>
                                             <i *ngIf="!paciente.seleccionado" class="mdi mdi-checkbox-blank-circle-outline"></i>

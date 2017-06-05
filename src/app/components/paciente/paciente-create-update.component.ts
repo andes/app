@@ -138,6 +138,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
   loading = false;
   esEscaneado = false;
   nuevaNota = '';
+  autoFocus = 0;
+
 
   contacto: IContacto = {
     tipo: 'celular',
@@ -256,6 +258,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             if (resultado) {
+              debugger
               if (!resultado.scan) {
                 resultado.scan = this.seleccion.scan;
               }
@@ -264,6 +267,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.actualizarDatosPaciente();
 
           });
+      }
+      if (this.seleccion.notas && this.seleccion.notas.length) {
+        this.mostrarNotas();
       }
     }
   }
@@ -332,6 +338,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.pacienteModel = Object.assign({}, this.seleccion);
     this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
 
+  }
+
+  mostrarNotas() {
+    let texto: any;
+    this.seleccion.notas.forEach(nota => {
+      texto = nota.nota;
+      if (nota.destacada) {
+        this.plex.toast('info', texto);
+      }
+    });
   }
 
   loadProvincias(event, pais) {
@@ -442,24 +458,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
       let operacionPac: Observable<IPaciente>;
 
-      // if (this.sugerenciaAceptada) {
-      //   operacionPac = this.pacienteService.save(pacienteGuardar);
-      //   operacionPac.subscribe(result => {
-
-
-
-      //     this.plex.alert('Los datos se actualizaron correctamente');
-      //     this.data.emit(result);
-      //   });
-      // } else {
       operacionPac = this.pacienteService.save(pacienteGuardar);
       operacionPac.subscribe(result => {
 
         if (result) {
           if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
             pacienteGuardar.relaciones.forEach(rel => {
+
               let relOp = this.relacionTutores.find((elem) => {
-                if (elem.nombre = rel.relacion.opuesto) {
+                if (elem.nombre === rel.relacion.opuesto) {
                   return elem;
                 }
               });
@@ -470,9 +477,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 apellido: pacienteGuardar.apellido,
                 documento: pacienteGuardar.documento
               };
-              this.pacienteService.patch(pacienteGuardar.id, {
-                'op': 'updateRelacion', 'dto': dto
-              });
+              debugger
+              if (rel.referencia) {
+                this.pacienteService.patch(rel.referencia, {
+                  'op': 'updateRelacion', 'dto': dto
+                }).subscribe(result => {
+                  console.log("RESULT PATCH--------", result);
+                });
+              }
             });
           }
           this.plex.alert('Los datos se actualizaron correctamente');
@@ -525,7 +537,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             } else {
 
 
-              if (this.pacientesSimilares[0].match >= 0.9) {
+              if (this.pacientesSimilares[0].match >= 0.94) {
                 if (this.pacientesSimilares[0].match >= 1.0) {
                   this.onSelect(this.pacientesSimilares[0].paciente);
                   this.pacientesSimilares = null;
@@ -682,7 +694,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             sexo: pacienteEscaneado.sexo.toString(),
             escaneado: true
           }).subscribe(resultado => {
-            debugger;
             this.loading = false;
             this.PacientesRel = resultado;
             this.esEscaneado = true;
@@ -726,11 +737,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                     this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                   } else {
-                    if (this.PacientesRel[0].match >= 0.90) {
+                    if (this.PacientesRel[0].match >= 0.94) {
                       this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                     } else {
-                      if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.90) {
+                      if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       }
                       //this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
@@ -832,6 +843,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     } else {
       this.pacienteModel.relaciones = [unaRelacion];
     }
+    this.autoFocus = this.autoFocus + 1;
   }
   removeRelacion(i) {
     if (i >= 0) {

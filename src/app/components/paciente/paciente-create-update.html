@@ -198,11 +198,11 @@
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-text label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese nombre...">
+                                                <plex-text [autoFocus]="autoFocus" label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese nombre...">
                                                 </plex-text>
                                             </div>
-                                            <div class="col">
-                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="relacionTutores" [required]="true" placeholder="Seleccione..." label="Relacion:">
+                                            <div class="col" >
+                                                <plex-select  [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="relacionTutores" [required]="true" placeholder="Seleccione..." label="Relacion:">
                                                 </plex-select>
                                             </div>
                                             <div class="col"><br><br>

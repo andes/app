@@ -64,7 +64,7 @@ export class PacienteService {
    * @param {any} cambios Recibe any
    */
   patch(id: String, cambios: any): Observable<IPaciente> {
-    console.log(cambios);
+    console.log("CAMBIOS PATCH",cambios);
     return this.server.patch(this.pacienteUrl + '/' + id, cambios);
   }
 

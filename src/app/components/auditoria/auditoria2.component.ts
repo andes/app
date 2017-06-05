@@ -15,6 +15,8 @@ import {
     PacienteService
 } from './../../services/paciente.service';
 import * as moment from 'moment';
+import { LogService } from '../../services/log.service';
+
 // import {
 //   AuditoriaPage
 // } from './../../e2e/app.po';
@@ -24,212 +26,55 @@ import * as moment from 'moment';
     templateUrl: 'auditoria2.html',
 })
 
+
 export class Auditoria2Component implements OnInit {
 
     seleccionada = false;
-    verDuplicados=false;
-    pacientesAudit = [
-        {
-            "seleccionado" : false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-               "seleccionado" : false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-               "seleccionado" : false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-        {
-            "seleccionado" : false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-               "seleccionado" : false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-               "seleccionado" : false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-        {
-            "seleccionado" : false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-               "seleccionado" : false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-               "seleccionado" : false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-        {
-            "seleccionado" : false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-               "seleccionado" : false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-               "seleccionado" : false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-    ]
-
-    candidatos = [
-        {
-
-            "documento": "36945224",
-            "estado": "temporal",
-            "nombre": "VALERIA EDIT",
-            "apellido": "ATENCIO",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": moment("1992-08-10T00:00:00.000-03:00"),
-            "similitud": "0.88",
-
-        }, {
-            "documento": "36945253",
-            "estado": "temporal",
-            "nombre": "EDGARDO GERMAN",
-            "apellido": "RIOS",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1992-08-24T00:00:00.000-03:00"),
-            "similitud": "0.82",
-        }, {
-            "documento": "32292948",
-            "estado": "temporal",
-            "nombre": "MARIA SOL",
-            "apellido": "FERNANDEZ",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": moment("1986-05-07T00:00:00.000-03:00"),
-            "similitud": "0.79",
-        }
-    ]
-
-    datosSisa = [
-        {
-
-            "documento": "36945224",
-            "estado": "temporal",
-            "nombre": "VALERIA EDIT",
-            "apellido": "ATENCIO",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": moment("1992-08-10T00:00:00.000-03:00"),
-            "similitud": "0.88",
-
-        }, {
-            "documento": "36945253",
-            "estado": "temporal",
-            "nombre": "EDGARDO GERMAN",
-            "apellido": "RIOS",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1992-08-24T00:00:00.000-03:00"),
-            "similitud": "0.82",
-        }, {
-            "documento": "32292948",
-            "estado": "temporal",
-            "nombre": "MARIA SOL",
-            "apellido": "FERNANDEZ",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": moment("1986-05-07T00:00:00.000-03:00"),
-            "similitud": "0.79",
-        }
-    ]
+    verDuplicados = false;
+    posiblesDuplicados: any[];
+    pacientesAudit: any[];
+    pacientesSimilares: any[];
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
-        private plex: Plex
+        private plex: Plex,
+        private logService: LogService
     ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        let dto = {
+            'op': 'posibleDuplicado'
+        }
+        this.logService.get('mpi', dto).subscribe(resultado => {
+            this.pacientesAudit = resultado;
+        });
+    }
+
+    verificaPaciente(paciente) {
+        if (paciente.nombre && paciente.apellido && paciente.documento && paciente.fechaNacimiento && paciente.sexo) {
+
+            let dto: any = {
+                type: 'suggest',
+                claveBlocking: 'documento',
+                percentage: true,
+                apellido: paciente.apellido.toString(),
+                nombre: paciente.nombre.toString(),
+                documento: paciente.documento.toString(),
+                sexo: ((typeof paciente.sexo === 'string')) ? paciente.sexo : (Object(paciente.sexo).id),
+                fechaNacimiento: paciente.fechaNacimiento
+            };
+
+            this.pacienteService.get(dto).subscribe(resultado => {
+                this.pacientesSimilares = resultado;
+                console.log(this.pacientesSimilares);
+                // res.forEach(pac => {
+                //     if (pac.match >= 0.7) {
+                //         this.posiblesDuplicados.push(pac);
+                //     }
+                // });
+
+            });
+        }
+    }
 }
