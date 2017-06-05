@@ -114,6 +114,18 @@ th {
   // margin-top: 5px;
 }
 
+label {
+  margin-top: 5px;
+}
+
+.btn-group.full-width {
+  display: flex;
+}
+
+.full-width .btn {
+  flex: 1
+}
+
 .list-inline>.list-inline-item {
   margin-bottom: 10px;
 }

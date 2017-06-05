@@ -1,12 +1,11 @@
 <header></header>
 
 <section>
-  <plex-box title="Pantalla inicio">
+  <plex-box>
     <header>
-      <div class="row">
-        <div class="col">
-          <h1>Lista de pacientes</h1>
-        </div>
+      <!--Botones / Acciones-->
+      <div class="clearfix">
+        <div class="page-title float-left">Lista de pacientes</div>
       </div>
     </header>
 
@@ -28,15 +27,10 @@
         </plex-select>
       </div>
     </div>
-    <div class="row" *ngIf="paciente && prestacionSeleccion">
-      <div class="col">
-        <plex-button icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Prestación" type="success"></plex-button>
-      </div>
-    </div>
 
-    <!-- La Lista de Pacientes -->
+
     <div class="row" *ngIf="mostrarLista">
-      <div class="col-3">
+      <div class="col-sm-6 col-3">
         <fieldset>
         </fieldset>
         <div class="row">
@@ -51,20 +45,6 @@
         </div>
       </div>
       <div class="col-3">
-        <label class="form-control-label">Filtrar por paciente</label>
-        <!--Agregar las clases active ngclass-->
-        <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-primary hover" [ngClass]="{active: filtrosPacientes == true}">
-                  <input type="radio"name="options" id="inactivo"  (click)="soloPacientesProfesional()">
-                   Solo mis pacientes
-              </label>
-          <label class="btn btn-primary hover" [ngClass]="{active: filtrosPacientes == false}">
-                  <input type="radio"name="options" id="inactivo"  (click)="todosLosPacientes()">
-                   Todos los pacientes
-              </label>
-        </div>
-      </div>
-      <div class="col-3">
         <fieldset>
           <!--<legend>Filtro por estado</legend>-->
         </fieldset>
@@ -75,14 +55,37 @@
         <fieldset>
           <!--<legend>Filtro tipo de prestacion</legend>-->
         </fieldset>
-        <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)"
+        <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" (getData)="loadPrestacionesProfesional($event)"
           (change)="filtraPorPrestacion()">
         </plex-select>
       </div>
     </div>
+    <div class="row">
+      <div class="col-sm-6 col-3">
+        <label class="form-control-label">Filtrar por paciente</label>
+        <div class="btn-group full-width" data-toggle="buttons">
+          <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === true}">
+                  <input type="radio"name="options" id="inactivo" (click)="soloPacientesProfesional()">
+                   Solo mis pacientes
+              </label>
+          <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === false}">
+                  <input type="radio"name="options" id="inactivo" (click)="todosLosPacientes()">
+                   Todos los pacientes
+              </label>
+        </div>
+      </div>
+    </div>
+
     <div class="row" *ngIf="mostrarLista">
-      <div class="col 12">
-        <table class="table table-hover table-bordered">
+      <div class="col-12">
+
+        <!--Resultados-->
+        <div *ngIf="!pacientesPresentes.length" class="alert alert-default">
+          <i class="mdi mdi-emoticon-sad"></i> No hay Pacientes que coincidan con los filtros de búsqueda
+        </div>
+
+        <!-- La Lista de Pacientes -->
+        <table *ngIf="pacientesPresentes.length" class="table table-hover">
           <thead>
             <tr>
               <th><strong>Paciente</strong></th>
@@ -92,13 +95,17 @@
             </tr>
           </thead>
           <tbody>
-
-            <tr class="item" *ngFor="let paciente of PacientesPresentes" (click)="elegirPrestacion(paciente.idPrestacion)">
+            <tr class="hover" *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente.idPrestacion)">
               <th>
                 {{paciente.paciente.nombre}} | {{paciente.paciente.apellido}}
               </th>
               <th>
-                {{paciente.profesionales.nombre}} | {{paciente.profesionales.apellido}}
+                <ng-container *ngIf="paciente.profesionales.nombre">
+                  {{paciente.profesionales.nombre}} | {{paciente.profesionales.apellido}}
+                </ng-container>
+                <ng-container *ngIf="!paciente.profesionales?.nombre">
+                  {{auth.usuario.nombre}} | {{auth.usuario.apellido}} (usuario auth)
+                </ng-container>
               </th>
               <th>
                 {{paciente.estado}} ({{paciente.fecha | date: 'dd/MM/yyyy'}})
@@ -114,6 +121,14 @@
     </div>
   </plex-box>
 </section>
+
+<!--Footer-->
+<footer *ngIf="paciente">
+  <plex-button *ngIf="paciente" icon="arrow-left" (click)="volverAlInicio()" label="Volver" type="danger"></plex-button>
+  <plex-button *ngIf="paciente && prestacionSeleccion" icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Prestación"
+    type="success" class="float-right"></plex-button>
+</footer>
+
 <!--<pre>
-  {{PacientesPresentes | json }}
+  {{pacientesPresentes | json }}
 </pre>-->
