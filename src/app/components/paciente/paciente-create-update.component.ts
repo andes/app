@@ -262,6 +262,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
               if (!resultado.scan) {
                 resultado.scan = this.seleccion.scan;
               }
+              if (this.escaneado && resultado.estado !== 'validado') {
+                resultado.nombre = this.seleccion.nombre.toUpperCase();
+                resultado.apellido = this.seleccion.apellido.toUpperCase();
+                resultado.fechaNacimiento = this.seleccion.fechaNacimiento;
+                resultado.sexo = this.seleccion.sexo;
+                resultado.documento = this.seleccion.documento;
+              }
               this.seleccion = Object.assign({}, resultado);
             }
             this.actualizarDatosPaciente();
@@ -530,6 +537,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
+          debugger
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
               resolve(false);
@@ -549,6 +557,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                   this.disableGuardar = true;
                 }
               } else {
+                debugger
                 if (!this.verificarDNISexo(this.pacientesSimilares)) {
                   this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
                   this.posibleDuplicado = true;
@@ -778,6 +787,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     foto: '',
                     relaciones: [],
                     claveBlocking: null,
+                    isScan: this.esEscaneado
                   };
 
 
