@@ -126,7 +126,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    // this.actualizar('sinFiltro');
   }
 
   loadTipoPrestaciones(event) {
@@ -138,20 +137,20 @@ export class DarTurnosComponent implements OnInit {
   }
 
   habilitarTurnoDoble() {
-  // Si el siguiente turno está disponible, se habilita la opción de turno doble
-  let cantidadTurnos;
-  this.permitirTurnoDoble = false;
-  if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
-    cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
-    cantidadTurnos--;
-    if (this.indiceTurno < cantidadTurnos) {
-      // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
-      if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
-        this.permitirTurnoDoble = true;
+    // Si el siguiente turno está disponible, se habilita la opción de turno doble
+    let cantidadTurnos;
+    this.permitirTurnoDoble = false;
+    if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
+      cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+      cantidadTurnos--;
+      if (this.indiceTurno < cantidadTurnos) {
+        // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
+        if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
+          this.permitirTurnoDoble = true;
+        }
       }
     }
   }
-}
 
 
   public verificarLlaves(tipoPrestaciones: any[], event) {
@@ -365,7 +364,7 @@ export class DarTurnosComponent implements OnInit {
 
       // Ordena las Agendas por fecha/hora de inicio
       this.agendas = this.agendas.sort(
-        function(a, b) {
+        function (a, b) {
           let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
           let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
           {
@@ -407,8 +406,8 @@ export class DarTurnosComponent implements OnInit {
 
         /*Filtra los bloques segun el filtro tipoPrestacion*/
         this.bloques = this.agenda.bloques.filter(
-          function(value) {
-            let prestacionesBlq = value.tipoPrestaciones.map(function(obj) {
+          function (value) {
+            let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
               return obj.id;
             });
             if (tipoPrestacion) {
@@ -675,7 +674,7 @@ export class DarTurnosComponent implements OnInit {
       };
 
       this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-        debugger;
+        // debugger;
         if (carpeta.nroCarpeta) {
           // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
           let nuevaCarpeta = {
@@ -697,8 +696,6 @@ export class DarTurnosComponent implements OnInit {
       });
 
     }
-
-
 
   }
 
@@ -768,62 +765,32 @@ export class DarTurnosComponent implements OnInit {
         let operacion: Observable<any>;
         operacion = this.serviceTurno.save(datosTurno);
         operacion.subscribe(resultado => {
-          debugger;
           if (this.turnoDoble) {
-            if (turnoSiguiente.estado === 'disponible'){
+            if (turnoSiguiente.estado === 'disponible') {
               let patch: any = {
-                  op: 'darTurnoDoble',
-                  turnos: [turnoSiguiente]
+                op: 'darTurnoDoble',
+                turnos: [turnoSiguiente]
               };
               // Patchea el turno doble
               this.serviceAgenda.patchMultiple(agendaid, patch).subscribe(resultado => {
 
-               });
-               this.estadoT = 'noSeleccionada';
-               this.agenda = null;
-               this.actualizar('sinFiltro');
-               this.borrarTurnoAnterior();
-               this.plex.alert('El turno se asignó correctamente');
+              });
+              this.estadoT = 'noSeleccionada';
+              this.agenda = null;
+              this.actualizar('sinFiltro');
+              this.borrarTurnoAnterior();
+              this.plex.alert('El turno se asignó correctamente');
 
-               let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-               let tm = moment(this.turno.horaInicio).format('HH:mm');
-               let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-               // this.enviarSMS(pacienteSave, mensaje);
-               this.actualizarCarpetaPaciente(pacienteSave);
+              let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+              let tm = moment(this.turno.horaInicio).format('HH:mm');
+              let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+              // this.enviarSMS(pacienteSave, mensaje);
+              this.actualizarCarpetaPaciente(pacienteSave);
             }
           }
 
         });
 
-
-        // Guardar Prestación Paciente
-
-        let nuevaPrestacion;
-        this.paciente['_id'] = this.paciente.id;
-        nuevaPrestacion = {
-          paciente: this.paciente,
-          solicitud: {
-            tipoPrestacion: this.turnoTipoPrestacion,
-            fecha: new Date(),
-            listaProblemas: [],
-            idTurno: this.turno.id,
-          },
-          estado: {
-            timestamp: new Date(),
-            tipo: 'pendiente'
-          },
-          ejecucion: {
-            fecha: new Date(),
-            evoluciones: []
-          }
-        };
-
-        // TODO: Revisar alert
-        this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-          this.plex.alert('prestacion paciente creada');
-        });
-
-        // });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {

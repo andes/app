@@ -79,16 +79,12 @@
               title="Registrar asistencia"></plex-button>
             <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
               title="Reasignar turno"></plex-button>
-           <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')" title="Turno doble"></plex-button>
+            <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')"
+              title="Turno doble"></plex-button>
             <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
             <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
             <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
-            <plex-button *ngIf="botones.desbloquearTurno" type="success" icon="mdi mdi-play" title="Reanudar turno"></plex-button>
-            <!--<span *ngIf="botones.desbloquearTurno">
-                <button class="btn btn-default" (click)="eventosTurno( 'bloquearTurno' )">
-                    <i title="Bloquear Turno" class="mdi mdi-lock-outline"></i>
-                </button>
-            </span>-->
+            <!--<plex-button *ngIf="botones.desbloquearTurno" type="success" icon="mdi mdi-play" title="Reanudar turno"></plex-button>-->
             <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop" title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
 
             <!--<span *ngIf="botones.sms">
@@ -126,10 +122,9 @@
             <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
                 <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
                     {{carpeta.nroCarpeta}}
-                      <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
                 </span>
             </span></small>
-
+            <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
             <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
             <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
@@ -147,7 +142,7 @@
             </div>
           </td>-->
           <td>
-          <span *ngIf="turno && turno.estado !== 'disponible' && turno.estado !== 'turnoDoble'">
+            <span *ngIf="turno && turno.estado !== 'disponible' && turno.estado !== 'turnoDoble'">
               <popover-audit placement="left" [data]="turno" >
               </popover-audit>
           </span>

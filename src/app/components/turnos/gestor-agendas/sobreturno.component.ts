@@ -47,7 +47,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     horaTurno = null;
     telefono: String = '';
     cambioTelefono = false;
-    
+
     public seleccion = null;
     public esEscaneado = false;
 
@@ -188,6 +188,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     cancelar() {
-        console.log('aca');
+        this.volverAlGestor.emit(true);
     }
 }
