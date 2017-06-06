@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class SnomedService {
-    private snomedURL = '/modules/snomed';  // URL to web api
+    private snomedURL = '/core/term/snomed';  // URL to web api
 
     constructor(private server: Server) {
     }
