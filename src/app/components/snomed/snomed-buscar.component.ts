@@ -48,6 +48,8 @@ export class SnomedBuscarComponent implements OnInit {
     public elementRef;
 
     public loading = false;
+    public searchTerm : String = '';
+    public tipoBusqueda : String = '';
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
@@ -66,12 +68,21 @@ export class SnomedBuscarComponent implements OnInit {
         this._onDragEnd.emit(e);
     }
 
+
+    setTipoBusqueda(tipoBusqueda): void {
+        // seteamos el tipo de busqueda que deseamos realizar
+        this.tipoBusqueda = tipoBusqueda;
+
+        // buscamos por la serpiente de SNOMED
+        this.buscar();
+    }
+
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
      * @param event  change event en el input buscar
      * @returns      Void
      */
-    buscar($e): void {
+    buscar(): void {
         // console.log($e);
         // if ($e.keyCode === 'Escape') {
         //     this.listaProblemasMaestro = [];
@@ -82,22 +93,19 @@ export class SnomedBuscarComponent implements OnInit {
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
         }
-        // let query = {
-        //     query: $e.value,
-        //     // semanticFilter: 'none', // trastorno /hallazgo
-        //     // limit: 10,
-        //     // searchMode: 'partialMatching',
-        //     // lang: 'english',
-        //     // statusFilter: 'activeOnly',
-        //     // skipTo: 0,
-        //     // returnLimit: 10,
-        //     // langFilter: 'spanish',
-        //     // normalize: true
-        // };
 
-        if ($e.value) {
-            let search = $e.value.trim();
+        console.log(this.searchTerm);
 
+        if (this.searchTerm) {
+            // levantamos el valor que escribimos en el input
+            let search = this.searchTerm.trim();
+
+            // armamos query para enviar al servicio
+            let query = {
+                search: search,
+                tipo: this.tipoBusqueda
+            };
+ 
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
@@ -106,7 +114,8 @@ export class SnomedBuscarComponent implements OnInit {
                 this.listaProblemasMaestro = [];
 
                 // buscamos
-                this.SNOMED.buscarTrastornosHallazgos(search).subscribe(problemas => {
+                //this.SNOMED.buscarTrastornosHallazgos(search).subscribe(problemas => {
+                this.SNOMED.get(query).subscribe(problemas => {
                     this.loading = false;
                     this.listaProblemasMaestro = problemas;
 

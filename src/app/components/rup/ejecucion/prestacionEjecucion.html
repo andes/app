@@ -20,12 +20,12 @@
                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->
                 <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onProblemaDrop($event) " class="droppable" [hidden]="!isDraggingProblem">
                     <!--
-              TODO: agregar
-            -->
+                    TODO: agregar
+                    -->
                     Arrastre aquí para vincularlos al paciente
                 </div>
 
-                <div *ngIf="listaproblemasMaestro?.length === 0">
+                <div *ngIf="listaproblemasMaestro?.length === 0 && listaProblemasPaciente.length">
                     <!--BOTONES DE FILTRO-->
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>

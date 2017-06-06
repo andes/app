@@ -1,60 +1,26 @@
-// import { TransformarProblemaComponent } from './../components/rup/problemas-paciente/transformarProblema.component';
-// import { Observable } from 'rxjs/Rx';
-// import { Injectable } from '@angular/core';
-// import { Server } from '@andes/shared';
-// import { environment } from '../../environments/environment';
-
-import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
+import { TransformarProblemaComponent } from './../components/rup/problemas-paciente/transformarProblema.component';
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
+import { Server } from '@andes/shared';
+import { environment } from '../../environments/environment';
+
+// import { Injectable } from '@angular/core';
+// import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
+// import { Observable } from 'rxjs/Rx';
+// import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SnomedService {
-    // private snomedURL = 'http://mongolito:3000/snomed/es-edition/v20160430/descriptions';
+    private snomedURL = '/core/term/snomed';  // URL to web api
 
-    // constructor(private server: Server) {
-    // }
-
-    // get(params: any): Observable<any[]> {
-    //     return this.server.get(this.snomedURL, { params: params, showError: true });
-    // }
-
-    private snomedURL = 'http://mongolito:3000/snomed/es-edition/v20160430/descriptions';
-    //http://127.0.0.1:3000/snomed/es-edition/v20160430/concepts/
-    // private snomedURL = 'http://127.0.0.1:3000/snomed/es-edition/v20160430/descriptions';
-
-    constructor(private http: Http) { }
-
-    getDefaultOptions(params) {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({
-            headers: headers
-        });
-
-        // establecemos los parametros de busqueda
-        if (params) {
-            options.search = new URLSearchParams();
-            for (const param in params) {
-                if (params[param]) {
-                    options.search.set(param, params[param]);
-                }
-            }
-        }
-
-        return options;
+    constructor(private server: Server) {
     }
 
-    extractData(res: Response) {
-        return res.json();
+    get(params: any): Observable<any[]> {
+         return this.server.get(this.snomedURL, { params: params, showError: true });
     }
 
-     get(params: any): Observable<any[]> {
-        const options = this.getDefaultOptions(params);
-
-        return this.http.get(this.snomedURL, options).map(this.extractData);
-    }
-
+    /*
     buscarTrastornosHallazgos(query: String): Observable<any[]> {
         if (!query) {
             return null;
@@ -103,4 +69,5 @@ export class SnomedService {
             return result.slice(0, params.returnLimit);
         });
     }
+    */
 }
