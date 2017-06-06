@@ -22,15 +22,18 @@ import * as moment from 'moment';
 @Component({
     selector: 'auditoria1',
     templateUrl: 'auditoria1.html',
+    styleUrls: ['auditoria1.css']
 })
 
 export class Auditoria1Component implements OnInit {
 
+    showValidator = false;
     seleccionada = false;
+    loading = false;
 
     pacientesAudit = [
         {
-            "seleccionado" : false,
+            "seleccionado": false,
             "documento": "36433556",
             "estado": "temporal",
             "nombre": "MARCOS DANIEL",
@@ -41,7 +44,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.88",
 
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "30096099",
             "estado": "temporal",
             "nombre": "RICARDO DANIEL",
@@ -51,7 +54,7 @@ export class Auditoria1Component implements OnInit {
             "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
             "matchSisa": "0.82",
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "39682204",
             "estado": "temporal",
             "nombre": "MAURO LEANDRO",
@@ -62,7 +65,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.72",
         },
         {
-            "seleccionado" : false,
+            "seleccionado": false,
             "documento": "36433556",
             "estado": "temporal",
             "nombre": "MARCOS DANIEL",
@@ -73,7 +76,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.88",
 
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "30096099",
             "estado": "temporal",
             "nombre": "RICARDO DANIEL",
@@ -83,7 +86,7 @@ export class Auditoria1Component implements OnInit {
             "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
             "matchSisa": "0.82",
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "39682204",
             "estado": "temporal",
             "nombre": "MAURO LEANDRO",
@@ -94,7 +97,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.72",
         },
         {
-            "seleccionado" : false,
+            "seleccionado": false,
             "documento": "36433556",
             "estado": "temporal",
             "nombre": "MARCOS DANIEL",
@@ -105,7 +108,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.88",
 
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "30096099",
             "estado": "temporal",
             "nombre": "RICARDO DANIEL",
@@ -115,7 +118,7 @@ export class Auditoria1Component implements OnInit {
             "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
             "matchSisa": "0.82",
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "39682204",
             "estado": "temporal",
             "nombre": "MAURO LEANDRO",
@@ -126,7 +129,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.72",
         },
         {
-            "seleccionado" : false,
+            "seleccionado": false,
             "documento": "36433556",
             "estado": "temporal",
             "nombre": "MARCOS DANIEL",
@@ -137,7 +140,7 @@ export class Auditoria1Component implements OnInit {
             "matchSisa": "0.88",
 
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "30096099",
             "estado": "temporal",
             "nombre": "RICARDO DANIEL",
@@ -147,7 +150,7 @@ export class Auditoria1Component implements OnInit {
             "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
             "matchSisa": "0.82",
         }, {
-               "seleccionado" : false,
+            "seleccionado": false,
             "documento": "39682204",
             "estado": "temporal",
             "nombre": "MAURO LEANDRO",
@@ -231,5 +234,17 @@ export class Auditoria1Component implements OnInit {
         private plex: Plex
     ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+
+    }
+
+    validar() {
+        this.loading = true;
+        setTimeout(() => this.showResult(), 2000);
+    }
+
+    showResult() {
+        this.loading = false;
+        this.plex.alert('resultado');
+    }
 }
