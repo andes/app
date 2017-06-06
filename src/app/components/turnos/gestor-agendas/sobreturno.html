@@ -86,7 +86,7 @@
     </div>-->
   </section>
 
-  <footer>
+  <footer *ngIf="showSobreTurnos">
     <div class="row">
       <div class="col text-right">
         <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">

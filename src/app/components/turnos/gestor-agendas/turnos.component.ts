@@ -112,7 +112,8 @@ export class TurnosComponent implements OnInit {
     return agendaActualizar;
   }
 
-  seleccionarTurno(turno, multiple = false) {
+  seleccionarTurno(turno, multiple = false, sobreturno) {
+    turno.sobreturno = sobreturno;
     if (!multiple) {
       this.turnosSeleccionados = [];
       this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
@@ -158,6 +159,15 @@ export class TurnosComponent implements OnInit {
         } else {
           this.agenda.bloques[a].turnos[b].checked = false;
         }
+      }
+    }
+
+    for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
+      if (!this.todos) {
+        this.agenda.sobreturnos[i].checked = true;
+        this.turnosSeleccionados = [...this.turnosSeleccionados, this.agenda.sobreturnos[i]];
+      } else {
+        this.agenda.sobreturnos[i].checked = false;
       }
     }
 
@@ -319,7 +329,6 @@ export class TurnosComponent implements OnInit {
     this.todos = false;
   }
 
-
   reasignarTurno(paciente: any, idTurno: any, idAgenda: any) {
     this.reasignar = { 'paciente': paciente, 'idTurno': idTurno, 'idAgenda': idAgenda };
     this.reasignaTurno.emit(this.reasignar);
@@ -347,7 +356,7 @@ export class TurnosComponent implements OnInit {
       turnoSeleccionado = this.turnosSeleccionados[x];
       index = turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
       if ((index > -1) && (index < turnos.length - 1) && (turnos[index + 1].estado === 'disponible')) {
-         turnosActualizar.push(turnos[index + 1]);
+        turnosActualizar.push(turnos[index + 1]);
       } else {
         // en el caso que el turno siguiente no se encuentre disponible
         this.plex.alert('No se puede asignar el turno doble');
@@ -365,7 +374,6 @@ export class TurnosComponent implements OnInit {
     // Reset botones y turnos seleccionados
     this.turnosSeleccionados = [];
     this.actualizarBotones();
-    // this.turnos.forEach((turno, index)
     this.turnos.forEach((turno) => {
       turno.checked = false;
     });
@@ -401,7 +409,7 @@ export class TurnosComponent implements OnInit {
 
       let idTurno = this.turnosSeleccionados[x].id;
 
-      this.turnos.filter(function(el, index, arr) {
+      this.turnos.filter(function (el, index, arr) {
         if (el.id === idTurno) {
           turno = el;
         }
@@ -452,17 +460,6 @@ export class TurnosComponent implements OnInit {
       this.showTurnos = true;
       this.showSuspenderTurno = false;
     });
-    // this.serviceAgenda.getById(this.agenda.id).subscribe(ag => {
-    //     this.agenda = ag;
-    //     this.turnosSeleccionados = [];
-
-    //     this.showTurnos = true;
-    //     this.showSuspenderTurno = false;
-    //     this.turnos.forEach((turno, index) => {
-    //         turno.checked = false;
-    //     });
-    //     this.todos = false;
-    // });
   }
 
   saveAgregarNotaTurno() {
@@ -477,17 +474,6 @@ export class TurnosComponent implements OnInit {
       });
       this.todos = false;
     });
-    // this.agenda = agenda;
-
-    // this.turnosSeleccionados = [];
-
-    // this.showTurnos = false;
-    // this.showTurnos = true;
-    // this.showAgregarNotaTurno = false;
-    // this.turnos.forEach((turno, index) => {
-    //     turno.checked = false;
-    // });
-    // this.todos = false;
   }
 
   cancelaAgregarNota() {

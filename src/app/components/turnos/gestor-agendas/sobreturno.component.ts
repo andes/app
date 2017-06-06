@@ -32,17 +32,25 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+
 
     paciente: IPaciente;
     tipoPrestacion: ITipoPrestacion;
     resultado: any;
     showAgregarSobreturno = true;
+    showCreateUpdate = false;
     showSobreturno = true;
     pacientesSearch = false;
     pacienteNombre = '';
     horaTurno = null;
     telefono: String = '';
     cambioTelefono = false;
+    
+    public seleccion = null;
+    public esEscaneado = false;
+
 
     constructor(
         public plex: Plex,
@@ -55,9 +63,21 @@ export class AgregarSobreturnoComponent implements OnInit {
     ngOnInit() {
     }
 
+
     buscarPaciente() {
         this.showSobreturno = false;
         this.pacientesSearch = true;
+    }
+
+    afterCreateUpdate(paciente) {
+        this.showCreateUpdate = false;
+        this.showSobreturno = true;
+        if (paciente) {
+            this.paciente = paciente;
+            this.verificarTelefono(this.paciente);
+        } else {
+            this.buscarPaciente();
+        }
     }
 
     onReturn(paciente: IPaciente): void {
@@ -69,16 +89,15 @@ export class AgregarSobreturnoComponent implements OnInit {
             this.showSobreturno = true;
             this.pacientesSearch = false;
             window.setTimeout(() => this.pacientesSearch = false, 100);
+        } else {
+            this.seleccion = paciente;
+            // this.verificarTelefono(this.seleccion);
+            this.esEscaneado = true;
+            this.escaneado.emit(this.esEscaneado);
+            this.selected.emit(this.seleccion);
+            this.pacientesSearch = false;
+            this.showCreateUpdate = true;
         }
-        // else {
-        //     this.seleccion = pacientes;
-        //     // this.verificarTelefono(this.seleccion);
-        //     this.esEscaneado = true;
-        //     this.escaneado.emit(this.esEscaneado);
-        //     this.selected.emit(this.seleccion);
-        //     this.pacientesSearch = false;
-        //     this.showCreateUpdate = true;
-        // }
     }
 
     verificarTelefono(paciente: IPaciente) {
@@ -97,6 +116,8 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     guardar() {
+        // TODO: Copiar funcionalidad de Dar Turnos para guardar
+
         let pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
