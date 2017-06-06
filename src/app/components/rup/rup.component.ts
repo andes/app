@@ -64,7 +64,7 @@ export class RupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('RUP', this.tipoPrestacion.granularidad);
+    // console.log('RUP', this.tipoPrestacion.granularidad);
     // El View ya está inicializado
     this.isViewInitialized = true;
 
@@ -87,7 +87,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
     // Átomo
     if (this.tipoPrestacion.granularidad === 'atomos' || this.tipoPrestacion.granularidad === 'formulas') {
-      console.log('--> Átomo <--');
+      // console.log('--> Átomo <--');
       if (this.data[this.tipoPrestacion.key] === null) {
         this.data = {};
       }
@@ -95,7 +95,7 @@ export class RupComponent implements OnInit, OnDestroy {
     } else {
 
       // Molécula
-      console.log('--> Molécula <--');
+      // console.log('--> Molécula <--');
       // valor: variable con el resultado qeu viene del input del formulario
       let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
       if (valor) {
@@ -154,7 +154,7 @@ export class RupComponent implements OnInit, OnDestroy {
     this.componentReference.instance.paciente = this.paciente;
     this.componentReference.instance.datosIngreso = this.datosIngreso;
 
-    console.log('this.datosIngreso:', this.datosIngreso);
+    // console.log('this.datosIngreso:', this.datosIngreso);
 
 
     this.componentReference.changeDetectorRef.detectChanges();

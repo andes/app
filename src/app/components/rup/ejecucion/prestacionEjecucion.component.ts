@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
@@ -309,15 +310,15 @@ export class PrestacionEjecucionComponent implements OnInit {
       this.agregarPrestacionEjecucion(prestacionEvent.dragData);
 
       this.prestacion.ejecucion.listaProblemas.forEach(problema => {
-        // this.onPrestacionDrop(prestacionEvent, problema.id);
+         this.onPrestacionDrop(prestacionEvent, problema.id);
 
         // Se vincula al problema
-        let pos = this.prestacionesEjecucion.length - 1;
-        if (this.prestacionesEjecucion[pos]) {
-          this.listaProblemaPrestacion[prestacionEvent.dragData.key].push(problema);
-          this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
+        // let pos = this.prestacionesEjecucion.length - 1;
+        // if (this.prestacionesEjecucion[pos]) {
+        //   this.listaProblemaPrestacion[prestacionEvent.dragData.key].push(problema);
+        //  // this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
           // this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(this.listaProblemaPrestacion[prestacionEvent.dragData.key][pos]);
-        }
+        // }
 
       });
 
@@ -328,8 +329,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
   onPrestacionDrop(e: any, idProblema) {
-
-    //
     this.paraTodas = false;
 
     // Se verifica que sea un tipo de prestación
@@ -338,19 +337,30 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Se busca el problema a vincular
     let problema = this.listaProblemasPaciente.find(elem => elem.id === idProblema);
-
     // Se vincula al problema
     let pos = this.prestacionesEjecucion.length - 1;
-    console.log('this.prestacionesEjecucion: ', this.prestacionesEjecucion);
+    let asignada = true;
+    let idPrestacionOrigen = this.prestacionesEjecucion[pos].idPrestacionOrigen;
+    this.prestacionesEjecucion.forEach(prestacion => {
+      if (prestacion.idPrestacionOrigen === idPrestacionOrigen) {
+        //Recorro los problemas de la prestacion y se fija si ya existe.
+        prestacion.ejecucion.listaProblemas.forEach(element => {
+          if (problema === element) {
+            this.plex.alert('La prestacion ya esta asociada al problema');
+            asignada = false;
+          }
+        });
+      }
+    });
 
-    if (this.prestacionesEjecucion[pos]) {
+    if (asignada) {
 
       this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
 
     }
 
     // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evolución
-    this.prestacionesEjecucion[pos - 1].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
+    this.prestacionesEjecucion[pos].ejecucion.evoluciones.push({ valores: { [e.dragData.key]: this.data[e.dragData.key] } });
 
     // Se asocia la prestacion y el problema
     this.listaProblemaPrestacion[e.dragData.key].push(problema);
@@ -396,7 +406,7 @@ export class PrestacionEjecucionComponent implements OnInit {
           planExistente = true;
         }
       });
-       // si plan existe entonces muestro un alerta
+      // si plan existe entonces muestro un alerta
       if (planExistente) {
         this.plex.alert('El plan ya esta asociado al problema');
       }
@@ -414,7 +424,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
       }
     });
-   
+
 
   }
   onPlanTodosLosProblemasDrop($event) { // Carga plan en todos los problemas
