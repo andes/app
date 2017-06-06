@@ -527,9 +527,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
           sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
           fechaNacimiento: this.pacienteModel.fechaNacimiento
         };
-
+        debugger;
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
+          // 
+          // agregamos la condición de abajo para filtrar las sugerencias
+          // cuando el pacienfe fue escaneado o ya estaba validado.
+          if (this.escaneado || this.pacienteModel.estado === 'validado') {
+            this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
+          }
+          debugger
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
               resolve(false);
