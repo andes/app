@@ -7,9 +7,10 @@ de la siguiente manera:
 
 1) Módulos principales de Angular
 2) Módulos globales
-3) Servicios
-4) Componentes
-5) Otros
+3) Pipes
+4) Servicios
+5) Componentes
+6) Otros
 */
 
 // Angular
@@ -31,6 +32,7 @@ import { Ng2DragDropModule } from 'ng2-drag-drop';
 // Pipes
 import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
 import { ProfesionalFullNamePipe } from './pipe/profesionalPipe';
+import { SortBloquesPipe } from './pipe/agenda-bloques.pipe';
 import { fromNowPipe } from './utils/date';
 import { fechaPipe } from './utils/datePipe';
 // Servicios
@@ -315,7 +317,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, ProfesionalFullNamePipe, fromNowPipe, fechaPipe,
+    MapsComponent, patientFullNamePipe, patientRealAgePipe, ProfesionalFullNamePipe, fromNowPipe, fechaPipe, SortBloquesPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,

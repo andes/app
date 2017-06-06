@@ -100,7 +100,7 @@
     </table>
 
     <!--Turnos-->
-    <table *ngFor="let bloque of agenda.bloques" class="table table-striped">
+    <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
       <thead *ngIf="bloque.descripcion">
         <tr>
           <th colspan="4">{{bloque.descripcion}}

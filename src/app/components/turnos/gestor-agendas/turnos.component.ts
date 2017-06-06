@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { SortBloquesPipe } from './../../../pipe/agenda-bloques.pipe';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
@@ -8,6 +9,7 @@ import { SmsService } from './../../../services/turnos/sms.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { EstadosAgenda } from './../enums';
+
 import * as moment from 'moment';
 
 @Component({
@@ -318,7 +320,10 @@ export class TurnosComponent implements OnInit {
     };
 
     // Patchea los turnosSeleccionados (1 o más turnos)
-    this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
+    this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => {
+       this.agenda = resultado;
+      // Si el evento es darAsistencia, crear prestacionPaciente
+    });
 
     // Reset botones y turnos seleccionados
     this.turnosSeleccionados = [];
