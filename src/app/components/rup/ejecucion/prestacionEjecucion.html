@@ -12,9 +12,26 @@
                     <legend>Problemas del paciente</legend>
                 </fieldset>
 
+                <form>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group">
+                                <input type="text" class="form-control" [(ngModel)]="buscarProblema" name="buscarProblema" (keyup)="buscarProblemasPaciente()" placeholder="Buscar Problema" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit" (click)="buscarProblemaSnomed()">
+                                        SNOMED
+                                        <i class="mdi mdi-magnify"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
                 <!--FILTRO EN MAESTRO DE PROBLEMAS-->
-                <snomed-buscar [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"></snomed-buscar>
+                <snomed-buscar [searchTermInput]="buscarProblema" *ngIf="buscarSnomed"
+                [_draggable]="true" [_dragScope]="'problemas-paciente'" 
+                (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"></snomed-buscar>
                 <!--<snomed-buscar (evtData)="conceptoSnomed($event)" [_draggable]="true" [_dragScope]="'concepto-snomed'"></snomed-buscar>-->
 
                 <!--PROBLEMAS DEL PACIENTE - DB: problema-->
@@ -25,20 +42,42 @@
                     Arrastre aquí para vincularlos al paciente
                 </div>
 
+                <div *ngIf="!listaProblemasPaciente.length && buscarProblema">
+                    No se ha <i>{{buscarProblema}}</i> encontrado en los problemas del paciente.
+                </div>
+
                 <div *ngIf="listaproblemasMaestro?.length === 0 && listaProblemasPaciente.length">
                     <!--BOTONES DE FILTRO-->
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroTodos'}"><input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> Todos</label>
-                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroActivo'}"><input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> Activo</label>
-                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroInactivo'}"><input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> Inactivo</label>
-                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroResuelto'}"><input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> Resuelto</label>
+                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroTodos'}">
+                            <input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> 
+                            Todos ({{listaProblemasPaciente.length}})
+                        </label>
+
+                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroActivo'}">
+                            <input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> 
+                            Activo (<span [innerHtml]="getCantidProblemasByEstado('activo')"></span>)
+                        </label>
+
+                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroInactivo'}">
+                            <input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> 
+                            Inactivo (<span [innerHtml]="getCantidProblemasByEstado('inactivo')"></span>)
+
+                        </label>
+                        
+                        <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroResuelto'}">
+                            <input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> 
+                            Resuelto (<span [innerHtml]="getCantidProblemasByEstado('resuelto')"></span>)
+                        </label>
                     </div>
-                    <div class="row">&nbsp;</div>
+
                     <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
                         <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
                         <ng-container *ngFor="let problema of listaProblemasPaciente ">
-                            <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
+                            <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action " 
+                                 *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
                                 (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
+
                                 <span *ngIf="problema?.tipoProblema?.term">
                                 <!--<h6>{{problema.tipoProblema.term }}</h6>TODO: cambio de interface-->
                                 <h6>{{problema.tipoProblema.term }}</h6>

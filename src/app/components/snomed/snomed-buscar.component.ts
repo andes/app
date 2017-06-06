@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, ElementRef  } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
 import { SnomedService } from './../../services/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -24,12 +24,13 @@ import { Observable } from 'rxjs/Rx';
     ]
 })
 
-export class SnomedBuscarComponent implements OnInit {
+export class SnomedBuscarComponent implements OnInit, OnChanges {
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
     // @Input() _dragData: String;
+    @Input() searchTermInput: String;
 
     // methods
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
@@ -42,14 +43,15 @@ export class SnomedBuscarComponent implements OnInit {
     // cerrar si cliqueo fuera de los resultados
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
+    private hideSearchInput: Boolean = false;
 
     public hideLista: Boolean = false;
     public listaProblemasMaestro = [];
     public elementRef;
 
     public loading = false;
-    public searchTerm : String = '';
-    public tipoBusqueda : String = '';
+    public searchTerm: String = '';
+    public tipoBusqueda: String = '';
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
@@ -58,7 +60,37 @@ export class SnomedBuscarComponent implements OnInit {
         this.elementRef = myElement;
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // si paso como un Input el string a buscar
+        // entonces oculto el text input del formulario
+        if (this.searchTermInput) {
+            // iniciar busqueda manual
+            this.busquedaManual();
+        }
+     }
+
+     ngOnChanges(changes: any) {
+        this.busquedaManual();
+    }
+
+    // iniciar busqueda es un metodo creado para poder buscar cuando
+    // ejecuto alguna acción en base al Input() _searchTerm
+    // (que viene desde otro componente)
+    // Si ese Input() no viene definido usa uno propio este componente
+    busquedaManual() {
+        this.hideSearchInput = true;
+
+        // asignamos el texto a buscar
+        this.searchTerm = this.searchTermInput;
+
+        // falso easter egg :D
+        if (this.searchTerm === 'ssssss') {
+            console.log('sssssss 🐍 busssscando');
+        }
+
+        // ejecutamos busqueda por la serpiendte de snomed ... sssss &#128013;    
+        this.buscar();
+    }
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -67,7 +99,6 @@ export class SnomedBuscarComponent implements OnInit {
     dragEnd(e) {
         this._onDragEnd.emit(e);
     }
-
 
     setTipoBusqueda(tipoBusqueda): void {
         // seteamos el tipo de busqueda que deseamos realizar
@@ -94,8 +125,6 @@ export class SnomedBuscarComponent implements OnInit {
             window.clearTimeout(this.timeoutHandle);
         }
 
-        console.log(this.searchTerm);
-
         if (this.searchTerm) {
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
@@ -105,7 +134,7 @@ export class SnomedBuscarComponent implements OnInit {
                 search: search,
                 tipo: this.tipoBusqueda
             };
- 
+
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
@@ -123,7 +152,7 @@ export class SnomedBuscarComponent implements OnInit {
                     this.loading = false;
                     // this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
-                console.log('buscando');
+
             }, 300);
         } else {
             this.listaProblemasMaestro = [];
