@@ -1,132 +1,134 @@
 <header></header>
 
 <section>
-  <plex-box>
-    <header>
-      <!--Botones / Acciones-->
-      <div class="clearfix">
-        <div class="page-title float-left">Lista de pacientes</div>
-      </div>
-    </header>
+    <plex-box>
+        <header>
+            <!--Botones / Acciones-->
+            <div class="clearfix">
+                <div class="page-title float-left">Lista de pacientes</div>
+            </div>
+        </header>
 
-    <!-- Buscador de Pacientes MPI -->
-    <div class="row" *ngIf="mostrarPacientesSearch">
-      <div class="col">
-        <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false"></pacientesSearch>
-      </div>
-    </div>
-    <div class="row" *ngIf="paciente">
-      <div class="col">
-        <header-paciente [paciente]="paciente"></header-paciente>
-      </div>
-    </div>
-    <div class="row" *ngIf="paciente">
-      <div class="col">
-        <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)"
-          (change)="filtraPorPrestacion()">
-        </plex-select>
-      </div>
-    </div>
-
-
-    <div class="row" *ngIf="mostrarLista">
-      <div class="col-sm-6 col-3">
-        <fieldset>
-        </fieldset>
-        <div class="row">
-          <div class="col-6">
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="filtrarPorFecha()" name="horaInicio" label="Desde">
-            </plex-datetime>
-          </div>
-          <div class="col-6">
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="filtrarPorFecha()" name="horaInicio" label="Hasta">
-            </plex-datetime>
-          </div>
+        <!-- Buscador de Pacientes MPI -->
+        <div class="row" *ngIf="mostrarPacientesSearch">
+            <div class="col">
+                <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false"></pacientesSearch>
+            </div>
         </div>
-      </div>
-      <div class="col-3">
-        <fieldset>
-          <!--<legend>Filtro por estado</legend>-->
-        </fieldset>
-        <plex-select [(ngModel)]="estadoSeleccion" name="nombrePrestacion" label="Estados" (getData)="loadEstados($event)" (change)="filtraPorEstado()">
-        </plex-select>
-      </div>
-      <div class="col-3">
-        <fieldset>
-          <!--<legend>Filtro tipo de prestacion</legend>-->
-        </fieldset>
-        <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" (getData)="loadPrestacionesProfesional($event)"
-          (change)="filtraPorPrestacion()">
-        </plex-select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 col-3">
-        <label class="form-control-label">Filtrar por paciente</label>
-        <div class="btn-group full-width" data-toggle="buttons">
-          <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === true}">
+        <div class="row" *ngIf="paciente">
+            <div class="col">
+                <header-paciente [paciente]="paciente"></header-paciente>
+            </div>
+        </div>
+        <div class="row" *ngIf="paciente">
+            <div class="col">
+                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)" (change)="filtraPorPrestacion()">
+                </plex-select>
+            </div>
+        </div>
+
+
+        <div class="row" *ngIf="mostrarLista">
+            <div class="col-sm-6 col-3">
+                <fieldset>
+                </fieldset>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="filtrarPorFecha()" name="horaInicio" label="Desde">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-6">
+                        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="filtrarPorFecha()" name="horaInicio" label="Hasta">
+                        </plex-datetime>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <fieldset>
+                    <!--<legend>Filtro por estado</legend>-->
+                </fieldset>
+                <plex-select [(ngModel)]="estadoSeleccion" name="nombrePrestacion" label="Estados" (getData)="loadEstados($event)" (change)="filtraPorEstado()">
+                </plex-select>
+            </div>
+            <div class="col-3">
+                <fieldset>
+                    <!--<legend>Filtro tipo de prestacion</legend>-->
+                </fieldset>
+                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" [data]="selectPrestacionesProfesional" (change)="filtraPorPrestacion()">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-3">
+                <label class="form-control-label">Filtrar por paciente</label>
+                <div class="btn-group full-width" data-toggle="buttons">
+                    <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === true}">
                   <input type="radio"name="options" id="inactivo" (click)="soloPacientesProfesional()">
                    Solo mis pacientes
               </label>
-          <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === false}">
+                    <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes === false}">
                   <input type="radio"name="options" id="inactivo" (click)="todosLosPacientes()">
                    Todos los pacientes
               </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="mostrarLista">
-      <div class="col-12">
-
-        <!--Resultados-->
-        <div *ngIf="!pacientesPresentes.length" class="alert alert-default">
-          <i class="mdi mdi-emoticon-sad"></i> No hay Pacientes que coincidan con los filtros de búsqueda
+                </div>
+            </div>
         </div>
 
-        <!-- La Lista de Pacientes -->
-        <table *ngIf="pacientesPresentes.length" class="table table-hover">
-          <thead>
-            <tr>
-              <th><strong>Paciente</strong></th>
-              <th><strong>Profesional</strong></th>
-              <th><strong>Estado</strong></th>
-              <th><strong>Tipo de prestacion</strong></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover" *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente.idPrestacion)">
-              <th>
-                {{paciente.paciente.nombre}} | {{paciente.paciente.apellido}}
-              </th>
-              <th>
-                <ng-container *ngIf="paciente.profesionales.nombre">
-                  {{paciente.profesionales.nombre}} | {{paciente.profesionales.apellido}}
-                </ng-container>
-                <ng-container *ngIf="!paciente.profesionales?.nombre">
-                  {{auth.usuario.nombre}} | {{auth.usuario.apellido}} (usuario auth)
-                </ng-container>
-              </th>
-              <th>
-                {{paciente.estado}} ({{paciente.fecha | date: 'dd/MM/yyyy'}})
-              </th>
-              <th>
-                {{paciente.nombrePrestacion}}
-              </th>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="row" *ngIf="mostrarLista">
+            <div class="col-12">
 
-    </div>
-  </plex-box>
+                <!--Resultados-->
+                <div *ngIf="!pacientesPresentes.length" class="alert alert-default">
+                    <i class="mdi mdi-emoticon-sad"></i> No hay Pacientes que coincidan con los filtros de búsqueda
+                </div>
+
+                <!-- La Lista de Pacientes -->
+                <table *ngIf="pacientesPresentes.length" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th><strong>Fecha</strong></th>
+                            <th><strong>Paciente</strong></th>
+                            <th><strong>Profesional</strong></th>
+                            <th><strong>Estado</strong></th>
+                            <th><strong>Tipo de prestacion</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente)">
+                            <th>
+                                {{paciente.fecha | date: 'dd/MM/yyyy H:m'}}
+                            </th>
+                            <th>
+                                <strong>{{paciente.paciente.apellido}}</strong>, {{paciente.paciente.nombre}}<br>
+                                <small>DNI: {{paciente.paciente.documento}}</small>
+                            </th>
+                            <th>
+                                <ng-container *ngIf="paciente.profesionales.nombre">
+                                    <strong>{{paciente.profesionales.apellido}}</strong>, {{paciente.profesionales.nombre}}
+                                </ng-container>
+                                <ng-container *ngIf="!paciente.profesionales?.nombre">
+                                    <strong>{{auth.usuario.apellido}}</strong>, {{auth.usuario.nombre}} (usuario auth)
+                                </ng-container>
+                            </th>
+                            <th>
+                                {{paciente.estado}}
+                            </th>
+                            <th>
+                                {{paciente.nombrePrestacion}}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </plex-box>
 </section>
 
 <!--Footer-->
 <footer *ngIf="paciente">
-  <plex-button *ngIf="paciente" icon="arrow-left" (click)="volverAlInicio()" label="Volver" type="danger"></plex-button>
-  <plex-button *ngIf="paciente && prestacionSeleccion" icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Prestación"
-    type="success" class="float-right"></plex-button>
+    <plex-button *ngIf="paciente" icon="arrow-left" (click)="volverAlInicio()" label="Volver" type="danger"></plex-button>
+    <plex-button *ngIf="paciente && prestacionSeleccion" icon="account" (click)="crearPrestacionVacia(prestacionSeleccion)" label="Generar Prestación" type="success" class="float-right"></plex-button>
 </footer>
 
 <!--<pre>
