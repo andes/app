@@ -40,7 +40,7 @@ export class PuntoInicioComponent implements OnInit {
 
     public conjuntoDePrestaciones: any = [];
     public pacientesPresentes: any = [];
-    public unPacientePresente: any = {};
+    public pacientesPresentesCompleto: any = [];
     public todasLasPrestaciones: any = [];
     public fechaDesde: Date;
     public fechaHasta: Date;
@@ -65,6 +65,8 @@ export class PuntoInicioComponent implements OnInit {
             fechaHasta: moment().endOf('day').format()
         }
 
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
         this.loadAgendasXDia(hoy);
 
     }
@@ -72,13 +74,9 @@ export class PuntoInicioComponent implements OnInit {
     loadAgendasXDia(params) {
         if (this.auth.profesional) {
 
-            // let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
-            // let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
             this.servicioAgenda.get(params).subscribe(
                 agendas => {
                     this.agendas = agendas;
-                    // console.log(this.agendas[2].bloques[0].turnos);
-
                     this.CreaConjuntoPrestacionesProfesional();
                     this.TraetodasLasPrestacionesFiltradas(params);
                     this.pacientesPresentes = [];
@@ -134,95 +132,81 @@ export class PuntoInicioComponent implements OnInit {
             // idProfesional: this.auth.profesional.id,
             // idTipoPrestacion: this.conjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
-            console.log('TraetodasLasPrestacionesFiltradas', resultado);
-
-            resultado.forEach(element => {
-                //console.log(element);
-                this.todasLasPrestaciones.push(element);
-            });
-            //console.log(this.todasLasPrestaciones);
+            if (resultado) {
+                this.todasLasPrestaciones = resultado;
+            }
             this.cargaPacientes();
         });
-        // console.log('#$#$$$$$$$$$$$$$$$$$$$$$$$$$$$$#');
-        // console.log(this.todasLasPrestaciones);
     }
 
 
     cargaPacientes() {
         this.pacientesPresentes = [];
-        this.agendas.forEach(element => {
+        let unPacientePresente: any = {};
+        this.agendas.forEach(agenda => {
             let turnos: any = [];
 
-            // Recorremos los bloques de una agenda para sacar los turnos.
-            for (let i in element.bloques) {
+            // Recorremos los bloques de una agenda para sacar los turnos asignados.
+            for (let i in agenda.bloques) {
                 if (i) {
-                    for (let e in element.bloques[i].turnos) {
-                        if (e) {
-                            turnos.push(element.bloques[i].turnos[e]);
+                    let turnosAsignados = agenda.bloques[i].turnos.filter(turno => turno.estado === 'asignado');
+                    turnos = [...turnos, ...turnosAsignados];
+                }
+            }
+
+            turnos.forEach(turno => { // Falta ver en ejecucion y validad
+                unPacientePresente.idTurno = turno.id;
+                unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
+                unPacientePresente.estado = 'En espera';
+                unPacientePresente.fecha = turno.horaInicio;
+                if (turno.asistencia) {
+                    unPacientePresente.estado = 'En espera (Asistencia)';
+                    //Buscar si existe una prestacion asociada al turno
+                    let prestacionTurno = this.todasLasPrestaciones.find(prestacion => {
+                        if (turno.id === prestacion.solicitud.idTurno) {
+                            return prestacion;
+                        }
+                    });
+                    if (prestacionTurno) {
+                        unPacientePresente.idPrestacion = prestacionTurno.id;
+                        if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
+                            unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
+                            unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
                         }
                     }
                 }
-            }
-
-            turnos.forEach(elemento => { // Falta ver en ejecucion y validad
-                if (elemento.estado === 'asignado' && elemento.asistencia === true) {
-
-                    this.unPacientePresente.estado = 'En espera';
-                    this.unPacientePresente.fecha = moment().format();
-
-                    this.todasLasPrestaciones.forEach(prestacion => {
-                        if (elemento.id === prestacion.solicitud.idTurno) {
-                            this.unPacientePresente.idPrestacion = prestacion.id;
-                            console.log('prestacion.estado', prestacion.estado);
-                            prestacion.estado.forEach(estado => {
-                                console.log('estado', estado);
-
-                                if (estado.tipo !== 'pendiente') {
-                                    this.unPacientePresente.estado = estado.tipo;
-                                    this.unPacientePresente.fecha = estado.timestamp;
-                                }
-                            });
-                        }
-                    });
-                    // Cargo un objeto con el profesional.
-                    this.unPacientePresente.profesionales = element.profesionales[0]; // Recorrer los profesionales si los tuviera
-                    // Cargo el tipo de prestacion
-                    this.unPacientePresente.nombrePrestacion = element.tipoPrestaciones[0].nombre; // Recorrer las prestaciones si tiene mas de una
-                    // Recorro agenda saco el estados
-                    this.unPacientePresente.paciente = elemento.paciente;
-                    this.pacientesPresentes = [... this.pacientesPresentes, this.unPacientePresente];
-                    this.unPacientePresente = {};
-                }
+                // Cargo un objeto con el profesional.
+                unPacientePresente.profesionales = agenda.profesionales[0]; // Recorrer los profesionales si los tuviera
+                // Cargo el tipo de prestacion
+                unPacientePresente.nombrePrestacion = agenda.tipoPrestaciones[0].nombre; // Recorrer las prestaciones si tiene mas de una
+                // Recorro agenda saco el estados
+                unPacientePresente.paciente = turno.paciente;
+                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                unPacientePresente = {};
             });
         });
+
         //Buscamos los que solo tienen prestacion y no tienen turno
-
-        console.log('this.todasLasPrestaciones', this.todasLasPrestaciones);
-
         this.todasLasPrestaciones.forEach(prestacion => {
-            // console.log(prestacion.solicitud);
             if (prestacion.solicitud.idTurno === null) {
-                console.log('dentreoo');
-                console.log(prestacion.solicitud.tipoPrestacion);
-                // this.unPacientePresente.estado = 'Sin turno';
-                // this.unPacientePresente.fecha = moment().format();
-                prestacion.estado.forEach(estado => {
-                    this.unPacientePresente.estado = estado.tipo;
-                    this.unPacientePresente.fecha = estado.timestamp;
-                });
-                this.unPacientePresente.idPrestacion = prestacion.id;
-                // this.unPacientePresente.idPrestacion = prestacion.id;
+                unPacientePresente.idTurno = null;
+                unPacientePresente.estado = prestacion.estado[prestacion.estado.length - 1].tipo;
+                unPacientePresente.fecha = prestacion.estado[prestacion.estado.length - 1].timestamp;
+                unPacientePresente.idPrestacion = prestacion.id;
                 // //cargo un objeto con el profesional.
-                this.unPacientePresente.profesionales = {}; // Recorrer los profesionales si los tuviera
+                unPacientePresente.profesionales = {}; // Recorrer los profesionales si los tuviera
                 // //Cargo el tipo de prestacion
-                this.unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre; // Recorrer las prestaciones si tiene mas de una
+                unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre; // Recorrer las prestaciones si tiene mas de una
                 // //Recorro agenda saco el estados
-                this.unPacientePresente.paciente = prestacion.paciente;
-                this.pacientesPresentes = [... this.pacientesPresentes, this.unPacientePresente];
-                this.unPacientePresente = {};
+                unPacientePresente.paciente = prestacion.paciente;
+                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                unPacientePresente = {};
             }
         });
 
+        //Ordenar por fecha y hora
+        this.pacientesPresentes = this.pacientesPresentes.sort((a, b) => { return (a.fecha > b.fecha) ? 1 : ((b.fecha > a.fecha) ? -1 : 0); });
+        this.pacientesPresentesCompleto = [... this.pacientesPresentes];
     }
 
     // Creo el conjunto de prestaciones del profesional..
@@ -238,10 +222,10 @@ export class PuntoInicioComponent implements OnInit {
             }
             if (agregar) {
                 this.conjuntoDePrestaciones.push(element.tipoPrestaciones[0].id);
-                this.selectPrestacionesProfesional.push({
+                this.selectPrestacionesProfesional = [... this.selectPrestacionesProfesional, {
                     id: element.tipoPrestaciones[0].id,
                     nombre: element.tipoPrestaciones[0].nombre
-                });
+                }];
             }
         });
 
@@ -254,8 +238,39 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
-    elegirPrestacion(id) {
-        this.router.navigate(['/rup/resumen', id]);
+    elegirPrestacion(unPacientePresente) {
+        if (unPacientePresente.idPrestacion) {
+            this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
+        } else {
+            // Guardar Prestación Paciente
+            let nuevaPrestacion;
+            nuevaPrestacion = {
+                paciente: unPacientePresente.paciente,
+                solicitud: {
+                    tipoPrestacion: unPacientePresente.tipoPrestacion,
+                    fecha: new Date(),
+                    listaProblemas: [],
+                    idTurno: unPacientePresente.idTurno ? unPacientePresente.idTurno : null,
+                },
+                estado: {
+                    timestamp: new Date(),
+                    tipo: 'pendiente'
+                },
+                ejecucion: {
+                    fecha: new Date(),
+                    evoluciones: []
+                }
+            };
+
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                if (prestacion) {
+                    this.router.navigate(['/rup/resumen', prestacion.id]);
+                } else {
+
+                }
+            });
+            // ruteamos
+        }
     }
 
     onReturn() {
@@ -266,28 +281,23 @@ export class PuntoInicioComponent implements OnInit {
         return $event.callback(this.selectPrestacionesProfesional);
     }
     loadEstados($event) {
-        return $event.callback([{ id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }]);
+        return $event.callback([{ id: 'En espera (Asistencia)', nombre: 'En espera (Asistencia)' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }]);
     }
 
 
     soloPacientesProfesional() { // Filtra los pacientes del profesional
         this.filtrosPacientes = true;
-        let misPacientes: any = [];
-        // console.log('pacientesPresentes: ', this.pacientesPresentes);
-        // console.log('PROFESIONAL: ', this.auth.profesional.id);
-        this.pacientesPresentes.forEach(paciente => {
-
+        this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
             if (paciente.profesionales.id === this.auth.profesional.id) {
-                misPacientes.push(paciente);
+                return paciente;
             }
         });
-        this.pacientesPresentes = misPacientes;
     }
 
 
     todosLosPacientes() { // Trae todos los pacientes
         this.filtrosPacientes = false;
-        this.cargaPacientes();
+        this.pacientesPresentes = [... this.pacientesPresentesCompleto];
     }
 
 
@@ -295,13 +305,11 @@ export class PuntoInicioComponent implements OnInit {
         this.cargaPacientes();
         let misPacientesEstado: any = [];
         if (this.estadoSeleccion) {
-            this.pacientesPresentes.forEach(paciente => {
-                // console.log(this.estadoSeleccion.id);
+            this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
                 if (paciente.estado === this.estadoSeleccion.id) {
-                    misPacientesEstado.push(paciente);
+                    return paciente;
                 }
             });
-            this.pacientesPresentes = misPacientesEstado;
         }
     }
 
@@ -339,8 +347,6 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     crearPrestacionVacia(tipoPrestacion) {
-        console.log(tipoPrestacion);
-        console.log('tipoPrestacion');
 
         let nuevaPrestacion;
 

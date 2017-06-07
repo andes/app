@@ -28,6 +28,7 @@ const skip = 0;
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
+
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     conceptoSnomed($e) {
         console.log($e);
@@ -52,6 +53,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     search: String = '';
 
     searchProblema: String;
+    buscarSnomed: Boolean = false;
+    buscarProblema: String;
     isDraggingProblem = false;
     isDraggingPrestacion = false;
     isDraggingProblemList = false;
@@ -101,11 +104,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
     // listado de problemas del paciente
     listaProblemasPaciente: any[] = [];
+    listaProblemasPacienteCopy: any[] = [];
+
     // Funciones de planes
     motivoSolicitud: String;
-    showMotivoSolicitud = false;
+    showMotivoSolicitud: boolean = false;
     planSelecionado: any;
-    listaPlanesProblemas: any[] = []; // array de todos los planes que se van a mostrar vinculados a los problemas (prestacionesSolicitadas)
+    listaPlanesProblemas: any = []; // array de todos los planes que se van a mostrar vinculados a los problemas..
 
 
     todas: any[] = [];
@@ -119,6 +124,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
     }
 
+    /*
+     * Mostrar opciones al hacer click sobre el menu de
+     * problemas para poder evolucionar / transformar / etc
+     * Opciones posibles en variable -items-
+    */
     mostrarOpciones(problema) {
         this.problemaItem = problema;
     }
@@ -171,6 +181,35 @@ export class PrestacionEjecucionComponent implements OnInit {
     onPlanSelecionDrop(e: any) {
         this.PlanesSeleccionados.push(e.dragData);
 
+    }
+
+
+    // Inicio - Filtro en Maestro de Problemas del Paciente
+    buscarProblemasPaciente() {
+        let search = this.buscarProblema;
+
+        let listaProblemasPaciente = this.listaProblemasPacienteCopy;
+
+        // buscamos los parecidos en la lista de problemas del paciente
+        this.listaProblemasPaciente = listaProblemasPaciente.filter(item => {
+            return (item.tipoProblema.term.toLowerCase().indexOf(search.toLowerCase()) !== -1);
+        });
+
+        if (!search) {
+            // restauramos originales
+            this.listaProblemasPaciente = this.listaProblemasPacienteCopy;
+
+            // desactivamos búsqueda mediante snomed
+            this.buscarSnomed = false;
+
+        }
+    }
+
+    buscarProblemaSnomed() {
+        // habilitamos para que vaya a buscar los problemas
+        // al componente snomed-search y no busque por los
+        // problemas activos del paciente
+        this.buscarSnomed = true;
     }
 
     buscarPrestacion(e) {
@@ -409,8 +448,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // si plan existe entonces muestro un alerta
             if (planExistente) {
                 this.plex.alert('El plan ya esta asociado al problema');
-            }
-            else {
+            } else {
                 this.servicioPrestacion.patch(prestacion, cambios).subscribe(prestacionActualizada => {
                     // buscamos la prestacion principal actualizada con los datos populados
                     this.route.params.subscribe(params => {
@@ -427,6 +465,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     }
+
     onPlanTodosLosProblemasDrop($event) { // Carga plan en todos los problemas
         if (this.prestacion && this.prestacion.solicitud && this.prestacion.ejecucion.listaProblemas) {
             this.prestacion.ejecucion.listaProblemas.forEach(problema => {
@@ -435,33 +474,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
-    // agregamos la prestacion al plan
-    agregarPlanDePrestacionFutura(prestacionFutura, textoMotivoSolicitud) {
-        // asignamos valores a la nueva prestacion
-        this.nuevaPrestacion = {
-            idPrestacionOrigen: this.prestacion.id,
-            paciente: this.prestacion.paciente,
-            solicitud: {
-                motivoSolicitud: textoMotivoSolicitud,
-                tipoPrestacion: prestacionFutura,
-                fecha: new Date(),
-                listaProblemas: []
-            },
-            estado: {
-                timestamp: Date(),
-                tipo: 'pendiente'
-            },
-            ejecucion: {
-                evoluciones: []
-            }
-        };
-        // guardamos la nueva prestacion
-        this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
-            this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
-            this.updatePrestacion();
-        });
 
-    }
 
     // FILTROS MAESTRO DE PROBLEMAS
     FiltroestadoTodos() {
@@ -556,14 +569,49 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (resultado) {
             }
         });
+
     }
 
-    // nuevoProblema(problema) {
-    //   this.showNuevo = true;
-    //   delete problema.$order; // Se debe comentar luego de que funcione el plex select
-    //   this.problemaTratar = problema;
+    // agregamos la prestacion al plan
+    agregarPlanDePrestacionFutura(prestacionFutura, textoMotivoSolicitud) {
+        // asignamos valores a la nueva prestacion
+        this.nuevaPrestacion = {
+            idPrestacionOrigen: this.prestacion.id,
+            paciente: this.prestacion.paciente,
+            solicitud: {
+                motivoSolicitud: textoMotivoSolicitud,
+                tipoPrestacion: prestacionFutura,
+                fecha: new Date(),
+                listaProblemas: []
+            },
+            estado: {
+                timestamp: Date(),
+                tipo: 'pendiente'
+            },
+            ejecucion: {
+                evoluciones: []
+            }
+        };
+        // guardamos la nueva prestacion
+        this.servicioPrestacion.post(this.nuevaPrestacion).subscribe(prestacionFutura => {
+            this.prestacion.prestacionesSolicitadas.push(prestacionFutura.id);
+            this.updatePrestacion();
+        });
 
-    // }
+    }
+
+    getCantidProblemasByEstado(estado) {
+        return this.listaProblemasPaciente.filter(problema => {
+            return (problema.evoluciones[problema.evoluciones.length - 1].estado === estado);
+        }).length;
+    }
+    // FILTROS MAESTRO DE PROBLEMAS
+
+
+
+
+
+
 
     evolucionarProblema(problema) {
         this.showEvolucionar = true;
@@ -612,6 +660,24 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+
+
+
+
+
+
+    onReturnTodos(datos: IProblemaPaciente[]) {
+        this.showEvolucionar = false;
+        this.showEvolTodo = false;
+        if (datos) {
+            this.cargarProblemasPaciente();
+            this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+                this.prestacion = prestacion;
+            });
+            this.plex.toast('success', 'Los problemas fueron evolucionados correctamente.', 'Información', 4000);
+        }
+    }
+
     onReturnNvoProblema(idProblema: any) {
 
         this.showEvolucionar = false;
@@ -648,19 +714,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.prestacion.ejecucion.listaProblemas = this.listaProblemas;
             this.updateListaProblemas(this.listaProblemas);
         }
+
     }
 
-    onReturnTodos(datos: IProblemaPaciente[]) {
-        this.showEvolucionar = false;
-        this.showEvolTodo = false;
-        if (datos) {
-            this.cargarProblemasPaciente();
-            this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-            });
-            this.plex.toast('success', 'Los problemas fueron evolucionados correctamente.', 'Información', 4000);
-        }
-    }
+
+
+
+
 
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
