@@ -30,6 +30,8 @@ export class Auditoria1Component implements OnInit {
     showValidator = false;
     seleccionada = false;
     loading = false;
+    result = false;
+    pacienteSelected: any;
 
     pacientesAudit = [
         {
@@ -165,7 +167,7 @@ export class Auditoria1Component implements OnInit {
     candidatos = [
         {
 
-            "documento": "36945224",
+            "documento": "36945253",
             "estado": "temporal",
             "nombre": "VALERIA EDIT",
             "apellido": "ATENCIO",
@@ -183,15 +185,6 @@ export class Auditoria1Component implements OnInit {
             "genero": "masculino",
             "fechaNacimiento": moment("1992-08-24T00:00:00.000-03:00"),
             "similitud": "0.82",
-        }, {
-            "documento": "32292948",
-            "estado": "temporal",
-            "nombre": "MARIA SOL",
-            "apellido": "FERNANDEZ",
-            "sexo": "femenino",
-            "genero": "femenino",
-            "fechaNacimiento": moment("1986-05-07T00:00:00.000-03:00"),
-            "similitud": "0.79",
         }
     ]
 
@@ -239,12 +232,19 @@ export class Auditoria1Component implements OnInit {
     }
 
     validar() {
+        this.result = false;
         this.loading = true;
         setTimeout(() => this.showResult(), 2000);
     }
 
+
     showResult() {
         this.loading = false;
-        this.plex.alert('resultado');
+        this.result = true;
+    }
+
+    estaSeleccionado(paciente: any) {
+        debugger
+        return this.pacienteSelected === paciente;
     }
 }

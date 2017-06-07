@@ -2,44 +2,43 @@
 
   <!--Listado INICIAL de pacientes -->
   <div class="row">
-    <div class="col-7" *ngIf="!showValidator">
+    <div class="col-7">
       <plex-box type="danger">
         <header>
           <div class="page-title">Pacientes que requieren revisión</div>
         </header>
         <!-- Search results -->
         <div>
-          <div class="table">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Documento</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Fecha Nac.</th>
-                  <th>Sexo</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="mostrarPaciente=true; pacienteSelected = paciente;verDuplicados=false;validate=false">
-                  <td>{{paciente.documento}}</td>
-                  <td>{{paciente.nombre| uppercase}}</td>
-                  <td>{{paciente.apellido| uppercase}}</td>
-                  <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                  <td>{{paciente.sexo}}</td>
-                  <td>{{paciente.estado}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha Nac.</th>
+                <th>Sexo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover" *ngFor="let paciente of pacientesAudit; let i=index" (click)="mostrarPaciente=true; pacienteSelected = paciente;verDuplicados=false;validate=false"
+                [ngClass]="{'bg-inverse text-white': estaSeleccionado(pacientesAudit[i])}">
+                <td>{{paciente.documento}}</td>
+                <td>{{paciente.nombre| uppercase}}</td>
+                <td>{{paciente.apellido| uppercase}}</td>
+                <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                <td>{{paciente.sexo}}</td>
+                <td>{{paciente.estado}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </plex-box>
       <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
     </div>
 
     <!-- Box con operaciones de validación -->
-    <div *ngIf="showValidator" class="col-7">
+    <!--<div *ngIf="showValidator" class="col-7">
       <plex-box>
         <header>
           <div class="page-title">Validar de Paciente</div>
@@ -57,10 +56,34 @@
           </div>
         </div>
 
+        <div *ngIf='result'>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha Nacimiento</th>
+                <th>Sexo</th>
+                <th>% match</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover" *ngFor="let paciente of candidatos">
+                <td>{{paciente.documento}}</td>
+                <td>{{paciente.nombre| uppercase}}</td>
+                <td>{{paciente.apellido| uppercase}}</td>
+                <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
+                <td>{{paciente.sexo}}</td>
+                <td>{{paciente.similitud * 100}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </plex-box>
+    </div>-->
 
-
-    </div>
 
     <!--fin de col-md-7 -->
 
@@ -109,10 +132,16 @@
           </div>
         </div>
         <br>
-        <plex-button icon="account-search" type="primary" label="Validación" (click)="showValidator=true"></plex-button>
-        <plex-button icon="account-search" type="success" label="Ver Duplicados" *ngIf="!verDuplicados" (click)="verDuplicados=true"></plex-button>
-        <plex-button icon="account-search" type="danger" label="Fusionar Selección" *ngIf="verDuplicados" (click)="verDuplicados=false"></plex-button>
-        <br> <br>
+        <div class="row">
+          <div class="col">
+            <plex-button icon="autorenew" type="primary" label="RENAPER" (click)="validar()"></plex-button>
+            <plex-button icon="autorenew" type="primary" label="SISA" (click)="validar()"></plex-button>
+            <plex-button icon="autorenew" type="primary" label="SINTyS" (click)="validar()"></plex-button>
+          </div>
+        </div>
+        <br>
+        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+        <h4><label>Imposible validar el paciente</label></h4>
       </plex-box>
     </div>
   </div>

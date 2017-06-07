@@ -2,3 +2,15 @@
     border: 1px solid;
     float: right;
 }
+
+.recVerde {
+    border: 0.5px solid;
+    color:#419641;
+}
+
+
+.recNaranja {
+    border: 0.5px solid;
+     position: relative;
+    color:#ff8d22;
+}
