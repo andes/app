@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, ElementRef  } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
 import { SnomedService } from './../../services/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -24,41 +24,88 @@ import { Observable } from 'rxjs/Rx';
     ]
 })
 
-export class SnomedBuscarComponent implements OnInit {
+export class SnomedBuscarComponent implements OnInit, OnChanges {
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
     // @Input() _dragData: String;
 
-    // methods
+    // searchTermInput: Acá podemos enviarle como input un string
+    // para que busque en SNOMED. ATENCION: al mandar este input se oculta
+    // el text field para ingresar la busqueda a mano
+    @Input() searchTermInput: String;
+
+    // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
-
-    // [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problemaMaestro"  
-    // (onDragEnd)="arrastrandoProblema(false)" (onDragStart)="arrastrandoProblema(true)"
+    // output de informacion que devuelve el componente
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     // cerrar si cliqueo fuera de los resultados
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
 
+    // En caso de ingresar searchTermInput esta variable hideSearchInput pasara a true
+    private hideSearchInput: Boolean = false;
+
+    // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
+    // lista de problemas de resultados
     public listaProblemasMaestro = [];
     public elementRef;
 
+    // boolean para indicar si esta cargando o no
     public loading = false;
-    public searchTerm : String = '';
-    public tipoBusqueda : String = '';
 
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // termino a buscar en SNOMED
+    public searchTerm: String = '';
+    // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
+    public tipoBusqueda: String = '';
 
+    // inyectamos servicio de snomed, plex y tambien ElementRef
+    // ElementRef lo utilizo para tener informacion del 
+    // html del codigo de este componente en el DOM
     constructor(private SNOMED: SnomedService, private plex: Plex,
         myElement: ElementRef) {
         this.elementRef = myElement;
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        // si paso como un Input el string a buscar mediante la variable searchTermInput
+        // entonces oculto el text input del formulario
+        if (this.searchTermInput) {
+            // iniciar busqueda manual
+            this.busquedaManual();
+        }
+     }
+
+     ngOnChanges(changes: any) {
+        // si paso como un Input el string a buscar mediante la variable searchTermInput
+        // y hubo algun cambio, entonces ejecuto la busqueda manual
+        this.busquedaManual();
+    }
+
+    // iniciar busqueda es un metodo creado para poder buscar cuando
+    // ejecuto alguna acción en base al Input() _searchTerm
+    // (que viene desde otro componente)
+    // Si ese Input() no viene definido usa uno propio este componente
+    busquedaManual() {
+        // ocultamos el campo input para buscar
+        this.hideSearchInput = true;
+
+        // asignamos el texto a buscar
+        this.searchTerm = this.searchTermInput;
+
+        // falso easter egg :D
+        if (this.searchTerm === 'ssssss') {
+            console.log('sssssss 🐍 busssscando');
+        }
+
+        // ejecutamos busqueda por la serpiendte de snomed ... sssss &#128013;
+        this.buscar();
+    }
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -67,7 +114,6 @@ export class SnomedBuscarComponent implements OnInit {
     dragEnd(e) {
         this._onDragEnd.emit(e);
     }
-
 
     setTipoBusqueda(tipoBusqueda): void {
         // seteamos el tipo de busqueda que deseamos realizar
@@ -94,8 +140,6 @@ export class SnomedBuscarComponent implements OnInit {
             window.clearTimeout(this.timeoutHandle);
         }
 
-        console.log(this.searchTerm);
-
         if (this.searchTerm) {
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
@@ -105,7 +149,7 @@ export class SnomedBuscarComponent implements OnInit {
                 search: search,
                 tipo: this.tipoBusqueda
             };
- 
+
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
@@ -123,7 +167,7 @@ export class SnomedBuscarComponent implements OnInit {
                     this.loading = false;
                     // this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
-                console.log('buscando');
+
             }, 300);
         } else {
             this.listaProblemasMaestro = [];
@@ -144,11 +188,16 @@ export class SnomedBuscarComponent implements OnInit {
 
         // loopeamos
         do {
+            // si hice click dentro del codigo html del componente
+            // entonces indico que estoy adentro (inside = true)
+            // y no oculto la lista de resultados
             if (clickedComponent === this.elementRef.nativeElement) {
                 inside = true;
 
                 this.hideLista = false;
             }
+
+            // info de que componente hice clic
             clickedComponent = clickedComponent.parentNode;
         } while (clickedComponent);
 
@@ -159,6 +208,7 @@ export class SnomedBuscarComponent implements OnInit {
         }
     }
 
+    // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
         this.evtData.emit(concepto);
     }

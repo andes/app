@@ -52,6 +52,8 @@ export class PrestacionEjecucionComponent implements OnInit {
   search: String = '';
 
   searchProblema: String;
+  buscarSnomed: Boolean = false;
+  buscarProblema: String;
   isDraggingProblem = false;
   isDraggingPrestacion = false;
   isDraggingProblemList = false;
@@ -101,6 +103,8 @@ export class PrestacionEjecucionComponent implements OnInit {
   valoresPrestaciones: {}[] = []; // listado de prestaciones futuras a pedir en el plan
   // listado de problemas del paciente
   listaProblemasPaciente: any[] = [];
+  listaProblemasPacienteCopy: any[] = [];
+
   // Funciones de planes
   motivoSolicitud: String;
   showMotivoSolicitud: boolean = false;
@@ -119,6 +123,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
   }
 
+  /*
+   * Mostrar opciones al hacer click sobre el menu de
+   * problemas para poder evolucionar / transformar / etc
+   * Opciones posibles en variable -items-
+  */
   mostrarOpciones(problema) {
     this.problemaItem = problema;
   }
@@ -194,20 +203,30 @@ export class PrestacionEjecucionComponent implements OnInit {
   }
 
   // Inicio - Filtro en Maestro de Problemas del Paciente
-  buscarProblemas(e) {
-    this.habilitaTransparencia = 'inhabilitar';
+  buscarProblemasPaciente() {
+    let search = this.buscarProblema;
 
-    if (e.value) {
-      this.habilitaTransparencia = 'habilitar';
-      this.servicioTipoProblema.get({ nombre: e.value }).debounceTime(1000).subscribe(listaTipoProblemas => {
-        this.listaproblemasMaestro = listaTipoProblemas;
-      });
+    let listaProblemasPaciente = this.listaProblemasPacienteCopy;
 
-    } else {
+    // buscamos los parecidos en la lista de problemas del paciente
+    this.listaProblemasPaciente = listaProblemasPaciente.filter(item => {
+        return (item.tipoProblema.term.toLowerCase().indexOf(search.toLowerCase()) !== -1);
+    });
 
-      this.listaproblemasMaestro = [];
+    if (!search) {
+      // restauramos originales
+      this.listaProblemasPaciente = this.listaProblemasPacienteCopy;
+
+      // desactivamos búsqueda mediante snomed
+      this.buscarSnomed = false;
     }
+  }
 
+  buscarProblemaSnomed() {
+    // habilitamos para que vaya a buscar los problemas
+    // al componente snomed-search y no busque por los
+    // problemas activos del paciente
+    this.buscarSnomed = true;
   }
 
 
@@ -481,6 +500,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.filtroEstado = 'resuelto';
     this.filtros = 'filtroResuelto';
   }
+
+  getCantidProblemasByEstado(estado) {
+    return this.listaProblemasPaciente.filter(problema => {
+      return (problema.evoluciones[problema.evoluciones.length - 1].estado === estado);
+    }).length;
+  }
   // FILTROS MAESTRO DE PROBLEMAS
 
 
@@ -737,6 +762,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     ).subscribe(lista => {
       if (lista) {
         this.listaProblemasPaciente = lista;
+        // guardamos una copia de los pacientes para luego usar filtros por strings y no perder el original
+        this.listaProblemasPacienteCopy = lista;
       }
 
     });
