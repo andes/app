@@ -24,3 +24,18 @@ export let EstadosAgenda: IEnum = {
     }
 };
 
+
+export let EstadosAsistencia: IEnum = {
+    'asistio': {
+        nombre: 'Asistio',
+        class: 'success'
+    },
+    'noAsistio': {
+        nombre: 'No Asistio',
+        class: 'danger'
+    },
+    'sinDatos': {
+        nombre: 'Sin Datos',
+        class: 'warning'
+    }
+};

@@ -33,6 +33,7 @@ export class GestorAgendasComponent implements OnInit {
     public showInsertarAgenda: Boolean = false;
     private showAgregarNotaAgenda = false;
     private showAgregarSobreturno = false;
+    public showRevisionAgenda = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -142,6 +143,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
+        this.showRevisionAgenda = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -174,6 +176,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showAgregarSobreturno = false;
         this.showClonar = false;
+        this.showRevisionAgenda = false;
         this.loadAgendas();
     }
 
@@ -208,6 +211,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
+        this.showRevisionAgenda = false;
+    }
+
+
+    revisionAgenda(agenda) {
+      this.showGestorAgendas = false;
+      this.showRevisionAgenda = true;
     }
 
     loadAgendas() {
@@ -293,6 +303,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showEditarAgendaPanel = false;
             this.showAgregarNotaAgenda = false;
             this.showAgregarSobreturno = false;
+            this.showRevisionAgenda = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
         });
@@ -327,6 +338,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         let temporal = this.agendasSeleccionadas;
         console.log('temporal ', temporal);
+        this.showRevisionAgenda = false;
         this.loadAgendas();
         console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
         this.agendasSeleccionadas = temporal;
@@ -346,4 +358,3 @@ export class GestorAgendasComponent implements OnInit {
     }
 
 }
-

@@ -13,7 +13,8 @@
                             (agregarSobreturnoEmit)="agregarSobreturno()"
                             (editarAgendaEmit)="editarAgenda($event)"
                             (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                            (listarTurnosEmit)="listarTurnos($event)">
+                            (listarTurnosEmit)="listarTurnos($event)"
+                            (revisionAgendaEmit)="revisionAgenda($event)">
                         </vista-agenda>
                     </div>
 
@@ -47,7 +48,7 @@
                         </div>
                         <div class="col-4">
                             <plex-select formControlName="estado" [data]="estadosAgenda" label="Estado">
-                                
+
                             </plex-select>
                         </div>
                     </div>
@@ -129,3 +130,4 @@
 
 <agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></agenda>
 <agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></agenda>
+<revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
