@@ -79,33 +79,45 @@
                                 *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
                                 (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
 
-                                <span *ngIf="problema?.tipoProblema?.term">
-                                <!--<h6>{{problema.tipoProblema.term }}</h6>TODO: cambio de interface-->
-                                <h6>{{problema.tipoProblema.term }}</h6>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <div *ngIf="problema?.tipoProblema?.term">
+                                            <!--<h6>{{problema.tipoProblema.term }}</h6>TODO: cambio de interface-->
+                                            <h6>{{problema.tipoProblema.term }} </h6>
 
-                            </span>
-                                <div class="pull-right">
-                                    <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'" class="badge-success">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'activo'" class="badge-success">
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                              </span>
+                                        </span>
 
-                                    <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge-danger"> 
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge-danger"> 
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                              </span>
-                                    <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge-danger"> 
-                                    {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
-                                </span>
+                                        </span>
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge-danger"> 
+                                                 {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
+                                        </span>
 
+                                    </div>
+                                    <div class="col-1">
+                                        <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)"
+                                            [items]="items"></plex-dropdown>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
 
+                                        Última evolución realizada                                   
+                                        <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
+                                        por el profesional 
+                                        <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
+                                        </small>
 
-                                <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
-
-                                    Última evolución realizada                                    
-                                    <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
-                                    por el profesional 
-                                    <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
-                            </small>
+                                    </div>
+                                    
+                                </div>
                             </li>
                         </ng-container>
                     </ul>
