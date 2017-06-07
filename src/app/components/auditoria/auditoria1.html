@@ -17,18 +17,16 @@
                 <th>Apellido</th>
                 <th>Fecha Nac.</th>
                 <th>Sexo</th>
-                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="hover" *ngFor="let paciente of pacientesAudit; let i=index" (click)="mostrarPaciente=true; pacienteSelected = paciente;verDuplicados=false;validate=false"
+              <tr class="hover" *ngFor="let paciente of pacientesAudit; let i=index" (click)="mostrarPaciente=true; expand=!expand; seleccionarPaciente(paciente);verDuplicados=false;validate=false"
                 [ngClass]="{'bg-inverse text-white': estaSeleccionado(pacientesAudit[i])}">
                 <td>{{paciente.documento}}</td>
                 <td>{{paciente.nombre| uppercase}}</td>
                 <td>{{paciente.apellido| uppercase}}</td>
                 <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
                 <td>{{paciente.sexo}}</td>
-                <td>{{paciente.estado}}</td>
               </tr>
             </tbody>
           </table>
@@ -134,14 +132,41 @@
         <br>
         <div class="row">
           <div class="col">
-            <plex-button icon="autorenew" type="primary" label="RENAPER" (click)="validar()"></plex-button>
-            <plex-button icon="autorenew" type="primary" label="SISA" (click)="validar()"></plex-button>
-            <plex-button icon="autorenew" type="primary" label="SINTyS" (click)="validar()"></plex-button>
+            <plex-button [disabled]="btnRenaper" icon="autorenew" type="primary" label="RENAPER" (click)="validarRenaper(true,pacienteSelected)"></plex-button>
+            <plex-button [disabled]="btnSisa" icon="autorenew" type="primary" label="SISA" (click)="validarSisa(true,pacienteSelected)"></plex-button>
+            <plex-button [disabled]="btnSintys" icon="autorenew" type="primary" label="SINTyS" (click)="validarSintys(false,pacienteSelected)"></plex-button>
           </div>
         </div>
         <br>
         <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-        <h4><label>Imposible validar el paciente</label></h4>
+
+        <div *ngIf="result">
+          <h2>Pacientes encontrados <span class="badge">{{datosSisa.length}}</span> </h2>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha Nacimiento</th>
+                <th>Sexo</th>
+                <th>match</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let pacienteSisa of resultado">
+              <td> {{pacienteSisa.documento}}</td>
+              <td> {{pacienteSisa.nombre}} </td>
+              <td> {{pacienteSisa.apellido}} </td>
+              <td> {{pacienteSisa.fechaNacimiento | date: 'dd-MM-yyyy'}} </td>
+              <td> {{pacienteSisa.sexo}} </td>
+              <td> {{pacienteSisa.similitud * 100}} </td>
+            </tr>
+          </table>
+          <div *ngIf=mensaje class="alert" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span> {{mensaje}}
+          </div>
+        </div>
       </plex-box>
     </div>
   </div>
