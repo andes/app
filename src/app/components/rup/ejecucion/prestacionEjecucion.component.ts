@@ -798,6 +798,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         ).subscribe(lista => {
             if (lista) {
                 this.listaProblemasPaciente = lista;
+                // guardamos una copia de los pacientes para luego usar filtros por strings y no perder el original
+                this.listaProblemasPacienteCopy = lista;
             }
 
         });
