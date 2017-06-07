@@ -62,6 +62,9 @@ import { ProblemaPacienteService } from './services/rup/problemaPaciente.service
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
 
+// ... term
+import { Cie10Service } from './services/term/cie10.service';
+
 // SNOMED
 import { SnomedService } from './services/snomed.service';
 
@@ -111,6 +114,7 @@ import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gesto
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
 import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
+import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 
 
@@ -321,7 +325,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverAuditComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
 
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
@@ -373,7 +377,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     AuditoriaPrestacionPacienteService,
 
-    SnomedService
+    SnomedService,
+    Cie10Service
   ]
 })
 

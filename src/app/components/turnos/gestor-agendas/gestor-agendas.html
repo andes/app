@@ -12,7 +12,8 @@
                             (agregarNotaAgendaEmit)="agregarNotaAgenda()"
                             (editarAgendaEmit)="editarAgenda($event)"
                             (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                            (listarTurnosEmit)="listarTurnos($event)">
+                            (listarTurnosEmit)="listarTurnos($event)"
+                            (revisionAgendaEmit)="revisionAgenda($event)">
                         </vista-agenda>
                     </div>
 
@@ -46,7 +47,7 @@
                         </div>
                         <div class="col-4">
                             <plex-select formControlName="estado" [data]="estadosAgenda" label="Estado">
-                                
+
                             </plex-select>
                         </div>
                     </div>
@@ -111,10 +112,6 @@
                     <!--<div class="clear"></div>-->
                     <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)" (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                 </div>
-                <!-- Muestra el listado de turnos con el número de carpeta (HC) -->
-                <!-- <div *ngIf="showListado && agendasSeleccionadas.length == 1" type="info">
-                    <lista-turnos [agenda]="agendasSeleccionadas[0]"></lista-turnos>
-                </div> -->
             </plex-box>
         </div>
     </div>
@@ -131,3 +128,4 @@
 <dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
 <agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></agenda>
 <agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></agenda>
+<revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>

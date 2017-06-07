@@ -33,6 +33,7 @@ export class GestorAgendasComponent implements OnInit {
     public showListado: Boolean = false;
     public showInsertarAgenda: Boolean = false;
     public showAgregarNotaAgenda: Boolean = false;
+    public showRevisionAgenda = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -143,6 +144,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showListado = false;
+        this.showRevisionAgenda = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -168,6 +170,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
         this.showClonar = false;
+        this.showRevisionAgenda = false;
         this.loadAgendas();
     }
 
@@ -202,6 +205,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
+        this.showRevisionAgenda = false;
         this.showListado = false;
     }
 
@@ -211,6 +215,12 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showListado = true;
+    }
+
+    revisionAgenda(agenda) {
+      debugger;
+      this.showGestorAgendas = false;
+      this.showRevisionAgenda = true;
     }
 
     loadAgendas() {
@@ -296,6 +306,7 @@ export class GestorAgendasComponent implements OnInit {
             // Reseteo el panel de la derecha
             this.showEditarAgendaPanel = false;
             this.showAgregarNotaAgenda = false;
+            this.showRevisionAgenda = false;
             this.showVistaAgendas = true;
             this.showTurnos = true;
         });
@@ -328,8 +339,8 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        this.showRevisionAgenda = false;
         this.loadAgendas();
     }
 
 }
-

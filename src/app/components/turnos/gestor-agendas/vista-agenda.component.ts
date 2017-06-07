@@ -15,6 +15,7 @@ export class VistaAgendaComponent implements OnInit {
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
+    @Output() revisionAgendaEmit = new EventEmitter<boolean>();
 
     private _agendasSeleccionadas: Array<any>;
 
@@ -145,6 +146,9 @@ export class VistaAgendaComponent implements OnInit {
             agregarNota: true,
             // (En pausa: no se puede hacer nada, debe volver al estado anterior una vez que se hace "play")
             listarTurnos: (this.cantSel === 1 && this.puedoListar()),
+            //Revisión de agenda
+            revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
+
         };
     }
 
@@ -181,6 +185,12 @@ export class VistaAgendaComponent implements OnInit {
     puedoReanudar() {
         return this.agendasSeleccionadas.filter((agenda) => {
             return agenda.estado !== 'pausada';
+        }).length <= 0;
+    }
+
+    puedoRevisar() {
+        return this.agendasSeleccionadas.filter((agenda) => {
+            return agenda.estado !== 'publicada';
         }).length <= 0;
     }
 
@@ -227,6 +237,11 @@ export class VistaAgendaComponent implements OnInit {
     // Listado de turnos con carpetas
     listarTurnos() {
         this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    // Botón de revisión de Agenda
+    revisionAgenda() {
+        this.revisionAgendaEmit.emit(this.agendasSeleccionadas[0]);
     }
 
     cancelar() {
