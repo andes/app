@@ -134,8 +134,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
-        //  this.breadcrumbs = this.route.routeConfig.path;
-        //     console.log('pantalla:', this.breadcrumbs);
 
         this.route.params.subscribe(params => {
             let id = params['id'];
@@ -393,9 +391,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
         if (asignada) {
-
             this.prestacionesEjecucion[pos].ejecucion.listaProblemas.push(problema);
-
         }
 
         // Se verifica si se cargaron datos en la prestacion, para cargar una nueva evolución
@@ -754,17 +750,22 @@ export class PrestacionEjecucionComponent implements OnInit {
         // recorremos todas las que se han ejecutado y si no esta
         // dentro de las que cargamos anteriormente las agregamos
         this.prestacion.ejecucion.prestaciones.forEach(_prestacion => {
-            let find = this.prestacionesEjecucion.find(pe => {
-                return _prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id;
-            });
 
-            if (!find) {
-                // this.idTiposPrestacionesEjecucion.push(_prestacion.solicitud.tipoPrestacion.id);
-                this.prestacionesEjecucion.push(_prestacion);
-                let key; key = _prestacion.solicitud.tipoPrestacion.key;
-                this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+            if (_prestacion.estado[_prestacion.estado.length - 1].tipo !== 'desvinculada') {
 
-                // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                let find = this.prestacionesEjecucion.find(pe => {
+                    console.log('_prestacion.estado[_prestacion.estado.length - 1].tipo', _prestacion.estado[_prestacion.estado.length - 1]);
+                    return (_prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id);
+                });
+
+                if (!find) {
+                    // this.idTiposPrestacionesEjecucion.push(_prestacion.solicitud.tipoPrestacion.id);
+                    this.prestacionesEjecucion.push(_prestacion);
+                    let key; key = _prestacion.solicitud.tipoPrestacion.key;
+                    this.listaProblemaPrestacion[key] = _prestacion.ejecucion.listaProblemas;
+
+                    // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
+                }
             }
         });
     }
@@ -794,8 +795,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarProblemasPaciente() {
-        this.servicioProblemaPac.get({ idPaciente: this.prestacion.paciente.id }
-        ).subscribe(lista => {
+        this.servicioProblemaPac.get({ idPaciente: this.prestacion.paciente.id }).subscribe(lista => {
             if (lista) {
                 this.listaProblemasPaciente = lista;
                 // guardamos una copia de los pacientes para luego usar filtros por strings y no perder el original
@@ -1057,12 +1057,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             if (confirmar === true) {
                 const patch = {
-                    op: 'estado',
-                    estado: 'anulada'
+                    op: 'estadoPush',
+                    estado: 'desvinculada'
                 };
                 if (typeof this.prestacionesEjecucion[index].id !== 'undefined') {
                     this.servicioPrestacion.patch(this.prestacionesEjecucion[index], patch).subscribe((result) => {
-                        console.log('Prestación desvinculada, pasó a estado "anulada"', result);
+                        console.log('Prestación desvinculada, pasó a estado "desvinculada"', result);
                         this.prestacionesEjecucion.splice(index, 1);
                         this.prestacionesEjecucion = [...this.prestacionesEjecucion];
                     });

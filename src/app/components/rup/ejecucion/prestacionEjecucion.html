@@ -233,7 +233,7 @@
 
                                 <!--Prestaciones para el problema-->
                                 <div class="col-12">
-                                    <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
+                                    <div *ngFor="let prestacionesProblema of prestacionesEjecucion; let b = index">
                                         <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
                                             <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas; let i = index">
                                                 <div *ngIf="problemaP.id == problema.id">
@@ -246,7 +246,7 @@
                                                         </plex-panel>
                                                     </plex-accordion>
                                                     <div class="float-right">
-                                                        <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, i)"></plex-button>
+                                                        <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"></plex-button>
                                                     </div>
                                                 </div>
                                             </div>
