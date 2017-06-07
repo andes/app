@@ -67,9 +67,6 @@ export class PuntoInicioComponent implements OnInit {
 
         this.fechaDesde = new Date(hoy.fechaDesde);
         this.fechaHasta = new Date(hoy.fechaHasta);
-        let prof = this.auth.profesional;
-        console.log("Profesional", prof);
-        alert(prof);
         this.loadAgendasXDia(hoy);
 
     }
@@ -163,7 +160,6 @@ export class PuntoInicioComponent implements OnInit {
                 unPacientePresente.estado = 'En espera';
                 unPacientePresente.fecha = turno.horaInicio;
                 if (turno.asistencia) {
-                    alert(turno.id);
                     unPacientePresente.estado = 'En espera (Asistencia)';
                     //Buscar si existe una prestacion asociada al turno
                     let prestacionTurno = this.todasLasPrestaciones.find(prestacion => {
