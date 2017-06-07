@@ -71,8 +71,11 @@ export class AgregarSobreturnoComponent implements OnInit {
         this.showCreateUpdate = false;
         this.showSobreturno = true;
         if (paciente) {
-            this.paciente = paciente;
-            this.verificarTelefono(this.paciente);
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.verificarTelefono(pacienteMPI);
+                });
         } else {
             this.buscarPaciente();
         }
@@ -80,12 +83,15 @@ export class AgregarSobreturnoComponent implements OnInit {
 
     afterSearch(paciente: IPaciente): void {
         if (paciente.id) {
-            this.paciente = paciente;
-            this.pacienteNombre = new patientFullNamePipe().transform(paciente, []);
-            this.verificarTelefono(this.paciente);
-            this.showSobreturno = true;
-            this.pacientesSearch = false;
-            window.setTimeout(() => this.pacientesSearch = false, 100);
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.pacienteNombre = new patientFullNamePipe().transform(this.paciente, []);
+                    this.verificarTelefono(this.paciente);
+                    this.showSobreturno = true;
+                    this.pacientesSearch = false;
+                    window.setTimeout(() => this.pacientesSearch = false, 100);
+                });
         } else {
             this.seleccion = paciente;
             // this.verificarTelefono(this.seleccion);
