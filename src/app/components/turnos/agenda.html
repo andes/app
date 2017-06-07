@@ -59,18 +59,12 @@
                   (click)="activarBloque(i)">
                   <div>{{unBloque.horaInicio | date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}</div>
                   <div *ngIf="unBloque.descripcion">{{unBloque.descripcion}}</div>
-                  <plex-button icon="delete" title="Eliminar Bloque" type="primary" (click)="deleteBloque(i)">
+                  <plex-button icon="delete" type="primary" (click)="deleteBloque(i)">
                   </plex-button>
                 </div>
               </div>
             </fieldset>
           </div>
-          <!--<div *ngIf="modelo.fecha && modelo.horaInicio && modelo.horaFin && modelo.tipoPrestaciones && modelo.tipoPrestaciones.length>0" class="row">
-                        <div class="col-12">
-                            <plex-button icon="plus" title="Agregar Bloque" label="Agregar Bloque" (click)="addBloque()">
-                            </plex-button>
-                        </div>
-                    </div>-->
         </plex-box>
       </div>
       <!--Edición del bloque activo-->

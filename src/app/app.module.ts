@@ -7,9 +7,10 @@ de la siguiente manera:
 
 1) Módulos principales de Angular
 2) Módulos globales
-3) Servicios
-4) Componentes
-5) Otros
+3) Pipes
+4) Servicios
+5) Componentes
+6) Otros
 */
 
 // Angular
@@ -36,6 +37,7 @@ import { FromNowPipe } from './pipes/fromNow.pipe';
 import { FechaPipe } from './pipes/fecha.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
+import { SortBloquesPipe } from './pipe/agenda-bloques.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -65,6 +67,9 @@ import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
+
+// ... term
+import { Cie10Service } from './services/term/cie10.service';
 
 // SNOMED
 import { SnomedService } from './services/snomed.service';
@@ -113,8 +118,10 @@ import { EditEspacioFisicoComponent } from './components/turnos/configuracion/es
 import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
+import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/sobreturno.component';
 import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
 import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
+import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 
 
@@ -293,8 +300,6 @@ import { routing, appRoutingProviders } from './app.routing';
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
-
-
 // Main module
 @NgModule({
   imports: [
@@ -320,14 +325,15 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverAuditComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    AgregarSobreturnoComponent, PanelAgendaComponent,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
@@ -377,7 +383,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     AuditoriaPrestacionPacienteService,
 
-    SnomedService
+    SnomedService,
+    Cie10Service
   ]
 })
 

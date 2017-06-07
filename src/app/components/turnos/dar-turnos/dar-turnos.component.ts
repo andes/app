@@ -73,6 +73,8 @@ export class DarTurnosComponent implements OnInit {
   private delDiaDisponibles: number;
   private programadosDisponibles: number;
   private gestionDisponibles: number;
+  private permitirTurnoDoble = false;
+  private turnoDoble = false;
   countBloques: any[];
   countTurnos: any = {};
   resultado: any;
@@ -135,6 +137,23 @@ export class DarTurnosComponent implements OnInit {
       let data2 = this.verificarLlaves(dataF, event);
     });
   }
+
+  habilitarTurnoDoble() {
+    // Si el siguiente turno está disponible, se habilita la opción de turno doble
+    let cantidadTurnos;
+    this.permitirTurnoDoble = false;
+    if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
+      cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+      cantidadTurnos--;
+      if (this.indiceTurno < cantidadTurnos) {
+        // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
+        if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
+          this.permitirTurnoDoble = true;
+        }
+      }
+    }
+  }
+
 
   public verificarLlaves(tipoPrestaciones: any[], event) {
     tipoPrestaciones.forEach((tipoPrestacion, index) => {
@@ -554,6 +573,7 @@ export class DarTurnosComponent implements OnInit {
       if (this.bloque.tipoPrestaciones.length === 1) {
         this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
       }
+      this.habilitarTurnoDoble();
       this.estadoT = 'confirmacion';
     } else {
       this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -656,8 +676,6 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
-
-
   }
 
   getUltimosTurnos() {
@@ -712,7 +730,8 @@ export class DarTurnosComponent implements OnInit {
 
         this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-
+        let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+        let agendaid = this.agenda.id;
         let datosTurno = {
           idAgenda: this.agenda.id,
           idTurno: this.turno.id,
@@ -765,11 +784,6 @@ export class DarTurnosComponent implements OnInit {
           }
         };
 
-        // TODO: Revisar alert
-        this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-        });
-
-        // });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {
