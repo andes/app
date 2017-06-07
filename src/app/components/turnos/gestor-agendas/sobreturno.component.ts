@@ -10,7 +10,6 @@ import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { patientFullNamePipe } from './../../../utils/patientPipe';
 
 @Component({
     selector: 'sobreturno',
@@ -81,7 +80,7 @@ export class AgregarSobreturnoComponent implements OnInit {
     afterSearch(paciente: IPaciente): void {
         if (paciente.id) {
             this.paciente = paciente;
-            this.pacienteNombre = new patientFullNamePipe().transform(paciente, []);
+            this.pacienteNombre = 'XXXXXXXXXXXXXXXXXXX'; // new patientFullNamePipe().transform(paciente, []);
             this.verificarTelefono(this.paciente);
             this.showSobreturno = true;
             this.pacientesSearch = false;

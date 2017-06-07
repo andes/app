@@ -110,7 +110,7 @@
                         <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
-                        <span *ngIf="turno && turno.paciente">{{ turno.paciente  | fullName: 'Mayusculas' }} </span>
+                        <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
                         <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
                         <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
 
@@ -163,7 +163,7 @@
                         <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <span *ngIf="sobreturno && sobreturno.paciente">{{ sobreturno.paciente  | fullName: 'Mayusculas' }} </span>
+                        <span *ngIf="sobreturno && sobreturno.paciente">{{ sobreturno.paciente  | paciente }} </span>
                         <small><span *ngIf="sobreturno && sobreturno.paciente">| DNI {{sobreturno.paciente.documento|number}}</span></small>
                         <small><span *ngIf="sobreturno && sobreturno.paciente && sobreturno.paciente.carpetaEfectores && sobreturno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
                 <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">

@@ -37,7 +37,7 @@ import { FromNowPipe } from './pipes/fromNow.pipe';
 import { FechaPipe } from './pipes/fecha.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
-import { SortBloquesPipe } from './pipe/agenda-bloques.pipe';
+import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 
 // Servicios
 // ... Tablas Maestras

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { SortBloquesPipe } from './../../../pipe/agenda-bloques.pipe';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { Plex } from '@andes/plex';
