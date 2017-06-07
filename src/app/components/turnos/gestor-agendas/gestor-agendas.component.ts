@@ -42,7 +42,8 @@ export class GestorAgendasComponent implements OnInit {
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
-    public estadosAgenda = enumToArray(enumerado.EstadosAgenda);
+    public estadosAgenda = enumerado.EstadosAgenda;
+    public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
 
     searchForm: FormGroup;
 
@@ -267,10 +268,6 @@ export class GestorAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
-    buscarEstado(estado) {
-        return this.estadosAgenda.find(x => x.id === estado);
-    }
-
     verAgenda(agenda, multiple, e) {
 
         this.showVistaAgendas = false;
@@ -354,7 +351,5 @@ export class GestorAgendasComponent implements OnInit {
         if (this.agendasSeleccionadas.length === 1) {
             this.showTurnos = true;
         }
-
     }
-
 }

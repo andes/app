@@ -7,14 +7,8 @@
                     <!--Botones / Acciones-->
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
-                        <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
-                            (clonarEmit)="clonar()"
-                            (agregarNotaAgendaEmit)="agregarNotaAgenda()"
-                            (agregarSobreturnoEmit)="agregarSobreturno()"
-                            (editarAgendaEmit)="editarAgenda($event)"
-                            (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                            (listarTurnosEmit)="listarTurnos($event)"
-                            (revisionAgendaEmit)="revisionAgenda($event)">
+                        <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
+                            (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)" (revisionAgendaEmit)="revisionAgenda($event)">
                         </vista-agenda>
                     </div>
 
@@ -47,8 +41,7 @@
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select formControlName="estado" [data]="estadosAgenda" label="Estado">
-
+                            <plex-select formControlName="estado" [data]="estadosAgendaArray" label="Estado">
                             </plex-select>
                         </div>
                     </div>
@@ -64,7 +57,7 @@
                         <th></th>
                         <th>Fecha y Hora</th>
                         <th>Tipos de prestación</th>
-                        <th>Estado</th>
+                        <th class="text-right">Estado</th>
                     </thead>
                     <tbody>
                         <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda)}">
@@ -73,7 +66,7 @@
                                 <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="text-warning warning mdi mdi-message"></i></span></span>
+                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span></span>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
@@ -84,14 +77,12 @@
                                 <div>
                                     <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | fullNameProfesional}}</div>
+                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
                                     </ng-container>
                                 </div>
                             </td>
-                            <td>
-                                <span class="badge-{{buscarEstado(agenda.estado).class}}" (click)="verAgenda(agenda, false, $event)">
-                                    {{buscarEstado(agenda.estado).nombre}}
-                                </span>
+                            <td class="text-right">
+                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
                             </td>
                         </tr>
                     </tbody>

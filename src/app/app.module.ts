@@ -29,12 +29,16 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
+import { HoverClassDirective } from './directives/hover-class.directive';
 // Pipes
-import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
-import { ProfesionalFullNamePipe } from './pipe/profesionalPipe';
-import { SortBloquesPipe } from './pipe/agenda-bloques.pipe';
-import { fromNowPipe } from './utils/date';
-import { fechaPipe } from './utils/datePipe';
+import { EdadPipe } from './pipes/edad.pipe';
+import { ProfesionalPipe } from './pipes/profesional.pipe';
+import { FromNowPipe } from './pipes/fromNow.pipe';
+import { FechaPipe } from './pipes/fecha.pipe';
+import { PacientePipe } from './pipes/paciente.pipe';
+import { OrganizacionPipe } from './pipes/organizacion.pipe';
+import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
+
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -321,19 +325,19 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, ProfesionalFullNamePipe, fromNowPipe, fechaPipe, SortBloquesPipe,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
     AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
     TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     AgregarSobreturnoComponent, PanelAgendaComponent,
     AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
+    HoverClassDirective
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],

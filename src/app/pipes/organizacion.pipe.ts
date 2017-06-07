@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'siglas' })
-export class siglasPipe implements PipeTransform {
+@Pipe({ name: 'organizacion' })
+export class OrganizacionPipe implements PipeTransform {
   transform(value: any): any {
     let nombre = value;
     let siglas = '';

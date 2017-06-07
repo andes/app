@@ -77,12 +77,6 @@ import {
 import {
     MapsComponent
 } from './../../utils/mapsComponent';
-import {
-    patientFullNamePipe,
-    patientRealAgePipe
-} from './../../utils/patientPipe';
-
-
 
 @Component({
     selector: 'paciente-actualizar',

@@ -1,30 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
-@Pipe({ name: 'fullName' })
-export class patientFullNamePipe implements PipeTransform {
-  transform(value: any, args: string[]): any {
-    let fullName;
-    if (value.alias) {
-      fullName = value.apellido + ' ' + value.alias;
-    }
-    else {
-      fullName = value.apellido + ' ' + value.nombre;
-    }
-
-    if (args[0]) {
-      fullName = fullName.toUpperCase();
-    }
-
-
-        return fullName;
-
-    }
-}
-@Pipe({ name: 'realAge' })
-export class patientRealAgePipe implements PipeTransform {
+@Pipe({ name: 'edad' })
+export class EdadPipe implements PipeTransform {
     transform(value: any, args: string[]): any {
-
         let edad: any;
         let fechaNac: any;
         let fechaActual: Date = new Date();
@@ -45,26 +24,25 @@ export class patientRealAgePipe implements PipeTransform {
         if (difAnios !== 0) {
             edad = {
                 valor: difAnios,
-                unidad: 'Años'
+                unidad: 'años'
             };
         } else if (difMeses !== 0) {
             edad = {
                 valor: difMeses,
-                unidad: 'Meses'
+                unidad: 'meses'
             };
         } else if (difDias !== 0) {
             edad = {
                 valor: difDias,
-                unidad: 'Días'
+                unidad: 'días'
             };
         } else if (difHs !== 0) {
             edad = {
                 valor: difHs,
-                unidad: 'Horas'
+                unidad: 'horas'
             };
         }
         return (edad.valor + ' ' + edad.unidad);
-
     }
 }
 
