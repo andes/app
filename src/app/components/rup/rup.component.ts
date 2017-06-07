@@ -10,171 +10,175 @@ import { ObservarDatosService } from './../../services/rup/observarDatos.service
 import { RUP_COMPONENTS } from '../../app.module';
 
 import {
-  Component, ViewContainerRef, ComponentFactoryResolver,
-  Output, Input,
-  OnInit, OnDestroy,
-  EventEmitter
+    Component, ViewContainerRef, ComponentFactoryResolver,
+    Output, Input,
+    OnInit, OnDestroy,
+    EventEmitter
 } from '@angular/core';
 
 @Component({
-  moduleId: 'RupModule',
-  selector: 'rup',
-  template: ''
+    moduleId: 'RupModule',
+    selector: 'rup',
+    template: ''
 
 })
 
 export class RupComponent implements OnInit, OnDestroy {
 
-  @Input() paciente: IPaciente;
-  @Input() tipoPrestacion: any; // Ver que sea de tipo IPrestacion..
-  @Input() datosIngreso: Object;
-  @Input() soloValores: Boolean = null;
-  @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-  // array de prestaciones que se estan ejecutando actualmente en el proceso
-  @Input() prestacionesEjecucion: ITipoPrestacion;
-  // array de valores de las prestaciones que se estan ejecutando actualmente
-  @Input() valoresPrestacionEjecucion: any = [];
-  @Input() prestacion: IPrestacionPaciente;
+    @Input() paciente: IPaciente;
+    @Input() tipoPrestacion: any; // Ver que sea de tipo IPrestacion..
+    @Input() datosIngreso: Object;
+    @Input() soloValores: Boolean = null;
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // array de prestaciones que se estan ejecutando actualmente en el proceso
+    @Input() prestacionesEjecucion: ITipoPrestacion;
+    // array de valores de las prestaciones que se estan ejecutando actualmente
+    @Input() valoresPrestacionEjecucion: any = [];
+    @Input() prestacion: IPrestacionPaciente;
 
-  pacientePrestacion: any = {};
-  // resultados a devolver
-  data: any = {};
-  mensaje: any = {};
+    pacientePrestacion: any = {};
+    // resultados a devolver
+    data: any = {};
+    mensaje: any = {};
 
 
-  // Componente a cargar
-  private componentContainer: any;
+    // Componente a cargar
+    private componentContainer: any;
 
-  tiposPrestaciones: Object[] = [];
+    tiposPrestaciones: Object[] = [];
 
-  // Referencia al componente para poder manejarlo
-  private componentReference: any;
+    // Referencia al componente para poder manejarlo
+    private componentReference: any;
 
-  // Asegurar que el View está inicializado
-  private isViewInitialized = false;
+    // Asegurar que el View está inicializado
+    private isViewInitialized = false;
 
-  // viewContainerRef es una referencia al padre del componente que queremos cargar
-  constructor(private componentFactoryResolver: ComponentFactoryResolver,
-    private viewContainerRef: ViewContainerRef,
-    private pacienteService: PacienteService,
-    private tipoPrestacionService: TipoPrestacionService,
-    public servicioTipoPrestacion: TipoPrestacionService, // Publico por que lo usa la molecula
-    public servicioObservarDatos: ObservarDatosService
-  ) {
-  }
-
-  ngOnInit() {
-    // console.log('RUP', this.tipoPrestacion.granularidad);
-    // El View ya está inicializado
-    this.isViewInitialized = true;
-
-    // Inicializamos la lista de Componentes RUP
-    for (let comp of RUP_COMPONENTS) {
-      this.tiposPrestaciones.push({
-        'nombre': comp.name,
-        'component': comp
-      });
+    // viewContainerRef es una referencia al padre del componente que queremos cargar
+    constructor(private componentFactoryResolver: ComponentFactoryResolver,
+        private viewContainerRef: ViewContainerRef,
+        private pacienteService: PacienteService,
+        private tipoPrestacionService: TipoPrestacionService,
+        public servicioTipoPrestacion: TipoPrestacionService, // Publico por que lo usa la molecula
+        public servicioObservarDatos: ObservarDatosService
+    ) {
     }
 
-    // Cargamos o actualizamos el componente 'Signos Vitales'
-    this.loadComponent();
+    ngOnInit() {
+        // console.log('RUP', this.tipoPrestacion.granularidad);
+        // El View ya está inicializado
+        this.isViewInitialized = true;
 
-  }
-
-  ngOnDestroy() { }
-
-  devolverValores(obj?: any, tipoPrestacion?: any) {
-
-    // Átomo
-    if (this.tipoPrestacion.granularidad === 'atomos' || this.tipoPrestacion.granularidad === 'formulas') {
-      // console.log('--> Átomo <--');
-      if (this.data[this.tipoPrestacion.key] === null) {
-        this.data = {};
-      }
-
-    } else {
-
-      // Molécula
-      // console.log('--> Molécula <--');
-      // valor: variable con el resultado qeu viene del input del formulario
-      let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
-      if (valor) {
-        if (!this.data[this.tipoPrestacion.key]) {
-          this.data[this.tipoPrestacion.key] = {};
+        // Inicializamos la lista de Componentes RUP
+        for (let comp of RUP_COMPONENTS) {
+            this.tiposPrestaciones.push({
+                'nombre': comp.name,
+                'component': comp
+            });
         }
-        if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
-          this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+
+        // Cargamos o actualizamos el componente 'Signos Vitales'
+        this.loadComponent();
+
+    }
+
+    ngOnDestroy() { }
+
+    devolverValores(obj?: any, tipoPrestacion?: any) {
+
+        // Átomo
+        if (this.tipoPrestacion.granularidad === 'atomos' || this.tipoPrestacion.granularidad === 'formulas') {
+            // console.log('--> Átomo <--');
+            if (this.data[this.tipoPrestacion.key] === null) {
+                this.data = {};
+            }
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
+
+        } else {
+
+            // Molécula
+            // console.log('--> Molécula <--');
+            // valor: variable con el resultado qeu viene del input del formulario
+            let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
+            if (valor) {
+                if (!this.data[this.tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key] = {};
+                }
+                if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
+                    this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
+                }
+                this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
+            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null) {
+                delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
+            }
+            if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
+                this.data = {};
+            }
         }
-        this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
-      } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null) {
-        delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
-      }
-      if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
-        this.data = {};
-      }
-    }
-    // this.mensaje = this.getMensajes();
-    this.evtData.emit(this.data);
-    this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
+        this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
 
-  }
-
-  // Método para cargar Components
-  loadComponent() {
-
-    // La creación dinámica de un Component tiene que darse después que se inicialize el View
-    if (!this.isViewInitialized) {
-      return;
     }
 
-    // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
-    this.componentContainer = this.tiposPrestaciones.find(prestacion => {
-      let p;
-      p = prestacion;
-      return p.nombre === this.tipoPrestacion.componente.nombre;
-    });
+    getMensajes() { }
+
+    // Método para cargar Components
+    loadComponent() {
+
+        // La creación dinámica de un Component tiene que darse después que se inicialize el View
+        if (!this.isViewInitialized) {
+            return;
+        }
+
+        // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
+        this.componentContainer = this.tiposPrestaciones.find(prestacion => {
+            let p;
+            p = prestacion;
+            return p.nombre === this.tipoPrestacion.componente.nombre;
+        });
 
 
-    // Cargamos el componente
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
+        // Cargamos el componente
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
 
-    // Creamos el componente
-    this.componentReference = this.viewContainerRef.createComponent(componentFactory);
+        // Creamos el componente
+        this.componentReference = this.viewContainerRef.createComponent(componentFactory);
 
-    // Agarramos la instancia
-    let datosComponente = this.componentReference.instance;
+        // Agarramos la instancia
+        let datosComponente = this.componentReference.instance;
 
-    // Generamos valores de la ejecución
-    // TODO: debe ser un array?
-    this.componentReference.instance.prestacion = this.prestacion;
-    this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
-    this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
-    this.componentReference.instance.soloValores = this.soloValores;
-    this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
-    this.componentReference.instance.paciente = this.paciente;
-    this.componentReference.instance.datosIngreso = this.datosIngreso;
+        // Generamos valores de la ejecución
+        // TODO: debe ser un array?
+        this.componentReference.instance.prestacion = this.prestacion;
+        this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
+        this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
+        this.componentReference.instance.soloValores = this.soloValores;
+        this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
+        this.componentReference.instance.paciente = this.paciente;
+        this.componentReference.instance.datosIngreso = this.datosIngreso;
 
-    // console.log('this.datosIngreso:', this.datosIngreso);
+        // console.log('this.datosIngreso:', this.datosIngreso);
 
 
-    this.componentReference.changeDetectorRef.detectChanges();
+        this.componentReference.changeDetectorRef.detectChanges();
 
-    // En caso de haber valores cargados en los datos de ingreso
-    // ejecutamos el evento para devolverlos y armar los valores
-    // de cada átomo
-    if (this.datosIngreso) {
-      this.evtData.emit(this.componentReference.instance.data);
+        // En caso de haber valores cargados en los datos de ingreso
+        // ejecutamos el evento para devolverlos y armar los valores
+        // de cada átomo
+        if (this.datosIngreso) {
+            this.evtData.emit(this.componentReference.instance.data);
+        }
+
+        // devolvemos los datos
+        datosComponente.evtData.subscribe(e => {
+            this.evtData.emit(this.componentReference.instance.data);
+        });
+
+        if (this.tipoPrestacion.granularidad === 'formulas') {
+            this.evtData.emit(this.componentReference.instance.data);
+        }
+
     }
-
-    // devolvemos los datos
-    datosComponente.evtData.subscribe(e => {
-      this.evtData.emit(this.componentReference.instance.data);
-    });
-
-    if (this.tipoPrestacion.granularidad === 'formulas') {
-      this.evtData.emit(this.componentReference.instance.data);
-    }
-
-  }
 
 }

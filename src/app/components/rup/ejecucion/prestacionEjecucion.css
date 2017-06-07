@@ -50,3 +50,9 @@ div.scroll-list {
 .fieldsetMargin-top {
     margin-top: 1px;
 }
+
+.desvincular {
+    position: relative;
+    top: -44px;
+    right: 5px;
+}
