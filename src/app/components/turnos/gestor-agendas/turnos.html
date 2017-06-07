@@ -131,8 +131,8 @@
             <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
           </td>
           <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
-            <div *ngIf="turno && turno.paciente && turno.asistencia && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-            <div *ngIf="turno && turno.paciente && turno.asistencia === false && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+            <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
+            <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
           </td>
           <!--<td class="text-center" *ngIf="turno && turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido'}">
             <i *ngIf="turno.botones?.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>
@@ -182,8 +182,10 @@
             <span *ngIf="sobreturno && sobreturno.nota"><i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
           </td>
           <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-            <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-            <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === false && sobreturno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+            <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
+            <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+            <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'sinDatos' && sobreturno.estado !== 'suspendido'" class="badge-danger">Sin Datos</div>
+            
           </td>
           <!--<td class="text-center" *ngIf="turno && turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido'}">
             <i *ngIf="turno.botones?.smsNoEnviado" title="SMS No Enviado" class="text-danger danger mdi mdi-checkbox-blank-circle-outline"></i>

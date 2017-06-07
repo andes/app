@@ -190,7 +190,7 @@ export class TurnosComponent implements OnInit {
 
   tienenAsistencia() {
     for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-      if (this.turnosSeleccionados[x].asistencia !== true) {
+      if (this.turnosSeleccionados[x].asistencia !== 'asistio') {
         return false;
       }
     };
@@ -199,7 +199,7 @@ export class TurnosComponent implements OnInit {
 
   noTienenAsistencia() {
     for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-      if (this.turnosSeleccionados[x].asistencia !== false) {
+      if (this.turnosSeleccionados[x].asistencia === 'asistio') {
         return false;
       }
     };
@@ -322,7 +322,6 @@ export class TurnosComponent implements OnInit {
     // Patchea los turnosSeleccionados (1 o más turnos)
     this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => {
        this.agenda = resultado;
-      // Si el evento es darAsistencia, crear prestacionPaciente
     });
 
     // Reset botones y turnos seleccionados
