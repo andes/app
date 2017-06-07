@@ -81,7 +81,6 @@
                 <div *ngIf="!pacientesPresentes.length" class="alert alert-default">
                     <i class="mdi mdi-emoticon-sad"></i> No hay Pacientes que coincidan con los filtros de búsqueda
                 </div>
-
                 <!-- La Lista de Pacientes -->
                 <table *ngIf="pacientesPresentes.length" class="table table-hover table-bordered">
                     <thead>
@@ -95,27 +94,27 @@
                     </thead>
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente)">
-                            <th>
+                            <td>
                                 {{paciente.fecha | date: 'dd/MM/yyyy H:m'}}
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 <strong>{{paciente.paciente.apellido}}</strong>, {{paciente.paciente.nombre}}<br>
                                 <small>DNI: {{paciente.paciente.documento}}</small>
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 <ng-container *ngIf="paciente.profesionales.nombre">
                                     <strong>{{paciente.profesionales.apellido}}</strong>, {{paciente.profesionales.nombre}}
                                 </ng-container>
                                 <ng-container *ngIf="!paciente.profesionales?.nombre">
                                     <strong>{{auth.usuario.apellido}}</strong>, {{auth.usuario.nombre}} (usuario auth)
                                 </ng-container>
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 {{paciente.estado}}
-                            </th>
-                            <th>
+                            </td>
+                            <td>
                                 {{paciente.nombrePrestacion}}
-                            </th>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
