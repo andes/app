@@ -204,11 +204,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   // Inicio - Filtro en Maestro de Problemas del Paciente
   buscarProblemasPaciente() {
-    debugger;
     let search = this.buscarProblema;
 
     let listaProblemasPaciente = this.listaProblemasPacienteCopy;
 
+    // buscamos los parecidos en la lista de problemas del paciente
     this.listaProblemasPaciente = listaProblemasPaciente.filter(item => {
         return (item.tipoProblema.term.toLowerCase().indexOf(search.toLowerCase()) !== -1);
     });
@@ -216,10 +216,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     if (!search) {
       // restauramos originales
       this.listaProblemasPaciente = this.listaProblemasPacienteCopy;
+
+      // desactivamos búsqueda mediante snomed
+      this.buscarSnomed = false;
     }
   }
 
   buscarProblemaSnomed() {
+    // habilitamos para que vaya a buscar los problemas
+    // al componente snomed-search y no busque por los
+    // problemas activos del paciente
     this.buscarSnomed = true;
   }
 
