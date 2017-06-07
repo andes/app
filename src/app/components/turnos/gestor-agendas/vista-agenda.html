@@ -31,13 +31,15 @@
         <plex-button icon="mdi mdi-comment-outline" (click)="agregarNotaAgenda()" title="Agregar una nota">
         </plex-button>
    </span>
-   <span *ngIf="vistaBotones.agregarSobreturno">
+  <span *ngIf="vistaBotones.agregarSobreturno">
         <plex-button icon="mdi mdi-account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
         </plex-button>
    </span>
-   
-   
 
+  <span *ngIf="vistaBotones.revisionAgenda">
+          <plex-button icon="mdi mdi-format-list-checks" (click)="revisionAgenda()" title="Revisión de Agenda">
+          </plex-button>
+      </span>
   <!--<span *ngIf="vistaBotones.listarTurnos">
         <plex-button icon="mdi mdi-book-open" (click)="listarTurnos()" title="Listado de turnos">
         </plex-button>
