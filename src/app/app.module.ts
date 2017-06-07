@@ -166,6 +166,9 @@ import { EcografiaComponent } from './components/rup/moleculas/ecografia.compone
 import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
+import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
+import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
+import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
 
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -282,7 +285,10 @@ export const RUP_COMPONENTS = [
   InterConsultaComponent,
   LaboratorioComponent,
   RadiografiaComponent,
-  SnomedBuscarComponent
+  SnomedBuscarComponent,
+  TomografiaComponent,
+  MamografiaComponent,
+  EndoscopiaComponent
 ];
 
 // Locales
