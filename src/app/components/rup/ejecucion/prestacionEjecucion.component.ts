@@ -1027,13 +1027,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    desvincularPlan(prestacion, nombre) {
+    desvincularPlan(prestacionFutura, prestacionNombre) {
 
-        this.plex.confirm('', '¿Desvincular Plan?').then((confirmar) => {
+        this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
                 for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
                     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
-                        if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === nombre._id) {
+                        if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
                             const patch = { op: 'desvincularPlan', idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id };
                             this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
                                 console.log('Plan desvinculado', result);
@@ -1047,21 +1047,27 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    desvincularPrestacion(idProblema, idPrestacion) {
-        let index = this.prestacionesEjecucion.indexOf(idProblema);
+    desvincularPrestacion(prestacionNombre, index) {
+        // let index = this.prestacionesEjecucion.indexOf(idProblema);
         console.log('this.prestacionesEjecucion', this.prestacionesEjecucion);
-        this.plex.confirm('Prestación: ' + idPrestacion, '¿Desvincular Prestación?').then((confirmar) => {
+        console.log('index', index);
+        this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Prestación?').then((confirmar) => {
 
             if (confirmar === true) {
                 const patch = {
                     op: 'estado',
                     estado: 'anulada'
                 };
-                this.servicioPrestacion.patch(this.prestacionesEjecucion[index], patch).subscribe((result) => {
-                    console.log('Prestación desvinculada, pasó a estado "anulada"', result);
+                if (typeof this.prestacionesEjecucion[index].id !== 'undefined') {
+                    this.servicioPrestacion.patch(this.prestacionesEjecucion[index], patch).subscribe((result) => {
+                        console.log('Prestación desvinculada, pasó a estado "anulada"', result);
+                        this.prestacionesEjecucion.splice(index, 1);
+                        this.prestacionesEjecucion = [...this.prestacionesEjecucion];
+                    });
+                } else {
                     this.prestacionesEjecucion.splice(index, 1);
                     this.prestacionesEjecucion = [...this.prestacionesEjecucion];
-                });
+                }
             }
         });
     }

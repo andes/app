@@ -116,7 +116,7 @@
                                         </small>
 
                                     </div>
-                                    
+
                                 </div>
                             </li>
                         </ng-container>
@@ -222,7 +222,7 @@
                                                             </plex-panel>
                                                         </plex-accordion>
                                                         <div class="float-right">
-                                                            <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan($event, prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)"></plex-button>
+                                                            <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)"></plex-button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,7 +235,7 @@
                                 <div class="col-12">
                                     <div *ngFor="let prestacionesProblema of prestacionesEjecucion">
                                         <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
-                                            <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas">
+                                            <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas; let i = index">
                                                 <div *ngIf="problemaP.id == problema.id">
                                                     <plex-accordion>
                                                         <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
@@ -246,7 +246,7 @@
                                                         </plex-panel>
                                                     </plex-accordion>
                                                     <div class="float-right">
-                                                        <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPrestacion($event, problema.id, prestacionesProblema.solicitud.tipoPrestacion.nombre)"></plex-button>
+                                                        <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, i)"></plex-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -254,7 +254,7 @@
                                     </div>
                                 </div>
                                 <div class="float-right">
-                                    <plex-button label="" icon="mdi mdi-link-variant-off mdi-24px" (click)="desvincularProblema($event, problema.id)"></plex-button>
+                                    <plex-button label="" icon="mdi mdi-link-variant-off mdi-24px" (click)="desvincularProblema(problema.id)"></plex-button>
                                 </div>
                             </li>
                         </ul>
