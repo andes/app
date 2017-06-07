@@ -12,8 +12,6 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { patientFullNamePipe } from './../../../utils/patientPipe';
 
-
-
 @Component({
     selector: 'sobreturno',
     templateUrl: 'sobreturno.html'
@@ -80,10 +78,9 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-    onReturn(paciente: IPaciente): void {
+    afterSearch(paciente: IPaciente): void {
         if (paciente.id) {
             this.paciente = paciente;
-            // new patientRealAgePipe().transform(this.paciente, []);
             this.pacienteNombre = new patientFullNamePipe().transform(paciente, []);
             this.verificarTelefono(this.paciente);
             this.showSobreturno = true;
@@ -116,8 +113,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     guardar() {
-        // TODO: Copiar funcionalidad de Dar Turnos para guardar
-
         let pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
@@ -179,8 +174,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         };
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            // console.log('cambioTelefono ', this.cambioTelefono);
-            // console.log('sobreturno ', sobreturno);
             this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
             this.volverAlGestor.emit(true);
         });
