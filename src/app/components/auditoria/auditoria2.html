@@ -1,32 +1,3 @@
-<style>
-  
-  .invertHover:hover {
-    background-color: #002738;
-    color: white;
-    cursor: pointer;
-  }
-  .desvincular:hover {
-    color:red;
-    cursor: pointer;
-  }
-
-  .vincular:hover {
-    color:green;
-    cursor: pointer;
-  }
-  
-  * > .mdi.mdi-hover-show,
-  *:hover > .mdi.mdi-hover-hidden {
-    display: none;
-  }
-  *:hover > .mdi.mdi-hover-show {
-    display: inline-block;
-  }
-
-
-</style>
-
-
 <form class="plex-layout" #form="ngForm">
   <section>
     <div class="row">
@@ -40,13 +11,13 @@
               <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente">
                 <div class="card invertHover" style="width: 20rem;">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
-                  <i (click)="vincularPaciente(paciente)" title="Clic para vincular" class="mdi mdi-link-variant mdi-hover-show vincular"></i></h4>
+                    <i (click)="vincularPaciente(paciente)" title="Clic para vincular" class="mdi mdi-link-variant mdi-hover-show vincular"></i></h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
                     <div>DU: {{paciente.documento}}</div>
                     <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
-                    <div>Sexo:{{paciente.sexo}}</div>
-                    <div>Estado:{{paciente.estado}}</div>
+                    <div>Sexo: {{paciente.sexo}}</div>
+                    <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
                   </div>
                 </div>
               </li>
@@ -63,16 +34,15 @@
             <ul class="list-group">
               <li *ngFor="let paciente of pacientesVinculados">
                 <div class="card invertHover" style="width: 20rem;">
-                   <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden "></i>
-                    <i (click)="desvincularPaciente(paciente)" 
-                    title="Clic para desvincular" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
-                    </h4>
+                  <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden "></i>
+                    <i (click)="desvincularPaciente(paciente)" title="Clic para desvincular" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
+                  </h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
                     <div>DU: {{paciente.documento}}</div>
-                    <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
-                    <div>Sexo:{{paciente.sexo}}</div>
-                    <div>Estado:{{paciente.estado}}</div>
+                    <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
+                    <div>Sexo: {{paciente.sexo}}</div>
+                     <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
                   </div>
                 </div>
               </li>
@@ -82,16 +52,14 @@
       </div>
       <div class="col-4">
         <plex-box type="info">
-
           <header>
             <h3>Datos del Paciente
-
               <span *ngIf="pacienteSelected.estado === 'validado'" class="label label-success recuadro">
                             {{pacienteSelected.estado | uppercase}} 
                         </span>
               <span *ngIf="pacienteSelected.estado !== 'validado'" class="label label-warning recuadro">
                             {{pacienteSelected.estado | uppercase}} 
-                        </span>
+              </span>
             </h3>
           </header>
 

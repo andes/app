@@ -30,6 +30,7 @@ import {
 @Component({
   selector: 'auditoria2',
   templateUrl: 'auditoria2.html',
+   styleUrls: ['auditoria.css']
 })
 
 
