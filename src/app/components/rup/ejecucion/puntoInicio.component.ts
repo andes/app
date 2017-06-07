@@ -149,32 +149,43 @@ export class PuntoInicioComponent implements OnInit {
             // Recorremos los bloques de una agenda para sacar los turnos asignados.
             for (let i in agenda.bloques) {
                 if (i) {
-                    let turnosAsignados = agenda.bloques[i].turnos.filter(turno => turno.estado === 'asignado');
+                    let turnosAsignados = agenda.bloques[i].turnos.filter(turno => (
+                        (turno.estado === 'asignado') || (turno.paciente && turno.estado === 'suspendido')));
                     turnos = [...turnos, ...turnosAsignados];
                 }
             }
-
             turnos.forEach(turno => { // Falta ver en ejecucion y validad
-                unPacientePresente.idTurno = turno.id;
+                unPacientePresente.idAgenda = agenda.id;
+                unPacientePresente.turno = turno;
                 unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
                 unPacientePresente.estado = 'En espera';
                 unPacientePresente.fecha = turno.horaInicio;
-                if (turno.asistencia) {
-                    unPacientePresente.estado = 'En espera (Asistencia)';
-                    //Buscar si existe una prestacion asociada al turno
-                    let prestacionTurno = this.todasLasPrestaciones.find(prestacion => {
-                        if (turno.id === prestacion.solicitud.idTurno) {
-                            return prestacion;
-                        }
-                    });
-                    if (prestacionTurno) {
-                        unPacientePresente.idPrestacion = prestacionTurno.id;
-                        if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
-                            unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
-                            unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
-                        }
+
+                if (turno.asistencia === 'asistio') {
+                    unPacientePresente.estado = 'Presente';
+                } else {
+                    if (turno.estado === 'suspendido') {
+                        unPacientePresente.estado = 'Suspendido';
+                        unPacientePresente.fecha = turno.horaInicio;
                     }
                 }
+
+                //Buscar si existe una prestacion asociada al turno
+                let prestacionTurno = this.todasLasPrestaciones.find(x => {
+                    if (x.solicitud.idTurno.toString() === turno._id.toString()) {
+
+                        return x;
+                    }
+                });
+                // alert(prestacionTurno);
+                if (prestacionTurno) {
+                    unPacientePresente.idPrestacion = prestacionTurno.id;
+                    if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
+                        unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
+                        unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
+                    }
+                }
+
                 // Cargo un objeto con el profesional.
                 unPacientePresente.profesionales = agenda.profesionales[0]; // Recorrer los profesionales si los tuviera
                 // Cargo el tipo de prestacion
@@ -189,7 +200,8 @@ export class PuntoInicioComponent implements OnInit {
         //Buscamos los que solo tienen prestacion y no tienen turno
         this.todasLasPrestaciones.forEach(prestacion => {
             if (prestacion.solicitud.idTurno === null) {
-                unPacientePresente.idTurno = null;
+                unPacientePresente.idAgenda = null;
+                unPacientePresente.turno = null;
                 unPacientePresente.estado = prestacion.estado[prestacion.estado.length - 1].tipo;
                 unPacientePresente.fecha = prestacion.estado[prestacion.estado.length - 1].timestamp;
                 unPacientePresente.idPrestacion = prestacion.id;
@@ -239,36 +251,52 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     elegirPrestacion(unPacientePresente) {
+        debugger;
         if (unPacientePresente.idPrestacion) {
             this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
         } else {
-            // Guardar Prestación Paciente
-            let nuevaPrestacion;
-            nuevaPrestacion = {
-                paciente: unPacientePresente.paciente,
-                solicitud: {
-                    tipoPrestacion: unPacientePresente.tipoPrestacion,
-                    fecha: new Date(),
-                    listaProblemas: [],
-                    idTurno: unPacientePresente.idTurno ? unPacientePresente.idTurno : null,
-                },
-                estado: {
-                    timestamp: new Date(),
-                    tipo: 'pendiente'
-                },
-                ejecucion: {
-                    fecha: new Date(),
-                    evoluciones: []
-                }
-            };
+            if (unPacientePresente.estado != 'Suspendido') {
+                //Marcar el turno como presente
+                let patch: any = {
+                    op: 'darAsistencia',
+                    turnos: [unPacientePresente.turno]
+                };
 
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                if (prestacion) {
-                    this.router.navigate(['/rup/resumen', prestacion.id]);
-                } else {
+                // Patchea los turnosSeleccionados (1 o más turnos)
+                this.servicioAgenda.patchMultiple(unPacientePresente.idAgenda, patch).subscribe(resultado => {
+                    if (resultado) {
+                        //TODO: Ver si se muestra un mensaje
+                    }
+                });
 
-                }
-            });
+                // Guardar Prestación Paciente
+                let nuevaPrestacion;
+                nuevaPrestacion = {
+                    paciente: unPacientePresente.paciente,
+                    solicitud: {
+                        tipoPrestacion: unPacientePresente.tipoPrestacion,
+                        fecha: new Date(),
+                        listaProblemas: [],
+                        idTurno: unPacientePresente.turno.id ? unPacientePresente.turno.id : null,
+                    },
+                    estado: {
+                        timestamp: new Date(),
+                        tipo: 'pendiente'
+                    },
+                    ejecucion: {
+                        fecha: new Date(),
+                        evoluciones: []
+                    }
+                };
+
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    if (prestacion) {
+                        this.router.navigate(['/rup/resumen', prestacion.id]);
+                    } else {
+                        this.plex.alert('ERROR: no se pudo cargar la prestación');
+                    }
+                });
+            }
             // ruteamos
         }
     }
@@ -281,7 +309,7 @@ export class PuntoInicioComponent implements OnInit {
         return $event.callback(this.selectPrestacionesProfesional);
     }
     loadEstados($event) {
-        return $event.callback([{ id: 'En espera (Asistencia)', nombre: 'En espera (Asistencia)' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }]);
+        return $event.callback([{ id: 'Presente', nombre: 'Presente' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }, { id: 'Suspendido', nombre: 'Suspendido' }]);
     }
 
 
@@ -314,14 +342,12 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     filtraPorPrestacion() {
-        this.cargaPacientes();
         let misPacientesPrestacion: any = [];
         if (this.prestacionSeleccion) {
-            this.pacientesPresentes.forEach(paciente => {
-                if (paciente.nombrePrestacion === this.prestacionSeleccion.nombre) {//Pasarlo a los id
-                    misPacientesPrestacion.push(paciente);
+            this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
+                if (paciente.nombrePrestacion === this.prestacionSeleccion.nombre) {
+                    return paciente;
                 }
-                this.pacientesPresentes = misPacientesPrestacion;
             });
         }
     }
