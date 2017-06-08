@@ -13,4 +13,10 @@ export class TurnoService {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque  + '/agenda/' + turno.idAgenda , turno);
         }
     }
+
+    put(turno: any): Observable<any> {
+        if (turno.idAgenda) {
+            return this.server.put(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque  + '/agenda/' + turno.idAgenda , turno);
+        }
+    }
 }
