@@ -382,7 +382,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (prestacion.idPrestacionOrigen === idPrestacionOrigen) {
                 //Recorro los problemas de la prestacion y se fija si ya existe.
                 prestacion.ejecucion.listaProblemas.forEach(element => {
-                    if (problema === element) {
+                    if (problema.id === element.id) {
                         this.plex.alert('La prestacion ya esta asociada al problema');
                         asignada = false;
                     }
