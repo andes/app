@@ -1019,12 +1019,26 @@ export class PrestacionEjecucionComponent implements OnInit {
     /**
      * Desvinculaciones
      */
+    desvincularProblema(idProblema, index) {
 
-    desvincularProblema(idProblema) {
         this.plex.confirm('', '¿Desvincular Problema?').then((confirmar) => {
             if (confirmar === true) {
-                this.prestacion.ejecucion.listaProblemas.splice(this.prestacion.ejecucion.listaProblemas.indexOf(idProblema), 1);
-                this.prestacion.ejecucion.listaProblemas = [...this.prestacion.ejecucion.listaProblemas];
+                const patch = {
+                    op: 'desvincularProblema',
+                    idProblema: idProblema
+                };
+                if (typeof this.prestacion.ejecucion.listaProblemas[index].id !== 'undefined') {
+                    this.servicioPrestacion.patch(this.prestacion, patch).subscribe((result) => {
+                        console.log('Problema desvinculado', result);
+                        this.prestacion.ejecucion.listaProblemas.splice(index, 1);
+                        this.prestacion.ejecucion.listaProblemas = [...this.prestacion.ejecucion.listaProblemas];
+                    });
+                } else {
+                    console.log(idProblema);
+                    this.prestacion.ejecucion.listaProblemas.splice(index, 1);
+                    this.prestacion.ejecucion.listaProblemas = [...this.prestacion.ejecucion.listaProblemas];
+                }
+
             }
         });
     }
@@ -1050,9 +1064,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     desvincularPrestacion(prestacionNombre, index) {
-        // let index = this.prestacionesEjecucion.indexOf(idProblema);
-        console.log('this.prestacionesEjecucion', this.prestacionesEjecucion);
-        console.log('index', index);
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Prestación?').then((confirmar) => {
 
             if (confirmar === true) {
