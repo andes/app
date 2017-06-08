@@ -1,7 +1,31 @@
 <!--<header *ngIf="prestacion">
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>-->
+<style>
+    .form-control-invert {
+        background-color: #002738;
+        border-color: solid 1px #FFFFFF;
+        border-radius: 0px;
+        color: #FFFFFF;
+        height: 400px;
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+    }
 
+    h5.box-title-principal {
+        color: #00A8E0;
+        font-weight: 350;
+        padding-bottom: 5px;
+    }
+
+    h5.box-title-secundario {
+        color: #00A8E0;
+        font-weight: 350;
+        padding-bottom: 5px;
+        border-bottom: solid white 1px;
+    }
+</style>
 <section class="plex-layout">
     <div class="row">
 
@@ -133,7 +157,7 @@
                     <legend>
                         <div class="clearfix">
                             <div class="float-left">{{ prestacion?.solicitud.tipoPrestacion.nombre }}</div>
-                            <div class="float-right" *ngIf="showNuevo==false && showEvolucionar==false && showEvolTodo == false">
+                            <div class="float-right" *ngIf="showNuevo==false && showEvolucionar==false && showEvolTodo == false && showMotivoSolicitud == false">
                                 <plex-button class="btn-evolucionartodos" title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()"
                                     type="primary btn-sm"></plex-button>
                             </div>
@@ -162,8 +186,48 @@
                     Arrastre aquí para vincularlo a todos los problemas
                 </div>
 
+
+                <!--div para escribir el texto en los planes textomotivo-->
+                <plex-box type="invert" *ngIf="showMotivoSolicitud">
+                    <header>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="box-title-principal">Plan | <span class="invert">{{planSelecionado.nombre}} </span></h5>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 class="box-title-secundario">Escriba el motivo de la solicitud </h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <!--<label for="comment">Observaciones</label>-->
+                                        <textarea class="form-control-invert" rows="5" id="comment" [(ngModel)]="motivoSolicitud" [required]="true" name="motivoSolicitud"
+                                            placeholder="Ingrese motivo"></textarea>
+                                    </div>
+                                    <!--<textarea [(ngModel)]="motivoSolicitud"> Escriba el motivo de la solicitud </textarea>-->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <plex-button title="Cancelar" label="Cancelar" type="danger" (click)="cancelarUnPlanConMotivo()"></plex-button>
+                                    <plex-button title="Guardar" label="Guardar" type="success" (click)="guardarUnPlanConMotivo()"></plex-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </plex-box>
+
+
+
+
                 <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
-                        && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false && showEvolTodo == false)">
+                        && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false && showEvolTodo == false) && !showMotivoSolicitud">
 
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas; let prIndex = index">
 
@@ -381,21 +445,8 @@
                         </plex-accordion>
 
                     </div>
-                    <!--div para escribir el texto en los planes textomotivo-->
-                    <div class="row" *ngIf="showMotivoSolicitud">
-                        <div class="col-12">
-                            <span>Escriba el motivo de la solicitud</span>
-                            <textarea [(ngModel)]="motivoSolicitud"> Escriba el motivo de la solicitud </textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <plex-button title="Cancelar" label="Cancelar" type="danger " (click)="cancelarUnPlanConMotivo()"></plex-button>
-                            </div>
-                            <div class="col-6">
-                                <plex-button title="Guardar" label="Guardar" type="primary " (click)="guardarUnPlanConMotivo()"></plex-button>
-                            </div>
-                        </div>
-                    </div>
+
+
 
                 </fieldset>
 
