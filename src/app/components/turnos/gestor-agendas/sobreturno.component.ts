@@ -46,6 +46,9 @@ export class AgregarSobreturnoComponent implements OnInit {
 
     public seleccion = null;
     public esEscaneado = false;
+    hoy = new Date();
+    inicio: Date;
+    fin: Date;
 
 
     constructor(
@@ -57,8 +60,9 @@ export class AgregarSobreturnoComponent implements OnInit {
         public servicePaciente: PacienteService) { }
 
     ngOnInit() {
+        this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
+        this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
     }
-
 
     buscarPaciente() {
         this.showSobreturno = false;
@@ -115,72 +119,92 @@ export class AgregarSobreturnoComponent implements OnInit {
         }
     }
 
-    guardar() {
-        let pacienteSave = {
-            id: this.paciente.id,
-            documento: this.paciente.documento,
-            apellido: this.paciente.apellido,
-            nombre: this.paciente.nombre,
-            telefono: this.telefono
-        };
+    guardar($event) {
 
-        // Si cambió el teléfono lo actualizo en el MPI
-        if (this.cambioTelefono) {
-            let nuevoCel = {
-                'tipo': 'celular',
-                'valor': this.telefono,
-                'ranking': 1,
-                'activo': true,
-                'ultimaActualizacion': new Date()
+        if ($event.formValid) {
+
+            let pacienteSave = {
+                id: this.paciente.id,
+                documento: this.paciente.documento,
+                apellido: this.paciente.apellido,
+                nombre: this.paciente.nombre,
+                telefono: this.telefono
             };
-            let mpi: Observable<any>;
-            let flagTelefono = false;
-            // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-            // sino, se genera un nuevo contacto
-            if (this.paciente.contacto.length > 0) {
-                this.paciente.contacto.forEach((contacto, index) => {
-                    if (contacto.tipo === 'celular') {
-                        contacto.valor = this.telefono;
-                        flagTelefono = true;
+
+            // Si cambió el teléfono lo actualizo en el MPI
+            if (this.cambioTelefono) {
+                let nuevoCel = {
+                    'tipo': 'celular',
+                    'valor': this.telefono,
+                    'ranking': 1,
+                    'activo': true,
+                    'ultimaActualizacion': new Date()
+                };
+                let mpi: Observable<any>;
+                let flagTelefono = false;
+                // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
+                // sino, se genera un nuevo contacto
+                if (this.paciente.contacto.length > 0) {
+                    this.paciente.contacto.forEach((contacto, index) => {
+                        if (contacto.tipo === 'celular') {
+                            contacto.valor = this.telefono;
+                            flagTelefono = true;
+                        }
+                    });
+                    if (!flagTelefono) {
+                        this.paciente.contacto.push(nuevoCel);
+                    }
+                } else {
+                    this.paciente.contacto = [nuevoCel];
+                }
+                console.log(this.paciente.contacto);
+                let cambios = {
+                    'op': 'updateContactos',
+                    'contacto': this.paciente.contacto
+                };
+                mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
+                mpi.subscribe(resultado => {
+
+                    if (resultado) {
+                        this.plex.alert('Se actualizó el numero de telefono');
                     }
                 });
-                if (!flagTelefono) {
-                    this.paciente.contacto.push(nuevoCel);
-                }
-            } else {
-                this.paciente.contacto = [nuevoCel];
             }
-            console.log(this.paciente.contacto);
-            let cambios = {
-                'op': 'updateContactos',
-                'contacto': this.paciente.contacto
-            };
-            mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-            mpi.subscribe(resultado => {
 
-                if (resultado) {
-                    this.plex.alert('Se actualizó el numero de telefono');
+            let patch = {
+                'op': 'agregarSobreturno',
+                'sobreturno': {
+                    horaInicio: this.combinarFechas(this.agenda.horaInicio, this.horaTurno),
+                    estado: 'asignado',
+                    tipoPrestacion: this.tipoPrestacion,
+                    paciente: pacienteSave,
                 }
+            };
+
+            this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
+                this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
+                this.volverAlGestor.emit(true);
             });
+        } else {
+            this.plex.alert('Debe completar los datos requeridos');
         }
+    }
 
-        let sobreturno = {
-            horaInicio: this.horaTurno,
-            estado: 'asignado',
-            tipoPrestacion: this.tipoPrestacion,
-            paciente: pacienteSave,
-        };
+    combinarFechas(fecha1, fecha2) {
+        if (fecha1 && fecha2) {
+            let horas: number;
+            let minutes: number;
+            let auxiliar: Date;
 
-        let patch = {
-            'op': 'agregarSobreturno',
-            'sobreturno': sobreturno,
-        };
-
-        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
-            this.volverAlGestor.emit(true);
-        });
-
+            auxiliar = new Date(fecha1);
+            horas = fecha2.getHours();
+            minutes = fecha2.getMinutes();
+            // Date.setHours(hour, min, sec, millisec)
+            auxiliar.setHours(horas, minutes, 0, 0);
+            return auxiliar;
+        } else {
+            return null;
+        }
     }
 
     cancelar() {

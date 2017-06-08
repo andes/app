@@ -170,7 +170,7 @@
                     {{carpeta.nroCarpeta}}
                 </span>
             </span></small>
-            <br *ngIf="sobreturno && sobreturno.paciente"><small><span *ngIf="sobreturno && sobreturno.paciente">{{sobreturno.tipoPrestacion.nombre}}</span></small>
+            <br *ngIf="sobreturno && sobreturno.paciente"><small><span *ngIf="sobreturno && sobreturno.paciente && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span></small>
 
                         <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
                         <!--<span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>-->

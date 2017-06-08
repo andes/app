@@ -271,10 +271,10 @@ export class TurnosComponent implements OnInit {
       darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
       // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
       sacarAsistencia: (this.tienenAsistencia()) && this.tienenPacientes(),
-      // Suspender turno: El turno no está asignado ==> el estado pasa a "suspendido"
-      suspenderTurno: (this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble')) && (!this.hayTurnosTarde()),
+      // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
+      suspenderTurno: this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
       // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-      liberarTurno: (this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
+      liberarTurno: (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
       // Bloquear turno: está "disponible" pero sin paciente ==> el estado pasa a "suspendido"
       bloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
       // Desbloquear turno: está "suspendido" pero sin paciente ==> el estado pasa a "disponible"
