@@ -229,6 +229,7 @@
                 <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
                         && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false && showEvolTodo == false) && !showMotivoSolicitud">
 
+
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas; let prIndex = index">
 
                         <!--Div para TODOS los planes-->
@@ -262,16 +263,6 @@
                                             [items]="items"></plex-dropdown>
                                     </div>
                                 </div>
-                                <!--
-
-
-                                <div class="list-inline flot-right">
-
-
-                                    <div class="d-inline">
-
-                                    </div>
-                                </div>-->
 
                                 <!--Planes Futuros para el problema-->
                                 <div class="col-12" *ngIf="listaPlanesProblemas && listaPlanesProblemas.length">
@@ -300,12 +291,18 @@
                                     <div *ngFor="let prestacionesProblema of prestacionesEjecucion; let b = index">
                                         <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
                                             <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas; let i = index">
-                                                <div *ngIf="problemaP.id == problema.id">
+                                                <div *ngIf="problemaP == problema.id || problemaP.id == problema.id">
+                                                    
                                                     <plex-accordion>
                                                         <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
                                                             <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
                                                                 (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                                [paciente]="prestacionesProblema.paciente" [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null">
+                                                                [paciente]="prestacionesProblema.paciente" 
+                                                                [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]"
+                                                                >
+                                                                <!--
+                                                                    [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null"
+                                                                 -->
                                                             </rup>
                                                         </plex-panel>
                                                     </plex-accordion>
@@ -373,13 +370,13 @@
                 <!--FILTRO PRESTACIONES-->
                 <form>
                     <div>
-                        <plex-text [(ngModel)]="searchPrestacion" name="searchPrestacion" (change)="buscarPrestacion($event)" placeholder="Buscar Prestación"></plex-text>
+                        <plex-text [(ngModel)]="searchPrestacion" name="searchPrestacion" (change)="loadPrestacion()" placeholder="Buscar Prestación"></plex-text>
                     </div>
                 </form>
 
                 <!--BOTONES DE FILTRO-->
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtrosPrestacion == 'todos'}"><input type="radio" name="options" id="todos"  (click)="loadPrestacion('todos')">Todos</label>
+                    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtrosPrestacion == ''}"><input type="radio" name="options" id="todos"  (click)="loadPrestacion()">Todos</label>
                     <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtrosPrestacion == 'formulas'}"><input type="radio" name="options" id="formula"  (click)="loadPrestacion('formulas')"> Fórmula</label>
                     <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtrosPrestacion == 'moleculas'}"><input type="radio" name="options" id="molecular"  (click)="loadPrestacion('moleculas')"> Molecular</label>
                     <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtrosPrestacion == 'atomos'}"><input type="radio" name="options" id="atomica"  (click)="loadPrestacion('atomos')"> Atómica</label>
@@ -468,7 +465,7 @@
             </div>
         </div>
         <div class="col-3 text-right ">
-            <plex-button title="Guardar " label="Guardar " (click)="evolucionarPrestacion('rup/validacion')" type="success"></plex-button>
+            <plex-button title="Guardar " label="Guardar " (click)="evolucionarPrestacion()" type="success"></plex-button>
         </div>
     </div>
 </footer>
