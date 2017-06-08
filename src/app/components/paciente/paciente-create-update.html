@@ -167,7 +167,7 @@
                                 </div>
                                 <div *ngFor="let _unaOS of pacienteModel.financiador; let j = index" class="row">
                                     <div class="col-4">
-                                        <plex-select [(ngModel)]="_unaOS.valor" name="valorOS-{{j}}" [data]="obrasSociales" placeholder="Seleccione..." label="Obra Social:">
+                                        <plex-select [(ngModel)]="_unaOS.entidad" name="valorOS-{{j}}" [data]="obrasSociales" placeholder="Seleccione..." label="Obra Social:">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">

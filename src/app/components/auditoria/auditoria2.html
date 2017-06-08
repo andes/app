@@ -1,121 +1,110 @@
-<section>
+<form class="plex-layout" #form="ngForm">
+  <section>
     <div class="row">
-        <div *ngIf="!verDuplicados" class="col-7">
-            <plex-box type="danger">
-                <header>
-                    <div class="page-title">Pacientes que requieren revisión</div>
-                </header>
-                <!-- Search results -->
-
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Sexo</th>
-                            <th>Estado</th>
-                            <!--<th>% Sisa</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="hover" *ngFor="let paciente of pacientesAudit" (click)="verificaPaciente(paciente.datosOperacion.pacienteScan);mostrarPaciente=true;">
-                            <td>{{paciente.datosOperacion.pacienteScan.documento}}</td>
-                            <td>{{paciente.datosOperacion.pacienteScan.nombre| uppercase}}</td>
-                            <td>{{paciente.datosOperacion.pacienteScan.apellido| uppercase}}</td>
-                            <td>{{paciente.datosOperacion.pacienteScan.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                            <td>{{paciente.datosOperacion.pacienteScan.sexo}}</td>
-                            <td>{{paciente.datosOperacion.pacienteScan.estado}}</td>
-                            <!--<td> {{paciente.datosOperacion.pacienteScan.matchSisa * 100}}%</td>-->
-                        </tr>
-                    </tbody>
-                </table>
-            </plex-box>
-            <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
-        </div>
-        <div *ngIf="verDuplicados" class="col-7">
-            <plex-box *ngIf=verDuplicados>
-                <header>
-                    <div class="page-title">Posibles duplicados</div>
-                </header>
-                <div class="row">
-                    <div class="col">
-                        <div class="table">
-                            <table class="table table-striped table-bordered ">
-                                <thead class="thead-inverse">
-                                    <tr>
-                                        <th>&nbsp;</th>
-                                        <th>Documento</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Fecha Nac.</th>
-                                        <th>Sexo</th>
-                                        <th>Estado</th>
-                                        <th>% Similitud</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="hover" *ngFor="let paciente of posiblesDuplicados" style="cursor: pointer;">
-                                        <td (click)="paciente.seleccionado = !paciente.seleccionado">
-                                            <i *ngIf="paciente.seleccionado" class="mdi mdi-check-circle"></i>
-                                            <i *ngIf="!paciente.seleccionado" class="mdi mdi-checkbox-blank-circle-outline"></i>
-                                        </td>
-                                        <td>{{paciente.documento}}</td>
-                                        <td>{{paciente.nombre| uppercase}}</td>
-                                        <td>{{paciente.apellido| uppercase}}</td>
-                                        <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                                        <td>{{paciente.sexo}}</td>
-                                        <td>{{paciente.estado}}</td>
-                                        <td> {{paciente.similitud * 100}}%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+      <div class="col-4">
+        <plex-box type="danger">
+          <header>
+            <div class="page-title">Candidatos a vincular</div>
+          </header>
+          <plex-box>
+            <ul class="list-group">
+              <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente">
+                <div class="card invertHover" style="width: 20rem;">
+                  <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
+                    <i (click)="vincularPaciente(paciente)" title="Clic para vincular" class="mdi mdi-link-variant mdi-hover-show vincular"></i></h4>
+                  <div class="card-block">
+                    <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
+                    <div>DU: {{paciente.documento}}</div>
+                    <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
+                    <div>Sexo: {{paciente.sexo}}</div>
+                    <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
+                  </div>
                 </div>
-            </plex-box>
-
-            <plex-loader *ngIf=loadingPrimaryTable></plex-loader>
-        </div>
-        <!--fin de col-md-7 -->
-
-        <div class="col" *ngIf=mostrarPaciente>
-            <plex-box type="info">
-                <h2>{{pacienteSelected.nombre}} {{pacienteSelected.apellido}}</h2>
-                <hr>
-                <h4><b>Documento: </b>{{pacienteSelected.documento}}</h4>
-                <h4><b>Fecha Nac.: </b> {{pacienteSelected.fechaNacimiento | date:'dd-MM-yyyy'}}</h4>
-                <h4><b>Sexo: </b> {{pacienteSelected.sexo}}</h4>
-                <h4><b>Estado: </b>{{pacienteSelected.estado}}</h4>
-                <plex-button icon="account-search" type="primary" label="Consultar Sisa" (click)="validate=true;verDuplicados=false"></plex-button>
-                <plex-button icon="account-search" type="success" label="Ver Duplicados" *ngIf="!verDuplicados" (click)="verDuplicados=true"></plex-button>
-                <plex-button icon="account-search" type="danger" label="Fusionar Selección" *ngIf="verDuplicados" (click)="verDuplicados=false"></plex-button>
-                <br> <br>
-                <div *ngIf=validate>
-                    <h2>Pacientes encontrados <span class="badge">{{datosSisa.length}}</span> </h2>
-                    <table class="table table-striped">
-                        <tr *ngFor="let pacienteSisa of datosSisa">
-                            <td><b>Nombre y Apellido:</b> {{pacienteSisa.nombre}} {{pacienteSisa.apellido}} </td>
-                            <td><b>Documento:</b> {{pacienteSisa.documento}}</td>
-                            <td><b>Fec de Nac.:</b> {{pacienteSisa.fechaNacimiento | date: 'dd-MM-yyyy'}} </td>
-                            <td><b>Sexo:</b> {{pacienteSisa.sexo}} </td>
-                            <td>
-                                <plex-button icon="account-check" type="success" label="Validar" (click)="validate=false"></plex-button>
-                            </td>
-                        </tr>
-                    </table>
-                    <div *ngIf=mensaje class="alert" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span class="sr-only">Error:</span> {{mensaje}}
-                    </div>
+              </li>
+            </ul>
+          </plex-box>
+        </plex-box>
+      </div>
+      <div class="col-4">
+        <plex-box type="danger">
+          <header>
+            <div class="page-title">Pacientes vinculados</div>
+          </header>
+          <plex-box droppable (onDrop)="vincularPacienteDrop($event)">
+            <ul class="list-group">
+              <li *ngFor="let paciente of pacientesVinculados">
+                <div class="card invertHover" style="width: 20rem;">
+                  <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden "></i>
+                    <i (click)="desvincularPaciente(paciente)" title="Clic para desvincular" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
+                  </h4>
+                  <div class="card-block">
+                    <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
+                    <div>DU: {{paciente.documento}}</div>
+                    <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
+                    <div>Sexo: {{paciente.sexo}}</div>
+                     <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
+                  </div>
                 </div>
+              </li>
+            </ul>
+          </plex-box>
+        </plex-box>
+      </div>
+      <div class="col-4">
+        <plex-box type="info">
+          <header>
+            <h3>Datos del Paciente
+              <span *ngIf="pacienteSelected.estado === 'validado'" class="label label-success recuadro">
+                            {{pacienteSelected.estado | uppercase}} 
+                        </span>
+              <span *ngIf="pacienteSelected.estado !== 'validado'" class="label label-warning recuadro">
+                            {{pacienteSelected.estado | uppercase}} 
+              </span>
+            </h3>
+          </header>
 
-            </plex-box>
-        </div>
+          <div class="row" *ngIf="pacienteSelected.apellido">
+            <div class="col-md-12">
+              <h3><strong>{{pacienteSelected.apellido}}</strong>
+                <small> {{pacienteSelected.nombre}}</small>
+              </h3>
+            </div>
+          </div>
+          <div class="row" *ngIf="pacienteSelected.documento">
+            <div class="col-md-12">
+              <h4>D.N.I. {{pacienteSelected.documento}} </h4>
+            </div>
+          </div>
+          <div class="row" *ngIf="pacienteSelected.fechaNacimiento">
+            <div class="col-md-12">
+              <h4> <label>Fecha de Nacimiento: </label> {{pacienteSelected.fechaNacimiento | fecha }} </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4> <label>Sexo: </label>
+                <span *ngIf="pacienteSelected.sexo.nombre">{{pacienteSelected.sexo.nombre}}</span>
+                <span *ngIf="!pacienteSelected.sexo.nombre">{{pacienteSelected.sexo}}</span>
+              </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <plex-bool label="Activo" type="slide"> </plex-bool>
+            </div>
+          </div>
+          <br>
+          <!--<plex-button icon="account-search" type="primary" label="Validación" (click)="showValidator=true"></plex-button>-->
+          <!--<plex-button icon="account-search" type="success" label="Ver Duplicados" *ngIf="!verDuplicados" (click)="verDuplicados=true"></plex-button>
+          <plex-button icon="account-search" type="danger" label="Fusionar Selección" *ngIf="verDuplicados" (click)="verDuplicados=false"></plex-button>-->
+          <br> <br>
+        </plex-box>
+      </div>
+
     </div>
 
+
     <br>
+  </section>
 
-
-</section>
+</form>

@@ -1,0 +1,30 @@
+  .invertHover:hover {
+    background-color: #002738;
+    color: white;
+    cursor: pointer;
+  }
+  .desvincular:hover {
+    color: red;
+    cursor: pointer;
+  }
+  .vincular:hover {
+    color: green;
+    cursor: pointer;
+  }
+  *>.mdi.mdi-hover-show,
+  *:hover>.mdi.mdi-hover-hidden {
+    display: none;
+  }
+  *:hover>.mdi.mdi-hover-show {
+    display: inline-block;
+  }
+  .recuadro {
+    border: 1px solid;
+    float: right;
+  }
+  .validado {
+    color: green
+  }
+  .temporal {
+    color: orange
+  }
