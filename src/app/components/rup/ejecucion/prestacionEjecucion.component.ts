@@ -2,7 +2,6 @@ import { element } from 'protractor';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
@@ -122,7 +121,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
   constructor(private servicioPrestacion: PrestacionPacienteService,
     private serviceTipoPrestacion: TipoPrestacionService,
-    private servicioTipoProblema: TipoProblemaService,
     private servicioProblemaPac: ProblemaPacienteService,
     public plex: Plex, public auth: Auth,
     private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
@@ -248,26 +246,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
   }
   // Fin - FILTRO DE PRESTACIONES
-
-
-
-  // Inicio - Filtro en Maestro de Problemas del Paciente
-  buscarProblemas(e) {
-    this.habilitaTransparencia = 'inhabilitar';
-
-    if (e.value) {
-      this.habilitaTransparencia = 'habilitar';
-      this.servicioTipoProblema.get({ nombre: e.value }).debounceTime(1000).subscribe(listaTipoProblemas => {
-        this.listaproblemasMaestro = listaTipoProblemas;
-      });
-
-    } else {
-
-      this.listaproblemasMaestro = [];
-    }
-
-  }
-
 
   // Buscador de planes del paciente..
   buscarPlanes(e) {
@@ -519,13 +497,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     this.filtros = 'filtroResuelto';
   }
   // FILTROS MAESTRO DE PROBLEMAS
-
-
-
-
-  loadTiposProblemas(event) {
-    this.servicioTipoProblema.get({}).subscribe(event.callback);
-  }
 
   // lista de problemas
   existeProblema(tipoProblema: ITipoProblema) {
