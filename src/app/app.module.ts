@@ -57,7 +57,6 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 // ... RUP
-import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
@@ -370,7 +369,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     SmsService,
     PrestacionPacienteService,
     ProblemaPacienteService,
-    TipoProblemaService,
     TipoPrestacionService,
 
     ObservarDatosService,

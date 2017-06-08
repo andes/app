@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 // import { Observable } from 'rxjs/Rx';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { TipoProblemaService } from './../../services/rup/tipoProblema.service';
 
 
 @Component({
@@ -33,7 +32,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
 
-    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService, private servicioTipoProblema: TipoProblemaService) { };
+    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { };
 
     // ****************************************** //
     ngOnInit() {
@@ -141,7 +140,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
 
     getTiposProblemas(event) {
-        this.servicioTipoProblema.get({}).subscribe(event.callback);
+        
     }
 
     // ****************************************** //

@@ -3,7 +3,6 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
@@ -35,8 +34,7 @@ export class TransformarProblemaComponent implements OnInit {
     opcionesVigencia = [{ id: 'activo', nombre: 'Activo' }, { id: 'Inactivo', nombre: 'Inactivo' }, { id: 'Resuelto', nombre: 'Resuelto' }];
 
 
-    constructor(private servicioTipoProblema: TipoProblemaService,
-        private servicioProblemaPac: ProblemaPacienteService,
+    constructor(private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex, public auth: Auth) { }
 
 
@@ -45,7 +43,7 @@ export class TransformarProblemaComponent implements OnInit {
     }
 
     loadTiposProblemas(event) {
-        this.servicioTipoProblema.get({}).subscribe(event.callback);
+        // vincular a snomed
     }
 
     existeProblema(tipoProblema: ITipoProblema) {
