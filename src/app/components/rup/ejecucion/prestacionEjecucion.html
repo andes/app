@@ -221,8 +221,8 @@
                                                                 <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
                                                             </plex-panel>
                                                         </plex-accordion>
-                                                        <div class="float-right">
-                                                            <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)"></plex-button>
+                                                        <div class="float-right mdi-16px">
+                                                            <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)"></plex-button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -246,7 +246,7 @@
                                                         </plex-panel>
                                                     </plex-accordion>
                                                     <div class="float-right">
-                                                        <plex-button class="desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"></plex-button>
+                                                        <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"></plex-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -254,12 +254,13 @@
                                     </div>
                                 </div>
                                 <div class="float-right">
-                                    <plex-button label="" icon="mdi mdi-link-variant-off mdi-24px" (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
+                                    <plex-button class="desvincularProblema" title="Desvincular" label="" icon="mdi mdi-link-variant-off mdi-20px"
+                                        (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
                                 </div>
                             </li>
                         </ul>
                         <!--Div para un plan-->
-                        <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id) "
+                        <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"
                             [hidden]="!isDraggingPlan" class="droppable">
                             Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
                         </div>

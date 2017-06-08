@@ -52,7 +52,14 @@ div.scroll-list {
 }
 
 .desvincular {
-    position: relative;
-    top: -44px;
-    right: 5px;
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+
+.desvincularProblema {
+    transform: scale(0.75);
+    position: absolute;
+    top: 12px;
+    right: 3px;
 }
