@@ -169,7 +169,9 @@ import { RadiografiaComponent } from './components/rup/moleculas/radiografia.com
 import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
 import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
 import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
-
+import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
+import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
@@ -288,7 +290,10 @@ export const RUP_COMPONENTS = [
   SnomedBuscarComponent,
   TomografiaComponent,
   MamografiaComponent,
-  EndoscopiaComponent
+  EndoscopiaComponent,
+  TomaHpvComponent,
+  TomaPapComponent,
+  SangreOcultaMateriaFecalComponent
 ];
 
 // Locales

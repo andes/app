@@ -8,7 +8,9 @@ import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano
 import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
 import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
 import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
-
+import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
+import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // import { RupComponent } from './components/rup/rup.component';
 // import { PacienteService } from './services/paciente.service';
 // import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
@@ -251,7 +253,10 @@ export const RUP_COMPONENTS = [
   RadiografiaComponent,
   TomografiaComponent,
   MamografiaComponent,
-  EndoscopiaComponent
+  EndoscopiaComponent,
+  TomaHpvComponent,
+  TomaPapComponent,
+  SangreOcultaMateriaFecalComponent
   //     // NO VAPacienteComponent
 ];
 
