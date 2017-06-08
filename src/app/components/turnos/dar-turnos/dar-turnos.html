@@ -229,7 +229,7 @@
         <div class="col col-sm-12" *ngIf="pacientesSearch">
             <div class="panel panel-default">
                 <div class="clear"></div>
-                <pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
+                <pacientesSearch (selected)='afterSearch($event)'></pacientesSearch>
             </div>
         </div>
         <div class="col col-sm-12" *ngIf="showCreateUpdate">

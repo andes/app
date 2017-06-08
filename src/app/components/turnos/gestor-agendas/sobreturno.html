@@ -39,8 +39,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <plex-text label="Paciente" [(ngModel)]="pacienteNombre" name="paciente" [required]="true" [readonly]="true" placeholder="Ingrese el paciente">
-                    </plex-text>
+                    <label>Paciente</label>
+                    <div *ngIf="paciente">{{paciente | paciente}}</div>
+                    <!--<plex-text  [(ngModel)]="paciente" label="Paciente" name="{{paciente | paciente}}" [required]="true" [readonly]="true" placeholder="Ingrese el paciente">
+                   </plex-text>-->
                     <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambioTelefono=true" name="telefono"></plex-phone>
                 </div>
             </div>
@@ -89,7 +91,7 @@
             <div class="col text-right">
                 <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button icon="mdi-content-save" label="Guardar" type="success" (click)="guardar()" title="Guardar">
+                <plex-button *ngIf="paciente" icon="mdi-content-save" label="Guardar" type="success" (click)="guardar()" title="Guardar">
                 </plex-button>
             </div>
         </div>

@@ -40,7 +40,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     showCreateUpdate = false;
     showSobreturno = true;
     pacientesSearch = false;
-    pacienteNombre = '';
     horaTurno = null;
     telefono: String = '';
     cambioTelefono = false;
@@ -85,7 +84,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.pacienteNombre = 'XXXXXXXXXXXXXXXXXXX'; // new patientFullNamePipe().transform(paciente, []);
                     this.verificarTelefono(this.paciente);
                     this.showSobreturno = true;
                     this.pacientesSearch = false;
