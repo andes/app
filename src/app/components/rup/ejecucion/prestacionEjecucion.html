@@ -176,7 +176,7 @@
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                             <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col-10">
                                         <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
                                             <h5 class="item-title">{{problema.tipoProblema.term}} | 
                                             <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5> 
