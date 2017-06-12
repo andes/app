@@ -753,7 +753,7 @@ export class DarTurnosComponent implements OnInit {
           // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
           // this.enviarSMS(pacienteSave, mensaje);
           if (this.turnoDoble) {
-            if (turnoSiguiente.estado === 'disponible'){
+            if (turnoSiguiente.estado === 'disponible') {
               let patch: any = {
                   op: 'darTurnoDoble',
                   turnos: [turnoSiguiente]
@@ -850,11 +850,7 @@ export class DarTurnosComponent implements OnInit {
 
   public tieneTurnos(bloque: IBloque): boolean {
     let turnos = bloque.turnos;
-    if (turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy)) {
-      return true;
-    } else {
-      return false;
-    }
+    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
   }
 
   afterCreateUpdate(paciente) {
