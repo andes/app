@@ -1,0 +1,65 @@
+div.scroll-list {
+    overflow: auto;
+    max-height: 70vh;
+}
+
+.drag-over-border {
+    border: #ff525b dashed 2px;
+}
+
+.droppable.drag-target-border,
+.list-group>.list-group-item.drag-target-border,
+.drag-target-border {
+    border: #00bfff dashed 2px;
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+.droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #999999;
+}
+
+.msg-problema {
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.dropdown-inline {
+    display: inline-block;
+}
+
+.list-inline>.list-inline-item {
+    margin-bottom: 10px;
+}
+
+.transparencia {
+    opacity: 0.4;
+}
+
+.fieldsetMargin-top {
+    margin-top: 1px;
+}
+
+.desvincular {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+
+.desvincularProblema {
+    transform: scale(0.75);
+    position: absolute;
+    top: 12px;
+    right: 3px;
+}

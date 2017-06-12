@@ -20,7 +20,6 @@ export class ResumenComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     prestacion: IPrestacionPaciente;
-    paciente: IPaciente;
     idPrestacion: String;
     listaProblemas: IProblemaPaciente[] = [];
     prestacionesPendientes: IPrestacionPaciente[] = [];

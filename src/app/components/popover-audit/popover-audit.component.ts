@@ -1,5 +1,8 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import { Plex } from '@andes/plex';
+
+
 
 @Component({
   selector: 'popover-audit',
@@ -7,8 +10,6 @@ import * as moment from 'moment';
 })
 export class PopoverAuditComponent implements OnInit {
 
-  @Input()
-  title: string;
   @Input()
   placement: string;
   private _datos: any;

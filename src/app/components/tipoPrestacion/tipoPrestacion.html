@@ -1,91 +1,93 @@
-<div class="col-sm-12" *ngIf="!showcreate && !showupdate">
-    <plex-box title="Consulta tipo de prestación">
-        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-        <!--Acción Filtros-->
-        <form>
-            <div class="row">
-                <div class="col-md-6">
-                    <plex-text [(ngModel)]="nombre" label="Nombre" name="filtroNombre" placeholder="Filtrar por nombre" (change)="loadDatos()">
-                    </plex-text>
+<section class="plex-layout" *ngIf="!showcreate && !showupdate">
+    <div class="row">
+        <div class="col-12">
+            <plex-box>
+                <fieldset>
+                    <legend>Consulta tipo de prestación</legend>
+                </fieldset>
+                <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+                <!--Acción Filtros-->
+                <div class="row">
+                    <div class="col-6">
+                        <plex-text [(ngModel)]="nombre" label="Nombre" name="filtroNombre" placeholder="Filtrar por nombre" (change)="loadDatos()">
+                        </plex-text>
+                    </div>
+
+                    <div class="col-6">
+                        <plex-select [(ngModel)]="granularidad" label="Tipo" name="filtroGranularidad" placeholder="Filtrar por granularidad" [data]="graanularidad_Filtro" (change)="loadDatos()">
+                        </plex-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <plex-button type="primary" label="Nuevo Tipo de prestación" title="Nuevo Tipo de prestación" (click)="showcreate = !showcreate">
+                        </plex-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Autónoma</th>
+                                        <th>Turneable</th>
+                                        <th>Ejecución</th>
+                                        <th>Componente</th>
+                                        <th>Activo</th>
+                                        <th>Actualizar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let tipoPrestacion of datos">
+                                        <td>{{tipoPrestacion.nombre}}</td>
+                                        <td>{{tipoPrestacion.granularidad}}</td>
+                                        <td>
+                                            <span *ngIf="tipoPrestacion.autonoma">SI</span>
+                                            <span *ngIf="!tipoPrestacion.autonoma">NO</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="tipoPrestacion.turneable">SI</span>
+                                            <span *ngIf="!tipoPrestacion.turneable">NO</span>
+                                        </td>
+                                        <td>
+                                            <span *ngFor="let itemEjecucion of tipoPrestacion.ejecucion">                   
+                                              {{itemEjecucion.nombre}}   /                       
+                                            </span>
+                                        </td>
+                                        <td>{{tipoPrestacion.nombre + ' - ' + 'Ruta: ' + tipoPrestacion.componente.ruta }}</td>
+                                        <td>
+                                            <span *ngIf="tipoPrestacion.activo">Activo</span>
+                                            <span *ngIf="!tipoPrestacion.activo">Inactivo</span>
+                                        </td>
+                                        <td>
+                                            <plex-button type="primary" label="Actualizar" (click)="onEdit(tipoPrestacion)">
+                                            </plex-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    <plex-select [(ngModel)]="granularidad" label="Granularidad" name="filtroGranularidad" placeholder="Filtrar por granularidad" [data]="graanularidad_Filtro" (change)="loadDatos()">
-                    </plex-select>
+                <plex-loader *ngIf="loader"></plex-loader>
+                <div *ngIf="finScroll" class="alert alert-warning">
+                    <p style="text-align: center;"> No se encontraron más resultados </p>
                 </div>
-            </div>
-        </form>
-        <!--Acción Filtros-->
-    </plex-box>
-    <plex-box>
-        <div class="row">
-            <div class="col-sm-12">
-                <plex-button type="primary" label="Nuevo Tipo de prestación" title="Nuevo Tipo de prestación" (click)="showcreate = !showcreate">
-                </plex-button>
-            </div>
+
+            </plex-box>
         </div>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Autónoma</th>
-                        <th>Activo</th>
-                        <th>Turneable</th>
-                        <th>Ejecución</th>
-                        <th>Componente</th>
-                        <th>Actualizar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let tipoPrestacion of datos">
-                        <td>{{tipoPrestacion.nombre}}</td>
+    </div>
+</section>
+<footer *ngIf="!showcreate && !showupdate">
+    <div class="row"></div>
+</footer>
 
-                        <td>
-                            {{tipoPrestacion.granularidad}}
-                            <span *ngIf="tipoPrestacion.tipo">
-                              - 
-                              <span *ngIf="tipoPrestacion.tipo == 'entidadObservable'">entidad observable</span>
-                            <span *ngIf="tipoPrestacion.tipo != 'entidadObservable'">{{tipoPrestacion.tipo}}</span>
-                            </span>
-                        </td>
 
-                        <td>{{tipoPrestacion.autonoma}}</td>
 
-                        <td>
-                            <plex-bool type="slide" [(ngModel)]="tipoPrestacion.activo" label="" name="tipoPrestacion.activo" (click)="activate(tipoPrestacion)"></plex-bool>
-                        </td>
-
-                        <td>
-                            <plex-bool type="slide" [(ngModel)]="tipoPrestacion.turneable" label="" name="tipoPrestacion.turneable" (click)="activate(tipoPrestacion)"></plex-bool>
-                        </td>
-
-                        <td>
-                            <span *ngFor="let itemEjecucion of tipoPrestacion.ejecucion"> 
-                                {{itemEjecucion.nombre}}                    
-                                /                       
-                            </span>
-                        </td>
-
-                        <td>{{tipoPrestacion.nombre + ' - ' + 'Ruta: ' + tipoPrestacion.componente.ruta }}</td>
-
-                        <td>
-                            <plex-button type="primary" label="Actualizar" (click)="onEdit(tipoPrestacion)">
-                            </plex-button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <plex-loader *ngIf="loader"></plex-loader>
-        <div *ngIf="finScroll" class="alert alert-warning">
-            <p style="text-align: center;"> No se encontraron más resultados </p>
-        </div>
-
-    </plex-box>
-</div>
 
 <div class="col-sm-12" *ngIf="showcreate">
     <div class="clear"></div>

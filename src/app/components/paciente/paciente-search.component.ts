@@ -216,6 +216,7 @@ export class PacienteSearchComponent implements OnInit {
                 if (this.pacientesSimilares.length > 0) {
 
                   let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
+                    debugger;
                     if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
                       return valuePac.paciente;
                     }
@@ -230,14 +231,24 @@ export class PacienteSearchComponent implements OnInit {
                     fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
                     match: this.pacientesSimilares[0].match
                   };
-
+                  debugger
                   if (pacienteEncontrado) {
                     this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+
+
                     this.seleccionarPaciente(pacienteEncontrado);
                   } else {
                     debugger
                     if (this.pacientesSimilares[0].match >= 0.94) {
                       this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+
+                      //
+                      // Actualizamos los datos del paciente con los datos obtenidos del DNI
+                      // 
+                      this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
+                      this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
+                      this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
+                      this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                     } else {
                       if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {

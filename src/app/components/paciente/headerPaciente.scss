@@ -1,0 +1,20 @@
+:host {
+    position: fixed;
+    left: 100px;
+    top: 0px;
+    z-index: 3000;
+    background: #0070BA;
+    color: white;
+    white-space: nowrap;
+    padding-right: 5px;
+    // Foto
+    img {
+        height: 50px;
+        padding: 5px;
+    }
+    // Texto
+    .texto {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

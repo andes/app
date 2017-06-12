@@ -1,7 +1,6 @@
 // import { PacienteComponent } from './../../../paciente/paciente.component';
 import { IProblemaPaciente } from './../../../../interfaces/rup/IProblemaPaciente';
 import { ProblemaPacienteService } from './../../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../../services/rup/tipoProblema.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 import * as moment from 'moment';
@@ -25,7 +24,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
     tipoProblemas = [];
     public problemasPaciente: IProblemaPaciente[] = [];
 
-    constructor(private servicioTipoProblema: TipoProblemaService, private servicioProblemas: ProblemaPacienteService) {
+    constructor(private servicioProblemas: ProblemaPacienteService) {
     }
 
     ngOnInit() {
@@ -45,6 +44,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
             let idTiposProblemas = this.tipoPrestacion.tipoProblemas.map(elem => { return elem.id; });
 
             // consultamos la API por los tipos de problemas
+            /* SNOMED
             this.servicioTipoProblema.get({ tiposProblemas: idTiposProblemas }).subscribe(tiposProblemas => {
                 this.tipoProblemas = tiposProblemas;
 
@@ -59,6 +59,7 @@ export class FactoresDeRiesgoNinoSanoComponent implements OnInit {
 
                 console.log(this.data);
             });
+            */
         }
 
         // buscamos todos los problema que tenga el Paciente

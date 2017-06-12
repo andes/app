@@ -1,5 +1,6 @@
 import { IEnum } from './../../utils/enums';
 
+
 export let EstadosAgenda: IEnum = {
     'planificacion': {
         nombre: 'En planificación',
@@ -15,10 +16,26 @@ export let EstadosAgenda: IEnum = {
     },
     'suspendida': {
         nombre: 'Suspendida',
-        class: 'error'
+        class: 'danger'
     },
     'pausada': {
         nombre: 'Pausada',
+        class: 'warning'
+    }
+};
+
+
+export let EstadosAsistencia: IEnum = {
+    'asistio': {
+        nombre: 'Asistio',
+        class: 'success'
+    },
+    'noAsistio': {
+        nombre: 'No Asistio',
+        class: 'danger'
+    },
+    'sinDatos': {
+        nombre: 'Sin Datos',
         class: 'warning'
     }
 };

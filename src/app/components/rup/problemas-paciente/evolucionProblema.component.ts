@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
@@ -42,6 +41,26 @@ export class EvolucionProblemaComponent implements OnInit {
         } else {
             this.cronicohtml = '';
          }
+
+
+         this.servProbPaciente.getById(this.problema.id)
+            .subscribe(problema => {
+                this.problema = problema;
+                this.problema.evoluciones.sort(function(a, b){
+                    if ( a.fecha > b.fecha ) {
+                        return -1;
+                    }
+
+                    if ( a.fecha < b.fecha ) {
+                        return 1;
+                    }
+
+                    return 0;
+                });
+            });
+
+
+
     }
 
     evolucionarProblema(event) {

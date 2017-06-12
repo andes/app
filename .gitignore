@@ -6,6 +6,7 @@
 /build
 /src/**/*.js
 /src/**/*.map
+package-lock.json
 
 # dependencies
 /node_modules
