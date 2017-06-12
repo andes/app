@@ -402,10 +402,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
         elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
         return elem;
       });
-      pacienteGuardar.financiador.map((elem: any) => {
-        delete elem.entidad.$order;
-        return elem;
-      });
+      if (pacienteGuardar.financiador) {
+        pacienteGuardar.financiador.map((elem: any) => {
+          delete elem.entidad.$order;
+          return elem;
+        });
+      }
 
       // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
       pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
