@@ -1,36 +1,42 @@
 import { ParentescoService } from './../../services/parentesco.service';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Server } from '@andes/shared';
+import { IUbicacion } from './../../interfaces/IUbicacion';
+import { PacienteSearch } from './../../services/pacienteSearch.interface';
+import { IContacto } from './../../interfaces/IContacto';
+import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from './../../interfaces/IDireccion';
+import { IBarrio } from './../../interfaces/IBarrio';
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IPais } from './../../interfaces/IPais';
+import { IFinanciador } from './../../interfaces/IFinanciador';
+import { Observable } from 'rxjs/Rx';
+import { BarrioService } from './../../services/barrio.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { PaisService } from './../../services/pais.service';
+import { PacienteService } from './../../services/paciente.service';
+import * as enumerados from './../../utils/enumerados';
+import { IPaciente } from './../../interfaces/IPaciente';
+import { IProvincia } from './../../interfaces/IProvincia';
+import { fechaPipe } from './../../utils/datePipe';
+import { Plex } from '@andes/plex';
+import { MapsComponent } from './../../utils/mapsComponent';
+import * as moment from 'moment';
 import {
-  IUbicacion
-} from './../../interfaces/IUbicacion';
+  patientFullNamePipe,
+  patientRealAgePipe
+} from './../../utils/patientPipe';
 import {
-  PacienteSearch
-} from './../../services/pacienteSearch.interface';
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators
+} from '@angular/forms';
 import {
-  IContacto
-} from './../../interfaces/IContacto';
-import {
-  FinanciadorService
-} from './../../services/financiador.service';
-import {
-  IDireccion
-} from './../../interfaces/IDireccion';
-import {
-  IBarrio
-} from './../../interfaces/IBarrio';
-import {
-  ILocalidad
-} from './../../interfaces/ILocalidad';
-import {
-  IPais
-} from './../../interfaces/IPais';
-import {
-  IFinanciador
-} from './../../interfaces/IFinanciador';
-import {
-  Observable
-} from 'rxjs/Rx';
+  DomSanitizer,
+  SafeHtml
+} from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -39,53 +45,6 @@ import {
   EventEmitter,
   HostBinding
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  Validators
-} from '@angular/forms';
-import * as moment from 'moment';
-import {
-  BarrioService
-} from './../../services/barrio.service';
-import {
-  LocalidadService
-} from './../../services/localidad.service';
-import {
-  ProvinciaService
-} from './../../services/provincia.service';
-import {
-  PaisService
-} from './../../services/pais.service';
-import {
-  PacienteService
-} from './../../services/paciente.service';
-import * as enumerados from './../../utils/enumerados';
-import {
-  IPaciente
-} from './../../interfaces/IPaciente';
-import {
-  IProvincia
-} from './../../interfaces/IProvincia';
-import {
-  DomSanitizer,
-  SafeHtml
-} from '@angular/platform-browser';
-import {
-  Plex
-} from '@andes/plex';
-import {
-  MapsComponent
-} from './../../utils/mapsComponent';
-import {
-  patientFullNamePipe,
-  patientRealAgePipe
-} from './../../utils/patientPipe';
-import {
-  fechaPipe
-} from './../../utils/datePipe';
-
 
 @Component({
   selector: 'paciente-create-update',
@@ -258,7 +217,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             if (resultado) {
-              debugger
               if (!resultado.scan) {
                 resultado.scan = this.seleccion.scan;
               }
@@ -488,12 +446,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 apellido: pacienteGuardar.apellido,
                 documento: pacienteGuardar.documento
               };
-              debugger
               if (rel.referencia) {
                 this.pacienteService.patch(rel.referencia, {
                   'op': 'updateRelacion', 'dto': dto
-                }).subscribe(result => {
-                  console.log("RESULT PATCH--------", result);
+                }).subscribe(result2 => {
+                  console.log('RESULT PATCH--------', result2);
                 });
               }
             });
@@ -504,7 +461,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
         }
       });
-      //}
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }
@@ -527,7 +483,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     return new Promise((resolve, reject) => {
       if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
         && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-        /*if (!this.pacienteModel.id) {*/
         let dto: any = {
           type: 'suggest',
           claveBlocking: 'documento',
@@ -538,17 +493,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
           sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
           fechaNacimiento: this.pacienteModel.fechaNacimiento
         };
-        debugger;
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
 
-          // 
           // agregamos la condición de abajo para filtrar las sugerencias
           // cuando el pacienfe fue escaneado o ya estaba validado.
           if (this.escaneado || this.pacienteModel.estado === 'validado') {
             this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
           }
-          debugger
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
               resolve(false);
@@ -765,7 +717,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                       if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       }
-                      //this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
                     }
                   }
 
@@ -872,6 +823,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
       this.pacienteModel.relaciones.splice(i, 1);
     }
   }
+
+  removeNota(i) {
+    if (i >= 0) {
+      this.pacienteModel.notas.splice(i, 1);
+    }
+  }
+
   addNota() {
     let nuevaNota = {
       'fecha': new Date(),
