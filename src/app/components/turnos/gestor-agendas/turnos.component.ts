@@ -213,11 +213,7 @@ export class TurnosComponent implements OnInit {
         return false;
       }
     };
-    if (this.turnosSeleccionados.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.turnosSeleccionados.length > 0;
   }
 
   todosConEstado(estado) {
@@ -226,11 +222,7 @@ export class TurnosComponent implements OnInit {
         return false;
       }
     };
-    if (this.turnosSeleccionados.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.turnosSeleccionados.length > 0;
   }
 
   hayTurnosTarde() {
@@ -273,24 +265,15 @@ export class TurnosComponent implements OnInit {
       suspenderTurno: this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
       // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
       liberarTurno: (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
-      // Bloquear turno: está "disponible" pero sin paciente ==> el estado pasa a "suspendido"
-      bloquearTurno: this.agendaNoSuspendida() && this.ningunoConEstado('disponible') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
-      // Desbloquear turno: está "suspendido" pero sin paciente ==> el estado pasa a "disponible"
-      // desbloquearTurno: this.agendaNoSuspendida() && this.todosConEstado('suspendido') && !this.tienenPacientes() && (!this.hayTurnosTarde()),
       // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
-      // reasignarTurno: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
       reasignarTurno: false,
       // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
       listaDeEspera: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
       // Enviar SMS
-      sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
-
-      smsNoEnviado: false,
-
+      // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
       nota: this.turnosSeleccionados.length > 0,
       // Se verifica si el siguiente turno se encuentra disponible
       turnoDoble: this.turnosSeleccionados.length === 1  && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado') && this.siguienteDisponible(),
-
     };
 
   }
@@ -478,11 +461,9 @@ export class TurnosComponent implements OnInit {
   }
 
   cancelaAgregarNota() {
-
     this.turnosSeleccionados.length = 0;
     this.showTurnos = true;
     this.showAgregarNotaTurno = false;
-
   }
 
   cancelaLiberarTurno() {
