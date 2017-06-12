@@ -10,8 +10,8 @@ import { AgendaService } from './../../../services/turnos/agenda.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 import * as enumerado from './../enums';
-// import { EstadosAgenda } from './../enums';
 import * as moment from 'moment';
+import { enumToArray } from '../../../utils/enums';
 
 @Component({
     selector: 'gestor-agendas',
@@ -25,14 +25,15 @@ export class GestorAgendasComponent implements OnInit {
 
     public showGestorAgendas: Boolean = true;
     public showTurnos: Boolean = false;
-    public showVistaAgendas: Boolean = false;
+    public showBotonesAgenda: Boolean = false;
     public showClonar: Boolean = false;
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
     public showEditarAgendaPanel: Boolean = false;
-    public showListado: Boolean = false;
     public showInsertarAgenda: Boolean = false;
-    public showAgregarNotaAgenda: Boolean = false;
+    private showAgregarNotaAgenda = false;
+    private showAgregarSobreturno = false;
+    public showRevisionAgenda = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -42,12 +43,12 @@ export class GestorAgendasComponent implements OnInit {
     public autorizado = false;
     public mostrarMasOpciones = false;
     public estadosAgenda = enumerado.EstadosAgenda;
-
+    public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
 
     searchForm: FormGroup;
 
     ag: IAgenda;
-    vistaAgenda: IAgenda;
+    // vistaAgenda: IAgenda;
     reasignar: IAgenda;
     editaAgenda: IAgenda;
 
@@ -143,14 +144,20 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
-        this.showListado = false;
+        this.showRevisionAgenda = false;
         this.showAgregarNotaAgenda = true;
+    }
+
+    agregarSobreturno() {
+        this.showGestorAgendas = false;
+        this.showAgregarSobreturno = true;
     }
 
     cancelaAgregarNotaAgenda() {
         this.showTurnos = true;
         this.showAgregarNotaAgenda = false;
     }
+
     saveAgregarNotaAgenda() {
         this.loadAgendas();
         this.showTurnos = true;
@@ -168,7 +175,9 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
+        this.showAgregarSobreturno = false;
         this.showClonar = false;
+        this.showRevisionAgenda = false;
         this.loadAgendas();
     }
 
@@ -203,15 +212,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
-        this.showListado = false;
+        this.showRevisionAgenda = false;
     }
 
-    listarTurnos(agenda) {
-        this.showGestorAgendas = true;
-        this.showEditarAgenda = false;
-        this.showEditarAgendaPanel = false;
-        this.showTurnos = false;
-        this.showListado = true;
+
+    revisionAgenda(agenda) {
+      this.showGestorAgendas = false;
+      this.showRevisionAgenda = true;
     }
 
     loadAgendas() {
@@ -261,25 +268,10 @@ export class GestorAgendasComponent implements OnInit {
         this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
     }
 
-    loadEstados(event) {
-        event.callback(enumerado.getEstados());
-        // this.serviceAgenda.get({}).subscribe(agendas => {
-        //     if (agendas.length > 0) {
-        //         let estadosAgendas = agendas[0].estadosAgendas.map(estado => {
-        //             return { id: estado, nombre: estado }; // return objeto compatible con plex-select
-        //         });
-        //         event.callback(estadosAgendas);
-        //     } else {
-        //         event.callback([]);
-        //     }
-        // });
-    }
-
     verAgenda(agenda, multiple, e) {
 
-        this.showVistaAgendas = false;
+        this.showBotonesAgenda = false;
         this.showTurnos = false;
-        this.showListado = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
@@ -307,7 +299,9 @@ export class GestorAgendasComponent implements OnInit {
             // Reseteo el panel de la derecha
             this.showEditarAgendaPanel = false;
             this.showAgregarNotaAgenda = false;
-            this.showVistaAgendas = true;
+            this.showAgregarSobreturno = false;
+            this.showRevisionAgenda = false;
+            this.showBotonesAgenda = true;
             this.showTurnos = true;
         });
 
@@ -335,12 +329,27 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit() {
-        this.loadAgendas();
         this.showTurnos = false;
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        let temporal = this.agendasSeleccionadas;
+        console.log('temporal ', temporal);
+        this.showRevisionAgenda = false;
+        this.loadAgendas();
+        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
+        this.agendasSeleccionadas = temporal;
+        this.agendasSeleccionadas.forEach((as) => {
+            if (this.agendasSeleccionadas.length === 1) {
+                this.verAgenda(as, false, null);
+            } else {
+                this.verAgenda(as, true, null);
+            }
+        });
+        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
+
+        if (this.agendasSeleccionadas.length === 1) {
+            this.showTurnos = true;
+        }
     }
-
 }
-

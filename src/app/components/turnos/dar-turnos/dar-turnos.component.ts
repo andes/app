@@ -1,10 +1,11 @@
-type Estado = 'seleccionada' | 'noSeleccionada' | 'confirmacion' | 'noTurnos';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
+import { EdadPipe } from './../../../pipes/edad.pipe';
+import { EstadosDarTurnos } from './enums';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -13,7 +14,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
-import { patientRealAgePipe } from './../../../utils/patientPipe';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
@@ -26,8 +26,6 @@ import { PrestacionPacienteService } from '../../../services/rup/prestacionPacie
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
-
-const size = 4;
 
 @Component({
   selector: 'dar-turnos',
@@ -59,7 +57,7 @@ export class DarTurnosComponent implements OnInit {
   };
 
   paciente: IPaciente;
-  public estadoT: Estado;
+  public estadoT: EstadosDarTurnos;
   private turno: ITurno;
   private bloque: IBloque;
   private bloques: IBloque[];
@@ -69,12 +67,12 @@ export class DarTurnosComponent implements OnInit {
   private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
   private alternativas: any[] = [];
   private reqfiltros = false;
-  private tipoPrestaciones: String = '';
-  private tipoPrestacionesArray: Object[];
   private turnoTipoPrestacion: any = {};
   private delDiaDisponibles: number;
   private programadosDisponibles: number;
   private gestionDisponibles: number;
+  private permitirTurnoDoble = false;
+  private turnoDoble = false;
   countBloques: any[];
   countTurnos: any = {};
   resultado: any;
@@ -124,31 +122,46 @@ export class DarTurnosComponent implements OnInit {
     }
 
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    // this.actualizar('sinFiltro');
+    // Debug: fuerza un paciente
+    // let paciente = { "createdBy": { "organizacion": { "id": "57e9670e52df311059bc8964", "nombre": "HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON", "_id": "57e9670e52df311059bc8964" }, "documento": 26108063, "username": 26108063, "apellido": "26108063", "nombre": "26108063", "nombreCompleto": "26108063 26108063" }, "createdAt": "2017-05-16T16:54:23.680Z", "documento": "29410428", "apellido": "CELESTE", "nombre": "CAROLINA SOLEDAD", "sexo": "femenino", "fechaNacimiento": "1982-03-30T03:00:00.000Z", "scan": "carolina", "estado": "validado", "genero": "femenino", "estadoCivil": null, "entidadesValidadoras": ["RENAPER"], "claveBlocking": ["ZLSTKRL", "ZLST", "KRLNSL", "454349564533", "4543"], "financiador": [], "relaciones": [], "direccion": [{ "valor": "", "codigoPostal": "", "ubicacion": { "pais": { "nombre": "Argentina", "_id": "57f3b5c469fe79a598e6281f", "id": "57f3b5c469fe79a598e6281f" }, "provincia": null, "localidad": null, "barrio": null, "_id": "591b2ebf816f8e62048802ec", "id": "591b2ebf816f8e62048802ec" }, "ranking": 0, "geoReferencia": null, "ultimaActualizacion": "2017-05-16T16:54:11.079Z", "_id": "591b2ebf816f8e62048802eb", "activo": true, "id": "591b2ebf816f8e62048802eb" }], "contacto": [{ "tipo": "celular", "valor": "2995573273", "ranking": 0, "ultimaActualizacion": "2017-05-16T16:54:11.079Z", "_id": "591b2ebf816f8e62048802ee", "activo": true, "id": "591b2ebf816f8e62048802ee" }], "identificadores": [], "edadReal": { "unidad": "Años", "valor": 35 }, "edad": 35, "nombreCompleto": "CAROLINA SOLEDAD CELESTE", "id": "591b2ebf816f8e62048802ea" };
+    // this.onReturn(paciente as any);
   }
 
   loadTipoPrestaciones(event) {
     this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-      console.log('permisos ', this.permisos);
       let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
       let data2 = this.verificarLlaves(dataF, event);
     });
   }
 
+  habilitarTurnoDoble() {
+    // Si el siguiente turno está disponible, se habilita la opción de turno doble
+    let cantidadTurnos;
+    this.permitirTurnoDoble = false;
+    if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
+      cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+      cantidadTurnos--;
+      if (this.indiceTurno < cantidadTurnos) {
+        // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
+        if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
+          this.permitirTurnoDoble = true;
+        }
+      }
+    }
+  }
+
   public verificarLlaves(tipoPrestaciones: any[], event) {
-    console.log('tipoPrestaciones ', tipoPrestaciones);
     tipoPrestaciones.forEach((tipoPrestacion, index) => {
       let band = true;
       this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
         llaves => {
-          console.log('llaves ', llaves);
           this.llaveTP = llaves[0];
           if (!this.llaveTP) {
             band = true;
           } else {
             // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
             if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
-              let edad = new patientRealAgePipe().transform(this.paciente, []);
+              let edad = new EdadPipe().transform(this.paciente, []);
               // Edad desde
               if (this.llaveTP.llave.edad.desde) {
                 let edadDesde = String(this.llaveTP.llave.edad.desde.valor) + ' ' + this.llaveTP.llave.edad.desde.unidad;
@@ -180,7 +193,6 @@ export class DarTurnosComponent implements OnInit {
         },
         err => {
           if (err) {
-            console.log(err);
             band = false;
           }
         }, () => {
@@ -195,7 +207,6 @@ export class DarTurnosComponent implements OnInit {
 
   cargarDatosLlaves(event) {
     this.llaves.forEach((cadaLlave, indiceLlave) => {
-      console.log(cadaLlave);
       let solicitudVigente = false;
       // Si la llave requiere solicitud, verificamos en prestacionPaciente la fecha de solicitud
       if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
@@ -204,19 +215,20 @@ export class DarTurnosComponent implements OnInit {
           idPaciente: this.paciente.id,
           idTipoPrestacion: cadaLlave.tipoPrestacion.id
         };
+        console.log('aca=>', params);
         this.servicioPrestacionPaciente.get(params).subscribe(
           prestacionPaciente => {
             if (prestacionPaciente.length > 0) {
-              console.log('prestacionPaciente', prestacionPaciente[0].solicitud.profesional);
               if (cadaLlave.llave.solicitud.vencimiento) {
+
                 if (cadaLlave.llave.solicitud.vencimiento.unidad === 'Días') {
                   this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
+                  this.llaves[indiceLlave].organizacion = prestacionPaciente[0].solicitud.organizacion;
                   this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
+                  // Controla si la solicitud está vigente
                   let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
                   solicitudVigente = moment().isBefore(end);
-                  console.log('fecha ', end.toDate(), 'condicion ', solicitudVigente);
                   this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
-                  this.llaves[indiceLlave].prestacionOrigen = 'Consulta de medicina general';
                   if (!solicitudVigente) {
                     let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
                     this.filtradas.splice(indiceFiltradas, 1);
@@ -232,16 +244,13 @@ export class DarTurnosComponent implements OnInit {
               let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
               this.filtradas.splice(indiceFiltradas, 1);
               this.filtradas = [...this.filtradas];
-              console.log('0__0', this.llaves);
             }
           },
           err => {
             if (err) {
-              console.log(err);
             }
           },
           () => {
-            console.log('yesss', this.llaves);
             event.callback(this.filtradas);
             this.actualizar('sinFiltro');
           }
@@ -256,7 +265,6 @@ export class DarTurnosComponent implements OnInit {
         let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
         this.filtradas.splice(indiceFiltradas, 1);
         this.filtradas = [...this.filtradas];
-        // console.log('noooou dsdsadsda', this.llaves);
       }
     });
   }
@@ -277,7 +285,7 @@ export class DarTurnosComponent implements OnInit {
       'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
       'profesional': this.opciones.profesional ? this.opciones.profesional : null
     };
-    if (this.busquedas.length === size) {
+    if (this.busquedas.length === 4) {
       this.busquedas.shift();
     }
 
@@ -322,7 +330,6 @@ export class DarTurnosComponent implements OnInit {
       // Resetear opciones
       this.opciones.tipoPrestacion = null;
       this.opciones.profesional = null;
-      console.log('filtradas ', this.filtradas.map((f) => { return f.id; }));
       params = {
         // Mostrar sólo las agendas a partir de hoy en adelante
         rango: true, desde: new Date(), hasta: fechaHasta,
@@ -346,7 +353,7 @@ export class DarTurnosComponent implements OnInit {
 
       // Ordena las Agendas por fecha/hora de inicio
       this.agendas = this.agendas.sort(
-        function(a, b) {
+        function (a, b) {
           let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
           let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
           {
@@ -372,7 +379,7 @@ export class DarTurnosComponent implements OnInit {
       // Si cambió el estado y ya no está disponible ni publicada, mostrar un alerta y cancelar cualquier operación
       if (a.estado !== 'disponible' && a.estado !== 'publicada') {
 
-        this.plex.alert('Esta agenda ya no está disponible.');
+        this.plex.info('warning', 'Esta agenda ya no está disponible.');
         return false;
 
       } else {
@@ -388,8 +395,8 @@ export class DarTurnosComponent implements OnInit {
 
         /*Filtra los bloques segun el filtro tipoPrestacion*/
         this.bloques = this.agenda.bloques.filter(
-          function(value) {
-            let prestacionesBlq = value.tipoPrestaciones.map(function(obj) {
+          function (value) {
+            let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
               return obj.id;
             });
             if (tipoPrestacion) {
@@ -454,7 +461,6 @@ export class DarTurnosComponent implements OnInit {
 
                 bloque.turnos.forEach((turno) => {
 
-                  console.log('tipoTurno', turno.tipoTurno);
                   // Si el turno está asignado o está disponible pero ya paso la hora
                   if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
                     switch (turno.tipoTurno) {
@@ -528,23 +534,9 @@ export class DarTurnosComponent implements OnInit {
             // contador de turnos por Bloque
             this.countBloques = countBloques;
 
-            this.tipoPrestaciones = '';
-
-            let tipoPrestacionesArray = [];
-
-            if (this.agenda.tipoPrestaciones.length > 1) {
-              this.agenda.tipoPrestaciones.forEach((cadaprestacion, ind) => {
-                this.tipoPrestaciones = this.tipoPrestaciones ? this.tipoPrestaciones + '\n' + cadaprestacion.nombre : cadaprestacion.nombre;
-                tipoPrestacionesArray.push({ nombre: cadaprestacion.nombre });
-              });
-            } else {
-              this.tipoPrestaciones = this.agenda.tipoPrestaciones[0].nombre;
+            if (this.agenda.tipoPrestaciones.length <= 1) {
               this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
-              tipoPrestacionesArray.push({ nombre: this.agenda.tipoPrestaciones[0].nombre });
             }
-            this.tipoPrestacionesArray = tipoPrestacionesArray;
-
-            // no hay turnos disponibles
           } else {
 
             /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
@@ -578,9 +570,10 @@ export class DarTurnosComponent implements OnInit {
       if (this.bloque.tipoPrestaciones.length === 1) {
         this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
       }
+      this.habilitarTurnoDoble();
       this.estadoT = 'confirmacion';
     } else {
-      this.plex.alert('Seleccione un paciente');
+      this.plex.info('warning', 'Debe seleccionar un paciente');
     }
   }
 
@@ -595,8 +588,12 @@ export class DarTurnosComponent implements OnInit {
   }
 
   seleccionarLlave(indice: number) {
-    this.opciones.tipoPrestacion = this.llaves[indice].tipoPrestacion;
-    this.actualizar('');
+    if (this.llaves[indice].solicitudVigente) {
+      this.opciones.tipoPrestacion = this.llaves[indice].tipoPrestacion;
+      this.actualizar('');
+    } else {
+      this.plex.info('alert', 'Esta solicitud ha vencido y el profesional debe solicitarla nuevamente');
+    }
   }
 
   verAgenda(direccion: String) {
@@ -655,7 +652,6 @@ export class DarTurnosComponent implements OnInit {
       };
 
       this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-        debugger;
         if (carpeta.nroCarpeta) {
           // Se actualiza la carpeta del Efector correspondiente, se realiza un patch del paciente
           let nuevaCarpeta = {
@@ -669,7 +665,6 @@ export class DarTurnosComponent implements OnInit {
           };
           this.servicePaciente.patch(pacienteActualizar.id, cambios).subscribe(resultado => {
             if (resultado) {
-              console.log(resultado);
             }
           });
 
@@ -677,8 +672,6 @@ export class DarTurnosComponent implements OnInit {
       });
 
     }
-
-
 
   }
 
@@ -693,7 +686,7 @@ export class DarTurnosComponent implements OnInit {
               if (turno.paciente.id === this.paciente.id) {
                 ultimosTurnos.push({
                   tipoPrestacion: turno.tipoPrestacion.nombre,
-                  horaInicio: moment(turno.horaInicio).format('L'),
+                  horaInicio: turno.horaInicio,
                   estado: turno.estado,
                   organizacion: agenda.organizacion.nombre,
                   profesionales: agenda.profesionales
@@ -716,7 +709,7 @@ export class DarTurnosComponent implements OnInit {
 
       if (a.estado !== 'disponible' && a.estado !== 'publicada') {
 
-        this.plex.alert('Esta agenda ya no está disponible.');
+        this.plex.info('warning', 'Esta agenda ya no está disponible.');
         this.actualizar('sinFiltro');
         return false;
 
@@ -734,7 +727,8 @@ export class DarTurnosComponent implements OnInit {
 
         this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-
+        let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+        let agendaid = this.agenda.id;
         let datosTurno = {
           idAgenda: this.agenda.id,
           idTurno: this.turno.id,
@@ -751,43 +745,27 @@ export class DarTurnosComponent implements OnInit {
           this.agenda = null;
           this.actualizar('sinFiltro');
           this.borrarTurnoAnterior();
-          this.plex.alert('El turno se asignó correctamente');
-          let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-          let tm = moment(this.turno.horaInicio).format('HH:mm');
-          let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+          this.plex.toast('info', 'El turno se asignó correctamente');
+
+          // Enviar SMS
+          // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+          // let tm = moment(this.turno.horaInicio).format('HH:mm');
+          // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
           // this.enviarSMS(pacienteSave, mensaje);
+          if (this.turnoDoble) {
+            if (turnoSiguiente.estado === 'disponible') {
+              let patch: any = {
+                  op: 'darTurnoDoble',
+                  turnos: [turnoSiguiente]
+              };
+              // Patchea el turno doble
+              this.serviceAgenda.patchMultiple(agendaid, patch).subscribe(resultado => {
+               });
+            }
+          }
           this.actualizarCarpetaPaciente(pacienteSave);
         });
 
-
-        // Guardar Prestación Paciente
-
-        let nuevaPrestacion;
-        this.paciente['_id'] = this.paciente.id;
-        nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-              tipoPrestacion: this.turnoTipoPrestacion,
-              fecha: new Date(),
-              listaProblemas: [],
-              idTurno: this.turno.id,
-            },
-            estado: {
-              timestamp: new Date(),
-              tipo: 'pendiente'
-            },
-            ejecucion: {
-              fecha: new Date(),
-              evoluciones: []
-            }
-        };
-
-        // TODO: Revisar alert
-         this.servicioPrestacionPaciente.post(nuevaPrestacion).subscribe(prestacion => {
-           this.plex.alert('prestacion paciente creada');
-         });
-
-        // });
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
           let nuevoCel = {
@@ -814,7 +792,6 @@ export class DarTurnosComponent implements OnInit {
           } else {
             this.paciente.contacto = [nuevoCel];
           }
-          console.log(this.paciente.contacto);
           let cambios = {
             'op': 'updateContactos',
             'contacto': this.paciente.contacto
@@ -823,7 +800,7 @@ export class DarTurnosComponent implements OnInit {
           mpi.subscribe(resultado => {
 
             if (resultado) {
-              this.plex.alert('Se actualizó el numero de telefono');
+              this.plex.toast('info', 'Número de teléfono actualizado');
             }
           });
 
@@ -838,7 +815,6 @@ export class DarTurnosComponent implements OnInit {
       telefono: paciente.telefono,
       mensaje: mensaje,
     };
-    console.log('smsParams ', smsParams);
     this.smsService.enviarSms(smsParams).subscribe(
       sms => {
         this.resultado = sms;
@@ -851,7 +827,6 @@ export class DarTurnosComponent implements OnInit {
       },
       err => {
         if (err) {
-          console.log(err);
         }
       });
   }
@@ -875,34 +850,39 @@ export class DarTurnosComponent implements OnInit {
 
   public tieneTurnos(bloque: IBloque): boolean {
     let turnos = bloque.turnos;
-    if (turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy)) {
-      return true;
-    } else {
-      return false;
-    }
+    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
   }
 
   afterCreateUpdate(paciente) {
     this.showCreateUpdate = false;
     this.showDarTurnos = true;
     if (paciente) {
-      this.paciente = paciente;
-      this.verificarTelefono(this.paciente);
+      this.servicePaciente.getById(paciente.id).subscribe(
+        pacienteMPI => {
+          this.paciente = pacienteMPI;
+          this.verificarTelefono(pacienteMPI);
+        });
     } else {
       this.buscarPaciente();
     }
   }
 
-  onReturn(pacientes: IPaciente): void {
-    if (pacientes.id) {
-      this.paciente = pacientes;
-      this.verificarTelefono(this.paciente);
-      this.showDarTurnos = true;
-      this.pacientesSearch = false;
-      window.setTimeout(() => this.pacientesSearch = false, 100);
-      this.getUltimosTurnos();
+  afterSearch(paciente: IPaciente): void {
+    this.paciente = paciente;
+    this.showDarTurnos = true;
+
+    if (paciente.id) {
+      this.servicePaciente.getById(paciente.id).subscribe(
+        pacienteMPI => {
+          this.paciente = pacienteMPI;
+          this.pacientesSearch = false;
+          // this.showDarTurnos = true;
+          this.verificarTelefono(this.paciente);
+          window.setTimeout(() => this.pacientesSearch = false, 100);
+          this.getUltimosTurnos();
+        });
     } else {
-      this.seleccion = pacientes;
+      this.seleccion = paciente;
       // this.verificarTelefono(this.seleccion);
       this.esEscaneado = true;
       this.escaneado.emit(this.esEscaneado);
@@ -957,11 +937,6 @@ export class DarTurnosComponent implements OnInit {
       operacion.subscribe();
     }
     this.buscarPaciente();
-  }
-
-  cancelar() {
-    this.pacientesSearch = true;
-    this.showDarTurnos = false;
   }
 
   redirect(pagina: string) {

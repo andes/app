@@ -12,7 +12,7 @@ import { Plex } from '@andes/plex';
 import { DropdownItem } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IProfesional } from './../../../interfaces/IProfesional';
-import { fromNowPipe } from './../../../utils/date';
+
 // Rutas
 import { Router, ActivatedRoute, Params } from '@angular/router';
 

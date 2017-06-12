@@ -19,14 +19,14 @@ import { PacienteService } from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
-import { fechaPipe } from './../../utils/datePipe';
+// import { fechaPipe } from './../../utils/datePipe';
+import { FechaPipe } from './../../pipes/fecha.pipe';
 import { Plex } from '@andes/plex';
 import { MapsComponent } from './../../utils/mapsComponent';
 import * as moment from 'moment';
-import {
-  patientFullNamePipe,
-  patientRealAgePipe
-} from './../../utils/patientPipe';
+import { PacientePipe } from './../../pipes/paciente.pipe';
+import { EdadPipe } from './../../pipes/edad.pipe';
+
 import {
   FormBuilder,
   FormGroup,
@@ -45,6 +45,7 @@ import {
   EventEmitter,
   HostBinding
 } from '@angular/core';
+
 
 @Component({
   selector: 'paciente-create-update',

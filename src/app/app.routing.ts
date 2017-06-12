@@ -33,10 +33,10 @@ import { EspacioFisicoComponent } from './components/turnos/configuracion/espaci
 // import { PrestacionComponent } from './components/turnos/configuracion/prestacion/prestacion.component';
 
 // ... Turnos
-import { AgendaComponent } from './components/turnos/agenda.component';
+import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
-import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
+import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 
@@ -78,8 +78,8 @@ const appRoutes: Routes = [
   { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
   { path: 'panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingGuard] },
-  { path: 'agendas', component: AgendaComponent, canActivate: [RoutingGuard] },
-  { path: 'agenda', component: AgendaComponent, canActivate: [RoutingGuard] },
+  { path: 'agendas', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
+  { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
 

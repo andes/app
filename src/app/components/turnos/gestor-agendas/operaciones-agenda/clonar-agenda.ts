@@ -3,8 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@an
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { AgendaService } from './../../services/turnos/agenda.service';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
 import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
@@ -140,7 +140,8 @@ export class ClonarAgendaComponent implements OnInit {
                 function (actual) {
                     let actualIni = moment(original.horaInicio).format('HH:mm');
                     let actualFin = moment(original.horaInicio).format('HH:mm');
-                    band = moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
+                    band = actual.estado !== 'suspendida';
+                    band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
                     band = band &&
                         ((originalIni <= actualIni && actualIni <= originalFin)
                             || (originalIni <= actualFin && actualFin <= originalFin));
@@ -174,16 +175,22 @@ export class ClonarAgendaComponent implements OnInit {
             }
             // Detectar el tipo de conflicto
             this.agendasFiltradas.forEach((agenda, index) => {
-                if (agenda.profesionales) {
+                if (agenda.profesionales.length > 0) {
+                    console.log('profesionales', agenda.profesionales.length);
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
                     }
                 }
                 if (agenda.espacioFisico) {
+                    console.log('espacio');
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
                     }
+                }
+                if (agenda.profesionales.length === 0 && !agenda.espacioFisico) {
+                    this.agendasFiltradas.splice(index, 1);
+                    console.log('borrar');
                 }
             });
         }
