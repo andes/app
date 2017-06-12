@@ -1,9 +1,9 @@
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../interfaces/turnos/ITurno';
-import { ListaEsperaService } from '../../services/turnos/listaEspera.service';
-import { AgendaService } from '../../services/turnos/agenda.service';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { ITurno } from './../../../../interfaces/turnos/ITurno';
+import { ListaEsperaService } from '../../../../services/turnos/listaEspera.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
     selector: 'liberar-turno',

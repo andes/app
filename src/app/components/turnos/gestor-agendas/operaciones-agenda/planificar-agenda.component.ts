@@ -3,18 +3,18 @@ import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import * as operaciones from './../../utils/operacionesJSON';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { AgendaService } from './../../services/turnos/agenda.service';
-import { EspacioFisicoService } from './../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from './../../services/profesional.service';
+import * as operaciones from './../../../../utils/operacionesJSON';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
+import { ProfesionalService } from './../../../../services/profesional.service';
 
 @Component({
-    selector: 'agenda',
-    templateUrl: 'agenda.html',
+    selector: 'planificar-agenda',
+    templateUrl: 'planificar-agenda.html',
 })
-export class AgendaComponent implements OnInit {
+export class PlanificarAgendaComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;

@@ -104,24 +104,24 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
-import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
-import { AgendaComponent } from './components/turnos/agenda.component';
+import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
+import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
-import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
-import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
+import { SuspenderTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/suspender-turno.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
-import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
-import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/sobreturno.component';
-import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
-import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
-import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/revision-agenda.component';
+import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
+import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
+import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
+import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
+import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 
 
@@ -326,10 +326,10 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
     MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
-    AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent,
+    TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     AgregarSobreturnoComponent, PanelAgendaComponent,
@@ -361,7 +361,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ParentescoService,
     appRoutingProviders,
     ConfigPrestacionService,
-    AgendaComponent,
+    PlanificarAgendaComponent,
     // EspacioFisicoComponent,
     AgendaService,
     TurnoService,

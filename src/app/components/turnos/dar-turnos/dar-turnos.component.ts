@@ -757,34 +757,19 @@ export class DarTurnosComponent implements OnInit {
           // let tm = moment(this.turno.horaInicio).format('HH:mm');
           // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
           // this.enviarSMS(pacienteSave, mensaje);
-
-
-          // Actualiza carpeta del paciente
+          if (this.turnoDoble) {
+            if (turnoSiguiente.estado === 'disponible'){
+              let patch: any = {
+                  op: 'darTurnoDoble',
+                  turnos: [turnoSiguiente]
+              };
+              // Patchea el turno doble
+              this.serviceAgenda.patchMultiple(agendaid, patch).subscribe(resultado => {
+               });
+            }
+          }
           this.actualizarCarpetaPaciente(pacienteSave);
         });
-
-
-        // Guardar Prestación Paciente
-
-        let nuevaPrestacion;
-        this.paciente['_id'] = this.paciente.id;
-        nuevaPrestacion = {
-          paciente: this.paciente,
-          solicitud: {
-            tipoPrestacion: this.turnoTipoPrestacion,
-            fecha: new Date(),
-            listaProblemas: [],
-            idTurno: this.turno.id,
-          },
-          estado: {
-            timestamp: new Date(),
-            tipo: 'pendiente'
-          },
-          ejecucion: {
-            fecha: new Date(),
-            evoluciones: []
-          }
-        };
 
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {

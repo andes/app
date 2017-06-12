@@ -25,7 +25,7 @@ export class GestorAgendasComponent implements OnInit {
 
     public showGestorAgendas: Boolean = true;
     public showTurnos: Boolean = false;
-    public showVistaAgendas: Boolean = false;
+    public showBotonesAgenda: Boolean = false;
     public showClonar: Boolean = false;
     public showDarTurnos: Boolean = false;
     public showEditarAgenda: Boolean = false;
@@ -48,7 +48,7 @@ export class GestorAgendasComponent implements OnInit {
     searchForm: FormGroup;
 
     ag: IAgenda;
-    vistaAgenda: IAgenda;
+    // vistaAgenda: IAgenda;
     reasignar: IAgenda;
     editaAgenda: IAgenda;
 
@@ -270,7 +270,7 @@ export class GestorAgendasComponent implements OnInit {
 
     verAgenda(agenda, multiple, e) {
 
-        this.showVistaAgendas = false;
+        this.showBotonesAgenda = false;
         this.showTurnos = false;
 
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
@@ -301,7 +301,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showAgregarNotaAgenda = false;
             this.showAgregarSobreturno = false;
             this.showRevisionAgenda = false;
-            this.showVistaAgendas = true;
+            this.showBotonesAgenda = true;
             this.showTurnos = true;
         });
 

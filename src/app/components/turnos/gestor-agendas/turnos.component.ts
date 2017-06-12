@@ -31,16 +31,17 @@ export class TurnosComponent implements OnInit {
 
     this.bloques = this.agenda.bloques;
     for (let i = 0; i < this.bloques.length; i++) {
-        this.turnos = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
-        for (let t = 0; t < this.turnos.length; t++) {
+        this.turnos = this.agenda.bloques[i].turnos;
+        this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
+        for (let t = 0; t < this.turnosAsignados.length; t++) {
             // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-            this.servicePaciente.getById(this.turnos[t].paciente.id).subscribe((paciente) => {
+            this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
                 if (paciente && paciente.carpetaEfectores) {
                     let carpetaEfector = null;
                     carpetaEfector = paciente.carpetaEfectores.filter((data) => {
                         return (data.organizacion.id === this.auth.organizacion.id);
                     });
-                    this.turnos[t].paciente.carpetaEfectores = carpetaEfector;
+                    this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
                 }
             });
         }
@@ -63,6 +64,7 @@ export class TurnosComponent implements OnInit {
   smsEnviado: Boolean = false;
   smsLoader: Boolean = false;
   turnos = [];
+  turnosAsignados = [];
   turnosSeleccionados: any[] = [];
   turno: ITurno;
   cantSel: number;
@@ -202,11 +204,7 @@ export class TurnosComponent implements OnInit {
         return false;
       }
     };
-    if (this.turnosSeleccionados.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.turnosSeleccionados.length > 0;
   }
 
   ningunoConEstado(estado) {
@@ -291,7 +289,7 @@ export class TurnosComponent implements OnInit {
 
       nota: this.turnosSeleccionados.length > 0,
       // Se verifica si el siguiente turno se encuentra disponible
-      turnoDoble: (this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado') && this.siguienteDisponible()),
+      turnoDoble: this.turnosSeleccionados.length === 1  && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado') && this.siguienteDisponible(),
 
     };
 

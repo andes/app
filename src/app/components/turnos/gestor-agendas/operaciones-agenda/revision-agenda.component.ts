@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
-import { AgendaService } from '../../../services/turnos/agenda.service';
-import { Cie10Service } from './../../../services/term/cie10.service';
-import {enumToArray} from '../../../utils/enums';
-import { EstadosAsistencia } from './../enums';
-import { TurnoService } from './../../../services/turnos/turno.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { PacienteService } from './../../../services/paciente.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { Cie10Service } from './../../../../services/term/cie10.service';
+import { enumToArray } from '../../../../utils/enums';
+import { EstadosAsistencia } from './../../enums';
+import { TurnoService } from './../../../../services/turnos/turno.service';
+import { IPaciente } from './../../../../interfaces/IPaciente';
+import { PacienteService } from './../../../../services/paciente.service';
 
 
 @Component({
@@ -139,7 +139,6 @@ export class RevisionAgendaComponent implements OnInit {
 
 
   seleccionarTurno(turno, bloque) {
-    debugger;
     this.paciente = null;
     if (this.turnoSeleccionado === turno) {
       this.turnoSeleccionado = null;
@@ -173,7 +172,7 @@ export class RevisionAgendaComponent implements OnInit {
 
   estaSeleccionado(turno: any) {
     this.showRegistrosTurno = true;
-    return this.turnoSeleccionado == turno; // .indexOf(turno) >= 0;
+    return this.turnoSeleccionado === turno;
   }
 
   buscarCodificacion(event) {
@@ -211,8 +210,10 @@ export class RevisionAgendaComponent implements OnInit {
 
   onSave() {
     // Se guarda el turno seleccionado
-    this.asignarPaciente(this.paciente);
-    debugger;
+    if (this.paciente) {
+      this.asignarPaciente(this.paciente);
+    }
+
     if (this.turnoTipoPrestacion) {
       this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
     };

@@ -7,9 +7,9 @@
                     <!--Botones / Acciones-->
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
-                        <vista-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
+                        <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
                             (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)" (revisionAgendaEmit)="revisionAgenda($event)">
-                        </vista-agenda>
+                        </botones-agenda>
                     </div>
 
                     <!--Filtros-->
@@ -119,6 +119,6 @@
 <dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
 <sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
-<agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></agenda>
-<agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></agenda>
+<planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
+<planificar-agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
 <revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>

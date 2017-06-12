@@ -1,14 +1,14 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
-import { AgendaService } from '../../../services/turnos/agenda.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
-  selector: 'vista-agenda',
-  templateUrl: 'vista-agenda.html'
+  selector: 'botones-agenda',
+  templateUrl: 'botones-agenda.html'
 })
 
-export class VistaAgendaComponent implements OnInit {
+export class BotonesAgendaComponent implements OnInit {
 
   @Output() clonarEmit = new EventEmitter<boolean>();
   @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
@@ -35,7 +35,7 @@ export class VistaAgendaComponent implements OnInit {
   vistaBotones: any = {};
 
   // Muestra/oculta este componente
-  showVistaAgendas: Boolean = true;
+  showBotonesAgenda: Boolean = true;
   showEditarAgenda: Boolean = false;
   showEditarAgendaPanel: Boolean = false;
   cantSel: number;
@@ -247,7 +247,7 @@ export class VistaAgendaComponent implements OnInit {
 
   cancelar() {
     this.showEditarAgenda = false;
-    this.showVistaAgendas = true;
+    this.showBotonesAgenda = true;
   }
 
 }

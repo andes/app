@@ -3,8 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter, HostBinding } from '@an
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { AgendaService } from './../../services/turnos/agenda.service';
+import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
 import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
