@@ -172,7 +172,7 @@ export class PuntoInicioComponent implements OnInit {
 
                 //Buscar si existe una prestacion asociada al turno
                 let prestacionTurno = this.todasLasPrestaciones.find(x => {
-                    if (x.solicitud.idTurno.toString() === turno._id.toString()) {
+                    if (x.solicitud.idTurno && (x.solicitud.idTurno.toString() === turno._id.toString())) {
 
                         return x;
                     }
@@ -204,6 +204,10 @@ export class PuntoInicioComponent implements OnInit {
                 unPacientePresente.turno = null;
                 unPacientePresente.estado = prestacion.estado[prestacion.estado.length - 1].tipo;
                 unPacientePresente.fecha = prestacion.estado[prestacion.estado.length - 1].timestamp;
+                if (unPacientePresente.estado === 'pendiente') {
+                    unPacientePresente.estado = 'En espera';
+                }
+
                 unPacientePresente.idPrestacion = prestacion.id;
                 // //cargo un objeto con el profesional.
                 unPacientePresente.profesionales = {}; // Recorrer los profesionales si los tuviera
