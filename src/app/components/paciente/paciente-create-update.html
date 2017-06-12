@@ -293,7 +293,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" *ngFor="let _unaNota of pacienteModel.notas; let l = index">
                                         <div class="row">
-                                            <div class="col">{{_unaNota.nota}} <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
+                                            <div class="col-8">{{_unaNota.nota}} <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
                                             </div>
                                             <div class="col-2 text-right">
                                                 <h2 class="text-warning">
@@ -301,8 +301,8 @@
                                                     <i *ngIf="!_unaNota.destacada" (click)="destacarNota(l)" class="mdi mdi-star-outline"></i>
                                                 </h2>
                                             </div>
-                                            <div class="col-2">
-                                                <plex-button label="" type="danger btn-sm" icon="close" (click)="removeNota(l)"></plex-button>
+                                            <div class="col-2 text-right">
+                                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="removeNota(l)"></plex-button>
                                             </div>
                                         </div>
                                     </li>
