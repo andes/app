@@ -896,7 +896,7 @@ export class DarTurnosComponent implements OnInit {
     // se busca entre los contactos si tiene un celular
     this.telefono = '';
     this.cambioTelefono = false;
-    if (paciente.contacto) {
+    if (paciente && paciente.contacto) {
       if (paciente.contacto.length > 0) {
         paciente.contacto.forEach((contacto) => {
           if (contacto.tipo === 'celular') {
