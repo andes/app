@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
@@ -37,7 +36,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private serviceTipoPrestacion: TipoPrestacionService,
-        private servicioTipoProblema: TipoProblemaService,
         private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
@@ -66,14 +64,17 @@ export class PrestacionValidacionComponent implements OnInit {
 
     loadPrestacionesEjacutadas() {
         let estado = (this.prestacion.estado[this.prestacion.estado.length - 1].tipo === 'ejecucion') ? 'ejecucion' : 'validada';
+
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: estado }).subscribe(resultado => {
             this.prestacionesEjecutadas = resultado;
+            console.log(resultado);
             // asignamos las prestaciones por problemas asi luego loopeamos
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
                 let idProblema = _problema.id.toString();
                 this.prestaciones[idProblema] = this.buscarPrestacionesPorProblema(_problema);
             });
         });
+
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id, estado: 'pendiente' }).subscribe(resultado => {
             this.prestacionesSolicitadas = resultado;
             this.prestacion.ejecucion.listaProblemas.forEach(_problema => {
@@ -93,7 +94,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     buscarPrestacionesPorProblema(problema: IProblemaPaciente) {
         return this.prestacionesEjecutadas.filter(data => {
-            if (data.solicitud.listaProblemas.find(p => p.id === problema.id)) {
+            if (data.ejecucion.listaProblemas.find(p => p.id === problema.id)) {
                 return data;
             }
         });

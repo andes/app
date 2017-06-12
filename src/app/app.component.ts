@@ -36,7 +36,7 @@ export class AppComponent {
         //         );
         // }, 2000);
 
-        // this.initStatusCheck();
+        this.initStatusCheck();
 
         // this.plex.updateMenu([
         //     { label: 'Ir a inicio', icon: 'dna', route: '/incio' },

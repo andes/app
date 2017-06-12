@@ -57,7 +57,6 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 // ... RUP
-import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
@@ -166,7 +165,12 @@ import { EcografiaComponent } from './components/rup/moleculas/ecografia.compone
 import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
-
+import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
+import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
+import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
+import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
+import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
@@ -282,7 +286,13 @@ export const RUP_COMPONENTS = [
   InterConsultaComponent,
   LaboratorioComponent,
   RadiografiaComponent,
-  SnomedBuscarComponent
+  SnomedBuscarComponent,
+  TomografiaComponent,
+  MamografiaComponent,
+  EndoscopiaComponent,
+  TomaHpvComponent,
+  TomaPapComponent,
+  SangreOcultaMateriaFecalComponent
 ];
 
 // Locales
@@ -364,7 +374,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     SmsService,
     PrestacionPacienteService,
     ProblemaPacienteService,
-    TipoProblemaService,
     TipoPrestacionService,
 
     ObservarDatosService,

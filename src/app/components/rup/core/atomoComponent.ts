@@ -5,7 +5,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     selector: 'Atomo',
     templateUrl: 'atomo.html'
 })
-export class Atomo extends RupComponent {
+export class Atomo extends RupComponent implements OnInit {
 
     ngOnInit() {
         this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
@@ -14,17 +14,4 @@ export class Atomo extends RupComponent {
             this.devolverValores();
         }
     }
-    // devolverValores() {
-    //
-    //     if (this.data[this.tipoPrestacion.key] === null) {
-    //         this.data = {};
-    //     }
-    //     this.mensaje = this.getMensajes();
-    //     this.evtData.emit(this.data);
-    // }
-
-    // getMensajes() {
-
-
-    // }
 }

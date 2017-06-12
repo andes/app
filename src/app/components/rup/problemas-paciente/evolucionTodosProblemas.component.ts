@@ -2,7 +2,6 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoProblemaService } from './../../../services/rup/tipoProblema.service';
 import { ITipoProblema } from './../../../interfaces/rup/ITipoProblema';
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
@@ -79,7 +78,6 @@ export class EvolucionTodosProblemasComponent implements OnInit {
 
             this.servProbPaciente.putAll(this.problemas).subscribe(resultado => {
                 if (resultado) {
-                     this.plex.toast('success', 'Los datos se han modificado correctamente.', 'Información', 4000);
                     this.evtData.emit(this.problemas);
                 } else {
                     this.plex.alert('Ha ocurrido un error al almacenar la evolución de los problemas.');

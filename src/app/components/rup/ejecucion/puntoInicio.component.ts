@@ -28,10 +28,7 @@ export class PuntoInicioComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     public profesional: IProfesional;
-    public usuario: IPaciente;
     public listaPrestaciones: IPrestacionPaciente[] = [];
-    public prestacionSeleccionada: IPrestacionPaciente = null; // será un IPaciente
-    public enEjecucion = false;
     public alerta = false;
     public agendas: any = [];
     public fechaActual = new Date();
@@ -41,16 +38,17 @@ export class PuntoInicioComponent implements OnInit {
     public mostrarLista = true;
     public mostrarPacientesSearch = true;
 
-    public ConjuntoDePrestaciones: any = [];
-    public PacientesPresentes: any = [];
-    public unPacientePresente: any = {};
-    public TodasLasPrestaciones: any = [];
+    public conjuntoDePrestaciones: any = [];
+    public pacientesPresentes: any = [];
+    public pacientesPresentesCompleto: any = [];
+    public todasLasPrestaciones: any = [];
     public fechaDesde: Date;
     public fechaHasta: Date;
     public prestacionSeleccion: any;
     public estadoSeleccion: any;
     public selectPrestacionesProfesional: any = [];
     public searchPaciente: any;
+    public filtrosPacientes = true;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -67,6 +65,8 @@ export class PuntoInicioComponent implements OnInit {
             fechaHasta: moment().endOf('day').format()
         }
 
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
         this.loadAgendasXDia(hoy);
 
     }
@@ -74,14 +74,12 @@ export class PuntoInicioComponent implements OnInit {
     loadAgendasXDia(params) {
         if (this.auth.profesional) {
 
-            // let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
-            // let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
             this.servicioAgenda.get(params).subscribe(
                 agendas => {
                     this.agendas = agendas;
-                    // console.log(this.agendas[2].bloques[0].turnos);
                     this.CreaConjuntoPrestacionesProfesional();
-                    this.TraeTodasLasPrestacionesFiltradas();
+                    this.TraetodasLasPrestacionesFiltradas(params);
+                    this.pacientesPresentes = [];
                 },
                 err => {
                     if (err) {
@@ -97,9 +95,15 @@ export class PuntoInicioComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
+        this.mostrarPacientesSearch = false;
         this.mostrarLista = false;
         // this.mostrarPrestacionSelect = true;
-        this.mostrarPacientesSearch = false;
+    }
+
+    volverAlInicio() {
+        this.paciente = null;
+        this.mostrarPacientesSearch = true;
+        this.mostrarLista = true;
     }
 
     listadoTurnos(bloque) {
@@ -116,66 +120,109 @@ export class PuntoInicioComponent implements OnInit {
     }
 
 
-    TraeTodasLasPrestacionesFiltradas() {
+    TraetodasLasPrestacionesFiltradas(params) {
 
         let fechaDesde = this.fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = this.fechaActual.setHours(23, 59, 0, 0);
+
         this.servicioPrestacion.get({
-            fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta,
+            turneables: true,
+            fechaDesde: params.fechaDesde || fechaDesde,
+            fechaHasta: params.fechaHasta || fechaHasta,
             // idProfesional: this.auth.profesional.id,
-            // idTipoPrestacion: this.ConjuntoDePrestaciones[0]//Recorrer y hacer las consultas
+            // idTipoPrestacion: this.conjuntoDePrestaciones[0]//Recorrer y hacer las consultas
         }).subscribe(resultado => {
-            resultado.forEach(element => {
-                console.log(element);
-                this.TodasLasPrestaciones.push(element);
-            });
-            //console.log(this.TodasLasPrestaciones);
-            this.cargaPacientesDelDia();
+            if (resultado) {
+                this.todasLasPrestaciones = resultado;
+            }
+            this.cargaPacientes();
         });
-        // console.log('#$#$$$$$$$$$$$$$$$$$$$$$$$$$$$$#');
-        // console.log(this.TodasLasPrestaciones);
     }
 
 
-    cargaPacientesDelDia() {
-        this.PacientesPresentes = [];
-        this.agendas.forEach(element => {
+    cargaPacientes() {
+        this.pacientesPresentes = [];
+        let unPacientePresente: any = {};
+        this.agendas.forEach(agenda => {
             let turnos: any = [];
-            // Recorremos los bloques de una agenda para sacar los turnos.
-            for (let i in element.bloques) {
-                for (let e in element.bloques[i].turnos) {
-                    turnos.push(element.bloques[i].turnos[e]);
+
+            // Recorremos los bloques de una agenda para sacar los turnos asignados.
+            for (let i in agenda.bloques) {
+                if (i) {
+                    let turnosAsignados = agenda.bloques[i].turnos.filter(turno => (
+                        (turno.estado === 'asignado') || (turno.paciente && turno.estado === 'suspendido')));
+                    turnos = [...turnos, ...turnosAsignados];
                 }
             }
+            turnos.forEach(turno => { // Falta ver en ejecucion y validad
+                unPacientePresente.idAgenda = agenda.id;
+                unPacientePresente.turno = turno;
+                unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
+                unPacientePresente.estado = 'En espera';
+                unPacientePresente.fecha = turno.horaInicio;
 
-            turnos.forEach(elemento => { //Falta ver en ejecucion y validad
-                if (elemento.estado === 'asignado' && elemento.asistencia === true) {
-
-                    this.unPacientePresente.estado = 'En espera';
-                    this.unPacientePresente.fecha = moment().format();
-
-                    this.TodasLasPrestaciones.forEach(prestacion => {
-                        if (elemento.id === prestacion.solicitud.idTurno) {
-                            this.unPacientePresente.idPrestacion = prestacion.id;
-                            prestacion.estado.forEach(estado => {
-                                this.unPacientePresente.estado = estado.tipo;
-                                this.unPacientePresente.fecha = estado.timestamp;
-                            });
-                        }
-                    });
-                    //cargo un objeto con el profesional.
-                    this.unPacientePresente.profesionales = element.profesionales[0];//Recorrer los profesionales si los tuviera
-                    //Cargo el tipo de prestacion
-                    this.unPacientePresente.nombrePrestacion = element.tipoPrestaciones[0].nombre;//Recorrer las prestaciones si tiene mas de una
-                    //Recorro agenda saco el estados
-                    this.unPacientePresente.paciente = elemento.paciente;
-                    this.PacientesPresentes.push(this.unPacientePresente);
-                    this.unPacientePresente = {};
+                if (turno.asistencia === 'asistio') {
+                    unPacientePresente.estado = 'Presente';
+                } else {
+                    if (turno.estado === 'suspendido') {
+                        unPacientePresente.estado = 'Suspendido';
+                        unPacientePresente.fecha = turno.horaInicio;
+                    }
                 }
+
+                //Buscar si existe una prestacion asociada al turno
+                let prestacionTurno = this.todasLasPrestaciones.find(x => {
+                    if (x.solicitud.idTurno && (x.solicitud.idTurno.toString() === turno._id.toString())) {
+
+                        return x;
+                    }
+                });
+                // alert(prestacionTurno);
+                if (prestacionTurno) {
+                    unPacientePresente.idPrestacion = prestacionTurno.id;
+                    if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
+                        unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
+                        unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
+                    }
+                }
+
+                // Cargo un objeto con el profesional.
+                unPacientePresente.profesionales = agenda.profesionales[0]; // Recorrer los profesionales si los tuviera
+                // Cargo el tipo de prestacion
+                unPacientePresente.nombrePrestacion = agenda.tipoPrestaciones[0].nombre; // Recorrer las prestaciones si tiene mas de una
+                // Recorro agenda saco el estados
+                unPacientePresente.paciente = turno.paciente;
+                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                unPacientePresente = {};
             });
         });
 
+        //Buscamos los que solo tienen prestacion y no tienen turno
+        this.todasLasPrestaciones.forEach(prestacion => {
+            if (prestacion.solicitud.idTurno === null) {
+                unPacientePresente.idAgenda = null;
+                unPacientePresente.turno = null;
+                unPacientePresente.estado = prestacion.estado[prestacion.estado.length - 1].tipo;
+                unPacientePresente.fecha = prestacion.estado[prestacion.estado.length - 1].timestamp;
+                if (unPacientePresente.estado === 'pendiente') {
+                    unPacientePresente.estado = 'En espera';
+                }
+
+                unPacientePresente.idPrestacion = prestacion.id;
+                // //cargo un objeto con el profesional.
+                unPacientePresente.profesionales = {}; // Recorrer los profesionales si los tuviera
+                // //Cargo el tipo de prestacion
+                unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre; // Recorrer las prestaciones si tiene mas de una
+                // //Recorro agenda saco el estados
+                unPacientePresente.paciente = prestacion.paciente;
+                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                unPacientePresente = {};
+            }
+        });
+
+        //Ordenar por fecha y hora
+        this.pacientesPresentes = this.pacientesPresentes.sort((a, b) => { return (a.fecha > b.fecha) ? 1 : ((b.fecha > a.fecha) ? -1 : 0); });
+        this.pacientesPresentesCompleto = [... this.pacientesPresentes];
     }
 
     // Creo el conjunto de prestaciones del profesional..
@@ -184,17 +231,17 @@ export class PuntoInicioComponent implements OnInit {
             let agregar = true;
 
             // Recorro para no agregar dos veces la misma
-            for (let i in this.ConjuntoDePrestaciones) {
-                if (this.ConjuntoDePrestaciones[i] === element.tipoPrestaciones[0].id) {
+            for (let i in this.conjuntoDePrestaciones) {
+                if (this.conjuntoDePrestaciones[i] === element.tipoPrestaciones[0].id) {
                     agregar = false;
                 }
             }
             if (agregar) {
-                this.ConjuntoDePrestaciones.push(element.tipoPrestaciones[0].id);
-                this.selectPrestacionesProfesional.push({
+                this.conjuntoDePrestaciones.push(element.tipoPrestaciones[0].id);
+                this.selectPrestacionesProfesional = [... this.selectPrestacionesProfesional, {
                     id: element.tipoPrestaciones[0].id,
                     nombre: element.tipoPrestaciones[0].nombre
-                });
+                }];
             }
         });
 
@@ -202,13 +249,60 @@ export class PuntoInicioComponent implements OnInit {
 
 
 
-    //Va a cargar todos lo pacientes con un turnos pendientes.
+    // Va a cargar todos lo pacientes con un turnos pendientes.
     PacientesPendientes() {
 
     }
 
-    elegirPrestacion(id) {
-        this.router.navigate(['/rup/resumen', id]);
+    elegirPrestacion(unPacientePresente) {
+        debugger;
+        if (unPacientePresente.idPrestacion) {
+            this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
+        } else {
+            if (unPacientePresente.estado != 'Suspendido') {
+                //Marcar el turno como presente
+                let patch: any = {
+                    op: 'darAsistencia',
+                    turnos: [unPacientePresente.turno]
+                };
+
+                // Patchea los turnosSeleccionados (1 o más turnos)
+                this.servicioAgenda.patchMultiple(unPacientePresente.idAgenda, patch).subscribe(resultado => {
+                    if (resultado) {
+                        //TODO: Ver si se muestra un mensaje
+                    }
+                });
+
+                // Guardar Prestación Paciente
+                let nuevaPrestacion;
+                nuevaPrestacion = {
+                    paciente: unPacientePresente.paciente,
+                    solicitud: {
+                        tipoPrestacion: unPacientePresente.tipoPrestacion,
+                        fecha: new Date(),
+                        listaProblemas: [],
+                        idTurno: unPacientePresente.turno.id ? unPacientePresente.turno.id : null,
+                    },
+                    estado: {
+                        timestamp: new Date(),
+                        tipo: 'pendiente'
+                    },
+                    ejecucion: {
+                        fecha: new Date(),
+                        evoluciones: []
+                    }
+                };
+
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    if (prestacion) {
+                        this.router.navigate(['/rup/resumen', prestacion.id]);
+                    } else {
+                        this.plex.alert('ERROR: no se pudo cargar la prestación');
+                    }
+                });
+            }
+            // ruteamos
+        }
     }
 
     onReturn() {
@@ -219,59 +313,54 @@ export class PuntoInicioComponent implements OnInit {
         return $event.callback(this.selectPrestacionesProfesional);
     }
     loadEstados($event) {
-        return $event.callback([{ id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecucion' }, { id: 'validada', nombre: 'validada' }]);
+        return $event.callback([{ id: 'Presente', nombre: 'Presente' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }, { id: 'Suspendido', nombre: 'Suspendido' }]);
     }
 
 
-    soloPacientesProfesional() { //Filtra los pacientes del profesional
-        let misPacientes: any = [];
-        console.log('PacientesPresentes: ', this.PacientesPresentes);
-        console.log('PROFESIONAL: ', this.auth.profesional.id);
-        this.PacientesPresentes.forEach(paciente => {
-
+    soloPacientesProfesional() { // Filtra los pacientes del profesional
+        this.filtrosPacientes = true;
+        this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
             if (paciente.profesionales.id === this.auth.profesional.id) {
-                misPacientes.push(paciente);
+                return paciente;
             }
         });
-        this.PacientesPresentes = misPacientes;
     }
 
 
-    todosLosPacientes() { //trae todos los pacientes
-        this.cargaPacientesDelDia();
+    todosLosPacientes() { // Trae todos los pacientes
+        this.filtrosPacientes = false;
+        this.pacientesPresentes = [... this.pacientesPresentesCompleto];
     }
 
 
     filtraPorEstado() {
-        this.cargaPacientesDelDia();
+        this.cargaPacientes();
         let misPacientesEstado: any = [];
         if (this.estadoSeleccion) {
-            this.PacientesPresentes.forEach(paciente => {
-                console.log(this.estadoSeleccion.id);
-                if (paciente.estado == this.estadoSeleccion.id) {
-                    misPacientesEstado.push(paciente);
+            this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
+                if (paciente.estado === this.estadoSeleccion.id) {
+                    return paciente;
                 }
             });
-            this.PacientesPresentes = misPacientesEstado;
         }
     }
 
     filtraPorPrestacion() {
-        this.cargaPacientesDelDia();
         let misPacientesPrestacion: any = [];
         if (this.prestacionSeleccion) {
-            this.PacientesPresentes.forEach(paciente => {
-                if (paciente.nombrePrestacion == this.prestacionSeleccion.nombre) {//Pasarlo a los id
-                    misPacientesPrestacion.push(paciente);
+            this.pacientesPresentes = this.pacientesPresentesCompleto.filter(paciente => {
+                if (paciente.nombrePrestacion === this.prestacionSeleccion.nombre) {
+                    return paciente;
                 }
-                this.PacientesPresentes = misPacientesPrestacion;
             });
         }
     }
 
     filtrarPorFecha() {
+        this.todasLasPrestaciones = [];
+        // this.pacientesPresentes = [];
         let fechaDesde = moment(this.fechaDesde).startOf('day');
-        let fechaHasta = moment(this.fechaHasta).endOf('month');
+        let fechaHasta = moment(this.fechaHasta).endOf('day');
 
         if (fechaDesde.isValid() && fechaHasta.isValid()) {
             let params = {
@@ -288,7 +377,10 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     crearPrestacionVacia(tipoPrestacion) {
+
         let nuevaPrestacion;
+
+        tipoPrestacion['turneable'] = true;
         nuevaPrestacion = {
             paciente: this.paciente,
             solicitud: {
@@ -302,8 +394,9 @@ export class PuntoInicioComponent implements OnInit {
                 tipo: 'pendiente'
             },
             ejecucion: {
-                fecha: null,
-                evoluciones: []
+                fecha: new Date(),
+                evoluciones: [],
+                // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
             }
         };
 
