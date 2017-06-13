@@ -216,20 +216,17 @@
 </section>
 
 <footer class="plex-box-invert" *ngIf="prestacion">
-  <div class="row">
-    <div class="col">
-      <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('/rup')" type="danger"></plex-button>
+    <div class="row">
+        <div class="col">
+            <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('/rup')" type="danger"></plex-button>
+        </div>
+        <div class="col text-right">
+            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
+            </plex-button>
+            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
+            </plex-button>
+        </div>
     </div>
-    <div class="col text-right">
-      <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar"
-        type="success" (click)="iniciarPrestacion(prestacion.id)">
-      </plex-button>
-      <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen"
-        type="success" (click)="verResumen(prestacion.id)">
-      </plex-button>
-      <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ver"
-        type="success" (click)="verPrestacion(prestacion.id)">
-      </plex-button>
-    </div>
-  </div>
 </footer>

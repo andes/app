@@ -2,7 +2,7 @@ import { Auth } from '@andes/auth';
 import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
 import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
 import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, HostBinding } from '@angular/core';
 import { IPrestacionPaciente } from '../../../interfaces/rup/IPrestacionPaciente';
 import { IPaciente } from '../../../interfaces/IPaciente';
 import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
@@ -14,10 +14,11 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
     templateUrl: 'resumen.html'
 })
 
+
+
 export class ResumenComponent implements OnInit {
 
-
-
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     prestacion: IPrestacionPaciente;
     idPrestacion: String;
@@ -58,6 +59,7 @@ export class ResumenComponent implements OnInit {
     loadPrestacionesPendientes() {
         this.servicioPrestacionPaciente.get({ estado: 'pendiente', idPaciente: this.prestacion.paciente.id, limit: 10 })
             .subscribe(prestaciones => {
+                console.log('prestaciones', prestaciones);
                 this.prestacionesPendientes = prestaciones;
             });
     }
