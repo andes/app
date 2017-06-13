@@ -13,7 +13,7 @@
               </plex-select>
             </div>
             <div class="col-4">
-              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                 (change)="filtrar()">
               </plex-select>
             </div>

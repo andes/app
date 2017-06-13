@@ -67,11 +67,19 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
+        let listaProfesionales = [];
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(event.callback);
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.modelo.profesionales) {
+                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
         } else {
             event.callback(this.modelo.profesionales || []);
         }

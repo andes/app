@@ -122,6 +122,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+
     // Debug: fuerza un paciente
     // let paciente = { "createdBy": { "organizacion": { "id": "57e9670e52df311059bc8964", "nombre": "HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON", "_id": "57e9670e52df311059bc8964" }, "documento": 26108063, "username": 26108063, "apellido": "26108063", "nombre": "26108063", "nombreCompleto": "26108063 26108063" }, "createdAt": "2017-05-16T16:54:23.680Z", "documento": "29410428", "apellido": "CELESTE", "nombre": "CAROLINA SOLEDAD", "sexo": "femenino", "fechaNacimiento": "1982-03-30T03:00:00.000Z", "scan": "carolina", "estado": "validado", "genero": "femenino", "estadoCivil": null, "entidadesValidadoras": ["RENAPER"], "claveBlocking": ["ZLSTKRL", "ZLST", "KRLNSL", "454349564533", "4543"], "financiador": [], "relaciones": [], "direccion": [{ "valor": "", "codigoPostal": "", "ubicacion": { "pais": { "nombre": "Argentina", "_id": "57f3b5c469fe79a598e6281f", "id": "57f3b5c469fe79a598e6281f" }, "provincia": null, "localidad": null, "barrio": null, "_id": "591b2ebf816f8e62048802ec", "id": "591b2ebf816f8e62048802ec" }, "ranking": 0, "geoReferencia": null, "ultimaActualizacion": "2017-05-16T16:54:11.079Z", "_id": "591b2ebf816f8e62048802eb", "activo": true, "id": "591b2ebf816f8e62048802eb" }], "contacto": [{ "tipo": "celular", "valor": "2995573273", "ranking": 0, "ultimaActualizacion": "2017-05-16T16:54:11.079Z", "_id": "591b2ebf816f8e62048802ee", "activo": true, "id": "591b2ebf816f8e62048802ee" }], "identificadores": [], "edadReal": { "unidad": "Años", "valor": 35 }, "edad": 35, "nombreCompleto": "CAROLINA SOLEDAD CELESTE", "id": "591b2ebf816f8e62048802ea" };
     // this.onReturn(paciente as any);
@@ -276,6 +277,8 @@ export class DarTurnosComponent implements OnInit {
       };
       this.serviceProfesional.get(query).subscribe(event.callback);
     } else {
+      console.log('this.opciones.profesional', this.opciones.profesional);
+      
       event.callback(this.opciones.profesional || []);
     }
   }
@@ -579,6 +582,7 @@ export class DarTurnosComponent implements OnInit {
   }
 
   seleccionarBusqueda(indice: number) {
+    console.log('busquedas[i] ', this.busquedas[indice]);
     this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
     this.opciones.profesional = this.busquedas[indice].profesional;
     this.actualizar('');
