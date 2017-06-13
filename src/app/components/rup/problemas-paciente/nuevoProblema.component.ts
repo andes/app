@@ -24,7 +24,7 @@ export class NuevoProblemaComponent implements OnInit {
     @Input() tipoProblema: ITipoProblema;
 
     // public profesional: IProfesional;
-    cronico = true;
+    cronico = false;
     descripcion: String = '';
     observacion: String = '';
     fechaIdentificacion: Date = new Date();

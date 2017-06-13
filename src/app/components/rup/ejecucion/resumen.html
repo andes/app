@@ -1,102 +1,102 @@
 <style>
-    .msg-problema {
-        border: 1px solid #ff9900;
-        color: #ff9900;
-        margin: 5px 5px 5px 5px;
-        padding: 5px;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-    }
-    
-    h5.box-title-principal {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-    }
-    
-    h5.item-title {
-        display: inline-block;
-        font-weight: 600;
-        line-height: 1;
-    }
-    
-    h5.item-title:hover {
-        color: #00A8E0;
-    }
-    
-    h5.box-title-secundario {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-        border-bottom: solid black 1px;
-        position: relative;
-        float: left;
-    }
-    
-    .badge {
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin: 0px 10px 10px 0px;
-        display: inline-block;
-    }
-    
-    .badge-danger {
-        border: 1.5px solid #dd4b39;
-        border-radius: 0px;
-        background: transparent;
-        color: #dd4b39;
-    }
-    
-    .badge-success {
-        border: 1.5px solid #8CC63F;
-        border-radius: 0px;
-        background: transparent;
-        color: #8CC63F;
-    }
-    
-    .badge-warning {
-        border: 1.5px solid #ff8d22;
-        border-radius: 0px;
-        background: transparent;
-        color: #ff8d22;
-    }
-    
-    .badge-info {
-        border: 1.5px solid #00A8E0;
-        border-radius: 0px;
-        background: transparent;
-        color: #00A8E0;
-    }
-    
-    .list-inline>.list-inline-item {
-        margin-bottom: 10px;
-    }
-    
-    .list-group>.list-group-item {
-        border-color: #AAAAAA;
-        border-radius: 0px;
-    }
-    
-    .list-group-item:hover {
-        background-color: #f9f9f9;
-        border: solid 1px #00A8E0;
-    }
-    
-    .list-group-item:active {
-        background-color: #f5f5f5;
-        border: solid 1px #AAAAAA;
-    }
-    
-    .list-group-top {
-        margin-top: 5px;
-    }
+  .msg-problema {
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    margin: 5px 5px 5px 5px;
+    padding: 5px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+
+  h5.box-title-principal {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+  }
+
+  h5.item-title {
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  h5.item-title:hover {
+    color: #00A8E0;
+  }
+
+  h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid black 1px;
+    position: relative;
+    float: left;
+  }
+
+  .badge {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin: 0px 10px 10px 0px;
+    display: inline-block;
+  }
+
+  .badge-danger {
+    border: 1.5px solid #dd4b39;
+    border-radius: 0px;
+    background: transparent;
+    color: #dd4b39;
+  }
+
+  .badge-success {
+    border: 1.5px solid #8CC63F;
+    border-radius: 0px;
+    background: transparent;
+    color: #8CC63F;
+  }
+
+  .badge-warning {
+    border: 1.5px solid #ff8d22;
+    border-radius: 0px;
+    background: transparent;
+    color: #ff8d22;
+  }
+
+  .badge-info {
+    border: 1.5px solid #00A8E0;
+    border-radius: 0px;
+    background: transparent;
+    color: #00A8E0;
+  }
+
+  .list-inline>.list-inline-item {
+    margin-bottom: 10px;
+  }
+
+  .list-group>.list-group-item {
+    border-color: #AAAAAA;
+    border-radius: 0px;
+  }
+
+  .list-group-item:hover {
+    background-color: #f9f9f9;
+    border: solid 1px #00A8E0;
+  }
+
+  .list-group-item:active {
+    background-color: #f5f5f5;
+    border: solid 1px #AAAAAA;
+  }
+
+  .list-group-top {
+    margin-top: 5px;
+  }
 </style>
 
 
 <header *ngIf="prestacion">
-    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
-    <!--<div class="row" *ngIf="prestacion && prestacion.paciente">
+  <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+  <!--<div class="row" *ngIf="prestacion && prestacion.paciente">
         <div class="col-12">
             <h5 class="box-title-secundario">{{prestacion.solicitud.tipoPrestacion.nombre}}</h5>
         </div>
@@ -105,53 +105,63 @@
 
 
 <section class="row">
-    <!--Solicitudes Pendientes-->
-    <div class="col-3">
-        <plex-box>
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Solicitudes pendientes</h5>
-                    </div>
-                </div>
-            </header>
+  <!--Solicitudes Pendientes-->
+  <div class="col-3">
+    <plex-box>
+      <header>
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Solicitudes pendientes</h5>
+          </div>
+        </div>
+      </header>
 
-            <ul class="results list-group">
-                <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">
+      <ul class="results list-group">
+        <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">
 
 
-                    <h5 class="item-title d-inline text-left">{{pendiente.solicitud.tipoPrestacion.nombre}}</h5>
-                    <small> Solicitado el <strong>{{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</strong>
+          <h5 class="item-title d-inline text-left">
+              {{pendiente.solicitud.tipoPrestacion.nombre}}
+              
+          </h5>
+          <div>
+            <span class="badge badge-info  mdi mdi-link pull-right" titlePosition="bottom" title='{{pendiente.solicitud.motivoSolicitud}}'></span>
+          </div>
+          <small> Solicitado el <strong>{{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</strong>
                     por (vincular profesional a la solicitud)) </small>
+          <ul>
 
-                    <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
-                        <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <!--<span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
-                            <span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.term}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>
-                        </div>
-                    </ng-container>
-
-
-
+            <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
+                <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                <!--<span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
+                <li> 
+                    {{problema.tipoProblema.term}}                    
                 </li>
-            </ul>
-        </plex-box>
-    </div>
-
-    <!--Problemas del paciente-->
-    <div class="col-6">
-        <plex-box>
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Problemas del paciente</h5>
-                    </div>
                 </div>
-            </header>
+            </ng-container>
+          </ul>
 
-            <ul class="list-group" *ngIf="listaProblemas">
-                <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">
-                    <span>                                
+
+
+        </li>
+      </ul>
+    </plex-box>
+  </div>
+
+  <!--Problemas del paciente-->
+  <div class="col-6">
+    <plex-box>
+      <header>
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Problemas del paciente</h5>
+          </div>
+        </div>
+      </header>
+
+      <ul class="list-group" *ngIf="listaProblemas">
+        <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">
+          <span>
                         <!--<strong>{{problema.tipoProblema.nombre}} </strong>  |                                   TODO: Cambio de interfaz anterior-->
                         <strong>{{problema.tipoProblema.term}} </strong>  |
                             <small>Iniciado <strong>{{problema.fechaInicio | fromNow}}</strong> por
@@ -161,58 +171,58 @@
 
 
 
-                    <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                        <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
+          <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+            <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
                                 Activo
                             </span>
-                        <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
+            <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
-                        <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
+            <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
                                 {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
                             </span>
-                        <!--
+            <!--
                             <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"
                                     class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
-                            </span> 
+                            </span>
                         -->
 
-                    </div>
+          </div>
 
-                </li>
-            </ul>
-        </plex-box>
-    </div>
+        </li>
+      </ul>
+    </plex-box>
+  </div>
 
-    <!--Registros de la consulta-->
-    <div class="col-3">
-        <plex-box>
-            <header>
-                <div class="row">
-                    <div class="col">
-                        <h5 class="box-title-principal">Registros de la consulta</h5>
-                    </div>
-                </div>
-            </header>
+  <!--Registros de la consulta-->
+  <div class="col-3">
+    <plex-box>
+      <header>
+        <div class="row">
+          <div class="col">
+            <h5 class="box-title-principal">Registros de la consulta</h5>
+          </div>
+        </div>
+      </header>
 
-            <div class="row">
-                <div class="col-6">
-                    <dl *ngIf="prestacionPeso">
-                        <dt>Peso</dt> {{prestacionPeso.valor}} Kg <br />
-                        <small>{{prestacionPeso.fecha | date: 'dd/MM/yyyy'}}</small>
+      <div class="row">
+        <div class="col-6">
+          <dl *ngIf="prestacionPeso">
+            <dt>Peso</dt> {{prestacionPeso.valor}} Kg <br />
+            <small>{{prestacionPeso.fecha | date: 'dd/MM/yyyy'}}</small>
 
-                    </dl>
-                </div>
+          </dl>
+        </div>
 
-                <div class="col-6">
-                    <dl *ngIf="prestacionTalla">
-                        <dt>Talla</dt> {{prestacionTalla.valor}} cm <br />
-                        <small>{{prestacionTalla.fecha | date: 'dd/MM/yyyy'}}</small>
-                    </dl>
-                </div>
-            </div>
-        </plex-box>
-    </div>
+        <div class="col-6">
+          <dl *ngIf="prestacionTalla">
+            <dt>Talla</dt> {{prestacionTalla.valor}} cm <br />
+            <small>{{prestacionTalla.fecha | date: 'dd/MM/yyyy'}}</small>
+          </dl>
+        </div>
+      </div>
+    </plex-box>
+  </div>
 </section>
 
 <footer class="plex-box-invert" *ngIf="prestacion">
@@ -225,7 +235,7 @@
             </plex-button>
             <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ver" type="success" (click)="verPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
             </plex-button>
         </div>
     </div>
