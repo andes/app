@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { element } from 'protractor';
 import { IOrganizacion } from './../../../interfaces/IOrganizacion';
 import { OrganizacionComponent } from './../../organizacion/organizacion.component';
@@ -52,13 +53,13 @@ export class PuntoInicioComponent implements OnInit {
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
+        private servicioTipoPrestacion: TipoPrestacionService,
         public servicioAgenda: AgendaService, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         private plex: Plex) { }
 
     ngOnInit() {
         this.breadcrumbs = this.route.routeConfig.path;
-        console.log('pantalla:', this.breadcrumbs);
 
         let hoy = {
             fechaDesde: moment().startOf('day').format(),
@@ -227,35 +228,34 @@ export class PuntoInicioComponent implements OnInit {
 
     // Creo el conjunto de prestaciones del profesional..
     CreaConjuntoPrestacionesProfesional() {
-        this.agendas.forEach(element => {
-            let agregar = true;
-
-            // Recorro para no agregar dos veces la misma
-            for (let i in this.conjuntoDePrestaciones) {
-                if (this.conjuntoDePrestaciones[i] === element.tipoPrestaciones[0].id) {
-                    agregar = false;
+        //Obtenemos los tipos de prestaciones que tiene autorizadas el usuario
+        let tipoPrestacionesAuth = this.auth.getPermissions('rup:tipoPrestacion:?');
+        if (tipoPrestacionesAuth && (tipoPrestacionesAuth.length > 0)) {
+            this.servicioTipoPrestacion.get({
+                'incluir': tipoPrestacionesAuth.join(',')
+            }).subscribe(resultado => {
+                if (resultado) {
+                    this.selectPrestacionesProfesional = resultado;
+                    this.conjuntoDePrestaciones = resultado;
                 }
-            }
-            if (agregar) {
-                this.conjuntoDePrestaciones.push(element.tipoPrestaciones[0].id);
-                this.selectPrestacionesProfesional = [... this.selectPrestacionesProfesional, {
-                    id: element.tipoPrestaciones[0].id,
-                    nombre: element.tipoPrestaciones[0].nombre
-                }];
-            }
-        });
+                //Agregamos los tipos de prestaciones de las agendas filtradas
+                if (this.agendas && this.agendas.length > 0) {
+                    this.agendas.forEach(agenda => {
+                        let agregar = true;
+                        this.conjuntoDePrestaciones = [... this.conjuntoDePrestaciones, ...agenda.tipoPrestaciones];
+                        this.conjuntoDePrestaciones = this.conjuntoDePrestaciones.filter(function (elem, pos, arr) {
+                            return arr.indexOf(elem) === pos;
+                        });
 
-    }
-
-
-
-    // Va a cargar todos lo pacientes con un turnos pendientes.
-    PacientesPendientes() {
+                    });
+                    this.selectPrestacionesProfesional = [... this.conjuntoDePrestaciones];
+                }
+            });
+        }
 
     }
 
     elegirPrestacion(unPacientePresente) {
-        debugger;
         if (unPacientePresente.idPrestacion) {
             this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
         } else {
