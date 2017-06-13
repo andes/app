@@ -97,7 +97,6 @@ export class OrganizacionComponent implements OnInit {
         this.seleccion = objOrganizacion;
     }
 
-// TODO: hay que resolver el tema de plex-scroll
     nextPage() {
         if (this.tengoDatos) {
             this.skip += limit;

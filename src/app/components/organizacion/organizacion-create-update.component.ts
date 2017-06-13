@@ -2,6 +2,10 @@ import { BarrioService } from './../../services/barrio.service';
 import { IPais } from './../../interfaces/IPais';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IUbicacion } from './../../interfaces/IUbicacion';
+import { IEdificio } from './../../interfaces/IEdificio';
+import { IDireccion } from './../../interfaces/IDireccion';
+import { IContacto } from './../../interfaces/IContacto';
 import { Observable } from 'rxjs/Rx';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
@@ -36,6 +40,81 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     localidades: ILocalidad[];
     todasLocalidades: ILocalidad[];
     barrios: IBarrio[];
+
+    tipoEstablecimiento: ITipoEstablecimiento = {
+        nombre: '',
+        descripcion: '',
+        clasificacion: '',
+        idTipoEfector: 0,
+    };
+
+    ubicacion: IUbicacion = {
+        barrio: {
+            id: '',
+            nombre: ''
+        },
+        localidad: {
+            id: '',
+            nombre: ''
+        },
+        provincia: {
+            id: '',
+            nombre: ''
+        },
+        pais: {
+            id: '',
+            nombre: ''
+        }
+    };
+
+    contacto: IContacto = {
+        tipo: 'celular',
+        valor: '',
+        ranking: 0,
+        activo: true,
+        ultimaActualizacion: new Date()
+    };
+
+    direccion: IDireccion = {
+        valor: '',
+        codigoPostal: '',
+        ubicacion: {
+            pais: null,
+            provincia: null,
+            localidad: null,
+            barrio: null,
+        },
+        ranking: 0,
+        geoReferencia: null,
+        ultimaActualizacion: new Date(),
+        activo: true
+    };
+
+    edificio: IEdificio = {
+        id: null,
+        descripcion: '',
+        contacto: this.contacto,
+        direccion: this.direccion,
+    };
+
+    organizacionModel: IOrganizacion = {
+        id: null,
+        codigo: {
+            sisa: '',
+            cuie: '',
+            remediar: ''
+        },
+        nombre: '',
+        tipoEstablecimiento: this.tipoEstablecimiento,
+        direccion: this.direccion,
+        contacto: [this.contacto],
+        edificio: [this.edificio],
+        nivelComplejidad: 0,
+        activo: true,
+        fechaAlta: new Date(),
+        fechaBaja: new Date(),
+    };
+
 
     constructor(
         private formBuilder: FormBuilder,
