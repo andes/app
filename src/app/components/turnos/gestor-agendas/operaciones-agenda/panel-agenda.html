@@ -1,6 +1,6 @@
 <fieldset>
     <legend>Editar agenda</legend>
-    <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)" 
+    <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
     placeholder="Seleccione los profesionales" [multiple]="true" labelField="apellido+' '+nombre" (change)="validarSolapamientos('profesionales')">
     </plex-select>
 
