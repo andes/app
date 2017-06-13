@@ -46,7 +46,6 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     guardarAgenda(agenda: IAgenda) {
-        debugger;
 
         if (this.alertas.length === 0) {
             // Quitar cuando esté solucionado inconveniente de plex-select
@@ -79,7 +78,6 @@ export class PanelAgendaComponent implements OnInit {
 
 
     loadProfesionales(event) {
-        debugger;
         let listaProfesionales = [];
         if (event.query) {
             let query = {
@@ -106,7 +104,6 @@ export class PanelAgendaComponent implements OnInit {
      * Valida que no se solapen Profesionales y/o Espacios físicos
      */
     validarSolapamientos(tipo) {
-        debugger;
         this.alertas = [];
 
         // Inicio y Fin de Agenda
