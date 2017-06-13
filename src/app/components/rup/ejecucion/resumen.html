@@ -120,16 +120,26 @@
         <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let pendiente of prestacionesPendientes">
 
 
-          <h5 class="item-title d-inline text-left">{{pendiente.solicitud.tipoPrestacion.nombre}}</h5>
+          <h5 class="item-title d-inline text-left">
+              {{pendiente.solicitud.tipoPrestacion.nombre}}
+              
+          </h5>
+          <div>
+            <span class="badge badge-info  mdi mdi-link pull-right" titlePosition="bottom" title='{{pendiente.solicitud.motivoSolicitud}}'></span>
+          </div>
           <small> Solicitado el <strong>{{pendiente.solicitud.fecha | date: 'dd/MM/yyyy'}}</strong>
                     por (vincular profesional a la solicitud)) </small>
+          <ul>
 
-          <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
-            <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-              <!--<span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
-              <span class="badge badge-info  mdi mdi-link" titlePosition="right" title='Problema: {{problema.tipoProblema.term}}'></span>
-            </div>
-          </ng-container>
+            <ng-container *ngFor="let problema of pendiente.solicitud.listaProblemas">
+                <div *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
+                <!--<span class="badge badge-info  mdi mdi-link" title='Problema: {{problema.tipoProblema.nombre}} - Estado: {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}'></span>-->
+                <li> 
+                    {{problema.tipoProblema.term}}                    
+                </li>
+                </div>
+            </ng-container>
+          </ul>
 
 
 
