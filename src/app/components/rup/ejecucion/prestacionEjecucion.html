@@ -2,29 +2,7 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>-->
 <style>
-    .form-control-invert {
-        background-color: #002738;
-        border-color: solid 1px #FFFFFF;
-        border-radius: 0px;
-        color: #FFFFFF;
-        height: 400px;
-        margin-top: 10px;
-        padding: 10px;
-        width: 100%;
-    }
-
-    h5.box-title-principal {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-    }
-
-    h5.box-title-secundario {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-        border-bottom: solid white 1px;
-    }
+    
 </style>
 
 <header *ngIf="prestacion">
@@ -104,7 +82,7 @@
                     <ul class="list-group list-group-top " [hidden]="isDraggingProblem">
                         <!--[ngClass]="{transparencia: habilitaTransparencia=='habilitar' } ">-->
                         <ng-container *ngFor="let problema of listaProblemasPaciente ">
-                            <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item justify-content-between list-group-item-action "
+                            <li draggable [dragScope]="'problemas-paciente'" [dragOverClass]="'drag-over-border'" [dragData]="problema " class="list-group-item problema justify-content-between list-group-item-action "
                                 *ngIf="problema.evoluciones && problema.evoluciones.length> 0 && (((filtroEstado!='' && problema.evoluciones[problema.evoluciones.length - 1].estado == filtroEstado ) || (filtroEstado=='' && problema.evoluciones[problema.evoluciones.length - 1])))"
                                 (onDragStart)="arrastrandoProblemaLista(true)" (onDragEnd)="arrastrandoProblemaLista(false)">
 
@@ -180,7 +158,8 @@
                     Arrastre aquí para vincularlos a esta consulta
                 </div>
 
-                <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " class="droppable" [hidden]="!isDraggingPrestacion">
+                <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) "
+                    class="droppable" [hidden]="!isDraggingPrestacion">
                     Arrastre aquí para vincularlo a todos los problemas
                 </div>
 
@@ -231,11 +210,12 @@
 
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
 
-<!--droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"-->
+                            <!--droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"-->
                             <!--[hidden]="!isDraggingPlan" class="droppable"-->
 
 
-                            <li droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
+                            <li droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onDrop($event, problema.id)"
+                                class="list-group-item problema justify-content-between list-group-item-action">
                                 <div class="row">
                                     <div class="col-10">
                                         <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
@@ -267,7 +247,7 @@
                                             <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
                                                 <div *ngFor="let problemaP of prestacionFutura.solicitud.listaProblemas">
                                                     <div *ngIf="problemaP._id == problema.id">
-                                                        <plex-accordion>
+                                                        <plex-accordion class="plan">
                                                             <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
                                                                 <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
 
@@ -302,16 +282,17 @@
                                                                 (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"
                                                             -->
                                                         </div>
-
-                                                        <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
-                                                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
-                                                                (evtData)="getValoresRup($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                                [paciente]="prestacionesProblema.paciente" [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]">
-                                                                <!--
-                                                                    [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null"
-                                                                 -->
-                                                            </rup>
-                                                        </plex-panel>
+                                                        <div class="prestacion">
+                                                            <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
+                                                                <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
+                                                                    (evtData)="getValoresRup($event, prestacionesProblema.solicitud.tipoPrestacion)"
+                                                                    [paciente]="prestacionesProblema.paciente" [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]">
+                                                                    <!--
+                                                                        [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null"
+                                                                        -->
+                                                                </rup>
+                                                            </plex-panel>
+                                                        </div>
                                                     </plex-accordion>
 
 
@@ -387,15 +368,14 @@
                 </div>
 
                 <!--PRESTACIONES-->
-                <plex-accordion *ngIf="tiposPrestaciones">
+                <plex-accordion *ngIf="tiposPrestaciones" class="prestacion">
                     <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones">
-                        <div draggable [dragScope]="'planes-paciente-problema'" [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)">
+                        <div draggable [dragScope]="'planes-paciente-problema'" [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)"
+                            (onDragEnd)="arrastrandoPrestacion(false)">
 
                             <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
                                 <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
-                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente"
-                                    [datosIngreso]=""
-                                    >
+                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="">
                                     <!-- [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null" -->
                                 </rup>
 
@@ -430,7 +410,7 @@
                         </ul>
 
 
-                        <plex-accordion class="results list-group" *ngIf="PlanesSeleccionados">
+                        <plex-accordion class="results list-group plan" *ngIf="PlanesSeleccionados">
 
                             <div draggable [dragScope]="'planes-paciente-problema'" [dragOverClass]="'drag-over-border'" *ngFor="let prestacionFutura of prestacion.prestacionesSolicitadas; let i = index;"
                                 [dragData]="prestacionFutura" (onDragStart)="arrastrandoPlan(true)" (onDragEnd)="arrastrandoPlan(false)">

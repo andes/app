@@ -26,7 +26,7 @@ const skip = 0;
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
-    styleUrls: ['prestacionEjecucion.css']
+    // styleUrls: ['prestacionEjecucion.css']
 
 })
 
