@@ -225,7 +225,7 @@
             </plex-button>
             <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ver" type="success" (click)="verPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
             </plex-button>
         </div>
     </div>
