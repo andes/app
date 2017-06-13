@@ -8,22 +8,16 @@
                         {{ fecha | date: "MMM yy" | uppercase}}
                         <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
                     </header>
-                    <table *ngIf="calendario" class="table table-striped">
+                    <table *ngIf="calendario">
                         <tr *ngFor="let week of calendario">
-                            <td *ngFor="let day of week" class="text-center td-calendario" [ngClass]="{
-                          'bg-primary'          : (day.estado == 'seleccionado') && (day.original == false),
-                          'text-white'          : (day.estado == 'seleccionado') && (day.original == false),
-                          'bg-success success'  : day.original == true ,
-                          'bg-warning'          : day.finde && !(day.estado == 'seleccionado'),
-                          'hover'               : day.fecha.getTime() >= hoy.getTime()
-                      }" (click)="seleccionar(day)" style="width: 50px; height: 80px">
+                            <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
+                                'weekend'             : day.weekend && !(day.estado == 'seleccionado'),
+                                'outline-primary'     : (day.estado == 'seleccionado') && (day.original == false),
+                                'outline-success'     : day.original == true,
+                                'hover'               : day.fecha.getTime() >= hoy.getTime()
+                            }">
                                 <div>{{ day.fecha | date:"d" }}</div>
                                 <div>{{ day.fecha | date:"EEE" | uppercase }}</div>
-                                <div>
-                                    <i *ngIf="day.seleccionado" class="mdi mdi-check-circle"></i>
-                                    <i *ngIf="(!day.seleccionado) && (day.estado == 'disponible')" class="mdi mdi-plus-box"></i>
-                                    <i *ngIf="(!day.seleccionado) && (day.estado == 'ocupado')" class="mdi mdi-close-box"></i>
-                                </div>
                             </td>
                         </tr>
                     </table>
@@ -62,27 +56,27 @@
 
                         </div>
                     </div>
-                    <div class="row">
-                        <template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
-              <div class="col">{{unBloque.descripcion}}</div>
-              <div class="col">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date: 'HH:mm'}}</div>
-              <div class="col">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
-            </template>
-                    </div>
+                    <template ngFor let-unBloque="$implicit" [ngForOf]="agenda.bloques" let-i="index">
+                        <div class="row">
+                            <div class="col">{{unBloque.descripcion}}</div>
+                            <div class="col">{{unBloque.horaInicio | date: 'HH:mm'}} - {{unBloque.horaFin | date: 'HH:mm'}}</div>
+                            <div class="col">{{unBloque.cantidadTurnos}} turnos de {{unBloque.duracionTurno}}'</div>
+                        </div>
+                    </template>
                     <div *ngIf="agendasFiltradas.length>0">
                         <hr>
                         <header>Agendas en conflicto</header>
                         <plex-accordion>
                             <template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
-                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy hh:mm'}}" icon="arrow-down-drop-circle-outline">
-                  <li *ngIf="agendaF.conflictoEF">
-                    Conflicto con Espacio Físico
-                  </li>
-                  <li *ngIf="agendaF.conflictoProfesional">
-                    Conflicto con Profesionales
-                  </li>
-                </plex-panel>
-              </template>
+                                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy hh:mm'}}" icon="arrow-down-drop-circle-outline">
+                                    <li *ngIf="agendaF.conflictoEF">
+                                        Conflicto con Espacio Físico
+                                    </li>
+                                    <li *ngIf="agendaF.conflictoProfesional">
+                                        Conflicto con Profesionales
+                                    </li>
+                                </plex-panel>
+                            </template>
                         </plex-accordion>
                     </div>
                 </plex-box>

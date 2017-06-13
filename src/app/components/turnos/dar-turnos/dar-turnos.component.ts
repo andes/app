@@ -534,9 +534,9 @@ export class DarTurnosComponent implements OnInit {
             // contador de turnos por Bloque
             this.countBloques = countBloques;
 
-            if (this.agenda.tipoPrestaciones.length <= 1) {
-              this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
-            }
+            // if (this.agenda.tipoPrestaciones.length <= 1) {
+            //   this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
+            // }
           } else {
 
             /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
@@ -568,6 +568,7 @@ export class DarTurnosComponent implements OnInit {
       this.indiceTurno = indice;
       this.turno = bloque.turnos[indice];
       if (this.bloque.tipoPrestaciones.length === 1) {
+        this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
         this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
       }
       this.habilitarTurnoDoble();
@@ -755,12 +756,12 @@ export class DarTurnosComponent implements OnInit {
           if (this.turnoDoble) {
             if (turnoSiguiente.estado === 'disponible') {
               let patch: any = {
-                  op: 'darTurnoDoble',
-                  turnos: [turnoSiguiente]
+                op: 'darTurnoDoble',
+                turnos: [turnoSiguiente]
               };
               // Patchea el turno doble
               this.serviceAgenda.patchMultiple(agendaid, patch).subscribe(resultado => {
-               });
+              });
             }
           }
           this.actualizarCarpetaPaciente(pacienteSave);
@@ -889,6 +890,7 @@ export class DarTurnosComponent implements OnInit {
       this.selected.emit(this.seleccion);
       this.pacientesSearch = false;
       this.showCreateUpdate = true;
+      this.showDarTurnos = false;
     }
   }
 

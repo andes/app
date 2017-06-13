@@ -9,7 +9,8 @@ import * as moment from 'moment';
 type Estado = 'noSeleccionado' | 'seleccionado';
 @Component({
     selector: 'clonar-agenda',
-    templateUrl: 'clonar-agenda.html'
+    templateUrl: 'clonar-agenda.html',
+    styleUrls: ['./../../dar-turnos/calendario.scss']
 })
 
 export class ClonarAgendaComponent implements OnInit {
@@ -28,7 +29,7 @@ export class ClonarAgendaComponent implements OnInit {
     private finMesDate;
     private original = true;
     private inicioAgenda: Date;
-    private finde: boolean;
+    // private finde: boolean;
 
     @Input('agenda')
     set agenda(value: any) {
@@ -110,7 +111,7 @@ export class ClonarAgendaComponent implements OnInit {
                         original: false
                     };
                 }
-                dia.finde = this.inicioMesMoment.isoWeekday() === 6 || this.inicioMesMoment.isoWeekday() === 7 ? true : false;
+                dia.weekend = this.inicioMesMoment.isoWeekday() === 6 || this.inicioMesMoment.isoWeekday() === 7 ? true : false;
                 week.push(dia);
             }
         }
