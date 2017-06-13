@@ -238,6 +238,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+    onDrop (e:any, idProblema) {
+        if (this.isDraggingPrestacion) {
+            this.onPrestacionDrop(e, idProblema);
+        } else {
+            this.onPlanDrop(e, idProblema);
+        }
+    }
+
     // Drag and drop ng2
     onProblemaDrop(e: any) {
         // debugger;

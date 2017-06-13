@@ -169,14 +169,18 @@
                         </div>
                     </legend>
                 </fieldset>
-
+                <!--Div para TODOS los planes-->
+                <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanTodosLosProblemasDrop($event) "
+                    [hidden]="!isDraggingPlan" class="droppable">
+                    Arrastre aquí para vincularlo a todos los problemas
+                </div>
                 <!--Div para los problemas paciente-->
                 <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)"
                     class="droppable" [hidden]="!isDraggingProblem && !isDraggingProblemList">
                     Arrastre aquí para vincularlos a esta consulta
                 </div>
 
-                <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " class="droppable" [hidden]="!isDraggingPrestacion">
+                <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) " class="droppable" [hidden]="!isDraggingPrestacion">
                     Arrastre aquí para vincularlo a todos los problemas
                 </div>
 
@@ -223,14 +227,15 @@
 
                     <div *ngFor="let problema of prestacion.ejecucion.listaProblemas; let prIndex = index">
 
-                        <!--Div para TODOS los planes-->
-                        <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanTodosLosProblemasDrop($event) "
-                            [hidden]="!isDraggingPlan" class="droppable">
-                            Arrastre aquí para vincularlo a todos los problemas
-                        </div>
+
 
                         <ul class="list-group" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
-                            <li droppable [dragOverClass]="'drag-target-border'" (onDrop)="onPrestacionDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
+
+<!--droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"-->
+                            <!--[hidden]="!isDraggingPlan" class="droppable"-->
+
+
+                            <li droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onDrop($event, problema.id)" class="list-group-item justify-content-between list-group-item-action">
                                 <div class="row">
                                     <div class="col-10">
                                         <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
@@ -269,10 +274,9 @@
 
                                                             </plex-panel>
                                                             <div class="float-right mdi-16px">
-                                                                    <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off"
-                                                                        (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)">
-                                                                    </plex-button>
-                                                                </div>
+                                                                <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)">
+                                                                </plex-button>
+                                                            </div>
                                                         </plex-accordion>
 
                                                     </div>
@@ -292,9 +296,7 @@
 
                                                     <plex-accordion>
                                                         <div class="float-right">
-                                                            <plex-button class="desvincular" title="Desvincular prestación" icon="mdi mdi-link-variant-off mdi-16px"
-                                                                (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)"
-                                                            >
+                                                            <plex-button class="desvincular" title="Desvincular prestación" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)">
                                                             </plex-button>
                                                             <!--
                                                                 (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"
@@ -302,12 +304,9 @@
                                                         </div>
 
                                                         <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
-                                                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion"
-                                                                [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
+                                                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
                                                                 (evtData)="getValoresRup($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                                [paciente]="prestacionesProblema.paciente"
-                                                                [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]"
-                                                                >
+                                                                [paciente]="prestacionesProblema.paciente" [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]">
                                                                 <!--
                                                                     [datosIngreso]="(prestacionesProblema.ejecucion.evoluciones && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1] && prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores) ? prestacionesProblema.ejecucion.evoluciones[prestacionesProblema.ejecucion.evoluciones.length-1].valores[prestacionesProblema.solicitud.tipoPrestacion.key] : null"
                                                                  -->
@@ -322,16 +321,15 @@
                                     </div>
                                 </div>
                                 <div class="float-right">
-                                    <plex-button class="desvincularProblema" title="Desvincular problema" label="" icon="mdi mdi-link-variant-off mdi-20px"
-                                        (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
+                                    <plex-button class="desvincularProblema" title="Desvincular problema" label="" icon="mdi mdi-link-variant-off mdi-20px" (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
                                 </div>
                             </li>
                         </ul>
                         <!--Div para un plan-->
-                        <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"
+                        <!--<div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onPlanDrop($event, problema.id)"
                             [hidden]="!isDraggingPlan" class="droppable">
                             Arrastre aquí para vincularlos al problema <b>{{problema.tipoProblema.nombre}}</b>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -393,14 +391,11 @@
                 <!--PRESTACIONES-->
                 <plex-accordion *ngIf="tiposPrestaciones">
                     <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones">
-                        <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)"
-                            (onDragEnd)="arrastrandoPrestacion(false)">
+                        <div draggable [dragScope]="'planes-paciente-problema'" [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)">
 
                             <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
                                 <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
-                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente"
-                                    [datosIngreso]="(data[tipoPrestacion.key]) ? data[tipoPrestacion.key] : null"
-                                    >
+                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="(data[tipoPrestacion.key]) ? data[tipoPrestacion.key] : null">
                                     <!-- [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null" -->
                                 </rup>
 
