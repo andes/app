@@ -697,7 +697,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     loadPrestacion(tipo) {
 
         let search = this.searchPrestacion;
-
+        console.log(search);
         // si escribimos algo
         if (search) {
             // buscamos los parecidos en la lista de problemas del paciente
@@ -712,13 +712,14 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         // si seleccionamos tipo pero no escribimos
-        if (tipo && !search) {
-            this.tiposPrestaciones = this.tiposPrestacionesPosibles.filter(tp => tp.granularidad === tipo);
-        }
+        // if (tipo && !search) {
+        //     this.tiposPrestaciones = this.tiposPrestacionesPosibles.filter(tp => tp.granularidad === tipo);
+        // }
 
         // todos
         if (!search && !tipo) {
-            this.tiposPrestaciones = this.tiposPrestacionesPosibles;
+            // this.tiposPrestaciones = this.tiposPrestacionesPosibles;
+            this.tiposPrestaciones = [];
         }
     }
 

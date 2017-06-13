@@ -25,9 +25,9 @@
 
 <ul class="results list-group">
     <ng-container *ngFor="let item of listaProblemasMaestro">
-        <li class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista">
+        <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
-            <a draggable href="javascript: void(0)" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)" *ngIf="_draggable">
+            <a  href="javascript: void(0)"  *ngIf="_draggable">
                 {{item.term}}
                 <!--
                 <br />
