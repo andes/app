@@ -526,10 +526,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.plex.toast('success', 'El plan se cargo correctamente', 'Plan Cargado', 4000);
         this.searchPlanes = '';
         this.planes = [];
+        this.motivoSolicitud = '';
     }
 
     cancelarUnPlanConMotivo() {
         this.showMotivoSolicitud = false;
+        this.motivoSolicitud = '';
     }
 
     onPlanDrop(e: any, idProblema) {
