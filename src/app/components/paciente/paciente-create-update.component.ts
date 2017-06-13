@@ -572,7 +572,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
   addContacto() {
-    let nuevoContacto = Object.assign({}, this.contacto);
+    let nuevoContacto = Object.assign({}, {
+      tipo: 'celular',
+      valor: '',
+      ranking: 0,
+      activo: true,
+      ultimaActualizacion: new Date()
+    });
     this.pacienteModel.contacto.push(nuevoContacto);
   }
 
