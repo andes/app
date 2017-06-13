@@ -98,15 +98,15 @@
             <!--CODIFICACION-->
             <h5>Codificación</h5>
             <h6><strong>Diagnóstico Principal</strong> </h6>
-            <plex-bool [(ngModel)]='diagnosticoPrincipal.ilegible' name="ilegible" label="Ilegible" (click)="marcarIlegible()"></plex-bool>
-            <div *ngIf="!diagnosticoPrincipal.ilegible">
-              <plex-select [(ngModel)]="diagnosticoPrincipal.codificacion" name="searchCodPrincipal" (getData)="buscarCodificacion($event)" placeholder="Seleccione un código CIE10"></plex-select>
-              <plex-bool [(ngModel)]='diagnosticoPrincipal.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
+            <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.ilegible' name="ilegible" label="Ilegible" (click)="marcarIlegible()"></plex-bool>
+            <div *ngIf="!turnoSeleccionado.diagnosticoPrincipal.ilegible">
+              <plex-select [(ngModel)]="turnoSeleccionado.diagnosticoPrincipal.codificacion" [data]="codigoPrincipal" (change)="buscarCodificacion($event)" name="searchCodPrincipal"  labelField="codigo+' '+nombre" placeholder="Seleccione un código CIE10"></plex-select>
+              <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
             </div>
             <label>Otros Diagnósticos</label>
             <div class="row">
               <div class="col-8">
-                <plex-select [(ngModel)]="nuevoCodSecundario" name="searchCodSecundario" (getData)="buscarCodificacion($event)" placeholder="Seleccione un ćodigo CIE10"></plex-select>
+                <plex-select [(ngModel)]="nuevoCodSecundario" name="searchCodSecundario" labelField="codigo+' '+nombre" (getData)="buscarCodificacionSecundaria($event)" placeholder="Seleccione un ćodigo CIE10"></plex-select>
               </div>
               <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary " (click)="agregarDiagnosticoSecundario()"></plex-button>
             </div>

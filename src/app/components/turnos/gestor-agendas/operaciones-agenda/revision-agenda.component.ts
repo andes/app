@@ -6,7 +6,7 @@ import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from './../../../../services/term/cie10.service';
-import { enumToArray } from '../../../../utils/enums';
+import {enumToArray} from '../../../../utils/enums';
 import { EstadosAsistencia } from './../../enums';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
@@ -46,7 +46,7 @@ export class RevisionAgendaComponent implements OnInit {
   turnoSeleccionado: any = null;
   bloqueSeleccionado: any = null;
   nuevoCodSecundario: any;
-  diagnosticoPrincipal: any;
+  codigoPrincipal = [];
   paciente: IPaciente;
   cambioTelefono = false;
   showCreateUpdate = false;
@@ -68,10 +68,9 @@ export class RevisionAgendaComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.turnoSeleccionado && this.turnoSeleccionado.diagnosticoPrincipal) {
-      this.diagnosticoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
-    } else {
-      this.diagnosticoPrincipal = {
+    if (this.turnoSeleccionado && !this.turnoSeleccionado.diagnosticoPrincipal) {
+      this.turnoSeleccionado.diagnosticoPrincipal = {
+        codificacion: {},
         ilegible: false,
         primeraVez: false,
       };
@@ -139,6 +138,7 @@ export class RevisionAgendaComponent implements OnInit {
 
 
   seleccionarTurno(turno, bloque) {
+    debugger;
     this.paciente = null;
     if (this.turnoSeleccionado === turno) {
       this.turnoSeleccionado = null;
@@ -148,14 +148,17 @@ export class RevisionAgendaComponent implements OnInit {
       this.bloqueSeleccionado = bloque;
       this.showCreateUpdate = false;
       this.pacientesSearch = false;
-      if (this.turnoSeleccionado.diagnosticoPrincipal) {
-        this.diagnosticoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
-      } else {
-        this.diagnosticoPrincipal = {
+      this.codigoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
+      if (!this.turnoSeleccionado.diagnosticoPrincipal) {
+        this.turnoSeleccionado.diagnosticoPrincipal = {
+          codificacion: {},
           ilegible: false,
           primeraVez: false,
         };
+      } else {
+        delete this.turnoSeleccionado.diagnosticoPrincipal.codificacion.$order;
       }
+      this.codigoPrincipal = [this.turnoSeleccionado.diagnosticoPrincipal.codificacion];
     }
 
   }
@@ -172,15 +175,37 @@ export class RevisionAgendaComponent implements OnInit {
 
   estaSeleccionado(turno: any) {
     this.showRegistrosTurno = true;
-    return this.turnoSeleccionado === turno;
+    return (this.turnoSeleccionado == turno); // .indexOf(turno) >= 0;
   }
 
   buscarCodificacion(event) {
+    debugger;
+    let diagnostico;
+   if (event && event.value) {
+      diagnostico = event.value;
+      delete diagnostico.$order;
+      this.turnoSeleccionado.diagnosticoPrincipal.codificacion = diagnostico;
+   } else {
+     if (event && event.target && event.target.value) {
+       let query = {
+         nombre: event.target.value
+       };
+       this.serviceCie10.get(query).subscribe(result => { this.codigoPrincipal = [...result]; });
+     } else {
+       this.codigoPrincipal = [];
+     }
+   }
+  }
+
+
+  buscarCodificacionSecundaria(event) {
     let query = {
       nombre: event.query
     };
-    if (event.query && event.query !== '') {
+    if (event.query) {
       this.serviceCie10.get(query).subscribe(event.callback);
+    } else {
+      event.callback([]);
     }
   }
 
@@ -198,9 +223,9 @@ export class RevisionAgendaComponent implements OnInit {
 
 
   marcarIlegible() {
-    if (this.diagnosticoPrincipal.ilegible) {
-      this.diagnosticoPrincipal.codificacion = null;
-      this.diagnosticoPrincipal.primeraVez = false;
+    if (this.turnoSeleccionado && this.turnoSeleccionado.diagnosticoPrincipal && this.turnoSeleccionado.diagnosticoPrincipal.ilegible) {
+      this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
+      this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
     }
   }
 
@@ -213,14 +238,10 @@ export class RevisionAgendaComponent implements OnInit {
     if (this.paciente) {
       this.asignarPaciente(this.paciente);
     }
-
+    debugger;
     if (this.turnoTipoPrestacion) {
       this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
     };
-
-    if (this.diagnosticoPrincipal) {
-      this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticoPrincipal;
-    }
 
     let datosTurno = {
       idAgenda: this.agenda.id,
@@ -231,7 +252,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     if (this.turnoSeleccionado.tipoPrestacion) {
       this.serviceTurno.put(datosTurno).subscribe(resultado => {
-        this.plex.toast('success', 'Información', 'La información del turno fue actualizada');
+        this.plex.toast('success', 'Información', 'El turno fue actualizado');
         this.turnoSeleccionado = null;
       });
     } else {
