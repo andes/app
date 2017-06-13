@@ -26,6 +26,11 @@
         border-bottom: solid white 1px;
     }
 </style>
+
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+</header>
+
 <section class="plex-layout">
     <div class="row">
 
@@ -75,23 +80,23 @@
                     <!--BOTONES DE FILTRO-->
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroTodos'}">
-                            <input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()"> 
+                            <input type="radio" name="options" id="todos"  (click)="FiltroestadoTodos()">
                             Todos ({{listaProblemasPaciente.length}})
                         </label>
 
                         <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroActivo'}">
-                            <input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()"> 
+                            <input type="radio" name="options" id="activo"  (click)="FiltroestadoActivo()">
                             Activo (<span [innerHtml]="getCantidProblemasByEstado('activo')"></span>)
                         </label>
 
                         <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroInactivo'}">
-                            <input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()"> 
+                            <input type="radio" name="options" id="inactivo"  (click)="FiltroestadoInactivo()">
                             Inactivo (<span [innerHtml]="getCantidProblemasByEstado('inactivo')"></span>)
 
                         </label>
 
                         <label class="btn btn-primary hover btn-sm" [ngClass]="{active: filtros == 'filtroResuelto'}">
-                            <input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()"> 
+                            <input type="radio" name="options" id="resuelto"  (click)="FiltroestadoResuelto()">
                             Resuelto (<span [innerHtml]="getCantidProblemasByEstado('resuelto')"></span>)
                         </label>
                     </div>
@@ -116,10 +121,10 @@
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
 
-                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge-danger"> 
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'inactivo'" class="badge-danger">
                                                   {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
-                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge-danger"> 
+                                        <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'" class="badge-danger">
                                                  {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </span>
 
@@ -131,11 +136,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">                                
+                                        <small *ngIf="problema?.evoluciones[problema.evoluciones.length - 1]?.fecha && problema.evoluciones[problema.evoluciones.length - 1].profesional">
 
-                                        Última evolución realizada                                   
+                                        Última evolución realizada
                                         <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow }} </strong>
-                                        por el profesional 
+                                        por el profesional
                                         <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
                                         </small>
 
@@ -164,17 +169,6 @@
                         </div>
                     </legend>
                 </fieldset>
-                <!-- <header *ngIf="showNuevo==false && showEvolucionar==false && showEvolTodo == false">
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="box-title-principal">Hallazgos de la consulta</h5>
-                        </div>
-                        <div class="col text-right">
-                            <plex-button class="btn-evolucionartodos" title="Evolucionar los Problemas" label="Evolucionar Todos " (click)="evolucionarTodo()" type="primary"></plex-button>
-                        </div>
-                    </div>
-                </header>-->
-
 
                 <!--Div para los problemas paciente-->
                 <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)"
@@ -223,10 +217,7 @@
                     </div>
                 </plex-box>
 
-
-
-
-                <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList          
+                <div *ngIf="prestacion?.solicitud  && prestacion?.ejecucion?.listaProblemas && !isDraggingProblem && !isDraggingProblemList
                         && (showNuevo==false && showEvolucionar==false && showEnmendar==false && showTransformar==false && showEvolTodo == false) && !showMotivoSolicitud">
 
 
@@ -243,11 +234,11 @@
                                 <div class="row">
                                     <div class="col-10">
                                         <span *ngIf="problema?.tipoProblema && problema.evoluciones[problema.evoluciones.length - 1]?.profesional ">
-                                            <h5 class="item-title">{{problema.tipoProblema.term}} | 
-                                            <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5> 
+                                            <h5 class="item-title">{{problema.tipoProblema.term}} |
+                                            <small>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | date: 'dd/MM/yyyy'}}</small></h5>
                                             <small *ngIf="problema?.evoluciones?.length > 0">
                                                 Última evolución realizada <strong>{{problema.evoluciones[problema.evoluciones.length - 1].fecha | fromNow}}</strong>
-                                                por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>                                                                                                                   
+                                                por el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
                                             </small>
                                         </span>
                                     </div>
@@ -274,11 +265,16 @@
                                                         <plex-accordion>
                                                             <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
                                                                 <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
+
+
                                                             </plex-panel>
+                                                            <div class="float-right mdi-16px">
+                                                                    <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off"
+                                                                        (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)">
+                                                                    </plex-button>
+                                                                </div>
                                                         </plex-accordion>
-                                                        <div class="float-right mdi-16px">
-                                                            <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)"></plex-button>
-                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -289,15 +285,27 @@
                                 <!--Prestaciones para el problema-->
                                 <div class="col-12">
                                     <div *ngFor="let prestacionesProblema of prestacionesEjecucion; let b = index">
+
                                         <div *ngIf="prestacionesProblema?.ejecucion?.listaProblemas?.length">
                                             <div *ngFor="let problemaP of prestacionesProblema.ejecucion.listaProblemas; let i = index">
                                                 <div *ngIf="problemaP == problema.id || problemaP.id == problema.id">
-                                                    
+
                                                     <plex-accordion>
+                                                        <div class="float-right">
+                                                            <plex-button class="desvincular" title="Desvincular prestación" icon="mdi mdi-link-variant-off mdi-16px"
+                                                                (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)"
+                                                            >
+                                                            </plex-button>
+                                                            <!--
+                                                                (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"
+                                                            -->
+                                                        </div>
+
                                                         <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
-                                                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
-                                                                (evtData)="onReturnComponent($event, prestacionesProblema.solicitud.tipoPrestacion)"
-                                                                [paciente]="prestacionesProblema.paciente" 
+                                                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion"
+                                                                [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
+                                                                (evtData)="getValoresRup($event, prestacionesProblema.solicitud.tipoPrestacion)"
+                                                                [paciente]="prestacionesProblema.paciente"
                                                                 [datosIngreso]="data[prestacionesProblema.solicitud.tipoPrestacion.key]"
                                                                 >
                                                                 <!--
@@ -306,16 +314,15 @@
                                                             </rup>
                                                         </plex-panel>
                                                     </plex-accordion>
-                                                    <div class="float-right">
-                                                        <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"></plex-button>
-                                                    </div>
+
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="float-right">
-                                    <plex-button class="desvincularProblema" title="Desvincular" label="" icon="mdi mdi-link-variant-off mdi-20px"
+                                    <plex-button class="desvincularProblema" title="Desvincular problema" label="" icon="mdi mdi-link-variant-off mdi-20px"
                                         (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
                                 </div>
                             </li>
@@ -385,17 +392,22 @@
 
                 <!--PRESTACIONES-->
                 <plex-accordion *ngIf="tiposPrestaciones">
-                    <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)" (onDragEnd)="arrastrandoPrestacion(false)"
-                        *ngFor="let tipoPrestacion of tiposPrestaciones">
+                    <ng-container *ngFor="let tipoPrestacion of tiposPrestaciones">
+                        <div draggable [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)"
+                            (onDragEnd)="arrastrandoPrestacion(false)">
 
-                        <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
-                            <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
-                                (evtData)="onReturnComponent($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null">
-                            </rup>
+                            <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
+                                <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
+                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente"
+                                    [datosIngreso]="(data[tipoPrestacion.key]) ? data[tipoPrestacion.key] : null"
+                                    >
+                                    <!-- [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null" -->
+                                </rup>
 
 
-                        </plex-panel>
-                    </div>
+                            </plex-panel>
+                        </div>
+                    </ng-container>
                 </plex-accordion>
                 <div *ngIf="searchPrestacion && tiposPrestaciones.length === 0">
                     No se han encontrado prestaciones
@@ -465,7 +477,7 @@
             </div>
         </div>
         <div class="col-3 text-right ">
-            <plex-button title="Guardar " label="Guardar " (click)="evolucionarPrestacion()" type="success"></plex-button>
+            <plex-button title="Guardar " label="Guardar " (click)="guardarPrestacion()" type="success"></plex-button>
         </div>
     </div>
 </footer>
