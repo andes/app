@@ -750,6 +750,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.isDraggingPrestacion = dragging;
     }
 
+    /**
+     * Se ejecuta cuando hago el drop de un tipo de prestacion sobre un problema
+     * @param e  Event que surje del drop. En e.dragData está la info de la prestacion
+     * @param idProblema Problema al que vamos a vincular la prestacion creada
+     * @returns Void
+     */
     onPrestacionDrop(e: any, idProblema) {
         let showAlert: Boolean = false;
         //this.paraTodas = false;
@@ -766,7 +772,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // devolvemos la posicion del array en la que se encuentra
         posicionPrestacion = this.prestacionesEjecucion.findIndex(prestacion => (prestacion.solicitud.tipoPrestacion.id === tipoPrestacion.id));
-        alert(posicionPrestacion);
+
+        /*console.log(this.prestacionesEjecucion[posicionPrestacion].ejecucion.listaProblemas);
+        alert(posicionPrestacion);*/
         if (posicionPrestacion < 0) {
             // asignamos valores a la nueva prestacion
             let nuevaPrestacion = {
@@ -797,9 +805,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
 
             // buscamos si existe el problema
-            let posicionProblema = this.prestacionesEjecucion[posicionPrestacion].ejecucion.listaProblemas.findIndex(problema => (idProblema === problema));
-
-            alert(idProblema + " / " + posicionProblema);
+            let posicionProblema = this.prestacionesEjecucion[posicionPrestacion].ejecucion.listaProblemas.findIndex(problema => (idProblema === problema || idProblema === problema.id));
+            /*console.log(idProblema);
+            console.log(this.prestacionesEjecucion[posicionPrestacion].ejecucion.listaProblemas);
+            alert(idProblema + " / " + posicionProblema);*/
 
             if (posicionProblema === -1) {
                 this.prestacionesEjecucion[posicionPrestacion].ejecucion.listaProblemas.push(idProblema);
@@ -810,7 +819,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
 
         }
-
+        console.log(this.prestacionesEjecucion);
         if (showAlert) {
             this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
         }
