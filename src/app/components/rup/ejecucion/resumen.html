@@ -124,7 +124,7 @@
                         <span class="badge badge-info  mdi mdi-link pull-right"></span>
                     </div>
                     <small> Solicitado el <strong>{{ prestacion.solicitud.fecha | date: 'dd/MM/yyyy' }}</strong>
-                        <span *ngIf="prestacion.ejecucion?.profesionales?.length > 0"> por {{ prestacion.ejecucion.profesionales[0].nombreCompleto }}</span>
+                        <span *ngIf="prestacion.ejecucion?.profesionales?.length > 0"> por {{ prestacion.ejecucion.profesionales[prestacion.ejecucion.profesionales.length - 1].nombreCompleto }}</span>
                         <span *ngIf="!prestacion.ejecucion?.profesionales[0]?.nombreCompleto">(sin profesionales asignados)</span>
                     </small>
                     <small *ngIf="prestacion.solicitud.motivoSolicitud">{{ prestacion.solicitud.motivoSolicitud }}</small>
