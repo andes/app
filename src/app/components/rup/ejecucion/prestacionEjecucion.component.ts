@@ -663,6 +663,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                                 this.listaPlanesProblemas = [];
                                 this.listaPlanesProblemas.push(prestacion);
+                                 this.plex.toast('success', 'Prestación desvinculada al problema', 'Plan desvinculado', 2000);
                             });
                         });
                     });
