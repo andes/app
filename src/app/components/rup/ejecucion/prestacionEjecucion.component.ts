@@ -641,10 +641,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    desvincularPlan(prestacionFutura, prestacionNombre) {
-
+    desvincularPlan(prestacionFutura, idProblema) {
+        let prestacionNombre = prestacionFutura.solicitud.tipoPrestacion.nombre;
+        let idPrestacionFutura = prestacionFutura;
+        console.log(idPrestacionFutura);
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
+<<<<<<< HEAD
                 for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
                     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
                         if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
@@ -659,7 +662,33 @@ export class PrestacionEjecucionComponent implements OnInit {
                             });
                         }
                     }
+=======
+                let idDesvincular = null;
+                prestacionFutura.solicitud.listaProblemas.forEach(element => {
+                    if (element.id === idProblema) {
+                        idDesvincular = idProblema;
+                    };
+                });
+                if (idDesvincular) {
+                    const patch = { op: 'desvincularPlan', idProblema: idDesvincular };
+                    this.servicioPrestacion.patch(idPrestacionFutura, patch).subscribe((result) => {
+                        console.log('Plan desvinculado', result);
+                        // ]this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
+                    });
+>>>>>>> 2c8a662d07f74cd82c4446cd520b379acfd88e45
                 }
+                // for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
+                //     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
+                //         console.log('this.listaPlanesProblemas', this.listaPlanesProblemas[x].prestacionesSolicitadas[y]);
+                //         if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
+                //             const patch = { op: 'desvincularPlan', idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id };
+                //             this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
+                //                 console.log('Plan desvinculado', result);
+                //                 this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
+                //             });
+                //         }
+                //    }
+                 //}
             }
         });
 
