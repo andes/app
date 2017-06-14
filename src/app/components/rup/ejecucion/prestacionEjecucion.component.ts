@@ -236,7 +236,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * Opciones posibles en variable -items-
     */
     mostrarOpciones(problema, indexProblema: number) {
-        this.plex.toast('info', String(indexProblema));
         if (indexProblema >= 0) {
             this.agregarAMenuHambuguesa(problema.id, indexProblema);
         }
