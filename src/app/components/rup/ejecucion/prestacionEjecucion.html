@@ -2,7 +2,8 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>-->
 <style>
-    
+
+
 </style>
 
 <header *ngIf="prestacion">
@@ -108,7 +109,7 @@
 
                                     </div>
                                     <div class="col-1">
-                                        <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)"
+                                        <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema, -1)"
                                             [items]="items"></plex-dropdown>
                                     </div>
                                 </div>
@@ -235,8 +236,8 @@
                                         <div class="badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].estado == 'resuelto'">
                                             {{problema.evoluciones[problema.evoluciones.length - 1].estado}}
                                         </div>
-                                        <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema)"
-                                            [items]="items"></plex-dropdown>
+                                        <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="mostrarOpciones(problema, prIndex)"
+                                            [items]="itemsEjecucion"></plex-dropdown>
                                     </div>
                                 </div>
 
@@ -301,9 +302,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="float-right">
+                                <!--<div class="float-right">
                                     <plex-button class="desvincularProblema" title="Desvincular problema" label="" icon="mdi mdi-link-variant-off mdi-20px" (click)="desvincularProblema(problema.id, prIndex)"></plex-button>
-                                </div>
+                                </div>-->
                             </li>
                         </ul>
                         <!--Div para un plan-->

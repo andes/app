@@ -79,9 +79,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
         { label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) },
         { label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) },
-        // { label: 'Ver Detalles', handler: (() => { this.verDetalles(this.problemaItem); }) },
     ];
+
+    itemsEjecucion = [
+        { label: 'Evolucionar Problema', handler: () => { this.evolucionarProblema(this.problemaItem); } },
+        { label: 'Transformar Problema', handler: (() => { this.transformarProblema(this.problemaItem); }) },
+        { label: 'Enmendar Problema', handler: (() => { this.enmendarProblema(this.problemaItem); }) },
+    ];
+
+    // problema principal (panel izquierdo)
     problemaItem: any;
+
+    // problema en ejecución (panel central)
+    problemaEjecucion: any;
+
     data: Object = {};
 
     showEvolucionar = false;
@@ -129,7 +140,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.auth);
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
@@ -224,7 +235,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * problemas para poder evolucionar / transformar / etc
      * Opciones posibles en variable -items-
     */
-    mostrarOpciones(problema) {
+    mostrarOpciones(problema, indexProblema: number) {
+        this.plex.toast('info', String(indexProblema));
+        if (indexProblema >= 0) {
+            this.agregarAMenuHambuguesa(problema.id, indexProblema);
+        }
         this.problemaItem = problema;
     }
 
@@ -238,7 +253,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    onDrop (e:any, idProblema) {
+    onDrop(e: any, idProblema) {
         if (this.isDraggingPrestacion) {
             this.onPrestacionDrop(e, idProblema);
         } else {
@@ -316,6 +331,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     limpiarBusqueda() {
         this.searchProblema = '';
         this.listaproblemasMaestro = [];
+    }
+
+
+    agregarAMenuHambuguesa(idProblema, indiceProblema) {
+        let itemNuevo = { label: 'Desvincular Problema', icon: 'link-variant-off', handler: (() => { this.desvincularProblema(idProblema, indiceProblema); }) };
+        this.itemsEjecucion = this.items;
+        this.itemsEjecucion = [... this.itemsEjecucion, itemNuevo];
     }
 
 
