@@ -1,21 +1,67 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { element } from 'protractor';
-import { IOrganizacion } from './../../../interfaces/IOrganizacion';
-import { OrganizacionComponent } from './../../organizacion/organizacion.component';
-import { IProfesional } from './../../../interfaces/IProfesional';
-import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
+import {
+    PacienteSearch
+} from './../../../services/pacienteSearch.interface';
+import {
+    TipoPrestacionService
+} from './../../../services/tipoPrestacion.service';
+import {
+    element
+} from 'protractor';
+import {
+    IOrganizacion
+} from './../../../interfaces/IOrganizacion';
+import {
+    OrganizacionComponent
+} from './../../organizacion/organizacion.component';
+import {
+    IProfesional
+} from './../../../interfaces/IProfesional';
+import {
+    Auth
+} from '@andes/auth';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    AgendaService
+} from './../../../services/turnos/agenda.service';
+import {
+    ITipoPrestacion
+} from './../../../interfaces/ITipoPrestacion';
+import {
+    PrestacionPacienteService
+} from './../../../services/rup/prestacionPaciente.service';
+import {
+    IPrestacionPaciente
+} from './../../../interfaces/rup/IPrestacionPaciente';
+import {
+    Component,
+    OnInit,
+    Output,
+    Input,
+    EventEmitter,
+    HostBinding
+} from '@angular/core';
+import {
+    FormBuilder,
+    FormGroup,
+    Validators
+} from '@angular/forms';
+import {
+    ProblemaPacienteService
+} from './../../../services/rup/problemaPaciente.service';
+import {
+    IPaciente
+} from './../../../interfaces/IPaciente';
+import {
+    IProblemaPaciente
+} from './../../../interfaces/rup/IProblemaPaciente';
 // Rutas
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import {
+    Router,
+    ActivatedRoute,
+    Params
+} from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -41,6 +87,7 @@ export class PuntoInicioComponent implements OnInit {
 
     public conjuntoDePrestaciones: any = [];
     public pacientesPresentes: any = [];
+    public pacientesFiltrados: any = [];
     public pacientesPresentesCompleto: any = [];
     public todasLasPrestaciones: any = [];
     public fechaDesde: Date;
@@ -53,6 +100,10 @@ export class PuntoInicioComponent implements OnInit {
 
     public searchPaciente: any;
     public filtrosPacientes = true;
+    public textoTipeado: string = null;
+    public searchTerm: String = '';
+
+    private buscarMPI: boolean = false;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -76,9 +127,48 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
+
+    /**
+     * @returns Realiza la búsqueda de pacientes localmente y si no existe lo busca en mpi
+     * 
+     * @memberof PuntoInicioComponent
+     */
+    buscar() {
+        this.cargaPacientes();
+        if (this.searchTerm) {
+            let search = this.searchTerm.toUpperCase();
+            this.pacientesFiltrados = this.pacientesPresentes.filter(paciente => {
+                if (paciente.paciente.nombre.indexOf(search) !== -1 || paciente.paciente.apellido.indexOf(search) !== -1 || paciente.paciente.documento.indexOf(search) !== -1) {
+                    return paciente;
+                }
+            });
+            this.pacientesPresentes = this.pacientesFiltrados;
+            if (this.pacientesPresentes.length <= 0 && this.searchTerm.length > 0) {
+                this.buscarMPI = true;
+            }
+            else {
+                this.buscarMPI = false;
+            }
+        }
+    }
+
+
+    //Reinicia la búsqueda en la tabla de acuerdo al output de componente pacienteSearch
+    handleBlanqueo(event) {
+        this.buscarMPI = false;
+        this.searchTerm = null;
+        this.volverAlInicio();
+    }
+
+    
+    volverAlInicio() {
+        this.paciente = null;
+        this.mostrarLista = true;
+        this.cargaPacientes;
+    }
+
     loadAgendasXDia(params) {
         if (this.auth.profesional) {
-
             this.servicioAgenda.get(params).subscribe(
                 agendas => {
                     this.agendas = agendas;
@@ -145,7 +235,6 @@ export class PuntoInicioComponent implements OnInit {
             this.cargaPacientes();
         });
     }
-
 
     cargaPacientes() {
         this.pacientesPresentes = [];
@@ -231,7 +320,6 @@ export class PuntoInicioComponent implements OnInit {
             this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
             unPacientePresente = {};
         });
-
         //Ordenar por fecha y hora
         this.pacientesPresentes = this.pacientesPresentes.sort((a, b) => { return (a.fecha > b.fecha) ? 1 : ((b.fecha > a.fecha) ? -1 : 0); });
         this.pacientesPresentesCompleto = [... this.pacientesPresentes];
@@ -240,13 +328,8 @@ export class PuntoInicioComponent implements OnInit {
 
 
 
-    volverAlInicio() {
-        this.paciente = null;
-        this.mostrarPacientesSearch = true;
-        this.mostrarLista = true;
-    }
 
-    //
+
     elegirPrestacion(unPacientePresente) {
         if (unPacientePresente.idPrestacion) {
             this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
@@ -316,6 +399,7 @@ export class PuntoInicioComponent implements OnInit {
         this.mostrarLista = false;
         // this.mostrarPrestacionSelect = true;
     }
+
 
     crearPrestacionVacia(tipoPrestacion) {
 
@@ -392,16 +476,16 @@ export class PuntoInicioComponent implements OnInit {
         }
     }
 
-
-
     filtrarPacientes(misPacientes: boolean) {
         this.filtrosPacientes = misPacientes;
         let listadoFiltrado = [... this.pacientesPresentesCompleto];
 
         if (this.filtrosPacientes) {
             listadoFiltrado = listadoFiltrado.filter(paciente => {
-                if (paciente.profesionales.find(p => p.id == this.auth.profesional.id)) {
-                    return paciente;
+                if (paciente.profesionales.length > 0) {
+                    if (paciente.profesionales.find(p => p.id == this.auth.profesional.id)) {
+                        return paciente;
+                    }
                 }
             });
         }
@@ -426,7 +510,6 @@ export class PuntoInicioComponent implements OnInit {
 
     }
 
-
-
-
 } // export class Punto Inicio Component
+
+
