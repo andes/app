@@ -240,12 +240,12 @@
                                             <div *ngIf="prestacionFutura.solicitud && prestacionFutura.solicitud.listaProblemas && prestacionFutura.solicitud.listaProblemas.length">
                                                 <div *ngFor="let problemaP of prestacionFutura.solicitud.listaProblemas">
                                                     <div *ngIf="problemaP._id == problema.id">
-                                                        <plex-accordion class="plan">
-                                                            <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
-                                                                <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
-
-
-                                                            </plex-panel>
+                                                        <plex-accordion>
+                                                            <div class="plan">
+                                                                <plex-panel tituloPrincipal="{{prestacionFutura.solicitud.tipoPrestacion.nombre}}">
+                                                                    <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
+                                                                </plex-panel>
+                                                            </div>
                                                             <div class="float-right mdi-16px">
                                                                 <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, prestacionFutura.solicitud.tipoPrestacion.nombre)">
                                                                 </plex-button>
@@ -346,6 +346,7 @@
                     <legend>Registros de la consulta</legend>
                 </fieldset>
                 <!--FILTRO PRESTACIONES-->
+                <h5 class="box-title-secundario">Prestaciones</h5>
                 <form>
                     <div>
                         <plex-text [(ngModel)]="searchPrestacion" name="searchPrestacion" (change)="loadPrestacion()" placeholder="Buscar Prestación"></plex-text>
@@ -393,16 +394,12 @@
                             </div>
                         </form>
 
-
-
-
                         <ul class="results list-group" *ngIf="planes">
                             <li *ngFor="let plan of planes" class="list-group-item justify-content-between list-group-item-action" (click)="setearMotivoPlan(plan)">
                                 <span> {{plan.nombre}}</span>
 
                             </li>
                         </ul>
-
 
                         <plex-accordion class="results list-group plan" *ngIf="PlanesSeleccionados">
 
@@ -418,7 +415,6 @@
                                     </plex-panel>
                                 </div>
                             </div>
-
 
                         </plex-accordion>
 

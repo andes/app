@@ -648,10 +648,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                 for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
                     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
                         if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
-                            const patch = { op: 'desvincularPlan', idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id };
+                            const patch = {
+                                op: 'desvincularPlan',
+                                idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id
+                            };
                             this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
                                 console.log('Plan desvinculado', result);
                                 this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
+                                this.plex.toast('success', 'Se ha desvinculado "' + this.listaPlanesProblemas[x].prestacionesSolicitadas[y].nombre + '" del problema', 'Plan desvinculado', 5000);
                             });
                         }
                     }
@@ -856,7 +860,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         console.log(this.prestacionesEjecucion);
         if (showAlert) {
-            this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
+            this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 4000);
         }
     }
 
