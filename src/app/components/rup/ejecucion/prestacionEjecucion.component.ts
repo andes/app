@@ -647,22 +647,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         console.log(idPrestacionFutura);
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
-<<<<<<< HEAD
-                for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
-                    for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
-                        if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
-                            const patch = {
-                                op: 'desvincularPlan',
-                                idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id
-                            };
-                            this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
-                                console.log('Plan desvinculado', result);
-                                this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
-                                this.plex.toast('success', 'Se ha desvinculado "' + this.listaPlanesProblemas[x].prestacionesSolicitadas[y].nombre + '" del problema', 'Plan desvinculado', 5000);
-                            });
-                        }
-                    }
-=======
                 let idDesvincular = null;
                 prestacionFutura.solicitud.listaProblemas.forEach(element => {
                     if (element.id === idProblema) {
@@ -675,7 +659,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         console.log('Plan desvinculado', result);
                         // ]this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
                     });
->>>>>>> 2c8a662d07f74cd82c4446cd520b379acfd88e45
                 }
                 // for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
                 //     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
@@ -688,7 +671,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 //             });
                 //         }
                 //    }
-                 //}
+                //}
             }
         });
 
