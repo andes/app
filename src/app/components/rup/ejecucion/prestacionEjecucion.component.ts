@@ -253,6 +253,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+    /* Evento que se ejecuta cuando realizo el drop de una
+     * prestación o un plan sobre un problema
+     */
     onDrop(e: any, idProblema) {
         if (this.isDraggingPrestacion) {
             this.onPrestacionDrop(e, idProblema);
@@ -563,7 +566,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             'problema': idProblema
         };
         let prestacion = e.dragData;
-        //Traigo la prestacion actualizada..
+        // Traigo la prestacion actualizada..
         this.servicioPrestacion.getById(e.dragData.id).subscribe(prestacionActual => {
             prestacion = prestacionActual;
             // Recorre la prestacion actual y se fija si el id del problema ya existe
