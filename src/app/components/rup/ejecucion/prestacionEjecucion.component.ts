@@ -238,7 +238,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    onDrop (e:any, idProblema) {
+    /* Evento que se ejecuta cuando realizo el drop de una
+     * prestación o un plan sobre un problema
+     */
+    onDrop(e: any, idProblema) {
         if (this.isDraggingPrestacion) {
             this.onPrestacionDrop(e, idProblema);
         } else {
