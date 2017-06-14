@@ -14,255 +14,251 @@ import { PacienteService } from './../../../../services/paciente.service';
 
 
 @Component({
-  selector: 'revision-agenda',
-  templateUrl: 'revision-agenda.html'
+    selector: 'revision-agenda',
+    templateUrl: 'revision-agenda.html'
 })
 
 export class RevisionAgendaComponent implements OnInit {
-  @HostBinding('class.plex-layout') layout = true;
-  private _agenda: any;
-  // Parámetros
-  @Input('agenda')
-  set agenda(value: any) {
-    this._agenda = value;
-    this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-    for (let i = 0; i < this.agenda.bloques.length; i++) {
-      this.turnos = this.agenda.bloques[i].turnos;
+    @HostBinding('class.plex-layout') layout = true;
+    private _agenda: any;
+    // Parámetros
+    @Input('agenda')
+    set agenda(value: any) {
+        this._agenda = value;
+        this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            this.turnos = this.agenda.bloques[i].turnos;
+        }
+        // this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
     }
-    debugger;
-    // this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
-  }
-  get agenda(): any {
-    return this._agenda;
-  }
-
-  @Output() volverAlGestor = new EventEmitter<boolean>();
-  @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-  @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-
-  showRevisionAgenda: Boolean = true;
-  turnos = [];
-  horaInicio: any;
-  turnoSeleccionado: any = null;
-  bloqueSeleccionado: any = null;
-  nuevoCodSecundario: any;
-  codigoPrincipal = [];
-  paciente: IPaciente;
-  cambioTelefono = false;
-  showCreateUpdate = false;
-  turnoTipoPrestacion: any = {};
-  public showRegistrosTurno = false;
-  pacientesSearch = false;
-  telefono: String = '';
-  public seleccion = null;
-  public esEscaneado = false;
-  public estadosAsistencia = enumToArray(EstadosAsistencia);
-
-
-  constructor(public plex: Plex,
-    public router: Router,
-    public auth: Auth,
-    private serviceCie10: Cie10Service,
-    public serviceTurno: TurnoService,
-    public servicePaciente: PacienteService) {
-  }
-
-  ngOnInit() {
-    if (this.turnoSeleccionado && !this.turnoSeleccionado.diagnosticoPrincipal) {
-      this.turnoSeleccionado.diagnosticoPrincipal = {
-        codificacion: {},
-        ilegible: false,
-        primeraVez: false,
-      };
+    get agenda(): any {
+        return this._agenda;
     }
-  }
 
-  buscarPaciente() {
-    this.showRegistrosTurno = false;
-    this.pacientesSearch = true;
-  }
+    @Output() volverAlGestor = new EventEmitter<boolean>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-  asignarPaciente(paciente) {
-    let estado: String = 'asignado';
-    let telefono;
-    if (paciente.contacto) {
-      if (paciente.contacto.length > 0) {
-        paciente.contacto.forEach((contacto) => {
-          if (contacto.tipo === 'celular') {
-            telefono = contacto.valor;
-          }
-        });
-      }
+    showRevisionAgenda: Boolean = true;
+    turnos = [];
+    horaInicio: any;
+    turnoSeleccionado: any = null;
+    bloqueSeleccionado: any = null;
+    nuevoCodSecundario: any;
+    codigoPrincipal = [];
+    paciente: IPaciente;
+    cambioTelefono = false;
+    showCreateUpdate = false;
+    turnoTipoPrestacion: any = {};
+    public showRegistrosTurno = false;
+    pacientesSearch = false;
+    telefono: String = '';
+    public seleccion = null;
+    public esEscaneado = false;
+    public estadosAsistencia = enumToArray(EstadosAsistencia);
+
+
+    constructor(public plex: Plex,
+        public router: Router,
+        public auth: Auth,
+        private serviceCie10: Cie10Service,
+        public serviceTurno: TurnoService,
+        public servicePaciente: PacienteService) {
     }
-    let pacienteTurno = {
-      id: this.paciente.id,
-      documento: this.paciente.documento,
-      apellido: this.paciente.apellido,
-      nombre: this.paciente.nombre,
-      telefono: telefono
-    };
-    if (this.turnoSeleccionado) {
-      this.turnoSeleccionado.paciente = pacienteTurno;
-      this.turnoSeleccionado.estado = estado;
+
+    ngOnInit() {
+        if (this.turnoSeleccionado && !this.turnoSeleccionado.diagnosticoPrincipal) {
+            this.turnoSeleccionado.diagnosticoPrincipal = {
+                codificacion: {},
+                ilegible: false,
+                primeraVez: false,
+            };
+        }
     }
-  }
 
-  afterCreateUpdate(paciente) {
-    this.showCreateUpdate = false;
-    this.showRegistrosTurno = true;
-
-    if (paciente) {
-      this.paciente = paciente;
-      // this.asignarPaciente(paciente);
-    } else {
-      this.buscarPaciente();
+    buscarPaciente() {
+        this.showRegistrosTurno = false;
+        this.pacientesSearch = true;
     }
-  }
 
-  onReturn(paciente: IPaciente): void {
-    if (paciente.id) {
-      this.paciente = paciente;
-      this.showRegistrosTurno = true;
-      this.pacientesSearch = false;
-      // this.asignarPaciente(paciente);
-      window.setTimeout(() => this.pacientesSearch = false, 100);
-    } else {
-      this.seleccion = paciente;
-      this.esEscaneado = true;
-      this.escaneado.emit(this.esEscaneado);
-      this.selected.emit(this.seleccion);
-      this.pacientesSearch = false;
-      this.showCreateUpdate = true;
-    }
-  }
-
-
-  seleccionarTurno(turno, bloque) {
-    debugger;
-    this.paciente = null;
-    if (this.turnoSeleccionado === turno) {
-      this.turnoSeleccionado = null;
-
-    } else {
-      this.turnoSeleccionado = turno;
-      this.bloqueSeleccionado = bloque;
-      this.showCreateUpdate = false;
-      this.pacientesSearch = false;
-      this.codigoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
-      if (!this.turnoSeleccionado.diagnosticoPrincipal) {
-        this.turnoSeleccionado.diagnosticoPrincipal = {
-          codificacion: {},
-          ilegible: false,
-          primeraVez: false,
+    asignarPaciente(paciente) {
+        let estado: String = 'asignado';
+        let telefono;
+        if (paciente.contacto) {
+            if (paciente.contacto.length > 0) {
+                paciente.contacto.forEach((contacto) => {
+                    if (contacto.tipo === 'celular') {
+                        telefono = contacto.valor;
+                    }
+                });
+            }
+        }
+        let pacienteTurno = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            telefono: telefono
         };
-      } else {
-        delete this.turnoSeleccionado.diagnosticoPrincipal.codificacion.$order;
-      }
-      this.codigoPrincipal = [this.turnoSeleccionado.diagnosticoPrincipal.codificacion];
+        if (this.turnoSeleccionado) {
+            this.turnoSeleccionado.paciente = pacienteTurno;
+            this.turnoSeleccionado.estado = estado;
+        }
     }
 
-  }
+    afterCreateUpdate(paciente) {
+        this.showCreateUpdate = false;
+        this.showRegistrosTurno = true;
 
-  seleccionarAsistencia(asistencia, i) {
-    if (this.turnoSeleccionado) {
-      this.turnoSeleccionado.asistencia = asistencia.id;
+        if (paciente) {
+            this.paciente = paciente;
+            // this.asignarPaciente(paciente);
+        } else {
+            this.buscarPaciente();
+        }
     }
-  }
 
-  asistenciaSeleccionada(asistencia) {
-    return (this.turnoSeleccionado.asistencia === asistencia.id);
-  }
-
-  estaSeleccionado(turno: any) {
-    this.showRegistrosTurno = true;
-    return (this.turnoSeleccionado == turno); // .indexOf(turno) >= 0;
-  }
-
-  buscarCodificacion(event) {
-    debugger;
-    let diagnostico;
-   if (event && event.value) {
-      diagnostico = event.value;
-      delete diagnostico.$order;
-      this.turnoSeleccionado.diagnosticoPrincipal.codificacion = diagnostico;
-   } else {
-     if (event && event.target && event.target.value) {
-       let query = {
-         nombre: event.target.value
-       };
-       this.serviceCie10.get(query).subscribe(result => { this.codigoPrincipal = [...result]; });
-     } else {
-       this.codigoPrincipal = [];
-     }
-   }
-  }
-
-
-  buscarCodificacionSecundaria(event) {
-    let query = {
-      nombre: event.query
-    };
-    if (event.query) {
-      this.serviceCie10.get(query).subscribe(event.callback);
-    } else {
-      event.callback([]);
+    onReturn(paciente: IPaciente): void {
+        if (paciente.id) {
+            this.paciente = paciente;
+            this.showRegistrosTurno = true;
+            this.pacientesSearch = false;
+            // this.asignarPaciente(paciente);
+            window.setTimeout(() => this.pacientesSearch = false, 100);
+        } else {
+            this.seleccion = paciente;
+            this.esEscaneado = true;
+            this.escaneado.emit(this.esEscaneado);
+            this.selected.emit(this.seleccion);
+            this.pacientesSearch = false;
+            this.showCreateUpdate = true;
+        }
     }
-  }
 
-  agregarDiagnosticoSecundario() {
-    let nuevoDiagnostico = { codificacion: null };
-    if (this.nuevoCodSecundario) {
-      nuevoDiagnostico.codificacion = this.nuevoCodSecundario;
-      this.turnoSeleccionado.diagnosticoSecundario.push(nuevoDiagnostico);
+
+    seleccionarTurno(turno, bloque) {
+        this.paciente = null;
+        if (this.turnoSeleccionado === turno) {
+            this.turnoSeleccionado = null;
+
+        } else {
+            this.turnoSeleccionado = turno;
+            this.bloqueSeleccionado = bloque;
+            this.showCreateUpdate = false;
+            this.pacientesSearch = false;
+            this.codigoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
+            if (!this.turnoSeleccionado.diagnosticoPrincipal) {
+                this.turnoSeleccionado.diagnosticoPrincipal = {
+                    codificacion: {},
+                    ilegible: false,
+                    primeraVez: false,
+                };
+            } else {
+                delete this.turnoSeleccionado.diagnosticoPrincipal.codificacion.$order;
+            }
+            this.codigoPrincipal = [this.turnoSeleccionado.diagnosticoPrincipal.codificacion];
+        }
+
     }
-  }
 
-  borrarDiagnostico(index) {
-    this.turnoSeleccionado.diagnosticoSecundario.splice(index, 1);
-  }
-
-
-  marcarIlegible() {
-    if (this.turnoSeleccionado && this.turnoSeleccionado.diagnosticoPrincipal && this.turnoSeleccionado.diagnosticoPrincipal.ilegible) {
-      this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
-      this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+    seleccionarAsistencia(asistencia, i) {
+        if (this.turnoSeleccionado) {
+            this.turnoSeleccionado.asistencia = asistencia.id;
+        }
     }
-  }
 
-  cancelar() {
-    this.turnoSeleccionado = null;
-  }
-
-  onSave() {
-    // Se guarda el turno seleccionado
-    if (this.paciente) {
-      this.asignarPaciente(this.paciente);
+    asistenciaSeleccionada(asistencia) {
+        return (this.turnoSeleccionado.asistencia === asistencia.id);
     }
-    debugger;
-    if (this.turnoTipoPrestacion) {
-      this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
-    };
 
-    let datosTurno = {
-      idAgenda: this.agenda.id,
-      idTurno: this.turnoSeleccionado.id,
-      idBloque: this.bloqueSeleccionado.id,
-      turno: this.turnoSeleccionado,
-    };
+    estaSeleccionado(turno: any) {
+        this.showRegistrosTurno = true;
+        return (this.turnoSeleccionado == turno); // .indexOf(turno) >= 0;
+    }
 
-    if (this.turnoSeleccionado.tipoPrestacion) {
-      this.serviceTurno.put(datosTurno).subscribe(resultado => {
-        this.plex.toast('success', 'Información', 'El turno fue actualizado');
+    buscarCodificacion(event) {
+        let diagnostico;
+        if (event && event.value) {
+            diagnostico = event.value;
+            delete diagnostico.$order;
+            this.turnoSeleccionado.diagnosticoPrincipal.codificacion = diagnostico;
+        } else {
+            if (event && event.target && event.target.value) {
+                let query = {
+                    nombre: event.target.value
+                };
+                this.serviceCie10.get(query).subscribe(result => { this.codigoPrincipal = [...result]; });
+            } else {
+                this.codigoPrincipal = [];
+            }
+        }
+    }
+
+
+    buscarCodificacionSecundaria(event) {
+        let query = {
+            nombre: event.query
+        };
+        if (event.query) {
+            this.serviceCie10.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    agregarDiagnosticoSecundario() {
+        let nuevoDiagnostico = { codificacion: null };
+        if (this.nuevoCodSecundario) {
+            nuevoDiagnostico.codificacion = this.nuevoCodSecundario;
+            this.turnoSeleccionado.diagnosticoSecundario.push(nuevoDiagnostico);
+        }
+    }
+
+    borrarDiagnostico(index) {
+        this.turnoSeleccionado.diagnosticoSecundario.splice(index, 1);
+    }
+
+
+    marcarIlegible() {
+        if (this.turnoSeleccionado && this.turnoSeleccionado.diagnosticoPrincipal && this.turnoSeleccionado.diagnosticoPrincipal.ilegible) {
+            this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
+            this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+        }
+    }
+
+    cancelar() {
         this.turnoSeleccionado = null;
-      });
-    } else {
-      this.plex.alert('Debe seleccionar un tipo de Prestacion');
     }
-  }
 
-  volver() {
-    this.volverAlGestor.emit(true);
+    onSave() {
+        // Se guarda el turno seleccionado
+        if (this.paciente) {
+            this.asignarPaciente(this.paciente);
+        }
+        if (this.turnoTipoPrestacion) {
+            this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
+        };
 
-  }
+        let datosTurno = {
+            idAgenda: this.agenda.id,
+            idTurno: this.turnoSeleccionado.id,
+            idBloque: this.bloqueSeleccionado.id,
+            turno: this.turnoSeleccionado,
+        };
+
+        if (this.turnoSeleccionado.tipoPrestacion) {
+            this.serviceTurno.put(datosTurno).subscribe(resultado => {
+                this.plex.toast('success', 'Información', 'El turno fue actualizado');
+                this.turnoSeleccionado = null;
+            });
+        } else {
+            this.plex.alert('Debe seleccionar un tipo de Prestacion');
+        }
+    }
+
+    volver() {
+        this.volverAlGestor.emit(true);
+
+    }
 
 }
