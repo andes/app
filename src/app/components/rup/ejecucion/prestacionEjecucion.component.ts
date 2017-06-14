@@ -671,7 +671,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 //             });
                 //         }
                 //    }
-                 //}
+                //}
             }
         });
 
@@ -872,7 +872,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         console.log(this.prestacionesEjecucion);
         if (showAlert) {
-            this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 5000);
+            this.plex.toast('success', 'Prestación vinculada al problema', 'Prestacion agregada', 4000);
         }
     }
 
