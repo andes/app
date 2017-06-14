@@ -139,7 +139,6 @@ export class PuntoInicioComponent implements OnInit {
             let search = this.searchTerm.toUpperCase();
             this.pacientesFiltrados = this.pacientesPresentes.filter(paciente => {
                 let nombreCompleto = paciente.paciente.apellido + ' ' + paciente.paciente.nombre;
-                debugger;
                 if (nombreCompleto.indexOf(search) !== -1 || paciente.paciente.nombre.indexOf(search) !== -1 || paciente.paciente.apellido.indexOf(search) !== -1 || paciente.paciente.documento.indexOf(search) !== -1) {
                     return paciente;
                 }
