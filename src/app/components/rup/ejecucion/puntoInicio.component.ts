@@ -138,7 +138,9 @@ export class PuntoInicioComponent implements OnInit {
         if (this.searchTerm) {
             let search = this.searchTerm.toUpperCase();
             this.pacientesFiltrados = this.pacientesPresentes.filter(paciente => {
-                if (paciente.paciente.nombre.indexOf(search) !== -1 || paciente.paciente.apellido.indexOf(search) !== -1 || paciente.paciente.documento.indexOf(search) !== -1) {
+                let nombreCompleto = paciente.paciente.apellido + ' ' + paciente.paciente.nombre;
+                debugger;
+                if (nombreCompleto.indexOf(search) !== -1 || paciente.paciente.nombre.indexOf(search) !== -1 || paciente.paciente.apellido.indexOf(search) !== -1 || paciente.paciente.documento.indexOf(search) !== -1) {
                     return paciente;
                 }
             });
@@ -158,13 +160,13 @@ export class PuntoInicioComponent implements OnInit {
         this.buscarMPI = false;
         this.searchTerm = null;
         this.volverAlInicio();
+        this.cargaPacientes()
     }
 
     
     volverAlInicio() {
         this.paciente = null;
         this.mostrarLista = true;
-        this.cargaPacientes;
     }
 
     loadAgendasXDia(params) {
