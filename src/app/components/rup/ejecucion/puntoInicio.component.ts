@@ -125,8 +125,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
     /**
-     * Realiza la búsqueda de pacientes localmente y si no existe lo busca en mpi
-     * 
+     * @returns Realiza la búsqueda de pacientes localmente y si no existe lo busca en mpi
      * 
      * @memberof PuntoInicioComponent
      */
@@ -149,6 +148,7 @@ export class PuntoInicioComponent implements OnInit {
         }
     }
 
+    
     //Reinicia la búsqueda en la tabla de acuerdo al output de componente pacienteSearch
     handleBlanqueo(event) {
         this.buscarMPI = false;
