@@ -304,7 +304,6 @@ export class DarTurnosComponent implements OnInit {
      * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
-        debugger;
 
         // 1) Auth general (si puede ver esta pantalla)
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
@@ -464,7 +463,6 @@ export class DarTurnosComponent implements OnInit {
                                 });
 
                                 bloque.turnos.forEach((turno) => {
-                                    debugger;
                                     // Si el turno está asignado o está disponible pero ya paso la hora
                                     if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
                                         if (turno.estado === 'turnoDoble' && turnoAnterior) {
