@@ -2,7 +2,7 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>-->
 <style>
-    
+
 </style>
 
 <header *ngIf="prestacion">
@@ -373,9 +373,11 @@
                         <div draggable [dragScope]="'planes-paciente-problema'" [dragData]="tipoPrestacion" (onDragStart)="arrastrandoPrestacion(true)"
                             (onDragEnd)="arrastrandoPrestacion(false)">
 
-                            <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}">
+                            <plex-panel tituloPrincipal="{{tipoPrestacion.nombre}}" *ngIf="tipoPrestacion">
                                 <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="tipoPrestacion"
-                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente" [datosIngreso]="">
+                                    (evtData)="getValoresRup($event, tipoPrestacion)" [paciente]="prestacion.paciente"
+                                    [datosIngreso]="(data[tipoPrestacion.key]) ? data[tipoPrestacion.key] : null">
+
                                     <!-- [datosIngreso]="(tipoPrestacion.ejecucion.evoluciones && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1] && tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores) ? tipoPrestacion.ejecucion.evoluciones[tipoPrestacion.ejecucion.evoluciones.length-1].valores[tipoPrestacion.solicitud.tipoPrestacion.key] : null" -->
                                 </rup>
 
