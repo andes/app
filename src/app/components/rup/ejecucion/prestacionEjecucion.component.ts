@@ -640,11 +640,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
     }
-
+// Desvincula los planes - borra el id del problema en la prestacion futura
     desvincularPlan(prestacionFutura, idProblema) {
         let prestacionNombre = prestacionFutura.solicitud.tipoPrestacion.nombre;
         let idPrestacionFutura = prestacionFutura;
-        console.log(idPrestacionFutura);
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
                 let idDesvincular = null;
@@ -655,26 +654,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
                 if (idDesvincular) {
                     const patch = { op: 'desvincularPlan', idProblema: idDesvincular };
+                    // hace el patch sobre la prestacionFutura sacando el id del problema.
                     this.servicioPrestacion.patch(idPrestacionFutura, patch).subscribe((result) => {
-                        console.log('Plan desvinculado', result);
-                        // ]this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
+                        // buscamos la prestacion principal actualizada con los datos populados
+                        this.route.params.subscribe(params => {
+                            let id = params['id'];
+                            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+                            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                                this.listaPlanesProblemas = [];
+                                this.listaPlanesProblemas.push(prestacion);
+                            });
+                        });
                     });
                 }
-                // for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
-                //     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
-                //         console.log('this.listaPlanesProblemas', this.listaPlanesProblemas[x].prestacionesSolicitadas[y]);
-                //         if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
-                //             const patch = { op: 'desvincularPlan', idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id };
-                //             this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
-                //                 console.log('Plan desvinculado', result);
-                //                 this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
-                //             });
-                //         }
-                //    }
-                //}
             }
         });
-
     }
 
     // agregamos la prestacion al plan
