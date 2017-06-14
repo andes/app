@@ -11,8 +11,12 @@
 
         <!-- Buscador de Pacientes MPI -->
         <div class="row" *ngIf="mostrarPacientesSearch">
-            <div class="col">
-                <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false"></pacientesSearch>
+            <div class="col" *ngIf="!buscarMPI">
+                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>"
+                    placeholder="Escriba los datos del paciente" (selected)="onPacienteSelected($event)"></plex-text>
+            </div>
+            <div class="col" *ngIf="buscarMPI">
+                <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm" (blanqueaInput)="handleBlanqueo($event)" ></pacientesSearch>
             </div>
         </div>
         <div class="row" *ngIf="paciente">

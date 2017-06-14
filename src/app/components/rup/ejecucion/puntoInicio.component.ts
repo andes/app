@@ -1,21 +1,67 @@
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { element } from 'protractor';
-import { IOrganizacion } from './../../../interfaces/IOrganizacion';
-import { OrganizacionComponent } from './../../organizacion/organizacion.component';
-import { IProfesional } from './../../../interfaces/IProfesional';
-import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
+import {
+    PacienteSearch
+} from './../../../services/pacienteSearch.interface';
+import {
+    TipoPrestacionService
+} from './../../../services/tipoPrestacion.service';
+import {
+    element
+} from 'protractor';
+import {
+    IOrganizacion
+} from './../../../interfaces/IOrganizacion';
+import {
+    OrganizacionComponent
+} from './../../organizacion/organizacion.component';
+import {
+    IProfesional
+} from './../../../interfaces/IProfesional';
+import {
+    Auth
+} from '@andes/auth';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    AgendaService
+} from './../../../services/turnos/agenda.service';
+import {
+    ITipoPrestacion
+} from './../../../interfaces/ITipoPrestacion';
+import {
+    PrestacionPacienteService
+} from './../../../services/rup/prestacionPaciente.service';
+import {
+    IPrestacionPaciente
+} from './../../../interfaces/rup/IPrestacionPaciente';
+import {
+    Component,
+    OnInit,
+    Output,
+    Input,
+    EventEmitter,
+    HostBinding
+} from '@angular/core';
+import {
+    FormBuilder,
+    FormGroup,
+    Validators
+} from '@angular/forms';
+import {
+    ProblemaPacienteService
+} from './../../../services/rup/problemaPaciente.service';
+import {
+    IPaciente
+} from './../../../interfaces/IPaciente';
+import {
+    IProblemaPaciente
+} from './../../../interfaces/rup/IProblemaPaciente';
 // Rutas
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import {
+    Router,
+    ActivatedRoute,
+    Params
+} from '@angular/router';
 import * as moment from 'moment';
 
 @Component({
@@ -41,6 +87,7 @@ export class PuntoInicioComponent implements OnInit {
 
     public conjuntoDePrestaciones: any = [];
     public pacientesPresentes: any = [];
+    public pacientesFiltrados: any = [];
     public pacientesPresentesCompleto: any = [];
     public todasLasPrestaciones: any = [];
     public fechaDesde: Date;
@@ -50,6 +97,10 @@ export class PuntoInicioComponent implements OnInit {
     public selectPrestacionesProfesional: any = [];
     public searchPaciente: any;
     public filtrosPacientes = true;
+    public textoTipeado: string = null;
+    public searchTerm: String = '';
+
+    private buscarMPI: boolean = false;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioProblemasPaciente: ProblemaPacienteService,
@@ -71,6 +122,40 @@ export class PuntoInicioComponent implements OnInit {
         this.loadAgendasXDia(hoy);
 
     }
+
+
+    /**
+     * Realiza la búsqueda de pacientes localmente y si no existe lo busca en mpi
+     * 
+     * 
+     * @memberof PuntoInicioComponent
+     */
+    buscar() {
+        this.cargaPacientes();
+        if (this.searchTerm) {
+            let search = this.searchTerm.toUpperCase();
+            this.pacientesFiltrados = this.pacientesPresentes.filter(paciente => {
+                if (paciente.paciente.nombre.indexOf(search) !== -1 || paciente.paciente.apellido.indexOf(search) !== -1 || paciente.paciente.documento.indexOf(search) !== -1) {
+                    return paciente;
+                }
+            });
+            this.pacientesPresentes = this.pacientesFiltrados;
+            if (this.pacientesPresentes.length <= 0 && this.searchTerm.length > 0) {
+                this.buscarMPI = true;
+            }
+            else {
+                this.buscarMPI = false;
+            }
+        }
+    }
+
+    //Reinicia la búsqueda en la tabla de acuerdo al output de componente pacienteSearch
+    handleBlanqueo(event) {
+        this.buscarMPI = false;
+        this.searchTerm = '';
+        this.cargaPacientes();
+    }
+
 
     loadAgendasXDia(params) {
         if (this.auth.profesional) {
@@ -109,8 +194,12 @@ export class PuntoInicioComponent implements OnInit {
 
     listadoTurnos(bloque) {
         this.bloqueSeleccionado = bloque;
-        let turnos = this.bloqueSeleccionado.turnos.map(elem => { return elem.id; });
-        this.servicioPrestacion.get({ turnos: turnos }).subscribe(resultado => {
+        let turnos = this.bloqueSeleccionado.turnos.map(elem => {
+            return elem.id;
+        });
+        this.servicioPrestacion.get({
+            turnos: turnos
+        }).subscribe(resultado => {
             this.listaPrestaciones = resultado;
             this.listaPrestaciones.forEach(prestacion => {
                 this.turnosPrestacion[prestacion.id.toString()] = this.bloqueSeleccionado.turnos.find(t => {
@@ -193,7 +282,7 @@ export class PuntoInicioComponent implements OnInit {
                 unPacientePresente.nombrePrestacion = agenda.tipoPrestaciones[0].nombre; // Recorrer las prestaciones si tiene mas de una
                 // Recorro agenda saco el estados
                 unPacientePresente.paciente = turno.paciente;
-                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                this.pacientesPresentes = [...this.pacientesPresentes, unPacientePresente];
                 unPacientePresente = {};
             });
         });
@@ -216,14 +305,16 @@ export class PuntoInicioComponent implements OnInit {
                 unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre; // Recorrer las prestaciones si tiene mas de una
                 // //Recorro agenda saco el estados
                 unPacientePresente.paciente = prestacion.paciente;
-                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+                this.pacientesPresentes = [...this.pacientesPresentes, unPacientePresente];
                 unPacientePresente = {};
             }
         });
 
         //Ordenar por fecha y hora
-        this.pacientesPresentes = this.pacientesPresentes.sort((a, b) => { return (a.fecha > b.fecha) ? 1 : ((b.fecha > a.fecha) ? -1 : 0); });
-        this.pacientesPresentesCompleto = [... this.pacientesPresentes];
+        this.pacientesPresentes = this.pacientesPresentes.sort((a, b) => {
+            return (a.fecha > b.fecha) ? 1 : ((b.fecha > a.fecha) ? -1 : 0);
+        });
+        this.pacientesPresentesCompleto = [...this.pacientesPresentes];
     }
 
     // Creo el conjunto de prestaciones del profesional..
@@ -242,13 +333,13 @@ export class PuntoInicioComponent implements OnInit {
                 if (this.agendas && this.agendas.length > 0) {
                     this.agendas.forEach(agenda => {
                         let agregar = true;
-                        this.conjuntoDePrestaciones = [... this.conjuntoDePrestaciones, ...agenda.tipoPrestaciones];
+                        this.conjuntoDePrestaciones = [...this.conjuntoDePrestaciones, ...agenda.tipoPrestaciones];
                         this.conjuntoDePrestaciones = this.conjuntoDePrestaciones.filter(function (elem, pos, arr) {
                             return arr.indexOf(elem) === pos;
                         });
 
                     });
-                    this.selectPrestacionesProfesional = [... this.conjuntoDePrestaciones];
+                    this.selectPrestacionesProfesional = [...this.conjuntoDePrestaciones];
                 }
             });
         }
@@ -313,7 +404,22 @@ export class PuntoInicioComponent implements OnInit {
         return $event.callback(this.selectPrestacionesProfesional);
     }
     loadEstados($event) {
-        return $event.callback([{ id: 'Presente', nombre: 'Presente' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }, { id: 'Suspendido', nombre: 'Suspendido' }]);
+        return $event.callback([{
+            id: 'Presente',
+            nombre: 'Presente'
+        }, {
+            id: 'En espera',
+            nombre: 'En espera'
+        }, {
+            id: 'ejecucion',
+            nombre: 'En ejecución'
+        }, {
+            id: 'validada',
+            nombre: 'Validada'
+        }, {
+            id: 'Suspendido',
+            nombre: 'Suspendido'
+        }]);
     }
 
 
@@ -329,7 +435,7 @@ export class PuntoInicioComponent implements OnInit {
 
     todosLosPacientes() { // Trae todos los pacientes
         this.filtrosPacientes = false;
-        this.pacientesPresentes = [... this.pacientesPresentesCompleto];
+        this.pacientesPresentes = [...this.pacientesPresentesCompleto];
     }
 
 
