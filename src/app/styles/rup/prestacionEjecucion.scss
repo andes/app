@@ -52,11 +52,10 @@ div.scroll-list {
 }
 
 .desvincular {
-    /*
     position: absolute;
     top: 5px;
     right: 20px;
-    */
+    z-index: 999;
 }
 
 .desvincularProblema {
@@ -67,38 +66,40 @@ div.scroll-list {
 }
 
 .form-control-invert {
-        background-color: #002738;
-        border-color: solid 1px #FFFFFF;
-        border-radius: 0px;
-        color: #FFFFFF;
-        height: 400px;
-        margin-top: 10px;
-        padding: 10px;
-        width: 100%;
-    }
+    background-color: #002738;
+    border-color: solid 1px #FFFFFF;
+    border-radius: 0px;
+    color: #FFFFFF;
+    height: 400px;
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+}
 
-    h5.box-title-principal {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-    }
+h5.box-title-principal {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+}
 
-    h5.box-title-secundario {
-        color: #00A8E0;
-        font-weight: 350;
-        padding-bottom: 5px;
-        border-bottom: solid white 1px;
-    }
-    /* Item lista */
+h5.box-title-secundario {
+    color: #00A8E0;
+    font-weight: 350;
+    padding-bottom: 5px;
+    border-bottom: solid white 1px;
+}
 
-    .list-group .list-group-item.problema {
-        border-left: solid 15px #92278E;
-    }
 
-    .plan {
-        border-left: solid 15px #6A99AD;
-    }
+/* Item lista */
 
-    .prestacion .card-header {
-        border-left: solid 15px #FFD800;
-    }
+.list-group .list-group-item.problema {
+    border-left: solid 15px #92278E;
+}
+
+.plan {
+    border-left: solid 15px #6A99AD;
+}
+
+.prestacion .card-header {
+    border-left: solid 15px #FFD800;
+}
