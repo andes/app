@@ -10,7 +10,6 @@ import { PrestacionPacienteService } from '../../../services/rup/prestacionPacie
 import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
 // Rutas
 
-
 @Component({
     selector: 'rup-resumen',
     templateUrl: 'resumen.html'
@@ -41,11 +40,16 @@ export class ResumenComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.servicioPrestacionPaciente.getById(id).subscribe(prestacion => {
+            this.servicioPrestacionPaciente.getById(id, {showError: false}).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.loadProblemas();
                 this.loadPrestacionesPendientes();
                 this.cargarIndicadores();
+            }, (err) => {
+                if (err) {
+                    this.plex.info('danger', err, 'Error');
+                    this.router.navigate(['/rup']);
+                }
             });
         });
     }
