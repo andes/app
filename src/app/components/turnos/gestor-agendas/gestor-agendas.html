@@ -116,7 +116,7 @@
 
 <!--Componentes-->
 <clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-<dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" (cancelaDarTurnos)="cancelaDarTurnos($event)"></dar-turnos>
+<dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar"></dar-turnos>
 <sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
 <planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>

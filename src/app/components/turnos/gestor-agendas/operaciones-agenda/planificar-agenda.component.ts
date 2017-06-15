@@ -34,6 +34,7 @@ export class PlanificarAgendaComponent implements OnInit {
     public alertas: String[] = [];
     public fecha: Date;
     public autorizado = false;
+    public today = new Date();
     showClonar = false;
     showAgenda = true;
 
@@ -42,6 +43,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+        this.today.setHours(0, 0, 0, 0);
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
@@ -67,11 +69,19 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
+        let listaProfesionales = [];
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(event.callback);
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.modelo.profesionales) {
+                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
         } else {
             event.callback(this.modelo.profesionales || []);
         }

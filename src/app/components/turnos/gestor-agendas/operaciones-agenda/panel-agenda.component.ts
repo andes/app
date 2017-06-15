@@ -48,8 +48,11 @@ export class PanelAgendaComponent implements OnInit {
     guardarAgenda(agenda: IAgenda) {
 
         if (this.alertas.length === 0) {
-
-            let profesional = this.modelo.profesionales;
+            // Quitar cuando esté solucionado inconveniente de plex-select
+            let profesional = this.modelo.profesionales.map((prof) => {
+                delete prof.$order;
+                return prof;
+            });
             let espacioFisico = this.modelo.espacioFisico;
 
             let patch = {
@@ -60,9 +63,7 @@ export class PanelAgendaComponent implements OnInit {
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
                 this.modelo = resultado;
-
                 this.showEditarAgenda = false;
-
                 this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
                 this.actualizarEstadoEmit.emit(true);
             });
@@ -77,11 +78,19 @@ export class PanelAgendaComponent implements OnInit {
 
 
     loadProfesionales(event) {
+        let listaProfesionales = [];
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(event.callback);
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.modelo.profesionales) {
+                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
         } else {
             event.callback(this.modelo.profesionales || []);
         }
@@ -95,7 +104,6 @@ export class PanelAgendaComponent implements OnInit {
      * Valida que no se solapen Profesionales y/o Espacios físicos
      */
     validarSolapamientos(tipo) {
-
         this.alertas = [];
 
         // Inicio y Fin de Agenda
@@ -104,23 +112,23 @@ export class PanelAgendaComponent implements OnInit {
         if (tipo === 'profesionales') {
 
             // Loop profesionales
-            this.modelo.profesionales.forEach((profesional, index) => {
+            if (this.modelo.profesionales) {
+                this.modelo.profesionales.forEach((profesional, index) => {
+                    this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+                        subscribe(agendas => {
 
-                this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
-                    subscribe(agendas => {
+                            // Hay problemas de solapamiento?
+                            let agendasConSolapamiento = agendas.filter(agenda => {
+                                return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
+                            });
 
-                        // Hay problemas de solapamiento?
-                        let agendasConSolapamiento = agendas.filter(agenda => {
-                            return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
+                            // Si encontramos una agenda que coincida con la búsqueda...
+                            if (agendasConSolapamiento.length > 0) {
+                                this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
+                            }
                         });
-
-                        // Si encontramos una agenda que coincida con la búsqueda...
-                        if (agendasConSolapamiento.length > 0) {
-                            this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
-                        }
-                    });
-            });
-
+                });
+            }
         } else if (tipo === 'espacioFisico') {
 
             // Loop Espacios Físicos
