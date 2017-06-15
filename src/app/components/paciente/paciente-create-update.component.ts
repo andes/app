@@ -65,6 +65,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   estadosCiviles: any[];
   tipoComunicacion: any[];
   relacionTutores: any[];
+  relacionesBorradas: any[];
 
   provincias: IProvincia[] = [];
   obrasSociales: IFinanciador[] = [];
@@ -172,6 +173,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
     this.financiadorService.get().subscribe(resultado => {
       this.obrasSociales = resultado;
     });
+
+    this.relacionesBorradas = [];
 
     // Se cargan los parentescos para las relaciones
     this.parentescoService.get().subscribe(resultado => {
@@ -434,16 +437,37 @@ export class PacienteCreateUpdateComponent implements OnInit {
       operacionPac.subscribe(result => {
 
         if (result) {
-          if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
-            pacienteGuardar.relaciones.forEach(rel => {
-
-              let relOp = this.relacionTutores.find((elem) => {
+          // Borramos relaciones
+          if (this.relacionesBorradas.length > 0) {
+            this.relacionesBorradas.forEach(rel => {
+              let relacionOpuesta = this.relacionTutores.find((elem) => {
                 if (elem.nombre === rel.relacion.opuesto) {
                   return elem;
                 }
               });
               let dto = {
-                relacion: relOp,
+                relacion: relacionOpuesta,
+                referencia: pacienteGuardar.id,
+              };
+              if (rel.referencia) {
+                this.pacienteService.patch(rel.referencia, {
+                  'op': 'deleteRelacion', 'dto': dto
+                }).subscribe(result2 => {
+                  console.log('RESULT PATCH--------', result2);
+                });
+              }
+            });
+          }
+          // agregamos las relaciones opuestas
+          if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
+            pacienteGuardar.relaciones.forEach(rel => {
+              let relacionOpuesta = this.relacionTutores.find((elem) => {
+                if (elem.nombre === rel.relacion.opuesto) {
+                  return elem;
+                }
+              });
+              let dto = {
+                relacion: relacionOpuesta,
                 referencia: pacienteGuardar.id,
                 nombre: pacienteGuardar.nombre,
                 apellido: pacienteGuardar.apellido,
@@ -572,7 +596,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
   addContacto() {
-    let nuevoContacto = Object.assign({}, this.contacto);
+    let nuevoContacto = Object.assign({}, {
+      tipo: 'celular',
+      valor: '',
+      ranking: 0,
+      activo: true,
+      ultimaActualizacion: new Date()
+    });
     this.pacienteModel.contacto.push(nuevoContacto);
   }
 
@@ -821,8 +851,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     this.autoFocus = this.autoFocus + 1;
   }
+
   removeRelacion(i) {
     if (i >= 0) {
+      this.relacionesBorradas.push(this.pacienteModel.relaciones[i]);
       this.pacienteModel.relaciones.splice(i, 1);
     }
   }

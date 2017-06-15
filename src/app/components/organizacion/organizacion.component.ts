@@ -1,6 +1,6 @@
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 const limit = 25;
@@ -10,6 +10,8 @@ const limit = 25;
     templateUrl: 'organizacion.html'
 })
 export class OrganizacionComponent implements OnInit {
+
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     showcreate: boolean = false;
     datos: IOrganizacion[] = [];
     searchForm: FormGroup;
@@ -42,7 +44,8 @@ export class OrganizacionComponent implements OnInit {
     loadDatos(concatenar: boolean = false) {
         let parametros = {
             'activo': this.value && this.value.activo, 'nombre':
-            this.value && this.value.nombre, 'skip': this.skip, 'limit': limit
+            this.value && this.value.nombre
+            , 'skip': this.skip, 'limit': limit
         };
         this.organizacionService.get(parametros)
             .subscribe(
@@ -94,6 +97,7 @@ export class OrganizacionComponent implements OnInit {
         this.seleccion = objOrganizacion;
     }
 
+// TODO: hay que resolver el tema de plex-scroll
     nextPage() {
         if (this.tengoDatos) {
             this.skip += limit;

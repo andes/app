@@ -1,258 +1,192 @@
-<form [formGroup]="createForm">
-    <plex-box type="success" title="Editar Organización">
-        <div class="col-sm-12">
-            <div class="row" formGroupName="codigo">
-                <div class="col-sm-4">
-                    <label> Cod. SISA: </label>
-                    <input type="text" class="form-control" formControlName="sisa" placeholder="Ingrese código SISA">
-                </div>
-                <div class="col-sm-4">
-                    <plex-text label="Cod. CUIE:" formControlName="cuie" placeholder="Ingrese código CUIE"></plex-text>
-                </div>
-                <div class="col-sm-4">
-                    <plex-text label="Cod. Remediar:" formControlName="remediar" placeholder="Ingrese código Remediar"></plex-text>
-                </div>
-            </div>
-            <div>&nbsp;</div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <label>Nombre:</label>
-                    <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
-                </div>
-                <div class="col-sm-4">
-                    <plex-select formControlName="tipoEstablecimiento" (getData)="loadTipos($event)" label="Tipo de Establecimiento:">
-                    </plex-select>
-                </div>
-                <div class="col-sm-4">
-                    <plex-int label="Complejidad" formControlName="nivelComplejidad" placeholder="Ingrese nivel de complejidad..."></plex-int>
-                </div>
-            </div>
-            <div>&nbsp;</div>
-            <plex-box type="warning" title="Dirección" formGroupName="direccion">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
+<form class="plex-layout" #form="ngForm" [formGroup]="createForm">
+    <section>
+        <div class="row">
+            <div class="col">
+                <plex-box type="success">
+                    <header>
+                        <div class="page-title">Editar Organizaciones</div>
+                    </header>
+                    <!-- DATOS BASICOS -->
+                    <div class="row" formGroupName="codigo">
+                        <div class="col-4">
+                            <label> Cod. SISA: </label>
+                            <input type="text" class="form-control" formControlName="sisa" placeholder="Ingrese código SISA">
+                        </div>
+                        <div class="col-4">
+                            <plex-text label="Cod. CUIE:" formControlName="cuie" placeholder="Ingrese código CUIE"></plex-text>
+                        </div>
+                        <div class="col-4">
+                            <plex-text label="Cod. Remediar:" formControlName="remediar" placeholder="Ingrese código Remediar"></plex-text>
+                        </div>
                     </div>
-                    <div class="col-sm-4">
-                        <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ingrese CP..."></plex-text>
-                    </div>
-                </div>
-                <div formGroupName="ubicacion">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
+                        <div class="col-4">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese nombre...">
+                        </div>
+                        <div class="col-4">
+                            <plex-select formControlName="tipoEstablecimiento" (getData)="loadTipos($event)" label="Tipo de Establecimiento:">
                             </plex-select>
                         </div>
-                        <div class="col-sm-4">
-                            <plex-select formControlName="provincia" (getData)="loadProvincias($event, createForm.controls.direccion.controls.ubicacion.controls.pais)"
-                                label="Provincia:">
-                            </plex-select>
-                        </div>
-                        <div class="col-sm-4">
-                            <plex-select formControlName="localidad" (getData)="loadLocalidades($event, createForm.controls.direccion.controls.ubicacion.controls.provincia)"
-                                label="Localidad:">
-                            </plex-select>
+                        <div class="col-4">
+                            <plex-int label="Complejidad" formControlName="nivelComplejidad" placeholder="Ingrese nivel de complejidad..."></plex-int>
                         </div>
                     </div>
-                </div>
-            </plex-box>
-            <!--<plex-box type="warning" title="Teléfono" formArrayName="telecom">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="list-group" *ngFor="let co of createForm.controls.telecom.controls; let i=index">
-                            <div class="row list-group-item" [formGroupName]="i">
-                                <div align="right" (click)="removeTelecom(i)">
-                                    <i class="glyphicon glyphicon-remove-circle"></i>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label> Tipo: </label>
-                                        <select class="form-control" id="tipo" formControlName="tipo">
-                                            <option *ngFor="let name of tiposcom" [value]="name">{{name}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <plex-text label="Valor:" formControlName="valor" placeholder="Ingresar valor..."></plex-text>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <plex-text label="Orden:" formControlName="ranking" placeholder="Ingresar ranking"></plex-text>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <br>
-                                        <plex-bool formControlName="activo" label="activo"></plex-bool>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
+                    <!-- DATOS BASICOS -->
+                    <div class="row">&nbsp;</div>
+                    <!-- DATOS DE DOMICILIO -->
+                    <fieldset>
+                        <legend>Datos de domicilio</legend>
+                        <div formGroupName="direccion">
                             <div class="row">
-                                <div class="margin-20">
-                                    <button class="btn btn-default" (click)="addTelecom({})"><i class="glyphicon glyphicon-plus"></i> Agregar Telecom</button>
+                                <div class="col-8">
+                                    <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
+                                </div>
+                                <div class="col-4">
+                                    <plex-text label="Código Postal:" formControlName="codigoPostal" placeholder="Ingrese CP..."></plex-text>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </plex-box>-->
-
-            <div class="row">&nbsp;</div>
-            <!--<div class="row">
-                <div class="col-sm-12">
-                    <plex-box type="warning" title="Contacto" formArrayName="contacto">
-                        <div *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default">
-                            <div class="panel-heading">
-                                <div align="right" *ngIf="createForm.controls.contacto.controls.length > 1" (click)="removeContacto(i)">
-                                    <i class="glyphicon glyphicon-remove-circle"></i>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row" [formGroupName]="i">
-                                    <div class="col-md-4">
-                                        <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo:">
+                            <div formGroupName="ubicacion">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
                                         </plex-select>
                                     </div>
-                                    <div class="col-md-4">
-                                        <plex-text label="Dato:" formControlName="valor">
-                                        </plex-text>
+                                    <div class="col-4">
+                                        <plex-select formControlName="provincia" (getData)="loadProvincias($event, createForm.controls.direccion.controls.ubicacion.controls.pais)"
+                                            label="Provincia:">
+                                        </plex-select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <plex-int label="Orden:" formControlName="ranking">
-                                        </plex-int>
+                                    <div class="col-4">
+                                        <plex-select formControlName="localidad" (getData)="loadLocalidades($event, createForm.controls.direccion.controls.ubicacion.controls.provincia)"
+                                            label="Localidad:">
+                                        </plex-select>
                                     </div>
-                                    <div class="col-md-2"> <br>
-                                        <plex-bool formControlName="activo" label="Activo"></plex-bool>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <!-- DATOS DE CONTACTO -->
+                    <fieldset>
+                        <legend>Datos de contacto</legend>
+                        <div class="row">
+                            <div class="col-12" formArrayName="contacto">
+
+                                <table *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="table table-striped">
+                                    <tr [formGroupName]="i">
+                                        <td>
+                                            <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo">
+                                            </plex-select>
+                                        </td>
+                                        <td>
+                                            <plex-text label="Dato" formControlName="valor">
+                                            </plex-text>
+                                        </td>
+                                        <td>
+                                            <plex-int label="Orden" formControlName="ranking">
+                                            </plex-int>
+                                        </td>
+                                        <td>
+                                            <label>Activo</label><br>
+                                            <plex-bool type="slide" formControlName="activo"></plex-bool>
+                                        </td>
+                                        <td *ngIf="createForm.controls.contacto.controls.length > 1">
+                                            <label>Borrar</label><br>
+                                            <plex-button icon="delete" (click)="removeContacto(i)">
+                                            </plex-button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <plex-button type="primary" label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Datos de edificios</legend>
+                        <div class="row" formArrayName="edificio">
+                            <div class="col-12" *ngFor="let co of createForm.controls.edificio.controls; let i=index">
+                                <div class="row list-group-item">
+                                    <div class="col-12" [formGroupName]="i">
+                                        <div align="right" (click)="removeEdificio(i)">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <plex-text label="Descripción:" formControlName="descripcion"></plex-text>
+                                            </div>
+                                        </div>
+                                        <div formGroupName="direccion">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
+                                                </div>
+                                                <div class="col-4">
+                                                    <plex-text label="Codigo Postal:" formControlName="codigoPostal" placeholder="Ingrese CP..."></plex-text>
+                                                </div>
+                                            </div>
+                                            <div formGroupName="ubicacion">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
+                                                        </plex-select>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <plex-select formControlName="provincia" (getData)="loadProvincias($event, createForm.controls.direccion.controls.ubicacion.controls.pais)"
+                                                            label="Provincia:">
+                                                        </plex-select>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <plex-select formControlName="localidad" (getData)="loadLocalidades($event, createForm.controls.direccion.controls.ubicacion.controls.provincia)"
+                                                            label="Localidad:">
+                                                        </plex-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div formGroupName="telefono">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <label> Tipo: </label>
+                                                    <select class="form-control" id="tipo" formControlName="tipo">
+                                                <option *ngFor="let name of tiposcom" [value]="name">{{name}}</option>
+                                            </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <plex-text label="Valor:" formControlName="valor" placeholder="Ingresar valor..."></plex-text>
+                                                </div>
+                                                <div class="col-3">
+                                                    <plex-text label="Orden:" formControlName="ranking" placeholder="Ingresar ranking"></plex-text>
+                                                </div>
+                                                <div class="col-3">
+                                                    <br>
+                                                    <plex-bool formControlName="activo" label="activo"></plex-bool>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <plex-button label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
+                            <div class="form-group col-6">
+                                <button class="btn btn-default" (click)="addEdificio({},'nuevo')"><i class="glyphicon glyphicon-plus"></i> Agregar Edificio</button>
                             </div>
                         </div>
-                    </plex-box>
-                </div>
-            </div>-->
-            <div class="row">
-                <div class="col-sm-12">
-                    <plex-box type="warning" title="Contacto" formArrayName="contacto">
-                        <table *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default table table-striped">
-                            <tr [formGroupName]="i">
-                                <td>
-                                    <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo">
-                                    </plex-select>
-                                </td>
-                                <td>
-                                    <plex-text label="Dato" formControlName="valor">
-                                    </plex-text>
-                                </td>
-                                <td>
-                                    <plex-int label="Orden" formControlName="ranking">
-                                    </plex-int>
-                                </td>
-                                <td>
-                                    <label>Activo</label><br>
-                                    <plex-bool type="slide" formControlName="activo"></plex-bool>
-                                </td>
-                                <td *ngIf="createForm.controls.contacto.controls.length > 1">
-                                    <label>Borrar</label><br>
-                                    <plex-button icon="delete" (click)="removeContacto(i)">
-                                    </plex-button>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <plex-button type="primary" label="Agregar Contacto" icon="add circle outline" (click)="addContacto()"></plex-button>
-                            </div>
-                        </div>
-                    </plex-box>
-                </div>
-            </div>
-            <plex-box type="warning" title="Edificios" formArrayName="edificio">
-                <div class="list-group" *ngFor="let co of createForm.controls.edificio.controls; let i=index">
-                    <div class="row list-group-item" [formGroupName]="i">
-                        <div align="right" (click)="removeEdificio(i)">
-                            <i class="glyphicon glyphicon-remove-circle"></i>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <plex-text label="Descripción:" formControlName="descripcion"></plex-text>
-                            </div>
-                        </div>
-                        <div class="row">&nbsp;</div>
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <plex-box type="default" title="Dirección" formGroupName="direccion">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Belgrano 1547 - Piso 2 - Departamento 3...."></plex-text>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <plex-text label="Codigo Postal:" formControlName="codigoPostal" placeholder="Ingrese CP..."></plex-text>
-                                        </div>
-                                    </div>
-                                    <div formGroupName="ubicacion">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <plex-select formControlName="pais" (getData)="loadPaises($event)" label="País:">
-                                                </plex-select>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <plex-select formControlName="provincia" (getData)="loadProvincias($event, createForm.controls.direccion.controls.ubicacion.controls.pais)"
-                                                    label="Provincia:">
-                                                </plex-select>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <plex-select formControlName="localidad" (getData)="loadLocalidades($event, createForm.controls.direccion.controls.ubicacion.controls.provincia)"
-                                                    label="Localidad:">
-                                                </plex-select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </plex-box>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <plex-box type="default" title="Teléfono" formGroupName="telefono">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <label> Tipo: </label>
-                                            <select class="form-control" id="tipo" formControlName="tipo">
-                                                <option *ngFor="let name of tiposcom" [value]="name">{{name}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <plex-text label="Valor:" formControlName="valor" placeholder="Ingresar valor..."></plex-text>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <plex-text label="Orden:" formControlName="ranking" placeholder="Ingresar ranking"></plex-text>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <br>
-                                            <plex-bool formControlName="activo" label="activo"></plex-bool>
-                                        </div>
-                                    </div>
-                                </plex-box>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <button class="btn btn-default" (click)="addEdificio({},'nuevo')"><i class="glyphicon glyphicon-plus"></i> Agregar Edificio</button>
-                    </div>
-                </div>
-            </plex-box>
-            <div class="row">
-                <div class="col-sm-4">
-                    <plex-button title="Guardar" label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)">
-                    </plex-button>
-                    <plex-button title="Cancelar" label="Cancelar" type="primary" (click)="onCancel()">
-                    </plex-button>
-                </div>
+                    </fieldset>
+                </plex-box>
             </div>
         </div>
-    </plex-box>
+    </section>
+    <footer>
+        <plex-button label="Guardar" type="primary" (click)="onSave(createForm.value, createForm.valid)">
+        </plex-button>
+        <plex-button label="Cancelar" type="primary" (click)="onCancel()">
+        </plex-button>
+    </footer>
 </form>

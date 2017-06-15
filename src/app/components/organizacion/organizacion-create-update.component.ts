@@ -5,7 +5,7 @@ import { ILocalidad } from './../../interfaces/ILocalidad';
 import { Observable } from 'rxjs/Rx';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
@@ -20,6 +20,8 @@ import { LocalidadService } from './../../services/localidad.service';
     templateUrl: 'organizacion-create-update.html'
 })
 export class OrganizacionCreateUpdateComponent implements OnInit {
+
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Input('seleccion') seleccion: IOrganizacion;
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
