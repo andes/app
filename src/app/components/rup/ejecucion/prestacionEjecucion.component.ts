@@ -1195,7 +1195,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     volver(ruta) {
-        this.router.navigate(['rup/resumen', this.prestacion.id]);
+        //valida si quedaron datos sin guardar..
+        if (this.prestacionesEjecucion.length > 0 || this.tiposPrestaciones.length > 0) {
+            this.plex.confirm('Se van a descartar los cambios sin guardar', 'Atención').then((confirmar) => {
+                if (confirmar === true) {
+                    this.router.navigate(['rup/resumen', this.prestacion.id]);
+                }
+            });
+        } else {
+            this.router.navigate(['rup/resumen', this.prestacion.id]);
+        }
     }
-
 }
