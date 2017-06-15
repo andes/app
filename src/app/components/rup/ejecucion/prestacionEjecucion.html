@@ -268,13 +268,6 @@
                                                 <div *ngIf="problemaP == problema.id || problemaP.id == problema.id">
 
                                                     <plex-accordion>
-                                                        <div class="desvincular-container float-right">
-                                                            <plex-button class="desvincular" title="Desvincular prestación" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)">
-                                                            </plex-button>
-                                                            <!--
-                                                                (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion.nombre, b)"
-                                                            -->
-                                                        </div>
                                                         <div class="prestacion">
                                                             <plex-panel tituloPrincipal="{{prestacionesProblema.solicitud.tipoPrestacion.nombre}}">
                                                                 <rup #rup [valoresPrestacionEjecucion]="data" [prestacion]="prestacion" [prestacionesEjecucion]="prestacionesEjecucion" [tipoPrestacion]="prestacionesProblema.solicitud.tipoPrestacion"
@@ -285,6 +278,10 @@
                                                                         -->
                                                                 </rup>
                                                             </plex-panel>
+                                                        </div>
+                                                        <div class="desvincular-container float-right">
+                                                            <plex-button class="desvincular" title="Desvincular Prestación" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)">
+                                                            </plex-button>
                                                         </div>
                                                     </plex-accordion>
 
