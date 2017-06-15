@@ -8,7 +8,8 @@
           </header>
           <plex-box>
             <ul class="list-group">
-              <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente">
+              <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente" [dragOverClass]="'drag-over-border'"
+              (onDragStart)="arrastrandoPaciente(false)" (onDragEnd)="arrastrandoPaciente(true)">
                 <div class="card invertHover" style="width: 20rem;">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
                     <i (click)="vincularPaciente(paciente)" title="Clic para vincular" class="mdi mdi-link-variant mdi-hover-show vincular"></i></h4>
@@ -30,12 +31,12 @@
           <header>
             <div class="page-title">Pacientes vinculados</div>
           </header>
-          <plex-box droppable (onDrop)="vincularPacienteDrop($event)">
+          <plex-box>
             <ul class="list-group">
-              <li *ngFor="let paciente of pacientesVinculados">
+              <li droppable *ngFor="let paciente of pacientesVinculados" (onDrop)="vincularPacienteDrop($event)" [dragOverClass]="'drag-target-border'"  css="droppable">
                 <div class="card invertHover" style="width: 20rem;">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden "></i>
-                    <i (click)="desvincularPaciente(paciente)" title="Clic para desvincular" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
+                    <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
                   </h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
@@ -47,6 +48,7 @@
                 </div>
               </li>
             </ul>
+            <div class="msg-arrastrePaciente" [hidden]="draggingPatient"> Arrastre aquí para vincular al paciente</div>
           </plex-box>
         </plex-box>
       </div>
