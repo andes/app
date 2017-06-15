@@ -1,12 +1,12 @@
 <style>
     /* Estilo expandidos*/
-    
+
     .small {
         color: grey;
         font-weight: 400;
         font-size: 0.85rem;
     }
-    
+
     .form-control-invert {
         background-color: #002738;
         border-color: solid 1px #FFFFFF;
@@ -18,23 +18,23 @@
         width: 100%;
         overflow: scroll;
     }
-    
+
     .box-title-principal {
         color: #00A8E0;
         font-weight: 350;
         padding-bottom: 5px;
     }
-    
+
     .box-title-secundario {
         color: #00A8E0;
         font-size: 1rem;
         font-weight: 400;
     }
-    
+
     .border {
         border: solid 1px white;
     }
-    
+
     hr {
         display: block;
         height: 1px;
@@ -44,7 +44,7 @@
         padding: 0;
     }
     /*Etiquetas*/
-    
+
     .badge {
         text-transform: uppercase;
         font-size: 0.75rem;
@@ -52,21 +52,21 @@
         margin: 0px 10px 10px 0px;
         display: inline-block;
     }
-    
+
     .badge-danger {
         border: 1.5px solid #dd4b39;
         border-radius: 0px;
         background: transparent;
         color: #dd4b39;
     }
-    
+
     .badge-success {
         border: 1.5px solid #8CC63F;
         border-radius: 0px;
         background: transparent;
         color: #8CC63F;
     }
-    
+
     .badge-warning {
         border: 1.5px solid #ff8d22;
         border-radius: 0px;
@@ -74,11 +74,11 @@
         color: #ff8d22;
     }
     /*Estilos Invertidos*/
-    
+
     .invert {
         color: #FFFFFF;
     }
-    
+
     .plex-box-invert {
         color: white;
         background-color: #002738;
@@ -92,7 +92,7 @@
         <div class="row">
             <div class="col-12">
                 <h5 class="box-title-principal">Nuevo Problema | <span class="invert">{{problema.term}}</span></h5>
-                <small class="invert"> Profesional: {{auth.profesional.id}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>
+                <small class="invert"> Profesional: {{auth.usuario | profesional}} | Matricula: {{auth.profesional.matriculas[auth.profesional.matriculas.length - 1].descripcion}}</small>
                 <hr>
             </div>
         </div>
