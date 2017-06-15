@@ -14,7 +14,7 @@
                                 'weekend'             : day.weekend && !(day.estado == 'seleccionado'),
                                 'outline-primary'     : (day.estado == 'seleccionado') && (day.original == false),
                                 'outline-success'     : day.original == true,
-                                'hover'               : day.fecha.getTime() >= hoy.getTime()
+                                'hover'               : day.fecha.getTime() >= today.getTime()
                             }">
                                 <div>{{ day.fecha | date:"d" }}</div>
                                 <div>{{ day.fecha | date:"EEE" | uppercase }}</div>

@@ -873,22 +873,6 @@ export class DarTurnosComponent implements OnInit {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
     }
-<<<<<<< HEAD
-  }
-
-  verificarTelefono(paciente: IPaciente) {
-    // se busca entre los contactos si tiene un celular
-    this.telefono = '';
-    this.cambioTelefono = false;
-    if (paciente && paciente.contacto) {
-      if (paciente.contacto.length > 0) {
-        paciente.contacto.forEach((contacto) => {
-          if (contacto.tipo === 'celular') {
-            this.telefono = contacto.valor;
-          }
-        });
-      }
-=======
 
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
@@ -902,7 +886,6 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.buscarPaciente();
         }
->>>>>>> turnos
     }
 
     afterSearch(paciente: IPaciente): void {

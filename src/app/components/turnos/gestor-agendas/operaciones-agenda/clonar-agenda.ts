@@ -14,23 +14,6 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 })
 
 export class ClonarAgendaComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;
-    private _agenda: any;
-    public autorizado = false;
-    public hoy: Date = new Date();
-    private fecha: Date;
-    private calendario: any = [];
-    private estado: Estado = 'noSeleccionado';
-    private seleccionados: any[] = [];
-    private agendas: IAgenda[] = []; // Agendas del mes seleccionado
-    private agendasFiltradas: any[] = []; // Las agendas que hay en el día,
-    private inicioMesMoment: moment.Moment;
-    private inicioMesDate;
-    private finMesDate;
-    private original = true;
-    private inicioAgenda: Date;
-    // private finde: boolean;
-
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -39,6 +22,21 @@ export class ClonarAgendaComponent implements OnInit {
         return this._agenda;
     }
     @Output() volverAlGestor = new EventEmitter<boolean>();
+    @HostBinding('class.plex-layout') layout = true;
+    public autorizado = false;
+    public agendasFiltradas: any[] = []; // Las agendas que hay en el día,
+    public today = new Date();
+    public fecha: Date;
+    public calendario: any = [];
+    private _agenda: any;
+    private estado: Estado = 'noSeleccionado';
+    private seleccionados: any[] = [];
+    private agendas: IAgenda[] = []; // Agendas del mes seleccionado
+    private inicioMesMoment: moment.Moment;
+    private inicioMesDate;
+    private finMesDate;
+    private original = true;
+    private inicioAgenda: Date;
 
     constructor(private serviceAgenda: AgendaService, public plex: Plex, public auth: Auth, private router: Router, ) { }
     ngOnInit() {
@@ -49,7 +47,7 @@ export class ClonarAgendaComponent implements OnInit {
         } else {
             this.inicioAgenda = new Date(this.agenda.horaInicio);
             this.inicioAgenda.setHours(0, 0, 0, 0);
-            this.hoy.setHours(0, 0, 0, 0);
+            this.today.setHours(0, 0, 0, 0);
             this.fecha = this.inicioAgenda;
             this.actualizar();
         }
@@ -127,7 +125,7 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public seleccionar(dia: any) {
-        if (dia.fecha.getTime() >= this.hoy.getTime()) {
+        if (dia.fecha.getTime() >= this.today.getTime()) {
             let original = this.agenda;
             if (dia.original) {
                 this.original = true;
@@ -165,7 +163,7 @@ export class ClonarAgendaComponent implements OnInit {
                     let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                     this.seleccionados.splice(i, 1);
                     filtro.forEach((fil) => {
-                        let aux = this.agendasFiltradas.map(elem => { return elem.id });
+                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         console.log(aux);
                         let indice = aux.indexOf(fil.id);
                         if (indice >= 0) {
