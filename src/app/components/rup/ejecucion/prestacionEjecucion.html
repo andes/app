@@ -147,12 +147,15 @@
                 </div>
                 <!--Div para los problemas paciente-->
                 <div droppable [dropScope]="'problemas-paciente'" [dragOverClass]="'drag-target-border'" (onDrop)="onHallazgoDrop($event)"
-                    class="droppable" [hidden]="!isDraggingProblem && !isDraggingProblemList">
-                    Arrastre aquí para vincularlos a esta consulta
+                    class="droppable drop-area" [hidden]="!isDraggingProblem && !isDraggingProblemList">
+                    <p>
+                        Arrastre aquí para vincularlos a esta consulta
+                    </p>
+
                 </div>
 
                 <div droppable [dropScope]="'planes-paciente-problema'" [dragOverClass]="'drag-target-border'" (onDrop)="onTodosProblemasDrop($event) "
-                    class="droppable" [hidden]="!isDraggingPrestacion">
+                    class="droppable " [hidden]="!isDraggingPrestacion">
                     Arrastre aquí para vincularlo a todos los problemas
                 </div>
 

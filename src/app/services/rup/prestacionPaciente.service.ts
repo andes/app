@@ -14,27 +14,57 @@ export class PrestacionPacienteService {
 
     /**
      * Metodo get. Trae lista de objetos prestacion.
-     * @param {any} params Opciones de busqueda
+     *
+     * @param {*} params Opciones de busqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<IPrestacionPaciente[]>}
+     *
+     * @memberof PrestacionPacienteService
      */
-    get(params: any): Observable<IPrestacionPaciente[]> {
-        return this.server.get(this.prestacionesUrl, { params: params, showError: true });
+    get(params: any, options: any = {}): Observable<IPrestacionPaciente[]> {
+
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt;
+        opt = {
+            params: params,
+            options
+        };
+
+        return this.server.get(this.prestacionesUrl, opt);
     }
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
-    getById(id: String): Observable<IPrestacionPaciente> {
+    getById(id: String, options: any = {}): Observable<IPrestacionPaciente> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
         let url = this.prestacionesUrl + '/' + id;
-        return this.server.get(url, null);
+        return this.server.get(url, options);
     }
 
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
-    getByKey(params: any): Observable<IPrestacionPaciente[]> {
+    getByKey(params: any, options: any = {}): Observable<IPrestacionPaciente[]> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt;
+        opt = {
+            params: params,
+            options
+        };
+
         let url = this.prestacionesUrl + '/forKey/';
-        return this.server.get(url, { params: params, showError: true });
+        return this.server.get(url, opt);
     }
 
     /**
