@@ -13,7 +13,7 @@
               </plex-select>
             </div>
             <div class="col-4">
-              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="nombre + ' ' + apellido"
+              <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                 (change)="filtrar()">
               </plex-select>
             </div>
@@ -25,7 +25,7 @@
           </div>
         </header>
         <!--Calendario-->
-        <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estado" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+        <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
       </plex-box>
     </div>
     <!--Lateral-->
@@ -217,9 +217,9 @@
               <legend class="pt-3 text-center">Últimos turnos del paciente</legend>
               <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item hover" [appHover]="'active'" title="Buscar turnos similares">
-                  <div class="list-group-item-text">
+                  <div class="list-group-item-text" (click)="seleccionarUltimoTurno(turno)">
                     <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} | <span>{{turno.estado}}</span></div>
-                    <div>{{turno.tipoPrestacion}}</div>
+                    <div>{{turno.tipoPrestacion.nombre}}</div>
                     <div *ngFor="let profesional of turno.profesionales">
                       {{profesional | profesional}}
                     </div>
