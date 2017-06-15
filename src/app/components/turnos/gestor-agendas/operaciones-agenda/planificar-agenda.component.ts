@@ -524,7 +524,15 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-        if ($event.formValid) {
+        let validaBloques = true;
+        for (let i = 0; i < this.modelo.bloques.length; i++) {
+            let bloque = this.modelo.bloques[i];
+            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno)){
+                validaBloques = false;
+                break;
+            }
+        }
+        if ($event.formValid && validaBloques) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);

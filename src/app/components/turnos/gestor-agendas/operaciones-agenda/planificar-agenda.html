@@ -80,12 +80,12 @@
               </div>
               <div class="row" *ngIf="!modelo.intercalar">
                 <div class="col-6">
-                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" name="horaInicio" (change)="cambioHoraBloques( 'inicio' )"
+                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaInicio" [name]="'horaInicio' + bloqueActivo" [required]="true" (change)="cambioHoraBloques( 'inicio' )"
                     label="Hora Inicio">
                   </plex-datetime>
                 </div>
                 <div class="col-6">
-                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" (change)="cambioHoraBloques( 'fin' )" label="Hora Fin">
+                  <plex-datetime type="time" [(ngModel)]="elementoActivo.horaFin" name="horaFin" [required]="true" (change)="cambioHoraBloques( 'fin' )" label="Hora Fin">
                   </plex-datetime>
                 </div>
               </div>
