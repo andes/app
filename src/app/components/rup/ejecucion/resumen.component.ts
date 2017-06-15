@@ -8,6 +8,7 @@ import { IPaciente } from '../../../interfaces/IPaciente';
 import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
 // Rutas
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Plex } from "@andes/plex";
 
 @Component({
     selector: 'rup-resumen',
@@ -31,7 +32,7 @@ export class ResumenComponent implements OnInit {
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService,
         private router: Router, private route: ActivatedRoute,
-        public auth: Auth) { }
+        public auth: Auth, private plex: Plex) { }
 
     ngOnInit() {
         console.log(this.auth.profesional);
@@ -41,11 +42,16 @@ export class ResumenComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.servicioPrestacionPaciente.getById(id).subscribe(prestacion => {
+            this.servicioPrestacionPaciente.getById(id, {showError: false}).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 this.loadProblemas();
                 this.loadPrestacionesPendientes();
                 this.cargarIndicadores();
+            }, (err) => {
+                if (err) {
+                    this.plex.info('danger', err, 'Error');
+                    this.router.navigate(['/rup']);
+                }
             });
         });
     }
