@@ -644,6 +644,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     desvincularPlan(prestacionFutura, idProblema) {
         let prestacionNombre = prestacionFutura.solicitud.tipoPrestacion.nombre;
         let idPrestacionFutura = prestacionFutura;
+
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
                 let idDesvincular = null;
@@ -655,7 +656,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (idDesvincular) {
                     const patch = { op: 'desvincularPlan', idProblema: idDesvincular };
                     // hace el patch sobre la prestacionFutura sacando el id del problema.
-                    this.servicioPrestacion.patch(idPrestacionFutura, patch).subscribe((result) => {
+                    this.servicioPrestacion.patch(prestacionFutura, patch).subscribe((result) => {
                         // buscamos la prestacion principal actualizada con los datos populados
                         this.route.params.subscribe(params => {
                             let id = params['id'];
