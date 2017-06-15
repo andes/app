@@ -51,11 +51,15 @@ div.scroll-list {
     margin-top: 1px;
 }
 
+.desvincular-container {
+    position: relative;
+}
+
 .desvincular {
     position: absolute;
-    top: 5px;
-    right: 20px;
-    z-index: 999;
+    bottom: 6px;
+    right: 6px;
+    z-index: 1;
 }
 
 .desvincularProblema {

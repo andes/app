@@ -640,7 +640,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
     }
-// Desvincula los planes - borra el id del problema en la prestacion futura
+    // Desvincula los planes - borra el id del problema en la prestacion futura
     desvincularPlan(prestacionFutura, idProblema) {
         let prestacionNombre = prestacionFutura.solicitud.tipoPrestacion.nombre;
         let idPrestacionFutura = prestacionFutura;
@@ -662,8 +662,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
                             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                                 this.listaPlanesProblemas = [];
-                                this.listaPlanesProblemas.push(prestacion);
-                                 this.plex.toast('success', 'Prestación desvinculada al problema', 'Plan desvinculado', 2000);
+                                this.listaPlanesProblemas = [... this.listaPlanesProblemas, prestacion];
+                                this.plex.toast('success', 'Prestación desvinculada del problema', 'Plan desvinculado', 2000);
                             });
                         });
                     });

@@ -246,8 +246,8 @@
                                                                     <b>Motivo de la consulta </b> {{prestacionFutura.solicitud.motivoSolicitud}}
                                                                 </plex-panel>
                                                             </div>
-                                                            <div class="float-right mdi-16px">
-                                                                <plex-button class="desvincular" title="Desvincular" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, problema.id)">
+                                                            <div class="desvincular-container float-right mdi-16px">
+                                                                <plex-button class="desvincular" title="Desvincular Plan" icon="mdi mdi-link-variant-off" (click)="desvincularPlan(prestacionFutura, problema.id)">
                                                                 </plex-button>
                                                             </div>
                                                         </plex-accordion>
@@ -268,7 +268,7 @@
                                                 <div *ngIf="problemaP == problema.id || problemaP.id == problema.id">
 
                                                     <plex-accordion>
-                                                        <div class="float-right">
+                                                        <div class="desvincular-container float-right">
                                                             <plex-button class="desvincular" title="Desvincular prestación" icon="mdi mdi-link-variant-off mdi-16px" (click)="desvincularPrestacion(prestacionesProblema.solicitud.tipoPrestacion, problema, b, i)">
                                                             </plex-button>
                                                             <!--
