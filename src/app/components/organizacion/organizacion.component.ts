@@ -12,18 +12,18 @@ const limit = 25;
 export class OrganizacionComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
-    showcreate: boolean = false;
+    showcreate = false;
     datos: IOrganizacion[] = [];
     searchForm: FormGroup;
     seleccion: IOrganizacion;
     value: any;
-    skip: number = 0;
-    nombre: string = '';
-    activo: Boolean = null;
-    loader: boolean = false;
-    finScroll: boolean = false;
-    tengoDatos: boolean = true;
-    checked: boolean = true;
+    skip = 0;
+    nombre = '';
+    activo: boolean = null;
+    loader = false;
+    finScroll = false;
+    tengoDatos = true;
+    checked = true;
 
     constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
 

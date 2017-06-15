@@ -19,7 +19,6 @@ import { PacienteService } from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { IProvincia } from './../../interfaces/IProvincia';
-// import { fechaPipe } from './../../utils/datePipe';
 import { FechaPipe } from './../../pipes/fecha.pipe';
 import { Plex } from '@andes/plex';
 import { MapsComponent } from './../../utils/mapsComponent';
@@ -547,7 +546,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                   this.disableGuardar = true;
                 }
               } else {
-                debugger
                 if (!this.verificarDNISexo(this.pacientesSimilares)) {
                   this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
                   this.posibleDuplicado = true;

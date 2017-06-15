@@ -1,4 +1,4 @@
-export interface ITipoEstablecimiento{
+export interface ITipoEstablecimiento {
     nombre: String;
     descripcion: String;
     clasificacion: String;
