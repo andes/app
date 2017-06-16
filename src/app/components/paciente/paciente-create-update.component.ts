@@ -99,7 +99,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   esEscaneado = false;
   nuevaNota = '';
   autoFocus = 0;
-
+  hoy = new Date();
 
   contacto: IContacto = {
     tipo: 'celular',
