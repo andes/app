@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado">
-                            <td [title]="paciente.estado">
+                            <td>
                                 <i *ngIf="paciente.estado == 'validado'" class="mdi mdi-brightness-1 text-success"></i>
                                 <i *ngIf="paciente.estado != 'validado'" class="mdi mdi-brightness-1 text-warning"></i>
                             </td>

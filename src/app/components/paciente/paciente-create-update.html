@@ -34,7 +34,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-datetime label="Fecha de Nacimiento" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
                                         [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
                                     </plex-datetime>
                                 </div>
@@ -417,13 +417,14 @@
         </div>
     </section>
     <footer>
-        <plex-button *ngIf="!disableGuardar" title="Guardar" icon="content-save" label="Guardar" type="success" validateForm="true"
-            (click)="preSave($event)">
-        </plex-button>
-        <plex-button *ngIf="enableIgnorarGuardar" title="Ignorar y Guardar" icon="content-save" label="Ignorar y Guardar" validateForm="true"
-            type="success" (click)="save($event)">
-        </plex-button>
-        <plex-button title="Cancelar" icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
-        </plex-button>
+        <div class="text-right">
+            <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+            </plex-button>
+            <plex-button *ngIf="!disableGuardar" icon="content-save" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">
+            </plex-button>
+            <plex-button *ngIf="enableIgnorarGuardar" icon="content-save" label="Ignorar y Guardar" validateForm="true" type="success"
+                (click)="save($event)">
+            </plex-button>
+        </div>
     </footer>
 </form>
