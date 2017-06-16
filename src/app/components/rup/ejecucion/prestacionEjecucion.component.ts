@@ -139,30 +139,61 @@ export class PrestacionEjecucionComponent implements OnInit {
         private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
     }
 
+    /**
+     * Inicializamos prestacion a traves del id que viene como parametro de la url
+     * Cargamos tipos de prestaciones posibles
+     * Inicializamos los datos de la prestacion en caso que se hayan registardo
+     * Cargamos los problemas del paciente
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     ngOnInit() {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                this.prestacion = prestacion;
 
                 // buscamos las prestaciones posibles a realizar
-                this.serviceTipoPrestacion.getById(prestacion.solicitud.tipoPrestacion.id).subscribe(tiposPrestaciones => {
-                    this.tiposPrestacionesPosibles = tiposPrestaciones.ejecucion;
-                });
+                this.serviceTipoPrestacion.getById(prestacion.solicitud.tipoPrestacion.id).subscribe(
+                    tiposPrestaciones => {
+                        if (!tiposPrestaciones) {
+                            // TODO: definir que hacer en caso que no hayan
+                            // prestaciones asignadas para registrar en la consulta
+                        }
+
+                        this.tiposPrestacionesPosibles = tiposPrestaciones.ejecucion;
+                    },
+                    err => {
+
+                    }
+                );
 
                 this.listaPlanesProblemas.push(prestacion);
-                this.prestacion = prestacion;
+
                 this.cargarDatosPrestacion();
                 this.cargarProblemasPaciente();
+            }, (err) => {
+                if (err) {
+                    this.plex.info('danger', err, 'Error');
+                    this.router.navigate(['/rup']);
+                }
             });
 
         });
     }
 
+    /**
+     * Asignamos valores precargados de la prestacion
+     * Asignamos problemas del paciente
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
         this.listaProblemasPaciente = this.prestacion.ejecucion.listaProblemas;
+
         /*
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
@@ -194,11 +225,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         // recorremos todas las que se han ejecutado y si no esta
         // dentro de las que cargamos anteriormente las agregamos
         this.prestacion.ejecucion.prestaciones.forEach(_prestacion => {
-            console.log(_prestacion);
+
             if (_prestacion.estado[_prestacion.estado.length - 1].tipo !== 'desvinculada') {
 
                 let find = this.prestacionesEjecucion.find(pe => {
-                    console.log('_prestacion.estado[_prestacion.estado.length - 1].tipo', _prestacion.estado[_prestacion.estado.length - 1]);
                     return (_prestacion.solicitud.tipoPrestacion.id === pe.solicitud.tipoPrestacion.id);
                 });
 
@@ -212,13 +242,16 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (_prestacion.ejecucion.evoluciones.length) {
                         this.data[key] = _prestacion.ejecucion.evoluciones[_prestacion.ejecucion.evoluciones.length - 1].valores[key];
                     }
-
-                    // let evolucion; evolucion = (_prestacion.ejecucion.evoluciones.length) ? _prestacion.ejecucion.evoluciones[find.ejecucion.evoluciones.length - 1].valores[key] : null;
                 }
             }
         });
     }
 
+    /**
+     * Llamada a la API para cargar los problemas del paciente
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     cargarProblemasPaciente() {
         this.servicioProblemaPac.get({ idPaciente: this.prestacion.paciente.id }).subscribe(lista => {
             if (lista) {
@@ -230,11 +263,16 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    /*
+    /**
      * Mostrar opciones al hacer click sobre el menu de
      * problemas para poder evolucionar / transformar / etc
      * Opciones posibles en variable -items-
-    */
+     *
+     * @param {any} problema
+     * @param {number} indexProblema
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     mostrarOpciones(problema, indexProblema: number) {
         if (indexProblema >= 0) {
             this.agregarAMenuHambuguesa(problema.id, indexProblema);
@@ -316,11 +354,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.buscarSnomed = true;
     }
 
-    /* Funcion para el template
+    /**
+     * Funcion para el template
      * Devuelve la cantidad de problemas según el estado
      * Se está utilizando en los filtros de problemas por estado
-    */
-    getCantidProblemasByEstado(estado) {
+     *
+     * @param {string} estado Tipo de estado a filtrar la lista de problemas
+     * @returns {number} Cantidad de problemas segun estado
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
+    getCantidProblemasByEstado(estado: string) {
         return this.listaProblemasPaciente.filter(problema => {
             return (problema.evoluciones[problema.evoluciones.length - 1].estado === estado);
         }).length;
@@ -475,6 +519,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+    /**
+     * Desvincular un problema de la consulta actual
+     *
+     * @param {any} idProblema
+     * @param {any} index
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     desvincularProblema(idProblema, index) {
 
         this.plex.confirm('', '¿Desvincular Problema?').then((confirmar) => {
@@ -485,12 +537,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                 };
                 if (typeof this.prestacion.ejecucion.listaProblemas[index].id !== 'undefined') {
                     this.servicioPrestacion.patch(this.prestacion, patch).subscribe((result) => {
-                        console.log('Problema desvinculado', result);
                         this.prestacion.ejecucion.listaProblemas.splice(index, 1);
                         this.prestacion.ejecucion.listaProblemas = [...this.prestacion.ejecucion.listaProblemas];
                     });
                 } else {
-                    console.log(idProblema);
                     this.prestacion.ejecucion.listaProblemas.splice(index, 1);
                     this.prestacion.ejecucion.listaProblemas = [...this.prestacion.ejecucion.listaProblemas];
                 }
@@ -570,7 +620,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             prestacion = prestacionActual;
             // Recorre la prestacion actual y se fija si el id del problema ya existe
             prestacion.solicitud.listaProblemas.forEach(unProblema => {
-                if (unProblema.id == idProblema) {
+                if (unProblema.id === idProblema) {
                     planExistente = true;
                 }
             });
@@ -623,11 +673,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 motivoSolicitud: textoMotivoSolicitud,
                 tipoPrestacion: prestacionFutura,
                 fecha: new Date(),
-                listaProblemas: []
+                listaProblemas: [],
+                // datos del profesional logueado
+                profesional: {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             estado: {
                 timestamp: Date(),
-                tipo: 'pendiente'
+                tipo: 'pendiente',
+                // datos del profesional logueado
+                profesional: {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             ejecucion: {
                 evoluciones: []
@@ -640,11 +700,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
     }
-
+    // Desvincula los planes - borra el id del problema en la prestacion futura
     desvincularPlan(prestacionFutura, idProblema) {
         let prestacionNombre = prestacionFutura.solicitud.tipoPrestacion.nombre;
         let idPrestacionFutura = prestacionFutura;
-        console.log(idPrestacionFutura);
+
         this.plex.confirm('Prestación: ' + prestacionNombre, '¿Desvincular Plan?').then((confirmar) => {
             if (confirmar === true) {
                 let idDesvincular = null;
@@ -655,26 +715,22 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
                 if (idDesvincular) {
                     const patch = { op: 'desvincularPlan', idProblema: idDesvincular };
-                    this.servicioPrestacion.patch(idPrestacionFutura, patch).subscribe((result) => {
-                        console.log('Plan desvinculado', result);
-                        // ]this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
+                    // hace el patch sobre la prestacionFutura sacando el id del problema.
+                    this.servicioPrestacion.patch(prestacionFutura, patch).subscribe((result) => {
+                        // buscamos la prestacion principal actualizada con los datos populados
+                        this.route.params.subscribe(params => {
+                            let id = params['id'];
+                            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+                            this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                                this.listaPlanesProblemas = [];
+                                this.listaPlanesProblemas = [... this.listaPlanesProblemas, prestacion];
+                                this.plex.toast('success', 'Prestación desvinculada del problema', 'Plan desvinculado', 2000);
+                            });
+                        });
                     });
                 }
-                // for (let x = 0; x < this.listaPlanesProblemas.length; x++) {
-                //     for (let y = 0; y < this.listaPlanesProblemas[x].prestacionesSolicitadas.length; y++) {
-                //         console.log('this.listaPlanesProblemas', this.listaPlanesProblemas[x].prestacionesSolicitadas[y]);
-                //         if (this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id === prestacionFutura._id) {
-                //             const patch = { op: 'desvincularPlan', idPrestacionFutura: this.listaPlanesProblemas[x].prestacionesSolicitadas[y]._id };
-                //             this.servicioPrestacion.patch(this.listaPlanesProblemas[x], patch).subscribe((result) => {
-                //                 console.log('Plan desvinculado', result);
-                //                 this.listaPlanesProblemas[x].prestacionesSolicitadas.splice(y, 1);
-                //             });
-                //         }
-                //    }
-                //}
             }
         });
-
     }
 
     // agregamos la prestacion al plan
@@ -688,11 +744,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: this.nuevoTipoPrestacion,
                     fecha: new Date(),
-                    listaProblemas: []
+                    listaProblemas: [],
+                    // datos del profesional logueado
+                    profesional: {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 estado: {
                     timestamp: Date(),
-                    tipo: 'pendiente'
+                    tipo: 'pendiente',
+                    // datos del profesional logueado
+                    profesional: {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 ejecucion: {
                     evoluciones: []
@@ -834,11 +900,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: tipoPrestacion,
                     fecha: new Date(),
-                    listaProblemas: []
+                    listaProblemas: [],
+                    profesional:
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 estado: {
                     timestamp: new Date(),
-                    tipo: 'ejecucion'
+                    tipo: 'ejecucion',
+                    profesional:
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 ejecucion: {
                     fecha: new Date(),
@@ -942,11 +1018,21 @@ export class PrestacionEjecucionComponent implements OnInit {
             solicitud: {
                 tipoPrestacion: tipoPrestacion,
                 fecha: new Date(),
-                listaProblemas: []
+                listaProblemas: [],
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             estado: {
                 timestamp: new Date(),
-                tipo: 'ejecucion'
+                tipo: 'ejecucion',
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             ejecucion: {
                 fecha: new Date(),
@@ -1034,8 +1120,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                     let prestacion; prestacion = _prestacion;
                     let tp; tp = _prestacion.solicitud.tipoPrestacion;
 
-                    /*
-                    // validamos que la evolucion tenga valors distintos y distintos problemas
+
+                    // validamos que la evolucion tenga valores distintos y distintos problemas
                     // y asi determinamos que han habido cambios en la prestacion ejecutada
                     let push = true;
 
@@ -1043,30 +1129,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (prestacion.ejecucion.evoluciones.length) {
                         // agregamos el valor solo si no ha cambiado de la evolucion anterior
                         let ultimaEvolucion = prestacion.ejecucion.evoluciones[prestacion.ejecucion.evoluciones.length - 1].valores;
-                        console.log(JSON.stringify(ultimaEvolucion));
 
                         let valorActual = {};
                         valorActual[tp.key] = this.data[tp.key];
 
-                        console.log(JSON.stringify(valorActual));
-
-                        if (JSON.stringify(ultimaEvolucion) === JSON.stringify(valorActual)) {
-                            alert("iguales");
-                            // Cargo el arreglo de prestaciones evoluciones
-                            //prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
+                        // comparamos, si da igual no agregamos
+                        if (ultimaEvolucion && JSON.stringify(ultimaEvolucion) === JSON.stringify(valorActual)) {
                             push = false;
                         }
                     }
-                    console.log("PUSH: ", push);
-                    if (push) {
-                        // si no agregamos la primera evolucion
-                        prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
-                    }else {
-                        prestacion.ejecucion.evoluciones.splice(prestacion.ejecucion.evoluciones.length - 1, 1);
-                    }
-                    */
-                    prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
 
+                    if (push) {
+                        // agregamos
+                        prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
+                    }
 
                     /*
                     // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
@@ -1179,6 +1255,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+    /**
+     * Agregamos un problema al array de ejecucion de la prestacion
+     *
+     * @param {any} problemaid Id del problemaa agregar
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     updateListaProblemas(problemaid) {
 
         let cambios = {
@@ -1199,7 +1282,18 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     volver(ruta) {
+        /*
+        //valida si quedaron datos sin guardar..
+        if (this.prestacionesEjecucion.length > 0 || this.tiposPrestaciones.length > 0) {
+            this.plex.confirm('Se van a descartar los cambios sin guardar', 'Atención').then((confirmar) => {
+                if (confirmar === true) {
+                    this.router.navigate(['rup/resumen', this.prestacion.id]);
+                }
+            });
+        } else {
+            this.router.navigate(['rup/resumen', this.prestacion.id]);
+        }
+        */
         this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
-
 }

@@ -28,6 +28,17 @@ div.scroll-list {
     color: #999999;
 }
 
+.drop-area {
+    height: calc(100vh - 310px);
+}
+
+.drop-area p {
+    font-size: 40px;
+    margin: 0;
+    padding: calc(calc(100vh - 480px) / 2) 60px;
+    text-align: center;
+}
+
 .msg-problema {
     border: 1px solid #ff9900;
     color: #ff9900;
@@ -51,11 +62,15 @@ div.scroll-list {
     margin-top: 1px;
 }
 
+.desvincular-container {
+    position: relative;
+}
+
 .desvincular {
     position: absolute;
-    top: 5px;
-    right: 20px;
-    z-index: 999;
+    bottom: 6px;
+    right: 6px;
+    z-index: 1;
 }
 
 .desvincularProblema {

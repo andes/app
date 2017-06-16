@@ -65,11 +65,10 @@
         <!-- Buscador de Pacientes MPI -->
         <div class="row" *ngIf="mostrarPacientesSearch">
             <div class="col" *ngIf="!buscarMPI">
-                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>"
-                    placeholder="Escriba los datos del paciente" (selected)="onPacienteSelected($event)"></plex-text>
+                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escriba los datos del paciente" (selected)="onPacienteSelected($event)"></plex-text>
             </div>
             <div class="col" *ngIf="buscarMPI">
-                <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm" (blanqueaInput)="handleBlanqueo($event)" ></pacientesSearch>
+                <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm" (blanqueaInput)="handleBlanqueo($event)"></pacientesSearch>
             </div>
         </div>
 
@@ -80,7 +79,7 @@
                     <i class="mdi mdi-emoticon-sad"></i> No hay Pacientes que coincidan con los filtros de búsqueda
                 </div>
                 <!-- La Lista de Pacientes -->
-                <table *ngIf="pacientesPresentes.length" class="table table-bordered">
+                <table *ngIf="pacientesPresentes.length" class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th><strong>Fecha</strong></th>
@@ -91,7 +90,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente)" [ngClass]="{danger: paciente.estado == 'Suspendido'}">
+                        <tr *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente)" [ngClass]="{'table-active': paciente.estado === 'Suspendido'}">
                             <td>
                                 {{paciente.fecha | date: 'dd/MM/yyyy H:m'}}
                             </td>
