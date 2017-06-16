@@ -1,11 +1,10 @@
 import * as moment from 'moment';
-
-type Estado = 'vacio' | 'disponible' | 'ocupado';
+import { EstadoCalendarioDia } from './enums';
 
 export class CalendarioDia {
     public seleccionado: boolean;
-    public estado: Estado;
-    public finde: boolean;
+    public estado: EstadoCalendarioDia;
+    public weekend: boolean;
     public cantidadAgendas: number;
     public hoy: Date;
     public turnosDisponibles: number;

@@ -32,10 +32,12 @@ export class PacienteSearchComponent implements OnInit {
   public autoFocus = 0;
   private permisoAgendas = false;
   @Input() modoCompleto = true; // muestra/oculta panel derecho
+  @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
 
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+  @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
 
 
 
@@ -46,6 +48,10 @@ export class PacienteSearchComponent implements OnInit {
 
   public ngOnInit() {
     this.autoFocus = this.autoFocus + 1;
+     // Asigno el valor del string de búsqueda que se envío desde algún otro componente
+    if (this.textSearch) {
+      this.textoLibre = this.textSearch;
+    }
     this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
   }
 
@@ -145,7 +151,8 @@ export class PacienteSearchComponent implements OnInit {
   private controlarScanner(): boolean {
     if (this.textoLibre) {
       let index = this.textoLibre.indexOf('"');
-      if (index >= 0 && index < 20) {
+      if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
+        /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
         this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
         this.textoLibre = null;
         return false;
@@ -172,6 +179,14 @@ export class PacienteSearchComponent implements OnInit {
     if (!this.controlarScanner()) {
       return;
     }
+
+
+    // Devuelve verdadero diciendo que borró el input de la búsqueda
+    // Lo usamos para la interacción con el rehuso del componente (ej: RUP)
+    if (this.textoLibre === null) {
+      this.blanqueaInput.next(true);
+    }
+    
 
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {

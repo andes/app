@@ -5,7 +5,7 @@ export interface ITurno {
     id: String;
     horaInicio: Date;
     estado: String;
-    asistencia: Boolean;
+    asistencia: String;
     paciente: {
         id: String,
         nombre: String,

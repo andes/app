@@ -16,7 +16,7 @@ export let EstadosAgenda: IEnum = {
     },
     'suspendida': {
         nombre: 'Suspendida',
-        class: 'error'
+        class: 'danger'
     },
     'pausada': {
         nombre: 'Pausada',
@@ -24,9 +24,18 @@ export let EstadosAgenda: IEnum = {
     }
 };
 
-export function getEstados() {
-    let arrEstados = Object.keys(EstadosAgenda);
-    // arrEstados = arrEstados.slice(arrEstados.length / 2);
-    let salida = arrEstados.map(elem => { return { 'id': elem, 'nombre': EstadosAgenda[elem].nombre }; } );
-    return salida;
-}
+
+export let EstadosAsistencia: IEnum = {
+    'asistio': {
+        nombre: 'Asistio',
+        class: 'success'
+    },
+    'noAsistio': {
+        nombre: 'No Asistio',
+        class: 'danger'
+    },
+    'sinDatos': {
+        nombre: 'Sin Datos',
+        class: 'warning'
+    }
+};

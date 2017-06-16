@@ -1,12 +1,23 @@
-<form>
+<form *ngIf="!hideSearchInput">
     <div>
-        <plex-text [(ngModel)]="searchSnomed" name="searchSnomed" (change)="buscar($event)" placeholder="Buscar Problema"></plex-text>
-        <!--<plex-text [formControl]="searchSnomed" name="searchSnomed" (keyup)='keyUp.next($event)' placeholder="Buscar Problema"></plex-text>-->
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar Problema"></plex-text>
     </div>
 </form>
 
+<div class="btn-group" data-toggle="buttons" *ngIf="searchTerm">
+    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == ''}">
+        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda()"> Trastornos
+    </label>
+    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'antecedentes'}">
+        <input type="radio" name="options" id="activo"  (click)="setTipoBusqueda('antecedentes')"> Antecedentes
+    </label>
+    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'antecedentesFamiliares'}">
+        <input type="radio" name="options" id="inactivo" (click)="setTipoBusqueda('antecedentesFamiliares')"> A. familiares
+    </label>
+</div>
+
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-<div *ngIf="searchProblema && listaProblemasMaestro && listaProblemasMaestro.length === 0">
+<div *ngIf="searchTerm && listaProblemasMaestro && listaProblemasMaestro.length === 0 && !loading">
     No se han encontrado problemas
 </div>
 
@@ -14,33 +25,31 @@
 
 <ul class="results list-group">
     <ng-container *ngFor="let item of listaProblemasMaestro">
-        <li class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista">
+        <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
-            <a draggable href="javascript: void(0)" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)" *ngIf="_draggable">
+            <a  href="javascript: void(0)"  *ngIf="_draggable">
                 {{item.term}}
+                <!--
                 <br />
                 <div>
                     <small class="text-left">
                         {{item.fsn}}
                     </small>
                 </div>
+                -->
             </a>
 
             <a href="javascript: void(0)" (click)="seleccionarConcepto(item)" *ngIf="!_draggable">
                 {{item.term}}
+                <!--
                 <br />
                 <div>
                     <small class="text-left">
                         {{item.fsn}}
                     </small>
                 </div>
+                -->
             </a>
-
-
-            <!--
-                (onDragEnd)="arrastrandoProblema(false)"
-                (onDragStart)="arrastrandoProblema(true)"
-            -->
         </li>
     </ng-container>
 </ul>

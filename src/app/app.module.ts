@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -8,9 +7,10 @@ de la siguiente manera:
 
 1) Módulos principales de Angular
 2) Módulos globales
-3) Servicios
-4) Componentes
-5) Otros
+3) Pipes
+4) Servicios
+5) Componentes
+6) Otros
 */
 
 // Angular
@@ -29,10 +29,16 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
+import { HoverClassDirective } from './directives/hover-class.directive';
 // Pipes
-import { patientFullNamePipe, patientRealAgePipe } from './utils/patientPipe';
-import { fromNowPipe } from './utils/date';
-import { fechaPipe } from './utils/datePipe';
+import { EdadPipe } from './pipes/edad.pipe';
+import { ProfesionalPipe } from './pipes/profesional.pipe';
+import { FromNowPipe } from './pipes/fromNow.pipe';
+import { FechaPipe } from './pipes/fecha.pipe';
+import { PacientePipe } from './pipes/paciente.pipe';
+import { OrganizacionPipe } from './pipes/organizacion.pipe';
+import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
+
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -57,10 +63,12 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 // ... RUP
-import { TipoProblemaService } from './services/rup/tipoProblema.service';
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
 import { ObservarDatosService } from './services/rup/observarDatos.service';
+
+// ... term
+import { Cie10Service } from './services/term/cie10.service';
 
 // SNOMED
 import { SnomedService } from './services/snomed.service';
@@ -95,25 +103,24 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
-import { ClonarAgendaComponent } from './components/turnos/clonar-agenda';
-import { AgendaComponent } from './components/turnos/agenda.component';
+import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
+import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
 import { DarTurnosComponent } from './components/turnos/dar-turnos/dar-turnos.component';
 import { CalendarioComponent } from './components/turnos/dar-turnos/calendario.component';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { ListaEsperaCreateUpdateComponent } from './components/turnos/lista-espera/listaEspera-create-update.component';
 import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspera.component';
-import { LiberarTurnoComponent } from './components/turnos/liberar-turno.component';
-import { SuspenderTurnoComponent } from './components/turnos/suspender-turno.component';
+import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
+import { SuspenderTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/suspender-turno.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
-import { AgregarNotaTurnoComponent } from './components/turnos/agregar-nota-turno.component';
+import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/nota-agenda.component';
-import { PanelAgendaComponent } from './components/turnos/gestor-agendas/panel-agenda.component';
-import { VistaAgendaComponent } from './components/turnos/gestor-agendas/vista-agenda.component';
-import { ListaTurnosComponent } from './components/turnos/gestor-agendas/lista-turnos.component';
-import { PopoverComponent } from './components/popover-audit/popover.component';
-import { PopoverContentComponent } from './components/popover-audit/popover-content.component';
+import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
+import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
+import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/panel-agenda.component';
+import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
+import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
 
 
@@ -166,7 +173,12 @@ import { EcografiaComponent } from './components/rup/moleculas/ecografia.compone
 import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
-
+import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
+import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
+import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
+import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
+import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
@@ -282,7 +294,13 @@ export const RUP_COMPONENTS = [
   InterConsultaComponent,
   LaboratorioComponent,
   RadiografiaComponent,
-  SnomedBuscarComponent
+  SnomedBuscarComponent,
+  TomografiaComponent,
+  MamografiaComponent,
+  EndoscopiaComponent,
+  TomaHpvComponent,
+  TomaPapComponent,
+  SangreOcultaMateriaFecalComponent
 ];
 
 // Locales
@@ -291,8 +309,6 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-
-
 
 // Main module
 @NgModule({
@@ -319,18 +335,19 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, patientFullNamePipe, patientRealAgePipe, fromNowPipe, fechaPipe,
-    AgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
+    PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
     DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-    TurnosComponent, VistaAgendaComponent, ClonarAgendaComponent, ListaTurnosComponent,
-    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, PopoverComponent, PopoverContentComponent, PopoverAuditComponent,
-
+    TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-    PanelAgendaComponent, AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    AgregarSobreturnoComponent, PanelAgendaComponent,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
+    HoverClassDirective
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
@@ -354,7 +371,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ParentescoService,
     appRoutingProviders,
     ConfigPrestacionService,
-    AgendaComponent,
+    PlanificarAgendaComponent,
     // EspacioFisicoComponent,
     AgendaService,
     TurnoService,
@@ -364,7 +381,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     SmsService,
     PrestacionPacienteService,
     ProblemaPacienteService,
-    TipoProblemaService,
     TipoPrestacionService,
 
     ObservarDatosService,
@@ -376,7 +392,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     AuditoriaPrestacionPacienteService,
 
-    SnomedService
+    SnomedService,
+    Cie10Service
   ]
 })
 

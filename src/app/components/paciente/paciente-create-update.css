@@ -2,3 +2,10 @@
     border: 1px solid;
     float: right;
 }
+
+.label-success {
+    color: green
+}
+.label-warning {
+    color: orange
+}

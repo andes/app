@@ -30,7 +30,7 @@ import {
 @Component({
   selector: 'auditoria2',
   templateUrl: 'auditoria2.html',
-   styleUrls: ['auditoria.css']
+   styleUrls: ['auditoria2.css']
 })
 
 
@@ -38,6 +38,8 @@ export class Auditoria2Component implements OnInit {
 
   seleccionada = false;
   verDuplicados = false;
+  draggingPatient = true;
+
   posiblesDuplicados: any[];
   pacientesAudit: any[];
   pacientesSimilares: any[];
@@ -125,9 +127,12 @@ export class Auditoria2Component implements OnInit {
 
   }
 
+  arrastrandoPaciente(dragging) {
+    this.draggingPatient = dragging;
+  }
 
   vincularPaciente(pac: any) {
-      this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a:' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + '¿seguro desea continuar?').then((resultado) => {
+      this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + ' ¿seguro desea continuar?').then((resultado) => {
       let rta = resultado;
       if (rta) {
         this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(pac), 1);
@@ -137,7 +142,7 @@ export class Auditoria2Component implements OnInit {
   }
 
   vincularPacienteDrop(evt: any) {
-    this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a:' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + '¿seguro desea continuar?').then((resultado) => {
+    this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + ' ¿seguro desea continuar?').then((resultado) => {
       let rta = resultado;
       if (rta) {
         this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(evt.dragData), 1);

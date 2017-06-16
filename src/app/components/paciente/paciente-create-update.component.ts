@@ -1,36 +1,41 @@
 import { ParentescoService } from './../../services/parentesco.service';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Server } from '@andes/shared';
+import { IUbicacion } from './../../interfaces/IUbicacion';
+import { PacienteSearch } from './../../services/pacienteSearch.interface';
+import { IContacto } from './../../interfaces/IContacto';
+import { FinanciadorService } from './../../services/financiador.service';
+import { IDireccion } from './../../interfaces/IDireccion';
+import { IBarrio } from './../../interfaces/IBarrio';
+import { ILocalidad } from './../../interfaces/ILocalidad';
+import { IPais } from './../../interfaces/IPais';
+import { IFinanciador } from './../../interfaces/IFinanciador';
+import { Observable } from 'rxjs/Rx';
+import { BarrioService } from './../../services/barrio.service';
+import { LocalidadService } from './../../services/localidad.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { PaisService } from './../../services/pais.service';
+import { PacienteService } from './../../services/paciente.service';
+import * as enumerados from './../../utils/enumerados';
+import { IPaciente } from './../../interfaces/IPaciente';
+import { IProvincia } from './../../interfaces/IProvincia';
+import { FechaPipe } from './../../pipes/fecha.pipe';
+import { Plex } from '@andes/plex';
+import { MapsComponent } from './../../utils/mapsComponent';
+import * as moment from 'moment';
+import { PacientePipe } from './../../pipes/paciente.pipe';
+import { EdadPipe } from './../../pipes/edad.pipe';
+
 import {
-  IUbicacion
-} from './../../interfaces/IUbicacion';
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators
+} from '@angular/forms';
 import {
-  PacienteSearch
-} from './../../services/pacienteSearch.interface';
-import {
-  IContacto
-} from './../../interfaces/IContacto';
-import {
-  FinanciadorService
-} from './../../services/financiador.service';
-import {
-  IDireccion
-} from './../../interfaces/IDireccion';
-import {
-  IBarrio
-} from './../../interfaces/IBarrio';
-import {
-  ILocalidad
-} from './../../interfaces/ILocalidad';
-import {
-  IPais
-} from './../../interfaces/IPais';
-import {
-  IFinanciador
-} from './../../interfaces/IFinanciador';
-import {
-  Observable
-} from 'rxjs/Rx';
+  DomSanitizer,
+  SafeHtml
+} from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -39,52 +44,6 @@ import {
   EventEmitter,
   HostBinding
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  Validators
-} from '@angular/forms';
-import * as moment from 'moment';
-import {
-  BarrioService
-} from './../../services/barrio.service';
-import {
-  LocalidadService
-} from './../../services/localidad.service';
-import {
-  ProvinciaService
-} from './../../services/provincia.service';
-import {
-  PaisService
-} from './../../services/pais.service';
-import {
-  PacienteService
-} from './../../services/paciente.service';
-import * as enumerados from './../../utils/enumerados';
-import {
-  IPaciente
-} from './../../interfaces/IPaciente';
-import {
-  IProvincia
-} from './../../interfaces/IProvincia';
-import {
-  DomSanitizer,
-  SafeHtml
-} from '@angular/platform-browser';
-import {
-  Plex
-} from '@andes/plex';
-import {
-  MapsComponent
-} from './../../utils/mapsComponent';
-import {
-  patientFullNamePipe,
-  patientRealAgePipe
-} from './../../utils/patientPipe';
-import {
-  fechaPipe
-} from './../../utils/datePipe';
 
 
 @Component({
@@ -105,6 +64,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
   estadosCiviles: any[];
   tipoComunicacion: any[];
   relacionTutores: any[];
+  relacionesBorradas: any[];
 
   provincias: IProvincia[] = [];
   obrasSociales: IFinanciador[] = [];
@@ -213,6 +173,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
       this.obrasSociales = resultado;
     });
 
+    this.relacionesBorradas = [];
+
     // Se cargan los parentescos para las relaciones
     this.parentescoService.get().subscribe(resultado => {
       this.relacionTutores = resultado;
@@ -258,7 +220,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteService.getById(this.seleccion.id)
           .subscribe(resultado => {
             if (resultado) {
-              debugger
               if (!resultado.scan) {
                 resultado.scan = this.seleccion.scan;
               }
@@ -443,10 +404,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
         elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
         return elem;
       });
-      pacienteGuardar.financiador.map((elem: any) => {
-        delete elem.entidad.$order;
-        return elem;
-      });
+      if (pacienteGuardar.financiador) {
+        pacienteGuardar.financiador.map((elem: any) => {
+          delete elem.entidad.$order;
+          return elem;
+        });
+      }
 
       // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
       pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
@@ -473,27 +436,47 @@ export class PacienteCreateUpdateComponent implements OnInit {
       operacionPac.subscribe(result => {
 
         if (result) {
-          if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
-            pacienteGuardar.relaciones.forEach(rel => {
-
-              let relOp = this.relacionTutores.find((elem) => {
+          // Borramos relaciones
+          if (this.relacionesBorradas.length > 0) {
+            this.relacionesBorradas.forEach(rel => {
+              let relacionOpuesta = this.relacionTutores.find((elem) => {
                 if (elem.nombre === rel.relacion.opuesto) {
                   return elem;
                 }
               });
               let dto = {
-                relacion: relOp,
+                relacion: relacionOpuesta,
+                referencia: pacienteGuardar.id,
+              };
+              if (rel.referencia) {
+                this.pacienteService.patch(rel.referencia, {
+                  'op': 'deleteRelacion', 'dto': dto
+                }).subscribe(result2 => {
+                  console.log('RESULT PATCH--------', result2);
+                });
+              }
+            });
+          }
+          // agregamos las relaciones opuestas
+          if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
+            pacienteGuardar.relaciones.forEach(rel => {
+              let relacionOpuesta = this.relacionTutores.find((elem) => {
+                if (elem.nombre === rel.relacion.opuesto) {
+                  return elem;
+                }
+              });
+              let dto = {
+                relacion: relacionOpuesta,
                 referencia: pacienteGuardar.id,
                 nombre: pacienteGuardar.nombre,
                 apellido: pacienteGuardar.apellido,
                 documento: pacienteGuardar.documento
               };
-              debugger
               if (rel.referencia) {
                 this.pacienteService.patch(rel.referencia, {
                   'op': 'updateRelacion', 'dto': dto
-                }).subscribe(result => {
-                  console.log("RESULT PATCH--------", result);
+                }).subscribe(result2 => {
+                  console.log('RESULT PATCH--------', result2);
                 });
               }
             });
@@ -504,7 +487,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
           this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
         }
       });
-      //}
     } else {
       this.plex.alert('Debe completar los datos obligatorios');
     }
@@ -527,7 +509,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     return new Promise((resolve, reject) => {
       if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento
         && this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
-        /*if (!this.pacienteModel.id) {*/
         let dto: any = {
           type: 'suggest',
           claveBlocking: 'documento',
@@ -538,17 +519,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
           sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
           fechaNacimiento: this.pacienteModel.fechaNacimiento
         };
-        debugger;
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
 
-          // 
           // agregamos la condición de abajo para filtrar las sugerencias
           // cuando el pacienfe fue escaneado o ya estaba validado.
           if (this.escaneado || this.pacienteModel.estado === 'validado') {
             this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
           }
-          debugger
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
               resolve(false);
@@ -568,7 +546,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                   this.disableGuardar = true;
                 }
               } else {
-                debugger
                 if (!this.verificarDNISexo(this.pacientesSimilares)) {
                   this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
                   this.posibleDuplicado = true;
@@ -617,7 +594,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
   }
   addContacto() {
-    let nuevoContacto = Object.assign({}, this.contacto);
+    let nuevoContacto = Object.assign({}, {
+      tipo: 'celular',
+      valor: '',
+      ranking: 0,
+      activo: true,
+      ultimaActualizacion: new Date()
+    });
     this.pacienteModel.contacto.push(nuevoContacto);
   }
 
@@ -765,7 +748,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                       if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
                         this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       }
-                      //this.seleccionarPacienteRelacionado(pacienteEscaneado, true);
                     }
                   }
 
@@ -867,11 +849,20 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     this.autoFocus = this.autoFocus + 1;
   }
+
   removeRelacion(i) {
     if (i >= 0) {
+      this.relacionesBorradas.push(this.pacienteModel.relaciones[i]);
       this.pacienteModel.relaciones.splice(i, 1);
     }
   }
+
+  removeNota(i) {
+    if (i >= 0) {
+      this.pacienteModel.notas.splice(i, 1);
+    }
+  }
+
   addNota() {
     let nuevaNota = {
       'fecha': new Date(),

@@ -1,104 +1,17 @@
-<!-- Barra de navegación -->
-<nav class="friso" style="width:183%">
-  <div class="row no-gutters">
-    <!-- Datos pacientes-->
-    <div class="col-9">
-      <div class="data-paciente" *ngIf="paciente">
-        <div class="row">
-          <div class="col-6">
-            <small>
-                <h5><strong>{{paciente.apellido}}, </strong> {{paciente.nombre}}</h5>               
-                <h6 class="subtitulo-paciente" *ngIf="paciente.edadReal">
-                    {{paciente.edadReal.valor}} {{paciente.edadReal.unidad}} | D.N.I {{paciente.documento | number}}
-                </h6>
-            </small>
-          </div>
-          <ul class="list-inline pull-right">
-
-            <div class="list-inline-item contenedor-subdata">
-              <h6 class="subdata-paciente consulta">Estado</h6>
-              <h6 class="subdata-descripcion">{{paciente.estado}}</h6>
-            </div>
-
-            <div class="list-inline-item contenedor-subdata">
-              <h6 class="subdata-paciente consulta">Validador</h6>
-              <h6 class="subdata-descripcion">{{paciente.entidadesValidadoras}}</h6>
-            </div>
-
-            <div class="list-inline-item contenedor-subdata" *ngFor="let identificador of paciente.identificadores">
-              <h6 class="subdata-paciente consulta">Identificador</h6>
-              <h6 class="subdata-descripcion">
-                {{identificador.entidad}}
-              </h6>
-            </div>
-            <!--Si posee teléfono tomo el primero-->
-            <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto?.length>0">
-              <h6 class="subdata-paciente consulta">Teléfonos</h6>
-              <h6 class="subdata-descripcion" *ngFor="let tel of paciente.contacto | slice:0:1;">
-                {{tel.valor}}
-              </h6>
-            </div>
-            <!--Si no posee telefono muestro un nro. genérico-->
-            <div class="list-inline-item contenedor-subdata" *ngIf="paciente.contacto?.length<1">
-              <h6 class="subdata-paciente consulta">Contacto</h6>
-              <h6 class="subdata-descripcion">...</h6>
-            </div>
-
-            <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador?.length>0">
-              <h6 class="subdata-paciente consulta">Obra social</h6>
-              <h6 class="subdata-descripcion" *ngFor="let financiador of paciente.financiador">
-                {{financiador.nombre}}
-              </h6>
-            </div>
-            <div class="list-inline-item contenedor-subdata" *ngIf="paciente.financiador?.length<1">
-              <h6 class="subdata-paciente consulta">Obra social</h6>
-              <h6 class="subdata-descripcion">...</h6>
-            </div>
-          </ul>
-        </div>
-      </div>
-      <!-- Subfriso Prestación-->
-      <div class="sub-friso">
-        <div class="row">
-          <div class="col-6" *ngIf="prestacion && prestacion.solicitud">
-            <h6 class="consulta"><strong>Tipo de Prestación: </strong><span> {{ prestacion.solicitud.tipoPrestacion.nombre }}</span></h6>
-          </div>
-        </div>
-      </div>
-      <!-- /.Subfriso -->
+<div class="clearfix" *ngIf="paciente">
+    <div class="float-left">
+        <img src="data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAUAAD/4QNnaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjUtYzAyMSA3OS4xNTU3NzIsIDIwMTQvMDEvMTMtMTk6NDQ6MDAgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9IkUyMDQzMUIyMjgzRDlBNERCODI5QjY3RUVERUI4NTIwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkIxRkRDQzg2OEIwODExRTY5MTM0REY2OTNGNTEwQTYzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkIxRkRDQzg1OEIwODExRTY5MTM0REY2OTNGNTEwQTYzIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE0IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ1ZjI3YTkyLTk5YzktODg0NC1hY2RhLTNmZjk0M2JkY2Y1ZCIgc3RSZWY6ZG9jdW1lbnRJRD0iRTIwNDMxQjIyODNEOUE0REI4MjlCNjdFRURFQjg1MjAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+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">
     </div>
-    <!-- /.Datos pacientes-->
-
-    <!-- Datos usuario logeado-->
-    <div class="col-3 invert">
-      <div class="row">
-        <div class="col-2">
-          <i ng-reflect-class-name="account" class="mdi mdi-account"></i>
+    <div class="texto float-right">
+        <div><strong>{{paciente | paciente}}</strong></div>
+        <div class="small">
+            <ng-container *ngIf="paciente.documento">
+                {{paciente.documento | number}} 
+            </ng-container>
+            | 
+            <ng-container *ngIf="paciente.fechaNacimiento">
+            {{paciente | edad}}
+            </ng-container>
         </div>
-        <div class="col-6 data-usuario">
-          <div class="list-inline-item">
-            <div class="row">
-              <h6 class="consulta">{{this.auth.usuario.apellido}}, {{this.auth.usuario.nombre}}</h6>
-            </div>
-
-            <div class="row">
-              <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
-                Especialidad: {{EspecialidadActiva.descripcion}}
-              </h6>
-            </div>
-
-            <div class="row">
-              <h6 class="consulta" *ngFor="let EspecialidadActiva of auth.profesional?.matriculas">
-                Matricula: {{EspecialidadActiva.numero}}
-              </h6>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-4 burger-container">
-          <i ng-reflect-class-name="menu" class="mdi mdi-menu"></i>
-        </div>
-      </div>
     </div>
-  </div>
-</nav>
+</div>

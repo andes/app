@@ -3,14 +3,9 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <header>
-                    <div class="page-title">Búsqueda de Pacientes</div>
-                    <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
-                        placeholder="Escanee un DNI digital para registrar al paciente">
-                    </plex-text>
-                </header>
-                <!--<plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escanee un DNI digital para registrar al paciente">
-                </plex-text>-->
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
+                    placeholder="Escanee un DNI digital para registrar al paciente">
+                </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
                 <!--Alerta si no se encontró ningun paciente-->
