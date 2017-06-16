@@ -155,7 +155,7 @@ export class PuntoInicioComponent implements OnInit {
 
     /**
      *
-     * Genera el listado de tipo de prestaciones 
+     * Genera el listado de tipo de prestaciones
      *
      * @memberof PuntoInicioComponent
      */
@@ -308,8 +308,8 @@ export class PuntoInicioComponent implements OnInit {
     /**
      * Se selecciona un turno o paciente. Si la prestacion no existe la creamos en este momento
      *
-     * @param {any} unPacientePresente 
-     * 
+     * @param {any} unPacientePresente
+     *
      * @memberof PuntoInicioComponent
      */
     elegirPrestacion(unPacientePresente) {
@@ -380,9 +380,9 @@ export class PuntoInicioComponent implements OnInit {
 
     /**
      * Crear prestaciones para pacientes que no tienen turno pero se atienden igual
-     * 
-     * @param {any} tipoPrestacion 
-     * 
+     *
+     * @param {any} tipoPrestacion
+     *
      * @memberof PuntoInicioComponent
      */
     crearPrestacionVacia(tipoPrestacion) {
@@ -391,7 +391,14 @@ export class PuntoInicioComponent implements OnInit {
 
         tipoPrestacion['turneable'] = true;
         nuevaPrestacion = {
-            paciente: this.paciente,
+            paciente: {
+                id: this.paciente.id,
+                nombre: this.paciente.nombre,
+                apellido: this.paciente.apellido,
+                documento: this.paciente.documento,
+                sexo: this.paciente.sexo,
+                fechaNacimiento: this.paciente.fechaNacimiento
+            },
             solicitud: {
                 tipoPrestacion: tipoPrestacion,
                 fecha: new Date(),
@@ -484,7 +491,7 @@ export class PuntoInicioComponent implements OnInit {
      * Filtrar el listado de pacientes
      *
      * @param {boolean} misPacientes: solo listar los pacientes del profesional
-     * 
+     *
      * @memberof PuntoInicioComponent
      */
     filtrarPacientes(misPacientes: boolean) {
@@ -529,7 +536,7 @@ export class PuntoInicioComponent implements OnInit {
 
     /**
      * @returns Realiza la búsqueda de pacientes localmente y si no existe lo busca en mpi
-     * 
+     *
      * @memberof PuntoInicioComponent
      */
     buscar() {

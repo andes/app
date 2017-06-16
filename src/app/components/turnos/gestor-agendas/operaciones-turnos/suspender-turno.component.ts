@@ -104,12 +104,12 @@ export class SuspenderTurnoComponent implements OnInit {
                 }
                 this.suspendio = true;
                 // TODO: Descomentar para que envíe SMS
-                for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-                    this.enviarSMS(this.seleccionadosSMS[x], 'Su turno fue suspendido');
-                    if (x === this.enviarSMS.length - 1) {
-                        console.log('recorrio todo ', this.seleccionadosSMS);
-                    }
-                };
+                // for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+                //     this.enviarSMS(this.seleccionadosSMS[x], 'Su turno fue suspendido');
+                //     if (x === this.enviarSMS.length - 1) {
+                //         console.log('recorrio todo ', this.seleccionadosSMS);
+                //     }
+                // };
             },
             err => {
                 if (err) {
@@ -139,7 +139,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
                     this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
 
-                    this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
+                    // this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
 
                 });
             });
@@ -151,7 +151,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.suspenderTurno();
 
-        this.enviarSMS(paciente, 'Su turno se suspendió, será reasignado');
+        // this.enviarSMS(paciente, 'Su turno se suspendió, será reasignado');
 
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
