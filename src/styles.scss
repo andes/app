@@ -1,12 +1,12 @@
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';
 
-/*** IMPORTS DE MÓDULOS **/
+// IMPORTS DE MÓDULOS
 
 // RUP
 @import './src/app/styles/rup/rup';
 
-/** OTROS **/
+// OTROS
 
 .table-striped {
   font-size: 0.85em;
@@ -101,3 +101,4 @@ h6.subdata-descripcion {
 legend {
   padding-bottom: 10px;
 }
+
