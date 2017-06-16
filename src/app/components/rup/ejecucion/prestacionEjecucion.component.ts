@@ -188,6 +188,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
         this.listaProblemasPaciente = this.prestacion.ejecucion.listaProblemas;
+
         /*
         // loopeamos las prestaciones que se deben cargar por defecto
         // y las inicializamos como una prestacion nueva a ejecutarse
@@ -667,11 +668,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 motivoSolicitud: textoMotivoSolicitud,
                 tipoPrestacion: prestacionFutura,
                 fecha: new Date(),
-                listaProblemas: []
+                listaProblemas: [],
+                // datos del profesional logueado
+                profesional: {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             estado: {
                 timestamp: Date(),
-                tipo: 'pendiente'
+                tipo: 'pendiente',
+                // datos del profesional logueado
+                profesional: {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             ejecucion: {
                 evoluciones: []
@@ -728,11 +739,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: this.nuevoTipoPrestacion,
                     fecha: new Date(),
-                    listaProblemas: []
+                    listaProblemas: [],
+                    // datos del profesional logueado
+                    profesional: {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 estado: {
                     timestamp: Date(),
-                    tipo: 'pendiente'
+                    tipo: 'pendiente',
+                    // datos del profesional logueado
+                    profesional: {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 ejecucion: {
                     evoluciones: []
@@ -874,11 +895,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: tipoPrestacion,
                     fecha: new Date(),
-                    listaProblemas: []
+                    listaProblemas: [],
+                    profesional:
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 estado: {
                     timestamp: new Date(),
-                    tipo: 'ejecucion'
+                    tipo: 'ejecucion',
+                    profesional:
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    }
                 },
                 ejecucion: {
                     fecha: new Date(),
@@ -982,11 +1013,21 @@ export class PrestacionEjecucionComponent implements OnInit {
             solicitud: {
                 tipoPrestacion: tipoPrestacion,
                 fecha: new Date(),
-                listaProblemas: []
+                listaProblemas: [],
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             estado: {
                 timestamp: new Date(),
-                tipo: 'ejecucion'
+                tipo: 'ejecucion',
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                }
             },
             ejecucion: {
                 fecha: new Date(),
