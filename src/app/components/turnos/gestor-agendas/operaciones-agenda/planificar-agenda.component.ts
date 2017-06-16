@@ -295,7 +295,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.validarTodo();
     }
 
-    cambiaCantTipo($event, cual: String) {
+    cambiaCantTipo(cual: String) {
         // if ($event.key === '-')
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
@@ -475,14 +475,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
-                let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
-                let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
-                let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
+                // let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
+                // let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
+                // let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
+                // let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
 
                 // if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
-                if ((add + adp + rg + rp) < bloque.cantidadTurnos) {
-                    const cant = bloque.cantidadTurnos - (add + adp + rg + rp);
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
+                    const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
                     this.alertas = [... this.alertas, alerta];
                 }
