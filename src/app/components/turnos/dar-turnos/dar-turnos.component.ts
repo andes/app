@@ -455,10 +455,10 @@ export class DarTurnosComponent implements OnInit {
 
                                 bloque.turnos.forEach((turno) => {
                                     // Si el turno está asignado o está disponible pero ya paso la hora
-                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
+                                    if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
+                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                        //     turno = turnoAnterior;
+                                        // }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -478,7 +478,7 @@ export class DarTurnosComponent implements OnInit {
                                         }
                                     }
 
-                                    turnoAnterior = turno;
+                                    // turnoAnterior = turno;
 
                                 });
                                 this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
@@ -490,7 +490,6 @@ export class DarTurnosComponent implements OnInit {
                         } else {
                             // En caso contrario, se calculan  los contadores por separado
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
-
                                 countBloques.push({
                                     // Asignamos a contadores dinamicos la cantidad inicial de c/u
                                     // de los tipos de turno respectivamente
@@ -501,10 +500,10 @@ export class DarTurnosComponent implements OnInit {
                                 });
 
                                 bloque.turnos.forEach((turno) => {
-                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
+                                    if (turno.estado === 'asignado') {
+                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                        //     turno = turnoAnterior;
+                                        // }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -520,7 +519,7 @@ export class DarTurnosComponent implements OnInit {
                                                 break;
                                         }
                                     }
-                                    turnoAnterior = turno;
+                                    // turnoAnterior = turno;
                                 });
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
                                 this.programadosDisponibles = + countBloques[indexBloque].programado;
@@ -762,7 +761,7 @@ export class DarTurnosComponent implements OnInit {
                     this.estadoT = 'noSeleccionada';
                     this.agenda = null;
                     this.actualizar('sinFiltro');
-                    this.borrarTurnoAnterior();
+                    // this.borrarTurnoAnterior();
                     this.plex.toast('info', 'El turno se asignó correctamente');
 
                     // Enviar SMS
