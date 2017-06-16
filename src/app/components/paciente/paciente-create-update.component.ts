@@ -521,43 +521,42 @@ export class PacienteCreateUpdateComponent implements OnInit {
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
-
+          debugger;
           // agregamos la condición de abajo para filtrar las sugerencias
           // cuando el pacienfe fue escaneado o ya estaba validado.
           if (this.escaneado || this.pacienteModel.estado === 'validado') {
+            debugger;
             this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
           }
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-            if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
-              resolve(false);
+            // Nos quedamos todos los pacientes menos el mismo.
+            debugger;
+            this.pacientesSimilares = this.pacientesSimilares.filter(paciente => paciente.paciente.id !== this.pacienteModel.id)
 
-            } else {
-
-
-              if (this.pacientesSimilares[0].match >= 0.94) {
-                if (this.pacientesSimilares[0].match >= 1.0) {
-                  this.onSelect(this.pacientesSimilares[0].paciente);
-                  this.pacientesSimilares = null;
-                  this.enableIgnorarGuardar = false;
-                } else {
-                  this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-                  this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
-                  this.enableIgnorarGuardar = false;
-                  this.disableGuardar = true;
-                }
+            if (this.pacientesSimilares[0].match >= 0.94) {
+              if (this.pacientesSimilares[0].match >= 1.0) {
+                this.onSelect(this.pacientesSimilares[0].paciente);
+                this.pacientesSimilares = null;
+                this.enableIgnorarGuardar = false;
               } else {
-                if (!this.verificarDNISexo(this.pacientesSimilares)) {
-                  this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
-                  this.posibleDuplicado = true;
-                  this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
-                  this.enableIgnorarGuardar = true;
-                  this.disableGuardar = true;
-                } else {
-                  resolve(true);
-                }
+                this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+                this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+                this.enableIgnorarGuardar = false;
+                this.disableGuardar = true;
               }
-              resolve(true);
+            } else {
+              if (!this.verificarDNISexo(this.pacientesSimilares)) {
+                this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: this.pacientesSimilares[0], pacienteScan: this.pacienteModel } }, { params: null, showError: false }).subscribe(() => { });
+                this.posibleDuplicado = true;
+                this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+                this.enableIgnorarGuardar = true;
+                this.disableGuardar = true;
+              } else {
+                resolve(true);
+              }
             }
+            resolve(true);
+
           } else {
             this.disableGuardar = false;
             this.enableIgnorarGuardar = false;
