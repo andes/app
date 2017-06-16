@@ -492,8 +492,6 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                console.log('bloques ', bloques);
-
                 // Verifica que no se solape con ningún otro
                 let mapeo = bloques.map(function (obj) {
                     if (obj.indice !== bloque.indice) {
@@ -505,7 +503,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         return null;
                     }
                 });
-                console.log('mapeo ', mapeo);
 
                 mapeo.forEach((bloqueMap, index1) => {
                     if (bloqueMap) {
@@ -548,7 +545,15 @@ export class PlanificarAgendaComponent implements OnInit {
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
-            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno)) {
+            // Verifico que cada bloque tenga al menos una prestacion activa
+            let prestacionActiva = false;
+            for (let j = 0; j < bloque.tipoPrestaciones.length; j++) {
+                if (bloque.tipoPrestaciones[j].activo) {
+                    prestacionActiva = true;
+                    break;
+                }
+            }
+            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva )) {
                 validaBloques = false;
                 break;
             }
