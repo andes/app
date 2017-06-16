@@ -381,7 +381,7 @@ export class TurnosComponent implements OnInit {
     this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
       this.agenda = resultado;
       this.plex.alert('El paciente pasó a Lista de Espera');
-      this.enviarSMS();
+      // this.enviarSMS();
     });
   }
 
