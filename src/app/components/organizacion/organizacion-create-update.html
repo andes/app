@@ -67,8 +67,7 @@
                             </div>
                             <div class="row" *ngFor="let _unContacto of organizacionModel.contacto; let i = index">
                                 <div class="col-4">
-                                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" placeholder="Seleccione..."
-                                        label="Tipo:">
+                                    <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" placeholder="Seleccione..." label="Tipo:">
                                     </plex-select>
                                 </div>
                                 <div class="col-4">
@@ -133,7 +132,7 @@
                                             </div>
                                             <div class="row" *ngIf="_unEdificio.contacto">
                                                 <div class="col-4">
-                                                    <plex-select [(ngModel)]="_unEdificio.contacto.tipo" [data]="tipoComunicacion" name="tipo2-{{i}}"  placeholder="Seleccione..."
+                                                    <plex-select [(ngModel)]="_unEdificio.contacto.tipo" [data]="tipoComunicacion" name="tipo2-{{i}}" placeholder="Seleccione..."
                                                         label="Tipo:">
                                                     </plex-select>
                                                 </div>
@@ -163,9 +162,11 @@
         </div>
     </section>
     <footer>
-        <plex-button label="Guardar" type="primary" (click)="onSave($event)">
-        </plex-button>
-        <plex-button label="Cancelar" type="primary" (click)="onCancel()">
-        </plex-button>
+        <div class="text-right">
+            <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="onCancel()">
+            </plex-button>
+            <plex-button label="Guardar" icon="content-save" type="primary" (click)="onSave($event)">
+            </plex-button>
+        </div>
     </footer>
 </form>
