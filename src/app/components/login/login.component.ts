@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public organizacion: any;
+    public loading:boolean = false;
 
     constructor(private plex: Plex, private auth: Auth, private router: Router) { }
 
@@ -21,13 +22,16 @@ export class LoginComponent implements OnInit {
     }
 
     login(event) {
+        this.loading = true;
         if (event.formValid) {
             this.auth.login(this.usuario.toString(), this.password, this.organizacion.id)
                 .subscribe((data) => {
                     this.plex.updateUserInfo({ usuario: this.auth.usuario, organizacion: this.auth.organizacion });
                     this.router.navigate(['inicio']);
+                    this.loading = false;
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
+                    this.loading = false;
                 });
         }
     }
