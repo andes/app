@@ -1282,6 +1282,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     volver(ruta) {
+        /*
         //valida si quedaron datos sin guardar..
         if (this.prestacionesEjecucion.length > 0 || this.tiposPrestaciones.length > 0) {
             this.plex.confirm('Se van a descartar los cambios sin guardar', 'Atención').then((confirmar) => {
@@ -1292,5 +1293,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             this.router.navigate(['rup/resumen', this.prestacion.id]);
         }
+        */
+        this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
 }
