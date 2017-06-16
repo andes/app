@@ -31,7 +31,7 @@ export class PlanificarAgendaComponent implements OnInit {
     public modelo: any = {};
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
-    public alertas: String[] = [];
+    public alertas = [];
     public fecha: Date;
     public autorizado = false;
     public today = new Date();
@@ -89,6 +89,10 @@ export class PlanificarAgendaComponent implements OnInit {
 
     loadEspacios(event) {
         this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    }
+
+    horaInicioPlus() {
+        return moment(this.modelo.horaInicio).add(30, 'minutes');
     }
 
     inicializarPrestacionesBloques(bloque) {
@@ -291,7 +295,8 @@ export class PlanificarAgendaComponent implements OnInit {
         this.validarTodo();
     }
 
-    cambiaCantTipo(cual: String) {
+    cambiaCantTipo($event, cual: String) {
+        // if ($event.key === '-')
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
@@ -470,8 +475,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
-                    const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
+                let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
+                let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
+                let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
+                let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
+
+                // if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
+                if ((add + adp + rg + rp) < bloque.cantidadTurnos) {
+                    const cant = bloque.cantidadTurnos - (add + adp + rg + rp);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
                     this.alertas = [... this.alertas, alerta];
                 }
@@ -481,9 +492,11 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
+                console.log('bloques ', bloques);
+
                 // Verifica que no se solape con ningún otro
                 let mapeo = bloques.map(function (obj) {
-                    if (obj.id !== bloque.id) {
+                    if (obj.indice !== bloque.indice) {
                         let robj = {};
                         robj['horaInicio'] = obj.horaInicio;
                         robj['horaFin'] = obj.horaFin;
@@ -492,13 +505,21 @@ export class PlanificarAgendaComponent implements OnInit {
                         return null;
                     }
                 });
+                console.log('mapeo ', mapeo);
+
                 mapeo.forEach((bloqueMap, index1) => {
                     if (bloqueMap) {
                         let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
                         let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
-                        if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
+                        console.log('inicio ', inicio);
+                        console.log('bloqueMapFin ', bloqueMapFin);
+                        // if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
+                        if (this.compararFechas(bloqueMapIni, fin) < 0 && this.compararFechas(inicio, bloqueMapFin) < 0) {
                             alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
-                            this.alertas.push(alerta);
+                            let alertaOpuesta = 'El bloque ' + (index1 + 1) + ' se solapa con el ' + (bloque.indice + 1);
+                            if (this.alertas.indexOf(alertaOpuesta) < 0) {
+                                this.alertas.push(alerta);
+                            }
                         }
                     }
                 });
@@ -524,7 +545,15 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
-        if ($event.formValid) {
+        let validaBloques = true;
+        for (let i = 0; i < this.modelo.bloques.length; i++) {
+            let bloque = this.modelo.bloques[i];
+            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno)) {
+                validaBloques = false;
+                break;
+            }
+        }
+        if ($event.formValid && validaBloques) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
