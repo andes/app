@@ -578,21 +578,20 @@ export class pacienteActualizarComponent implements OnInit {
 
 
     addRelaciones() {
-        let unaRelacion = {
-            relacion: '',
-            referencia: null,
-            nombre: '',
-            apellido: '',
-            documento: ''
-        };
+        alert('Reimplementar la interfase con el tipo de datos "string" en minúscula');
+        // let unaRelacion = {
+        //     relacion: '',
+        //     referencia: null,
+        //     nombre: '',
+        //     apellido: '',
+        //     documento: ''
+        // };
 
-        if (this.pacienteModel.relaciones) {
-            this.pacienteModel.relaciones.push(unaRelacion);
-        } else {
-            this.pacienteModel.relaciones = [unaRelacion];
-        }
-
-
+        // if (this.pacienteModel.relaciones) {
+        //     this.pacienteModel.relaciones.push(unaRelacion);
+        // } else {
+        //     this.pacienteModel.relaciones = [unaRelacion];
+        // }
     }
 
 
