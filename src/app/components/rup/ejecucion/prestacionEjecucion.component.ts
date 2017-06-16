@@ -174,6 +174,11 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                 this.cargarDatosPrestacion();
                 this.cargarProblemasPaciente();
+            }, (err) => {
+                if (err) {
+                    this.plex.info('danger', err, 'Error');
+                    this.router.navigate(['/rup']);
+                }
             });
 
         });
@@ -1074,7 +1079,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     let prestacion; prestacion = _prestacion;
                     let tp; tp = _prestacion.solicitud.tipoPrestacion;
 
-                    /*
+
                     // validamos que la evolucion tenga valores distintos y distintos problemas
                     // y asi determinamos que han habido cambios en la prestacion ejecutada
                     let push = true;
@@ -1083,31 +1088,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (prestacion.ejecucion.evoluciones.length) {
                         // agregamos el valor solo si no ha cambiado de la evolucion anterior
                         let ultimaEvolucion = prestacion.ejecucion.evoluciones[prestacion.ejecucion.evoluciones.length - 1].valores;
-                        console.log(JSON.stringify(ultimaEvolucion));
 
                         let valorActual = {};
                         valorActual[tp.key] = this.data[tp.key];
 
-                        console.log(JSON.stringify(valorActual));
-
-                        if (JSON.stringify(ultimaEvolucion) === JSON.stringify(valorActual)) {
-                            // Cargo el arreglo de prestaciones evoluciones
-                            //prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
+                        // comparamos, si da igual no agregamos
+                        if (ultimaEvolucion && JSON.stringify(ultimaEvolucion) === JSON.stringify(valorActual)) {
                             push = false;
                         }
                     }
 
                     if (push) {
-                        // si no agregamos la primera evolucion
+                        // agregamos
                         prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
-                    }else {
-                        prestacion.ejecucion.evoluciones.splice(prestacion.ejecucion.evoluciones.length - 1, 1);
                     }
-
-                    console.log(prestacion.ejecucion.evoluciones);
-                    */
-                    prestacion.ejecucion.evoluciones.push({ valores: { [tp.key]: this.data[tp.key] } });
-
 
                     /*
                     // si he agregado algun problema a la nueva prestacion, asigno su id a la prestacion a guardar
