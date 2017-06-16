@@ -36,14 +36,14 @@
               <li droppable *ngFor="let paciente of pacientesVinculados" (onDrop)="vincularPacienteDrop($event)" [dragOverClass]="'drag-target-border'"  css="droppable">
                 <div class="card invertHover" style="width: 20rem;">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden "></i>
-                    <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
+                    <i (click)="desvincularPaciente(paciente)" title="Clic para desvincular" class="mdi mdi-link-variant-off mdi-hover-show desvincular "></i>
                   </h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
                     <div>DU: {{paciente.documento}}</div>
                     <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
                     <div>Sexo: {{paciente.sexo}}</div>
-                     <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
+                    <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
                   </div>
                 </div>
               </li>
@@ -52,14 +52,14 @@
           </plex-box>
         </plex-box>
       </div>
-      <div class="col-4">
+      <div class="col">
         <plex-box type="info">
           <header>
             <h3>Datos del Paciente
-              <span *ngIf="pacienteSelected.estado === 'validado'" class="label label-success recuadro">
+              <span *ngIf="pacienteSelected.estado === 'validado'" class="validado recuadro">
                             {{pacienteSelected.estado | uppercase}} 
                         </span>
-              <span *ngIf="pacienteSelected.estado !== 'validado'" class="label label-warning recuadro">
+              <span *ngIf="pacienteSelected.estado !== 'validado'" class="temporal recuadro">
                             {{pacienteSelected.estado | uppercase}} 
               </span>
             </h3>
