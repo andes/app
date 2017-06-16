@@ -38,6 +38,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     paisArgentina = null;
     provinciaNeuquen = null;
+    barrioNulleado = null;
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -132,6 +133,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     Object.assign(this.organizacionModel, resultado);
                 }
             });
+        } else {
+
         }
 
         // Set País Argentina
@@ -158,8 +161,19 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
             return elem;
         });
+        if (organizacionGuardar.edificio) {
+            organizacionGuardar.edificio.forEach(e => {
+                if (e.contacto) {
+                    e.contacto.tipo = ((typeof e.contacto.tipo === 'string') ? e.contacto.tipo : (Object(e.contacto.tipo).id));
+                }
+                e.direccion.ubicacion.pais = this.paisArgentina;
+                e.direccion.ubicacion.provincia = this.provinciaNeuquen;
+                e.direccion.ubicacion.barrio = null;
+            });
+        }
         organizacionGuardar.direccion.ubicacion.pais = this.paisArgentina;
         organizacionGuardar.direccion.ubicacion.provincia = this.provinciaNeuquen;
+        organizacionGuardar.direccion.ubicacion.barrio = null;
 
         let operacion = this.organizacionService.save(organizacionGuardar);
         operacion.subscribe(result => {
@@ -170,8 +184,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                 this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
             }
         });
-
-
     }
 
     onCancel() {
@@ -196,8 +208,48 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     }
 
     addEdificio() {
-        let nuevoEdificio = Object.assign({}, this.edificio);
-        this.organizacionModel.edificio.push(nuevoEdificio);
+        let nuevoEdificio = Object.assign({}, {
+            id: null,
+            descripcion: '',
+            contacto: {
+                tipo: 'celular',
+                valor: '',
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
+            },
+            direccion: {
+                valor: '',
+                codigoPostal: '',
+                ubicacion: {
+                    barrio: {
+                        id: '',
+                        nombre: ''
+                    },
+                    localidad: {
+                        id: '',
+                        nombre: ''
+                    },
+                    provincia: {
+                        id: '',
+                        nombre: ''
+                    },
+                    pais: {
+                        id: '',
+                        nombre: ''
+                    }
+                },
+                ranking: 0,
+                geoReferencia: null,
+                ultimaActualizacion: new Date(),
+                activo: true
+            },
+        });
+        if (this.organizacionModel.edificio) {
+            this.organizacionModel.edificio.push(nuevoEdificio);
+        } else {
+            this.organizacionModel.edificio = [nuevoEdificio];
+        }
     }
 
     removeEdificio(i) {
