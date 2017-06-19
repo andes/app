@@ -3,11 +3,16 @@
 
     <!--Listado INICIAL de pacientes -->
     <div class="row">
-      <div class="col-7">
+      <div class="col">
         <plex-box type="danger">
           <header>
             <div class="page-title">Validación de Pacientes</div>
           </header>
+          <div class="row">
+            <div class="col-12">
+              <plex-text name="filtro" [(ngModel)]="filtro" (click)="mostrarPaciente=false" placeholder="Buscar por DNI, nombre o apellido">   </plex-text>
+            </div>
+          </div>
           <!-- Search results -->
           <div>
             <table class="table table-hover">
@@ -21,7 +26,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="hover" *ngFor="let paciente of pacientesTemporales; let i=index" (click)="mostrarPaciente=true; expand=!expand; seleccionarPaciente(paciente);verDuplicados=false;validate=false"
+                <tr class="hover" *ngFor="let paciente of pacientesTemporales | textFilter:filtro ; let i=index" (click)="mostrarPaciente=true;  seleccionarPaciente(paciente);"
                   [ngClass]="{'bg-inverse text-white': estaSeleccionado(pacientesTemporales[i])}">
                   <td>{{paciente.documento}}</td>
                   <td>{{paciente.nombre| uppercase}}</td>
@@ -37,7 +42,7 @@
       </div>
 
 
-      <div class="col" *ngIf=mostrarPaciente>
+      <div class="col-4" *ngIf=mostrarPaciente>
         <plex-box type="info">
           <header>
             <h3>Datos del Paciente

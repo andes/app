@@ -13,6 +13,8 @@ import { IAudit } from '../../interfaces/auditoria/IAudit';
 // Services
 import { PacienteService } from './../../services/paciente.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+// Pipes
+import { TextFilterPipe } from './../../pipes/textFilter.pipe';
 @Component({
     selector: 'auditoria1',
     templateUrl: 'auditoria1.html',
@@ -31,9 +33,8 @@ export class Auditoria1Component implements OnInit {
     btnRenaper = false;
     expand = false;
     resultado: any[];
-
     pacientesTemporales: any[];
-
+    filtro = '';
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
@@ -49,7 +50,6 @@ export class Auditoria1Component implements OnInit {
     getTemporales() {
         this.loading = true;
         this.pacienteService.getTemporales().subscribe(data => {
-            debugger
             this.loading = false;
             this.pacientesTemporales = data;
         });
@@ -102,7 +102,6 @@ export class Auditoria1Component implements OnInit {
     }
 
     estaSeleccionado(paciente: any) {
-        debugger;
         return this.pacienteSelected === paciente;
     }
 
