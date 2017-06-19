@@ -7,18 +7,14 @@ import {
     FormsModule,
     ReactiveFormsModule
 } from '@angular/forms';
-import { AuditoriaService } from '../../services/auditoria/auditoria.service';
-import {
-    IAudit
-} from '../../interfaces/auditoria/IAudit';
-import {
-    PacienteService
-} from './../../services/paciente.service';
 import * as moment from 'moment';
-// import {
-//   AuditoriaPage
-// } from './../../e2e/app.po';
-
+// Interfaces
+import { IAudit } from '../../interfaces/auditoria/IAudit';
+// Services
+import { PacienteService } from './../../services/paciente.service';
+import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+// Pipes
+import { TextFilterPipe } from './../../pipes/textFilter.pipe';
 @Component({
     selector: 'auditoria1',
     templateUrl: 'auditoria1.html',
@@ -37,202 +33,8 @@ export class Auditoria1Component implements OnInit {
     btnRenaper = false;
     expand = false;
     resultado: any[];
-
-    pacientesAudit = [
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-        },
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-            "entidadesValidadoras": [
-                "Sintys"
-            ],
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-            "entidadesValidadoras": [
-                "Renaper"
-            ],
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            'estado': 'temporal',
-            'nombre': 'MAURO LEANDRO',
-            'apellido': 'JARA',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1996-06-21T00:00:00.000-03:00'),
-            'matchSisa': '0.72',
-        },
-        {
-            'seleccionado': false,
-            'documento': '36433556',
-            'estado': 'temporal',
-            'nombre': 'MARCOS DANIEL',
-            'apellido': 'OSMAN',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1991-08-07T00:00:00.000-03:00'),
-            'matchSisa': '0.88',
-
-        }, {
-            'seleccionado': false,
-            'documento': '30096099',
-            'estado': 'temporal',
-            'nombre': 'RICARDO DANIEL',
-            'apellido': 'LOPEZ',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1983-10-27T00:00:00.000-03:00'),
-            'matchSisa': '0.82',
-        }, {
-            'seleccionado': false,
-            'documento': '39682204',
-            'estado': 'temporal',
-            'nombre': 'MAURO LEANDRO',
-            'apellido': 'JARA',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1996-06-21T00:00:00.000-03:00'),
-            'matchSisa': '0.72',
-        },
-    ]
-
-    candidatos = [
-        {
-
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'VALERIA EDIT',
-            'apellido': 'ATENCIO',
-            'sexo': 'femenino',
-            'genero': 'femenino',
-            'fechaNacimiento': moment('1992-08-10T00:00:00.000-03:00'),
-            'similitud': '0.88',
-
-        }, {
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'EDGARDO GERMAN',
-            'apellido': 'RIOS',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1992-08-24T00:00:00.000-03:00'),
-            'similitud': '0.82',
-        }
-    ]
-
-    datosSisa = [
-        {
-
-            'documento': '36945224',
-            'estado': 'temporal',
-            'nombre': 'VALERIA EDIT',
-            'apellido': 'ATENCIO',
-            'sexo': 'femenino',
-            'genero': 'femenino',
-            'fechaNacimiento': moment('1992-08-10T00:00:00.000-03:00'),
-            'similitud': '0.88',
-
-        }, {
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'EDGARDO GERMAN',
-            'apellido': 'RIOS',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1992-08-24T00:00:00.000-03:00'),
-            'similitud': '0.82',
-        }
-    ]
-
+    pacientesTemporales: any[];
+    filtro = '';
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
@@ -241,7 +43,16 @@ export class Auditoria1Component implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.getTemporales();
 
+    }
+
+    getTemporales() {
+        this.loading = true;
+        this.pacienteService.getTemporales().subscribe(data => {
+            this.loading = false;
+            this.pacientesTemporales = data;
+        });
     }
 
     showLoader() {
@@ -252,7 +63,7 @@ export class Auditoria1Component implements OnInit {
 
     validarSisa(band: any, paciente: any) {
         this.showLoader();
-        this.resultado = this.datosSisa;
+        // this.resultado = this.datosSisa;
         this.plex.info('warning', '', 'Match Incompleto');
         paciente.entidadesValidadoras.push('Sisa');
         this.seleccionarPaciente(paciente);
@@ -291,7 +102,6 @@ export class Auditoria1Component implements OnInit {
     }
 
     estaSeleccionado(paciente: any) {
-        debugger;
         return this.pacienteSelected === paciente;
     }
 
