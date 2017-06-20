@@ -14,8 +14,8 @@ export class AppComponent {
             this.server.get('/core/status', { params: null, showError: false, showLoader: false })
                 .finally(() => this.initStatusCheck())
                 .subscribe(
-                (data) => this.plex.updateStatus(data),
-                (err) => this.plex.updateStatus({ API: 'Error' })
+                (data) => this.plex.updateAppStatus(data),
+                (err) => this.plex.updateAppStatus({ API: 'Error' })
                 );
         }, 2000);
     }
