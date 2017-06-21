@@ -78,7 +78,7 @@ import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaC
 import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';

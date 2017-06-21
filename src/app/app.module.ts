@@ -135,7 +135,7 @@ import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaC
 import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
 import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
@@ -178,6 +178,7 @@ import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamog
 import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
 import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
 import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+import { TestComponent } from './components/test.component';
 import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -300,7 +301,8 @@ export const RUP_COMPONENTS = [
   EndoscopiaComponent,
   TomaHpvComponent,
   TomaPapComponent,
-  SangreOcultaMateriaFecalComponent
+  SangreOcultaMateriaFecalComponent,
+  TestComponent
 ];
 
 // Locales
@@ -309,6 +311,7 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { ElementosRupService } from "./services/elementosRUP.service";
 
 // Main module
 @NgModule({
@@ -382,7 +385,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     PrestacionPacienteService,
     ProblemaPacienteService,
     TipoPrestacionService,
-
+ElementosRupService,
     ObservarDatosService,
     LlavesTipoPrestacionService,
 

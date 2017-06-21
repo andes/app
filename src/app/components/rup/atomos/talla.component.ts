@@ -6,7 +6,7 @@ import * as moment from 'moment';
     templateUrl: 'talla.html'
 })
 export class TallaComponent extends Atomo {
-    
+
     getMensajes() {
 
         // Calculo Edad en Meses
@@ -18,7 +18,7 @@ export class TallaComponent extends Atomo {
         fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
         difDias = fechaAct.diff(fechaNac, 'd');     // Diferencia en días
         edadEnMeses = Math.floor(difDias / 30.4375); // Diferencia en Meses
-        let talla = this.data[this.tipoPrestacion.key];
+        let talla = this.data[this.elementoRUP.key];
 
         let mensaje: any = {
             texto: '',
@@ -284,9 +284,9 @@ export class TallaComponent extends Atomo {
             }
         }
         return mensaje;
-        
+
     }
-    
+
 }
 
 
@@ -303,7 +303,7 @@ export class TallaComponent extends Atomo {
             //         0.03950, 0.03910, 0.03880, 0.03850, 0.03830, 0.03810, 0.03789, 0.03770, 0.03760, 0.03750, 0.03740, 0.03730, 0.03730, 0.03720,
             //         0.03720, 0.03720, 0.03720, 0.03720, 0.03720, 0.03720, 0.03730, 0.03730, 0.03740, 0.03740, 0.03750, 0.03760, 0.03770,
             //         0.03770, 0.03783, 0.03790, 0.03800, 0.03810, 0.03820, 0.03830, 0.03840, 0.03850, 0.03860, 0.03870, 0.03880, 0.03896,
-            //     ],// array de la columa S de acondropl.. 
+            //     ],// array de la columa S de acondropl..
             //     tablasExcel['ScolumnaGarrahan'] = [
             //         0.03650, 0.03626, 0.03602, 0.03578, 0.03555, 0.03547, 0.03532, 0.03509, 0.03487, 0.03465, 0.03450, 0.03444, 0.03423, 0.03404, 0.03384, 0.03365, 0.03293, 0.03235, 0.03189,
             //         0.03156, 0.03133, 0.03121, 0.03117, 0.03120, 0.03130, 0.03146, 0.03165, 0.03188, 0.03215, 0.03243, 0.03274,
@@ -391,7 +391,7 @@ export class TallaComponent extends Atomo {
             // //Fin del Calculo $columnaL
 
             // var $zind = (((talla) / $columnaM) ^ 1 / $columnaL - 1) / ($columnaS * $columnaM); //calculo en formula tabla N
-            // var $sdMas3 = $columnaM*(1+$columnaL* $columnaS*3)^(1/$columnaL); //Calculo en tabla O 
+            // var $sdMas3 = $columnaM*(1+$columnaL* $columnaS*3)^(1/$columnaL); //Calculo en tabla O
             // var $sdMas23 = $sdMas3-$columnaM*(1+$columnaL* $columnaS*2)^(1/$columnaL); //Calculo en tabla Q
             // var $valorAbsoluto = Math.abs($zind);
             // var $valorZcore = 0; //Formula tabla Zcore
@@ -414,7 +414,7 @@ export class TallaComponent extends Atomo {
 
 
             //N = zind -> =((($H12)/L12)^1/K12-1)/(M12*K12)
-            //O = SD + 3 -> =$L2*(1+$K2* $M2*3)^(1/$K2) 
+            //O = SD + 3 -> =$L2*(1+$K2* $M2*3)^(1/$K2)
             //Q = SD +23 -> =O5-$L5*(1+$K5* $M5*2)^(1/$K5)
             //P = SD - 3 -> =$L2*(1+$K2* $M2*-3)^(1/$K2)
             //R = SD -23 -> =$L2*(1+$K2* $M2*-2)^(1/$K2)-P2

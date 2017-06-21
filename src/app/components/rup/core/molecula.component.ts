@@ -13,12 +13,12 @@ export class Molecula extends RupComponent {
         //VER SERVICIO PRESTACION SE REPITE EN RUP
 
         // como es una molécula buscamos sus atomos
-        this.servicioTipoPrestacion.getById(this.tipoPrestacion.id).subscribe(tipoPrestacion => {
-            this.tipoPrestacion = tipoPrestacion;
+        this.servicioElementosRUP.getById(this.elementoRUP.id).subscribe(tipoPrestacion => {
+            this.elementoRUP = tipoPrestacion;
         });
 
         // si vienen datos por input, los asignamos a nuestro objeto data
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {};
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
     }
 
     // devolverValores(obj: any, tipoPrestacion: any) {
