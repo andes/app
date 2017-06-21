@@ -310,6 +310,7 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 
 // Main module
 @NgModule({
@@ -394,7 +395,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     AuditoriaPrestacionPacienteService,
 
     SnomedService,
-    Cie10Service
+    Cie10Service,
+
+    SisaService,
   ]
 })
 

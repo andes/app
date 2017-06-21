@@ -13,6 +13,7 @@ import { IAudit } from '../../interfaces/auditoria/IAudit';
 // Services
 import { PacienteService } from './../../services/paciente.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
 // Pipes
 import { TextFilterPipe } from './../../pipes/textFilter.pipe';
 @Component({
@@ -39,6 +40,7 @@ export class Auditoria1Component implements OnInit {
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
+        private servicioSisa: SisaService,
         private plex: Plex
     ) { }
 
@@ -62,11 +64,7 @@ export class Auditoria1Component implements OnInit {
     }
 
     validarSisa(band: any, paciente: any) {
-        this.showLoader();
-        // this.resultado = this.datosSisa;
-        this.plex.info('warning', '', 'Match Incompleto');
-        paciente.entidadesValidadoras.push('Sisa');
-        this.seleccionarPaciente(paciente);
+        this.servicioSisa.ValidarPacienteEnSisa(paciente);
     }
 
     validarSintys(band: any, paciente: any) {
