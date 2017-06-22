@@ -1,11 +1,13 @@
 import { Atomo } from './../core/atomoComponent';
-import { RupComponent } from './../rup.component';
+//import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
+
 @Component({
     selector: 'rup-evolucion-problema',
     templateUrl: 'evolucionProblema.html'
 })
+
 export class EvolucionProblemaComponent extends Atomo {
     public fechaInicio: Date;
     public descripcion: String; //
@@ -39,7 +41,7 @@ export class EvolucionProblemaComponent extends Atomo {
                     fechaCalc = new Date();
             }
 
-            this.data[this.tipoPrestacion.key].fechaInicio = fechaCalc;
+            this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
 
             this.devolverValores();
     }

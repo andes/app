@@ -14,7 +14,7 @@ export class EstadoNutricionalComponent extends Atomo {
         } else {
             this.suffix = 'PRC';
         };
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
         if (this.datosIngreso) {
             this.devolverValores();
         }
@@ -23,7 +23,7 @@ export class EstadoNutricionalComponent extends Atomo {
         let edad;
         edad = this.paciente.edad;
         let prc;
-        prc = this.data[this.tipoPrestacion.key];
+        prc = this.data[this.elementoRUP.key];
         let mensaje: any = {
             texto: null,
             class: 'danger'
@@ -49,7 +49,7 @@ export class EstadoNutricionalComponent extends Atomo {
                     break;
                 default:
                     break;
-            } 
+            }
         }
         return mensaje;
     }

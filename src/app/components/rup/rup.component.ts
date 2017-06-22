@@ -34,9 +34,10 @@ export class RupComponent implements OnInit, OnDestroy {
     // array de prestaciones que se estan ejecutando actualmente en el proceso
     // TODO: revisar uso de prestacionesEJecucion
     //@Input() prestacionesEjecucion: ITipoPrestacion;
+
     // array de valores de las prestaciones que se estan ejecutando actualmente
-    // TODO: revisar valoresPrestacionesEjecucion
-    //@Input() valoresPrestacionEjecucion: any = [];
+    // se utiliza para enviarle a las formulas
+    @Input() valoresPrestacionEjecucion: any = [];
     @Input() prestacion: IPrestacionPaciente;
 
     //pacientePrestacion: any = {};
@@ -153,8 +154,8 @@ export class RupComponent implements OnInit, OnDestroy {
         // Generamos valores de la ejecución
         // TODO: debe ser un array?
         this.componentReference.instance.prestacion = this.prestacion;
-        /*this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
-        this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;*/
+        this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
+        // this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
         this.componentReference.instance.soloValores = this.soloValores;
         this.componentReference.instance.elementoRUP = this.elementoRUP;
         this.componentReference.instance.paciente = this.paciente;

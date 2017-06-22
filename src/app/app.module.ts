@@ -136,7 +136,7 @@ import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuen
 import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
 import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
+import { TensionArterialComponent } from './components/rup/moleculas/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { NuevoProblemaComponent } from './components/rup/problemas-paciente/nuevoProblema.component';
@@ -240,9 +240,9 @@ export const RUP_COMPONENTS = [
   NuevoProblemaComponent,
   EvolucionProblemaComponent,
   EvolucionTodosProblemasComponent,
-  PuntoInicioComponent,
-  PrestacionEjecucionComponent,
-  ResumenComponent,
+  //PuntoInicioComponent,
+  //PrestacionEjecucionComponent,
+  //ResumenComponent,
   HeaderPacienteComponent,
   PrestacionValidacionComponent,
   EdadGestacionalComponent,
@@ -385,7 +385,7 @@ import { ElementosRupService } from "./services/elementosRUP.service";
     PrestacionPacienteService,
     ProblemaPacienteService,
     TipoPrestacionService,
-ElementosRupService,
+    ElementosRupService,
     ObservarDatosService,
     LlavesTipoPrestacionService,
 
