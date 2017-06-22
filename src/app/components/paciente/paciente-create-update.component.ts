@@ -521,16 +521,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
         };
         this.pacienteService.get(dto).subscribe(resultado => {
           this.pacientesSimilares = resultado;
-          debugger;
+          
           // agregamos la condición de abajo para filtrar las sugerencias
           // cuando el pacienfe fue escaneado o ya estaba validado.
           if (this.escaneado || this.pacienteModel.estado === 'validado') {
-            debugger;
+            
             this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
           }
           if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
             // Nos quedamos todos los pacientes menos el mismo.
-            debugger;
+          
             this.pacientesSimilares = this.pacientesSimilares.filter(paciente => paciente.paciente.id !== this.pacienteModel.id)
 
             if (this.pacientesSimilares[0].match >= 0.94) {

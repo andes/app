@@ -89,9 +89,8 @@
           <br>
           <div class="row">
             <div class="col">
-              <plex-button [disabled]="btnRenaper" icon="autorenew" type="primary" label="RENAPER" (click)="validarRenaper(true,pacienteSelected)"></plex-button>
-              <plex-button [disabled]="btnSisa" icon="autorenew" type="primary" label="SISA" (click)="validarSisa(true,pacienteSelected)"></plex-button>
-              <plex-button [disabled]="btnSintys" icon="autorenew" type="primary" label="SINTyS" (click)="validarSintys(false,pacienteSelected)"></plex-button>
+              <plex-button [disabled]="disableValidar" icon="autorenew" type="success" label="Validar" (click)="validar()"></plex-button>
+           
             </div>
           </div>
           <br>
