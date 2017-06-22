@@ -81,20 +81,12 @@
               </h4>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12">
-              <plex-bool label="Activo" type="slide"> </plex-bool>
-            </div>
-          </div>
           <br>
           <div class="row">
             <div class="col">
               <plex-button [disabled]="disableValidar" icon="autorenew" type="success" label="Validar" (click)="validar()"></plex-button>
-           
             </div>
           </div>
-          <br>
-          <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
           <div *ngIf="result">
             <h2>Pacientes encontrados <span class="badge"></span> </h2>

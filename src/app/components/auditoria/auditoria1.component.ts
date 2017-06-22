@@ -27,7 +27,6 @@ export class Auditoria1Component implements OnInit {
 
     showValidator = false;
     seleccionada = false;
-    loading = false;
     result = false;
     pacienteSelected: IPaciente;
     disableValidar = false;
@@ -52,17 +51,17 @@ export class Auditoria1Component implements OnInit {
 
     getTemporales() {
         // TODO: filtrar los pacientes DESACTIVADOS y no mostrarlos en el listado
-        this.loading = true;
+        this.plex.showLoader();
         this.pacienteService.getTemporales().subscribe(data => {
-            this.loading = false;
+            this.plex.hideLoader();
             this.pacientesTemporales = data;
         });
     }
 
     validar() {
-        this.loading = true;
+        this.plex.showLoader();
         this.servicioSisa.ValidarPacienteEnSisa(this.pacienteSelected).then(res => {
-            this.loading = false;
+            this.plex.hideLoader();
             this.pacienteSelected = this.pacienteSelected;
             this.datosSisa = res;
             if (this.datosSisa.matcheos && this.datosSisa.matcheos.matcheo === 100) {
@@ -71,10 +70,19 @@ export class Auditoria1Component implements OnInit {
             if (this.datosSisa.matcheos && this.datosSisa.matcheos.matcheo > 94 && this.pacienteSelected.sexo === this.datosSisa.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosSisa.matcheos.datosPaciente.documento) {
                 this.disableValidar = true;
                 this.editarPaciente();
+            } else {
+                this.rechazarValidacion();
             }
         });
     }
 
+    rechazarValidacion() {
+        this.pacienteSelected.entidadesValidadoras.push('Sisa');
+        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+            this.plex.info('danger', '', 'Paciente no encontrado');
+            this.getTemporales();
+        });
+    }
 
     editarPaciente() {
         this.pacienteSelected.nombre = this.datosSisa.matcheos.datosPaciente.nombre;
