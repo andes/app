@@ -12,19 +12,23 @@
                 <!--Header de la agenda-->
                 <div class="alert alert-default mb-0">
                     <div class="float-right">
-                        <plex-button type="default" title="Mostrar detalle de la agenda" titlePosition="left" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'" (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
+                        <plex-button type="default" title="Mostrar detalle de la agenda" titlePosition="left" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'"
+                            (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
                     </div>
                     <!--Header pequeño-->
                     <div *ngIf="!mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+                            'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
                             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                         </div>
                     </div>
                     <!--Header completo-->
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
+                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            hs
                         </div>
                     </div>
                     <div *ngIf="mostrarHeaderCompleto" class="row">
@@ -70,10 +74,14 @@
                 </td>
                 <td colspan="3" class="text-right">
                     <div *ngIf="turnosSeleccionados.length > 0">
-                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove" (click)="eventosTurno('sacarAsistencia')" title="Registrar inasistencia"></plex-button>
-                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')" title="Registrar asistencia"></plex-button>
-                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)" title="Reasignar turno"></plex-button>
-                        <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')" title="Turno doble"></plex-button>
+                        <plex-button *ngIf="botones.sacarAsistencia" type="warning" icon="mdi mdi-account-remove" (click)="eventosTurno('sacarAsistencia')"
+                            title="Registrar inasistencia"></plex-button>
+                        <plex-button *ngIf="botones.darAsistencia" type="success" icon="mdi mdi-account-check" (click)="eventosTurno('darAsistencia')"
+                            title="Registrar asistencia"></plex-button>
+                        <plex-button *ngIf="botones.reasignarTurno" type="default" icon="mdi mdi-account-switch" (click)="reasignarTurno(turno.paciente, turno.id, agenda.id)"
+                            title="Reasignar turno"></plex-button>
+                        <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')"
+                            title="Turno doble"></plex-button>
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
@@ -169,7 +177,7 @@
                     {{carpeta.nroCarpeta}}
                 </span>
             </span></small>
-            <br *ngIf="sobreturno && sobreturno.paciente"><small><span *ngIf="sobreturno && sobreturno.paciente && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span></small>
+                        <br *ngIf="sobreturno && sobreturno.paciente"><small><span *ngIf="sobreturno && sobreturno.paciente && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span></small>
 
                         <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
                         <!--<span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>-->
@@ -177,9 +185,12 @@
                         <span *ngIf="sobreturno && sobreturno.nota"><i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
-                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'sinDatos' && sobreturno.estado !== 'suspendido'" class="badge-danger">Sin Datos</div>
+                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'"
+                            class="badge-success">Asistió</div>
+                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'"
+                            class="badge-danger">No asistió</div>
+                        <div *ngIf="sobreturno && sobreturno.paciente && sobreturno.asistencia === 'sinDatos' && sobreturno.estado !== 'suspendido'"
+                            class="badge-danger">Sin Datos</div>
 
                     </td>
                     <!--<td class="text-center" *ngIf="turno && turno.botones?.smsVisible" (click)="seleccionarTurno(bloque.turnos[i], false)" [ngClass]="{'text-success': turno.paciente && turno.estado !== 'suspendido'}">
@@ -190,10 +201,9 @@
             </div>
           </td>-->
                     <td>
-                        <span *ngIf="sobreturno && sobreturno.estado !== 'disponible' && sobreturno.estado !== 'turnoDoble'">
-                <popover-audit placement="left" [data]="sobreturno" >
-                </popover-audit>
-            </span>
+                        <popover-audit *ngIf="sobreturno && sobreturno.estado !== 'disponible' && sobreturno.estado !== 'turnoDoble'" placement="left"
+                            [data]="sobreturno">
+                        </popover-audit>
                     </td>
                 </tr>
             </tbody>
@@ -204,15 +214,18 @@
 
 <!-- Muestra el panel de Liberar turno -->
 <div class="clear"></div>
-<liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)" (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)" (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
+<liberar-turno *ngIf="showLiberarTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)"
+    (reasignarTurnoLiberado)="reasignarTurnoLiberado($event)" (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
 </liberar-turno>
 
 <!-- Muestra el panel de Suspender turno -->
 <div class="clear"></div>
-<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
+<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
+    (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
 </suspender-turno>
 
 <!-- Muestra el panel de Nota -->
 <div class="clear"></div>
-<agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)" (cancelaAgregarNota)="cancelaAgregarNota($event)">
+<agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
+    (cancelaAgregarNota)="cancelaAgregarNota($event)">
 </agregar-nota-turno>
