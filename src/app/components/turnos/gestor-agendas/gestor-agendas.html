@@ -83,7 +83,7 @@
                                     </ng-container>
                                 </div>
                             </td>
-                            <td class="text-right">
+                            <td (click)="verAgenda(agenda, false, $event)" class="text-right">
                                 <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
                             </td>
                         </tr>
