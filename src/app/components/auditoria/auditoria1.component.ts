@@ -13,6 +13,7 @@ import { IAudit } from '../../interfaces/auditoria/IAudit';
 import { IPaciente } from '../../interfaces/IPaciente';
 // Services
 import { PacienteService } from './../../services/paciente.service';
+import { AgendaService } from './../../services/turnos/agenda.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
@@ -45,6 +46,7 @@ export class Auditoria1Component implements OnInit {
         private pacienteService: PacienteService,
         private servicioSisa: SisaService,
         private servicioSintys: SintysService,
+        private agendaService: AgendaService,
         private plex: Plex
     ) { }
 
@@ -68,19 +70,43 @@ export class Auditoria1Component implements OnInit {
             if (!this.verificarDatosFA(res)) {
                 this.servicioSintys.ValidarPacienteEnSintys(this.pacienteSelected).then(res2 => {
                     if (!this.verificarDatosFA(res2)) {
-                        this.rechazarValidacion();
+
                         if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
-                            // TODO: crear indice en prestaciones y turnos para verificar si el paciente
-                            // tiene alguno asignado
-                            // 
-                            // this.enableBaja = true;
-                            // this.enableValidar = false;
+                            // TODO: chequear si el paciente tiene algun turno o prestacion asignado/a
+                            this.agendaService.find(this.pacienteSelected.id).subscribe(data => {
+                                if (data.length < 1) {
+                                    this.plex.confirm('¿Desea darlo de baja?', 'Paciente inactivo').then((confirmar) => {
+                                        if (confirmar) {
+                                            this.pacienteSelected.activo = false;
+                                            this.pacienteService.save(this.pacienteSelected).subscribe(res3 => {
+                                                debugger;
+                                                this.getTemporales();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            this.rechazarValidacion();
                         }
+
                     }
                 });
 
             }
         });
+    }
+
+    rechazarValidacion() {
+        if (this.pacienteSelected.entidadesValidadoras.find(entidad => entidad.toString().toUpperCase() === 'SISA')) {
+            this.pacienteSelected.entidadesValidadoras.push('SISA');
+            this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+                this.plex.info('danger', '', 'Paciente no encontrado');
+                this.getTemporales();
+            });
+        } else {
+            this.getTemporales();
+        }
     }
 
     verificarDatosFA(data) {
@@ -103,14 +129,6 @@ export class Auditoria1Component implements OnInit {
 
     }
 
-    rechazarValidacion() {
-        this.pacienteSelected.entidadesValidadoras.push('SISA');
-        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
-            this.plex.info('danger', '', 'Paciente no encontrado');
-            this.getTemporales();
-        });
-    }
-
     editarPaciente() {
         this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
         this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
@@ -124,8 +142,8 @@ export class Auditoria1Component implements OnInit {
     }
 
     validarPaciente() {
-        this.pacienteSelected.nombre = this.datosFA.datosPaciente.nombre;
-        this.pacienteSelected.apellido = this.datosFA.datosPaciente.apellido;
+        this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+        this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
         this.pacienteSelected.estado = 'validado';
         this.pacienteSelected.entidadesValidadoras.push('Sisa');
         this.pacienteService.save(this.pacienteSelected).subscribe(result => {
