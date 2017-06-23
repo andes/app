@@ -70,7 +70,7 @@ export class ReasignarTurnoComponent implements OnInit {
                         tipoPrestacion: (turno.tipoPrestacion.nombre === ag.tipoPrestaciones[0].nombre ? 30 : 0),
                         horaInicio: (turno.horaInicio === tu.horaInicio ? 30 : 0),
                         duracionTurno: (this.agendaAReasignar.bloques.find(x => x.duracionTurno === bl.duracionTurno) ? 20 : 0),
-                        profesional: (ag.profesionales[0].nombre ? 10 : 0),
+                        profesional: (ag.profesionales.length && ag.profesionales[0].nombre ? 10 : 0),
                         diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
                     };
                     console.log(calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);

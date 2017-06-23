@@ -15,7 +15,7 @@
                     <p class="mb-1">
                         Tipo Prestación: {{ turnoCandidato.turno.tipoPrestacion.nombre }}
                     </p>
-                    <small>Profesional: {{ agenda.profesionales[0] | profesional }}</small>
+                    <small *ngIf="agenda.profesionales.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
                 </a>
 
             </div>
