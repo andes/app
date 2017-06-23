@@ -131,10 +131,12 @@ export class DarTurnosComponent implements OnInit {
         // Si el siguiente turno está disponible, se habilita la opción de turno doble
         let cantidadTurnos;
         this.permitirTurnoDoble = false;
+        let tipoTurnoDoble = this.tiposTurnosSelect.toString();
+        let cantidadDisponible = this.countBloques[this.indiceBloque];
         if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
             cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
             cantidadTurnos--;
-            if (this.indiceTurno < cantidadTurnos) {
+            if (this.indiceTurno < cantidadTurnos && (cantidadDisponible[tipoTurnoDoble] >= 2)) {
                 // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
                 if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
                     this.permitirTurnoDoble = true;
@@ -366,6 +368,7 @@ export class DarTurnosComponent implements OnInit {
         // Asigno agenda
         this.agenda = agenda;
         let turnoAnterior = null;
+        this.turnoDoble = false;
 
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
@@ -442,7 +445,6 @@ export class DarTurnosComponent implements OnInit {
                             isDelDia = true;
                             this.tiposTurnosSelect = 'delDia';
                             this.tiposTurnosLabel = 'Del día';
-
                             // Recorro los bloques y cuento los turnos programados como "delDia", luego descuento los ya asignados
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
 
@@ -452,13 +454,12 @@ export class DarTurnosComponent implements OnInit {
                                     gestion: bloque.reservadoGestion,
                                     profesional: bloque.reservadoProfesional
                                 });
-
                                 bloque.turnos.forEach((turno) => {
                                     // Si el turno está asignado o está disponible pero ya paso la hora
-                                    if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                        //     turno = turnoAnterior;
-                                        // }
+                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
+                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                            turno = turnoAnterior;
+                                        }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -478,7 +479,7 @@ export class DarTurnosComponent implements OnInit {
                                         }
                                     }
 
-                                    // turnoAnterior = turno;
+                                    turnoAnterior = turno;
 
                                 });
                                 this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
@@ -500,10 +501,10 @@ export class DarTurnosComponent implements OnInit {
                                 });
 
                                 bloque.turnos.forEach((turno) => {
-                                    if (turno.estado === 'asignado') {
-                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                        //     turno = turnoAnterior;
-                                        // }
+                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
+                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                            turno = turnoAnterior;
+                                        }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -519,7 +520,7 @@ export class DarTurnosComponent implements OnInit {
                                                 break;
                                         }
                                     }
-                                    // turnoAnterior = turno;
+                                    turnoAnterior = turno;
                                 });
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
                                 this.programadosDisponibles = + countBloques[indexBloque].programado;
@@ -563,6 +564,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
+        this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
