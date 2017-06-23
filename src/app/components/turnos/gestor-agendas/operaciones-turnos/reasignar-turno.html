@@ -1,0 +1,32 @@
+<pre>
+    <!--{{ agendasCandidatas | json }}-->
+</pre>
+<div *ngIf="agendasCandidatas?.length">
+    <div *ngFor="let bloque of agendaAReasignar.bloques">
+        <div *ngFor="let turno of bloque.turnos">
+            <plex-accordion *ngIf="turno.paciente">
+                Turno: {{ turno.horaInicio | date: 'dd/MM/yyyy' }} {{ turno.horaInicio | date: 'HH:mm' }} hs ~ Paciente: {{ turno.paciente
+                | paciente }}
+                <plex-panel tituloPrincipal="Turno">
+                    <div class="list-group" *ngFor="let agenda of agendasCandidatas">
+                        {{ agenda.horaInicio }}
+                        <div *ngFor="let bloque of agenda.bloques">
+                            <div *ngFor="let turno of bloque.turnos">
+                                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1"></h5>
+                                        <small>{{turno.horaInicio}}</small>
+                                    </div>
+                                    <p class="mb-1">
+
+                                    </p>
+                                    <small>Donec id elit non mi porta.</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </plex-panel>
+            </plex-accordion>
+        </div>
+    </div>
+</div>
