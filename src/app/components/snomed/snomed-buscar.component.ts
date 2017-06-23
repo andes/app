@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Rx';
     .results {
         margin-top: 0;
     }
-    
+
     .results.list-group>.list-group-item {
         padding: 5px;
         cursor: -webkit-grab;
@@ -65,7 +65,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     public tipoBusqueda: String = '';
 
     // inyectamos servicio de snomed, plex y tambien ElementRef
-    // ElementRef lo utilizo para tener informacion del 
+    // ElementRef lo utilizo para tener informacion del
     // html del codigo de este componente en el DOM
     constructor(private SNOMED: SnomedService, private plex: Plex,
         myElement: ElementRef) {
@@ -205,11 +205,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         if (!inside && !this._draggable) {
             // this.listaProblemasMaestro = [];
             this.hideLista = true;
+            this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
+        this.searchTerm = '';
         this.evtData.emit(concepto);
     }
 }

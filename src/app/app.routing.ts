@@ -47,7 +47,6 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
@@ -94,8 +93,8 @@ const appRoutes: Routes = [
   // Prestación Clínica General de Medicina
   { path: 'test', component: TestComponent, canActivate: [RoutingGuard] },
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
-  // { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
-  // { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
   // { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 

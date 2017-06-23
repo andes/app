@@ -15,7 +15,7 @@
 
             <ul class="results list-group">
                 <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let prestacion of prestacionesPendientes">
-                    <h5 class="item-title d-inline text-left">{{ prestacion.solicitud.tipoPrestacion.nombre }}</h5>
+                    <h5 class="item-title d-inline text-left">{{ prestacion.solicitud.tipoPrestacion.term }}</h5>
                     <div>
                         <span class="badge badge-info  mdi mdi-link pull-right"></span>
                     </div>
@@ -90,7 +90,9 @@
     </div>
     <!-- /Problemas del paciente-->
     <!-- Registros de la consulta-->
+
     <div class="col-3">
+        <!--
         <plex-box>
             <header>
                 <div class="row">
@@ -117,6 +119,7 @@
                 </div>
             </div>
         </plex-box>
+        -->
     </div>
     <!-- /Registros de la consulta-->
 </section>
@@ -127,11 +130,11 @@
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('/rup')" type="danger"></plex-button>
         </div>
         <div class="col text-right">
-            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estado[prestacion.estado.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
             </plex-button>
         </div>
     </div>

@@ -1,8 +1,12 @@
-<plex-text *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="observaciones" label="Observaciones" (keyup)="devolverValores()">
-</plex-text>
+<ng-container *ngIf="!soloValores">
+    <label for="observaciones">
+        Observación <i>({{elementoRUP.nombre}})</i>
+    </label>
+    <textarea class="form-control" [(ngModel)]="data[elementoRUP.key]" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución" (keyup)="devolverValores()"></textarea>
+</ng-container>
 
 <p *ngIf="soloValores">
     <label>Observaciones</label>
-    <br /> {{data[tipoPrestacion.key]}}
+    <br /> {{data[elementoRUP.key]}}
 </p>
 

@@ -6,6 +6,7 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class ElementosRupService {
+    private evolucionPorDefecto = '594aa43a884431c25d9a0267';
 
     private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
@@ -54,5 +55,31 @@ export class ElementosRupService {
     enable(elementoRup: IElementoRUP): Observable<IElementoRUP> {
         elementoRup.activo = true;
         return this.put(elementoRup);
+    }
+
+    /**
+     * Traemos el elemento rup asociado al concepto de SNOMED
+     * de la lista de elementos rup precargados en memoria
+     *
+     * @param {*} listaElementosRup
+     * @param {*} conceptoSnomed
+     * @returns elementoRUP
+     * @memberof ElementosRupService
+     */
+    buscarElementoRup(listaElementosRup: any, conceptoSnomed: any) {
+        //debugger;
+        let concepto = listaElementosRup.find(elemento => {
+            return elemento.conceptos.find(concepto =>
+                concepto.conceptId === conceptoSnomed.conceptId
+            );
+        });
+
+        // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
+        if (!concepto) {
+            concepto = listaElementosRup.find(elemento => elemento.id  === this.evolucionPorDefecto);
+        }
+
+        return concepto;
+
     }
 }
