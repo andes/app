@@ -1,32 +1,24 @@
-<pre>
-    <!--{{ agendasCandidatas | json }}-->
-</pre>
-<div *ngIf="agendasCandidatas?.length">
-    <div *ngFor="let bloque of agendaAReasignar.bloques">
-        <div *ngFor="let turno of bloque.turnos">
-            <plex-accordion *ngIf="turno.paciente">
-                Turno: {{ turno.horaInicio | date: 'dd/MM/yyyy' }} {{ turno.horaInicio | date: 'HH:mm' }} hs ~ Paciente: {{ turno.paciente
-                | paciente }}
-                <plex-panel tituloPrincipal="Turno">
-                    <div class="list-group" *ngFor="let agenda of agendasCandidatas">
-                        {{ agenda.horaInicio }}
-                        <div *ngFor="let bloque of agenda.bloques">
-                            <div *ngFor="let turno of bloque.turnos">
-                                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h5 class="mb-1"></h5>
-                                        <small>{{turno.horaInicio}}</small>
-                                    </div>
-                                    <p class="mb-1">
+<div *ngFor="let turnoCandidato of agendasCandidatas">
+    <plex-accordion>
+        Turno: {{ turnoCandidato.turno.horaInicio | date: 'dd/MM/yyyy' }} {{ turnoCandidato.turno.horaInicio | date: 'HH:mm' }} hs
+        ~ Paciente: {{ turnoCandidato.turno.paciente | paciente }}
+        <plex-panel tituloPrincipal="Turno">
+            <div class="list-group" *ngFor="let agenda of turnoCandidato.agendas; let i = index">
 
-                                    </p>
-                                    <small>Donec id elit non mi porta.</small>
-                                </a>
-                            </div>
-                        </div>
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} - Hora de inicio: {{ agenda.horaInicio | date:
+                            'HH:mm'}} hs.
+                        </h5>
+                        <small>{{ turnoCandidato.similitud | json }}%</small>
                     </div>
-                </plex-panel>
-            </plex-accordion>
-        </div>
-    </div>
+                    <p class="mb-1">
+                        Tipo Prestación: {{ turnoCandidato.turno.tipoPrestacion.nombre }}
+                    </p>
+                    <small>Profesional: {{ agenda.profesionales[0] | profesional }}</small>
+                </a>
+
+            </div>
+        </plex-panel>
+    </plex-accordion>
 </div>

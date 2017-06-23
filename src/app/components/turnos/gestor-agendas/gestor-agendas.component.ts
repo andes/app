@@ -23,7 +23,6 @@ export class GestorAgendasComponent implements OnInit {
 
     agendasSeleccionadas: IAgenda[] = [];
 
-    agendasCandidatas: any;
     public showGestorAgendas: Boolean = true;
     public showTurnos: Boolean = false;
     public showReasignarTurno = false;
