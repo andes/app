@@ -146,7 +146,7 @@ import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
 import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
@@ -237,7 +237,7 @@ export const RUP_COMPONENTS = [
   TensionSistolicaComponent,
   TensionDiastolicaComponent,
   ObservacionesComponent,
-  // ConsultaGeneralClinicaMedicaComponent,
+  ConsultaMedicinaGeneralComponent,
   // NuevoProblemaComponent,
   // EvolucionProblemaComponent,
   // EvolucionTodosProblemasComponent,

@@ -137,7 +137,7 @@ export class PuntoInicioComponent implements OnInit {
         // this.fechaHasta = new Date(hoy.fechaHasta);
         // this.loadAgendasXDia(hoy);
 
-        this.TraetodasLasPrestacionesFiltradas(hoy);
+        // this.TraetodasLasPrestacionesFiltradas(hoy);
 
     }
 

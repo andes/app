@@ -64,7 +64,7 @@ import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sa
 // import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
 
 // RUP
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
 import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
