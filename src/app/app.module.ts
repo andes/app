@@ -1,3 +1,4 @@
+import { SnomedConceptBuscarComponent } from './components/snomed/snomedConcept-buscar.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -236,15 +237,15 @@ export const RUP_COMPONENTS = [
   TensionSistolicaComponent,
   TensionDiastolicaComponent,
   ObservacionesComponent,
-  ConsultaGeneralClinicaMedicaComponent,
-  NuevoProblemaComponent,
-  EvolucionProblemaComponent,
-  EvolucionTodosProblemasComponent,
-  //PuntoInicioComponent,
+  // ConsultaGeneralClinicaMedicaComponent,
+  // NuevoProblemaComponent,
+  // EvolucionProblemaComponent,
+  // EvolucionTodosProblemasComponent,
+  PuntoInicioComponent,
   //PrestacionEjecucionComponent,
   //ResumenComponent,
   HeaderPacienteComponent,
-  PrestacionValidacionComponent,
+  //PrestacionValidacionComponent,
   EdadGestacionalComponent,
   ScoreApgarComponent,
   NacimientoComponent,
@@ -296,6 +297,7 @@ export const RUP_COMPONENTS = [
   LaboratorioComponent,
   RadiografiaComponent,
   SnomedBuscarComponent,
+  SnomedConceptBuscarComponent,
   TomografiaComponent,
   MamografiaComponent,
   EndoscopiaComponent,

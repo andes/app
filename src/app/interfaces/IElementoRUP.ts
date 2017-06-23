@@ -3,6 +3,7 @@ export interface IElementoRUP {
     key: String;
     nombre: String;
     autonoma: Boolean;
+    turneable: Boolean;
     activo: Boolean;
     componente: {
         nombre: String,
@@ -10,11 +11,12 @@ export interface IElementoRUP {
     };
     tipo: String;
     conceptos: [
-        {conceptId: String,
-        term: String,
-        fsn: String,
-        semanticTag: String
-    }];
+        {
+            conceptId: String,
+            term: String,
+            fsn: String,
+            semanticTag: String
+        }];
     requeridos: IElementoRUP[];
     frecuentes: IElementoRUP[];
 

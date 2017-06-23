@@ -12,10 +12,11 @@
                 <header-paciente [paciente]="paciente"></header-paciente>
             </div>
         </div>
+
+
         <div class="row" *ngIf="paciente">
             <div class="col">
-                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Tipos de prestaciones" (getData)="loadPrestacionesProfesional($event)">
-                </plex-select>
+                <snomedConcept-buscar (evtData)="conceptoSnomed($event)"></snomedConcept-buscar>
             </div>
         </div>
 

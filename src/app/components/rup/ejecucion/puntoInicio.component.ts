@@ -1,3 +1,6 @@
+import { ElementosRupService } from './../../../services/elementosRUP.service';
+import { IElementoRUP } from './../../../interfaces/IElementoRUP';
+import * as elementosRupFunciones from '../core/elementosRup.funciones';
 import {
     PacienteSearch
 } from './../../../services/pacienteSearch.interface';
@@ -74,6 +77,11 @@ export class PuntoInicioComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
+    // Lista de elementos RUP en memoria
+    public elementosRUP: IElementoRUP[] = [];
+    // termino a buscar en Snomed
+    public searchTerm: String = '';
+
 
     public listaPrestaciones: IPrestacionPaciente[] = [];
     public agendas: any = [];
@@ -95,10 +103,13 @@ export class PuntoInicioComponent implements OnInit {
     public todosSeleccion = false;
     public selectPrestacionesProfesional: any = [];
 
+
+
+
+
     public searchPaciente: any;
     public filtrosPacientes = true;
     public textoTipeado: string = null;
-    public searchTerm: String = '';
 
     private buscarMPI = false;
 
@@ -107,23 +118,37 @@ export class PuntoInicioComponent implements OnInit {
         private servicioTipoPrestacion: TipoPrestacionService,
         public servicioAgenda: AgendaService, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
-        private plex: Plex) { }
+        private plex: Plex,
+        private servicioElementosRUP: ElementosRupService) { }
 
     ngOnInit() {
         this.breadcrumbs = this.route.routeConfig.path;
+        // buscamos los elementos rup de la api
+        this.servicioElementosRUP.get({}).subscribe(elementosRup => {
+            this.elementosRUP = elementosRup;
+        });
 
         let hoy = {
             fechaDesde: moment().startOf('day').format(),
             fechaHasta: moment().endOf('day').format()
         }
 
-        this.fechaDesde = new Date(hoy.fechaDesde);
-        this.fechaHasta = new Date(hoy.fechaHasta);
-        this.loadAgendasXDia(hoy);
+        // this.fechaDesde = new Date(hoy.fechaDesde);
+        // this.fechaHasta = new Date(hoy.fechaHasta);
+        // this.loadAgendasXDia(hoy);
+
+        this.TraetodasLasPrestacionesFiltradas(hoy);
 
     }
 
+    conceptoSnomed(concepto) {
 
+        console.log(concepto);
+        let elemento = elementosRupFunciones.buscarElementoRup(this.elementosRUP, concepto);
+        debugger;
+        this.crearPrestacionVacia(concepto);
+
+    }
 
 
 
@@ -200,7 +225,7 @@ export class PuntoInicioComponent implements OnInit {
         let fechaHasta = fechaActual.setHours(23, 59, 0, 0);
 
         this.servicioPrestacion.get({
-            turneables: true,
+            // turneables: true,
             fechaDesde: params.fechaDesde || fechaDesde,
             fechaHasta: params.fechaHasta || fechaHasta
         }).subscribe(resultado => {
@@ -219,61 +244,62 @@ export class PuntoInicioComponent implements OnInit {
     cargaPacientes() {
         this.pacientesPresentes = [];
         let unPacientePresente: any = {};
-        this.agendas.forEach(agenda => {
-            let turnos: any = [];
-            // Recorremos los bloques de una agenda para sacar los turnos asignados.
-            for (let i in agenda.bloques) {
-                if (i) {
-                    let turnosAsignados = agenda.bloques[i].turnos.filter(turno => (
-                        (turno.estado === 'asignado') || (turno.paciente && turno.estado === 'suspendido')));
-                    turnos = [...turnos, ...turnosAsignados];
-                }
-            }
-            turnos.forEach(turno => {
-                unPacientePresente.idAgenda = agenda.id;
-                unPacientePresente.turno = turno;
-                unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
-                // El estado para pacientes que aún no dieron asistencia es Programado
-                unPacientePresente.estado = 'Programado';
-                unPacientePresente.fecha = turno.horaInicio;
-                unPacientePresente.profesionales = agenda.profesionales;
-                // Cargo el tipo de prestacion y el paciente del turno
-                unPacientePresente.nombrePrestacion = turno.tipoPrestacion.nombre;
-                unPacientePresente.paciente = turno.paciente;
+        // this.agendas.forEach(agenda => {
+        //     let turnos: any = [];
+        //     // Recorremos los bloques de una agenda para sacar los turnos asignados.
+        //     for (let i in agenda.bloques) {
+        //         if (i) {
+        //             let turnosAsignados = agenda.bloques[i].turnos.filter(turno => (
+        //                 (turno.estado === 'asignado') || (turno.paciente && turno.estado === 'suspendido')));
+        //             turnos = [...turnos, ...turnosAsignados];
+        //         }
+        //     }
+        //     turnos.forEach(turno => {
+        //         unPacientePresente.idAgenda = agenda.id;
+        //         unPacientePresente.turno = turno;
+        //         unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
+        //         // El estado para pacientes que aún no dieron asistencia es Programado
+        //         unPacientePresente.estado = 'Programado';
+        //         unPacientePresente.fecha = turno.horaInicio;
+        //         unPacientePresente.profesionales = agenda.profesionales;
+        //         // Cargo el tipo de prestacion y el paciente del turno
+        //         unPacientePresente.nombrePrestacion = turno.tipoPrestacion.nombre;
+        //         unPacientePresente.paciente = turno.paciente;
 
-                if (turno.asistencia === 'asistio') {
-                    unPacientePresente.estado = 'En espera';
-                } else {
-                    if (turno.estado === 'suspendido') {
-                        unPacientePresente.estado = 'Suspendido';
-                        unPacientePresente.fecha = turno.horaInicio;
-                    }
-                }
+        //         if (turno.asistencia === 'asistio') {
+        //             unPacientePresente.estado = 'En espera';
+        //         } else {
+        //             if (turno.estado === 'suspendido') {
+        //                 unPacientePresente.estado = 'Suspendido';
+        //                 unPacientePresente.fecha = turno.horaInicio;
+        //             }
+        //         }
 
-                // Buscar si existe una prestacion asociada al turno
-                let prestacionTurno = this.todasLasPrestaciones.find(x => {
-                    if (x.solicitud.idTurno && (x.solicitud.idTurno.toString() === turno._id.toString())) {
+        //         // Buscar si existe una prestacion asociada al turno
+        //         let prestacionTurno = this.todasLasPrestaciones.find(x => {
+        //             if (x.solicitud.idTurno && (x.solicitud.idTurno.toString() === turno._id.toString())) {
 
-                        return x;
-                    }
-                });
+        //                 return x;
+        //             }
+        //         });
 
-                if (prestacionTurno) {
-                    unPacientePresente.idPrestacion = prestacionTurno.id;
-                    // Cargo un objeto con el profesional que realizó el ultimo cambio de estado.
-                    unPacientePresente.profesionales = [prestacionTurno.estado[prestacionTurno.estado.length - 1].profesional];
-                    if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
-                        unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
-                        unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
-                    }
-                }
+        //         if (prestacionTurno) {
+        //             unPacientePresente.idPrestacion = prestacionTurno.id;
+        //             // Cargo un objeto con el profesional que realizó el ultimo cambio de estado.
+        //             unPacientePresente.profesionales = [prestacionTurno.estado[prestacionTurno.estado.length - 1].profesional];
+        //             if (prestacionTurno.estado[(prestacionTurno.estado.length - 1)].tipo !== 'pendiente') {
+        //                 unPacientePresente.estado = prestacionTurno.estado[prestacionTurno.estado.length - 1].tipo;
+        //                 unPacientePresente.fecha = prestacionTurno.estado[prestacionTurno.estado.length - 1].timestamp;
+        //             }
+        //         }
 
-                this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
-                unPacientePresente = {};
-            });
-        });
+        //         this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
+        //         unPacientePresente = {};
+        //     });
+        // });
 
         // Buscamos los que solo tienen prestacion y no tienen turno
+        debugger;
         let prestacionesSinTurno = this.todasLasPrestaciones.filter(prestacion => {
             if (prestacion.solicitud.idTurno === null) {
                 return prestacion;
@@ -293,7 +319,7 @@ export class PuntoInicioComponent implements OnInit {
 
             unPacientePresente.idPrestacion = prestacion.id;
             // //Cargo el tipo de prestacion
-            unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.nombre; // Recorrer las prestaciones si tiene mas de una
+            unPacientePresente.nombrePrestacion = prestacion.solicitud.tipoPrestacion.term; // Recorrer las prestaciones si tiene mas de una
             // //Recorro agenda saco el estados
             unPacientePresente.paciente = prestacion.paciente;
             this.pacientesPresentes = [... this.pacientesPresentes, unPacientePresente];
@@ -385,11 +411,9 @@ export class PuntoInicioComponent implements OnInit {
      *
      * @memberof PuntoInicioComponent
      */
-    crearPrestacionVacia(tipoPrestacion) {
-
+    crearPrestacionVacia(conceptoSnomed) {
+        debugger;
         let nuevaPrestacion;
-
-        tipoPrestacion['turneable'] = true;
         nuevaPrestacion = {
             paciente: {
                 id: this.paciente.id,
@@ -400,10 +424,11 @@ export class PuntoInicioComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento
             },
             solicitud: {
-                tipoPrestacion: tipoPrestacion,
+                tipoPrestacion: conceptoSnomed,
                 fecha: new Date(),
-                listaProblemas: [],
                 idTurno: null,
+                hallazgos: [],
+                idPrestacionOrigen: null,
                 // profesional logueado
                 profesional:
                 {
@@ -413,27 +438,24 @@ export class PuntoInicioComponent implements OnInit {
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
             },
-            estado: {
-                timestamp: new Date(),
-                tipo: 'pendiente',
-                profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                }
-            },
             ejecucion: {
                 fecha: new Date(),
-                evoluciones: [],
+                registros: [],
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
+            },
+            estados: {
+                fecha: new Date(),
+                tipo: 'pendiente'
             }
         };
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
-
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
-                this.router.navigate(['/rup/resumen', prestacion.id]);
+                this.paciente = null;
+                this.mostrarPacientesSearch = true;
+                this.mostrarLista = true;
+                // this.router.navigate(['/rup/resumen', prestacion.id]);
             });
         });
     }

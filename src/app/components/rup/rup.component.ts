@@ -87,7 +87,6 @@ export class RupComponent implements OnInit, OnDestroy {
     ngOnDestroy() { }
 
     devolverValores(obj?: any, elementoRUPactual?: any) {
-
         // Átomo
         if (this.elementoRUP.tipo === 'atomo' || this.elementoRUP.tipo === 'formula') {
             // console.log('--> Átomo <--');
@@ -111,8 +110,10 @@ export class RupComponent implements OnInit, OnDestroy {
                     this.data[this.elementoRUP.key][elementoRUPactual.key] = {};
                 }
                 this.data[this.elementoRUP.key][elementoRUPactual.key] = valor;
-            } else if (this.data[this.elementoRUP.key][elementoRUPactual.key] && valor == null) {
-                delete this.data[this.elementoRUP.key][elementoRUPactual.key];
+            } else {
+                if (this.data[this.elementoRUP.key][elementoRUPactual.key] && valor == null) {
+                    delete this.data[this.elementoRUP.key][elementoRUPactual.key];
+                }
             }
             if (!Object.keys(this.data[this.elementoRUP.key]).length) {
                 this.data = {};

@@ -7,7 +7,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class ElementosRupService {
 
-    private elementoRupUrl = '/rup/elementosRUP';  // URL to web api
+    private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
     constructor(private server: Server) { }
 
@@ -16,8 +16,6 @@ export class ElementosRupService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IElementoRUP[]> {
-
-
         return this.server.get(this.elementoRupUrl, { params: params, showError: true });
     }
     /**

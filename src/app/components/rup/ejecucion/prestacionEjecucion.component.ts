@@ -1008,12 +1008,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     crearPrestacionVacia(tipoPrestacion) {
         // asignamos valores a la nueva prestacion
         let nuevaPrestacion = {
-            idPrestacionOrigen: this.prestacion.id,
+            // idPrestacionOrigen: this.prestacion.id,
             paciente: this.prestacion.paciente,
             solicitud: {
                 tipoPrestacion: tipoPrestacion,
                 fecha: new Date(),
-                listaProblemas: [],
+                // listaProblemas: [],
                 profesional:
                 {
                     id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
