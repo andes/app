@@ -25,6 +25,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public elementosRUP: any[];
     public elementoRUP: any;
 
+    // concepto snomed seleccionado del buscador a ejecutar
+    public conceptoSnomedSeleccionado: any;
     // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
     public ejecutarRUP: any;
     public data: any[];
@@ -70,6 +72,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ejecutarConcepto(concepto) {
+        this.conceptoSnomedSeleccionado = concepto;
         this.ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, concepto);
     }
 

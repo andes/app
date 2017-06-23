@@ -30,6 +30,8 @@ export class RupComponent implements OnInit, OnDestroy {
     @Input() elementoRUP: any;
     @Input() datosIngreso: Object;
     @Input() soloValores: Boolean = null;
+    @Input() conceptoSnomed: any;
+
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // array de prestaciones que se estan ejecutando actualmente en el proceso
     // TODO: revisar uso de prestacionesEJecucion
@@ -161,6 +163,7 @@ export class RupComponent implements OnInit, OnDestroy {
         this.componentReference.instance.elementoRUP = this.elementoRUP;
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
+        this.componentReference.instance.conceptoSnomed = this.conceptoSnomed;
 
         // console.log('this.datosIngreso:', this.datosIngreso);
 
