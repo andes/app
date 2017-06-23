@@ -119,12 +119,9 @@
                     <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
                         <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
                         <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
-                        <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
-
-                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
-                    {{carpeta.nroCarpeta}}
-                </span>
-            </span></small>
+                        <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta 
+                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
+                        </span></small>
 
                         <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
                         <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
@@ -145,9 +142,9 @@
           </td>-->
                     <td>
                         <span *ngIf="turno && turno.estado !== 'disponible' && turno.estado !== 'turnoDoble'">
-              <popover-audit placement="left" [data]="turno" >
-              </popover-audit>
-          </span>
+                        <popover-audit placement="left" [data]="turno" >
+                        </popover-audit>
+                        </span>
                     </td>
                 </tr>
             </tbody>
