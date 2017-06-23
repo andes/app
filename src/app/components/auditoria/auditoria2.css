@@ -32,10 +32,14 @@
     border: #ff525b dashed 2px;
 }
 
+.centrado {
+  text-align: center
+}
+
 .droppable.drag-target-border,
 .list-group>.list-group-item.drag-target-border,
 .drag-target-border {
-    border: #00bfff dashed 2px;
+    border: lightskyblue dashed 2px;
 }
 
 .drag-handle {
@@ -54,8 +58,9 @@
 }
 
 .msg-arrastrePaciente {
-    border: 1px solid #ff9900;
-    color: #ff9900;
+    border: 1px solid green;
+    color:green;
     margin-bottom: 10px;
     padding: 10px;
+    text-align: center;
 }

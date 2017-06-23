@@ -295,7 +295,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.validarTodo();
     }
 
-    cambiaCantTipo($event, cual: String) {
+    cambiaCantTipo(cual: String) {
         // if ($event.key === '-')
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
@@ -475,14 +475,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.alertas.push(alerta);
                 }
 
-                let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
-                let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
-                let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
-                let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
+                // let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
+                // let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
+                // let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
+                // let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
 
                 // if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
-                if ((add + adp + rg + rp) < bloque.cantidadTurnos) {
-                    const cant = bloque.cantidadTurnos - (add + adp + rg + rp);
+                if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
+                    const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
                     this.alertas = [... this.alertas, alerta];
                 }
@@ -491,8 +491,6 @@ export class PlanificarAgendaComponent implements OnInit {
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': La hora de inicio es mayor a la hora de fin';
                     this.alertas.push(alerta);
                 }
-
-                console.log('bloques ', bloques);
 
                 // Verifica que no se solape con ningún otro
                 let mapeo = bloques.map(function (obj) {
@@ -505,7 +503,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         return null;
                     }
                 });
-                console.log('mapeo ', mapeo);
 
                 mapeo.forEach((bloqueMap, index1) => {
                     if (bloqueMap) {
@@ -548,7 +545,15 @@ export class PlanificarAgendaComponent implements OnInit {
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
-            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno)) {
+            // Verifico que cada bloque tenga al menos una prestacion activa
+            let prestacionActiva = false;
+            for (let j = 0; j < bloque.tipoPrestaciones.length; j++) {
+                if (bloque.tipoPrestaciones[j].activo) {
+                    prestacionActiva = true;
+                    break;
+                }
+            }
+            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva )) {
                 validaBloques = false;
                 break;
             }

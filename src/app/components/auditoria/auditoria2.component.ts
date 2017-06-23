@@ -1,3 +1,4 @@
+import { AuditoriaPorBloqueComponent } from './auditoriaPorBloque.component';
 import {
   Plex
 } from '@andes/plex';
@@ -12,6 +13,9 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+import {
+  AuditoriaPorBloqueService
+} from '../../services/auditoria/auditoriaPorBloque.service';
 import {
   AuditoriaService
 } from '../../services/auditoria/auditoria.service';
@@ -30,7 +34,7 @@ import {
 @Component({
   selector: 'auditoria2',
   templateUrl: 'auditoria2.html',
-   styleUrls: ['auditoria2.css']
+  styleUrls: ['auditoria2.css']
 })
 
 
@@ -40,115 +44,145 @@ export class Auditoria2Component implements OnInit {
   verDuplicados = false;
   draggingPatient = true;
 
-  posiblesDuplicados: any[];
+  //pacienteSelected: any;
   pacientesAudit: any[];
-  pacientesSimilares: any[];
-  pacienteSelected = {
-    "documento": "36433556",
-    "estado": "validado",
-    "nombre": "MARCOS DANIEL",
-    "apellido": "OSMAN",
-    "sexo": "masculino",
-    "genero": "masculino",
-    "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-    "matchSisa": "0.88",
+  pacientesVinculados = [];
+  pacientesDesvinculados = [];
 
+  // Lo dejamos hardcodeado, luego sería un input desde otro componente
+  pacienteSelected : any = {
+    "documento": "",
+    "estado": "",
+    "nombre": "",
+    "apellido": "",
+    "sexo": "",
+    "genero": "",
+    "fechaNacimiento": "",
+    "estadoCivil": null,
+    "activo": true,
   }
 
-
-  pacientesVinculados = [{
-    "seleccionado": false,
-    "documento": "36433556",
-    "estado": "temporal",
-    "nombre": "MARCO",
-    "apellido": "OSLAM",
-    "sexo": "masculino",
-    "genero": "masculino",
-    "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-    "matchSisa": "0.88",
-
-  }]
-
-
-  pacientesDesvinculados = [{
-      "seleccionado": false,
-      "documento": "36433556",
-      "estado": "temporal",
-      "nombre": "DANIEL ORLANDO",
-      "apellido": "OSMANAN",
-      "sexo": "masculino",
-      "genero": "masculino",
-      "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-      "matchSisa": "0.88",
-
-    }, {
-      "seleccionado": false,
-      "documento": "30096099",
-      "estado": "validado",
-      "nombre": "RRICHARD HORACIO",
-      "apellido": "OSS",
-      "sexo": "masculino",
-      "genero": "masculino",
-      "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-      "matchSisa": "0.82",
-    },
-    {
-      "seleccionado": false,
-      "documento": "39682204",
-      "estado": "temporal",
-      "nombre": "MAURO LEANDRO",
-      "apellido": "JARA",
-      "sexo": "masculino",
-      "genero": "masculino",
-      "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-      "matchSisa": "0.72",
-    },
-    {
-      "seleccionado": false,
-      "documento": "30096099",
-      "estado": "validado",
-      "nombre": "RICARDO DANIEL",
-      "apellido": "LOPEZ",
-      "sexo": "masculino",
-      "genero": "masculino",
-      "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-      "matchSisa": "0.82",
-    }
-  ]
 
   constructor(
     private formBuilder: FormBuilder,
     private auditoriaService: AuditoriaService,
+    private auditoriaPorBloqueService: AuditoriaPorBloqueService,
     private pacienteService: PacienteService,
     private plex: Plex,
-  ) {}
+  ) { }
 
   ngOnInit() {
 
+    this.inicializar();
+    
+  }
+
+
+  inicializar() {
+    /* Ejecutar una consulta que obtenga un array con todos los pacientes que tienen la misma clave de blocking.
+      Vamos a suponer que el paciente a buscar viene en un input desde otro componente.
+    */
+  this.pacienteService.getById('586e6e8527d3107fde11125d').subscribe(data => {
+        if (data) {
+          this.pacienteSelected = data;
+          this.loadPacientePorBloque();
+          /* Levanta todos los pacientes cuyos objectId están asociados al paciente seleccionado */
+          this.loadPacientesVinculados();
+        }
+      })
+  }
+
+  loadPacientesVinculados(){
+    let idVinculados = this.pacienteSelected.identificadores;
+    idVinculados.forEach(identificador => {
+      if (identificador.entidad === 'ANDES') {
+        this.pacienteService.getById(identificador.valor).subscribe(pac => {
+          this.pacientesVinculados.push(pac);
+        })
+      }
+    });
+  }
+
+  loadPacientePorBloque() {
+    // Obtenemos la lista de pacientes que tienen la misma clave de blocking y hardcodeamos el tipo de clave a METAPHONE Nombre + Apellido
+     let tipoClave: number = 0;
+     let dto: any = {
+       idTipoBloque: tipoClave, 
+       idBloque: this.pacienteSelected.claveBlocking[tipoClave].toString()
+     };
+     
+    this.auditoriaPorBloqueService.getListaBloques(dto).subscribe(rta => {
+      if (rta) {
+        rta.forEach(element => {
+          if (element.id !== this.pacienteSelected.id){
+            this.pacientesDesvinculados.push(element)
+          }
+        });
+      };
+    })
   }
 
   arrastrandoPaciente(dragging) {
     this.draggingPatient = dragging;
   }
 
-  vincularPaciente(pac: any) {
-      this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + ' ¿seguro desea continuar?').then((resultado) => {
+  /**
+   * Función que realiza la vinculación desde clic en el clip
+   * 
+   * @param {*} pac 
+   * @memberof Auditoria2Component
+   */
+  vincularPacienteClic(pac: any) {
+    this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido + ' ' + this.pacienteSelected.nombre + ' ¿seguro desea continuar?').then((resultado) => {
       let rta = resultado;
       if (rta) {
         this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(pac), 1);
         this.pacientesVinculados.push(pac);
+        this.vincular(pac);
       }
     });
   }
 
+  /**
+   * Función que realiza la vinculación desde un Drag&Drop
+   * 
+   * @param {*} evt 
+   * @memberof Auditoria2Component
+   */
   vincularPacienteDrop(evt: any) {
-    this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido +' '+ this.pacienteSelected.nombre  + ' ¿seguro desea continuar?').then((resultado) => {
+    this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido + ' ' + this.pacienteSelected.nombre + ' ¿seguro desea continuar?').then((resultado) => {
       let rta = resultado;
       if (rta) {
+        debugger;
         this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(evt.dragData), 1);
         this.pacientesVinculados.push(evt.dragData);
+        this.vincular(evt.dragData);
       }
     });
+  }
+
+
+  /**
+   * Vincula el paciente seleccionado tanto por Drag&Drop como por el clic en el clip
+   * 
+   * @param {*} paciente : El paciente a vincualar
+   * @memberof Auditoria2Component
+   */
+  vincular(paciente: any) {
+    debugger;
+    /* Acá hacemos el put con el update de los pacientes */
+        let dataLink = {entidad:'ANDES', valor: paciente.id};
+        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'updateIdentificadores', 'dto': dataLink}).subscribe(resultado => {
+          if (resultado) {
+            let activo = false
+            debugger;
+            this.pacienteService.patch(paciente.id, {'op':'desactivarPaciente', 'dto':activo}).subscribe(resultado2 => {
+              if (resultado2) {
+                this.plex.toast('success','La vinculación ha sido realizada correctamente', 'Información', 3000);
+              }
+            })
+          }
+        })
   }
 
   desvincularPaciente(pac: any) {
@@ -156,7 +190,6 @@ export class Auditoria2Component implements OnInit {
     this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
       let rta = resultado;
       if (rta) {
-          debugger;
         this.pacientesVinculados.splice(this.pacientesVinculados.indexOf(pac), 1);
         this.pacientesDesvinculados.push(pac);
       }

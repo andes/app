@@ -100,7 +100,7 @@ export class AuditoriaComponent implements OnInit {
   }
 
   mostrarDatos(paciente: any) {
-    debugger
+
     this.validate = false;
     this.pacienteSelected.id = paciente.id;
     this.pacienteSelected.apellido = paciente.apellido;
