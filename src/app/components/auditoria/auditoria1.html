@@ -10,7 +10,8 @@
           </header>
           <div class="row">
             <div class="col-12">
-              <plex-text name="filtro" [(ngModel)]="filtro" (click)="mostrarPaciente=false" placeholder="Buscar por DNI, nombre o apellido">   </plex-text>
+              <plex-text name="filtro" [(ngModel)]="filtro" (click)="mostrarDetalle=false" placeholder="Buscar por DNI, nombre o apellido">
+              </plex-text>
             </div>
           </div>
           <!-- Search results -->
@@ -26,7 +27,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="hover" *ngFor="let paciente of pacientesTemporales | textFilter:filtro ; let i=index" (click)="mostrarPaciente=true;  seleccionarPaciente(paciente);"
+                <tr class="hover" *ngFor="let paciente of pacientesTemporales | textFilter:filtro ; let i=index" (click)="mostrarDetalle=true;  seleccionarPaciente(paciente);"
                   [ngClass]="{'bg-inverse text-white': estaSeleccionado(pacientesTemporales[i])}">
                   <td>{{paciente.documento}}</td>
                   <td>{{paciente.nombre| uppercase}}</td>
@@ -42,7 +43,7 @@
       </div>
 
 
-      <div class="col-4" *ngIf=mostrarPaciente>
+      <div class="col-4" *ngIf=mostrarDetalle>
         <plex-box type="info">
           <header>
             <h3>Datos del Paciente
@@ -84,7 +85,8 @@
           <br>
           <div class="row">
             <div class="col">
-              <plex-button [disabled]="disableValidar" icon="autorenew" type="success" label="Validar" (click)="validar()"></plex-button>
+              <plex-button *ngIf="enableValidar" icon="autorenew" type="success" label="Validar" (click)="validar()"></plex-button>
+              <plex-button *ngIf="enableBaja" icon="autorenew" type="danger" label="Desactivar" (click)="validar()"></plex-button>
             </div>
           </div>
 

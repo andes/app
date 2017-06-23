@@ -15,6 +15,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 import { PacienteService } from './../../services/paciente.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
 // Pipes
 import { TextFilterPipe } from './../../pipes/textFilter.pipe';
 @Component({
@@ -29,18 +30,21 @@ export class Auditoria1Component implements OnInit {
     seleccionada = false;
     result = false;
     pacienteSelected: IPaciente;
-    disableValidar = false;
+    enableValidar = true;
+    enableBaja = false;
     resultado: any[];
     pacientesTemporales: any[];
     filtro = '';
+    mostrarDetalle = false;
 
-    private datosSisa: any;
+    private datosFA: any;
 
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
         private servicioSisa: SisaService,
+        private servicioSintys: SintysService,
         private plex: Plex
     ) { }
 
@@ -61,23 +65,46 @@ export class Auditoria1Component implements OnInit {
     validar() {
         this.plex.showLoader();
         this.servicioSisa.ValidarPacienteEnSisa(this.pacienteSelected).then(res => {
-            this.plex.hideLoader();
-            this.pacienteSelected = this.pacienteSelected;
-            this.datosSisa = res;
-            if (this.datosSisa.matcheos && this.datosSisa.matcheos.matcheo === 100) {
-                this.validarPaciente();
-            }
-            if (this.datosSisa.matcheos && this.datosSisa.matcheos.matcheo > 94 && this.pacienteSelected.sexo === this.datosSisa.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosSisa.matcheos.datosPaciente.documento) {
-                this.disableValidar = true;
-                this.editarPaciente();
-            } else {
-                this.rechazarValidacion();
+            if (!this.verificarDatosFA(res)) {
+                this.servicioSintys.ValidarPacienteEnSintys(this.pacienteSelected).then(res2 => {
+                    if (!this.verificarDatosFA(res2)) {
+                        this.rechazarValidacion();
+                        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
+                            // TODO: crear indice en prestaciones y turnos para verificar si el paciente
+                            // tiene alguno asignado
+                            // 
+                            // this.enableBaja = true;
+                            // this.enableValidar = false;
+                        }
+                    }
+                });
+
             }
         });
     }
 
+    verificarDatosFA(data) {
+        this.plex.hideLoader();
+        this.pacienteSelected = this.pacienteSelected;
+        this.datosFA = data;
+        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo === 100) {
+            this.validarPaciente();
+            this.mostrarDetalle = false;
+            return true;
+        }
+        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo > 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
+            this.enableValidar = false;
+            this.editarPaciente();
+            this.mostrarDetalle = false;
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     rechazarValidacion() {
-        this.pacienteSelected.entidadesValidadoras.push('Sisa');
+        this.pacienteSelected.entidadesValidadoras.push('SISA');
         this.pacienteService.save(this.pacienteSelected).subscribe(result => {
             this.plex.info('danger', '', 'Paciente no encontrado');
             this.getTemporales();
@@ -85,9 +112,9 @@ export class Auditoria1Component implements OnInit {
     }
 
     editarPaciente() {
-        this.pacienteSelected.nombre = this.datosSisa.matcheos.datosPaciente.nombre;
-        this.pacienteSelected.apellido = this.datosSisa.matcheos.datosPaciente.apellido;
-        this.pacienteSelected.fechaNacimiento = this.datosSisa.matcheos.datosPaciente.fechaNacimiento;
+        this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+        this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+        this.pacienteSelected.fechaNacimiento = this.datosFA.matcheos.datosPaciente.fechaNacimiento;
         this.pacienteSelected.estado = 'validado';
         this.pacienteSelected.entidadesValidadoras.push('Sisa');
         this.pacienteService.save(this.pacienteSelected).subscribe(result => {
@@ -97,8 +124,8 @@ export class Auditoria1Component implements OnInit {
     }
 
     validarPaciente() {
-        this.pacienteSelected.nombre = this.datosSisa.datosPaciente.nombre;
-        this.pacienteSelected.apellido = this.datosSisa.datosPaciente.apellido;
+        this.pacienteSelected.nombre = this.datosFA.datosPaciente.nombre;
+        this.pacienteSelected.apellido = this.datosFA.datosPaciente.apellido;
         this.pacienteSelected.estado = 'validado';
         this.pacienteSelected.entidadesValidadoras.push('Sisa');
         this.pacienteService.save(this.pacienteSelected).subscribe(result => {
@@ -114,4 +141,5 @@ export class Auditoria1Component implements OnInit {
     seleccionarPaciente(paciente: any) {
         this.pacienteSelected = paciente;
     }
+
 }
