@@ -1,7 +1,7 @@
-import { IElementoRUP } from './../interfaces/IElementoRUP';
+import { IElementoRUP } from './../../interfaces/IElementoRUP';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Server } from '@andes/shared';
 
 @Injectable()

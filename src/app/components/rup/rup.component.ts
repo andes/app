@@ -2,7 +2,7 @@ import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente'
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from './../../interfaces/IPaciente';
-import { ElementosRupService } from './../../services/elementosRUP.service';
+import { ElementosRupService } from './../../services/rup/elementosRUP.service';
 import { PacienteService } from './../../services/paciente.service';
 import { ObservarDatosService } from './../../services/rup/observarDatos.service';
 

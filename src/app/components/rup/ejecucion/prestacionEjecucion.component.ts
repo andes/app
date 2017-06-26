@@ -11,7 +11,7 @@ import { PrestacionPacienteService } from './../../../services/rup/prestacionPac
 
 // interfaces
 import { IProfesional } from './../../../interfaces/IProfesional';
-import { ElementosRupService } from '../../../services/elementosRUP.service';
+import { ElementosRupService } from '../../../services/rup/elementosRUP.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',

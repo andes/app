@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col">
                     Procedimientos
-                    <snomed-buscar [tipoBusqueda]="procedimientos" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+                    <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
                     <!--
                         [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
                     -->
@@ -28,6 +28,9 @@
 
 
             <div class="row" *ngIf="ejecutarRUP">
+                <pre>
+                {{ejecutarRUP | json}}
+                </pre>
                 <div class="col">
                     <rup #rup [prestacion]="prestacion"
                         [elementoRUP]="ejecutarRUP"

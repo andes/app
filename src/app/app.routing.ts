@@ -1,4 +1,3 @@
-import { TestComponent } from './components/test.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -91,7 +90,6 @@ const appRoutes: Routes = [
 
   // RUP
   // Prestación Clínica General de Medicina
-  { path: 'test', component: TestComponent, canActivate: [RoutingGuard] },
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },

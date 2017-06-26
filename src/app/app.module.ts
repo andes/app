@@ -1,4 +1,3 @@
-import { SnomedConceptBuscarComponent } from './components/snomed/snomedConcept-buscar.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -72,7 +71,7 @@ import { ObservarDatosService } from './services/rup/observarDatos.service';
 import { Cie10Service } from './services/term/cie10.service';
 
 // SNOMED
-import { SnomedService } from './services/snomed.service';
+import { SnomedService } from './services/term/snomed.service';
 
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
@@ -179,7 +178,6 @@ import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamog
 import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
 import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
 import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
-import { TestComponent } from './components/test.component';
 import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -297,14 +295,12 @@ export const RUP_COMPONENTS = [
   LaboratorioComponent,
   RadiografiaComponent,
   SnomedBuscarComponent,
-  SnomedConceptBuscarComponent,
   TomografiaComponent,
   MamografiaComponent,
   EndoscopiaComponent,
   TomaHpvComponent,
   TomaPapComponent,
-  SangreOcultaMateriaFecalComponent,
-  TestComponent
+  SangreOcultaMateriaFecalComponent
 ];
 
 // Locales
@@ -313,7 +309,7 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-import { ElementosRupService } from "./services/elementosRUP.service";
+import { ElementosRupService } from "./services/rup/elementosRUP.service";
 
 // Main module
 @NgModule({

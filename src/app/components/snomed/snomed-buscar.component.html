@@ -1,7 +1,6 @@
-{{hideSearchInput}}
 <form *ngIf="!hideSearchInput">
     <div>
-        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar Problema"></plex-text>
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar ..."></plex-text>
     </div>
 </form>
 
@@ -23,14 +22,14 @@
 -->
 
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-<div *ngIf="searchTerm && listaProblemasMaestro && listaProblemasMaestro.length === 0 && !loading">
-    No se han encontrado problemas
+<div *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
+    No se han encontrado resultados
 </div>
 
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
 <ul class="results list-group">
-    <ng-container *ngFor="let item of listaProblemasMaestro">
+    <ng-container *ngFor="let item of resultados">
         <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
             <a  href="javascript: void(0)"  *ngIf="_draggable">

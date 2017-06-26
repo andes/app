@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
-import { SnomedService } from './../../services/snomed.service';
+import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -55,8 +55,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
-    // lista de problemas de resultados
-    public listaProblemasMaestro = [];
+
+    public resultados = [];
     public elementRef;
 
     // boolean para indicar si esta cargando o no
@@ -64,6 +64,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';
+
+    private dragAndDrop = false;
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -140,7 +142,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     buscar(): void {
         // console.log($e);
         // if ($e.keyCode === 'Escape') {
-        //     this.listaProblemasMaestro = [];
+        //     this.resultados = [];
         // //     return false;
         // }
 
@@ -164,16 +166,18 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
                 this.loading = true;
-                this.listaProblemasMaestro = [];
+                this.resultados = [];
+
+                alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
                 let apiMethod;
-                switch(this.tipoBusqueda) {
+                switch (this.tipoBusqueda) {
                     case 'problemas':
-                        //apiMethod = this.SNOMED.getProblemas(query);
+                        apiMethod = this.SNOMED.getProblemas(query);
                     break;
                     case 'procedimientos':
-                        //apiMethod = this.SNOMED.getProcedimientos(query);
+                        apiMethod = this.SNOMED.getProcedimientos(query);
                     break;
                     default:
                         apiMethod = this.SNOMED.get(query);
@@ -182,7 +186,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                 apiMethod.subscribe(problemas => {
                     this.loading = false;
-                    this.listaProblemasMaestro = problemas;
+                    this.resultados = problemas;
 
                 }, err => {
                     this.loading = false;
@@ -191,7 +195,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            this.listaProblemasMaestro = [];
+            this.resultados = [];
         }
     }
 
@@ -224,7 +228,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            // this.listaProblemasMaestro = [];
+            // this.resultados = [];
             this.hideLista = true;
             this.searchTerm = '';
         }
@@ -232,6 +236,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
+        this.resultados = [];
         this.searchTerm = '';
         this.evtData.emit(concepto);
     }
