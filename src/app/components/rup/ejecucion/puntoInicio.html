@@ -16,7 +16,10 @@
 
         <div class="row" *ngIf="paciente">
             <div class="col">
-                <snomedConcept-buscar (evtData)="crearPrestacionVacia($event)"></snomedConcept-buscar>
+                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Tipos de prestaciones" labelField="term" (getData)="loadPrestacionesProfesional($event)" (change)="crearPrestacionVacia()">
+                </plex-select>
+                <!--
+                <snomedConcept-buscar (evtData)="crearPrestacionVacia($event)"></snomedConcept-buscar>-->
             </div>
         </div>
 
@@ -45,7 +48,7 @@
                 <fieldset>
                     <!--<legend>Filtro tipo de prestacion</legend>-->
                 </fieldset>
-                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" [data]="selectPrestacionesProfesional" (change)="filtrarPacientes(filtrosPacientes)">
+                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" [data]="selectPrestacionesProfesional" labelField="term" (change)="filtrarPacientes(filtrosPacientes)">
                 </plex-select>
             </div>
             <div class="col-3">
