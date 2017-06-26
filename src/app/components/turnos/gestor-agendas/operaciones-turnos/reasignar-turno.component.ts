@@ -1,7 +1,8 @@
-import { CalendarioComponent } from './../../dar-turnos/calendario.component';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Observable } from 'rxjs/Rx';
+import { CalendarioComponent } from './../../dar-turnos/calendario.component';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
@@ -114,7 +115,7 @@ export class ReasignarTurnoComponent implements OnInit {
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-        // Si no es del dia, chequeo el estado para definir el tipo de turno
+            // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
             if (agendaSeleccionada.estado === 'disponible') {
                 tipoTurno = 'gestion';
@@ -136,41 +137,27 @@ export class ReasignarTurnoComponent implements OnInit {
             tipoTurno: tipoTurno
         };
         console.log('datosTurno ', datosTurno);
+        this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
+            if (!confirmado) {
+                return false;
+            }
+
+            let operacion: Observable<any>;
+            operacion = this.serviceTurno.save(datosTurno);
+            operacion.subscribe(resultado => {
+                this.plex.toast('success', 'El turno se reasignó correctamente');
+
+                // Enviar SMS
+                // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+                // let tm = moment(this.turno.horaInicio).format('HH:mm');
+                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                // this.enviarSMS(pacienteSave, mensaje);
+                // this.actualizarCarpetaPaciente(turno.paciente);
+            });
+        });
+
     }
 
-    // seleccionarTurno(turno) {
-    //     let indice = this.seleccionadosSMS.indexOf(turno);
-    //     if (indice === -1) {
-    //         if (turno.paciente) {
-    //             this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
-    //         }
-    //     } else {
-    //         this.seleccionadosSMS.splice(indice, 1);
-    //         this.seleccionadosSMS = [...this.seleccionadosSMS];
-    //     }
-    // }
-
-    // estaSeleccionado(turno) {
-    //     // console.log('turno.paciente ', turno.paciente);
-    //     if (this.seleccionadosSMS.indexOf(turno) >= 0) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
-
-    // reasignarTurno(paciente: any) {
-    //     // this.reasignarTurnoSuspendido.emit(this.turnoAReasignar);
-    // }
-
-    // enviarSMS(turno: any, mensaje) {
-
-    // }
-
-    // smsEnviado(turno) {
-
-    // }
 
     // cancelar() {
     //     this.cancelaSuspenderTurno.emit(true);
