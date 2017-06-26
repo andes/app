@@ -200,7 +200,7 @@ export const RUP_COMPONENTS = [
   TensionSistolicaComponent,
   TensionDiastolicaComponent,
   ObservacionesComponent,
-  ConsultaGeneralClinicaMedicaComponent,
+  ConsultaMedicinaGeneralComponent,
   EvolucionProblemaComponent,
   EvolucionTodosProblemasComponent,
   PuntoInicioComponent,

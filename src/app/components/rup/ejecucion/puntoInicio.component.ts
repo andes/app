@@ -58,6 +58,7 @@ import {
 import {
     IProblemaPaciente
 } from './../../../interfaces/rup/IProblemaPaciente';
+
 // Rutas
 import {
     Router,
@@ -96,6 +97,7 @@ export class PuntoInicioComponent implements OnInit {
     public todasLasPrestaciones: any = [];
     public fechaDesde: Date;
     public fechaHasta: Date;
+    public tipoPrestacionSeleccionada: any;
     public prestacionSeleccion: any;
     public estadoSeleccion: any;
     public misPacientesSeleccion = false;
@@ -115,15 +117,18 @@ export class PuntoInicioComponent implements OnInit {
     constructor(
         private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
-        public servicioAgenda: AgendaService, public servicioPrestacion: PrestacionPacienteService,
+        public servicioAgenda: AgendaService,
+        public servicioPrestacion: PrestacionPacienteService,
+        public servicioTipoPrestacion: TipoPrestacionService,
         private servicioElementosRUP: ElementosRupService) { }
 
     ngOnInit() {
         // this.breadcrumbs = this.route.routeConfig.path;
 
         // buscamos los elementos rup de la api
-        this.servicioElementosRUP.get({}).subscribe(elementosRup => {
-            this.elementosRUP = elementosRup;
+        this.servicioTipoPrestacion.get({}).subscribe(tiposPrestacion => {
+            debugger;
+            this.selectPrestacionesProfesional = tiposPrestacion;
         });
 
         let hoy = {
@@ -222,8 +227,9 @@ export class PuntoInicioComponent implements OnInit {
      *
      * @memberof PuntoInicioComponent
      */
-    crearPrestacionVacia(conceptoSnomed) {
+    crearPrestacionVacia() {
         debugger;
+        let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
         nuevaPrestacion = {
             paciente: {
@@ -263,10 +269,10 @@ export class PuntoInicioComponent implements OnInit {
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
-                this.paciente = null;
+                this.router.navigate(['/rup/resumen', prestacion.id]);
+                /*this.paciente = null;
                 this.mostrarPacientesSearch = true;
-                this.mostrarLista = true;
-                // this.router.navigate(['/rup/resumen', prestacion.id]);
+                this.mostrarLista = true;*/
             });
         });
     }
