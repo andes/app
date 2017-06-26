@@ -79,7 +79,6 @@ export class Auditoria1Component implements OnInit {
                                         if (confirmar) {
                                             this.pacienteSelected.activo = false;
                                             this.pacienteService.save(this.pacienteSelected).subscribe(res3 => {
-                                                debugger;
                                                 this.getTemporales();
                                             });
                                         }
@@ -118,7 +117,7 @@ export class Auditoria1Component implements OnInit {
             this.mostrarDetalle = false;
             return true;
         }
-        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo > 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
+        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
             this.enableValidar = false;
             this.editarPaciente();
             this.mostrarDetalle = false;

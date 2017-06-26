@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,203 +7,162 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import {
   IAudit
 } from '../../interfaces/auditoria/IAudit';
 import {
-  PacienteService
 } from './../../services/paciente.service';
 import * as moment from 'moment';
 // import {
 //   AuditoriaPage
 // } from './../../e2e/app.po';
+// Services
+import { PacienteService } from './../../services/paciente.service';
+import { AgendaService } from './../../services/turnos/agenda.service';
+import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
 
 @Component({
   selector: 'auditoria',
   templateUrl: 'auditoria.html',
+  styleUrls: ['auditoria.css']
 })
 
 export class AuditoriaComponent implements OnInit {
 
-  searchForm: FormGroup;
-  displayDialog: boolean;
-  pacientesAudit: IAudit[];
+  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+  @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+
+  enableDuplicados: boolean;
+  enableValidar: boolean;
   pacienteSelected: any;
-  pacienteSisa: any;
-  mostrarPaciente: boolean;
-  validate: boolean;
+  mostrarPaciente = false;
   loading = false;
-  datosSisa = [];
-  mensaje = null;
-  loadingPrimaryTable = false;
-  encontradosSisa = false;
-  pacientesSimilares = [];
-  verDuplicados = false;
+  showAuditoria2 = false;
+
+  private datosFA: any;
+
 
   constructor(
     private formBuilder: FormBuilder,
     private auditoriaService: AuditoriaService,
     private pacienteService: PacienteService,
+    private servicioSisa: SisaService,
+    private servicioSintys: SintysService,
+    private agendaService: AgendaService,
     private plex: Plex
   ) { }
 
   ngOnInit() {
 
-
-    //this.searchForm = this.formBuilder.group({
-    // nombre: [''],
-    // apellido: [''],
-    // documento: [''],
-    // matching: ['']
-    //});
-
-    this.pacienteSelected = {
-      id: '',
-      nombre: '',
-      apellido: '',
-      documento: '',
-      fechaNacimiento: null,
-      sexo: '',
-      estado: '',
-      matchSisa: ''
-    };
-
-    this.pacienteSisa = {
-      nombre: '',
-      apellido: '',
-      documento: '',
-      fechaNacimiento: '',
-      sexo: ''
-    };
-
-    this.mostrarPaciente = false;
-    this.validate = false;
-    this.loadAuditorias();
   }
 
-  loadAuditorias() {
-    this.loadingPrimaryTable = true;
-    this.auditoriaService.get()
-      .subscribe(
-      paciente => {
-        this.loadingPrimaryTable = false;
-        this.pacientesAudit = paciente;
-
-      },
-      err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-
-  }
-
-  mostrarDatos(paciente: any) {
-
-    this.validate = false;
-    this.pacienteSelected.id = paciente.id;
-    this.pacienteSelected.apellido = paciente.apellido;
-    this.pacienteSelected.nombre = paciente.nombre;
-    this.pacienteSelected.documento = paciente.documento;
-    this.pacienteSelected.fechaNacimiento = paciente.fechaNacimiento;
-    this.pacienteSelected.sexo = paciente.sexo;
-    this.pacienteSelected.estado = paciente.estado;
-    this.pacienteSelected.matchSisa = paciente.matchSisa;
-
-    this.mostrarPaciente = true;
-    this.mostrarCandidatos();
-
-  }
-
-  mostrarCandidatos() {
-    if (this.pacienteSelected.nombre && this.pacienteSelected.apellido && this.pacienteSelected.documento
-      && this.pacienteSelected.fechaNacimiento && this.pacienteSelected.sexo) {
-      let dto: any = {
-        type: 'suggest',
-        claveBlocking: 'documento',
-        percentage: true,
-        apellido: this.pacienteSelected.apellido.toString(),
-        nombre: this.pacienteSelected.nombre.toString(),
-        documento: this.pacienteSelected.documento.toString(),
-        sexo: ((typeof this.pacienteSelected.sexo === 'string')) ? this.pacienteSelected.sexo : (Object(this.pacienteSelected.sexo).id),
-        fechaNacimiento: moment(this.pacienteSelected.fechaNacimiento).format('YYYY-MM-DD')
-      };
-      this.pacienteService.get(dto).subscribe(resultado => {
-        this.pacientesSimilares = resultado;
-      });
-      if (this.pacientesSimilares.length > 0) {
-        this.verDuplicados = true;
+  onSelect(paciente: any): void {
+    if (paciente.id) {
+      this.pacienteSelected = paciente;
+      this.mostrarPaciente = true;
+      if (paciente.estado !== 'validado') {
+        this.enableValidar = true;
+        this.enableDuplicados = false;
+      } else {
+        this.enableDuplicados = true;
+        this.enableValidar = false;
       }
     }
+    this.selected.emit(paciente);
   }
 
-
-  onValidate(paciente: any) {
-    this.loading = true;
-    this.mensaje = null;
-
-    let patch: any = {};
-    /* Esta parte la dejo preparada para definir más operaciones sobre el mismo método */
-    patch = {
-      'op': 'validarSisa',
-    };
-
-    /*Los simulo aca*/
-    // this.loading = false;
-    // this.validate = true;
-    // this.datosSisa = [
-    //   {nombre:'Juan Alberto', apellido:'Lopez Ortega', documento: '30569854', fechaNacimiento:"1942-06-06T03:00:00.000Z", sexo:'Masculino'},
-    //   {nombre:'Eleonora', apellido:'Fernández', documento: '30569854', fechaNacimiento:"1942-06-06T03:00:00.000Z", sexo:'Femenino'}
-    // ];
-    /* Borrar hasta aca */
-
-    /*Comento el servicio temporalmente para no gastar consumos*/
-    this.auditoriaService.patch(paciente.id, patch).subscribe(resultado => {
-      this.loading = false;
-      this.validate = true;
-      if (resultado.length <= 0) {
-        this.mensaje = 'No se han encontrado coincidencias en esta fuente auténtica';
-      }
-      this.datosSisa = resultado;
-    },
-      err => {
-        if (err) {
-          console.log(err);
-        }
-      });
+  verDuplicados() {
+    this.showAuditoria2 = true;
+    
   }
 
+  validar() {
+    this.plex.showLoader();
+    this.servicioSisa.ValidarPacienteEnSisa(this.pacienteSelected).then(res => {
+      if (!this.verificarDatosFA(res)) {
+        this.servicioSintys.ValidarPacienteEnSintys(this.pacienteSelected).then(res2 => {
+          if (!this.verificarDatosFA(res2)) {
 
-  fusionar(pacienteSisa: any) {
+            if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
+              // TODO: chequear si el paciente tiene algun turno o prestacion asignado/a
+              this.agendaService.find(this.pacienteSelected.id).subscribe(data => {
+                if (data.length < 1) {
+                  this.plex.confirm('¿Desea darlo de baja?', 'Paciente inactivo').then((confirmar) => {
+                    if (confirmar) {
+                      this.pacienteSelected.activo = false;
+                      this.pacienteService.save(this.pacienteSelected).subscribe(res3 => {
+                        // this.getTemporales();
+                      });
+                    }
+                  });
+                }
+              });
+            } else {
+              this.rechazarValidacion();
+            }
 
-    this.plex.confirm('¿Esta seguro que desea fusionar al paciente actual con esta información de SISA? ').then(resultado => {
-      if (resultado) {
-        /*Actualizo los datos del paciente y lo inserto en la base de datos con la información de sisa*/
-        let elSelected = this.pacienteSelected;
-        this.pacienteSelected.nombre = pacienteSisa.nombre;
-        this.pacienteSelected.apellido = pacienteSisa.apellido;
-        this.pacienteSelected.documento = pacienteSisa.documento;
-        this.pacienteSelected.fechaNacimiento = pacienteSisa.fechaNacimiento;
-        this.pacienteSelected.sexo = pacienteSisa.sexo;
-        this.pacienteSelected.estado = 'validado';
-        this.pacienteSelected.matchSisa = 1;
-        // Oculto los paneles
-        this.validate = false;
-        this.loading = true;
-        this.mostrarPaciente = false;
-
-        this.auditoriaService.put(this.pacienteSelected).subscribe(resultado => {
-          if (resultado) {
-            this.loadAuditorias();
-            this.loading = false;
           }
-        }
-        )
+        });
+
       }
     });
   }
 
+  rechazarValidacion() {
+    if (this.pacienteSelected.entidadesValidadoras.find(entidad => entidad.toString().toUpperCase() === 'SISA')) {
+      this.pacienteSelected.entidadesValidadoras.push('SISA');
+      this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+        this.plex.info('danger', '', 'Paciente no encontrado');
+        // this.getTemporales();
+      });
+    } else {
+      // this.getTemporales();
+    }
+  }
 
+  verificarDatosFA(data) {
+    this.plex.hideLoader();
+    this.pacienteSelected = this.pacienteSelected;
+    this.datosFA = data;
+    if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo === 100) {
+      this.validarPaciente();
+      this.enableValidar = false;
+      return true;
+    }
+    if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
+      this.enableValidar = false;
+      this.editarPaciente();
+      this.enableValidar = false;
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  editarPaciente() {
+    this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+    this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+    this.pacienteSelected.fechaNacimiento = this.datosFA.matcheos.datosPaciente.fechaNacimiento;
+    this.pacienteSelected.estado = 'validado';
+    this.pacienteSelected.entidadesValidadoras.push('Sisa');
+    this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+      this.plex.info('success', '', 'Validación Exitosa');
+      // this.getTemporales();
+    });
+  }
+
+  validarPaciente() {
+    this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+    this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+    this.pacienteSelected.estado = 'validado';
+    this.pacienteSelected.entidadesValidadoras.push('Sisa');
+    this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+      this.plex.info('success', '', 'Validación Exitosa');
+      // this.getTemporales();
+    });
+  }
 
 }
