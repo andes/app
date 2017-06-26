@@ -12,12 +12,17 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class SnomedService {
     private snomedURL = '/core/term/snomed';  // URL to web api
+    private snomedURLProblema = '/core/term/snomed/problema';  // URL to web api
 
     constructor(private server: Server) {
     }
 
     get(params: any): Observable<any[]> {
          return this.server.get(this.snomedURL, { params: params, showError: true });
+    }
+
+    getProblema(params: any): Observable<any[]> {
+         return this.server.get(this.snomedURLProblema, { params: params, showError: true });
     }
 
     /*
