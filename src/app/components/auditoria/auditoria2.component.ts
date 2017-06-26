@@ -44,23 +44,10 @@ export class Auditoria2Component implements OnInit {
   verDuplicados = false;
   draggingPatient = true;
 
-  //pacienteSelected: any;
+  pacienteSelected: any;
   pacientesAudit: any[];
   pacientesVinculados = [];
   pacientesDesvinculados = [];
-
-  // Lo dejamos hardcodeado, luego sería un input desde otro componente
-  pacienteSelected : any = {
-    "documento": "",
-    "estado": "",
-    "nombre": "",
-    "apellido": "",
-    "sexo": "",
-    "genero": "",
-    "fechaNacimiento": "",
-    "estadoCivil": null,
-    "activo": true,
-  }
 
 
   constructor(
@@ -77,7 +64,6 @@ export class Auditoria2Component implements OnInit {
     
   }
 
-
   inicializar() {
     /* Ejecutar una consulta que obtenga un array con todos los pacientes que tienen la misma clave de blocking.
       Vamos a suponer que el paciente a buscar viene en un input desde otro componente.
@@ -92,6 +78,11 @@ export class Auditoria2Component implements OnInit {
       })
   }
 
+  /**
+   * Carga todos los pacientes vinculados, éstos no están activos y su objectId está asociado al paciente vinculado
+   * 
+   * @memberof Auditoria2Component
+   */
   loadPacientesVinculados(){
     let idVinculados = this.pacienteSelected.identificadores;
     idVinculados.forEach(identificador => {
@@ -103,8 +94,12 @@ export class Auditoria2Component implements OnInit {
     });
   }
 
+  /**
+   * Obtenemos la lista de pacientes que tienen la misma clave de blocking y fijamos el tipo de clave a METAPHONE
+   * 
+   * @memberof Auditoria2Component
+   */
   loadPacientePorBloque() {
-    // Obtenemos la lista de pacientes que tienen la misma clave de blocking y hardcodeamos el tipo de clave a METAPHONE Nombre + Apellido
      let tipoClave: number = 0;
      let dto: any = {
        idTipoBloque: tipoClave, 
@@ -169,14 +164,12 @@ export class Auditoria2Component implements OnInit {
    * @memberof Auditoria2Component
    */
   vincular(paciente: any) {
-    debugger;
     /* Acá hacemos el put con el update de los pacientes */
         let dataLink = {entidad:'ANDES', valor: paciente.id};
-        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'updateIdentificadores', 'dto': dataLink}).subscribe(resultado => {
+        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'linkIdentificadores', 'dto': dataLink}).subscribe(resultado => {
           if (resultado) {
-            let activo = false
-            debugger;
-            this.pacienteService.patch(paciente.id, {'op':'desactivarPaciente', 'dto':activo}).subscribe(resultado2 => {
+            let activo = false;
+            this.pacienteService.patch(paciente.id, {'op':'updateActivo', 'dto':activo}).subscribe(resultado2 => {
               if (resultado2) {
                 this.plex.toast('success','La vinculación ha sido realizada correctamente', 'Información', 3000);
               }
@@ -185,33 +178,47 @@ export class Auditoria2Component implements OnInit {
         })
   }
 
+  /**
+   * Implica activa al paciente y quitar el objectId asociado al paciente
+   * 
+   * @param {*} pac 
+   * @memberof Auditoria2Component
+   */
   desvincularPaciente(pac: any) {
-
     this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
       let rta = resultado;
       if (rta) {
+        debugger;
         this.pacientesVinculados.splice(this.pacientesVinculados.indexOf(pac), 1);
         this.pacientesDesvinculados.push(pac);
+        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'unlinkIdentificadores', 'dto': pac.id}).subscribe(resultado => {
+          if (resultado) {
+            // Activa el paciente
+            let activo = true;
+            this.pacienteService.patch(pac.id, {'op':'updateActivo', 'dto': activo}).subscribe(resultado2 => {
+              if (resultado2) {
+                this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
+              }
+            })
+          }
+        })
       }
     });
 
   }
 
-  verificaPaciente(paciente) {
-    if (paciente.nombre && paciente.apellido && paciente.documento && paciente.fechaNacimiento && paciente.sexo) {
-
-      let dto: any = {
-        type: 'suggest',
-        claveBlocking: 'documento',
-        percentage: true,
-        apellido: paciente.apellido.toString(),
-        nombre: paciente.nombre.toString(),
-        documento: paciente.documento.toString(),
-        sexo: ((typeof paciente.sexo === 'string')) ? paciente.sexo : (Object(paciente.sexo).id),
-        fechaNacimiento: paciente.fechaNacimiento
-      };
-
-
-    }
-  }
+  // verificaPaciente(paciente) {
+  //   if (paciente.nombre && paciente.apellido && paciente.documento && paciente.fechaNacimiento && paciente.sexo) {
+  //     let dto: any = {
+  //       type: 'suggest',
+  //       claveBlocking: 'documento',
+  //       percentage: true,
+  //       apellido: paciente.apellido.toString(),
+  //       nombre: paciente.nombre.toString(),
+  //       documento: paciente.documento.toString(),
+  //       sexo: ((typeof paciente.sexo === 'string')) ? paciente.sexo : (Object(paciente.sexo).id),
+  //       fechaNacimiento: paciente.fechaNacimiento
+  //     };
+  //   }
+  // }
 }

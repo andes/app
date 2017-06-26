@@ -3,11 +3,11 @@
     color: white;
     cursor: pointer;
   }
-  .desvincular:hover {
+  .deslinkear:hover {
     color: red;
     cursor: pointer;
   }
-  .vincular:hover {
+  .linkear:hover {
     color: green;
     cursor: pointer;
   }

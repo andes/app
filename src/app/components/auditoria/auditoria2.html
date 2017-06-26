@@ -12,7 +12,8 @@
               (onDragStart)="arrastrandoPaciente(false)" (onDragEnd)="arrastrandoPaciente(true)">
                 <div class="card invertHover">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
-                    <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show vincular"></i></h4>
+                    <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
+                    </h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
                     <div>DU: {{paciente.documento}}</div>
@@ -36,7 +37,8 @@
               <li *ngFor="let paciente of pacientesVinculados">
                 <div class="card invertHover">
                   <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden"></i>
-                    <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show desvincular"></i></h4>
+                    <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
+                    </h4>
                   <div class="card-block">
                     <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
                     <div>DU: {{paciente.documento}}</div>
