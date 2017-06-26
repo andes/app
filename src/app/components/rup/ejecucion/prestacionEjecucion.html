@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col">
                         <h5 class="box-title-principal">
-                            {{elementoRUP?.nombre}}
+                            {{prestacion.solicitud.tipoPrestacion.term}}
                         </h5>
                     </div>
                 </div>
@@ -18,7 +18,8 @@
 
             <div class="row">
                 <div class="col">
-                    <snomed-buscar (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+                    Procedimientos
+                    <snomed-buscar [tipoBusqueda]="procedimientos" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
                     <!--
                         [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
                     -->
@@ -27,13 +28,13 @@
 
 
             <div class="row" *ngIf="ejecutarRUP">
-
                 <div class="col">
                     <rup #rup [prestacion]="prestacion"
                         [elementoRUP]="ejecutarRUP"
                         (evtData)="getValoresRup($event)"
                         [paciente]="prestacion.paciente"
                         [conceptoSnomed]="conceptoSnomedSeleccionado"
+
                     >
                     </rup>
                 </div>

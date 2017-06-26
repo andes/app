@@ -74,6 +74,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(concepto) {
         this.conceptoSnomedSeleccionado = concepto;
         this.ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, concepto);
+        console.log(this.ejecutarRUP);
     }
 
     /*

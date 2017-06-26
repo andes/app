@@ -1,12 +1,17 @@
+{{hideSearchInput}}
 <form *ngIf="!hideSearchInput">
     <div>
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar Problema"></plex-text>
     </div>
 </form>
 
+<!--
 <div class="btn-group" data-toggle="buttons" *ngIf="searchTerm">
-    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == ''}">
-        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda()"> Trastornos
+    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'procedimientos'}">
+        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda()"> Procedimientos
+    </label>
+    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'trastornos'}">
+        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda('trastornos')"> Trastornos
     </label>
     <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'antecedentes'}">
         <input type="radio" name="options" id="activo"  (click)="setTipoBusqueda('antecedentes')"> Antecedentes
@@ -15,6 +20,7 @@
         <input type="radio" name="options" id="inactivo" (click)="setTipoBusqueda('antecedentesFamiliares')"> A. familiares
     </label>
 </div>
+-->
 
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
 <div *ngIf="searchTerm && listaProblemasMaestro && listaProblemasMaestro.length === 0 && !loading">

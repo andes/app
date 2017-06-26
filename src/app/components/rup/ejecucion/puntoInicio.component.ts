@@ -1,71 +1,31 @@
-import { ElementosRupService } from './../../../services/elementosRUP.service';
-import { IElementoRUP } from './../../../interfaces/IElementoRUP';
-import {
-    PacienteSearch
-} from './../../../services/pacienteSearch.interface';
-import {
-    TipoPrestacionService
-} from './../../../services/tipoPrestacion.service';
-import {
-    element
-} from 'protractor';
-import {
-    IOrganizacion
-} from './../../../interfaces/IOrganizacion';
-import {
-    OrganizacionComponent
-} from './../../organizacion/organizacion.component';
-import {
-    IProfesional
-} from './../../../interfaces/IProfesional';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    AgendaService
-} from './../../../services/turnos/agenda.service';
-import {
-    ITipoPrestacion
-} from './../../../interfaces/ITipoPrestacion';
-import {
-    PrestacionPacienteService
-} from './../../../services/rup/prestacionPaciente.service';
-import {
-    IPrestacionPaciente
-} from './../../../interfaces/rup/IPrestacionPaciente';
-import {
-    Component,
-    OnInit,
-    Output,
-    Input,
-    EventEmitter,
-    HostBinding
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    Validators
-} from '@angular/forms';
-import {
-    ProblemaPacienteService
-} from './../../../services/rup/problemaPaciente.service';
-import {
-    IPaciente
-} from './../../../interfaces/IPaciente';
-import {
-    IProblemaPaciente
-} from './../../../interfaces/rup/IProblemaPaciente';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
-// Rutas
-import {
-    Router,
-    ActivatedRoute,
-    Params
-} from '@angular/router';
 import * as moment from 'moment';
+
+import { element } from 'protractor';
+
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+
+// import { IOrganizacion } from './../../../interfaces/IOrganizacion';
+// import { OrganizacionComponent } from './../../organizacion/organizacion.component';
+
+import { IElementoRUP } from './../../../interfaces/IElementoRUP';
+import { IPaciente } from './../../../interfaces/IPaciente';
+import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
+import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
+import { IProfesional } from './../../../interfaces/IProfesional';
+import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
+
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
+import { PacienteSearch } from './../../../services/pacienteSearch.interface';
+import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
+import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -103,9 +63,6 @@ export class PuntoInicioComponent implements OnInit {
     public misPacientesSeleccion = false;
     public todosSeleccion = false;
     public selectPrestacionesProfesional: any = [];
-
-
-
 
 
     public searchPaciente: any;
