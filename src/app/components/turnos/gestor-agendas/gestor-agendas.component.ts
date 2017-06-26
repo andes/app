@@ -23,15 +23,15 @@ export class GestorAgendasComponent implements OnInit {
 
     agendasSeleccionadas: IAgenda[] = [];
 
-    public showGestorAgendas: Boolean = true;
-    public showTurnos: Boolean = false;
+    public showGestorAgendas = true;
+    public showTurnos = false;
     public showReasignarTurno = false;
-    public showBotonesAgenda: Boolean = false;
-    public showClonar: Boolean = false;
-    public showDarTurnos: Boolean = false;
-    public showEditarAgenda: Boolean = false;
-    public showEditarAgendaPanel: Boolean = false;
-    public showInsertarAgenda: Boolean = false;
+    public showBotonesAgenda = false;
+    public showClonar = false;
+    public showDarTurnos = false;
+    public showEditarAgenda = false;
+    public showEditarAgendaPanel = false;
+    public showInsertarAgenda = false;
     private showAgregarNotaAgenda = false;
     private showAgregarSobreturno = false;
     public showRevisionAgenda = false;
@@ -146,6 +146,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -179,6 +180,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarSobreturno = false;
         this.showClonar = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
         this.loadAgendas();
     }
 
@@ -188,7 +190,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    showVistaTurnos(showTurnos: Boolean) {
+    showVistaTurnos(showTurnos: boolean) {
         this.showTurnos = showTurnos;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
@@ -214,6 +216,7 @@ export class GestorAgendasComponent implements OnInit {
         }
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
     }
 
 
@@ -302,9 +305,9 @@ export class GestorAgendasComponent implements OnInit {
             this.showAgregarNotaAgenda = false;
             this.showAgregarSobreturno = false;
             this.showRevisionAgenda = false;
-            this.showBotonesAgenda = true;
-
             this.showTurnos = false;
+            this.showReasignarTurno = false;
+            this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
                 this.showReasignarTurno = true;
@@ -346,6 +349,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        this.showReasignarTurno = false;
         let temporal = this.agendasSeleccionadas;
         console.log('temporal ', temporal);
         this.showRevisionAgenda = false;

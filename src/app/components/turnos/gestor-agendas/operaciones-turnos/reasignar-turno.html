@@ -1,24 +1,27 @@
-<div *ngFor="let turnoCandidato of agendasCandidatas">
-    <plex-accordion>
-        Turno: {{ turnoCandidato.turno.horaInicio | date: 'dd/MM/yyyy' }} {{ turnoCandidato.turno.horaInicio | date: 'HH:mm' }} hs
-        ~ Paciente: {{ turnoCandidato.turno.paciente | paciente }}
-        <plex-panel tituloPrincipal="Turno">
-            <div class="list-group" *ngFor="let agenda of turnoCandidato.agendas; let i = index">
+<fieldset>
+    <legend>Reasignar Turnos</legend>
+    <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
+        <plex-accordion>
+            <!--Turno-->
+            <plex-panel tituloPrincipal="Turno: {{ agendaCandidata.turno.horaInicio | date: 'dd/MM/yyyy' }} {{ agendaCandidata.turno.horaInicio | date: 'HH:mm' }} hs
+             - {{ agendaCandidata.turno.paciente | paciente }}">
+                <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
 
-                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} - Hora de inicio: {{ agenda.horaInicio | date:
-                            'HH:mm'}} hs.
-                        </h5>
-                        <small>{{ turnoCandidato.similitud | json }}%</small>
-                    </div>
-                    <p class="mb-1">
-                        Tipo Prestación: {{ turnoCandidato.turno.tipoPrestacion.nombre }}
-                    </p>
-                    <small *ngIf="agenda.profesionales.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
-                </a>
+                    <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} - {{ agenda.horaInicio | date:'HH:mm'}}
+                                hs. a {{ agenda.horaFin | date:'HH:mm'}}
+                            </h5>
+                            <small>{{ agendaCandidata.similitud | json }}%</small>
+                        </div>
+                        <p class="mb-1">
+                            Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
+                        </p>
+                        <small *ngIf="agenda.profesionales.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
+                    </a>
 
-            </div>
-        </plex-panel>
-    </plex-accordion>
-</div>
+                </div>
+            </plex-panel>
+        </plex-accordion>
+    </div>
+</fieldset>

@@ -36,7 +36,6 @@ export class ReasignarTurnoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-        // this.turnoAReasignar = this.agendaAReasignar;
         this.agendaAReasignar.bloques.forEach(bloque => {
             bloque.turnos.forEach(turno => {
                 if (turno.paciente) {
@@ -46,12 +45,8 @@ export class ReasignarTurnoComponent implements OnInit {
                         idTurno: turno.id
                     };
 
-
                     this.serviceTurno.get(params).subscribe((agendas) => {
-                        this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, agendas: agendas, similitud: this.calculosSimilitud(turno, agendas) }];
-
-
-
+                        this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas, similitud: this.calculosSimilitud(turno, agendas) }];
                         console.log('agendasCandidatas', this.agendasCandidatas);
                     });
                 }
@@ -73,8 +68,7 @@ export class ReasignarTurnoComponent implements OnInit {
                         profesional: (ag.profesionales.length && ag.profesionales[0].nombre ? 10 : 0),
                         diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
                     };
-                    console.log(calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);
-
+                    // console.log(calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);
                     calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);
                 });
             });
@@ -83,7 +77,6 @@ export class ReasignarTurnoComponent implements OnInit {
         if (calculos > 0) {
             return calculos;
         }
-
 
     }
 
@@ -96,8 +89,6 @@ export class ReasignarTurnoComponent implements OnInit {
         };
 
         console.log('agendasCandidatas', this.agendasCandidatas);
-
-
         this.serviceTurno.get(params).subscribe((agendas) => {
 
             let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
@@ -112,47 +103,82 @@ export class ReasignarTurnoComponent implements OnInit {
         });
     }
 
-    seleccionarTurno(turno) {
-        let indice = this.seleccionadosSMS.indexOf(turno);
-        if (indice === -1) {
-            if (turno.paciente) {
-                this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+    seleccionarCandidata(indiceTurno, i) {
+        let turno = this.agendasCandidatas[indiceTurno].turno;
+        let bloque = this.agendasCandidatas[indiceTurno].bloque;
+        let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
+        let tipoTurno;
+        console.log('seleccionarCandidata ', agendaSeleccionada);
+        console.log('seleccionarCandidata ', this.agendasCandidatas[indiceTurno]);
+        // Si la agenda es del día
+        if (agendaSeleccionada >= moment().startOf('day').toDate() &&
+            agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
+            tipoTurno = 'delDia';
+        // Si no es del dia, chequeo el estado para definir el tipo de turno
+        } else {
+            if (agendaSeleccionada.estado === 'disponible') {
+                tipoTurno = 'gestion';
             }
-        } else {
-            this.seleccionadosSMS.splice(indice, 1);
-            this.seleccionadosSMS = [...this.seleccionadosSMS];
+
+            if (agendaSeleccionada.estado === 'publicada') {
+                tipoTurno = 'programado';
+            }
         }
+        let indiceBloque = agendaSeleccionada.bloques.findIndex(b => b.duracionTurno === bloque.duracionTurno);
+        let indTurno = agendaSeleccionada.bloques[indiceBloque].turnos.findIndex(t => moment(t.horaInicio).format('HH:mm') === moment(turno.horaInicio).format('HH:mm'));
+
+        let datosTurno = {
+            idAgenda: agendaSeleccionada._id,
+            idTurno: agendaSeleccionada.bloques[indiceBloque].turnos[indTurno]._id,
+            idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
+            paciente: turno.paciente,
+            tipoPrestacion: turno.tipoPrestacion,
+            tipoTurno: tipoTurno
+        };
+        console.log('datosTurno ', datosTurno);
     }
 
-    estaSeleccionado(turno) {
-        // console.log('turno.paciente ', turno.paciente);
-        if (this.seleccionadosSMS.indexOf(turno) >= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // seleccionarTurno(turno) {
+    //     let indice = this.seleccionadosSMS.indexOf(turno);
+    //     if (indice === -1) {
+    //         if (turno.paciente) {
+    //             this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+    //         }
+    //     } else {
+    //         this.seleccionadosSMS.splice(indice, 1);
+    //         this.seleccionadosSMS = [...this.seleccionadosSMS];
+    //     }
+    // }
+
+    // estaSeleccionado(turno) {
+    //     // console.log('turno.paciente ', turno.paciente);
+    //     if (this.seleccionadosSMS.indexOf(turno) >= 0) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
 
-    reasignarTurno(paciente: any) {
-        // this.reasignarTurnoSuspendido.emit(this.turnoAReasignar);
-    }
+    // reasignarTurno(paciente: any) {
+    //     // this.reasignarTurnoSuspendido.emit(this.turnoAReasignar);
+    // }
 
-    enviarSMS(turno: any, mensaje) {
+    // enviarSMS(turno: any, mensaje) {
 
-    }
+    // }
 
-    smsEnviado(turno) {
+    // smsEnviado(turno) {
 
-    }
+    // }
 
-    cancelar() {
-        this.cancelaSuspenderTurno.emit(true);
-        this.turnoAReasignar = null;
-    }
+    // cancelar() {
+    //     this.cancelaSuspenderTurno.emit(true);
+    //     this.turnoAReasignar = null;
+    // }
 
-    cerrar() {
-        // this.saveSuspenderTurno.emit(this.agenda);
-    }
+    // cerrar() {
+    //     // this.saveSuspenderTurno.emit(this.agenda);
+    // }
 
 }
