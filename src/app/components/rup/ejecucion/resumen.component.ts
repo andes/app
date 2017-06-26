@@ -128,12 +128,10 @@ export class ResumenComponent implements OnInit {
         //this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
 
         this.servicioPrestacionPaciente.patch(this.prestacion, cambioEstado).subscribe(prestacion => {
-            //this.router.navigate(['/rup/ejecucion', id]);
-            console.log(prestacion);
+            this.router.navigate(['/rup/ejecucion', id]);
         }, (err) => {
             this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación');
         });
-
     }
 
     /**

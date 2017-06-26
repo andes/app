@@ -36,6 +36,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // el text field para ingresar la busqueda a mano
     @Input() searchTermInput: String;
 
+    // tipo de busqueda a realizar por: problemas / procedimientos /
+    @Input() tipoBusqueda: String;
+
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
@@ -61,8 +64,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';
+    /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
+    */
 
     // inyectamos servicio de snomed, plex y tambien ElementRef
     // ElementRef lo utilizo para tener informacion del
@@ -84,7 +89,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
      ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
         // y hubo algun cambio, entonces ejecuto la busqueda manual
-        this.busquedaManual();
+        if (this.searchTermInput) {
+            this.busquedaManual();
+        }
     }
 
     // iniciar busqueda es un metodo creado para poder buscar cuando
@@ -115,6 +122,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         this._onDragEnd.emit(e);
     }
 
+    /*
     setTipoBusqueda(tipoBusqueda): void {
         // seteamos el tipo de busqueda que deseamos realizar
         this.tipoBusqueda = tipoBusqueda;
@@ -122,6 +130,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         // buscamos por la serpiente de SNOMED
         this.buscar();
     }
+    */
 
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
@@ -146,8 +155,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             // armamos query para enviar al servicio
             let query = {
-                search: search,
-                tipo: this.tipoBusqueda
+                search: search
+                //,tipo: this.tipoBusqueda
             };
 
             // seteamos un timeout de 3 segundos luego que termino de escribir
@@ -158,8 +167,20 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 this.listaProblemasMaestro = [];
 
                 // buscamos
-                //this.SNOMED.buscarTrastornosHallazgos(search).subscribe(problemas => {
-                this.SNOMED.get(query).subscribe(problemas => {
+                let apiMethod;
+                switch(this.tipoBusqueda) {
+                    case 'problemas':
+                        //apiMethod = this.SNOMED.getProblemas(query);
+                    break;
+                    case 'procedimientos':
+                        //apiMethod = this.SNOMED.getProcedimientos(query);
+                    break;
+                    default:
+                        apiMethod = this.SNOMED.get(query);
+                    break;
+                }
+
+                apiMethod.subscribe(problemas => {
                     this.loading = false;
                     this.listaProblemasMaestro = problemas;
 
