@@ -4,7 +4,8 @@ import {
 } from '@andes/plex';
 import {
   Component,
-  OnInit
+  OnInit,
+  Input
 } from '@angular/core';
 import {
   FormBuilder,
@@ -49,6 +50,8 @@ export class Auditoria2Component implements OnInit {
   pacientesVinculados = [];
   pacientesDesvinculados = [];
 
+  @Input() pacienteInput: any;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -61,21 +64,22 @@ export class Auditoria2Component implements OnInit {
   ngOnInit() {
 
     this.inicializar();
-    
+
   }
 
   inicializar() {
     /* Ejecutar una consulta que obtenga un array con todos los pacientes que tienen la misma clave de blocking.
       Vamos a suponer que el paciente a buscar viene en un input desde otro componente.
     */
-  this.pacienteService.getById('586e6e8527d3107fde11125d').subscribe(data => {
-        if (data) {
-          this.pacienteSelected = data;
-          this.loadPacientePorBloque();
-          /* Levanta todos los pacientes cuyos objectId están asociados al paciente seleccionado */
-          this.loadPacientesVinculados();
-        }
-      })
+    this.pacienteService.getById(this.pacienteInput.id).subscribe(data => {
+      if (data) {
+        this.pacienteSelected = data;
+        debugger
+        this.loadPacientePorBloque();
+        /* Levanta todos los pacientes cuyos objectId están asociados al paciente seleccionado */
+        this.loadPacientesVinculados();
+      }
+    })
   }
 
   /**
@@ -83,7 +87,7 @@ export class Auditoria2Component implements OnInit {
    * 
    * @memberof Auditoria2Component
    */
-  loadPacientesVinculados(){
+  loadPacientesVinculados() {
     let idVinculados = this.pacienteSelected.identificadores;
     idVinculados.forEach(identificador => {
       if (identificador.entidad === 'ANDES') {
@@ -100,16 +104,17 @@ export class Auditoria2Component implements OnInit {
    * @memberof Auditoria2Component
    */
   loadPacientePorBloque() {
-     let tipoClave: number = 0;
-     let dto: any = {
-       idTipoBloque: tipoClave, 
-       idBloque: this.pacienteSelected.claveBlocking[tipoClave].toString()
-     };
-     
+    let tipoClave: number = 0;
+    let dto: any = {
+      idTipoBloque: tipoClave,
+      idBloque: this.pacienteSelected.claveBlocking[tipoClave].toString()
+    };
+
     this.auditoriaPorBloqueService.getListaBloques(dto).subscribe(rta => {
+      debugger
       if (rta) {
         rta.forEach(element => {
-          if (element.id !== this.pacienteSelected.id){
+          if (element.id !== this.pacienteSelected.id) {
             this.pacientesDesvinculados.push(element)
           }
         });
@@ -165,17 +170,17 @@ export class Auditoria2Component implements OnInit {
    */
   vincular(paciente: any) {
     /* Acá hacemos el put con el update de los pacientes */
-        let dataLink = {entidad:'ANDES', valor: paciente.id};
-        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'linkIdentificadores', 'dto': dataLink}).subscribe(resultado => {
-          if (resultado) {
-            let activo = false;
-            this.pacienteService.patch(paciente.id, {'op':'updateActivo', 'dto':activo}).subscribe(resultado2 => {
-              if (resultado2) {
-                this.plex.toast('success','La vinculación ha sido realizada correctamente', 'Información', 3000);
-              }
-            })
+    let dataLink = { entidad: 'ANDES', valor: paciente.id };
+    this.pacienteService.patch(this.pacienteSelected.id, { 'op': 'linkIdentificadores', 'dto': dataLink }).subscribe(resultado => {
+      if (resultado) {
+        let activo = false;
+        this.pacienteService.patch(paciente.id, { 'op': 'updateActivo', 'dto': activo }).subscribe(resultado2 => {
+          if (resultado2) {
+            this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
           }
         })
+      }
+    })
   }
 
   /**
@@ -191,11 +196,11 @@ export class Auditoria2Component implements OnInit {
         debugger;
         this.pacientesVinculados.splice(this.pacientesVinculados.indexOf(pac), 1);
         this.pacientesDesvinculados.push(pac);
-        this.pacienteService.patch(this.pacienteSelected.id, {'op': 'unlinkIdentificadores', 'dto': pac.id}).subscribe(resultado => {
+        this.pacienteService.patch(this.pacienteSelected.id, { 'op': 'unlinkIdentificadores', 'dto': pac.id }).subscribe(resultado => {
           if (resultado) {
             // Activa el paciente
             let activo = true;
-            this.pacienteService.patch(pac.id, {'op':'updateActivo', 'dto': activo}).subscribe(resultado2 => {
+            this.pacienteService.patch(pac.id, { 'op': 'updateActivo', 'dto': activo }).subscribe(resultado2 => {
               if (resultado2) {
                 this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
               }

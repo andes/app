@@ -1,33 +1,34 @@
-  .invertHover:hover {
-    background-color: #002738;
-    color: white;
-    cursor: pointer;
-  }
-  .deslinkear:hover {
-    color: red;
-    cursor: pointer;
-  }
-  .linkear:hover {
-    color: green;
-    cursor: pointer;
-  }
-  *>.mdi.mdi-hover-show,
-  *:hover>.mdi.mdi-hover-hidden {
-    display: none;
-  }
-  *:hover>.mdi.mdi-hover-show {
-    display: inline-block;
-  }
-  .recuadro {
-    border: 1px solid;
-    float: right;
-  }
-  .validado {
-    color: green
-  }
-  .temporal {
-    color: orange
-  }
+.invertHover:hover {
+  background-color: #002738;
+  color: white;
+  cursor: pointer;
+}
+.deslinkear:hover {
+  color: red;
+  cursor: pointer;
+}
+.linkear:hover {
+  color: green;
+  cursor: pointer;
+}
+*>.mdi.mdi-hover-show,
+*:hover>.mdi.mdi-hover-hidden {
+  display: none;
+}
+*:hover>.mdi.mdi-hover-show {
+  display: inline-block;
+}
+.recuadro {
+  border: 1px solid;
+  float: right;
+}
+.validado {
+  color: green
+}
+.temporal {
+  color: orange
+}
+
 .drag-over-border {
     border: #ff525b dashed 2px;
 }

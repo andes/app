@@ -1,0 +1,11 @@
+
+  .recuadro {
+    border: 1px solid;
+    float: right;
+  }
+  .validado {
+    color: green
+  }
+  .temporal {
+    color: orange
+  }

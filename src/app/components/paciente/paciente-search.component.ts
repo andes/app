@@ -33,7 +33,7 @@ export class PacienteSearchComponent implements OnInit {
   private permisoAgendas = false;
   @Input() modoCompleto = true; // muestra/oculta panel derecho
   @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
-
+  @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
   // Eventos
   @Output() selected: EventEmitter<any> = new EventEmitter<any>();
   @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
@@ -48,7 +48,7 @@ export class PacienteSearchComponent implements OnInit {
 
   public ngOnInit() {
     this.autoFocus = this.autoFocus + 1;
-     // Asigno el valor del string de búsqueda que se envío desde algún otro componente
+    // Asigno el valor del string de búsqueda que se envío desde algún otro componente
     if (this.textSearch) {
       this.textoLibre = this.textSearch;
     }
@@ -74,7 +74,9 @@ export class PacienteSearchComponent implements OnInit {
       this.esEscaneado = false;
       this.escaneado.emit(this.esEscaneado);
     }
-    this.showCreateUpdate = true;
+    if (!this.bloquearCreate) {
+      this.showCreateUpdate = true;
+    }
     this.textoLibre = null;
     this.mostrarNuevo = false;
   }
@@ -105,12 +107,12 @@ export class PacienteSearchComponent implements OnInit {
     for (let key in DocumentoEscaneados) {
       if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
         // Loggea el documento escaneado para análisis
-        this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
+        this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
         return DocumentoEscaneados[key];
       }
     }
     if (this.textoLibre.length > 30) {
-      this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { })
+      this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
     }
     return null;
   }
@@ -123,14 +125,14 @@ export class PacienteSearchComponent implements OnInit {
    */
   private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
     let datos = this.textoLibre.match(documento.regEx);
-    let sexo = "";
+    let sexo = '';
     if (documento.grupoSexo > 0) {
       sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
     }
 
     let fechaNacimiento = null;
     if (documento.grupoFechaNacimiento > 0) {
-      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY')
+      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
     }
 
     return {
@@ -186,7 +188,7 @@ export class PacienteSearchComponent implements OnInit {
     if (this.textoLibre === null) {
       this.blanqueaInput.next(true);
     }
-    
+
 
     // Inicia búsqueda
     if (this.textoLibre && this.textoLibre.trim()) {
@@ -231,7 +233,6 @@ export class PacienteSearchComponent implements OnInit {
                 if (this.pacientesSimilares.length > 0) {
 
                   let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
-                    debugger;
                     if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
                       return valuePac.paciente;
                     }
@@ -246,20 +247,18 @@ export class PacienteSearchComponent implements OnInit {
                     fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
                     match: this.pacientesSimilares[0].match
                   };
-                  debugger
                   if (pacienteEncontrado) {
-                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
 
 
                     this.seleccionarPaciente(pacienteEncontrado);
                   } else {
-                    debugger
                     if (this.pacientesSimilares[0].match >= 0.94) {
-                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
 
                       //
                       // Actualizamos los datos del paciente con los datos obtenidos del DNI
-                      // 
+                      //
                       this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
                       this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
                       this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
@@ -267,7 +266,7 @@ export class PacienteSearchComponent implements OnInit {
                       this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                     } else {
                       if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
-                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { })
+                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
                       }
                       this.seleccionarPaciente(pacienteEscaneado);
                     }

@@ -54,7 +54,7 @@
           </div>
         </plex-box>
       </div>
-      <div class="col-4">
+      <div class="col-4" *ngIf="pacienteSelected">
         <plex-box type="info">
           <header>
             <h3>Datos del Paciente
@@ -92,11 +92,11 @@
               </h4>
             </div>
           </div>
-          <div class="row">
+          <!--<div class="row">
             <div class="col-md-12">
                <plex-bool [(ngModel)]="pacienteSelected.activo" type="slide" label="activo" name="activo"></plex-bool>
             </div>
-          </div>
+          </div>-->
           <br>
           <!--<plex-button icon="account-search" type="primary" label="Validación" (click)="showValidator=true"></plex-button>-->
           <!--<plex-button icon="account-search" type="success" label="Ver Duplicados" *ngIf="!verDuplicados" (click)="verDuplicados=true"></plex-button>
