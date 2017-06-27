@@ -340,50 +340,55 @@
                         </span>
                         </h3>
                     </header>
+                    <div class="col">
+                        <div class="col">
+                            <img class="foto" src="{{pacienteModel.foto}}">
+                        </div>
+                        <div class="row" *ngIf="pacienteModel.apellido">
+                            <div class="col-12">
+                                <h3><strong>{{pacienteModel.apellido}}</strong>
+                                    <small *ngIf="pacienteModel.nombre && !pacienteModel.alias"> {{pacienteModel.nombre}}</small>
+                                    <small *ngIf="pacienteModel.nombre && pacienteModel.alias"> {{pacienteModel.alias}}</small>
+                                </h3>
+                            </div>
 
-                    <div class="row" *ngIf="pacienteModel.apellido">
-                        <div class="col-md-12">
-                            <h3><strong>{{pacienteModel.apellido}}</strong>
-                                <small *ngIf="pacienteModel.nombre && !pacienteModel.alias"> {{pacienteModel.nombre}}</small>
-                                <small *ngIf="pacienteModel.nombre && pacienteModel.alias"> {{pacienteModel.alias}}</small>
-                            </h3>
                         </div>
-                    </div>
-                    <div class="row" *ngIf="pacienteModel.documento">
-                        <div class="col-md-12">
-                            <h4>D.N.I. {{pacienteModel.documento}} </h4>
+                        <div class="row" *ngIf="pacienteModel.documento">
+                            <div class="col-md-12">
+                                <h4>D.N.I. {{pacienteModel.documento}} </h4>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" *ngIf="pacienteModel.fechaNacimiento">
-                        <div class="col-md-12">
-                            <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | fecha }} </h4>
+                        <div class="row" *ngIf="pacienteModel.fechaNacimiento">
+                            <div class="col-md-12">
+                                <h4> <label>Fecha de Nacimiento: </label> {{pacienteModel.fechaNacimiento | fecha }} </h4>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row" *ngIf="pacienteModel.sexo">
-                        <div class="col-md-12" *ngIf="pacienteModel.sexo == pacienteModel.genero">
-                            <h4> <label>Sexo: </label>
-                                <span *ngIf="pacienteModel.sexo.nombre">{{pacienteModel.sexo.nombre}}</span>
-                                <span *ngIf="!pacienteModel.sexo.nombre">{{pacienteModel.sexo}}</span>
-                            </h4>
+                        <div class="row" *ngIf="pacienteModel.sexo">
+                            <div class="col-md-12" *ngIf="pacienteModel.sexo == pacienteModel.genero">
+                                <h4> <label>Sexo: </label>
+                                    <span *ngIf="pacienteModel.sexo.nombre">{{pacienteModel.sexo.nombre}}</span>
+                                    <span *ngIf="!pacienteModel.sexo.nombre">{{pacienteModel.sexo}}</span>
+                                </h4>
+                            </div>
+                            <div class="col-md-12" *ngIf="pacienteModel.genero && pacienteModel.sexo && pacienteModel.sexo !== pacienteModel.genero">
+                                <h4> <label>Genero: </label>
+                                    <span *ngIf="pacienteModel.genero.nombre">{{pacienteModel.genero.nombre}}</span>
+                                    <span *ngIf="!pacienteModel.genero.nombre">{{pacienteModel.genero}}</span>
+                                </h4>
+                            </div>
                         </div>
-                        <div class="col-md-12" *ngIf="pacienteModel.genero && pacienteModel.sexo && pacienteModel.sexo !== pacienteModel.genero">
-                            <h4> <label>Genero: </label>
-                                <span *ngIf="pacienteModel.genero.nombre">{{pacienteModel.genero.nombre}}</span>
-                                <span *ngIf="!pacienteModel.genero.nombre">{{pacienteModel.genero}}</span>
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="pacienteModel.contacto[0].valor">
-                        <div class="col-md-12">
-                            <h4> <label>Teléfono:</label>
-                                <span *ngFor="let fono of pacienteModel.contacto; let i = index"> 
+                        <div class="row" *ngIf="pacienteModel.contacto[0].valor">
+                            <div class="col-md-12">
+                                <h4> <label>Teléfono:</label>
+                                    <span *ngFor="let fono of pacienteModel.contacto; let i = index"> 
                                     {{fono.valor}} /
                                 </span>
-                            </h4>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
 
                     <div class="row">&nbsp;</div>
                     <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">

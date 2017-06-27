@@ -9,3 +9,13 @@
 .label-warning {
     color: orange
 }
+.foto {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 20px;
+        height: 150px;
+        padding: 5px;
+    }
+
+    
