@@ -135,7 +135,8 @@ export class ReasignarTurnoComponent implements OnInit {
             idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
             paciente: turno.paciente,
             tipoPrestacion: turno.tipoPrestacion,
-            tipoTurno: tipoTurno
+            tipoTurno: tipoTurno,
+            // reasignacion: this.agendaAReasignar.id
         };
         console.log('datosTurno ', datosTurno);
         this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
@@ -146,7 +147,20 @@ export class ReasignarTurnoComponent implements OnInit {
             let operacion: Observable<any>;
             operacion = this.serviceTurno.save(datosTurno);
             operacion.subscribe(resultado => {
-                this.plex.toast('success', 'El turno se reasignó correctamente');
+                // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
+                let turnoReasignado = turno;
+                turnoReasignado.reasignado = agendaSeleccionada._id;
+                let reasignacion = {
+                    idAgenda: this.agendaAReasignar.id,
+                    idTurno: turno.id,
+                    idBloque: bloque.id,
+                    turno: turnoReasignado,
+                };
+                console.log('reasignacion');
+                
+                this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
+                    this.plex.toast('success', 'El turno se reasignó correctamente');
+                });
 
                 // Enviar SMS
                 // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
