@@ -58,6 +58,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     calculosSimilitud(turno: ITurno, agendas: IAgenda[]): Number {
 
+        // TODO: revisar estos cálculos, definir prioridades, etc
         let calculos = 0;
         agendas.forEach((ag) => {
             ag.bloques.forEach((bl) => {

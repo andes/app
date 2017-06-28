@@ -1,5 +1,17 @@
 <fieldset>
-    <legend>Reasignar Turnos</legend>
+    <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
+    <div class="row">
+        <div class="col-8">
+            <b>Ordenar por:</b>
+            <div class="input-group">
+                <div class="input-group-btn"><button class="btn btn-secondary btn-sm">FECHA</button></div>
+                <div class="input-group-btn"><button class="btn btn-secondary btn-sm">DÍA</button></div>
+                <div class="input-group-btn"><button class="btn btn-secondary btn-sm">HORARIO</button></div>
+                <div class="input-group-btn"><button class="btn btn-primary btn-sm">LIMPIAR</button></div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
     <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
         <plex-accordion>
             <!--Turno-->
@@ -12,7 +24,7 @@
                             <h5 class="mb-1">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} - {{ agenda.horaInicio | date:'HH:mm'}}
                                 hs. a {{ agenda.horaFin | date:'HH:mm'}}
                             </h5>
-                            <small>{{ agendaCandidata.similitud | json }}%</small>
+                            <small>{{ agendaCandidata.similitud }}%</small>
                         </div>
                         <p class="mb-1">
                             Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
