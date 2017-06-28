@@ -20,6 +20,11 @@ import { Observable } from 'rxjs/Rx';
     .results.list-group>.list-group-item {
         padding: 5px;
         cursor: -webkit-grab;
+    }
+
+    .results.list-group>.list-group-item a{
+        display: block;
+        width: 100%;
     }`
     ]
 })

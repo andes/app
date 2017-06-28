@@ -21,7 +21,7 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-    //Le pasamos la prestacion que se esta ejecutando. 
+    //Le pasamos la prestacion que se esta ejecutando.
     //  @Input() prestacionEjecucion: object;
 
     public prestacion: any;
@@ -32,11 +32,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoSnomedSeleccionado: any;
     // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
     public ejecutarRUP: any;
-    public data: any[];
+    public data: any[] = [];
 
     //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
     public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
-    
+
     public ejecucion: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -88,22 +88,25 @@ export class PrestacionEjecucionComponent implements OnInit {
       * Event emmiter ejecutado cuando se devuelven valores
       * desde un átomo / molecula / fórmula desde RUP
       */
-    getValoresRup(datos) {
+    getValoresRup(datos, elementoRUP) {
+        console.log(datos);
+        console.log(elementoRUP);
+        debugger;
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
-        if (this.data[this.ejecutarRUP.key] && !Object.keys(datos).length) {
+        if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
             // eliminamos la prestacion de data
-            delete this.data[this.ejecutarRUP.key];
+            delete this.data[elementoRUP.key];
         } else {
             // si no está seteada la prestacion en data
             // entonces inicializamos el objeto vacío
-            if (!this.data[this.ejecutarRUP.key]) {
-                this.data[this.ejecutarRUP.key] = {};
+            if (!this.data[elementoRUP.key]) {
+                this.data[elementoRUP.key] = {};
             }
 
             // asignamos los valores que devuelve RUP en la variable datos
             // a nuestro array de valores data
-            this.data[this.ejecutarRUP.key] = datos[this.ejecutarRUP.key];
+            this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
 
     }
