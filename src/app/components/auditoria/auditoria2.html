@@ -1,114 +1,110 @@
 <form class="plex-layout" #form="ngForm">
-  <section>
-    <div class="row">
-      <div class="col-4">
-        <plex-box type="danger">
-          <header>
-            <div class="page-title">Candidatos a vincular</div>
-          </header>
-          <div>
-            <ul class="list-group">
-              <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente" [dragOverClass]="'drag-over-border'"
-              (onDragStart)="arrastrandoPaciente(false)" (onDragEnd)="arrastrandoPaciente(true)">
-                <div class="card invertHover">
-                  <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
-                    <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
-                    </h4>
-                  <div class="card-block">
-                    <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
-                    <div>DU: {{paciente.documento}}</div>
-                    <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
-                    <div>Sexo: {{paciente.sexo}}</div>
-                    <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </plex-box>
-      </div>
-      <div class="col-4">
-        <plex-box type="danger">
-          <header>
-            <div class="page-title">Pacientes vinculados</div>
-          </header>
-          <div droppable css="droppable" (onDrop)="vincularPacienteDrop($event)" [dragOverClass]="'drag-target-border'">
-            <ul class="list-group">
-              <li *ngFor="let paciente of pacientesVinculados">
-                <div class="card invertHover">
-                  <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden"></i>
-                    <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
-                    </h4>
-                  <div class="card-block">
-                    <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
-                    <div>DU: {{paciente.documento}}</div>
-                    <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
-                    <div>Sexo: {{paciente.sexo}}</div>
-                    <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <br>
-            <div class="msg-arrastrePaciente" [hidden]="draggingPatient"> Arrastre aquí para vincular al paciente</div>
-          </div>
-        </plex-box>
-      </div>
-      <div class="col-4" *ngIf="pacienteSelected">
-        <plex-box type="info">
-          <header>
-            <h3>Datos del Paciente
-              <span *ngIf="pacienteSelected.estado === 'validado'" class="validado recuadro">
+    <section>
+        <div class="row">
+            <div class="col-4">
+                <plex-box type="danger">
+                    <header>
+                        <div class="page-title">Candidatos a vincular</div>
+                    </header>
+                    <div>
+                        <ul class="list-group">
+                            <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente" [dragOverClass]="'drag-over-border'"
+                                (onDragStart)="arrastrandoPaciente(false)" (onDragEnd)="arrastrandoPaciente(true)">
+                                <div class="card invertHover">
+                                    <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
+                                        <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
+                                    </h4>
+                                    <div class="card-block">
+                                        <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
+                                        <div>DU: {{paciente.documento}}</div>
+                                        <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
+                                        <div>Sexo: {{paciente.sexo}}</div>
+                                        <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </plex-box>
+            </div>
+            <div class="col-4">
+                <plex-box type="danger">
+                    <header>
+                        <div class="page-title">Pacientes vinculados</div>
+                    </header>
+                    <div droppable css="droppable" (onDrop)="vincularPacienteDrop($event)" [dragOverClass]="'drag-target-border'">
+                        <ul class="list-group">
+                            <li *ngFor="let paciente of pacientesVinculados">
+                                <div class="card invertHover">
+                                    <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden"></i>
+                                        <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
+                                    </h4>
+                                    <div class="card-block">
+                                        <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
+                                        <div>DU: {{paciente.documento}}</div>
+                                        <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
+                                        <div>Sexo: {{paciente.sexo}}</div>
+                                        <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <br>
+                        <div class="msg-arrastrePaciente" [hidden]="draggingPatient"> Arrastre aquí para vincular al paciente</div>
+                    </div>
+                </plex-box>
+            </div>
+            <div class="col-4" *ngIf="pacienteSelected">
+                <plex-box type="info">
+                    <header>
+                        <h3>Datos del Paciente
+                            <span *ngIf="pacienteSelected.estado === 'validado'" class="validado recuadro">
                             {{pacienteSelected.estado | uppercase}} 
                         </span>
-              <span *ngIf="pacienteSelected.estado !== 'validado'" class="temporal recuadro">
+                            <span *ngIf="pacienteSelected.estado !== 'validado'" class="temporal recuadro">
                             {{pacienteSelected.estado | uppercase}} 
               </span>
-            </h3>
-          </header>
-
-          <div class="row" *ngIf="pacienteSelected.apellido">
-            <div class="col-md-12">
-              <h3><strong>{{pacienteSelected.apellido}}</strong>
-                <small> {{pacienteSelected.nombre}}</small>
-              </h3>
+                        </h3>
+                    </header>
+                  <div class="col"> 
+                    <div class="col">
+                            <img class="foto" src="{{pacienteSelected.foto}}">
+                    </div>
+                    <div class="row" *ngIf="pacienteSelected.apellido">
+                        <div class="col-md-12">
+                            <h3><strong>{{pacienteSelected.apellido}}</strong>
+                                <small> {{pacienteSelected.nombre}}</small>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="pacienteSelected.documento">
+                        <div class="col-md-12">
+                            <h4>D.N.I. {{pacienteSelected.documento}} </h4>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="pacienteSelected.fechaNacimiento">
+                        <div class="col-md-12">
+                            <h4> <label>Fecha de Nacimiento: </label> {{pacienteSelected.fechaNacimiento | fecha }} </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4> <label>Sexo: </label>
+                                <span *ngIf="pacienteSelected.sexo.nombre">{{pacienteSelected.sexo.nombre}}</span>
+                                <span *ngIf="!pacienteSelected.sexo.nombre">{{pacienteSelected.sexo}}</span>
+                            </h4>
+                        </div>
+                    </div>
+                  </div>
+                </plex-box>
             </div>
-          </div>
-          <div class="row" *ngIf="pacienteSelected.documento">
-            <div class="col-md-12">
-              <h4>D.N.I. {{pacienteSelected.documento}} </h4>
-            </div>
-          </div>
-          <div class="row" *ngIf="pacienteSelected.fechaNacimiento">
-            <div class="col-md-12">
-              <h4> <label>Fecha de Nacimiento: </label> {{pacienteSelected.fechaNacimiento | fecha }} </h4>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <h4> <label>Sexo: </label>
-                <span *ngIf="pacienteSelected.sexo.nombre">{{pacienteSelected.sexo.nombre}}</span>
-                <span *ngIf="!pacienteSelected.sexo.nombre">{{pacienteSelected.sexo}}</span>
-              </h4>
-            </div>
-          </div>
-          <!--<div class="row">
-            <div class="col-md-12">
-               <plex-bool [(ngModel)]="pacienteSelected.activo" type="slide" label="activo" name="activo"></plex-bool>
-            </div>
-          </div>-->
-          <br>
-          <!--<plex-button icon="account-search" type="primary" label="Validación" (click)="showValidator=true"></plex-button>-->
-          <!--<plex-button icon="account-search" type="success" label="Ver Duplicados" *ngIf="!verDuplicados" (click)="verDuplicados=true"></plex-button>
-          <plex-button icon="account-search" type="danger" label="Fusionar Selección" *ngIf="verDuplicados" (click)="verDuplicados=false"></plex-button>-->
-          <br> <br>
-        </plex-box>
-      </div>
-
-    </div>
-
-
-    <br>
-  </section>
+        </div>
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button icon="reply" label="Volver" type="danger" (click)="onBack()">
+            </plex-button>
+        </div>
+    </footer>
 
 </form>

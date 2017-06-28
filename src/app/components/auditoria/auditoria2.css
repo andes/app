@@ -18,10 +18,6 @@
 *:hover>.mdi.mdi-hover-show {
   display: inline-block;
 }
-.recuadro {
-  border: 1px solid;
-  float: right;
-}
 .validado {
   color: green
 }
