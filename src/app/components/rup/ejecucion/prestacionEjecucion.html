@@ -20,7 +20,7 @@
                 <div class="col">
                     <!--Procedimientos
                     <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
-                    <plex-button class="" title="Hallazgos" label="Hallazgos" (click)="filtroBuscadorSnomed('hallazgos')" type="primary btn-sm"></plex-button>
+                    <plex-button class="" title="Problemas" label="Problemas" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm"></plex-button>
                     <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
                     <plex-button class="" title="Planes" label="Planes" (click)="filtroBuscadorSnomed('planes')" type="primary btn-sm"></plex-button>
                     Buscador {{tipoBusqueda}}
@@ -32,14 +32,19 @@
             </div>
 
 
-            <div class="row" *ngIf="ejecutarRUP">
-                <pre>
-                {{ejecutarRUP | json}}
-                </pre>
-                <div class="col">
-                    <rup #rup [prestacion]="prestacion" [elementoRUP]="ejecutarRUP" (evtData)="getValoresRup($event)" [paciente]="prestacion.paciente"
-                        [conceptoSnomed]="conceptoSnomedSeleccionado">
-                    </rup>
+          <div *ngIf="ejecucion && ejecucion.length">
+                <div class="row" *ngFor="let elemento of ejecucion">
+                    <div class="col">
+                        <rup #rup [prestacion]="prestacion"
+                            [elementoRUP]="elemento"
+                            [paciente]="prestacion.paciente"
+                            [conceptoSnomed]="conceptoSnomedSeleccionado"
+
+                            (evtData)="getValoresRup($event)"
+
+                            >
+                        </rup>
+                    </div>
                 </div>
 
             </div>

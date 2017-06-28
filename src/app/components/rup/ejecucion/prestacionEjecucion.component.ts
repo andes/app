@@ -21,6 +21,9 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
+    //Le pasamos la prestacion que se esta ejecutando. 
+    //  @Input() prestacionEjecucion: object;
+
     public prestacion: any;
     public elementosRUP: any[];
     public elementoRUP: any;
@@ -32,8 +35,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public data: any[];
 
     //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    public tipoBusqueda: string = 'hallazgos'; //Por defecto trae los hallazgos
-
+    public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
+    
+    public ejecucion: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -77,7 +81,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(concepto) {
         this.conceptoSnomedSeleccionado = concepto;
         this.ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, concepto);
-        console.log(this.ejecutarRUP);
+        this.ejecucion.push(this.ejecutarRUP);
     }
 
     /*
