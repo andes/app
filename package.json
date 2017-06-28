@@ -57,7 +57,6 @@
         "protractor": "~5.1.0",
         "ts-node": "~2.0.0",
         "tslint": "~4.4.2",
-        // Fix saco el sobrero sino la versión 4.0 de typescript rompe tutto
         "typescript": "2.3.4"
     }
 }
