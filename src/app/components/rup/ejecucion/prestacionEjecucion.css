@@ -1,0 +1,11 @@
+.list-group .list-group-item.problema {
+    border-left: solid 15px #92278E;
+}
+
+.plan {
+    border-left: solid 15px #6A99AD;
+}
+
+.prestacion .card-header {
+    border-left: solid 15px #FFD800;
+}

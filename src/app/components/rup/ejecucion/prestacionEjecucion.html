@@ -2,56 +2,70 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
-<section class="row" *ngIf="prestacion && elementoRUPprestacion">
+<section *ngIf="prestacion && elementoRUPprestacion">
 
-    <div class="col-6">
-        <plex-box>
-            <header>
+    <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-6">
+            <plex-box>
+                <header>
+                    <div class="clearfix">
+                        <div class="page-title">
+                            {{prestacion.solicitud.tipoPrestacion.term}}
+                        </div>
+                    </div>
+                </header>
+
+                <div *ngIf="ejecucion && ejecucion.length">
+                    <plex-accordion>
+                        <div class="row" *ngFor="let elementoRUP of ejecucion">
+                            <div class="col">
+                                <plex-panel tituloPrincipal="{{elementoRUP.conceptos[0].term}}">
+
+                                    <rup #rup [prestacion]="prestacion"
+                                        [elementoRUP]="elementoRUP"
+                                        [paciente]="prestacion.paciente"
+                                        [conceptoSnomed]="conceptoSnomedSeleccionado"
+
+                                        (evtData)="getValoresRup($event, elementoRUP)">
+                                    </rup>
+
+                                </plex-panel>
+
+                            </div>
+                        </div>
+                    </plex-accordion>
+
+                </div>
+            </plex-box>
+        </div>
+        <div class="col-3">
+            <plex-box>
+                <header>
+                    <div class="clearfix">
+                        <div class="page-title">
+                            {{prestacion.solicitud.tipoPrestacion.term}}
+                        </div>
+                    </div>
+                </header>
+
                 <div class="row">
                     <div class="col">
-                        <h5 class="box-title-principal">
-                            {{prestacion.solicitud.tipoPrestacion.term}}
-                        </h5>
+                        <!--Procedimientos
+                        <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
+                        <plex-button class="" title="Problemas" label="Problemas" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm"></plex-button>
+                        <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
+                        <plex-button class="" title="Planes" label="Planes" (click)="filtroBuscadorSnomed('planes')" type="primary btn-sm"></plex-button>
+                        Buscador {{tipoBusqueda}}
+                        <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+                        <!--
+                            [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
+                        -->
                     </div>
                 </div>
-            </header>
-
-            <div class="row">
-                <div class="col">
-                    <!--Procedimientos
-                    <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
-                    <plex-button class="" title="Problemas" label="Problemas" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm"></plex-button>
-                    <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
-                    <plex-button class="" title="Planes" label="Planes" (click)="filtroBuscadorSnomed('planes')" type="primary btn-sm"></plex-button>
-                    Buscador {{tipoBusqueda}}
-                    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
-                    <!--
-                        [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
-                    -->
-                </div>
-            </div>
-
-
-          <div *ngIf="ejecucion && ejecucion.length">
-                <div class="row" *ngFor="let elementoRUP of ejecucion">
-                    <div class="col">
-                        <rup #rup [prestacion]="prestacion"
-                            [elementoRUP]="elementoRUP"
-                            [paciente]="prestacion.paciente"
-                            [conceptoSnomed]="conceptoSnomedSeleccionado"
-
-                            (evtData)="getValoresRup($event, elementoRUP)"
-
-                            >
-                        </rup>
-                    </div>
-                </div>
-
-            </div>
-
-
-
-        </plex-box>
+            </plex-box>
+        </div>
     </div>
 </section>
 

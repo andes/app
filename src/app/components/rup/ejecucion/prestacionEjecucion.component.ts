@@ -16,7 +16,7 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
-    // styleUrls: ['prestacionEjecucion.css']
+    styleUrls: ['prestacionEjecucion.css']
 
 })
 
