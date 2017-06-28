@@ -24,14 +24,17 @@ export class PrestacionEjecucionComponent implements OnInit {
     //Le pasamos la prestacion que se esta ejecutando.
     //  @Input() prestacionEjecucion: object;
 
+    // prestacion actual en ejecucion
     public prestacion: any;
+    // array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
-    public elementoRUP: any;
+    // elementoRUP de la prestacion actual
+    public elementoRUPprestacion: any;
 
     // concepto snomed seleccionado del buscador a ejecutar
     public conceptoSnomedSeleccionado: any;
-    // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-    public ejecutarRUP: any;
+
+    // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
 
     //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
@@ -64,8 +67,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
 
-                    this.elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion);
-                    console.log(this.elementoRUP);
+                    this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion);
                 });
 
             }, (err) => {
@@ -78,10 +80,22 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    ejecutarConcepto(concepto) {
-        this.conceptoSnomedSeleccionado = concepto;
-        this.ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, concepto);
-        this.ejecucion.push(this.ejecutarRUP);
+
+    /**
+     * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
+     * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
+     * a dicho concepto de snomed
+     * @param {any} snomedConcept
+     * @memberof PrestacionEjecucionComponent
+     */
+    ejecutarConcepto(snomedConcept) {
+        this.conceptoSnomedSeleccionado = snomedConcept;
+
+        // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+        let ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+
+        // agregamos al array de ejecucion
+        this.ejecucion.push(ejecutarRUP);
     }
 
     /*
@@ -89,9 +103,6 @@ export class PrestacionEjecucionComponent implements OnInit {
       * desde un átomo / molecula / fórmula desde RUP
       */
     getValoresRup(datos, elementoRUP) {
-        console.log(datos);
-        console.log(elementoRUP);
-        debugger;
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -108,7 +119,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             // a nuestro array de valores data
             this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
-
     }
 
     volver(ruta) {
