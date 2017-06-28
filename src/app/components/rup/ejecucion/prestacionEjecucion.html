@@ -18,8 +18,13 @@
 
             <div class="row">
                 <div class="col">
-                    Procedimientos
-                    <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+                    <!--Procedimientos
+                    <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
+                    <plex-button class="" title="Hallazgos" label="Hallazgos" (click)="filtroBuscadorSnomed('hallazgos')" type="primary btn-sm"></plex-button>
+                    <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
+                    <plex-button class="" title="Planes" label="Planes" (click)="filtroBuscadorSnomed('planes')" type="primary btn-sm"></plex-button>
+                    Buscador {{tipoBusqueda}}
+                    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
                     <!--
                         [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
                     -->
@@ -32,13 +37,8 @@
                 {{ejecutarRUP | json}}
                 </pre>
                 <div class="col">
-                    <rup #rup [prestacion]="prestacion"
-                        [elementoRUP]="ejecutarRUP"
-                        (evtData)="getValoresRup($event)"
-                        [paciente]="prestacion.paciente"
-                        [conceptoSnomed]="conceptoSnomedSeleccionado"
-
-                    >
+                    <rup #rup [prestacion]="prestacion" [elementoRUP]="ejecutarRUP" (evtData)="getValoresRup($event)" [paciente]="prestacion.paciente"
+                        [conceptoSnomed]="conceptoSnomedSeleccionado">
                     </rup>
                 </div>
 

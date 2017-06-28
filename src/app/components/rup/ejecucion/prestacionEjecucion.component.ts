@@ -31,6 +31,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public ejecutarRUP: any;
     public data: any[];
 
+    //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
+    public tipoBusqueda: string = 'hallazgos'; //Por defecto trae los hallazgos
+
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -116,4 +119,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         */
         this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
+    //Recibe el parametro y lo setea para realizar la busqueda en Snomed
+    filtroBuscadorSnomed(tipoBusqueda) {
+        console.log(tipoBusqueda);
+        this.tipoBusqueda = tipoBusqueda;
+    }
+
 }

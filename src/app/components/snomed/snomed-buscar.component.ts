@@ -168,7 +168,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 this.loading = true;
                 this.resultados = [];
 
-                alert(this.tipoBusqueda + " / " + search);
+               // alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
                 let apiMethod;
