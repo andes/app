@@ -5,7 +5,6 @@ import { IOrganizacion } from './../IOrganizacion';
 import { IProfesional } from './../IProfesional';
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IPaciente } from './../IPaciente';
-
 export interface IPrestacionPaciente {
     id: String;
     idPrestacionOrigen: String; // prestacion desde la que se solicita
@@ -86,7 +85,7 @@ export interface IPrestacionPaciente {
             tipo: String,
             profesional: IProfesional
         }
-       
+
     ];
-// tslint:disable-next-line:eofline
+    // tslint:disable-next-line:eofline
 }

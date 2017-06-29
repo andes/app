@@ -4,9 +4,9 @@
 
 <section class="prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion">
 
-    <div class="row" >
+    <div class="row">
         <div class="col-3">
-
+            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id"></rup-hudsBusqueda>
         </div>
         <div class="col-6">
             <plex-box>
@@ -27,13 +27,7 @@
                             <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
                                 <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
 
-                                    <rup #rup [prestacion]="prestacion"
-                                        [elementoRUP]="elemento.elementoRUP"
-                                        [paciente]="prestacion.paciente"
-                                        [conceptoSnomed]="conceptoSnomedSeleccionado"
-
-                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"
-                                        *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                         || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
 
                                     </rup>
@@ -70,6 +64,7 @@
                         <div *ngIf="!showPlanes">
                             <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
                         </div>
+
                         <div *ngIf="showPlanes">
                             <buscador-planes></buscador-planes>
                         </div>
