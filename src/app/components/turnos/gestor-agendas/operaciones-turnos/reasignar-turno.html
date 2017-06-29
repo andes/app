@@ -2,7 +2,7 @@
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
     <div class="row">
         <div class="col-8">
-            <b>Ordenar por:</b>
+            <b>Priorizar por:</b>
             <div class="input-group">
                 <div class="input-group-btn"><button class="btn btn-info btn-sm active">FECHA</button></div>
                 <div class="input-group-btn"><button class="btn btn-info btn-sm">DÍA</button></div>
@@ -20,21 +20,20 @@
             <div *ngIf="agendaCandidata.agendas.length>0 && !agendaCandidata.turno?.reasignado" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
             <plex-panel *ngIf="agendaCandidata.agendas.length>0" tituloPrincipal="Turno: {{ agendaCandidata.turno.horaInicio | date: 'dd/MM/yyyy' }} 
             {{ agendaCandidata.turno.horaInicio | date: 'HH:mm' }} hs.
-            {{ agendaCandidata.turno.paciente | paciente }} |
+            {{ agendaCandidata.turno.paciente | paciente }} |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
             {{ agendaAReasignar.profesionales[0]| profesional }} ">
                 <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
 
                     <ng-container *ngIf="agendaCandidata.turno?.reasignado; then reasignado else noReasignado"></ng-container>
 
                     <ng-template #reasignado>
-                        <span class="list-group-item list-group-item-action flex-column align-items-start">
+                        <span *ngIf="i==0" class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Turno ya reasignado a la agenda del {{ agenda.horaInicio | date: 'dd/MM/yyyy' }}
+                                <h5 class="mb-1">Turno ya reasignado
                                 </h5>
                             </div>
                        </span>
                     </ng-template>
-
                     <ng-template #noReasignado>
                         <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)">
                             <div class="d-flex w-100 justify-content-between">

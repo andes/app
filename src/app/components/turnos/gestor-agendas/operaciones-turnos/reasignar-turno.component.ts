@@ -17,9 +17,16 @@ import * as moment from 'moment';
 
 export class ReasignarTurnoComponent implements OnInit {
 
+    private _agendaAReasignar: any;
 
-    @Input() agendaAReasignar: IAgenda;
-
+    @Input('agendaAReasignar')
+    set agendaAReasignar(value: any) {
+        this._agendaAReasignar = value;
+        this.actualizar();
+    }
+    get agendaAReasignar(): any {
+        return this._agendaAReasignar;
+    }
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
@@ -37,31 +44,37 @@ export class ReasignarTurnoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-        this.agendaAReasignar.bloques.forEach(bloque => {
-            bloque.turnos.forEach(turno => {
-                if (turno.paciente) {
+    }
 
-                    let params = {
-                        idAgenda: this.agendaAReasignar.id,
-                        idBloque: bloque.id,
-                        idTurno: turno.id
-                    };
+    actualizar() {
+        this.agendasCandidatas = [];
+        if (this.agendaAReasignar) {
+            this.agendaAReasignar.bloques.forEach(bloque => {
+                bloque.turnos.forEach(turno => {
+                    if (turno.paciente) {
 
-                    this.serviceTurno.get(params).subscribe((agendas) => {
-                        this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
-                        this.calculosSimilitud(turno, agendas);
-                        // console.log('agendasCandidatas', this.agendasCandidatas);
-                    });
-                }
+                        let params = {
+                            idAgenda: this.agendaAReasignar.id,
+                            idBloque: bloque.id,
+                            idTurno: turno.id
+                        };
 
+                        this.serviceTurno.get(params).subscribe((agendas) => {
+                            this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
+                            this.calculosSimilitud(turno, agendas);
+                            // console.log('agendasCandidatas', this.agendasCandidatas);
+                        });
+                    }
+
+                });
             });
-        });
+        }
     }
 
     interseccion(array1: any[], array2: any[]) {
         for (let i = 0; i < array1.length; i++) {
             let prof1 = array1[i];
-            if ( array2.find(x => String(x._id)  === String(prof1._id))) {
+            if (array2.find(x => String(x._id) === String(prof1._id))) {
                 return true;
             }
         }
@@ -170,6 +183,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
                 this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
+                    this.actualizar();
                 });
 
                 // Enviar SMS
