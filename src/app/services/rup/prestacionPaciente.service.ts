@@ -1,3 +1,4 @@
+import { IHallazgo } from './../../interfaces/rup/IHallazgo';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../../environments/environment';
@@ -9,6 +10,7 @@ import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
 export class PrestacionPacienteService {
 
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
+    private cache: any[] = [];
 
     constructor(private server: Server) { }
 
@@ -21,7 +23,7 @@ export class PrestacionPacienteService {
      *
      * @memberof PrestacionPacienteService
      */
-    get(params: any, options: any = {}): Observable<IPrestacionPaciente[]> {
+    get(params: any, options: any = {}): Observable<any[]> {
 
         if (typeof options.showError === 'undefined') {
             options.showError = true;
@@ -47,6 +49,54 @@ export class PrestacionPacienteService {
         let url = this.prestacionesUrl + '/' + id;
         return this.server.get(url, options);
     }
+
+    /**
+     * Metodo getByPaciente. Busca todas las prestaciones de un paciente 
+     * @param {String} idPaciente
+     */
+    getByPaciente(idPaciente: any): Observable<any[]> {
+        debugger;
+        if (this.cache[idPaciente]) {
+            return new Observable(resultado => resultado.next(this.cache[idPaciente]));
+        } else {
+            let opt;
+            opt = {
+                params: {
+                    'idPaciente': idPaciente,
+                    'ordenFecha': true
+                },
+                options: {
+                    showError: true
+                }
+            };
+
+            return this.server.get(this.prestacionesUrl, opt).map(data => {
+                this.cache[idPaciente] = data;
+                return this.cache[idPaciente];
+            });
+        }
+
+    }
+
+    /**
+     * Metodo getByHallazo. 
+     * @param {String} idPaciente
+     */
+    getByHallazgoPaciente(idPaciente: String): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            debugger;
+            let registros = [];
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                    registros = [...registros, ...prestacion.ejecucion.registros.filter(registro =>
+                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')];
+
+                }
+            });
+            return registros;
+        });
+    }
+
 
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
@@ -87,5 +137,5 @@ export class PrestacionPacienteService {
         return this.server.patch(this.prestacionesUrl + '/' + prestacion.id, cambios);
     }
 
-// tslint:disable-next-line:eofline
+    // tslint:disable-next-line:eofline
 }

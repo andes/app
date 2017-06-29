@@ -35,7 +35,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
-    prestacion: IPrestacionPaciente;
+    prestacion: any;
     public listaProblemas: IProblemaPaciente[] = [];
     public problemaBuscar: String = '';
     public error: String = '';
