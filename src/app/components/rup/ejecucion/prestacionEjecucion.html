@@ -16,9 +16,11 @@
                             {{prestacion.solicitud.tipoPrestacion.term}}
                         </div>
                     </div>
+
                 </header>
 
                 <div *ngIf="ejecucion && ejecucion.length">
+
                     <plex-accordion class="elementosRup">
                         <div class="row" *ngFor="let elemento of ejecucion">
 
@@ -31,6 +33,7 @@
                                         [conceptoSnomed]="conceptoSnomedSeleccionado"
 
                                         (evtData)="getValoresRup($event, elemento.elementoRUP)"  *ngIf="elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+
                                     </rup>
 
                                 </plex-panel>
@@ -44,6 +47,7 @@
             </plex-box>
         </div>
         <div class="col-3">
+
             <plex-box>
                 <header>
                     <div class="clearfix">
@@ -59,12 +63,30 @@
                         <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
                         <plex-button class="" title="Problemas" label="Problemas" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm"></plex-button>
                         <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
-                        <plex-button class="" title="Planes" label="Planes" (click)="filtroBuscadorSnomed('planes')" type="primary btn-sm"></plex-button>
+                        <plex-button class="" title="Planes" label="Planes" (click)="busquedaPlanes()" type="primary btn-sm"></plex-button>
                         Buscador {{tipoBusqueda}}
-                        <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
-                        <!--
-                            [_draggable]="true" [_dragScope]="'problemas-paciente'" (_onDragStart)="arrastrandoProblema(true)" (_onDragEnd)="arrastrandoProblema(false)"
-                        -->
+                        <div *ngIf="!showPlanes">
+                            <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+                        </div>
+                        <form *ngIf="showPlanes">
+                            <div>
+                                Busqueda de planes
+                                <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscar ..."></plex-text>
+                            </div>
+                        </form>
+
+                        <div>
+                            <ul class="results list-group">
+                                <ng-container *ngFor="let item of listaPlanes">
+                                    <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope"
+                                        [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                        <a href="javascript: void(0)">
+                                        {{item.term}}
+                                    </a>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </plex-box>
