@@ -48,7 +48,8 @@ export class ReasignarTurnoComponent implements OnInit {
                     };
 
                     this.serviceTurno.get(params).subscribe((agendas) => {
-                        this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas, similitud: this.calculosSimilitud(turno, agendas) }];
+                        this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
+                        this.calculosSimilitud(turno, agendas);
                         console.log('agendasCandidatas', this.agendasCandidatas);
                     });
                 }
@@ -57,29 +58,40 @@ export class ReasignarTurnoComponent implements OnInit {
         });
     }
 
-    calculosSimilitud(turno: ITurno, agendas: IAgenda[]): Number {
+    interseccion(array1: any[], array2: any[]) {
+        console.log('array1', array1);
+        console.log('array2', array2);
+        for (let i = 0; i < array1.length; i++) {
+            let prof1 = array1[i];
+            if ( array2.find(x => String(x._id)  === String(prof1._id))) {
+                return true;
+            }
+        }
+    }
 
-        // TODO: revisar estos cálculos, definir prioridades, etc
+    calculosSimilitud(turno: ITurno, agendas: any[]) {
+
         let calculos = 0;
         agendas.forEach((ag) => {
             ag.bloques.forEach((bl) => {
                 bl.turnos.forEach((tu) => {
                     let calculoSimilitud = {
-                        tipoPrestacion: (turno.tipoPrestacion.nombre === ag.tipoPrestaciones[0].nombre ? 30 : 0),
-                        horaInicio: (turno.horaInicio === tu.horaInicio ? 30 : 0),
+                        tipoPrestacion: bl.tipoPrestaciones.findIndex(x => x._id === turno.tipoPrestacion.id) >= 0 ? 30 : 0,
+                        // horaInicio: (turno.horaInicio === tu.horaInicio ? 30 : 0),
+                        horaInicio: 20,
                         duracionTurno: (this.agendaAReasignar.bloques.find(x => x.duracionTurno === bl.duracionTurno) ? 20 : 0),
-                        profesional: (ag.profesionales.length && ag.profesionales[0].nombre ? 10 : 0),
-                        diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
+                        profesional: this.interseccion(ag.profesionales, this.agendaAReasignar.profesionales) === true ? 30 : 0
+                        // diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
                     };
-                    // console.log(calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);
-                    calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional + calculoSimilitud.diaSemana);
+                    calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
                 });
             });
+            ag.similitud = calculos;
         });
 
-        if (calculos > 0) {
-            return calculos;
-        }
+        // if (calculos > 0) {
+        //     return calculos;
+        // }
 
     }
 
@@ -91,7 +103,6 @@ export class ReasignarTurnoComponent implements OnInit {
             idTurno: idTurno
         };
 
-        console.log('agendasCandidatas', this.agendasCandidatas);
         this.serviceTurno.get(params).subscribe((agendas) => {
 
             let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
@@ -102,7 +113,7 @@ export class ReasignarTurnoComponent implements OnInit {
             };
             this.agendasCandidatas = [... this.agendasCandidatas, candidatas];
             // }
-            console.log('agendasCandidatas', this.agendasCandidatas);
+            // console.log('agendasCandidatas', this.agendasCandidatas);
         });
     }
 
