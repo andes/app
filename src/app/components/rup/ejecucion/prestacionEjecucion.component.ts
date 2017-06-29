@@ -113,10 +113,45 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'hallazgo':
             case 'problema':
                 data.tipo = 'problema';
-            break;
+                break;
             case 'procedimiento':
                 data.tipo = (this.tipoBusqueda) ? 'planes' : data.tipo;
-            break;
+                break;
+        }
+
+        // agregamos al array de ejecucion
+        this.ejecucion.push(data);
+    }
+
+    ejecutarConceptoHuds(resultadoHuds) {
+        let snomedConcept;
+        if (resultadoHuds.tipo === 'prestacion') {
+            snomedConcept = resultadoHuds.data.solicitud.tipoPrestacion;
+        } else {
+            snomedConcept = resultadoHuds.data.concepto;
+        }
+
+        this.conceptoSnomedSeleccionado = snomedConcept;
+
+        // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+        let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+
+
+        // armamos el elemento data a agregar al array de ejecucion
+        let data = {
+            tipo: snomedConcept.semanticTag,
+            concepto: snomedConcept,
+            elementoRUP: elementoRUP
+        };
+
+        switch (snomedConcept.semanticTag) {
+            case 'hallazgo':
+            case 'problema':
+                data.tipo = 'problema';
+                break;
+            case 'procedimiento':
+                data.tipo = (this.tipoBusqueda) ? 'planes' : data.tipo;
+                break;
         }
 
         // agregamos al array de ejecucion
@@ -177,7 +212,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.servicioTipoPrestacion.get({ term: this.searchPlanes }).subscribe(tiposPrestacion => {
                 this.listaPlanes = tiposPrestacion;
             });
-        }else {
+        } else {
             this.listaPlanes = [];
         }
     }

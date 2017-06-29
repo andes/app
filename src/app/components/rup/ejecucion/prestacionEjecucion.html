@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-3">
-            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id"></rup-hudsBusqueda>
+            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" (evtData)="ejecutarConceptoHuds($event)"></rup-hudsBusqueda>
         </div>
         <div class="col-6">
             <plex-box>
@@ -16,7 +16,6 @@
                             {{prestacion.solicitud.tipoPrestacion.term}}
                         </div>
                     </div>
-
                 </header>
 
                 <div *ngIf="ejecucion && ejecucion.length">
