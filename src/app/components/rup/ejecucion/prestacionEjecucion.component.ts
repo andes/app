@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -36,13 +37,18 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
     public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
-    
+    public showPlanes: boolean = false;
     public ejecucion: any[] = [];
+    // termino a buscar en PLANES
+    public searchPlanes: String = '';
+    //Lista de planes.
+    public listaPlanes: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
         public plex: Plex, public auth: Auth,
-        private router: Router, private route: ActivatedRoute) {
+        private router: Router, private route: ActivatedRoute,
+        public servicioTipoPrestacion: TipoPrestacionService,) {
     }
 
     /**
@@ -125,8 +131,19 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     //Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
+        this.showPlanes = false;// Oculta el buscador de planes
         console.log(tipoBusqueda);
         this.tipoBusqueda = tipoBusqueda;
     }
+    //Muestra el buscador de planes
+    busquedaPlanes() {
+        this.showPlanes = true;
+    }
+    buscar() {
+         this.servicioTipoPrestacion.get({term: this.searchPlanes}).subscribe(tiposPrestacion => {
+            this.listaPlanes = tiposPrestacion;
+        });
+    }
+
 
 }
