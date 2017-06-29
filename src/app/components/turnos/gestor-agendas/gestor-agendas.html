@@ -68,7 +68,7 @@
                                 <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span></span>
+                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span></span>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>

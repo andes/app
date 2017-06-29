@@ -40,6 +40,7 @@ export class ReasignarTurnoComponent implements OnInit {
         this.agendaAReasignar.bloques.forEach(bloque => {
             bloque.turnos.forEach(turno => {
                 if (turno.paciente) {
+
                     let params = {
                         idAgenda: this.agendaAReasignar.id,
                         idBloque: bloque.id,
@@ -157,7 +158,7 @@ export class ReasignarTurnoComponent implements OnInit {
                     turno: turnoReasignado,
                 };
                 console.log('reasignacion');
-                
+
                 this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
                 });
