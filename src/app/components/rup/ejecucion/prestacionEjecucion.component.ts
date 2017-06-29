@@ -104,7 +104,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // armamos el elemento data a agregar al array de ejecucion
         let data = {
-            tipo : snomedConcept.semanticTag,
+            tipo: snomedConcept.semanticTag,
             concepto: snomedConcept,
             elementoRUP: elementoRUP
         };
@@ -113,7 +113,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'hallazgo':
             case 'problema':
                 data.tipo = 'problema';
-            break;
+                break;
         }
 
         // agregamos al array de ejecucion
@@ -169,10 +169,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showPlanes = true;
     }
     buscar() {
-         this.servicioTipoPrestacion.get({term: this.searchPlanes}).subscribe(tiposPrestacion => {
-            this.listaPlanes = tiposPrestacion;
-        });
+        if (this.searchPlanes !== null) {
+            this.servicioTipoPrestacion.get({ term: this.searchPlanes }).subscribe(tiposPrestacion => {
+                this.listaPlanes = tiposPrestacion;
+            });
+        }else {
+            this.listaPlanes = [];
+        }
     }
-
 
 }
