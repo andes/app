@@ -50,7 +50,7 @@ export class ReasignarTurnoComponent implements OnInit {
                     this.serviceTurno.get(params).subscribe((agendas) => {
                         this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
                         this.calculosSimilitud(turno, agendas);
-                        console.log('agendasCandidatas', this.agendasCandidatas);
+                        // console.log('agendasCandidatas', this.agendasCandidatas);
                     });
                 }
 
@@ -59,8 +59,6 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     interseccion(array1: any[], array2: any[]) {
-        console.log('array1', array1);
-        console.log('array2', array2);
         for (let i = 0; i < array1.length; i++) {
             let prof1 = array1[i];
             if ( array2.find(x => String(x._id)  === String(prof1._id))) {
