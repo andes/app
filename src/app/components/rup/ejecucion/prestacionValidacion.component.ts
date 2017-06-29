@@ -20,9 +20,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 export class PrestacionValidacionComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    prestacion: IPrestacionPaciente;
-    prestacionesEjecutadas: IPrestacionPaciente[] = null;
-    prestacionesSolicitadas: IPrestacionPaciente[] = null;
+    prestacion: any;
+    prestacionesEjecutadas: any[] = null;
+    prestacionesSolicitadas: any[] = null;
     public breadcrumbs: any;
 
     // arreglo de prestaciones a mostrar por cada problema
@@ -84,7 +84,7 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
-    filtrarPrestaciones(prestacionEj: IPrestacionPaciente, idProblema) {
+    filtrarPrestaciones(prestacionEj: any, idProblema) {
         if (prestacionEj.solicitud.listaProblemas.find(p => p.id = idProblema)) {
             return prestacionEj;
         } else {

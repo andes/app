@@ -2,8 +2,10 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
-<section class="row" *ngIf="prestacion && elementoRUP">
-
+<section class="row" *ngIf="prestacion">
+    <div class="col-3">
+        <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id"></rup-hudsBusqueda>
+    </div>
     <div class="col-6">
         <plex-box>
             <header>
@@ -32,13 +34,7 @@
                 {{ejecutarRUP | json}}
                 </pre>
                 <div class="col">
-                    <rup #rup [prestacion]="prestacion"
-                        [elementoRUP]="ejecutarRUP"
-                        (evtData)="getValoresRup($event)"
-                        [paciente]="prestacion.paciente"
-                        [conceptoSnomed]="conceptoSnomedSeleccionado"
-
-                    >
+                    <rup #rup [prestacion]="prestacion" [elementoRUP]="ejecutarRUP" (evtData)="getValoresRup($event)" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado">
                     </rup>
                 </div>
 

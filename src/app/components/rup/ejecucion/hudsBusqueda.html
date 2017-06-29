@@ -1,0 +1,38 @@
+<plex-box>
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5 class="box-title-principal">
+                    HUDS
+                </h5>
+            </div>
+        </div>
+    </header>
+
+    <div class="row">
+        <div class="col">
+            <plex-button type="primary btn-sm" label="Prestaciones" (click)="listarPrestaciones()">
+            </plex-button>
+            <plex-button type="info btn-sm" label="Hallazgos" (click)="listarHallazgos()">
+            </plex-button>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col">
+            <ul *ngIf="prestaciones" class="list-group">
+                <li *ngFor="let prestacion of prestaciones; let i = index" class="list-group-item justify-content-between hover" (click)="devolverPrestacion(prestacion)">
+                    {{ prestacion.solicitud.tipoPrestacion.term }}
+                    <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small><br>
+                    <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
+                </li>
+            </ul>
+            <ul *ngIf="hallazgos" class="list-group">
+                <li *ngFor="let hallago of hallazgos; let i = index" class="list-group-item justify-content-between hover" (click)="devolverHallazgo(hallago)">
+                    {{ hallago.concepto.term }} <small></small>
+                    <br>
+                </li>
+            </ul>
+        </div>
+    </div>
+</plex-box>
