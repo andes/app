@@ -26,3 +26,14 @@
     border-left: solid 15px #FFD800;
 }
 
+.list-group > .list-group-item .problemas{
+    border-left: solid 15px #34a;
+}
+
+.list-group > .list-group-item .planes{
+    border-left: solid 15px #6A99AD;
+}
+
+.list-group > .list-group-item .prestacion{
+    border-left: solid 15px #FFD800;
+}

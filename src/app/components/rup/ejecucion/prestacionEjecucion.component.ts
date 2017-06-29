@@ -43,10 +43,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
     public showPlanes: boolean = false;
     public ejecucion: any[] = [];
-    // termino a buscar en PLANES
-    public searchPlanes: String = '';
-    //Lista de planes.
-    public listaPlanes: any[] = [];
+
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -171,15 +168,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     busquedaPlanes() {
         this.tipoBusqueda = 'planes';
         this.showPlanes = true;
-    }
-    buscar() {
-        if (this.searchPlanes !== null) {
-            this.servicioTipoPrestacion.get({ term: this.searchPlanes }).subscribe(tiposPrestacion => {
-                this.listaPlanes = tiposPrestacion;
-            });
-        }else {
-            this.listaPlanes = [];
-        }
     }
 
 }

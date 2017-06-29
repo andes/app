@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -179,6 +180,7 @@ import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endos
 import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
 import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
 import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
+import { BuscadorPlanesComponent } from './components/rup/planes/buscadorPlanes.component';
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
@@ -306,7 +308,8 @@ export const RUP_COMPONENTS = [
   TomaHpvComponent,
   TomaPapComponent,
   SangreOcultaMateriaFecalComponent,
-  EvolucionProblemaDefaultComponent
+  EvolucionProblemaDefaultComponent,
+  BuscadorPlanesComponent
 ];
 
 // Locales
