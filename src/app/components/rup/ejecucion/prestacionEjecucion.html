@@ -32,7 +32,9 @@
                                         [paciente]="prestacion.paciente"
                                         [conceptoSnomed]="conceptoSnomedSeleccionado"
 
-                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"  *ngIf="elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"
+                                        *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                        || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
 
                                     </rup>
 
@@ -80,7 +82,7 @@
                                 <ng-container *ngFor="let item of listaPlanes">
                                     <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope"
                                         [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                        <a href="javascript: void(0)">
+                                        <a href="javascript: void(0)" (click)="ejecutarConcepto(item)">
                                         {{item.term}}
                                     </a>
                                     </li>

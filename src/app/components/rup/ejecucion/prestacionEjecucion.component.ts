@@ -114,6 +114,9 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'problema':
                 data.tipo = 'problema';
             break;
+            case 'procedimiento':
+                data.tipo = (this.tipoBusqueda) ? 'planes' : data.tipo;
+            break;
         }
 
         // agregamos al array de ejecucion
@@ -166,6 +169,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     //Muestra el buscador de planes
     busquedaPlanes() {
+        this.tipoBusqueda = 'planes';
         this.showPlanes = true;
     }
     buscar() {
