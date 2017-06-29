@@ -7,6 +7,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class ElementosRupService {
     private evolucionPorDefecto = '594aa43a884431c25d9a0267';
+    private evolucionProblemaPorDefecto = '594aa21a884431c25d9a0266';
 
     private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
@@ -67,8 +68,16 @@ export class ElementosRupService {
      * @memberof ElementosRupService
      */
     buscarElementoRup(listaElementosRup: any, conceptoSnomed: any) {
-        //debugger;
-        let concepto = listaElementosRup.find(elemento => {
+        let concepto: any;
+        // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
+        if (conceptoSnomed.semanticTag === 'trastorno' || conceptoSnomed.semanticTag === 'hallazgo') {
+            concepto = listaElementosRup.find(elemento => elemento.id  === this.evolucionProblemaPorDefecto);
+
+            return concepto;
+        }
+
+        // si es un procedimiento buscamos su propia forma de evolucionar
+        concepto = listaElementosRup.find(elemento => {
             return elemento.conceptos.find(concepto =>
                 concepto.conceptId === conceptoSnomed.conceptId
             );

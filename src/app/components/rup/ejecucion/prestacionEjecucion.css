@@ -1,11 +1,28 @@
-.list-group .list-group-item.problema {
+.prestacionEjecucion .elementosRup .card,
+.prestacionEjecucion .elementosRup .card-header:first-child {
+    border-radius: 0;
+}
+.prestacionEjecucion .elementosRup .card {
+    margin: 10px 0;
+
+}
+.prestacionEjecucion .elementosRup .card h5{
+    text-transform: capitalize
+}
+
+.prestacionEjecucion .elementosRup .procedimiento .card{
     border-left: solid 15px #92278E;
 }
 
-.plan {
+.prestacionEjecucion .elementosRup .problema .card{
+    border-left: solid 15px #34a;
+}
+
+.prestacionEjecucion .elementosRup .plan .card{
     border-left: solid 15px #6A99AD;
 }
 
-.prestacion .card-header {
+.prestacionEjecucion .elementosRup .prestacion .card{
     border-left: solid 15px #FFD800;
 }
+

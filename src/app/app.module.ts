@@ -182,6 +182,9 @@ import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sa
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 
+// Problemas
+import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
+
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
 import { ViviendaResiduosComponent } from './components/rup/atomos/socio-economicos/viviendaResiduos.component';
@@ -215,6 +218,8 @@ import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPre
 // ... Auditoría RUP (prestacionPaciente)
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
+
+import { ElementosRupService } from "./services/rup/elementosRUP.service";
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -300,7 +305,8 @@ export const RUP_COMPONENTS = [
   EndoscopiaComponent,
   TomaHpvComponent,
   TomaPapComponent,
-  SangreOcultaMateriaFecalComponent
+  SangreOcultaMateriaFecalComponent,
+  EvolucionProblemaDefaultComponent
 ];
 
 // Locales
@@ -309,7 +315,6 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Ver donde poner
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-import { ElementosRupService } from "./services/rup/elementosRUP.service";
 
 // Main module
 @NgModule({

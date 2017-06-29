@@ -4,11 +4,11 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
 @Component({
-    selector: 'rup-evolucion-problema',
-    templateUrl: 'evolucionProblema.html'
+    selector: 'rup-evolucion-problema-default',
+    templateUrl: 'evolucionProblemaDefault.html'
 })
 
-export class EvolucionProblemaComponent extends Atomo {
+export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     public fechaInicio: Date;
     public descripcion: String; //
     public estado: String; // activo / inactivo / resuleto
@@ -21,6 +21,19 @@ export class EvolucionProblemaComponent extends Atomo {
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
     estados      = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
     unidadTiempo = [{ id: 'anios', nombre: 'Año(s)' }, { id: 'mes', nombre: 'Mes(es)' }, { id: 'semanas', nombre: 'Semana(s)' } , { id: 'dias', nombre: 'Día(s)' }  ];
+
+
+    /* los atomos por defecto se inicializan en null porque generalmente tienen un solo input
+     * al ser este un caso de atomo medio particular que lleva muchas propiedades dentro
+     * entonces inicializamos data como un objeto
+     */
+    ngOnInit() {
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
+        // si tengo valores cargados entonces devuelvo los resultados y mensajes
+        if (this.datosIngreso) {
+            this.devolverValores();
+        }
+    }
 
     calcularFecha() {
         let fechaCalc;
@@ -42,6 +55,7 @@ export class EvolucionProblemaComponent extends Atomo {
             }
 
             this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
+
 
             this.devolverValores();
     }

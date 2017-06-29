@@ -216,6 +216,9 @@ export class PuntoInicioComponent implements OnInit {
                 fecha: new Date(),
                 registros: [],
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
+
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
             },
             estados: {
                 fecha: new Date(),

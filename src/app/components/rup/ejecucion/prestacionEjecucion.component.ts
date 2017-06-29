@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -16,8 +16,9 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
-    styleUrls: ['prestacionEjecucion.css']
-
+    styleUrls: ['prestacionEjecucion.css'],
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
@@ -92,10 +93,25 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.conceptoSnomedSeleccionado = snomedConcept;
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-        let ejecutarRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+        let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+
+
+        // armamos el elemento data a agregar al array de ejecucion
+        let data = {
+            tipo : snomedConcept.semanticTag,
+            concepto: snomedConcept,
+            elementoRUP: elementoRUP
+        };
+
+        switch (snomedConcept.semanticTag) {
+            case 'hallazgo':
+            case 'problema':
+                data.tipo = 'problema';
+            break;
+        }
 
         // agregamos al array de ejecucion
-        this.ejecucion.push(ejecutarRUP);
+        this.ejecucion.push(data);
     }
 
     /*

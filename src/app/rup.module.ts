@@ -124,6 +124,7 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 import { HeaderPacienteComponent } from "./components/paciente/headerPaciente.component";
+import { EvolucionProblemaDefaultComponent } from "./components/rup/atomos/evolucionProblemaDefault.component";
 
 
 // // Servicios RUP //
@@ -256,7 +257,8 @@ export const RUP_COMPONENTS = [
   EndoscopiaComponent,
   TomaHpvComponent,
   TomaPapComponent,
-  SangreOcultaMateriaFecalComponent
+  SangreOcultaMateriaFecalComponent,
+  EvolucionProblemaDefaultComponent
   //     // NO VAPacienteComponent
 ];
 

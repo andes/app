@@ -1,3 +1,4 @@
+<div *ngIf="elementoRUP && data[elementoRUP.key]">
 <!--ESTADO DEL PROBLEMA-->
     <!--
     <div class="row invertDatosReadonly">
@@ -20,7 +21,7 @@
             <label class="box-title-secundario" for="comment">Descripción</label>
             <small class="invert">Examen físico, intensidad, frecuencia, parte del cuerpo afectada, síntomas y otras observaciones</small>
             <hr>
-            <textarea class="form-control-invert" rows="4" id="descripcion" [(ngModel)]="data[tipoPrestacion.key].descripcion" [required]="true" name="descripcion" placeholder="Escriba sólo detalles permanentes/semipermanentes del problema">
+            <textarea class="form-control-invert" rows="4" id="descripcion" [(ngModel)]="data[elementoRUP.key].descripcion" [required]="true" name="descripcion" placeholder="Escriba sólo detalles permanentes/semipermanentes del problema" (keyup)="devolverValores()">
             </textarea>
         </div>
     </div>
@@ -38,12 +39,12 @@
         <!--ESTADO DEL PROBLEMA-->
         <div class="col-2">
             <label class="box-title-secundario">Estado actual</label>
-            <plex-select [(ngModel)]="data[tipoPrestacion.key].estado" name="estadoActual" [data]="estados" [required]="true" (change)="devolverValores()">
+            <plex-select [(ngModel)]="data[elementoRUP.key].estado" name="estadoActual" [data]="estados" [required]="true" (change)="devolverValores()">
             </plex-select>
         </div>
         <!--ES CRONICO?-->
         <div class="col-4">
-            <plex-bool [(ngModel)]="data[tipoPrestacion.key].esCronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
+            <plex-bool [(ngModel)]="data[elementoRUP.key].esCronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
         </div>
     </div>
 
@@ -54,6 +55,7 @@
         <div class="col-12">
             <label class="box-title-secundario" for="comment">Evolución</label>
             <hr>
-            <textarea class="form-control-invert" [(ngModel)]="data[tipoPrestacion.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea>
+            <textarea class="form-control-invert" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea>
         </div>
     </div>
+</div>

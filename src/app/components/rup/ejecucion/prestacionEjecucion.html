@@ -2,10 +2,11 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
-<section *ngIf="prestacion && elementoRUPprestacion">
+<section class="prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion">
 
-    <div class="row">
+    <div class="row" >
         <div class="col-3">
+
         </div>
         <div class="col-6">
             <plex-box>
@@ -18,22 +19,24 @@
                 </header>
 
                 <div *ngIf="ejecucion && ejecucion.length">
-                    <plex-accordion>
-                        <div class="row" *ngFor="let elementoRUP of ejecucion">
-                            <div class="col">
-                                <plex-panel tituloPrincipal="{{elementoRUP.conceptos[0].term}}">
+                    <plex-accordion class="elementosRup">
+                        <div class="row" *ngFor="let elemento of ejecucion">
+
+                            <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
+                                <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
 
                                     <rup #rup [prestacion]="prestacion"
-                                        [elementoRUP]="elementoRUP"
+                                        [elementoRUP]="elemento.elementoRUP"
                                         [paciente]="prestacion.paciente"
                                         [conceptoSnomed]="conceptoSnomedSeleccionado"
 
-                                        (evtData)="getValoresRup($event, elementoRUP)">
+                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"  *ngIf="elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
                                     </rup>
 
                                 </plex-panel>
 
                             </div>
+
                         </div>
                     </plex-accordion>
 
