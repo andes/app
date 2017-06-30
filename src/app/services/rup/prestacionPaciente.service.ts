@@ -93,7 +93,30 @@ export class PrestacionPacienteService {
 
                 }
             });
-            return registros;
+            let registroSalida = [];
+            registros.forEach(registro => {
+                let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
+                if (!registroEncontrado) {
+                    let dato = {
+                        concepto: registro.concepto,
+                        evoluciones: [{
+                            fechaCarga: registro.createdAt,
+                            fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
+                            descripcion: registro.valor.descripcion ? registro.valor.descripcion : '',
+                            estado: registro.valor.estado ? registro.valor.estado : '',
+                            esCronico: registro.valor.esCronico ? registro.valor.esCronico : false,
+                            esEnmienda: registro.valor.esEnmienda ? registro.valor.esEnmienda : false,
+                            evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
+                        }]
+                    };
+                    registroSalida.push(dato);
+                } else {
+                    registroEncontrado.evoluciones.push(registro.valor);
+                    registroSalida.push(registroEncontrado);
+                }
+
+            });
+            return registroSalida;
         });
     }
 

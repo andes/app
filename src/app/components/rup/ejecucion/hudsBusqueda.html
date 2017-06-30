@@ -20,14 +20,17 @@
         <div class="col">
             <ul *ngIf="prestaciones" class="list-group">
                 <li *ngFor="let prestacion of prestaciones; let i = index" class="list-group-item justify-content-between hover" (click)="devolverPrestacion(prestacion)">
-                    {{ prestacion.solicitud.tipoPrestacion.term }}
-                    <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small><br>
+                    {{ prestacion.solicitud.tipoPrestacion.term }} <br>
+                    <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
                     <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
                 </li>
             </ul>
             <ul *ngIf="hallazgos" class="list-group">
                 <li *ngFor="let hallago of hallazgos; let i = index" class="list-group-item justify-content-between hover" (click)="devolverHallazgo(hallago)">
-                    {{ hallago.concepto.term }} <small></small>
+                    {{ hallago.concepto.term }} <br>
+                    <small>
+                        ultima evolución: {{ hallago.evoluciones[0].fechaCarga | fecha}}
+                    </small>
                     <br>
                 </li>
             </ul>

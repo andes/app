@@ -6,6 +6,7 @@ export interface IHallazgo {
         semanticTag: String;
     };
     evoluciones: [{
+        fechaCarga: Date,
         fechaInicio: Date,
         descripcion: String,
         estado: String,
