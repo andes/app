@@ -56,7 +56,9 @@
 </section>
 
 <footer *ngIf="!showcreate">
-  <plex-button type="primary" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+  <div class="text-right">
+    <plex-button type="primary" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+  </div>
 </footer>
 
 <!--Componente de Alta/Modificación-->

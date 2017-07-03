@@ -35,6 +35,10 @@ export class PacienteService {
     return this.server.get(this.pacienteUrl + '/dashboard/', null);
   }
 
+  getTemporales(): Observable<IPaciente[]> {
+    return this.server.get(this.pacienteUrl + '/temporales/', null);
+  }
+
   getNroCarpeta(params: any): Observable<any> {
     return this.server.get(this.carpetaUrl, { params: params, showError: true });
   }

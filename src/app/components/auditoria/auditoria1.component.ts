@@ -7,18 +7,18 @@ import {
     FormsModule,
     ReactiveFormsModule
 } from '@angular/forms';
-import { AuditoriaService } from '../../services/auditoria/auditoria.service';
-import {
-    IAudit
-} from '../../interfaces/auditoria/IAudit';
-import {
-    PacienteService
-} from './../../services/paciente.service';
 import * as moment from 'moment';
-// import {
-//   AuditoriaPage
-// } from './../../e2e/app.po';
-
+// Interfaces
+import { IAudit } from '../../interfaces/auditoria/IAudit';
+import { IPaciente } from '../../interfaces/IPaciente';
+// Services
+import { PacienteService } from './../../services/paciente.service';
+import { AgendaService } from './../../services/turnos/agenda.service';
+import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
+// Pipes
+import { TextFilterPipe } from './../../pipes/textFilter.pipe';
 @Component({
     selector: 'auditoria1',
     templateUrl: 'auditoria1.html',
@@ -29,279 +29,134 @@ export class Auditoria1Component implements OnInit {
 
     showValidator = false;
     seleccionada = false;
-    loading = false;
     result = false;
-    pacienteSelected: any;
-    btnSisa = false;
-    btnSintys = false;
-    btnRenaper = false;
-    expand = false;
+    pacienteSelected: IPaciente;
+    enableValidar = true;
+    enableBaja = false;
     resultado: any[];
+    pacientesTemporales: any[];
+    filtro = '';
+    mostrarDetalle = false;
 
-    pacientesAudit = [
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-            "entidadesValidadoras": [
-                "Sisa"
-            ],
-        },
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-            "entidadesValidadoras": [
-                "Sintys"
-            ],
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-            "entidadesValidadoras": [
-                "Renaper"
-            ],
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            "estado": "temporal",
-            "nombre": "MAURO LEANDRO",
-            "apellido": "JARA",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1996-06-21T00:00:00.000-03:00"),
-            "matchSisa": "0.72",
-        },
-        {
-            "seleccionado": false,
-            "documento": "36433556",
-            "estado": "temporal",
-            "nombre": "MARCOS DANIEL",
-            "apellido": "OSMAN",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1991-08-07T00:00:00.000-03:00"),
-            "matchSisa": "0.88",
-
-        }, {
-            "seleccionado": false,
-            "documento": "30096099",
-            "estado": "temporal",
-            "nombre": "RICARDO DANIEL",
-            "apellido": "LOPEZ",
-            "sexo": "masculino",
-            "genero": "masculino",
-            "fechaNacimiento": moment("1983-10-27T00:00:00.000-03:00"),
-            "matchSisa": "0.82",
-        }, {
-            "seleccionado": false,
-            "documento": "39682204",
-            'estado': 'temporal',
-            'nombre': 'MAURO LEANDRO',
-            'apellido': 'JARA',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1996-06-21T00:00:00.000-03:00'),
-            'matchSisa': '0.72',
-        },
-        {
-            'seleccionado': false,
-            'documento': '36433556',
-            'estado': 'temporal',
-            'nombre': 'MARCOS DANIEL',
-            'apellido': 'OSMAN',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1991-08-07T00:00:00.000-03:00'),
-            'matchSisa': '0.88',
-
-        }, {
-            'seleccionado': false,
-            'documento': '30096099',
-            'estado': 'temporal',
-            'nombre': 'RICARDO DANIEL',
-            'apellido': 'LOPEZ',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1983-10-27T00:00:00.000-03:00'),
-            'matchSisa': '0.82',
-        }, {
-            'seleccionado': false,
-            'documento': '39682204',
-            'estado': 'temporal',
-            'nombre': 'MAURO LEANDRO',
-            'apellido': 'JARA',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1996-06-21T00:00:00.000-03:00'),
-            'matchSisa': '0.72',
-        },
-    ]
-
-    candidatos = [
-        {
-
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'VALERIA EDIT',
-            'apellido': 'ATENCIO',
-            'sexo': 'femenino',
-            'genero': 'femenino',
-            'fechaNacimiento': moment('1992-08-10T00:00:00.000-03:00'),
-            'similitud': '0.88',
-
-        }, {
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'EDGARDO GERMAN',
-            'apellido': 'RIOS',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1992-08-24T00:00:00.000-03:00'),
-            'similitud': '0.82',
-        }
-    ]
-
-    datosSisa = [
-        {
-
-            'documento': '36945224',
-            'estado': 'temporal',
-            'nombre': 'VALERIA EDIT',
-            'apellido': 'ATENCIO',
-            'sexo': 'femenino',
-            'genero': 'femenino',
-            'fechaNacimiento': moment('1992-08-10T00:00:00.000-03:00'),
-            'similitud': '0.88',
-
-        }, {
-            'documento': '36945253',
-            'estado': 'temporal',
-            'nombre': 'EDGARDO GERMAN',
-            'apellido': 'RIOS',
-            'sexo': 'masculino',
-            'genero': 'masculino',
-            'fechaNacimiento': moment('1992-08-24T00:00:00.000-03:00'),
-            'similitud': '0.82',
-        }
-    ]
+    private datosFA: any;
 
     constructor(
         private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
+        private servicioSisa: SisaService,
+        private servicioSintys: SintysService,
+        private agendaService: AgendaService,
         private plex: Plex
     ) { }
 
     ngOnInit() {
+        this.getTemporales();
 
     }
 
-    showLoader() {
-        this.result = false;
-        this.loading = true;
-        setTimeout(() => this.showResult(), 2000);
+    getTemporales() {
+        // TODO: filtrar los pacientes DESACTIVADOS y no mostrarlos en el listado
+        this.plex.showLoader();
+        this.pacienteService.getTemporales().subscribe(data => {
+            this.plex.hideLoader();
+            this.pacientesTemporales = data;
+        });
     }
 
-    validarSisa(band: any, paciente: any) {
-        this.showLoader();
-        this.resultado = this.datosSisa;
-        this.plex.info('warning', '', 'Match Incompleto');
-        paciente.entidadesValidadoras.push('Sisa');
-        this.seleccionarPaciente(paciente);
-    }
+    validar() {
+        this.plex.showLoader();
+        this.servicioSisa.ValidarPacienteEnSisa(this.pacienteSelected).then(res => {
+            if (!this.verificarDatosFA(res)) {
+                this.servicioSintys.ValidarPacienteEnSintys(this.pacienteSelected).then(res2 => {
+                    if (!this.verificarDatosFA(res2)) {
 
-    validarSintys(band: any, paciente: any) {
-        this.showLoader();
-        this.resultado = [];
-        this.plex.info('danger', '', 'No Encontrado');
-        paciente.entidadesValidadoras.push('Sintys');
-        this.seleccionarPaciente(paciente);
-    }
+                        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
+                            // TODO: chequear si el paciente tiene algun turno o prestacion asignado/a
+                            this.agendaService.find(this.pacienteSelected.id).subscribe(data => {
+                                if (data.length < 1) {
+                                    this.plex.confirm('¿Desea darlo de baja?', 'Paciente inactivo').then((confirmar) => {
+                                        if (confirmar) {
+                                            this.pacienteSelected.activo = false;
+                                            this.pacienteService.save(this.pacienteSelected).subscribe(res3 => {
+                                                this.getTemporales();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            this.rechazarValidacion();
+                        }
 
-    validarRenaper(band: any, paciente: any) {
-        this.showLoader();
-        this.plex.info('success', '', 'Paciente Validado');
-        this.resultado = [
-            {
-                'documento': paciente.documento,
-                'nombre': paciente.nombre,
-                'apellido': paciente.apellido,
-                'sexo': paciente.sexo,
-                'fechaNacimiento': paciente.fechaNacimiento,
-                'similitud': '1'
+                    }
+                });
+
             }
-        ]
-        paciente.entidadesValidadoras.push('Renaper');
-        this.seleccionarPaciente(paciente);
+        });
     }
 
+    rechazarValidacion() {
+        if (this.pacienteSelected.entidadesValidadoras.find(entidad => entidad.toString().toUpperCase() === 'SISA')) {
+            this.pacienteSelected.entidadesValidadoras.push('SISA');
+            this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+                this.plex.info('danger', '', 'Paciente no encontrado');
+                this.getTemporales();
+            });
+        } else {
+            this.getTemporales();
+        }
+    }
 
-    showResult() {
-        this.loading = false;
-        this.result = true;
+    verificarDatosFA(data) {
+        this.plex.hideLoader();
+        this.pacienteSelected = this.pacienteSelected;
+        this.datosFA = data;
+        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo === 100) {
+            this.validarPaciente();
+            this.mostrarDetalle = false;
+            return true;
+        }
+        if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
+            this.enableValidar = false;
+            this.editarPaciente();
+            this.mostrarDetalle = false;
+            return true;
+        } else {
+            return false;
+        }
 
+    }
+
+    editarPaciente() {
+        this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+        this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+        this.pacienteSelected.fechaNacimiento = this.datosFA.matcheos.datosPaciente.fechaNacimiento;
+        this.pacienteSelected.estado = 'validado';
+        this.pacienteSelected.entidadesValidadoras.push('Sisa');
+        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+            this.plex.info('success', '', 'Validación Exitosa');
+            this.getTemporales();
+        });
+    }
+
+    validarPaciente() {
+        this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+        this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+        this.pacienteSelected.estado = 'validado';
+        this.pacienteSelected.entidadesValidadoras.push('Sisa');
+        this.pacienteService.save(this.pacienteSelected).subscribe(result => {
+            this.plex.info('success', '', 'Validación Exitosa');
+            this.getTemporales();
+        });
     }
 
     estaSeleccionado(paciente: any) {
-        debugger;
         return this.pacienteSelected === paciente;
     }
 
     seleccionarPaciente(paciente: any) {
-        // this.btnRenaper = false;
-        // this.btnSintys = false;
-        // this.btnSisa = false;
         this.pacienteSelected = paciente;
-        // (this.pacienteSelected.entidadesValidadoras.indexOf('Sisa') >= 0) ? this.btnSisa = true : this.btnSisa = false;
-        // (this.pacienteSelected.entidadesValidadoras.indexOf('Renaper') >= 0) ? this.btnRenaper = true : this.btnRenaper = false;
-        // (this.pacienteSelected.entidadesValidadoras.indexOf('Sintys') >= 0) ? this.btnSintys = true : this.btnSintys = false;
     }
+
 }

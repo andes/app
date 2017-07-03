@@ -38,6 +38,7 @@ import { FechaPipe } from './pipes/fecha.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
+import { TextFilterPipe } from './pipes/textFilter.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -82,6 +83,9 @@ import { AuditoriaService } from './services/auditoria/auditoria.service';
 
 // Auditoría
 import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
+import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
+import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
+import { servicioSintys } from '../../../api/utils/servicioSintys'; // DE LA API
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -337,7 +341,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
+        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -395,7 +399,11 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AuditoriaPrestacionPacienteService,
 
         SnomedService,
-        Cie10Service
+        Cie10Service,
+
+        SisaService,
+        SintysService,
+        servicioSintys // de la api
     ]
 })
 
