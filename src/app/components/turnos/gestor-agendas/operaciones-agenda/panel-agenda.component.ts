@@ -54,6 +54,7 @@ export class PanelAgendaComponent implements OnInit {
                 return prof;
             });
             let espacioFisico = this.modelo.espacioFisico;
+            delete espacioFisico.$order;
 
             let patch = {
                 'op': 'editarAgenda',
