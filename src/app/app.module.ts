@@ -225,6 +225,10 @@ import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
+// USUARIO
+import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+
+
 
 export const RUP_COMPONENTS = [
   TensionArterialComponent,
@@ -350,7 +354,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-    HoverClassDirective
+    HoverClassDirective,
+    BusquedaUsuarioComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],
