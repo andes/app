@@ -12,13 +12,13 @@ export interface IAgenda {
         nombre: String,
         apellido: String
     }];
+    organizacion: {
+        id: String,
+        nombre: String
+    };
     espacioFisico: {
         id: String,
         nombre: String,
-        organizacion: {
-            id: String,
-            nombre: String
-        };
         servicio: {
             id: String,
             nombre: String

@@ -88,23 +88,32 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+
+    // loadServicios(event) {
+    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+    //         let servicios = respuesta.map((ef) => {
+    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
+    //         });
+    //         event.callback(servicios);
+    //     });
+    // }
+
     loadEdificios(event) {
         this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
-
-    loadEspacios(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    }
-
-    loadServicios(event) {
+    loadSectores(event) {
         this.servicioEspacioFisico.get({}).subscribe(respuesta => {
-            let servicios = respuesta.map((ef) => {
-                return (typeof ef.servicio !== 'undefined' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
+            let sectores = respuesta.map((ef) => {
+                return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
             });
-            event.callback(servicios);
+            event.callback(sectores);
         });
+    }
+    loadEspacios(event) {
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        this.servicioEspacioFisico.get({}).subscribe(event.callback);
     }
 
     horaInicioPlus() {
