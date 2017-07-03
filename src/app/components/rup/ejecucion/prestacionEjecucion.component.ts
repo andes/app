@@ -97,8 +97,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
-
-
         // armamos el elemento data a agregar al array de ejecucion
         let data = {
             tipo: snomedConcept.semanticTag,

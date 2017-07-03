@@ -2,38 +2,39 @@
 .prestacionEjecucion .elementosRup .card-header:first-child {
     border-radius: 0;
 }
+
 .prestacionEjecucion .elementosRup .card {
     margin: 10px 0;
-
 }
-.prestacionEjecucion .elementosRup .card h5{
+
+.prestacionEjecucion .elementosRup .card h5 {
     text-transform: capitalize
 }
 
-.prestacionEjecucion .elementosRup .procedimiento .card{
+.prestacionEjecucion .elementosRup .procedimientos .card {
     border-left: solid 15px #92278E;
 }
 
-.prestacionEjecucion .elementosRup .problema .card{
+.prestacionEjecucion .elementosRup .problemas .card {
     border-left: solid 15px #34a;
 }
 
-.prestacionEjecucion .elementosRup .planes .card{
+.prestacionEjecucion .elementosRup .planes .card {
     border-left: solid 15px #6A99AD;
 }
 
-.prestacionEjecucion .elementosRup .prestacion .card{
+.prestacionEjecucion .elementosRup .prestaciones .card {
     border-left: solid 15px #FFD800;
 }
 
-.list-group > .list-group-item .problemas{
+.list-group>.list-group-item .problemas {
     border-left: solid 15px #34a;
 }
 
-.list-group > .list-group-item .planes{
+.list-group>.list-group-item .planes {
     border-left: solid 15px #6A99AD;
 }
 
-.list-group > .list-group-item .prestacion{
+.list-group>.list-group-item .prestacion {
     border-left: solid 15px #FFD800;
 }
