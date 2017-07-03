@@ -57,7 +57,6 @@ import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacio
 // Auditoria
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
 // ... Auditoría RUP (prestacionPaciente)
@@ -85,7 +84,6 @@ const appRoutes: Routes = [
 
   // Auditoria
   { path: 'auditoria', component: AuditoriaComponent },
-  { path: 'auditoria1', component: Auditoria1Component },
   { path: 'auditoria2', component: Auditoria2Component },
   { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
 

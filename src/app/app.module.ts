@@ -222,7 +222,6 @@ import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditor
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
@@ -347,7 +346,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
     RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
     AgregarSobreturnoComponent, PanelAgendaComponent,
-    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
     ...RUP_COMPONENTS,
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
