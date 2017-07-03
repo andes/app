@@ -605,8 +605,8 @@ export class PlanificarAgendaComponent implements OnInit {
             if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
             }
-            if (this.modelo.servicio) {
-                delete this.modelo.servicio.$order;
+            if (this.modelo.sector) {
+                delete this.modelo.sector.$order;
             }
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
