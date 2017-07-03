@@ -25,6 +25,9 @@ import * as moment from 'moment';
 import {
     IPaciente
 } from "../../interfaces/IPaciente";
+import {
+    matching
+} from '@andes/match';
 
 // Imports de servicios
 import {
@@ -57,6 +60,7 @@ export class Auditoria2Component implements OnInit {
     pacientesAudit: any[];
     pacientesVinculados = [];
     pacientesDesvinculados = [];
+    
     // definición de parametros de I/O
     @Input() pacienteInput: any;
     @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
@@ -113,12 +117,20 @@ export class Auditoria2Component implements OnInit {
     }
 
     /**
-     * Obtenemos la lista de pacientes que tienen la misma clave de blocking y fijamos el tipo de clave a METAPHONE
-     * 
+     * Obtenemos la lista de pacientes que tienen la misma clave de blocking
+     * le aplicamos además el algoritmo de matching
      * @memberof Auditoria2Component
      */
     loadPacientePorBloque() {
-        let tipoClave: number = 0;
+        let match = new matching();
+        let weights = { 
+                identity: 0.3,
+                name: 0.3,
+                gender: 0.1,
+                birthDate: 0.3
+        };
+        let tipoDeMatching = 'Levenshtein';
+        let tipoClave: number = 4; //Soundex Apellido
         let dto: any = {
             idTipoBloque: tipoClave,
             idBloque: this.pacienteSelected.claveBlocking[tipoClave].toString()
@@ -128,7 +140,13 @@ export class Auditoria2Component implements OnInit {
             if (rta) {
                 rta.forEach(element => {
                     if (element.id !== this.pacienteSelected.id) {
-                        this.pacientesDesvinculados.push(element)
+                        // Aplicamos match de pacientes y filtramos por mayores al 70%
+                        let porcentajeMatching = match.matchPersonas(this.pacienteSelected, element,  weights, tipoDeMatching);
+                        if (porcentajeMatching > 0.7) {
+                            element.matching = porcentajeMatching * 100;
+                            this.pacientesDesvinculados.push(element)
+                        }
+                        
                     }
                 });
             };
@@ -166,7 +184,6 @@ export class Auditoria2Component implements OnInit {
         this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido + ' ' + this.pacienteSelected.nombre + ' ¿seguro desea continuar?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                debugger;
                 this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(evt.dragData), 1);
                 this.pacientesVinculados.push(evt.dragData);
                 this.vincular(evt.dragData);

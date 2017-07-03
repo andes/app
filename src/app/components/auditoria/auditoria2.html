@@ -15,10 +15,11 @@
                                         <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
                                     </h4>
                                     <div class="card-block">
-                                        <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
+                                        <h4 class="card-title">{{paciente.apellido | uppercase}} {{paciente.nombre | uppercase}} </h4>
                                         <div>DU: {{paciente.documento}}</div>
                                         <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
                                         <div>Sexo: {{paciente.sexo}}</div>
+                                        <div>Similitud: <span class="badge badge-default">{{paciente.matching}}%</span></div>
                                         <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
                                     </div>
                                 </div>
