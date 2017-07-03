@@ -123,7 +123,9 @@ import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaci
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
-
+import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
+import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
+import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -328,7 +330,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
             confirmButtonType: 'danger' // set defaults here
         })
     ],
-
     declarations: [
         AppComponent, InicioComponent, LoginComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
@@ -343,7 +344,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, ReasignarTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-        AgregarSobreturnoComponent, PanelAgendaComponent,
+        AgregarSobreturnoComponent, PanelAgendaComponent, DashboardTurnosComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
