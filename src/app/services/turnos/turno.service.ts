@@ -10,6 +10,7 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
+        debugger;
         return this.server.get(this.turnoUrl, { params: params, showError: true });
     }
 
