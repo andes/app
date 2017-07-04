@@ -25,6 +25,9 @@ import * as moment from 'moment';
 import {
     IPaciente
 } from "../../interfaces/IPaciente";
+import {
+    matching
+} from '@andes/match';
 
 // Imports de servicios
 import {
@@ -57,6 +60,15 @@ export class Auditoria2Component implements OnInit {
     pacientesAudit: any[];
     pacientesVinculados = [];
     pacientesDesvinculados = [];
+    match = new matching();
+    weights = { 
+                identity: 0.3,
+                name: 0.3,
+                gender: 0.1,
+                birthDate: 0.3
+        };
+    tipoDeMatching = 'Levenshtein';
+    
     // definición de parametros de I/O
     @Input() pacienteInput: any;
     @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
@@ -104,7 +116,17 @@ export class Auditoria2Component implements OnInit {
             idVinculados.forEach(identificador => {
                 if (identificador.entidad === 'ANDES') {
                     this.pacienteService.getById(identificador.valor).subscribe(pac => {
-                        this.pacientesVinculados.push(pac);
+                        debugger;
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, pac,  this.weights, this.tipoDeMatching);
+                        let patient = {
+                            matching : 0,
+                            paciente : null
+                        };
+                        if (porcentajeMatching) {
+                            patient.matching = porcentajeMatching * 100;
+                            patient.paciente = pac;
+                        }
+                        this.pacientesVinculados.push(patient);
                     })
                 }
             });
@@ -113,12 +135,13 @@ export class Auditoria2Component implements OnInit {
     }
 
     /**
-     * Obtenemos la lista de pacientes que tienen la misma clave de blocking y fijamos el tipo de clave a METAPHONE
-     * 
+     * Obtenemos la lista de pacientes que tienen la misma clave de blocking
+     * le aplicamos además el algoritmo de matching
      * @memberof Auditoria2Component
      */
     loadPacientePorBloque() {
-        let tipoClave: number = 0;
+        
+        let tipoClave: number = 4; //Soundex Apellido
         let dto: any = {
             idTipoBloque: tipoClave,
             idBloque: this.pacienteSelected.claveBlocking[tipoClave].toString()
@@ -128,7 +151,18 @@ export class Auditoria2Component implements OnInit {
             if (rta) {
                 rta.forEach(element => {
                     if (element.id !== this.pacienteSelected.id) {
-                        this.pacientesDesvinculados.push(element)
+                        // Aplicamos match de pacientes y filtramos por mayores al 70%
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, element,  this.weights, this.tipoDeMatching);
+                        let patient = {
+                            matching : 0,
+                            paciente : null
+                        };
+                        if (porcentajeMatching > 0.7) {
+                            patient.matching = porcentajeMatching * 100;
+                            patient.paciente = element;
+                            this.pacientesDesvinculados.push(patient)
+                        }
+                        
                     }
                 });
             };
@@ -166,7 +200,6 @@ export class Auditoria2Component implements OnInit {
         this.plex.confirm(' Ud. está por vincular los registros del paciente seleccionado a: ' + this.pacienteSelected.apellido + ' ' + this.pacienteSelected.nombre + ' ¿seguro desea continuar?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                debugger;
                 this.pacientesDesvinculados.splice(this.pacientesDesvinculados.indexOf(evt.dragData), 1);
                 this.pacientesVinculados.push(evt.dragData);
                 this.vincular(evt.dragData);
@@ -181,11 +214,11 @@ export class Auditoria2Component implements OnInit {
      * @param {*} paciente : El paciente a vincualar
      * @memberof Auditoria2Component
      */
-    vincular(paciente: any) {
+    vincular(pac: any) {
         /* Acá hacemos el put con el update de los pacientes */
         let dataLink = {
             entidad: 'ANDES',
-            valor: paciente.id
+            valor: pac.paciente.id
         };
         this.pacienteService.patch(this.pacienteSelected.id, {
             'op': 'linkIdentificadores',
@@ -193,7 +226,7 @@ export class Auditoria2Component implements OnInit {
         }).subscribe(resultado => {
             if (resultado) {
                 let activo = false;
-                this.pacienteService.patch(paciente.id, {
+                this.pacienteService.patch(pac.paciente.id, {
                     'op': 'updateActivo',
                     'dto': activo
                 }).subscribe(resultado2 => {
@@ -220,12 +253,12 @@ export class Auditoria2Component implements OnInit {
                 this.pacientesDesvinculados.push(pac);
                 this.pacienteService.patch(this.pacienteSelected.id, {
                     'op': 'unlinkIdentificadores',
-                    'dto': pac.id
+                    'dto': pac.paciente.id
                 }).subscribe(resultado => {
                     if (resultado) {
                         // Activa el paciente
                         let activo = true;
-                        this.pacienteService.patch(pac.id, {
+                        this.pacienteService.patch(pac.paciente.id, {
                             'op': 'updateActivo',
                             'dto': activo
                         }).subscribe(resultado2 => {
