@@ -24,7 +24,7 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-    //Le pasamos la prestacion que se esta ejecutando.
+    // Le pasamos la prestacion que se esta ejecutando.
     //  @Input() prestacionEjecucion: object;
 
     // prestacion actual en ejecucion
@@ -40,10 +40,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
 
-    //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
-    public showPlanes: boolean = false;
+    // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
+    public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
+    public showPlanes = false;
     public registros: any[] = [];
+    public relacion = null;
+    public conceptoARelacionar = [];
 
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -84,9 +86,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+    loadRegistros($event, registroActual) {
+        debugger;
+
+        let salida = this.registros.filter(registro => registro.concepto.conceptId !== registroActual.concepto.conceptId);
+        salida = salida.map(registro => { registro['id'] = registro.concepto.conceptId; return registro; });
+        return $event.callback(salida);
+    }
+
     /**
      * Carga un nuevo registro en el array en una posicion determinada
-     * 
+     *
      * @param posicion: posicion donde cargar el nuevo registro
      * @param registro: objeto a cargar en el array de registros
      */
@@ -94,7 +104,30 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(posicion, 0, registro);
     }
 
+    /**
+     * Mover un registro a una posicion especifica
+     *
+     * @param posicionActual: posicion actual del registro
+     * @param posicionNueva: posicion donde cargar el registro
+     * @param registro: objeto a mover en el array de registros
+     */
+    moverRegistroEnPosicion(posicionActual: number, posicionNueva: number, registro: any) {
+        this.registros.splice(posicionActual, 1);
+        this.registros.splice(posicionNueva, 0, registro);
+    }
 
+    vincularRegistrosRup(registroPadre, registroHijo) {
+        if (!registroHijo.relacionadoCon) {
+            registroHijo.relacionadoCon = registroPadre.concepto;
+        } else {
+            this.plex.info('danger', 'El registro ' + registroHijo.concepto.term + ' ya se encuentra relacionado con otro registro', 'Información');
+        }
+
+    }
+
+    vincular(registro, posicion) {
+
+    }
 
     /**
      * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
@@ -104,15 +137,19 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept) {
+        this.conceptoARelacionar.push(snomedConcept);
         this.conceptoSnomedSeleccionado = snomedConcept;
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
-        // armamos el elemento data a agregar al array de ejecucion
+        // armamos el elemento data a agregar al array de registros
         let data = {
             tipo: snomedConcept.semanticTag,
             concepto: snomedConcept,
-            elementoRUP: elementoRUP
+            elementoRUP: elementoRUP,
+            valor: null,
+            destacado: false,
+            relacionadoCon: null
         };
 
         switch (snomedConcept.semanticTag) {
@@ -126,8 +163,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 break;
         }
 
-        // agregamos al array de ejecucion
-        this.registros.push(data);
+        // agregamos al array de registros
+        this.cargarRegistroEnPosicion(this.registros.length, data);
     }
 
     ejecutarConceptoHuds(resultadoHuds) {

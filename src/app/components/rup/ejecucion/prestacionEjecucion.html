@@ -21,15 +21,23 @@
                 <div *ngIf="registros && registros.length">
 
                     <plex-accordion class="elementosRup">
-                        <div class="row" *ngFor="let elemento of registros">
+                        <div class="row" *ngFor="let elemento of registros; let i = index ">
 
                             <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
                                 <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
 
                                     <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                         || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-
                                     </rup>
+
+                                    <p>
+                                        <plex-button title="mover" icon="mdi mdi-arrow-left-bold" label="mover al inicio" (click)="moverRegistroEnPosicion(i,0,elemento)" type="info btn-sm"></plex-button>
+                                    </p>
+                                    <p>
+                                        Relacionado con:
+                                        <plex-select [(ngModel)]="elemento.relacionadoCon" name="relacion-{{i}}" (getData)="loadRegistros($event,elemento)" labelField="concepto.term" (change)="vincular(elemento,i)"> </plex-select>
+                                    </p>
+
 
                                 </plex-panel>
 
