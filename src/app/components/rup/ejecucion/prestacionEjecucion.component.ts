@@ -89,14 +89,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    loadRegistros($event, registroActual) {
-        debugger;
-
-        let salida = this.registros.filter(registro => registro.concepto.conceptId !== registroActual.concepto.conceptId);
-        salida = salida.map(registro => { registro['id'] = registro.concepto.conceptId; return registro; });
-        return $event.callback(salida);
-    }
-
     /**
      * Carga un nuevo registro en el array en una posicion determinada
      *
@@ -119,19 +111,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(posicionNueva, 0, registro);
     }
 
-    vincularRegistrosRup(registroPadre, registroHijo) {
-        if (!registroHijo.relacionadoCon) {
-            registroHijo.relacionadoCon = registroPadre.concepto;
-        } else {
-            this.plex.info('danger', 'El registro ' + registroHijo.concepto.term + ' ya se encuentra relacionado con otro registro', 'Información');
-        }
-
-    }
-
-    vincular(registro, posicion) {
-
-    }
-
     /**
      * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
      * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
@@ -142,7 +121,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(snomedConcept) {
         console.log('Ejecucion');
         console.log(snomedConcept);
-        this.conceptoARelacionar.push(snomedConcept);
+        let conceptoIn = snomedConcept;
+        conceptoIn['id'] = snomedConcept.conceptId;
+        this.conceptoARelacionar.push(conceptoIn);
         this.conceptoSnomedSeleccionado = snomedConcept;
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
