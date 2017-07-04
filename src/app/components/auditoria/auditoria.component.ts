@@ -53,7 +53,6 @@ export class AuditoriaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-   
   }
 
   onSelect(paciente: any): void {
@@ -82,7 +81,6 @@ export class AuditoriaComponent implements OnInit {
   validar() {
     this.plex.showLoader();
     this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
-      debugger
       if (!this.verificarDatosFA(res)) {
         this.servicioSintys.get(this.pacienteSelected).subscribe(res2 => {
           if (!this.verificarDatosFA(res2)) {

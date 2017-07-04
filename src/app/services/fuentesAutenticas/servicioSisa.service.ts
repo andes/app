@@ -13,7 +13,7 @@ export class SisaService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any> {
-        return this.server.get(this.sisaUrl + '/validar', { params: params, showError: true });
+        return this.server.get(this.sisaUrl + '/sisa', { params: params, showError: true });
     }
 
 }

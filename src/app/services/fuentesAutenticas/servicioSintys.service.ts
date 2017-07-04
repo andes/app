@@ -13,7 +13,7 @@ export class SintysService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any> {
-        return this.server.get(this.sintysUrl + '/validar', { params: params, showError: true });
+        return this.server.get(this.sintysUrl + '/sintys', { params: params, showError: true });
     }
 
 }
