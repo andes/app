@@ -35,7 +35,15 @@
     width: 100%;
 }
 
+.rup-card .rup-content .rup-body {
+    padding: 15px;
+}
+
 .rup-card .rup-content .header{
+    padding: 5px 15px;
+    text-transform: capitalize;
+}
+.rup-card.mini .rup-content .header{
     padding: 5px;
 }
 
