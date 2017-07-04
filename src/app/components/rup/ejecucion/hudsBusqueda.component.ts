@@ -16,6 +16,16 @@ export class HudsBusquedaComponent implements OnInit {
     @Input() paciente: any;
     @Input() prestacionActual: any;
 
+
+    // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
+    @Input() _draggable: Boolean = false;
+    @Input() _dragScope: String;
+    @Input() _dragOverClass: String = 'drag-over-border';
+
+    // Outputs de los eventos drag start y drag end
+    @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
+    @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
     /**
      * Devuelve un elemento seleccionado que puede ser 
      * una prestacion o un ?????
@@ -39,12 +49,20 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
-            this.servicioPrestacion.getByPaciente(this.paciente.id).subscribe(prestaciones => {
-                this.prestaciones = prestaciones.filter(d => d.id !== this.prestacionActual);
-            });
+            this.listarHallazgos();
         }
 
     }
+
+
+    dragStart(e) {
+        this._onDragStart.emit(e);
+    }
+
+    dragEnd(e) {
+        this._onDragEnd.emit(e);
+    }
+
 
 
     devolverPrestacion(prestacion) {
@@ -78,5 +96,8 @@ export class HudsBusquedaComponent implements OnInit {
             this.hallazgos = hallazgos;
         });
     }
+
+
+
 
 }
