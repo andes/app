@@ -1,4 +1,4 @@
-<section *ngIf="!showCreateUpdate">
+<section *ngIf="!showCreateUpdate || bloquearCreate">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -63,4 +63,4 @@
 </footer>
 
 <!--Componente de Alta/Modificación-->
-<paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+<paciente-create-update *ngIf="showCreateUpdate && !bloquearCreate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
