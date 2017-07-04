@@ -215,10 +215,28 @@ export class PrestacionEjecucionComponent implements OnInit {
     onConceptoDrop(e: any) {
         console.log('onConceptoDrop');
         console.log(e.dragData);
-        this.ejecutarConcepto(e.dragData);
+        debugger;
+        if (e.dragData.tipo) {
+            switch (e.dragData.tipo) {
+                case 'prestacion':
+                    this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
+                    break;
+                case 'hallazgo':
+                case 'trastorno':
+                    this.ejecutarConcepto(e.dragData.data.concepto);
+                    break;
+                default:
+                    this.ejecutarConcepto(e.dragData);
+                    break;
+            }
+
+        } else {
+            this.ejecutarConcepto(e.dragData);
+        }
     }
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
     }
+
 }

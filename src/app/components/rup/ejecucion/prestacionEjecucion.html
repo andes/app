@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-3">
-            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" (evtData)="ejecutarConceptoHuds($event)"></rup-hudsBusqueda>
+            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
         </div>
         <div class="col-6">
             <plex-box>
@@ -17,8 +17,8 @@
                         </div>
                     </div>
                 </header>
-                <div droppable  [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
-                     <p>
+                <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                    <p>
                         Arrastre aquí para vincularlos a esta consulta
                     </p>
                 </div>
@@ -68,7 +68,7 @@
                         </div>
                     </ng-container>
 
-<!--
+                    <!--
                             <div class="concepto" *ngIf="elemento.elementoRUP">
                                 <div class="header">
                                     <div class="indicadorTipo {{elemento.concepto.term}}">
