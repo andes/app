@@ -15,6 +15,10 @@ export class BuscadorComponent implements OnInit {
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+    // Outputs de los eventos drag start y drag end
+    @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
+    @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
     public searchPlanes: String = '';
     //Lista de planes.
     public listaPlanes: any[] = [];
@@ -36,6 +40,14 @@ export class BuscadorComponent implements OnInit {
     ngOnInit() { }
 
 
+    //drag and drop funciones
+    dragStart(e) {
+        this._onDragStart.emit(e);
+    }
+
+    dragEnd(e) {
+        this._onDragEnd.emit(e);
+    }
 
     // Buscador de planes
     buscar() {

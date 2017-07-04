@@ -38,3 +38,39 @@
 .list-group>.list-group-item .prestacion {
     border-left: solid 15px #FFD800;
 }
+
+.drag-over-border {
+    border: #ff525b dashed 2px;
+}
+
+.droppable.drag-target-border,
+.list-group>.list-group-item.drag-target-border,
+.drag-target-border {
+    border: #00bfff dashed 2px;
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+.droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #999999;
+}
+
+.drop-area {
+    height: calc(100vh - 410px);
+}
+
+.drop-area p {
+    font-size: 20px;
+    margin: 0;
+    padding: calc(calc(100vh - 480px) / 2) 60px;
+    text-align: center;
+}

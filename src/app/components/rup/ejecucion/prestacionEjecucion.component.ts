@@ -45,6 +45,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public showPlanes: boolean = false;
     public registros: any[] = [];
 
+    //Variable para mostrar el div dropable en el momento que se hace el drag
+    public isDraggingConcepto: boolean = false;
+
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -190,4 +193,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     //     this.showPlanes = true;
     // }
 
+
+    onConceptoDrop(e: any) {
+        console.log('onConceptoDrop');
+        console.log(e.dragData);
+        this.ejecutarConcepto(e.dragData);
+    }
+
+     arrastrandoConcepto(dragging: boolean) {
+        this.isDraggingConcepto = dragging;
+    }
 }
