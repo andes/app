@@ -85,7 +85,6 @@ import { AuditoriaService } from './services/auditoria/auditoria.service';
 import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
-import { servicioSintys } from '../../../api/utils/servicioSintys'; // DE LA API
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -405,7 +404,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     SisaService,
     SintysService,
-    servicioSintys // de la api
   ]
 })
 

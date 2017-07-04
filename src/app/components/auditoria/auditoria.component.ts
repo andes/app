@@ -81,9 +81,10 @@ export class AuditoriaComponent implements OnInit {
 
   validar() {
     this.plex.showLoader();
-    this.servicioSisa.ValidarPacienteEnSisa(this.pacienteSelected).then(res => {
+    this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
+      debugger
       if (!this.verificarDatosFA(res)) {
-        this.servicioSintys.ValidarPacienteEnSintys(this.pacienteSelected).then(res2 => {
+        this.servicioSintys.get(this.pacienteSelected).subscribe(res2 => {
           if (!this.verificarDatosFA(res2)) {
 
             if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
