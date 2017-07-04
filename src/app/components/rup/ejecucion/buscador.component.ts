@@ -9,6 +9,12 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 })
 
 export class BuscadorComponent implements OnInit {
+
+    /**
+     * Devuelve un elemento seleccionado.
+     */
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+
     public searchPlanes: String = '';
     //Lista de planes.
     public listaPlanes: any[] = [];
@@ -52,5 +58,18 @@ export class BuscadorComponent implements OnInit {
     busquedaPlanes() {
         this.tipoBusqueda = 'planes';
         this.showPlanes = true;
+    }
+
+    seleccionBusqueda(concepto) {
+        // this.resultados = [];
+        // this.searchTerm = '';
+        this.evtData.emit(concepto);
+    }
+
+     // si hago clic en un concepto lo capturo y lo devuelvo
+     // Lo trae del buscador de SNOMED 
+    ejecutarConcepto(concepto) {
+        console.log(concepto);
+        this.evtData.emit(concepto);
     }
 }

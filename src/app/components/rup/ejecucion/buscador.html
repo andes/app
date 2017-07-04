@@ -17,11 +17,11 @@ Buscador {{tipoBusqueda}}
     <div>
         <ul class="results list-group" *ngIf="listaPlanes">
             <ng-container *ngFor="let item of listaPlanes">
-                <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope"
+                <li draggable class="list-group-item justify-content-between list-group-item-action"  [dragScope]="_dragScope"
                     [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                    <a href="javascript: void(0)">
-                                    {{item.term}}
-                                </a>
+                    <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
+                        {{item.term}}
+                    </a>
                 </li>
             </ng-container>
         </ul>
