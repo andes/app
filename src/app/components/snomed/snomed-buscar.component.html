@@ -4,23 +4,6 @@
     </div>
 </form>
 
-<!--
-<div class="btn-group" data-toggle="buttons" *ngIf="searchTerm">
-    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'procedimientos'}">
-        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda()"> Procedimientos
-    </label>
-    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'trastornos'}">
-        <input type="radio" name="options" id="todos" [(ngModel)]="tipoBusqueda" (click)="setTipoBusqueda('trastornos')"> Trastornos
-    </label>
-    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'antecedentes'}">
-        <input type="radio" name="options" id="activo"  (click)="setTipoBusqueda('antecedentes')"> Antecedentes
-    </label>
-    <label class="btn btn-primary hover btn-sm" [ngClass]="{active: tipoBusqueda == 'antecedentesFamiliares'}">
-        <input type="radio" name="options" id="inactivo" (click)="setTipoBusqueda('antecedentesFamiliares')"> A. familiares
-    </label>
-</div>
--->
-
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
 <div *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
     No se han encontrado resultados
@@ -28,33 +11,32 @@
 
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-<ul class="results list-group">
+<ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <li draggable class="" *ngIf="!hideLista"
+            [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
-            <a  href="javascript: void(0)"  *ngIf="_draggable">
-                {{item.term}}
-                <!--
-                <br />
-                <div>
-                    <small class="text-left">
-                        {{item.fsn}}
-                    </small>
-                </div>
-                -->
-            </a>
 
-            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)" *ngIf="!_draggable">
-                {{item.term}}
-                <!--
-                <br />
-                <div>
-                    <small class="text-left">
-                        {{item.fsn}}
-                    </small>
+            <div class="rup-card mini">
+                <div class="type {{tipoBusqueda}}">
+                    <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                 </div>
-                -->
-            </a>
+
+                <div class="rup-content">
+                    <div class="header">
+                        <div class="title">
+                            {{item.term}}
+                        </div>
+
+                        <div class="actions">
+                            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </li>
     </ng-container>
 </ul>

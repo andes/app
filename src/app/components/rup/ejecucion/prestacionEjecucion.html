@@ -25,6 +25,7 @@
                 <div *ngIf="registros && registros.length">
 
 
+                    <!--
                     <plex-accordion class="elementosRup">
                         <div class="row" *ngFor="let elemento of registros">
 
@@ -38,11 +39,56 @@
                                     </rup>
 
                                 </plex-panel>
-
                             </div>
-
                         </div>
                     </plex-accordion>
+                    -->
+                    <ng-container *ngFor="let elemento of registros">
+                        <div class="rup-card" *ngIf="elemento.elementoRUP">
+                            <div class="type {{elemento.tipo}}">
+                                <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                            </div>
+                            <div class="rup-content">
+                                <div class="header">
+                                    <div class="title">
+                                        {{elemento.concepto.term}}
+                                    </div>
+
+                                    <div class="actions">
+
+                                    </div>
+                                </div>
+                                <div class="rup-body">
+                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                            || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+
+                                    </rup>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+<!--
+                            <div class="concepto" *ngIf="elemento.elementoRUP">
+                                <div class="header">
+                                    <div class="indicadorTipo {{elemento.concepto.term}}">
+                                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                                    </div>
+
+                                    <div class="nombre">
+                                        {{elemento.concepto.term}}
+
+                                    </div>
+
+                                </div>
+                                <div class="content">
+                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                        || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+
+                                    </rup>
+                                </div>
+                            </div>
+-->
 
                 </div>
             </plex-box>
@@ -60,7 +106,9 @@
 
                 <div class="row">
                     <div class="col">
+
                         <rup-buscador (evtData)="ejecutarConcepto($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+
                     </div>
                 </div>
             </plex-box>

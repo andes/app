@@ -68,27 +68,27 @@ export class ElementosRupService {
      * @memberof ElementosRupService
      */
     buscarElementoRup(listaElementosRup: any, conceptoSnomed: any) {
-        let concepto: any;
+        let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
         if (conceptoSnomed.semanticTag === 'trastorno' || conceptoSnomed.semanticTag === 'hallazgo') {
-            concepto = listaElementosRup.find(elemento => elemento.id  === this.evolucionProblemaPorDefecto);
+            elementoRUP = listaElementosRup.find(elemento => elemento.id  === this.evolucionProblemaPorDefecto);
 
-            return concepto;
+            return elementoRUP;
         }
 
         // si es un procedimiento buscamos su propia forma de evolucionar
-        concepto = listaElementosRup.find(elemento => {
+        elementoRUP = listaElementosRup.find(elemento => {
             return elemento.conceptos.find(concepto =>
                 concepto.conceptId === conceptoSnomed.conceptId
             );
         });
 
         // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
-        if (!concepto) {
-            concepto = listaElementosRup.find(elemento => elemento.id  === this.evolucionPorDefecto);
+        if (!elementoRUP) {
+            elementoRUP = listaElementosRup.find(elemento => elemento.id  === this.evolucionPorDefecto);
         }
 
-        return concepto;
+        return elementoRUP;
 
     }
 }

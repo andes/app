@@ -1,3 +1,4 @@
+/*
 .prestacionEjecucion .elementosRup .card,
 .prestacionEjecucion .elementosRup .card-header:first-child {
     border-radius: 0;
@@ -8,36 +9,91 @@
 }
 
 .prestacionEjecucion .elementosRup .card h5 {
-    text-transform: capitalize
+    text-transform: capitalize;
 }
 
-.prestacionEjecucion .elementosRup .procedimientos .card {
-    border-left: solid 15px #92278E;
+.conceptos.list-group > .list-group-item {
+    padding: 0;
+}
+*/
+.rup-card {
+    width: 100%;
+    display: flex;
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
+}
+.rup-card .type {
+    padding: 5px;
+    width: 20px;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.prestacionEjecucion .elementosRup .problemas .card {
-    border-left: solid 15px #34a;
+.rup-card .type i {color: white;}
+
+.rup-card .rup-content {
+    margin: 0;
+    width: 100%;
 }
 
-.prestacionEjecucion .elementosRup .planes .card {
-    border-left: solid 15px #6A99AD;
+.rup-card .rup-content .rup-body {
+    padding: 15px;
 }
 
-.prestacionEjecucion .elementosRup .prestaciones .card {
-    border-left: solid 15px #FFD800;
+.rup-card .rup-content .header{
+    padding: 5px 15px;
+    text-transform: capitalize;
+    border-bottom: 1px solid #ccc;
 }
 
-.list-group>.list-group-item .problemas {
-    border-left: solid 15px #34a;
+.rup-card.mini .rup-content .header{
+    padding: 5px;
+    border-bottom: 0 none;
 }
 
-.list-group>.list-group-item .planes {
-    border-left: solid 15px #6A99AD;
+.rup-card .rup-content .header .title{
+    display: inline-flex;
+}
+.rup-card .rup-content .header .actions{
+    float: right!important;
+
 }
 
-.list-group>.list-group-item .prestacion {
-    border-left: solid 15px #FFD800;
+
+.problemas {
+    background-color: #34a;
 }
+.btn-primary.problemas {
+    background-color: #34a;
+    border-color: #34a;
+}
+
+.planes {
+    background-color: #6A99AD;
+}
+.btn-primary.planes {
+    background-color: #6A99AD;
+    border-color: #6A99AD;
+}
+
+.prestaciones {
+    background-color: #FFD800;
+}
+.btn-primary.prestaciones {
+    background-color: #FFD800;
+    border-color: #FFD800;
+}
+
+.procedimientos {
+    background-color: #92278E;
+}
+.btn-primary.procedimientos {
+    background-color: #92278E;
+    border-color: #92278E;
+}
+
 
 .drag-over-border {
     border: #ff525b dashed 2px;
@@ -74,3 +130,4 @@
     padding: calc(calc(100vh - 480px) / 2) 60px;
     text-align: center;
 }
+
