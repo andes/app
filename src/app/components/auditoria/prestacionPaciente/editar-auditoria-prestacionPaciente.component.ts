@@ -45,9 +45,9 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
     unidadesValidas = true;
 
     constructor(
-        public plex: Plex, 
-        public auth: Auth, 
-        public prestacionPacienteService: PrestacionPacienteService, 
+        public plex: Plex,
+        public auth: Auth,
+        public prestacionPacienteService: PrestacionPacienteService,
         public serviceTipoPrestacion: TipoPrestacionService,
         private auditoriaPrestacionPacienteService: AuditoriaPrestacionPacienteService) { }
 

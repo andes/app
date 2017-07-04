@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { element } from 'protractor';
@@ -136,7 +136,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private serviceTipoPrestacion: TipoPrestacionService,
         private servicioProblemaPac: ProblemaPacienteService,
         public plex: Plex, public auth: Auth,
-        private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
+        private router: Router, private route: ActivatedRoute) {
     }
 
     /**
@@ -193,34 +193,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargarDatosPrestacion() {
         this.listaProblemas = this.prestacion.ejecucion.listaProblemas;
         this.listaProblemasPaciente = this.prestacion.ejecucion.listaProblemas;
-
-        /*
-        // loopeamos las prestaciones que se deben cargar por defecto
-        // y las inicializamos como una prestacion nueva a ejecutarse
-        if (this.prestacion.solicitud) {
-            this.prestacion.solicitud.tipoPrestacion.ejecucion.forEach(element => {
-                // Verificamos si el tipo de prestacion no está dentro de las prestaciones
-                // que se han ejecutado, y de ser así las creo vacias
-                let find;
-                if (this.prestacion.ejecucion && this.prestacion.ejecucion.prestaciones.length) {
-                    find = this.prestacion.ejecucion.prestaciones.find(p => {
-                        return p.solicitud.tipoPrestacion.id === element.id;
-                    });
-                }
-                // si no esta en las ejecutadas entonces asignamos para ejecutar las que son por defecto
-                if (!find) {
-                    // asignamos valores a la nueva prestacion
-                    find = this.crearPrestacionVacia(element);
-                    this.prestacionesEjecucion.push(find);
-                    this.valoresPrestaciones[element.key.toString()] = {};
-                } else {
-                    this.prestacionesEjecucion.push(find);
-                    let key; key = element.key;
-                    this.listaProblemaPrestacion[key] = find.solicitud.listaProblemas;
-                }
-            });
-        }
-        */
 
         // recorremos todas las que se han ejecutado y si no esta
         // dentro de las que cargamos anteriormente las agregamos
@@ -280,20 +252,43 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.problemaItem = problema;
     }
 
-    /* Problemas del paciente */
-    arrastrandoProblema(dragging) {
+
+    /**
+     * Indicando si estoy arrastrando un problema del
+     * paciente desde los resultados de SNOMED
+     *
+     * @param {boolean} dragging true/false
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
+    arrastrandoProblema(dragging: boolean) {
         this.isDraggingProblem = dragging;
     }
 
+
+    /**
+     * Indicando si estoy arrastrando un problema del paciente de su lista maestra
+     *
+     * @param {boolean} dragging true/false indicando si estoy arrastrando un problema
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
     arrastrandoProblemaLista(dragging) {
         this.isDraggingProblemList = dragging;
 
     }
 
-    /* Evento que se ejecuta cuando realizo el drop de una
+
+    /**
+     * Evento que se ejecuta cuando realizo el drop de una
      * prestación o un plan sobre un problema
+     *
+     * @param {DragEvent} e
+     * @param {string} idProblema
+     *
+     * @memberof PrestacionEjecucionComponent
      */
-    onDrop(e: any, idProblema) {
+    onDrop(e: DragEvent, idProblema: string) {
         if (this.isDraggingPrestacion) {
             this.onPrestacionDrop(e, idProblema);
         } else {

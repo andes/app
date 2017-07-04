@@ -1,9 +1,10 @@
-import { IPaciente } from './IPaciente';
+import { IPaciente } from '../IPaciente';
 
 export interface IListaMatcheo{
-    paciente: IPaciente,
+    paciente: IPaciente;
     matcheos: {
         entidad: String,
         matcheo: Number
-    }
+    };
+
 }

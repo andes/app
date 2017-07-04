@@ -17,7 +17,7 @@ export class ConfigPrestacionService {
     }
 
     getConfig(): Observable<any[]> {
-        return this.server.get(this.configPrestacionUrl)
+        return this.server.get(this.configPrestacionUrl);
     }
 
     post(prestacion: IConfigPrestacion): Observable<IConfigPrestacion> {

@@ -38,6 +38,7 @@
                             <td>{{paciente.sexo}}</td>
                             <td>
                                 <plex-button title="Seleccionar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
+                                
                             </td>
                         </tr>
                     </tbody>
@@ -58,10 +59,8 @@
 
 </section>
 <footer *ngIf="!showCreateUpdate && modoCompleto">
-    <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
-    <!--boton provisorio hasta tener el menu desplegable-->
-    <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
     <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
+    <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
 </footer>
 
 <!--Componente de Alta/Modificación-->

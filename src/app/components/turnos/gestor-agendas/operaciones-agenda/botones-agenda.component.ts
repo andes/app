@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'botones-agenda',
@@ -194,9 +195,11 @@ export class BotonesAgendaComponent implements OnInit {
   }
 
   puedoRevisar() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
     return this.agendasSeleccionadas.filter((agenda) => {
-      return agenda.estado !== 'publicada';
-    }).length <= 0;
+      return moment(agenda.horaInicio).format() <= moment(today).format();
+    }).length > 0;
   }
 
   // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado

@@ -10,7 +10,15 @@ export class EspacioFisicoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<IEspacioFisico[]> {
-        return this.server.get(this.espacioFisicoUrl, {params: params, showError: true});
+        return this.server.get(this.espacioFisicoUrl, { params: params, showError: true });
+    }
+
+    /**
+     * Metodo getById. Trae el objeto organizacion por su Id.
+     * @param {String} id Busca por Id
+     */
+    getById(id: String): Observable<IEspacioFisico> {
+        return this.server.get(this.espacioFisicoUrl + '/' + id, null);
     }
 
     post(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {

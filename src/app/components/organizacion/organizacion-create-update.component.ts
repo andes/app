@@ -1,4 +1,16 @@
+import { Plex } from '@andes/plex';
+import { Server } from '@andes/shared';
+import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
+import * as enumerados from './../../utils/enumerados';
+// Services
 import { BarrioService } from './../../services/barrio.service';
+import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { OrganizacionService } from './../../services/organizacion.service';
+import { PaisService } from './../../services/pais.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { LocalidadService } from './../../services/localidad.service';
+// Interfaces
 import { IPais } from './../../interfaces/IPais';
 import { IBarrio } from './../../interfaces/IBarrio';
 import { ILocalidad } from './../../interfaces/ILocalidad';
@@ -6,19 +18,10 @@ import { IUbicacion } from './../../interfaces/IUbicacion';
 import { IEdificio } from './../../interfaces/IEdificio';
 import { IDireccion } from './../../interfaces/IDireccion';
 import { IContacto } from './../../interfaces/IContacto';
-import { Observable } from 'rxjs/Rx';
-import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
-import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
-import * as enumerados from './../../utils/enumerados';
-import { PaisService } from './../../services/pais.service';
-import { ProvinciaService } from './../../services/provincia.service';
-import { LocalidadService } from './../../services/localidad.service';
-import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
+
 @Component({
     selector: 'organizacion-create-update',
     templateUrl: 'organizacion-create-update.html'
@@ -31,14 +34,13 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     // definición de arreglos
     tiposEstablecimiento: ITipoEstablecimiento[];
-    tiposcom: String[];
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     localidadesNeuquen: any[];
 
-    paisArgentina = null;
-    provinciaNeuquen = null;
-    barrioNulleado = null;
+    private paisArgentina = null;
+    private provinciaNeuquen = null;
+    private barrioNulleado = null;
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -109,7 +111,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         fechaBaja: new Date(),
     };
 
-
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
@@ -121,7 +122,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.tiposcom = enumerados.getTipoComunicacion();
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
@@ -133,8 +133,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
                     Object.assign(this.organizacionModel, resultado);
                 }
             });
-        } else {
-
         }
 
         // Set País Argentina
@@ -143,7 +141,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }).subscribe(arg => {
             this.paisArgentina = arg[0];
         });
-
+        // Set provincia Neuquen
         this.provinciaService.get({
             nombre: 'Neuquén'
         }).subscribe(Prov => {
@@ -152,8 +150,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         });
 
     }
-
-
 
     onSave(valid) {
         let organizacionGuardar = Object.assign({}, this.organizacionModel);

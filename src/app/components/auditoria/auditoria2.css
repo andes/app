@@ -1,41 +1,42 @@
-  .invertHover:hover {
-    background-color: #002738;
-    color: white;
-    cursor: pointer;
-  }
-  .desvincular:hover {
-    color: red;
-    cursor: pointer;
-  }
-  .vincular:hover {
-    color: green;
-    cursor: pointer;
-  }
-  *>.mdi.mdi-hover-show,
-  *:hover>.mdi.mdi-hover-hidden {
-    display: none;
-  }
-  *:hover>.mdi.mdi-hover-show {
-    display: inline-block;
-  }
-  .recuadro {
-    border: 1px solid;
-    float: right;
-  }
-  .validado {
-    color: green
-  }
-  .temporal {
-    color: orange
-  }
+.invertHover:hover {
+  background-color: #002738;
+  color: white;
+  cursor: pointer;
+}
+.deslinkear:hover {
+  color: red;
+  cursor: pointer;
+}
+.linkear:hover {
+  color: green;
+  cursor: pointer;
+}
+*>.mdi.mdi-hover-show,
+*:hover>.mdi.mdi-hover-hidden {
+  display: none;
+}
+*:hover>.mdi.mdi-hover-show {
+  display: inline-block;
+}
+.validado {
+  color: green
+}
+.temporal {
+  color: orange
+}
+
 .drag-over-border {
     border: #ff525b dashed 2px;
+}
+
+.centrado {
+  text-align: center
 }
 
 .droppable.drag-target-border,
 .list-group>.list-group-item.drag-target-border,
 .drag-target-border {
-    border: #00bfff dashed 2px;
+    border: lightskyblue dashed 2px;
 }
 
 .drag-handle {
@@ -54,8 +55,9 @@
 }
 
 .msg-arrastrePaciente {
-    border: 1px solid #ff9900;
-    color: #ff9900;
+    border: 1px solid green;
+    color:green;
     margin-bottom: 10px;
     padding: 10px;
+    text-align: center;
 }

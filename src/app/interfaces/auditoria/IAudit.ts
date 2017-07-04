@@ -1,9 +1,9 @@
-import { IUbicacion } from './IUbicacion';
-import { IDireccion } from './IDireccion';
-import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
+import { IUbicacion } from '../IUbicacion';
+import { IDireccion } from '../IDireccion';
+import { Sexo, Genero, EstadoCivil } from './../../utils/enumerados';
 
 
-export interface IAudit{
+export interface IAudit {
     paciente1: {
         idPaciente: Number,
         documento: String,
@@ -11,7 +11,7 @@ export interface IAudit{
         nombre: String,
         apellido: String,
         contacto: [{
-            tipo:String,
+            tipo: String,
             valor: String,
             ranking: Number, // Specify preferred order of use (1 = highest) // Podemos usar el rank para guardar un historico de puntos de contacto (le restamos valor si no es actual???)
             ultimaActualizacion: Date,
@@ -22,24 +22,24 @@ export interface IAudit{
             codigoPostal: String,
             ubicacion: IUbicacion,
             ranking: Number,
-            geoReferencia:[Number],
+            geoReferencia: [Number],
             ultimaActualizacion: Date,
             activo: Boolean
         }],
-       sexo: Sexo,
+        sexo: Sexo,
         genero: Genero, // identidad autopercibida
         fechaNacimiento: Date, // Fecha Nacimiento
         estadoCivil: EstadoCivil,
         claveSN: String
-    },
+    };
     paciente2: {
-       idPaciente: Number,
+        idPaciente: Number,
         documento: String,
         estado: String,
         nombre: String,
         apellido: String,
         contacto: [{
-            tipo:String,
+            tipo: String,
             valor: String,
             ranking: Number, // Specify preferred order of use (1 = highest) // Podemos usar el rank para guardar un historico de puntos de contacto (le restamos valor si no es actual???)
             ultimaActualizacion: Date,
@@ -50,15 +50,15 @@ export interface IAudit{
             codigoPostal: String,
             ubicacion: IUbicacion,
             ranking: Number,
-            geoReferencia:[Number],
+            geoReferencia: [Number],
             ultimaActualizacion: Date,
             activo: Boolean
         }],
-       sexo: Sexo,
+        sexo: Sexo,
         genero: Genero, // identidad autopercibida
         fechaNacimiento: Date, // Fecha Nacimiento
         estadoCivil: EstadoCivil,
         claveSN: String
-    },
-    match:Number
-};
+    };
+    match: Number;
+}

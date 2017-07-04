@@ -1,0 +1,20 @@
+
+.recuadro {
+    border: 1px solid;
+    float: right;
+}
+
+.label-success {
+    color: green
+}
+.label-warning {
+    color: orange
+}
+.foto {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 20px;
+        height: 200px;
+        padding: 5px;
+    }

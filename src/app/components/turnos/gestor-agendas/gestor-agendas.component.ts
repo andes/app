@@ -23,14 +23,15 @@ export class GestorAgendasComponent implements OnInit {
 
     agendasSeleccionadas: IAgenda[] = [];
 
-    public showGestorAgendas: Boolean = true;
-    public showTurnos: Boolean = false;
-    public showBotonesAgenda: Boolean = false;
-    public showClonar: Boolean = false;
-    public showDarTurnos: Boolean = false;
-    public showEditarAgenda: Boolean = false;
-    public showEditarAgendaPanel: Boolean = false;
-    public showInsertarAgenda: Boolean = false;
+    public showGestorAgendas = true;
+    public showTurnos = false;
+    public showReasignarTurno = false;
+    public showBotonesAgenda = false;
+    public showClonar = false;
+    public showDarTurnos = false;
+    public showEditarAgenda = false;
+    public showEditarAgendaPanel = false;
+    public showInsertarAgenda = false;
     private showAgregarNotaAgenda = false;
     private showAgregarSobreturno = false;
     public showRevisionAgenda = false;
@@ -145,6 +146,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -178,6 +180,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarSobreturno = false;
         this.showClonar = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
         this.loadAgendas();
     }
 
@@ -187,7 +190,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    showVistaTurnos(showTurnos: Boolean) {
+    showVistaTurnos(showTurnos: boolean) {
         this.showTurnos = showTurnos;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
@@ -213,12 +216,13 @@ export class GestorAgendasComponent implements OnInit {
         }
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
     }
 
 
     revisionAgenda(agenda) {
-      this.showGestorAgendas = false;
-      this.showRevisionAgenda = true;
+        this.showGestorAgendas = false;
+        this.showRevisionAgenda = true;
     }
 
     loadAgendas() {
@@ -301,10 +305,22 @@ export class GestorAgendasComponent implements OnInit {
             this.showAgregarNotaAgenda = false;
             this.showAgregarSobreturno = false;
             this.showRevisionAgenda = false;
+            this.showTurnos = false;
+            this.showReasignarTurno = false;
             this.showBotonesAgenda = true;
-            this.showTurnos = true;
+
+            if (this.hayAgendasSuspendidas()) {
+                this.showReasignarTurno = true;
+            } else {
+                this.showTurnos = true;
+            }
+
         });
 
+    }
+
+    hayAgendasSuspendidas() {
+        return this.agendasSeleccionadas.filter((x) => { return x.estado === 'suspendida'; }).length > 0;
     }
 
     estaSeleccionada(agenda: any) {
@@ -333,6 +349,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
+        this.showReasignarTurno = false;
         let temporal = this.agendasSeleccionadas;
         console.log('temporal ', temporal);
         this.showRevisionAgenda = false;

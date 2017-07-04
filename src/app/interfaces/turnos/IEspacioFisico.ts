@@ -4,16 +4,24 @@ export interface IEspacioFisico {
     id: string;
     nombre: String;
     descripcion: String;
-    edificio: {
-        id: String,
-        descripcion: String,
-        contacto: IContacto,
-        direccion: IDireccion
-    };
     detalle: String;
-    activo: Boolean;
     organizacion: {
         id: String,
         nombre: String
     };
+    edificio: {
+        id: String,
+        descripcion: String,
+        contacto: IContacto,
+        direccion: IDireccion,
+    };
+    sector: {
+        id: String,
+        nombre: String
+    };
+    servicio: {
+        id: String,
+        nombre: String
+    };
+    activo: Boolean;
 }

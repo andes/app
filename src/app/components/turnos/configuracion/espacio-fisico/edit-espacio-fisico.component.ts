@@ -28,15 +28,35 @@ export class EditEspacioFisicoComponent implements OnInit {
         let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
         let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
         let edificio = this.espacioFisicoHijo ? this.espacioFisicoHijo.edificio : '';
+        let sector = this.espacioFisicoHijo ? this.espacioFisicoHijo.sector : '';
+        let servicio = this.espacioFisicoHijo ? this.espacioFisicoHijo.servicio : '';
         let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
         let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
-        this.modelo = { nombre: nombre, descripcion: descripcion, activo: activo, edificio: edificio, detalle: detalle };
+        this.modelo = { nombre: nombre, descripcion: descripcion, activo: activo, edificio: edificio, detalle: detalle, sector: sector, servicio: servicio };
 
         // console.log('permisos ', this.auth.getPermissions('turnos:?').indexOf('editarEspacio') >= 0);
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => { event.callback(respuesta.edificio); });
+        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+            event.callback(respuesta.edificio);
+        });
+    }
+    loadSectores(event) {
+        this.EspacioFisicoService.get({}).subscribe(respuesta => {
+            let sectores = respuesta.map((ef) => {
+                return (typeof ef.sector !== 'undefined' ? ef.sector : []);
+            });
+            event.callback(sectores);
+        });
+    }
+    loadServicios(event) {
+        this.EspacioFisicoService.get({}).subscribe(respuesta => {
+            let servicios = respuesta.map((ef) => {
+                return (typeof ef.servicio !== 'undefined' ? ef.servicio : []);
+            });
+            event.callback(servicios);
+        });
     }
 
     onClick(modelo: IEspacioFisico) {
