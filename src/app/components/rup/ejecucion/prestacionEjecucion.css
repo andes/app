@@ -18,6 +18,8 @@
 .rup-card {
     width: 100%;
     display: flex;
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
 }
 .rup-card .type {
     padding: 5px;
@@ -28,7 +30,7 @@
     justify-content: center;
 }
 
-.type i {color: white;}
+.rup-card .type i {color: white;}
 
 .rup-card .rup-content {
     margin: 0;
@@ -42,9 +44,12 @@
 .rup-card .rup-content .header{
     padding: 5px 15px;
     text-transform: capitalize;
+    border-bottom: 1px solid #ccc;
 }
+
 .rup-card.mini .rup-content .header{
     padding: 5px;
+    border-bottom: 0 none;
 }
 
 .rup-card .rup-content .header .title{

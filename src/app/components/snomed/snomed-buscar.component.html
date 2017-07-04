@@ -11,9 +11,9 @@
 
 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-<ul class="conceptos list-group">
+<ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="list-group-item justify-content-between list-group-item-action" *ngIf="!hideLista"
+        <li draggable class="" *ngIf="!hideLista"
             [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
 
@@ -21,6 +21,7 @@
                 <div class="type {{tipoBusqueda}}">
                     <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                 </div>
+
                 <div class="rup-content">
                     <div class="header">
                         <div class="title">
