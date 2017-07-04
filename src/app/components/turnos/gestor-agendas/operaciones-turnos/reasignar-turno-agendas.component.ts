@@ -1,3 +1,4 @@
+import { IBloque } from './../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -22,7 +23,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input('agendasSimilares')
     set agendasSimilares(value: any) {
         this._agendasSimilares = value;
-        this.actualizar();
+        // this.actualizar();
     }
     get agendasSimilares(): any {
         return this._agendasSimilares;
@@ -34,7 +35,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     public turnoAReasignar: ITurno;
 
-    agendasCandidatas: any[] = [];
+    turnosAReasignar: any[] = [];
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
@@ -51,7 +52,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     actualizar() {
         console.log(this.agendasSimilares);
 
-        this.agendasCandidatas = [];
+        this.turnosAReasignar = [];
         if (this.agendasSimilares) {
             this.agendasSimilares.forEach(agenda => {
                 agenda.bloques.forEach(bloque => {
@@ -65,9 +66,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                             // };
 
                             this.serviceAgenda.get({}).subscribe((agendas) => {
-                                this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
+                                this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                                 // this.calculosSimilitud(turno, agendas);
-                                // console.log('agendasCandidatas', this.agendasCandidatas);
+                                // console.log('turnosAReasignar', this.turnosAReasignar);
                             });
                         }
 
@@ -112,7 +113,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
-    cargarAgendasCandidatas(idagendasSimilares, idBloque, idTurno) {
+    cargarturnosAReasignar(idagendasSimilares, idBloque, idTurno) {
 
         let params = {
             idAgenda: idagendasSimilares,
@@ -122,25 +123,25 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
         this.serviceTurno.get(params).subscribe((agendas) => {
 
-            let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
+            let indice = this.turnosAReasignar.find(x => x.idTurno === idTurno);
             // if (indice === -1) {
             let candidatas = {
                 idTurno: idTurno,
                 agendas: agendas
             };
-            this.agendasCandidatas = [... this.agendasCandidatas, candidatas];
+            this.turnosAReasignar = [... this.turnosAReasignar, candidatas];
             // }
-            // console.log('agendasCandidatas', this.agendasCandidatas);
+            // console.log('turnosAReasignar', this.turnosAReasignar);
         });
     }
 
     seleccionarCandidata(indiceTurno, i) {
-        let turno = this.agendasCandidatas[indiceTurno].turno;
-        let bloque = this.agendasCandidatas[indiceTurno].bloque;
-        let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
+        let turno = this.turnosAReasignar[indiceTurno].turno;
+        let bloque = this.turnosAReasignar[indiceTurno].bloque;
+        let agendaSeleccionada = this.turnosAReasignar[indiceTurno].agendas[i];
         let tipoTurno;
         console.log('seleccionarCandidata ', agendaSeleccionada);
-        console.log('seleccionarCandidata ', this.agendasCandidatas[indiceTurno]);
+        console.log('seleccionarCandidata ', this.turnosAReasignar[indiceTurno]);
         // Si la agenda es del día
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
@@ -203,6 +204,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
+    public tieneTurnos(bloque: IBloque): boolean {
+        let turnos = bloque.turnos;
+        return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
+    }
 
     reasignacionManual() {
         this.reasignacionManualEmit.emit(true);
