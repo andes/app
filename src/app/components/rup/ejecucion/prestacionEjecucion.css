@@ -8,33 +8,74 @@
 }
 
 .prestacionEjecucion .elementosRup .card h5 {
-    text-transform: capitalize
+    text-transform: capitalize;
 }
 
-.prestacionEjecucion .elementosRup .procedimientos .card {
-    border-left: solid 15px #92278E;
+.conceptos.list-group > .list-group-item {
+    padding: 0;
 }
 
-.prestacionEjecucion .elementosRup .problemas .card {
-    border-left: solid 15px #34a;
+.rup-card {
+    width: 100%;
+    display: flex;
+}
+.rup-card .type {
+    padding: 5px;
+    width: 20px;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.prestacionEjecucion .elementosRup .planes .card {
-    border-left: solid 15px #6A99AD;
+.type i {color: white;}
+
+.rup-card .rup-content {
+    margin: 0;
+    width: 100%;
 }
 
-.prestacionEjecucion .elementosRup .prestaciones .card {
-    border-left: solid 15px #FFD800;
+.rup-card .rup-content .header{
+    padding: 5px;
 }
 
-.list-group>.list-group-item .problemas {
-    border-left: solid 15px #34a;
+.rup-card .rup-content .header .title{
+    display: inline-flex;
+}
+.rup-card .rup-content .header .actions{
+    float: right!important;
+
 }
 
-.list-group>.list-group-item .planes {
-    border-left: solid 15px #6A99AD;
+
+.problemas {
+    background-color: #34a;
+}
+.btn-primary.problemas {
+    background-color: #34a;
+    border-color: #34a;
 }
 
-.list-group>.list-group-item .prestacion {
-    border-left: solid 15px #FFD800;
+.planes {
+    background-color: #6A99AD;
+}
+.btn-primary.planes {
+    background-color: #6A99AD;
+    border-color: #6A99AD;
+}
+
+.prestaciones {
+    background-color: #FFD800;
+}
+.btn-primary.prestaciones {
+    background-color: #FFD800;
+    border-color: #FFD800;
+}
+
+.procedimientos {
+    background-color: #92278E;
+}
+.btn-primary.procedimientos {
+    background-color: #92278E;
+    border-color: #92278E;
 }

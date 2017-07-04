@@ -32,11 +32,45 @@
                                     </rup>
 
                                 </plex-panel>
-
                             </div>
-
                         </div>
                     </plex-accordion>
+                    <!--
+
+                    <div class="rup-card" *ngIf="elemento.elementoRUP">
+                        <div class="type">
+                        </div>
+                        <div class="content">
+                            <div class="header">
+                                <div class="indicadorTipo {{elemento.concepto.term}}">
+                                    <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+
+<!--
+                            <div class="concepto" *ngIf="elemento.elementoRUP">
+                                <div class="header">
+                                    <div class="indicadorTipo {{elemento.concepto.term}}">
+                                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                                    </div>
+
+                                    <div class="nombre">
+                                        {{elemento.concepto.term}}
+
+                                    </div>
+
+                                </div>
+                                <div class="content">
+                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                        || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+
+                                    </rup>
+                                </div>
+                            </div>
+-->
 
                 </div>
             </plex-box>
@@ -67,7 +101,7 @@
                         <div *ngIf="showPlanes">
                             <buscador-planes></buscador-planes>
                         </div>
-                        
+
                     </div>
                 </div>
             </plex-box>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -12,19 +12,16 @@ import { Observable } from 'rxjs/Rx';
     host: {
         '(document:click)': 'handleClick($event)'
     },
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None,
     styles: [`
     .results {
         margin-top: 0;
     }
 
-    .results.list-group>.list-group-item {
-        padding: 5px;
+    .drag-bar {
         cursor: -webkit-grab;
-    }
-
-    .results.list-group>.list-group-item a{
-        display: block;
-        width: 100%;
+        color: white;
     }`
     ]
 })
@@ -128,16 +125,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     dragEnd(e) {
         this._onDragEnd.emit(e);
     }
-
-    /*
-    setTipoBusqueda(tipoBusqueda): void {
-        // seteamos el tipo de busqueda que deseamos realizar
-        this.tipoBusqueda = tipoBusqueda;
-
-        // buscamos por la serpiente de SNOMED
-        this.buscar();
-    }
-    */
 
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
