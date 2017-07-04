@@ -84,7 +84,6 @@ export class AuditoriaComponent implements OnInit {
       if (!this.verificarDatosFA(res)) {
         this.servicioSintys.get(this.pacienteSelected).subscribe(res2 => {
           if (!this.verificarDatosFA(res2)) {
-
             if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
               // TODO: chequear si el paciente tiene algun turno o prestacion asignado/a
               this.agendaService.find(this.pacienteSelected.id).subscribe(data => {
@@ -130,7 +129,7 @@ export class AuditoriaComponent implements OnInit {
       this.enableValidar = false;
       return true;
     }
-    if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 94 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
+    if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo >= 93 && this.pacienteSelected.sexo === this.datosFA.matcheos.datosPaciente.sexo && this.pacienteSelected.documento === this.datosFA.matcheos.datosPaciente.documento) {
       this.enableValidar = false;
       this.editarPaciente();
       this.enableValidar = false;
