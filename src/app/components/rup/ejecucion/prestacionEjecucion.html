@@ -30,15 +30,6 @@
                                         || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
                                     </rup>
 
-                                    <p>
-                                        <plex-button title="mover" icon="mdi mdi-arrow-left-bold" label="mover al inicio" (click)="moverRegistroEnPosicion(i,0,elemento)" type="info btn-sm"></plex-button>
-                                    </p>
-                                    <p>
-                                        Relacionado con:
-                                        <plex-select [(ngModel)]="elemento.relacionadoCon" name="relacion-{{i}}" (getData)="loadRegistros($event,elemento)" labelField="concepto.term" (change)="vincular(elemento,i)"> </plex-select>
-                                    </p>
-
-
                                 </plex-panel>
 
                             </div>
