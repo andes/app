@@ -321,77 +321,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 // Main module
 @NgModule({
-<<<<<<< HEAD
-    imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HttpModule,
-        PlexModule,
-        Ng2DragDropModule,
-        routing,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        ConfirmationPopoverModule.forRoot({
-            confirmButtonType: 'danger' // set defaults here
-        })
-    ],
-    declarations: [
-        AppComponent, InicioComponent, LoginComponent,
-        OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        ProfesionalComponent, ProfesionalCreateUpdateComponent,
-        ProfesionalCreateUpdateComponent,
-        EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
-        TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
-        DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, ReasignarTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-        AgregarSobreturnoComponent, PanelAgendaComponent, DashboardTurnosComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
-        ...RUP_COMPONENTS,
-        LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-        AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-        HoverClassDirective
-    ],
-    entryComponents: RUP_COMPONENTS,
-    bootstrap: [AppComponent],
-    providers: [{
-        provide: LOCALE_ID,
-        useValue: 'es-AR'
-    },
-        Plex,
-        Auth,
-        RoutingGuard,
-        OrganizacionService,
-        ProvinciaService,
-        TipoEstablecimientoService,
-        EspecialidadService,
-        ProfesionalService,
-        PaisService,
-        LocalidadService,
-        BarrioService,
-        PacienteService,
-        FinanciadorService,
-        ParentescoService,
-        appRoutingProviders,
-        ConfigPrestacionService,
-        PlanificarAgendaComponent,
-        // EspacioFisicoComponent,
-        AgendaService,
-        TurnoService,
-        EspacioFisicoService,
-        ListaEsperaService,
-        Server,
-        SmsService,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
-        TipoPrestacionService,
-=======
   imports: [
     BrowserModule,
     ReactiveFormsModule,
@@ -463,7 +392,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     PrestacionPacienteService,
     ProblemaPacienteService,
     TipoPrestacionService,
->>>>>>> mpi
 
         ObservarDatosService,
         LlavesTipoPrestacionService,
@@ -477,16 +405,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         SnomedService,
         Cie10Service,
 
-<<<<<<< HEAD
-        SisaService,
-        SintysService,
-        servicioSintys // de la api
-    ]
-=======
     SisaService,
     SintysService,
   ]
->>>>>>> mpi
 })
 
 export class AppModule { }
