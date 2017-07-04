@@ -57,9 +57,10 @@ import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacio
 // Auditoria
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
+// USUARIO
+import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 // ... Auditoría RUP (prestacionPaciente)
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 
@@ -85,9 +86,11 @@ const appRoutes: Routes = [
 
   // Auditoria
   { path: 'auditoria', component: AuditoriaComponent },
-  { path: 'auditoria1', component: Auditoria1Component },
   { path: 'auditoria2', component: Auditoria2Component },
   { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
+
+  // Usuario
+  { path: 'busquedaUsuario', component: BusquedaUsuarioComponent },
 
   // RUP
   // Prestación Clínica General de Medicina
@@ -97,7 +100,7 @@ const appRoutes: Routes = [
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
-// Auditoría RUP (prestacionPaciente)
+  // Auditoría RUP (prestacionPaciente)
   { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
 
   // Llaves

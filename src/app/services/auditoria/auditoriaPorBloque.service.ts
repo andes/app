@@ -14,15 +14,15 @@ import 'rxjs/add/operator/catch';
 export class AuditoriaPorBloqueService {
     private patientBlockURL = '/core/mpi/auditoria/bloques/pacientes/';
     constructor(private server: Server) { }
-    
+
     getListaBloques(params: any): Observable<any[]> {
-        return this.server.get(this.patientBlockURL + params.idTipoBloque +'/'+params.idBloque);      
+        return this.server.get(this.patientBlockURL + params.idTipoBloque + '/' + params.idBloque);
     }
 
-    
-    
-    /* Esto era lo viejo que hay que revisar*/ 
-    
+
+
+    /* Esto era lo viejo que hay que revisar*/
+
     // public getPacientesBloque(tipoClave: Number, clave: String): Observable<IListaMatcheo[]> {
     //     return this.http.get(this.duplicadosURL + "pacientes/" + tipoClave + "/" + clave)
     //         .map((res: Response) => res.json())
@@ -81,7 +81,6 @@ export class AuditoriaPorBloqueService {
     // }
 
     handleError(error: any) {
-        debugger;
         return Observable.throw(error.json().error || 'Server error');
     }
 
