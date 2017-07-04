@@ -230,6 +230,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     seleccionarConcepto(concepto) {
         this.resultados = [];
         this.searchTerm = '';
+
         this.evtData.emit(concepto);
     }
 }
