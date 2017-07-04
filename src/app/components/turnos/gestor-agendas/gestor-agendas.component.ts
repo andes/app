@@ -371,4 +371,10 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = true;
         }
     }
+
+    reasignacionManualEmit() {
+        this.showGestorAgendas = false;
+        this.showReasignarTurno = true;
+    }
+
 }

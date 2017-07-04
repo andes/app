@@ -106,9 +106,9 @@
                     <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
                         (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                 </div>
-                <!-- Muestra el panel de reasignación de turnos automático -->
+                <!-- Panel Reasignar Turnos Automático -->
                 <div *ngIf="showReasignarTurnoAutomatico">
-                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]"></reasignar-turno-automatico>
+                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignacionManualEmit)="reasignacionManualEmit($event)"></reasignar-turno-automatico>
                 </div>
 
             </plex-box>
@@ -134,5 +134,5 @@
 <revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
     (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
-<!-- Panel Reasignar Turnos -->
+<!-- Pantalla Reasignar Turnos Manual -->
 <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]"></reasignar-turno>

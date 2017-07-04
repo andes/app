@@ -16,6 +16,7 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoComponent implements OnInit {
+    agendasSimilares: IAgenda[];
 
     private _agendaAReasignar: any;
 
@@ -121,29 +122,39 @@ export class ReasignarTurnoComponent implements OnInit {
         this.serviceTurno.get(params).subscribe((agendas) => {
 
             let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
-            // if (indice === -1) {
             let candidatas = {
                 idTurno: idTurno,
                 agendas: agendas
             };
             this.agendasCandidatas = [... this.agendasCandidatas, candidatas];
-            // }
-            // console.log('agendasCandidatas', this.agendasCandidatas);
+        });
+    }
+
+    cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
+
+        let params = {
+
+        };
+
+        this.serviceAgenda.get({}).subscribe((agendas) => {
+            this.agendasSimilares = agendas;
         });
     }
 
     seleccionarCandidata(indiceTurno, i) {
+
         let turno = this.agendasCandidatas[indiceTurno].turno;
         let bloque = this.agendasCandidatas[indiceTurno].bloque;
         let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
         let tipoTurno;
+
         console.log('seleccionarCandidata ', agendaSeleccionada);
         console.log('seleccionarCandidata ', this.agendasCandidatas[indiceTurno]);
         // Si la agenda es del día
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-            // Si no es del dia, chequeo el estado para definir el tipo de turno
+            // Si no es del día, chequeo el estado para definir el tipo de turno
         } else {
             if (agendaSeleccionada.estado === 'disponible') {
                 tipoTurno = 'gestion';
