@@ -104,6 +104,8 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept) {
+        console.log('Ejecucion');
+        console.log(snomedConcept);
         this.conceptoSnomedSeleccionado = snomedConcept;
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
