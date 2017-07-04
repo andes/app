@@ -47,27 +47,14 @@
                 <header>
                     <div class="clearfix">
                         <div class="page-title">
-                            {{prestacion.solicitud.tipoPrestacion.term}}
+                            Buscador
                         </div>
                     </div>
                 </header>
 
                 <div class="row">
                     <div class="col">
-                        <!--Procedimientos
-                        <snomed-buscar [tipoBusqueda]="'procedimientos'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>-->
-                        <plex-button class="" title="Problemas" label="Problemas" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm"></plex-button>
-                        <plex-button class="" title="Procedimientos" label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm"></plex-button>
-                        <plex-button class="" title="Planes" label="Planes" (click)="busquedaPlanes()" type="primary btn-sm"></plex-button>
-                        Buscador {{tipoBusqueda}}
-                        <div *ngIf="!showPlanes">
-                            <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
-                        </div>
-
-                        <div *ngIf="showPlanes">
-                            <buscador-planes></buscador-planes>
-                        </div>
-
+                        <rup-buscador></rup-buscador>
                     </div>
                 </div>
             </plex-box>

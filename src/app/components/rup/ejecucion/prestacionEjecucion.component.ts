@@ -176,16 +176,16 @@ export class PrestacionEjecucionComponent implements OnInit {
         */
         this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
-    //Recibe el parametro y lo setea para realizar la busqueda en Snomed
-    filtroBuscadorSnomed(tipoBusqueda) {
-        this.showPlanes = false;// Oculta el buscador de planes
-        console.log(tipoBusqueda);
-        this.tipoBusqueda = tipoBusqueda;
-    }
-    //Muestra el buscador de planes
-    busquedaPlanes() {
-        this.tipoBusqueda = 'planes';
-        this.showPlanes = true;
-    }
+    // //Recibe el parametro y lo setea para realizar la busqueda en Snomed
+    // filtroBuscadorSnomed(tipoBusqueda) {
+    //     this.showPlanes = false;// Oculta el buscador de planes
+    //     console.log(tipoBusqueda);
+    //     this.tipoBusqueda = tipoBusqueda;
+    // }
+    // //Muestra el buscador de planes
+    // busquedaPlanes() {
+    //     this.tipoBusqueda = 'planes';
+    //     this.showPlanes = true;
+    // }
 
 }
