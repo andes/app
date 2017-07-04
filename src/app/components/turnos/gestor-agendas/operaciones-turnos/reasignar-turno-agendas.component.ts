@@ -45,6 +45,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.actualizar();
     }
 
     actualizar() {
@@ -57,13 +58,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     bloque.turnos.forEach(turno => {
                         if (turno.paciente) {
 
-                            let params = {
-                                idAgenda: this.agendasSimilares.id,
-                                idBloque: bloque.id,
-                                idTurno: turno.id
-                            };
+                            // let params = {
+                            //     idAgenda: this.agendasSimilares.id,
+                            //     idBloque: bloque.id,
+                            //     idTurno: turno.id
+                            // };
 
-                            this.serviceTurno.get(params).subscribe((agendas) => {
+                            this.serviceAgenda.get({}).subscribe((agendas) => {
                                 this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
                                 // this.calculosSimilitud(turno, agendas);
                                 // console.log('agendasCandidatas', this.agendasCandidatas);

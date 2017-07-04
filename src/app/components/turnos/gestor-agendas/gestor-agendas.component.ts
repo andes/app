@@ -19,6 +19,7 @@ import { enumToArray } from '../../../utils/enums';
 })
 
 export class GestorAgendasComponent implements OnInit {
+    showReasignarTurnoAgendas: boolean;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     agendasSeleccionadas: IAgenda[] = [];
@@ -378,9 +379,13 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    reasignacionManualEmit() {
+    reasignarTurnos() {
         this.showGestorAgendas = false;
         this.showReasignarTurno = true;
+    }
+
+    reasignarTurnosAgendas() {
+        this.showReasignarTurnoAgendas = true;
     }
 
 }

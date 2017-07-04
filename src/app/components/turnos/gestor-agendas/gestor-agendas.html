@@ -10,7 +10,7 @@
                         <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
                             (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
                             (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)"
-                            (revisionAgendaEmit)="revisionAgenda($event)">
+                            (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)">
                         </botones-agenda>
                     </div>
 
@@ -108,12 +108,11 @@
                 </div>
                 <!-- Panel Reasignar Turnos Automático -->
                 <div *ngIf="showReasignarTurnoAutomatico">
-                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignacionManualEmit)="reasignacionManualEmit($event)"></reasignar-turno-automatico>
+                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignacionManualEmit)="reasignacionManualEmitted($event)"></reasignar-turno-automatico>
                 </div>
 
             </plex-box>
         </div>
-
 
     </div>
 </section>
@@ -136,3 +135,4 @@
 
 <!-- Pantalla Reasignar Turnos Manual -->
 <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]"></reasignar-turno>
+<reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>

@@ -1,94 +1,80 @@
-<fieldset>
-    <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div class="row">
-        <div class="col-8">
-            <b>Priorizar por:</b>
-            <div class="input-group">
-                <div class="input-group-btn"><button class="btn btn-info btn-sm active">FECHA</button></div>
-                <div class="input-group-btn"><button class="btn btn-info btn-sm">DÍA</button></div>
-                <div class="input-group-btn"><button class="btn btn-info btn-sm">HORARIO</button></div>
-                <div class="input-group-btn"><button class="btn btn-secondary btn-sm">LIMPIAR</button></div>
-            </div>
-        </div>
-        <div class="col"></div>
-    </div>
-    <!--{{ agendaAReasignar | json}}-->
-    <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
-        <plex-accordion class="accordion-reasignar">
-            <!--Turno-->
-            <div *ngIf="agendaCandidata.length>0 && agendaCandidata.turno?.reasignado" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
-            <div *ngIf="agendaCandidata.length>0 && !agendaCandidata.turno?.reasignado" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
-            <plex-panel *ngIf="agendaCandidata.length>0" tituloPrincipal="Turno: {{ agendaCandidata.turno.horaInicio | date: 'dd/MM/yyyy' }} 
+<plex-box>
+    <fieldset>
+        <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
+        {{ agendasCandidatas | json }}
+        <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
+            <plex-accordion class="accordion-reasignar">
+                <!--Turno-->
+                <div *ngIf="agendaCandidata.length>0 && agendaCandidata.turno?.reasignado" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
+                <div *ngIf="agendaCandidata.length>0 && !agendaCandidata.turno?.reasignado" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
+                <plex-panel *ngIf="agendaCandidata.length>0" tituloPrincipal="Turno: {{ agendaCandidata.turno.horaInicio | date: 'dd/MM/yyyy' }} 
             {{ agendaCandidata.turno.horaInicio | date: 'HH:mm' }} hs.
             {{ agendaCandidata.turno.paciente | paciente }} |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
             {{ agendaAReasignar.profesionales[0]| profesional }} ">
-                <div class="list-group" *ngFor="let agenda of agendasCandidatas.agendas; let i = index">
+                    <div class="list-group" *ngFor="let agenda of agendasCandidatas.agendas; let i = index">
 
-                    <!-- Tiene turnos disponibles -->
-                    <ng-container>
-                        <!--Lista de turnos, bloque por bloque-->
-                        <div *ngFor="let bloque of bloques; let indiceBq = index">
-                            <div *ngIf="tieneTurnos(bloque)">
-                                <div *ngIf="bloque.descripcion">
-                                    <span>{{bloque.descripcion}}</span>
-                                    <!--<span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span>-->
+                        <!-- Tiene turnos disponibles -->
+                        <ng-container>
+                            <!--Lista de turnos, bloque por bloque-->
+                            <div *ngFor="let bloque of bloques; let indiceBq = index">
+                                <div *ngIf="tieneTurnos(bloque)">
+                                    <div *ngIf="bloque.descripcion">
+                                        <span>{{bloque.descripcion}}</span>
+                                        <!--<span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span>-->
+                                    </div>
+                                    <!--Tipos de turnos-->
+                                    <table class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
+                                        <thead>
+                                            <tr>
+                                                <td>Del día</td>
+                                                <td>Programados</td>
+                                                <td>Con llave</td>
+                                                <!--<td class="text-sm">Profesional</td>-->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{countBloques[indiceBq].delDia}}</td>
+                                                <td>{{countBloques[indiceBq].programado}}</td>
+                                                <td>{{countBloques[indiceBq].gestion}}</td>
+                                                <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <!--Tipos de turnos-->
-                                <table class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
-                                    <thead>
-                                        <tr>
-                                            <td>Del día</td>
-                                            <td>Programados</td>
-                                            <td>Con llave</td>
-                                            <!--<td class="text-sm">Profesional</td>-->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{countBloques[indiceBq].delDia}}</td>
-                                            <td>{{countBloques[indiceBq].programado}}</td>
-                                            <td>{{countBloques[indiceBq].gestion}}</td>
-                                            <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div *ngFor="let turno of bloque.turnos; let i = index">
-                                <ng-container *ngIf="turno.horaInicio >= hoy">
-                                    <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                                        <div *ngIf="turno.estado == 'disponible'" class="text-center mb-3 hover outline-dashed-default" [appHover]="'text-success outline-success'"
-                                            (click)="seleccionarTurno(bloque,i)">
-                                            {{turno.horaInicio | date: 'HH:mm'}}
-                                        </div>
-                                    </div>
-                                    <div *ngIf="bloque.pacienteSimultaneos">
-                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                                            <div class="col col-md-12">
-                                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                <div *ngFor="let turno of bloque.turnos; let i = index">
+                                    <ng-container *ngIf="turno.horaInicio >= hoy">
+                                        <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                                            <div *ngIf="turno.estado == 'disponible'" class="text-center mb-3 hover outline-dashed-default" [appHover]="'text-success outline-success'"
+                                                (click)="seleccionarTurno(bloque,i)">
+                                                {{turno.horaInicio | date: 'HH:mm'}}
                                             </div>
                                         </div>
-                                        <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
-                                    </div>
-                                    <div *ngIf="bloque.citarPorBloque">
-                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                                            <div class="col col-md-12">
-                                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                        <div *ngIf="bloque.pacienteSimultaneos">
+                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
+                                                <div class="col col-md-12">
+                                                    <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                                </div>
                                             </div>
+                                            <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
                                         </div>
-                                        <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
-                                    </div>
-                                </ng-container>
+                                        <div *ngIf="bloque.citarPorBloque">
+                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
+                                                <div class="col col-md-12">
+                                                    <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                                </div>
+                                            </div>
+                                            <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
+                                        </div>
+                                    </ng-container>
+                                </div>
                             </div>
-                        </div>
 
-                    </ng-container>
+                        </ng-container>
 
-                </div>
-            </plex-panel>
-        </plex-accordion>
-    </div>
-    <hr>
-    <div>
-        <plex-button type="primary" label="Reasignación Manual" (click)="reasignacionManual()"></plex-button>
-    </div>
-</fieldset>
+                    </div>
+                </plex-panel>
+            </plex-accordion>
+        </div>
+    </fieldset>
+</plex-box>

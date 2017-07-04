@@ -16,6 +16,7 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoComponent implements OnInit {
+    showReasignarTurno: boolean;
     agendasSimilares: IAgenda[];
 
     private _agendaAReasignar: any;
@@ -31,6 +32,7 @@ export class ReasignarTurnoComponent implements OnInit {
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
+    @Output() reasignacionManualAgendasEmit = new EventEmitter<boolean>();
 
     public turnoAReasignar: ITurno;
 
@@ -131,10 +133,7 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-
-        let params = {
-
-        };
+        let params = {};
 
         this.serviceAgenda.get({}).subscribe((agendas) => {
             this.agendasSimilares = agendas;
@@ -210,6 +209,10 @@ export class ReasignarTurnoComponent implements OnInit {
             });
         });
 
+    }
+
+    reasignacionManualAgendas() {
+        this.reasignacionManualAgendasEmit.emit(true);
     }
 
 
