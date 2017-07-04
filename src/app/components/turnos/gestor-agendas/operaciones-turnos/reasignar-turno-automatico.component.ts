@@ -59,7 +59,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                             idTurno: turno.id
                         };
 
-                        this.serviceTurno.get(params).subscribe((agendas) => {
+                        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
                             this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
                             this.calculosSimilitud(turno, agendas);
                             // console.log('agendasCandidatas', this.agendasCandidatas);
@@ -114,7 +114,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             idTurno: idTurno
         };
 
-        this.serviceTurno.get(params).subscribe((agendas) => {
+        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
 
             let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
             // if (indice === -1) {
