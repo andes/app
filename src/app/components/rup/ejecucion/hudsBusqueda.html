@@ -29,7 +29,7 @@
 
             <ul *ngIf="hallazgos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
