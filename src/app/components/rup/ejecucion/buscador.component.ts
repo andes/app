@@ -65,6 +65,7 @@ export class BuscadorComponent implements OnInit {
         this.showPlanes = false;// Oculta el buscador de planes
         console.log(tipoBusqueda);
         this.tipoBusqueda = tipoBusqueda;
+        // this.evtData.emit(tipoBusqueda);
     }
     //Muestra el buscador de planes
     busquedaPlanes() {
