@@ -22,7 +22,7 @@ export class BuscadorComponent implements OnInit {
     public searchPlanes: String = '';
     //Lista de planes.
     public listaPlanes: any[] = [];
-     // concepto snomed seleccionado del buscador a ejecutar
+    // concepto snomed seleccionado del buscador a ejecutar
     public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
@@ -78,8 +78,8 @@ export class BuscadorComponent implements OnInit {
         this.evtData.emit(concepto);
     }
 
-     // si hago clic en un concepto lo capturo y lo devuelvo
-     // Lo trae del buscador de SNOMED 
+    // si hago clic en un concepto lo capturo y lo devuelvo
+    // Lo trae del buscador de SNOMED 
     ejecutarConcepto(concepto) {
         console.log(concepto);
         this.evtData.emit(concepto);
