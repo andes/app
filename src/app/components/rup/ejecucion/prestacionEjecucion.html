@@ -27,7 +27,7 @@
 
                     <!--
                     <plex-accordion class="elementosRup">
-                        <div class="row" *ngFor="let elemento of registros">
+                        <div class="row" *ngFor="let elemento of registros; let i = index ">
 
                             <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
                                 <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
@@ -35,7 +35,6 @@
                                     <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado"
                                         (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                         || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-
                                     </rup>
 
                                 </plex-panel>
