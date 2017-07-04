@@ -5,7 +5,7 @@
 <plex-button class="" title="Planes" label="Planes" (click)="busquedaPlanes()" type="primary btn-sm"></plex-button>
 Buscador {{tipoBusqueda}}
 <div *ngIf="!showPlanes">
-    <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
+    <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="'registros-rup'" (evtData)="ejecutarConcepto($event)"></snomed-buscar>
 </div>
 
 <div *ngIf="showPlanes">

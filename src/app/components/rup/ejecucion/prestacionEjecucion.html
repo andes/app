@@ -17,11 +17,23 @@
                         </div>
                     </div>
                 </header>
-                <div droppable [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                <div droppable  [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
                      <p>
                         Arrastre aquí para vincularlos a esta consulta
                     </p>
                 </div>
+
+
+
+
+                <div droppable  [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area">
+                     <p>dfasf
+                        Asta consulta
+                    </p>
+                </div>
+
+
+
                 <div *ngIf="registros && registros.length">
 
 
