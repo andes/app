@@ -16,6 +16,10 @@ export class AgendaService {
         return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
     }
 
+    findCandidatas(params: any): Observable<any[]> {
+        return this.server.get(this.agendaUrl + '/candidatas', { params: params, showError: true });
+    }
+
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
     }

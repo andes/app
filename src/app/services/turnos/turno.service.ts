@@ -10,7 +10,7 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
-        return this.server.get(this.turnoUrl + '/turno/reasignar', { params: params, showError: true });
+        return this.server.get(this.turnoUrl + '/turno/' , { params: params, showError: true });
     }
 
     save(turno: any): Observable<any> {
