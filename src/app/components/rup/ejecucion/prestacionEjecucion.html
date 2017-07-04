@@ -18,10 +18,10 @@
                     </div>
                 </header>
 
-                <div *ngIf="ejecucion && ejecucion.length">
+                <div *ngIf="registros && registros.length">
 
                     <plex-accordion class="elementosRup">
-                        <div class="row" *ngFor="let elemento of ejecucion">
+                        <div class="row" *ngFor="let elemento of registros">
 
                             <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
                                 <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
@@ -67,7 +67,7 @@
                         <div *ngIf="showPlanes">
                             <buscador-planes></buscador-planes>
                         </div>
-                        
+
                     </div>
                 </div>
             </plex-box>

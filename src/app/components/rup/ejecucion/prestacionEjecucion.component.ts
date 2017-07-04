@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -42,7 +43,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
     public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
     public showPlanes: boolean = false;
-    public ejecucion: any[] = [];
+    public registros: any[] = [];
 
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -70,7 +71,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
-
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion);
                 });
 
@@ -83,6 +83,17 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
+
+    /**
+     * Carga un nuevo registro en el array en una posicion determinada
+     * 
+     * @param posicion: posicion donde cargar el nuevo registro
+     * @param registro: objeto a cargar en el array de registros
+     */
+    cargarRegistroEnPosicion(posicion: number, registro: any) {
+        this.registros.splice(posicion, 0, registro);
+    }
+
 
 
     /**
@@ -116,7 +127,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         // agregamos al array de ejecucion
-        this.ejecucion.push(data);
+        this.registros.push(data);
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
