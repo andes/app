@@ -85,7 +85,6 @@ import { AuditoriaService } from './services/auditoria/auditoria.service';
 import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
-import { servicioSintys } from '../../../api/utils/servicioSintys'; // DE LA API
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -226,9 +225,12 @@ import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditor
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+
+// USUARIO
+import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+
 
 
 export const RUP_COMPONENTS = [
@@ -320,75 +322,78 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 // Main module
 @NgModule({
-    imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HttpModule,
-        PlexModule,
-        Ng2DragDropModule,
-        routing,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        ConfirmationPopoverModule.forRoot({
-            confirmButtonType: 'danger' // set defaults here
-        })
-    ],
-    declarations: [
-        AppComponent, InicioComponent, LoginComponent,
-        OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        ProfesionalComponent, ProfesionalCreateUpdateComponent,
-        ProfesionalCreateUpdateComponent,
-        EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
-        TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
-        DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-        AgregarSobreturnoComponent, PanelAgendaComponent, DashboardTurnosComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
-        ...RUP_COMPONENTS,
-        LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-        AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-        HoverClassDirective
-    ],
-    entryComponents: RUP_COMPONENTS,
-    bootstrap: [AppComponent],
-    providers: [{
-        provide: LOCALE_ID,
-        useValue: 'es-AR'
-    },
-        Plex,
-        Auth,
-        RoutingGuard,
-        OrganizacionService,
-        ProvinciaService,
-        TipoEstablecimientoService,
-        EspecialidadService,
-        ProfesionalService,
-        PaisService,
-        LocalidadService,
-        BarrioService,
-        PacienteService,
-        FinanciadorService,
-        ParentescoService,
-        appRoutingProviders,
-        ConfigPrestacionService,
-        PlanificarAgendaComponent,
-        // EspacioFisicoComponent,
-        AgendaService,
-        TurnoService,
-        EspacioFisicoService,
-        ListaEsperaService,
-        Server,
-        SmsService,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
-        TipoPrestacionService,
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpModule,
+    PlexModule,
+    Ng2DragDropModule,
+    routing,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+    }),
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger' // set defaults here
+    })
+  ],
+
+  declarations: [
+    AppComponent, InicioComponent, LoginComponent,
+    OrganizacionComponent, OrganizacionCreateUpdateComponent,
+    ProfesionalComponent, ProfesionalCreateUpdateComponent,
+    ProfesionalCreateUpdateComponent,
+    EspecialidadComponent, EspecialidadCreateUpdateComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+    PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
+    DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
+    TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
+    AgregarSobreturnoComponent, PanelAgendaComponent, 
+    DashboardTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
+    ...RUP_COMPONENTS,
+    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
+    HoverClassDirective,
+    BusquedaUsuarioComponent
+  ],
+  entryComponents: RUP_COMPONENTS,
+  bootstrap: [AppComponent],
+  providers: [{
+    provide: LOCALE_ID,
+    useValue: 'es-AR'
+  },
+    Plex,
+    Auth,
+    RoutingGuard,
+    OrganizacionService,
+    ProvinciaService,
+    TipoEstablecimientoService,
+    EspecialidadService,
+    ProfesionalService,
+    PaisService,
+    LocalidadService,
+    BarrioService,
+    PacienteService,
+    FinanciadorService,
+    ParentescoService,
+    appRoutingProviders,
+    ConfigPrestacionService,
+    PlanificarAgendaComponent,
+    // EspacioFisicoComponent,
+    AgendaService,
+    TurnoService,
+    EspacioFisicoService,
+    ListaEsperaService,
+    Server,
+    SmsService,
+    PrestacionPacienteService,
+    ProblemaPacienteService,
+    TipoPrestacionService,
 
         ObservarDatosService,
         LlavesTipoPrestacionService,
@@ -402,10 +407,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         SnomedService,
         Cie10Service,
 
-        SisaService,
-        SintysService,
-        servicioSintys // de la api
-    ]
+    SisaService,
+    SintysService,
+  ]
 })
 
 export class AppModule { }

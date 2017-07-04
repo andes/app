@@ -148,6 +148,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showTurnos = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -182,6 +183,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
         this.loadAgendas();
     }
 
@@ -218,6 +220,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
     }
 
 
@@ -308,6 +311,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showRevisionAgenda = false;
             this.showTurnos = false;
             this.showReasignarTurno = false;
+            this.showReasignarTurnoAutomatico = false;
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
@@ -352,6 +356,8 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
         this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
+
         let temporal = this.agendasSeleccionadas;
         console.log('temporal ', temporal);
         this.showRevisionAgenda = false;

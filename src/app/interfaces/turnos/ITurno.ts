@@ -16,6 +16,17 @@ export interface ITurno {
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
     tipoTurno: String;
-    reasignado: String;
+    reasignado: {
+        anterior: {
+            idAgenda: String,
+            idBloque: String,
+            idTurno: String
+        }
+        siguiente: {
+            idAgenda: String,
+            idBloque: String,
+            idTurno: String
+        }
+    };
     nota: String;
 }
