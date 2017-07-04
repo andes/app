@@ -11,11 +11,11 @@ import { TurnoService } from '../../../../services/turnos/turno.service';
 import * as moment from 'moment';
 
 @Component({
-    selector: 'reasignar-turno',
-    templateUrl: 'reasignar-turno.html'
+    selector: 'reasignar-turno-automatico',
+    templateUrl: 'reasignar-turno-automatico.html'
 })
 
-export class ReasignarTurnoComponent implements OnInit {
+export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
     private _agendaAReasignar: any;
 
@@ -105,10 +105,6 @@ export class ReasignarTurnoComponent implements OnInit {
         // }
 
     }
-
-    // estaSeleccionado(turno: any) {
-    //     return this.turnosSeleccionados.indexOf(turno) >= 0;
-    // }
 
     cargarAgendasCandidatas(idAgendaAReasignar, idBloque, idTurno) {
 
@@ -200,8 +196,6 @@ export class ReasignarTurnoComponent implements OnInit {
         });
 
     }
-
-
 
 
     // cancelar() {

@@ -117,6 +117,7 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { LiberarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/liberar-turno.component';
 import { SuspenderTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/suspender-turno.component';
 import { ReasignarTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar-turno.component';
+import { ReasignarTurnoAutomaticoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/reasignar-turno-automatico.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
@@ -347,7 +348,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, ReasignarTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
+        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent, DashboardTurnosComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria1Component, Auditoria2Component,
         ...RUP_COMPONENTS,

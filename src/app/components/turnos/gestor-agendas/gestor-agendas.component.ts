@@ -26,6 +26,7 @@ export class GestorAgendasComponent implements OnInit {
     public showGestorAgendas = true;
     public showTurnos = false;
     public showReasignarTurno = false;
+    public showReasignarTurnoAutomatico = false;
     public showBotonesAgenda = false;
     public showClonar = false;
     public showDarTurnos = false;
@@ -310,7 +311,8 @@ export class GestorAgendasComponent implements OnInit {
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
-                this.showReasignarTurno = true;
+                // this.showGestorAgendas = false;
+                this.showReasignarTurnoAutomatico = true;
             } else {
                 this.showTurnos = true;
             }
