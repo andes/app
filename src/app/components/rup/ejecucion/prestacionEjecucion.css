@@ -20,8 +20,13 @@
     width: 100%;
     display: flex;
     border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.rup-card.mini {
     margin-bottom: -1px;
 }
+
 .rup-card .type {
     padding: 5px;
     width: 20px;
@@ -61,7 +66,6 @@
 
 }
 
-
 .problemas {
     background-color: #34a;
 }
@@ -94,7 +98,7 @@
     border-color: #92278E;
 }
 
-
+/* drag and drop */
 .drag-over-border {
     border: #ff525b dashed 2px;
 }
@@ -121,13 +125,22 @@
 }
 
 .drop-area {
-    height: calc(100vh - 410px);
+    min-height: 50px;
 }
 
 .drop-area p {
     font-size: 20px;
     margin: 0;
-    padding: calc(calc(100vh - 480px) / 2) 60px;
     text-align: center;
 }
 
+
+
+
+.spin::before {
+     -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}

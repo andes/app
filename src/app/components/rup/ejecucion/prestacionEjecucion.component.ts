@@ -48,8 +48,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoARelacionar = [];
 
     //Variable para mostrar el div dropable en el momento que se hace el drag
-    public isDraggingConcepto: boolean = false;
+    public isDraggingConcepto: Boolean = false;
 
+    public elementosRUPcollapse: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -151,6 +152,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // agregamos al array de registros
         this.cargarRegistroEnPosicion(this.registros.length, data);
+
+        this.elementosRUPcollapse.push(this.data);
+        this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
     }
 
     ejecutarConceptoHuds(resultadoHuds) {

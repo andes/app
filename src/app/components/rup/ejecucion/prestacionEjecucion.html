@@ -17,6 +17,7 @@
                         </div>
                     </div>
                 </header>
+
                 <div droppable  [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
                      <p>
                         Arrastre aquí para vincularlos a esta consulta
@@ -25,25 +26,7 @@
 
                 <div *ngIf="registros && registros.length">
 
-
-                    <!--
-                    <plex-accordion class="elementosRup">
-                        <div class="row" *ngFor="let elemento of registros; let i = index ">
-
-                            <div class="col {{elemento.tipo}}" *ngIf="elemento.elementoRUP">
-                                <plex-panel tituloPrincipal="{{elemento.concepto.term}}">
-
-                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado"
-                                        (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
-                                        || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-                                    </rup>
-
-                                </plex-panel>
-                            </div>
-                        </div>
-                    </plex-accordion>
-                    -->
-                    <ng-container *ngFor="let elemento of registros">
+                    <ng-container *ngFor="let elemento of registros; let i = index">
                         <div class="rup-card" *ngIf="elemento.elementoRUP">
                             <div class="type {{elemento.tipo}}">
                                 <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
@@ -55,40 +38,21 @@
                                     </div>
 
                                     <div class="actions">
+                                        <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
 
+                                            <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : elementosRUPcollapse[i]}"></i>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="rup-body">
+
+                                <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
                                     <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                             || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-
                                     </rup>
                                 </div>
                             </div>
                         </div>
                     </ng-container>
-
-<!--
-                            <div class="concepto" *ngIf="elemento.elementoRUP">
-                                <div class="header">
-                                    <div class="indicadorTipo {{elemento.concepto.term}}">
-                                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
-                                    </div>
-
-                                    <div class="nombre">
-                                        {{elemento.concepto.term}}
-
-                                    </div>
-
-                                </div>
-                                <div class="content">
-                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
-                                        || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-
-                                    </rup>
-                                </div>
-                            </div>
--->
 
                 </div>
             </plex-box>
