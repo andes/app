@@ -8,19 +8,19 @@
                     </header>
                     <div>
                         <ul class="list-group">
-                            <li draggable *ngFor="let paciente of pacientesDesvinculados" [dragData]="paciente" [dragOverClass]="'drag-over-border'"
+                            <li draggable *ngFor="let pac of pacientesDesvinculados" [dragData]="pac" [dragOverClass]="'drag-over-border'"
                                 (onDragStart)="arrastrandoPaciente(false)" (onDragEnd)="arrastrandoPaciente(true)">
                                 <div class="card invertHover">
                                     <h4 style="text-align: right"><i class="mdi mdi-link-variant-off mdi-hover-hidden"></i>
-                                        <i (click)="vincularPacienteClic(paciente)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
+                                        <i (click)="vincularPacienteClic(pac)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
                                     </h4>
                                     <div class="card-block">
-                                        <h4 class="card-title">{{paciente.apellido | uppercase}} {{paciente.nombre | uppercase}} </h4>
-                                        <div>DU: {{paciente.documento}}</div>
-                                        <div>Fecha Nac.:{{paciente.fechaNacimiento | fecha }}</div>
-                                        <div>Sexo: {{paciente.sexo}}</div>
-                                        <div>Similitud: <span class="badge badge-default">{{paciente.matching}}%</span></div>
-                                        <div class={{paciente.estado}}> {{paciente.estado | uppercase}}</div>
+                                        <h4 class="card-title">{{pac.paciente.apellido | uppercase}} {{pac.paciente.nombre | uppercase}} </h4>
+                                        <div>DU: {{pac.paciente.documento}}</div>
+                                        <div>Fecha Nac.:{{pac.paciente.fechaNacimiento | fecha }}</div>
+                                        <div>Sexo: {{pac.paciente.sexo}}</div>
+                                        <div>Similitud: <span class="badge badge-default">{{pac.matching}}%</span></div>
+                                        <div class={{pac.paciente.estado}}> {{pac.paciente.estado | uppercase}}</div>
                                     </div>
                                 </div>
                             </li>
@@ -35,17 +35,18 @@
                     </header>
                     <div droppable css="droppable" (onDrop)="vincularPacienteDrop($event)" [dragOverClass]="'drag-target-border'">
                         <ul class="list-group">
-                            <li *ngFor="let paciente of pacientesVinculados">
+                            <li *ngFor="let pac of pacientesVinculados">
                                 <div class="card invertHover">
                                     <h4 style="text-align: right"><i class="mdi mdi-link-variant mdi-hover-hidden"></i>
-                                        <i (click)="desvincularPaciente(paciente)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
+                                        <i (click)="desvincularPaciente(pac)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
                                     </h4>
                                     <div class="card-block">
-                                        <h4 class="card-title">{{paciente.apellido}} {{paciente.nombre}} </h4>
-                                        <div>DU: {{paciente.documento}}</div>
-                                        <div>Fecha Nac.: {{paciente.fechaNacimiento | fecha }}</div>
-                                        <div>Sexo: {{paciente.sexo}}</div>
-                                        <div class={{paciente.estado}}> {{paciente.estado | uppercase }}</div>
+                                        <h4 class="card-title">{{pac.paciente.apellido}} {{pac.paciente.nombre}} </h4>
+                                        <div>DU: {{pac.paciente.documento}}</div>
+                                        <div>Fecha Nac.: {{pac.paciente.fechaNacimiento | fecha }}</div>
+                                        <div>Sexo: {{pac.paciente.sexo}}</div>
+                                        <div>Similitud: <span class="badge badge-default">{{pac.matching}}%</span></div>
+                                        <div class={{pac.paciente.estado}}> {{pac.paciente.estado | uppercase }}</div>
                                     </div>
                                 </div>
                             </li>

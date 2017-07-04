@@ -60,6 +60,14 @@ export class Auditoria2Component implements OnInit {
     pacientesAudit: any[];
     pacientesVinculados = [];
     pacientesDesvinculados = [];
+    match = new matching();
+    weights = { 
+                identity: 0.3,
+                name: 0.3,
+                gender: 0.1,
+                birthDate: 0.3
+        };
+    tipoDeMatching = 'Levenshtein';
     
     // definición de parametros de I/O
     @Input() pacienteInput: any;
@@ -108,7 +116,17 @@ export class Auditoria2Component implements OnInit {
             idVinculados.forEach(identificador => {
                 if (identificador.entidad === 'ANDES') {
                     this.pacienteService.getById(identificador.valor).subscribe(pac => {
-                        this.pacientesVinculados.push(pac);
+                        debugger;
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, pac,  this.weights, this.tipoDeMatching);
+                        let patient = {
+                            matching : 0,
+                            paciente : null
+                        };
+                        if (porcentajeMatching) {
+                            patient.matching = porcentajeMatching * 100;
+                            patient.paciente = pac;
+                        }
+                        this.pacientesVinculados.push(patient);
                     })
                 }
             });
@@ -122,14 +140,7 @@ export class Auditoria2Component implements OnInit {
      * @memberof Auditoria2Component
      */
     loadPacientePorBloque() {
-        let match = new matching();
-        let weights = { 
-                identity: 0.3,
-                name: 0.3,
-                gender: 0.1,
-                birthDate: 0.3
-        };
-        let tipoDeMatching = 'Levenshtein';
+        
         let tipoClave: number = 4; //Soundex Apellido
         let dto: any = {
             idTipoBloque: tipoClave,
@@ -141,10 +152,15 @@ export class Auditoria2Component implements OnInit {
                 rta.forEach(element => {
                     if (element.id !== this.pacienteSelected.id) {
                         // Aplicamos match de pacientes y filtramos por mayores al 70%
-                        let porcentajeMatching = match.matchPersonas(this.pacienteSelected, element,  weights, tipoDeMatching);
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, element,  this.weights, this.tipoDeMatching);
+                        let patient = {
+                            matching : 0,
+                            paciente : null
+                        };
                         if (porcentajeMatching > 0.7) {
-                            element.matching = porcentajeMatching * 100;
-                            this.pacientesDesvinculados.push(element)
+                            patient.matching = porcentajeMatching * 100;
+                            patient.paciente = element;
+                            this.pacientesDesvinculados.push(patient)
                         }
                         
                     }
@@ -198,11 +214,11 @@ export class Auditoria2Component implements OnInit {
      * @param {*} paciente : El paciente a vincualar
      * @memberof Auditoria2Component
      */
-    vincular(paciente: any) {
+    vincular(pac: any) {
         /* Acá hacemos el put con el update de los pacientes */
         let dataLink = {
             entidad: 'ANDES',
-            valor: paciente.id
+            valor: pac.paciente.id
         };
         this.pacienteService.patch(this.pacienteSelected.id, {
             'op': 'linkIdentificadores',
@@ -210,7 +226,7 @@ export class Auditoria2Component implements OnInit {
         }).subscribe(resultado => {
             if (resultado) {
                 let activo = false;
-                this.pacienteService.patch(paciente.id, {
+                this.pacienteService.patch(pac.paciente.id, {
                     'op': 'updateActivo',
                     'dto': activo
                 }).subscribe(resultado2 => {
@@ -237,12 +253,12 @@ export class Auditoria2Component implements OnInit {
                 this.pacientesDesvinculados.push(pac);
                 this.pacienteService.patch(this.pacienteSelected.id, {
                     'op': 'unlinkIdentificadores',
-                    'dto': pac.id
+                    'dto': pac.paciente.id
                 }).subscribe(resultado => {
                     if (resultado) {
                         // Activa el paciente
                         let activo = true;
-                        this.pacienteService.patch(pac.id, {
+                        this.pacienteService.patch(pac.paciente.id, {
                             'op': 'updateActivo',
                             'dto': activo
                         }).subscribe(resultado2 => {
