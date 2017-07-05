@@ -84,7 +84,7 @@ export class PrestacionPacienteService {
      */
     getByHallazgoPaciente(idPaciente: String): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
-            debugger;
+
             let registros = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
@@ -95,6 +95,7 @@ export class PrestacionPacienteService {
             });
             let registroSalida = [];
             registros.forEach(registro => {
+                debugger;
                 let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
                 if (!registroEncontrado) {
                     let dato = {
@@ -112,7 +113,6 @@ export class PrestacionPacienteService {
                     registroSalida.push(dato);
                 } else {
                     registroEncontrado.evoluciones.push(registro.valor);
-                    registroSalida.push(registroEncontrado);
                 }
 
             });

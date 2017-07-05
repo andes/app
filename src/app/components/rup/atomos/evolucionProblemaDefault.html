@@ -19,9 +19,9 @@
     <div class="row">
         <div class="col-12">
             <label class="box-title-secundario" for="comment">Descripción</label>
-            <small class="invert">Examen físico, intensidad, frecuencia, parte del cuerpo afectada, síntomas y otras observaciones</small>
+            <small class="">Examen físico, intensidad, frecuencia, parte del cuerpo afectada, síntomas y otras observaciones</small>
             <hr>
-            <textarea class="form-control-invert" rows="4" id="descripcion" [(ngModel)]="data[elementoRUP.key].descripcion" [required]="true" name="descripcion" placeholder="Escriba sólo detalles permanentes/semipermanentes del problema" (keyup)="devolverValores()">
+            <textarea class="form-control" rows="4" id="descripcion" [(ngModel)]="data[elementoRUP.key].descripcion" [required]="true" name="descripcion" placeholder="Escriba sólo detalles permanentes/semipermanentes del problema" (keyup)="devolverValores()">
             </textarea>
         </div>
     </div>
@@ -29,21 +29,23 @@
     <!--INICIO ESTIMADO DEL PROBLEMA-->
     <div class="row">
         <!--FECHA ESTIMADA-->
-        <div class="col-6 list-inline">
+        <div class="col list-inline">
             <label class="box-title-secundario">Fecha estimada</label>
             <div class="row">
                 <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
                 <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true"  (change)="calcularFecha()"></plex-select>
             </div>
         </div>
+    </div>
+    <div class="row">
         <!--ESTADO DEL PROBLEMA-->
-        <div class="col-2">
+        <div class="col">
             <label class="box-title-secundario">Estado actual</label>
             <plex-select [(ngModel)]="data[elementoRUP.key].estado" name="estadoActual" [data]="estados" [required]="true" (change)="devolverValores()">
             </plex-select>
         </div>
         <!--ES CRONICO?-->
-        <div class="col-4">
+        <div class="col">
             <plex-bool [(ngModel)]="data[elementoRUP.key].esCronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
         </div>
     </div>
@@ -55,7 +57,7 @@
         <div class="col-12">
             <label class="box-title-secundario" for="comment">Evolución</label>
             <hr>
-            <textarea class="form-control-invert" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea>
+            <textarea class="form-control" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea>
         </div>
     </div>
 </div>
