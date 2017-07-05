@@ -43,7 +43,33 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     };
 
-    public dataPermisos: any[] = [];
+    public dataPermisos: any[] = [
+        {
+            'id': '1',
+            'codigo': 1,
+            'nombre': 'MPI-Lectura'
+        },
+        {
+            'id': '2',
+            'codigo': 2,
+            'nombre': 'MPI-Escritura'
+        },
+        {
+            'id': '3',
+            'codigo': 3,
+            'nombre': 'Turnos'
+        },
+        {
+            'id': '4',
+            'codigo': 4,
+            'nombre': 'Auditoria'
+        },
+        {
+            'id': '5',
+            'codigo': 5,
+            'nombre': 'Agendas'
+        },
+    ];
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
@@ -53,9 +79,9 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.provinciaService.get({}).subscribe(rta => {
-            this.dataPermisos = rta;
-        });
+        // this.provinciaService.get({}).subscribe(rta => {
+        //     this.dataPermisos = rta;
+        // });
 
         if (this.seleccion) {
             this.loadUser();
@@ -80,6 +106,5 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     onCancel() {
-        this.selected.emit(null);
     }
 }
