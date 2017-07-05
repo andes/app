@@ -16,6 +16,8 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoComponent implements OnInit {
+    showReasignarTurno: boolean;
+    agendasSimilares: IAgenda[];
 
     private _agendaAReasignar: any;
 
@@ -30,10 +32,11 @@ export class ReasignarTurnoComponent implements OnInit {
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
+    @Output() reasignacionManualAgendasEmit = new EventEmitter<boolean>();
 
     public turnoAReasignar: ITurno;
 
-    agendasCandidatas: any[] = [];
+    turnosAReasignar: any[] = [];
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
@@ -47,7 +50,7 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     actualizar() {
-        this.agendasCandidatas = [];
+        this.turnosAReasignar = [];
         if (this.agendaAReasignar) {
             this.agendaAReasignar.bloques.forEach(bloque => {
                 bloque.turnos.forEach(turno => {
@@ -60,9 +63,9 @@ export class ReasignarTurnoComponent implements OnInit {
                         };
 
                         this.serviceTurno.get(params).subscribe((agendas) => {
-                            this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
+                            this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                             this.calculosSimilitud(turno, agendas);
-                            // console.log('agendasCandidatas', this.agendasCandidatas);
+                            // console.log('turnosAReasignar', this.turnosAReasignar);
                         });
                     }
 
@@ -110,7 +113,7 @@ export class ReasignarTurnoComponent implements OnInit {
     //     return this.turnosSeleccionados.indexOf(turno) >= 0;
     // }
 
-    cargarAgendasCandidatas(idAgendaAReasignar, idBloque, idTurno) {
+    cargarturnosAReasignar(idAgendaAReasignar, idBloque, idTurno) {
 
         let params = {
             idAgenda: idAgendaAReasignar,
@@ -120,30 +123,37 @@ export class ReasignarTurnoComponent implements OnInit {
 
         this.serviceTurno.get(params).subscribe((agendas) => {
 
-            let indice = this.agendasCandidatas.find(x => x.idTurno === idTurno);
-            // if (indice === -1) {
+            let indice = this.turnosAReasignar.find(x => x.idTurno === idTurno);
             let candidatas = {
                 idTurno: idTurno,
                 agendas: agendas
             };
-            this.agendasCandidatas = [... this.agendasCandidatas, candidatas];
-            // }
-            // console.log('agendasCandidatas', this.agendasCandidatas);
+            this.turnosAReasignar = [... this.turnosAReasignar, candidatas];
+        });
+    }
+
+    cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
+        let params = {};
+
+        this.serviceAgenda.get({}).subscribe((agendas) => {
+            this.agendasSimilares = agendas;
         });
     }
 
     seleccionarCandidata(indiceTurno, i) {
-        let turno = this.agendasCandidatas[indiceTurno].turno;
-        let bloque = this.agendasCandidatas[indiceTurno].bloque;
-        let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
+
+        let turno = this.turnosAReasignar[indiceTurno].turno;
+        let bloque = this.turnosAReasignar[indiceTurno].bloque;
+        let agendaSeleccionada = this.turnosAReasignar[indiceTurno].agendas[i];
         let tipoTurno;
+
         console.log('seleccionarCandidata ', agendaSeleccionada);
-        console.log('seleccionarCandidata ', this.agendasCandidatas[indiceTurno]);
+        console.log('seleccionarCandidata ', this.turnosAReasignar[indiceTurno]);
         // Si la agenda es del día
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-            // Si no es del dia, chequeo el estado para definir el tipo de turno
+            // Si no es del día, chequeo el estado para definir el tipo de turno
         } else {
             if (agendaSeleccionada.estado === 'disponible') {
                 tipoTurno = 'gestion';
@@ -201,6 +211,13 @@ export class ReasignarTurnoComponent implements OnInit {
 
     }
 
+    reasignacionManualAgendas() {
+        this.reasignacionManualAgendasEmit.emit(true);
+    }
+
+    volverAlgestor() {
+        this.reasignacionManualAgendasEmit.emit(true);
+    }
 
 
 

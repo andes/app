@@ -1,35 +1,35 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <!-- Header -->
-            <div class="col">
-                <plex-box>
-                    <header>
-                        <!-- Títulos / Botones -->
-                        <div class="clearfix">
-                            <div class="page-title float-left">REASIGNACIÓN MANUAL DE TURNOS</div>
-                        </div>
-                    </header>
-
-                    <!--Resultados-->
-                    <div *ngIf="!agendaAReasignar.length" class="alert alert-default">
-                        <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
+<section>
+    <div class="row">
+        <!-- Header -->
+        <div class="col">
+            <plex-box>
+                <header>
+                    <!-- Títulos / Botones -->
+                    <div class="clearfix">
+                        <div class="page-title float-left">REASIGNACIÓN MANUAL DE TURNOS</div>
                     </div>
+                </header>
 
-                    <!--Turnos-->
-                    <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
-                        <thead *ngIf="bloque.descripcion">
-                            <tr>
-                                <th colspan="4">{{bloque.descripcion}}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
-                                <td (click)="cargarAgendasCandidatas(agendaAReasignar.id, bloque.id, turno.id)">
+                <!--Resultados-->
+                <div *ngIf="!agendaAReasignar?.horaInicio" class="alert alert-default">
+                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
+                </div>
+
+                <!--Turnos-->
+                <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
+                    <thead *ngIf="bloque.descripcion">
+                        <tr>
+                            <th colspan="4">{{bloque.descripcion}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
+                            <div *ngIf="turno.estado === 'asignado'">
+                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
                                     <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                 </td>
-                                <td (click)="cargarAgendasCandidatas(agendaAReasignar.id, bloque.id, turno.id)">
+                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
                                     <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
                                     <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
                                     <small>
@@ -44,18 +44,24 @@
                                     <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
                                     <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                 </td>
-                                <td (click)="cargarAgendasCandidatas(agendaAReasignar.id, bloque.id, turno.id)">
+                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
                                 </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
 
-                </plex-box>
-            </div>
-            <div *ngIf="1 === 2" class="col">
-            </div>
+            </plex-box>
         </div>
-    </section>
-</form>
+        <div *ngIf="agendasSimilares?.length" class="col">
+            <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+        </div>
+    </div>
+</section>
+
+<!--Footer-->
+<footer *ngIf="autorizado">
+    <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="volverAlgestor()"></plex-button>
+</footer>
