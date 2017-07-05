@@ -1,3 +1,4 @@
+import { UsuarioService } from './services/usuarios/usuario.service';
 /*
 @jgabriel | 04-03-2017
 
@@ -404,6 +405,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
     SisaService,
     SintysService,
+
+    UsuarioService
   ]
 })
 
