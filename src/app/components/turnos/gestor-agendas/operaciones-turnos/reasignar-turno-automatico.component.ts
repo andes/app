@@ -56,13 +56,15 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                         let params = {
                             idAgenda: this.agendaAReasignar.id,
                             idBloque: bloque.id,
-                            idTurno: turno.id
+                            idTurno: turno.id,
+                            duracion: true,
+                            horario: true
                         };
 
                         this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
                             this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
                             this.calculosSimilitud(turno, agendas);
-                            // console.log('agendasCandidatas', this.agendasCandidatas);
+                            console.log('agendasCandidatas', this.agendasCandidatas);
                         });
                     }
 
@@ -72,12 +74,14 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
     interseccion(array1: any[], array2: any[]) {
+
         for (let i = 0; i < array1.length; i++) {
             let prof1 = array1[i];
             if (array2.find(x => String(x._id) === String(prof1._id))) {
                 return true;
             }
         }
+
     }
 
     calculosSimilitud(turno: ITurno, agendas: any[]) {
@@ -100,10 +104,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             ag.similitud = calculos;
         });
 
-        // if (calculos > 0) {
-        //     return calculos;
-        // }
-
     }
 
     cargarAgendasCandidatas(idAgendaAReasignar, idBloque, idTurno) {
@@ -111,7 +111,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let params = {
             idAgenda: idAgendaAReasignar,
             idBloque: idBloque,
-            idTurno: idTurno
+            idTurno: idTurno,
+            duracion: true,
+            horario: true
         };
 
         this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
@@ -133,8 +135,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let bloque = this.agendasCandidatas[indiceTurno].bloque;
         let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
         let tipoTurno;
-        console.log('seleccionarCandidata ', agendaSeleccionada);
-        console.log('seleccionarCandidata ', this.agendasCandidatas[indiceTurno]);
+
         // Si la agenda es del día
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
@@ -159,7 +160,13 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             paciente: turno.paciente,
             tipoPrestacion: turno.tipoPrestacion,
             tipoTurno: tipoTurno,
-            // reasignacion: this.agendaAReasignar.id
+            reasignado: {
+                anterior: {
+                    idAgenda: this.agendaAReasignar.id,
+                    idBloque: bloque.id,
+                    idTurno: turno.id
+                }
+            }
         };
         console.log('datosTurno ', datosTurno);
         this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
@@ -172,7 +179,18 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             operacion.subscribe(resultado => {
                 // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
                 let turnoReasignado = turno;
-                turnoReasignado.reasignado = agendaSeleccionada._id;
+                let siguiente = {
+                    idAgenda: agendaSeleccionada._id,
+                    idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
+                    idTurno: agendaSeleccionada.bloques[indiceBloque].turnos[indTurno]._id
+                }
+                if (turnoReasignado.reasignado) {
+                    turnoReasignado.reasignado.siguiente = siguiente;
+                } else {
+                    turnoReasignado.reasignado = {
+                        siguiente: siguiente
+                    };
+                }
                 let reasignacion = {
                     idAgenda: this.agendaAReasignar.id,
                     idTurno: turno.id,
