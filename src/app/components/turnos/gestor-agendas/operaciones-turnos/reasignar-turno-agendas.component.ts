@@ -116,7 +116,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                             this.serviceAgenda.get({}).subscribe((agendas) => {
                                 this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                                 // this.calculosSimilitud(turno, agendas);
-                                // console.log('turnosAReasignar', this.turnosAReasignar);
                             });
                         }
 
@@ -166,7 +165,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let params = {
             idAgenda: idagendasSimilares,
             idBloque: idBloque,
-            idTurno: idTurno
+            idTurno: idTurno,
+            horario: true,
+            duracion: false
         };
 
         this.serviceTurno.get(params).subscribe((agendas) => {
@@ -257,8 +258,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
     }
 
-    existePrestacion(bloque: IBloque, idPrestacion: string) {
-        return bloque.tipoPrestaciones.find(tp => tp.id === idPrestacion);
+    existePrestacion(bloque: any, idPrestacion: string) {
+        return bloque.tipoPrestaciones.find((tp) => {
+            return tp._id === idPrestacion;
+        });
     }
 
     primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {

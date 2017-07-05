@@ -140,14 +140,27 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
+        // let params = {
+        //     fechaDesde: new Date(),
+        //     estados: ['publicada', 'disponible']
+        // };
+
+        // this.serviceAgenda.get(params).subscribe((agendas) => {
+        //     this.agendasSimilares = agendas;
+        // });
+
         let params = {
-            fechaDesde: new Date(),
-            estados: ['publicada', 'disponible']
+            idAgenda: idAgendaAReasignar,
+            idBloque: idBloque,
+            idTurno: idTurno
         };
 
-        this.serviceAgenda.get(params).subscribe((agendas) => {
+        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
             this.agendasSimilares = agendas;
+            console.log('agendasSimilares', this.agendasSimilares);
         });
+
+
     }
 
     seleccionarTurno(turno, bloque, multiple = false, sobreturno) {
