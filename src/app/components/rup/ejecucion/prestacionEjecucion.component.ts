@@ -145,8 +145,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'problema':
                 data.tipo = 'problemas';
                 break;
-            case 'procedimiento':
-                data.tipo = (this.tipoBusqueda) ? 'planes' : 'procedimientos';
+            case ('procedimiento'):
+                if (this.tipoBusqueda === 'procedimientos') {
+                    data.tipo = 'procedimientos';
+                } else {
+                    data.tipo = 'planes';
+                }
+                // data.tipo = (this.tipoBusqueda) ? 'planes' : 'procedimientos';
                 break;
         }
 
@@ -217,9 +222,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     onConceptoDrop(e: any) {
-        console.log('onConceptoDrop');
-        console.log(e.dragData);
-        debugger;
         if (e.dragData.tipo) {
             switch (e.dragData.tipo) {
                 case 'prestacion':
@@ -241,6 +243,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
+    }
+    recibeTipoBusqueda(tipoDeBusqueda) {
+        this.tipoBusqueda = tipoDeBusqueda;
     }
 
 }
