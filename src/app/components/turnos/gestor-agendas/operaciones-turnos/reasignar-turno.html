@@ -19,17 +19,16 @@
                 <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
                     <thead *ngIf="bloque.descripcion">
                         <tr>
-                            <th colspan="4">{{bloque.descripcion}}
-                            </th>
+                            <th colspan="4">{{bloque.descripcion}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
                             <div *ngIf="turno.estado === 'asignado'">
-                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
+                                <td (click)="seleccionarTurno(turno, bloque, true, false)">
                                     <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                 </td>
-                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
+                                <td (click)="seleccionarTurno(turno, bloque, true, false)">
                                     <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
                                     <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
                                     <small>
@@ -44,7 +43,7 @@
                                     <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
                                     <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                 </td>
-                                <td (click)="cargarAgendasSimilares(agendaAReasignar.id, bloque.id, turno.id)">
+                                <td (click)="seleccionarTurno(turno, bloque, true, false)">
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
                                 </td>
@@ -55,13 +54,18 @@
 
             </plex-box>
         </div>
-        <div *ngIf="agendasSimilares?.length" class="col">
-            <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+        <div *ngIf="agendasSimilares?.length" class="col-8">
+            <plex-box>
+                <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+            </plex-box>
         </div>
     </div>
+    <!--Footer-->
+    <footer *ngIf="autorizado">
+        <div class="row">
+            <div class="col">
+                <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="volverAlgestor()"></plex-button>
+            </div>
+        </div>
+    </footer>
 </section>
-
-<!--Footer-->
-<footer *ngIf="autorizado">
-    <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="volverAlgestor()"></plex-button>
-</footer>

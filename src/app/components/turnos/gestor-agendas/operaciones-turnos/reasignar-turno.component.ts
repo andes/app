@@ -37,6 +37,8 @@ export class ReasignarTurnoComponent implements OnInit {
     public turnoAReasignar: ITurno;
 
     turnosAReasignar: any[] = [];
+    turnosSeleccionados: any[] = [];
+
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
@@ -74,6 +76,11 @@ export class ReasignarTurnoComponent implements OnInit {
         }
     }
 
+    /**
+     * 
+     * @param array1 
+     * @param array2 
+     */
     interseccion(array1: any[], array2: any[]) {
         for (let i = 0; i < array1.length; i++) {
             let prof1 = array1[i];
@@ -133,11 +140,37 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-        let params = {};
+        let params = {
+            fechaDesde: new Date(),
+            estados: ['publicada', 'disponible']
+        };
 
-        this.serviceAgenda.get({}).subscribe((agendas) => {
+        this.serviceAgenda.get(params).subscribe((agendas) => {
             this.agendasSimilares = agendas;
         });
+    }
+
+    seleccionarTurno(turno, bloque, multiple = false, sobreturno) {
+        turno.sobreturno = sobreturno;
+
+        if (!multiple) {
+            this.turnosSeleccionados = [];
+            this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+        } else {
+            if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
+                this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
+                this.turnosSeleccionados = [... this.turnosSeleccionados];
+            } else {
+                this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
+            }
+        }
+
+        this.turnosSeleccionados.sort((a, b) => {
+            return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
+        });
+
+        this.cargarAgendasSimilares(this.agendaAReasignar.id, bloque.id, turno.id);
+
     }
 
     seleccionarCandidata(indiceTurno, i) {
@@ -218,16 +251,5 @@ export class ReasignarTurnoComponent implements OnInit {
     volverAlgestor() {
         this.reasignacionManualAgendasEmit.emit(true);
     }
-
-
-
-    // cancelar() {
-    //     this.cancelaSuspenderTurno.emit(true);
-    //     this.turnoAReasignar = null;
-    // }
-
-    // cerrar() {
-    //     // this.saveSuspenderTurno.emit(this.agenda);
-    // }
 
 }
