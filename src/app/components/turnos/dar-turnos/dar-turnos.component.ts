@@ -33,7 +33,11 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 })
 
 export class DarTurnosComponent implements OnInit {
+
     private _reasignaTurnos: any;
+    private _pacienteSeleccionado: any;
+    paciente: IPaciente;
+
     @Input('reasignar')
     set reasignar(value: any) {
         this._reasignaTurnos = value;
@@ -41,9 +45,19 @@ export class DarTurnosComponent implements OnInit {
     get reasignar(): any {
         return this._reasignaTurnos;
     }
+    @Input('pacienteSeleccionado')
+    set pacienteSeleccionado(value: any) {
+        this._pacienteSeleccionado = value;
+        this.paciente = value;
+    }
+    get pacienteSeleccionado() {
+        return this._pacienteSeleccionado;
+    }
+
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
 
     public agenda: IAgenda;
     public agendas: IAgenda[];
@@ -54,7 +68,7 @@ export class DarTurnosComponent implements OnInit {
     };
     llaveTP: any;
     estadoT: EstadosDarTurnos;
-    paciente: IPaciente;
+
     turnoDoble = false;
     telefono: String = '';
     countBloques: any[];
@@ -120,6 +134,11 @@ export class DarTurnosComponent implements OnInit {
 
         }
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+        if (this._pacienteSeleccionado) {
+            this.paciente = this._pacienteSeleccionado;
+            this.pacientesSearch = false;
+            this.showDarTurnos = true;
+        }
     }
 
     loadTipoPrestaciones(event) {
@@ -967,7 +986,13 @@ export class DarTurnosComponent implements OnInit {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
-        this.buscarPaciente();
+
+        if (this._pacienteSeleccionado) {
+            this.router.navigate(['./' + 'dashboard_turnos']);
+            this.cancelarDarTurno.emit(true);
+        } else {
+            this.buscarPaciente();
+        }
     }
 
     redirect(pagina: string) {

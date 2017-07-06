@@ -1,7 +1,7 @@
 <!--Header de estadisticas-->
 <fieldset>
     <legend>INFORMACIÓN ESTADÍSTICA</legend>
-      <br>
+    <br>
     <!--<header>
     <div class="row">
         <div class="col">
@@ -18,25 +18,25 @@
     <!--Estadisticas Ventanilla-->
     <br>
     <legend>Estadísticas | Ventanillas</legend>
-    
-      <br>
+
+    <br>
     <div class="row">
         <div class="col-3">
-            <i class="mdi mdi-calendar-clock mdi-36px"></i>10
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>{{cantTurnosAsignados}}
             <h5>Turnos Otorgados</h5>
         </div>
         <div class="col-3">
-            <i class="mdi mdi-calendar-clock mdi-36px"></i>50
-            <h5>Turnos Restantes</h5>
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>{{cantTurnosRestantes}}
+            <h5 style="color: #00A8E0">Turnos Restantes</h5>
         </div>
         <div class="col">
-            <i class="mdi mdi-calendar-clock mdi-36px"></i>25
-            <h5>Turnos Anulados</h5>
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>{{cantTurnosSuspendidos}}
+            <h5 style="color:red">Turnos Anulados</h5>
         </div>
     </div>
-      <br>
+    <br>
     <legend>Estadísticas | Valores Totales</legend>
-      <br>
+    <br>
     <div class="row">
         <div class="col-2">
             <i class="mdi mdi-account-check mdi-36px"></i>
@@ -45,7 +45,7 @@
             <h5>Turnos / Pacientes Validados</h5>
         </div>
         <div class="col-2 badge badge-success">
-            20
+            {{turnosPacientesValidados}}
         </div>
     </div>
     <div class="row">
@@ -53,10 +53,10 @@
             <i class="mdi mdi-account-outline mdi-36px"></i>
         </div>
         <div class="col">
-           <h5>Turnos /Pacientes Temporales</h5>
+            <h5>Turnos /Pacientes Temporales</h5>
         </div>
         <div class="col-2 badge badge-warning">
-            5
+            {{turnosPacientesTemporales}}
         </div>
     </div>
     <div class="row">
@@ -64,7 +64,7 @@
             <i class="mdi mdi-calendar-multiple-check mdi-36px"></i>
         </div>
         <div class="col">
-           <h5>Turnos codificados</h5>
+            <h5>Turnos codificados</h5>
         </div>
         <div class="col-2 badge badge-success">
             4
@@ -75,7 +75,7 @@
             <i class="mdi mdi-calendar-check mdi-36px"></i>
         </div>
         <div class="col">
-           <h5>Turnos chequeados</h5>
+            <h5>Turnos chequeados</h5>
         </div>
         <div class="col-2 badge badge-info">
             3

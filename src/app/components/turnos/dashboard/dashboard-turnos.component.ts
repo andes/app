@@ -10,7 +10,6 @@ import { IAgenda } from '../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../interfaces/IPaciente';
 
 // Servicios
-import { PacienteSearch } from '../../../services/pacienteSearch.interface';
 import { PacienteService } from '../../../services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 
@@ -30,9 +29,17 @@ export class DashboardTurnosComponent implements OnInit {
     public mostrarPacientesSearch = true;
     public showMostrarEstadisticasAgendas = true;
     public showMostrarEstadisticasPacientes = true;
+
     public paciente;
-    public searchTerm= '';
+    public searchTerm = '';
+    public autorizado = false;
+    operacionTurnos = '';
+    showDarTurnos = false;
+    showDashboard = true;
+    showMostrarTurnosPaciente = false;
     private buscarMPI = true;
+    private esOperacion = false;
+
 
     constructor(
         public servicePaciente: PacienteService,
@@ -41,15 +48,23 @@ export class DashboardTurnosComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
     }
 
     onPacienteSelected(paciente: IPaciente): void {
+        debugger;
         this.paciente = paciente;
         this.showMostrarEstadisticasAgendas = false;
-        this.showMostrarEstadisticasPacientes = true;
-        debugger;
-        if (paciente.id) {
+        if (this.esOperacion) {
+            this.showMostrarEstadisticasPacientes = false;
+            this.esOperacion = false;
+        } else {
+            this.showMostrarEstadisticasPacientes = true;
+            this.showMostrarTurnosPaciente = false;
+        }
+
+        /*if (paciente.id) {
             this.searchTerm = '';
             this.buscarMPI = false;
             this.servicePaciente.getById(paciente.id).subscribe(
@@ -58,14 +73,46 @@ export class DashboardTurnosComponent implements OnInit {
                     this.searchTerm = '';
                     window.setTimeout(() => this.buscarMPI = true, 100);
                 });
-        }
+        }*/
 
         // this.buscarMPI = false;
     }
 
     handleBlanqueo(event) {
-        this.searchTerm = '';
-        //this.buscarMPI = false;
+        this.showMostrarEstadisticasAgendas = true;
+        this.showMostrarEstadisticasPacientes = false;
+    }
+
+    verificarOperacion(operacion) {
+        debugger;
+        this.esOperacion = true;
+        switch (operacion) {
+            case 'darTurno':
+                this.showDarTurnos = true;
+                this.showDashboard = false;
+                this.showMostrarTurnosPaciente = false;
+                break;
+            case 'anulacionTurno':
+                this.showMostrarEstadisticasAgendas = false;
+                this.showMostrarEstadisticasPacientes = false;
+                this.operacionTurnos = 'anulacionTurno';
+                this.showMostrarTurnosPaciente = true;
+                break;
+            case 'registrarAsistencia':
+                this.showMostrarEstadisticasAgendas = false;
+                this.showMostrarEstadisticasPacientes = false;
+                this.operacionTurnos = 'registrarAsistencia';
+                this.showMostrarTurnosPaciente = true;
+                break;
+        }
+    }
+
+    cancelarDarTurno() {
+        this.showDarTurnos = false;
+        this.showDashboard = true;
+        this.showMostrarEstadisticasAgendas = true;
+        this.showMostrarEstadisticasPacientes = false;
+        this.showMostrarTurnosPaciente = false;
     }
 
 }
