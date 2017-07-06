@@ -27,15 +27,14 @@
 
                     <ng-template #reasignado>
                         <span *ngIf="i==0">
-                            <h5 class="mb-1">Reasignado a la Agenda: {{agenda.agendaReasignada?.horaInicio | date: 'dd/MM/yyyy' }}
-                            </h5>
+                        <!--TODO BOTHO: Hace tu gracia-->
+                        <div class="col-12">
+                            Reasignado al Turno:  {{ agenda.agendaReasignada?.horaInicio | date: 'EEE' | uppercase }} {{ agenda.agendaReasignada?.horaInicio | date: 'dd/MM/yyyy'}}, 
+                            {{ agenda.turnoReasignado?.horaInicio| date: 'HH:mm'}} hs
+                            <div>{{agenda.turnoReasignado?.tipoPrestacion.nombre}}</div>
+                            <div *ngFor="let profesional of agenda.agendaReasignada?.profesionales">{{profesional | profesional}}</div>
+                        </div>
                        </span>
-                        <!--<span *ngIf="i==0" class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Turno ya reasignado
-                                </h5>
-                            </div>
-                       </span>-->
                     </ng-template>
                     <ng-template #noReasignado>
                         <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)">
