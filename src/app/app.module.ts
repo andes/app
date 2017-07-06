@@ -131,6 +131,8 @@ import { PopoverAuditComponent } from './components/popover-audit/popover-audit.
 import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
+import { PacienteSearchTurnosComponent } from './components/turnos/dashboard/paciente-search-turnos.component';
+import { TurnosPacienteComponent } from './components/turnos/dashboard/turnos-paciente.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -355,6 +357,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         DashboardTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+        PacienteSearchTurnosComponent, TurnosPacienteComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
