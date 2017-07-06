@@ -15,15 +15,24 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
-    // @Input('paciente') paciente: IPaciente;
+    @Input('paciente') paciente: IPaciente;
 
+    public fechaDesde: any;
+    public fechaHasta: any;
     turnosOtorgados = 125;
+
     // Inicialización
     constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
-    // Se cargan los datos calculados
-       console.log('TURNOSSS');
+        // Se cargan los datos calculados
+        let hoy = {
+            fechaDesde: moment().startOf('day').format(),
+            fechaHasta: moment().endOf('day').format()
+        };
+
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
 
     }
 

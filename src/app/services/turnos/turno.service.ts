@@ -13,6 +13,10 @@ export class TurnoService {
         return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 
+    getTurnos(params: any): Observable<any[]> {
+        return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
+    }
+
     save(turno: any): Observable<any> {
         console.log(turno.paciente);
 

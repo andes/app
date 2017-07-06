@@ -1,7 +1,8 @@
 <!--Header de estadisticas-->
+
 <fieldset>
     <legend>INFORMACIÓN SOBRE EL PACIENTE</legend>
-      <br>
+    <br>
     <!--<header>
     <div class="row">
         <div class="col">
@@ -17,13 +18,103 @@
 </header>-->
     <!--Estadisticas Ventanilla-->
     <br>
-    <legend>Paciente | Datos Básicos</legend>
-    
-      <br>
+    <!--Datos básicos del Paciente-->
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5> <span style="color: #00A8E0">{{paciente | paciente}}</span> </h5>
+            </div>
+        </div>
+        <hr>
+    </header>
+    <br>
     <div class="row">
-       
+        <div class="col-6">
+            <i class="mdi mdi-account-card-details"></i> <span style="color: #00A8E0">Documento</span>
+        </div>
+        <div class="col-6">
+            <i class="mdi mdi-calendar-today"></i> <span style="color: #00A8E0">Fecha de Nacimiento</span>
+        </div>
     </div>
-      <br>
-    <legend>Paciente | Estadísticas</legend>
-      <br>
+    <div class="row">
+        <div class="col-6" *ngIf="paciente">
+            {{paciente.documento | number}}
+        </div>
+        <div class="col-6" *ngIf="paciente">
+            {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="paciente && paciente.direccion && paciente.direccion.length > 0">
+            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Dirección</span>
+        </div>
+        <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
+            <i class="mdi mdi-cellphone-android"></i> <span style="color: #00A8E0">Teléfono</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="paciente && paciente.direccion && paciente.direccion.length > 0">
+            {{paciente.direccion[0].valor}}
+        </div>
+        <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
+            {{paciente.contacto[0].valor}}
+        </div>
+    </div>
+    <br>
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5>Paciente | <span style="color: #00A8E0">Estadísticas</span> </h5>
+            </div>
+        </div>
+        <hr>
+    </header>
+    
+    <div class="row"> 
+        <div class="col"><label>Filtrar por Fechas</label></div>         
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
+            </plex-datetime>
+        </div>
+        <div class="col-6">
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
+            </plex-datetime>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-account-check mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Cantidad de turnos</h5>
+        </div>
+        <div class="col-2 badge badge-success">
+            5
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-account-minus mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Inasistencias</h5>
+        </div>
+        <div class="col-2 badge badge-danger">
+            2
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-calendar-remove mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Anulaciones</h5>
+        </div>
+        <div class="col-2 badge badge-warning">
+            4
+        </div>
+    </div>
 </fieldset>
