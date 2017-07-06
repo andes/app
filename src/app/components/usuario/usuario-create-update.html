@@ -1,0 +1,67 @@
+<section>
+    <div class="row" *ngIf="showCreate">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box type="primary">
+                <plex-int [(ngModel)]="documento" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Ingrese el Documento">
+                </plex-int>
+                <!--Loader-->
+                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                <div *ngIf="users && !users.length" class="alert alert-danger">
+                    <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+                </div>
+                <!--Tabla de resultados por SimpleQuery -->
+
+            </plex-box>
+        </div>
+    </div>
+    <div class="row" *ngIf="showUpdate">
+        <div class="col-8">
+            <plex-box type="primary">
+                <header>
+                    <div class="page-title">Gestión de Usuarios</div>
+                </header>
+                <plex-select [(ngModel)]="organizacion" [required]="true" name="organizacion" placeholder="Selecciona la organización" label="Organizacion"
+                    [data]="dataOrganizaciones">
+                </plex-select>
+                <plex-select [(ngModel)]="roles" name="roles" [required]="true" [multiple]="true" placeholder="Selecciona los roles" label="Roles" [data]="dataRoles">
+                </plex-select>
+                <plex-select [(ngModel)]="permisos" name="permisos" [required]="true" [multiple]="true" placeholder="Selecciona los permisos" label="Permisos"
+                    (change)="devolverValores($event)" [data]="dataPermisos">
+                </plex-select>
+            </plex-box>
+        </div>
+        <div class="col text-center">
+            <plex-box type="primary">
+                <header>
+                    <h3>Datos del Usuario
+                    </h3>
+                </header>
+                <div class="row">
+                    <div class="col-12">
+                        <img class="foto" src="{{userModel.foto}}">
+                    </div>
+                    <div class="col-12" *ngIf="userModel.apellido && userModel.nombre">
+                        <h3><strong>{{userModel.apellido}}</strong>
+                            <small> {{userModel.nombre}}</small>
+                        </h3>
+                    </div>
+                    <div class="col-12" *ngIf="userModel.usuario">
+                        <h4>D.N.I. {{userModel.usuario}} </h4>
+                    </div>
+                </div>
+
+            </plex-box>
+        </div>
+
+    </div>
+</section>
+<footer>
+    <div class="text-right">
+        <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+        </plex-button>
+        <plex-button icon="content-save" label="Guardar" type="success">
+        </plex-button>
+
+    </div>
+</footer>

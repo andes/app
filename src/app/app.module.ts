@@ -227,6 +227,7 @@ import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPor
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
 
 
 
@@ -355,7 +356,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
     AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
     HoverClassDirective,
-    BusquedaUsuarioComponent
+    BusquedaUsuarioComponent, UsuarioCreateUpdateComponent
   ],
   entryComponents: RUP_COMPONENTS,
   bootstrap: [AppComponent],

@@ -45,12 +45,12 @@ export class BusquedaUsuarioComponent implements OnInit {
     public seleccion = null;
     public loading = false;
     public showCreateUpdate = false;
-    public mostrarNuevo = false;
+    public mostrarNuevo = true;
     public autoFocus = 0;
     public users;
 
     // Eventos
-    @Output() selected: EventEmitter < any > = new EventEmitter < any > ();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private auth: Auth) {
 
@@ -69,12 +69,13 @@ export class BusquedaUsuarioComponent implements OnInit {
      * @param {*} user Usuario para seleccionar
      */
     public seleccionarUsuario(user: any) {
+        this.seleccion = user;
         if (user) {
-            this.seleccion = user;
             this.selected.emit(user);
         }
         this.textoLibre = null;
         this.mostrarNuevo = false;
+        this.showCreateUpdate = true;
     }
 
     /**
@@ -82,11 +83,11 @@ export class BusquedaUsuarioComponent implements OnInit {
      */
     public loadUsuarios() {
         this.usuarioService.get().subscribe(
-                datos => {
-                    this.users = datos;
-                    
-                }
-            );
+            datos => {
+                this.users = datos;
+
+            }
+        );
     }
 
     afterCreateUpdate(user) {
