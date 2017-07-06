@@ -1,6 +1,6 @@
 <fieldset>
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div class="row">
+    <!--<div class="row">
         <div class="col-8">
             <b>Priorizar por:</b>
             <div class="input-group">
@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="col"></div>
-    </div>
+    </div>-->
     <!--{{ agendaAReasignar | json}}-->
     <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
         <plex-accordion class="accordion-reasignar">
@@ -26,12 +26,16 @@
                     <ng-container *ngIf="agendaCandidata.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                     <ng-template #reasignado>
-                        <span *ngIf="i==0" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <span *ngIf="i==0">
+                            <h5 class="mb-1">Reasignado a la Agenda: {{agenda.agendaReasignada?.horaInicio | date: 'dd/MM/yyyy' }}
+                            </h5>
+                       </span>
+                        <!--<span *ngIf="i==0" class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">Turno ya reasignado
                                 </h5>
                             </div>
-                       </span>
+                       </span>-->
                     </ng-template>
                     <ng-template #noReasignado>
                         <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)">
