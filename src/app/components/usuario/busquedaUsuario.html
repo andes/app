@@ -3,8 +3,11 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
+                 <header>
+                    <h3>Administración de Permisos</h3>
+                </header>
+
                 <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>" placeholder="Buscar por DNI, nombre o apellido">
-                   
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -40,6 +43,12 @@
                         </tr>
                     </tbody>
                 </table>
+            </plex-box>
+        </div>
+        <!--Panel lateral-->
+        <div class="col-4">
+            <plex-box type="primary">
+                <div class="gestionUsuarios"></div>
             </plex-box>
         </div>
     </div>

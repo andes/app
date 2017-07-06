@@ -1,0 +1,7 @@
+.gestionUsuarios {
+    background-image: url('../../assets/img/users.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 400px;
+}

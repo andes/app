@@ -29,7 +29,7 @@ import {
 @Component({
     selector: 'busquedaUsuario',
     templateUrl: 'busquedaUsuario.html',
-    //styleUrls: ['busquedaUsuario.css']
+    styleUrls: ['usuarios.css']
 })
 
 export class BusquedaUsuarioComponent implements OnInit {
