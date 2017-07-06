@@ -18,6 +18,7 @@ export class BuscadorComponent implements OnInit {
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+    @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
 
     public searchPlanes: String = '';
     //Lista de planes.
@@ -64,11 +65,14 @@ export class BuscadorComponent implements OnInit {
         this.showPlanes = false;// Oculta el buscador de planes
         console.log(tipoBusqueda);
         this.tipoBusqueda = tipoBusqueda;
+        this._tipoDeBusqueda.emit(tipoBusqueda);
+        //console.log(this.evtData);
     }
     //Muestra el buscador de planes
     busquedaPlanes() {
         this.tipoBusqueda = 'planes';
         this.showPlanes = true;
+        this._tipoDeBusqueda.emit(this.tipoBusqueda);
     }
 
     seleccionBusqueda(concepto) {
