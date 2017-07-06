@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
@@ -66,8 +67,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';
-
     private dragAndDrop = false;
+
+    private cachePrestacionesTurneables = null;
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -77,7 +80,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // ElementRef lo utilizo para tener informacion del
     // html del codigo de este componente en el DOM
     constructor(private SNOMED: SnomedService, private plex: Plex,
-        myElement: ElementRef) {
+        myElement: ElementRef, public servicioTipoPrestacion: TipoPrestacionService) {
         this.elementRef = myElement;
     }
 
@@ -88,9 +91,21 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
-     }
+        // Trae las prestaciones turneables y la guarda en memoria para luego 
+        // filtrar los resultados de las busquedas
+        this.iniciarPrestacionesTurneables();
+    }
 
-     ngOnChanges(changes: any) {
+    iniciarPrestacionesTurneables() {
+        if (!this.cachePrestacionesTurneables) {
+            this.servicioTipoPrestacion.get({}).subscribe(tiposPrestacion => {
+                debugger;
+                this.cachePrestacionesTurneables = tiposPrestacion;
+            });
+        }
+    }
+
+    ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
         // y hubo algun cambio, entonces ejecuto la busqueda manual
         if (this.searchTermInput) {
@@ -138,6 +153,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         // //     return false;
         // }
 
+        this.iniciarPrestacionesTurneables();
+
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
@@ -160,25 +177,32 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 this.loading = true;
                 this.resultados = [];
 
-               // alert(this.tipoBusqueda + " / " + search);
+                // alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
                 let apiMethod;
                 switch (this.tipoBusqueda) {
                     case 'problemas':
                         apiMethod = this.SNOMED.getProblemas(query);
-                    break;
+                        break;
                     case 'procedimientos':
                         apiMethod = this.SNOMED.getProcedimientos(query);
-                    break;
+                        break;
                     default:
                         apiMethod = this.SNOMED.get(query);
-                    break;
+                        break;
                 }
 
                 apiMethod.subscribe(problemas => {
                     this.loading = false;
                     this.resultados = problemas;
+
+                    if (this.tipoBusqueda === 'procedimientos') {
+                        // Filtrar de los resultado las prestaciones turneables
+                        this.resultados = this.resultados.filter(concepto => {
+                            return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
+                        });
+                    }
 
                 }, err => {
                     this.loading = false;

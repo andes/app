@@ -219,7 +219,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     onConceptoDrop(e: any) {
         console.log('onConceptoDrop');
         console.log(e.dragData);
-        debugger;
         if (e.dragData.tipo) {
             switch (e.dragData.tipo) {
                 case 'prestacion':

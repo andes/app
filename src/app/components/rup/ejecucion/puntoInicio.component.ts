@@ -84,7 +84,6 @@ export class PuntoInicioComponent implements OnInit {
 
         // buscamos los elementos rup de la api
         this.servicioTipoPrestacion.get({}).subscribe(tiposPrestacion => {
-            debugger;
             this.selectPrestacionesProfesional = tiposPrestacion;
         });
 

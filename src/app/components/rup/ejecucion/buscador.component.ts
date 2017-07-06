@@ -39,7 +39,6 @@ export class BuscadorComponent implements OnInit {
 
     ngOnInit() { }
 
-
     //drag and drop funciones
     dragStart(e) {
         this._onDragStart.emit(e);

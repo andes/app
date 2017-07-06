@@ -55,7 +55,6 @@ export class PrestacionPacienteService {
      * @param {String} idPaciente
      */
     getByPaciente(idPaciente: any): Observable<any[]> {
-        debugger;
         if (this.cache[idPaciente]) {
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
         } else {
@@ -79,10 +78,10 @@ export class PrestacionPacienteService {
     }
 
     /**
-     * Metodo getByHallazo. 
+     * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
-    getByHallazgoPaciente(idPaciente: String): Observable<any[]> {
+    getByPacienteHallazgo(idPaciente: String): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
 
             let registros = [];
@@ -95,7 +94,6 @@ export class PrestacionPacienteService {
             });
             let registroSalida = [];
             registros.forEach(registro => {
-                debugger;
                 let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
                 if (!registroEncontrado) {
                     let dato = {
@@ -112,7 +110,17 @@ export class PrestacionPacienteService {
                     };
                     registroSalida.push(dato);
                 } else {
-                    registroEncontrado.evoluciones.push(registro.valor);
+                    let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                    let nuevaEvolucion = {
+                        fechaCarga: registro.createdAt,
+                        fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
+                        descripcion: registro.valor.descripcion ? registro.valor.descripcion : ultimaEvolucion.descripcion,
+                        estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
+                        esCronico: registro.valor.esCronico ? registro.valor.esCronico : false,
+                        esEnmienda: registro.valor.esEnmienda ? registro.valor.esEnmienda : false,
+                        evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
+                    };
+                    registroEncontrado.evoluciones.push(nuevaEvolucion);
                 }
 
             });

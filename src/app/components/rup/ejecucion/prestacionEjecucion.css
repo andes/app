@@ -16,6 +16,7 @@
     padding: 0;
 }
 */
+
 .rup-card {
     width: 100%;
     display: flex;
@@ -36,7 +37,9 @@
     justify-content: center;
 }
 
-.rup-card .type i {color: white;}
+.rup-card .type i {
+    color: white;
+}
 
 .rup-card .rup-content {
     margin: 0;
@@ -47,28 +50,29 @@
     padding: 15px;
 }
 
-.rup-card .rup-content .header{
+.rup-card .rup-content .header {
     padding: 5px 15px;
     text-transform: capitalize;
     border-bottom: 1px solid #ccc;
 }
 
-.rup-card.mini .rup-content .header{
+.rup-card.mini .rup-content .header {
     padding: 5px;
     border-bottom: 0 none;
 }
 
-.rup-card .rup-content .header .title{
+.rup-card .rup-content .header .title {
     display: inline-flex;
 }
-.rup-card .rup-content .header .actions{
-    float: right!important;
 
+.rup-card .rup-content .header .actions {
+    float: right!important;
 }
 
 .problemas {
     background-color: #34a;
 }
+
 .btn-primary.problemas {
     background-color: #34a;
     border-color: #34a;
@@ -77,28 +81,33 @@
 .planes {
     background-color: #6A99AD;
 }
+
 .btn-primary.planes {
     background-color: #6A99AD;
     border-color: #6A99AD;
 }
 
 .prestaciones {
-    background-color: #FFD800;
+    background-color: #b99e06;
 }
+
 .btn-primary.prestaciones {
-    background-color: #FFD800;
-    border-color: #FFD800;
+    background-color: #b99e06;
+    border-color: #b99e06;
 }
 
 .procedimientos {
     background-color: #92278E;
 }
+
 .btn-primary.procedimientos {
     background-color: #92278E;
     border-color: #92278E;
 }
 
+
 /* drag and drop */
+
 .drag-over-border {
     border: #ff525b dashed 2px;
 }
@@ -134,11 +143,8 @@
     text-align: center;
 }
 
-
-
-
 .spin::before {
-     -webkit-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);

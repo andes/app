@@ -90,8 +90,7 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     listarHallazgos() {
-        this.servicioPrestacion.getByHallazgoPaciente(this.paciente.id).subscribe(hallazgos => {
-            debugger;
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe(hallazgos => {
             this.prestaciones = null;
             this.hallazgos = hallazgos;
         });

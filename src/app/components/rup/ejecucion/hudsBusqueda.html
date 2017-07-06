@@ -9,11 +9,10 @@
 
     <div class="row">
         <div class="col">
-            <plex-button type="primary btn-sm active" label="Hallazgos" (click)="listarHallazgos()">
+            <plex-button type="primary btn-sm problemas" label="Hallazgos" (click)="listarHallazgos()">
             </plex-button>
-            <plex-button type="primary btn-sm" label="Prestaciones" (click)="listarPrestaciones()">
+            <plex-button type="primary btn-sm prestaciones" label="Prestaciones" (click)="listarPrestaciones()">
             </plex-button>
-
         </div>
     </div>
     <div class="row">&nbsp;</div>
@@ -34,7 +33,6 @@
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                             </div>
-
                             <div class="rup-content">
                                 <div class="header">
                                     <div class="title">
@@ -56,9 +54,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                     </li>
                 </ng-container>
             </ul>
