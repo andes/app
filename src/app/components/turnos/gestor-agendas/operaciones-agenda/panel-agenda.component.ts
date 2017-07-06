@@ -100,7 +100,8 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        this.servicioEspacioFisico.get({}).subscribe(event.callback);
     }
 
     /**
