@@ -16,6 +16,11 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoComponent implements OnInit {
+    datosAgenda: {
+        idAgenda: any;
+        idBloque: any;
+        idTurno: any;
+    };
     showReasignarTurno: boolean;
     agendasSimilares: IAgenda[];
 
@@ -53,27 +58,28 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     actualizar() {
-        this.turnosAReasignar = [];
-        if (this.agendaAReasignar) {
-            this.agendaAReasignar.bloques.forEach(bloque => {
-                bloque.turnos.forEach(turno => {
-                    if (turno.paciente) {
+        // this.turnosAReasignar = [];
+        // if (this.agendaAReasignar) {
+        //     this.agendaAReasignar.bloques.forEach(bloque => {
+        //         bloque.turnos.forEach(turno => {
+        //             if (turno.paciente) {
 
-                        let params = {
-                            idAgenda: this.agendaAReasignar.id,
-                            idBloque: bloque.id,
-                            idTurno: turno.id
-                        };
+        //                 let params = {
+        //                     idAgenda: this.agendaAReasignar.id,
+        //                     idBloque: bloque.id,
+        //                     idTurno: turno.id
+        //                 };
 
-                        this.serviceTurno.get(params).subscribe((agendas) => {
-                            this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
-                            this.calculosSimilitud(turno, agendas);
-                        });
-                    }
+        //                 this.serviceTurno.get(params).subscribe((agendas) => {
+        //                     this.agendaAReasignar = [... this.agendaAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
+        //                     // this.calculosSimilitud(turno, agendas);
 
-                });
-            });
-        }
+        //                 });
+        //             }
+
+        //         });
+        //     });
+        // }
     }
 
     /**
@@ -147,9 +153,13 @@ export class ReasignarTurnoComponent implements OnInit {
             idTurno: idTurno
         };
 
+        this.datosAgenda = params;
+
         this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
             this.agendasSimilares = agendas;
             console.log('agendasSimilares', this.agendasSimilares);
+            console.log('agendaAReasignar', this.agendaAReasignar);
+
         });
 
     }
@@ -186,6 +196,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
         console.log('seleccionarCandidata ', agendaSeleccionada);
         console.log('seleccionarCandidata ', this.turnosAReasignar[indiceTurno]);
+
         // Si la agenda es del día
         if (agendaSeleccionada >= moment().startOf('day').toDate() &&
             agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
@@ -207,12 +218,14 @@ export class ReasignarTurnoComponent implements OnInit {
             idAgenda: agendaSeleccionada._id,
             idTurno: agendaSeleccionada.bloques[indiceBloque].turnos[indTurno]._id,
             idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
-            paciente: turno.paciente,
+            paciente: agendaSeleccionada.bloques[indiceBloque].turnos[indTurno].paciente,
             tipoPrestacion: turno.tipoPrestacion,
             tipoTurno: tipoTurno,
             // reasignacion: this.agendaAReasignar.id
         };
+
         console.log('datosTurno ', datosTurno);
+
         this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;

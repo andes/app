@@ -10,10 +10,12 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
-        return this.server.get(this.turnoUrl + '/turno/' , { params: params, showError: true });
+        return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 
     save(turno: any): Observable<any> {
+        console.log(turno.paciente);
+
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno);
         }

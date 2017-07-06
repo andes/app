@@ -54,9 +54,10 @@
 
             </plex-box>
         </div>
-        <div *ngIf="agendasSimilares?.length" class="col-8">
+        <div class="col-8">
             <plex-box>
-                <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+                <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" [agendaAReasignar]="agendaAReasignar"
+                    [datosAgenda]="datosAgenda" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
             </plex-box>
         </div>
     </div>

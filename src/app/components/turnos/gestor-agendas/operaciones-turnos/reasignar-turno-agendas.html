@@ -3,7 +3,7 @@
         <i class="mdi mdi-emoticon-smile"></i> No quedan turnos para reasignar
     </div>
 </div>
-<form class="plex-layout" *ngIf="agendasSimilares?.length && turnosAReasignar?.length">
+<form class="plex-layout">
     <section>
         <div class="row">
             <div class="col-12">
@@ -21,7 +21,7 @@
                                 <h4 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
                                     }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h4>
                                 <p class="card-text">{{ agenda.tiposPrestacion | json }}</p>
-                                <div *ngFor="let bloque of agenda.bloques; let indiceBq = index">
+                                <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
                                     <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
                                         <div *ngIf="bloque.descripcion">
                                             Bloque <span>{{bloque.descripcion}}</span>
@@ -30,14 +30,14 @@
                                             <ng-container *ngIf="turno.horaInicio">
                                                 <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
                                                     <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default" [appHover]="'text-success outline-success'"
-                                                        (click)="seleccionarCandidata(indiceTurno, indiceAgenda)">
+                                                        (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
                                                 <div *ngIf="bloque.pacienteSimultaneos">
                                                     <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="row">
                                                         <div class="col col-md-12">
-                                                            <a class="hover" (click)="seleccionarCandidata(indiceTurno, indiceAgenda)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                                            <a class="hover" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">{{turno.horaInicio | date: 'HH:mm'}} </a>
                                                         </div>
                                                     </div>
                                                     <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno) && indiceTurno+bloque.cantidadSimultaneos < bloque.turnos.length">
@@ -45,7 +45,7 @@
                                                 <div *ngIf="bloque.citarPorBloque">
                                                     <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="row">
                                                         <div class="col col-md-12">
-                                                            <a class="hover" (click)="seleccionarCandidata(indiceTurno, indiceAgenda)">{{turno.horaInicio | date: 'HH:mm'}} </a>
+                                                            <a class="hover" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">{{turno.horaInicio | date: 'HH:mm'}} </a>
                                                         </div>
                                                     </div>
                                                     <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno) && indiceTurno+bloque.cantidadBloque < bloque.turnos.length">
