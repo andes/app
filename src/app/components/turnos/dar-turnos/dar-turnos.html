@@ -118,7 +118,7 @@
                     <div *ngFor="let turno of bloque.turnos; let i=index">
                       <ng-container *ngIf="turno.horaInicio >= hoy">
                         <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                          <div *ngIf="turno.estado == 'disponible'" class="text-center hover mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
+                          <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
                             (click)="seleccionarTurno(bloque,i)">
                             {{turno.horaInicio | date: 'HH:mm'}}
                           </div>

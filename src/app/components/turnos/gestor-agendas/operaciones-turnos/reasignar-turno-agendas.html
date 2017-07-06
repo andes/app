@@ -28,7 +28,7 @@
                                         </div>
                                         <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
                                             <ng-container *ngIf="turno.horaInicio">
-                                                <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                                                <div class="reasignar" *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
                                                     <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default" [appHover]="'text-success outline-success'"
                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}

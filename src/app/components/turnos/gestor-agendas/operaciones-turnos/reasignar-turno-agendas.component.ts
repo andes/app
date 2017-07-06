@@ -229,7 +229,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     idAgenda: this.agendaAReasignar.id,
                     idTurno: turno._id,
                     idBloque: bloque._id,
-                    turno: turnoReasignado,
+                    turno: turnoReasignado
                 };
 
                 // Agrego datos de reasignación al turno original (PUT)
