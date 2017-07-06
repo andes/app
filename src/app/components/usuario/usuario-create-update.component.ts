@@ -6,9 +6,9 @@ import { Auth } from '@andes/auth';
 import * as enumerados from './../../utils/enumerados';
 // Services
 import { UsuarioService } from '../../services/usuarios/usuario.service';
-import {
-    ProvinciaService
-} from './../../services/provincia.service';
+import { ProvinciaService } from './../../services/provincia.service';
+import { OrganizacionService } from './../../services/organizacion.service';
+import { IOrganizacion } from './../../interfaces/IOrganizacion';
 @Component({
     selector: 'usuario-create-update',
     templateUrl: 'usuario-create-update.html',
@@ -19,6 +19,7 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input('seleccion') seleccion: any;
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     private timeoutHandle: number;
 
@@ -69,12 +70,48 @@ export class UsuarioCreateUpdateComponent implements OnInit {
             'codigo': 5,
             'nombre': 'Agendas'
         },
+        {
+            'id': '6',
+            'codigo': 6,
+            'nombre': 'Rup'
+        },
     ];
+    public dataRoles: any[] = [
+        {
+            'id': '1',
+            'codigo': 1,
+            'nombre': 'Medico'
+        },
+        {
+            'id': '2',
+            'codigo': 2,
+            'nombre': 'Administrativo'
+        },
+        {
+            'id': '3',
+            'codigo': 3,
+            'nombre': 'Auditor'
+        },
+        // {
+        //     'id': '4',
+        //     'codigo': 4,
+        //     'nombre': 'Auditoria'
+        // },
+        // {
+        //     'id': '5',
+        //     'codigo': 5,
+        //     'nombre': 'Agendas'
+        // },
+        // {
+        //     'id': '6',
+        //     'codigo': 6,
+        //     'nombre': 'Rup'
+        // },
+    ];
+    public dataOrganizaciones: any[] = [];
 
-    // Eventos
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private auth: Auth, private provinciaService: ProvinciaService, ) {
+    constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService) {
 
     }
 
@@ -82,7 +119,7 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         // this.provinciaService.get({}).subscribe(rta => {
         //     this.dataPermisos = rta;
         // });
-
+        this.loadOrganizaciones();
         if (this.seleccion) {
             this.loadUser();
         } else {
@@ -97,6 +134,16 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
     }
 
+    loadOrganizaciones() {
+        let parametros = {
+            'activo': true
+        };
+        this.organizacionService.get(parametros)
+            .subscribe(
+            datos => {
+                this.dataOrganizaciones = datos;
+            });
+    }
     newUser() {
 
     }
@@ -106,5 +153,6 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     onCancel() {
+        this.data.emit();
     }
 }

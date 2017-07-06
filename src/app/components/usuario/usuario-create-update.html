@@ -21,10 +21,12 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <plex-select [(ngModel)]="roles" name="roles" [multiple]="true" placeholder="Selecciona los roles" label="Roles"
-                    (change)="devolverValores($event)" [data]="dataRoles">
+                <plex-select [(ngModel)]="organizacion" [required]="true" name="organizacion" placeholder="Selecciona la organización" label="Organizacion"
+                    [data]="dataOrganizaciones">
                 </plex-select>
-                <plex-select [(ngModel)]="permisos" name="permisos" [multiple]="true" placeholder="Selecciona los permisos" label="Permisos"
+                <plex-select [(ngModel)]="roles" name="roles" [required]="true" [multiple]="true" placeholder="Selecciona los roles" label="Roles" [data]="dataRoles">
+                </plex-select>
+                <plex-select [(ngModel)]="permisos" name="permisos" [required]="true" [multiple]="true" placeholder="Selecciona los permisos" label="Permisos"
                     (change)="devolverValores($event)" [data]="dataPermisos">
                 </plex-select>
             </plex-box>
@@ -58,8 +60,8 @@
     <div class="text-right">
         <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
         </plex-button>
-        <plex-button icon="content-save" label="Guardar" type="success" >
+        <plex-button icon="content-save" label="Guardar" type="success">
         </plex-button>
-       
+
     </div>
 </footer>
