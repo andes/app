@@ -16,6 +16,8 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoComponent implements OnInit {
+    // Guarda si están todos los Turnos seleccionados o no
+    todos = false;
     datosAgenda: {
         idAgenda: any;
         idBloque: any;
@@ -122,9 +124,9 @@ export class ReasignarTurnoComponent implements OnInit {
 
     }
 
-    // estaSeleccionado(turno: any) {
-    //     return this.turnosSeleccionados.indexOf(turno) >= 0;
-    // }
+    estaSeleccionado(turno: any) {
+        return this.turnosSeleccionados.indexOf(turno) >= 0;
+    }
 
     cargarturnosAReasignar(idAgendaAReasignar, idBloque, idTurno) {
 
@@ -182,6 +184,14 @@ export class ReasignarTurnoComponent implements OnInit {
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
+
+        // if (this.turnosSeleccionados.length < this.agendaAReasignar.turnos.length) {
+        //     this.todos = false;
+        // }
+
+        // if (this.turnosSeleccionados.length === this.agendaAReasignar.turnos.length) {
+        //     this.todos = true;
+        // }
 
         this.cargarAgendasSimilares(this.agendaAReasignar.id, bloque.id, turno.id);
 

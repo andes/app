@@ -31,7 +31,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this._agendasSimilares;
     }
 
-    @Input() turnoSeleccionado: ITurno;
+    @Input() turnoSeleccionado: any;
     @Input() agendaAReasignar: IAgenda;
     @Input() datosAgenda: any;
 
@@ -40,7 +40,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
     @Output() reasignacionManualEmit = new EventEmitter<boolean>();
 
-    public turnoAReasignar: ITurno;
+    public turnoAReasignar: any;
 
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
@@ -209,7 +209,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
             this.serviceTurno.save(datosTurno).subscribe(resultado => {
                 // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
-                let turnoReasignado = turno;
+                let turnoReasignado = this.turnoSeleccionado;
                 let siguiente = {
                     idAgenda: agendaSeleccionada._id,
                     idBloque: agendaSeleccionada.bloques[indiceBloque]._id,

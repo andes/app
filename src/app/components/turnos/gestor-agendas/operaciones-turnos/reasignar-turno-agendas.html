@@ -1,19 +1,13 @@
-<div class="row" *ngIf="agendasSimilares?.length && !turnosAReasignar?.length">
-    <div class="col">
-        <i class="mdi mdi-emoticon-smile"></i> No quedan turnos para reasignar
-    </div>
-</div>
 <form class="plex-layout">
     <section>
         <div class="row">
             <div class="col-12">
                 <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-                <!--{{ turnosAReasignar | json }}-->
-
-                <!--<div *ngFor="let t of turnosAReasignar; let it = index">
-                    {{ t | json }}
-                </div>-->
-
+                <div class="row" *ngIf="agendasSimilares?.length === 0 && !turnosAReasignar?.length">
+                    <div class="col">
+                        <i class="mdi mdi-emoticon-sad"></i> No hay agendas que contengan turnos que coincidan
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-4" *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
                         <div class="card">
