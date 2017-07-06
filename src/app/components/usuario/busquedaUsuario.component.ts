@@ -92,6 +92,7 @@ export class BusquedaUsuarioComponent implements OnInit {
 
     afterCreateUpdate(user) {
         this.showCreateUpdate = false;
+        this.mostrarNuevo = true;
         this.seleccion = null;
         this.autoFocus = this.autoFocus + 1;
         this.textoLibre = '';

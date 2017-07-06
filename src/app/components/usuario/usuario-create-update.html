@@ -3,15 +3,25 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <plex-int [(ngModel)]="documento" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Ingrese el Documento">
-                </plex-int>
-                <!--Loader-->
-                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-                <div *ngIf="users && !users.length" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
-                </div>
-                <!--Tabla de resultados por SimpleQuery -->
+                <header>
+                    <div class="page-title">Gestión de Usuarios</div>
+                </header>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="documento" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Ingrese el Documento">
+                        </plex-int>
+                    </div>
+                    <div class="col">
+                        <plex-button icon="search" label="Buscar" type="success" (click)="buscarUsuario()">
+                        </plex-button>
+                    </div>
+                    <!--Loader-->
 
+                    <div *ngIf="users && !users.length" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+                    </div>
+                    <!--Tabla de resultados por SimpleQuery -->
+                </div>
             </plex-box>
         </div>
     </div>
@@ -24,10 +34,11 @@
                 <plex-select [(ngModel)]="organizacion" [required]="true" name="organizacion" placeholder="Selecciona la organización" label="Organizacion"
                     [data]="dataOrganizaciones">
                 </plex-select>
-                <plex-select [(ngModel)]="roles" name="roles" [required]="true" [multiple]="true" placeholder="Selecciona los roles" label="Roles" [data]="dataRoles">
+                <plex-select [(ngModel)]="roles" name="roles" [required]="true" placeholder="Selecciona los roles" label="Roles"
+                    [data]="dataRoles" (change)="updateRoles($event)">
                 </plex-select>
-                <plex-select [(ngModel)]="permisos" name="permisos" [required]="true" [multiple]="true" placeholder="Selecciona los permisos" label="Permisos"
-                    (change)="devolverValores($event)" [data]="dataPermisos">
+                <plex-select [(ngModel)]="permisos" name="permisos" [required]="true" [multiple]="true" placeholder="Selecciona los permisos"
+                    label="Permisos" (change)="updatePermisos($event.value)" [data]="dataPermisos">
                 </plex-select>
             </plex-box>
         </div>
