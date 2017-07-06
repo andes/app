@@ -3,7 +3,7 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escriba documento, nombre o apellido">
+                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Buscar por DNI, nombre o apellido">
                    
                 </plex-text>
                 <!--Loader-->
