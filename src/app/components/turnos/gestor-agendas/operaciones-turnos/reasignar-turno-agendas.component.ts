@@ -17,6 +17,8 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAgendasComponent implements OnInit {
+    hoy: Date;
+    delDiaDisponibles: number;
 
     private _agendasSimilares: any;
 
@@ -28,6 +30,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     get agendasSimilares(): any {
         return this._agendasSimilares;
     }
+
+    @Input() turnoSeleccionado: ITurno;
+
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
@@ -41,10 +46,12 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     public seleccionadosSMS = [];
     public suspendio = false;
     autorizado: any;
+    countBloques = [];
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
+        this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.actualizar();
     }
@@ -52,10 +59,51 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     actualizar() {
         console.log(this.agendasSimilares);
 
+        this.delDiaDisponibles = 0;
         this.turnosAReasignar = [];
+        let turnoAnterior = null;
+
+
         if (this.agendasSimilares) {
             this.agendasSimilares.forEach(agenda => {
-                agenda.bloques.forEach(bloque => {
+                agenda.bloques.forEach((bloque, indexBloque) => {
+
+                    this.countBloques.push({
+                        delDia: ((bloque.accesoDirectoDelDia as number) + (bloque.accesoDirectoProgramado as number)),
+                        programado: 0,
+                        gestion: bloque.reservadoGestion,
+                        profesional: bloque.reservadoProfesional
+                    });
+                    bloque.turnos.forEach((turno) => {
+                        // Si el turno está asignado o está disponible pero ya paso la hora
+                        if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
+                            if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                turno = turnoAnterior;
+                            }
+                            switch (turno.tipoTurno) {
+                                case ('delDia'):
+                                    this.countBloques[indexBloque].delDia--;
+                                    break;
+                                case ('programado'):
+                                    this.countBloques[indexBloque].delDia--;
+                                    break;
+                                case ('profesional'):
+                                    this.countBloques[indexBloque].profesional--;
+                                    break;
+                                case ('gestion'):
+                                    this.countBloques[indexBloque].gestion--;
+                                    break;
+                                default:
+                                    this.delDiaDisponibles--;
+                                    break;
+                            }
+                        }
+
+                        turnoAnterior = turno;
+
+                    });
+                    this.delDiaDisponibles = this.delDiaDisponibles + this.countBloques[indexBloque].delDia;
+
                     bloque.turnos.forEach(turno => {
                         if (turno.paciente) {
 
@@ -68,7 +116,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                             this.serviceAgenda.get({}).subscribe((agendas) => {
                                 this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                                 // this.calculosSimilitud(turno, agendas);
-                                // console.log('turnosAReasignar', this.turnosAReasignar);
                             });
                         }
 
@@ -118,7 +165,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let params = {
             idAgenda: idagendasSimilares,
             idBloque: idBloque,
-            idTurno: idTurno
+            idTurno: idTurno,
+            horario: true,
+            duracion: false
         };
 
         this.serviceTurno.get(params).subscribe((agendas) => {
@@ -207,6 +256,19 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     public tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
+    }
+
+    existePrestacion(bloque: any, idPrestacion: string) {
+        return bloque.tipoPrestaciones.find((tp) => {
+            return tp._id === idPrestacion;
+        });
+    }
+
+    primerSimultaneoDisponible(bloque: IBloque, turno: ITurno, indiceT: number) {
+        return (indiceT - 1 < 0)
+            || (turno.horaInicio.getTime() !== bloque.turnos[(indiceT - 1)].horaInicio.getTime())
+            || ((turno.horaInicio.getTime() === bloque.turnos[(indiceT - 1)].horaInicio.getTime())
+                && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
     reasignacionManual() {
