@@ -24,6 +24,11 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
+    xconsole(e) {
+        console.log(e);
+    }
+    listOne: Array<string> = ['Coffee', 'Orange Juice', 'Red Wine', 'Unhealty drink!', 'Water'];
+    @HostBinding('class.plex-layout') layout = true;
     // Le pasamos la prestacion que se esta ejecutando.
     //  @Input() prestacionEjecucion: object;
 
@@ -49,6 +54,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     //Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
+
+    //Variable para mostrar el div dropable en el momento que se hace el drag
+    public isDraggingRegistro: Boolean = false;
 
     public elementosRUPcollapse: any[] = [];
 
@@ -110,6 +118,30 @@ export class PrestacionEjecucionComponent implements OnInit {
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number, registro: any) {
         this.registros.splice(posicionActual, 1);
         this.registros.splice(posicionNueva, 0, registro);
+
+        console.log(this.registros);
+    }
+
+
+    /**
+     * Mover un registro hacia una posicion especifica
+     * Para ello busca su posicion actual y llama a moverRegistroEnPoscion()
+     *
+     * @param {number} posicionNueva: posicion actual del registro
+     * @param {*} registro: objeto a mover en el array de registros
+     * @memberof PrestacionEjecucionComponent
+     */
+    moverRegistro(posicionNueva: number, registro: any) {
+        //buscamos posicion actual
+        let posicionActual = this.registros.findIndex(r => (registro.dragData.concepto.conceptId === r.concepto.conceptId));
+
+        // si la posicion a la que lo muevo es distinta a la actual
+        // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
+        if ( (posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1) ) {
+            // movemos
+            this.moverRegistroEnPosicion(posicionActual, posicionNueva, registro.dragData);
+        }
+
     }
 
     /**
@@ -120,6 +152,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept) {
+
         console.log('Ejecucion');
         console.log(snomedConcept);
         let conceptoIn = snomedConcept;
@@ -150,11 +183,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                 break;
         }
 
+        let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.id);
+        if (existe) {
+            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra agregado.');
+
+            return false;
+        }
+
         // agregamos al array de registros
         this.cargarRegistroEnPosicion(this.registros.length, data);
 
+        // agregamos el elemento al collapse
         this.elementosRUPcollapse.push(this.data);
         this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
+
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
@@ -164,6 +206,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.ejecutarConcepto(resultadoHuds.data.concepto);
         }
     }
+
+    /* ordenamiento de los elementos */
+    /**
+     * Indicando si estoy arrastrando registro
+     *
+     * @param {boolean} dragging true/false
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
+    draggingRegistro(dragging: Boolean) {
+        console.log(dragging);
+        this.isDraggingRegistro = dragging;
+    }
+    /* fin ordenamiento de los elementos */
 
     /*
       * Event emmiter ejecutado cuando se devuelven valores

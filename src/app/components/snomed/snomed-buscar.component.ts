@@ -17,11 +17,6 @@ import { Observable } from 'rxjs/Rx';
     styles: [`
     .results {
         margin-top: 0;
-    }
-
-    .drag-bar {
-        cursor: -webkit-grab;
-        color: white;
     }`
     ]
 })
