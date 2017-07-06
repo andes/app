@@ -19,17 +19,18 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input('seleccion') seleccion: any;
-    @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    @Output() data: EventEmitter<string> = new EventEmitter<string>();
 
     private timeoutHandle: number;
 
     // Propiedades públicas
-    public provincias: any[] = [];
+    public documento = '';
+    public roles: any[] = [];
     public textoLibre: string = null;
     public disableBuscar = false;
     public showCreate = false;
     public showUpdate = false;
-    public permisos: any;
+    public permisos: any[] = [];
     public userModel: any = {
         usuario: '',
         activo: true,
@@ -63,16 +64,21 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         {
             'id': '4',
             'codigo': 4,
-            'nombre': 'Auditoria'
+            'nombre': 'MPI - Auditoria'
         },
         {
             'id': '5',
             'codigo': 5,
-            'nombre': 'Agendas'
+            'nombre': 'RUP - Auditoria'
         },
         {
             'id': '6',
             'codigo': 6,
+            'nombre': 'Agendas'
+        },
+        {
+            'id': '7',
+            'codigo': 7,
             'nombre': 'Rup'
         },
     ];
@@ -127,6 +133,22 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         }
     }
 
+    updateRoles(event) {
+        if (this.roles && this.roles.length > 0) {
+            this.roles.forEach(rol => {
+                switch (rol.nombre) {
+                    case ('Medico'):
+                        this.permisos.push('Rup');
+                        this.permisos.push('Agendas');
+                        break;
+                }
+            });
+        }
+    }
+
+    updatePermisos(event) {
+    }
+
     loadUser() {
         this.showUpdate = true;
         this.userModel.usuario = this.seleccion.usuario;
@@ -145,14 +167,22 @@ export class UsuarioCreateUpdateComponent implements OnInit {
             });
     }
     newUser() {
+        this.showCreate = true;
+    }
 
+    buscarUsuario() {
+        this.userModel.nombre = 'Juan';
+        this.userModel.apellido = 'Perez';
+        this.userModel.usuario = this.documento;
+        this.plex.info('success', '', 'Usuario creado', );
+        this.showCreate = false;
+        this.showUpdate = true;
     }
 
     devolverValores(event: any) {
-
     }
 
     onCancel() {
-        this.data.emit();
+        this.data.emit(null);
     }
 }

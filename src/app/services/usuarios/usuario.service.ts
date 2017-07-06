@@ -12,7 +12,11 @@ export class UsuarioService {
     constructor(private server: Server) { }
 
     get(): Observable<any> {
-        return this.server.get(this.usuarioUrl + '/usuarios');
+        return this.server.get(this.usuarioUrl + '');
+    }
+
+    getUser(id: String): Observable<any> {
+        return this.server.get(this.usuarioUrl + '/ldap/' + id);
     }
 
 }
