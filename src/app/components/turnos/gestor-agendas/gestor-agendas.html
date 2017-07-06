@@ -108,7 +108,7 @@
                 </div>
                 <!-- Panel Reasignar Turnos Automático -->
                 <div *ngIf="showReasignarTurnoAutomatico">
-                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignacionManualEmit)="reasignacionManualEmitted($event)"></reasignar-turno-automatico>
+                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
                 </div>
             </plex-box>
         </div>
@@ -133,5 +133,5 @@
     (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
 <!-- Pantalla Reasignar Turnos -->
-<reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]"></reasignar-turno>
+<reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></reasignar-turno>
 <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>

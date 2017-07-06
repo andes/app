@@ -32,7 +32,7 @@ export class ReasignarTurnoComponent implements OnInit {
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
-    @Output() reasignacionManualAgendasEmit = new EventEmitter<boolean>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
 
     public turnoAReasignar: ITurno;
 
@@ -49,6 +49,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.showReasignarTurno = true;
     }
 
     actualizar() {
@@ -67,7 +68,6 @@ export class ReasignarTurnoComponent implements OnInit {
                         this.serviceTurno.get(params).subscribe((agendas) => {
                             this.turnosAReasignar = [... this.turnosAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                             this.calculosSimilitud(turno, agendas);
-                            // console.log('turnosAReasignar', this.turnosAReasignar);
                         });
                     }
 
@@ -140,14 +140,6 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-        // let params = {
-        //     fechaDesde: new Date(),
-        //     estados: ['publicada', 'disponible']
-        // };
-
-        // this.serviceAgenda.get(params).subscribe((agendas) => {
-        //     this.agendasSimilares = agendas;
-        // });
 
         let params = {
             idAgenda: idAgendaAReasignar,
@@ -159,7 +151,6 @@ export class ReasignarTurnoComponent implements OnInit {
             this.agendasSimilares = agendas;
             console.log('agendasSimilares', this.agendasSimilares);
         });
-
 
     }
 
@@ -257,12 +248,10 @@ export class ReasignarTurnoComponent implements OnInit {
 
     }
 
-    reasignacionManualAgendas() {
-        this.reasignacionManualAgendasEmit.emit(true);
+    cancelar() {
+        this.volverAlGestor.emit(true);
+        this.showReasignarTurno = false;
     }
 
-    volverAlgestor() {
-        this.reasignacionManualAgendasEmit.emit(true);
-    }
 
 }

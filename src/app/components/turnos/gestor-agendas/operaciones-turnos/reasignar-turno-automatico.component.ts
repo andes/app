@@ -30,7 +30,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
     @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
-    @Output() reasignacionManualEmit = new EventEmitter<boolean>();
+    @Output() reasignarTurnosEmit = new EventEmitter<boolean>();
 
     public turnoAReasignar: ITurno;
 
@@ -226,8 +226,8 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
 
-    reasignacionManual() {
-        this.reasignacionManualEmit.emit(true);
+    reasignarTurnos() {
+        this.reasignarTurnosEmit.emit(this.agendaAReasignar);
     }
 
     // cancelar() {

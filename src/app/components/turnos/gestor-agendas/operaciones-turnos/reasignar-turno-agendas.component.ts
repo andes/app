@@ -184,10 +184,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         });
     }
 
-    seleccionarCandidata(indiceTurno, i) {
+    seleccionarCandidata(indiceTurno, indiceAgenda) {
         let turno = this.turnosAReasignar[indiceTurno].turno;
         let bloque = this.turnosAReasignar[indiceTurno].bloque;
-        let agendaSeleccionada = this.turnosAReasignar[indiceTurno].agendas[i];
+        let agendaSeleccionada = this.turnosAReasignar[indiceTurno].agendas[indiceAgenda];
         let tipoTurno;
         console.log('seleccionarCandidata ', agendaSeleccionada);
         console.log('seleccionarCandidata ', this.turnosAReasignar[indiceTurno]);

@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="showReasignarTurno">
     <div class="row">
         <!-- Header -->
         <div class="col">
@@ -11,13 +11,13 @@
                 </header>
 
                 <!--Resultados-->
-                <div *ngIf="!agendaAReasignar?.horaInicio" class="alert alert-default">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
+                <div *ngIf="turnosAReasignar.length === 0" class="alert alert-default">
+                    <i class="mdi mdi-emoticon"></i> No quedan Turnos para reasignar es esta Agenda
                 </div>
 
                 <!--Turnos-->
                 <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
-                    <thead *ngIf="bloque.descripcion">
+                    <thead *ngIf="turnosAReasignar.length > 0 && bloque.descripcion">
                         <tr>
                             <th colspan="4">{{bloque.descripcion}}</th>
                         </tr>
@@ -60,12 +60,13 @@
             </plex-box>
         </div>
     </div>
-    <!--Footer-->
-    <footer *ngIf="autorizado">
-        <div class="row">
-            <div class="col">
-                <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="volverAlgestor()"></plex-button>
-            </div>
-        </div>
-    </footer>
 </section>
+
+<!--Footer-->
+<footer *ngIf="autorizado">
+    <div class="row">
+        <div class="col">
+            <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button>
+        </div>
+    </div>
+</footer>
