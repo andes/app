@@ -2,7 +2,7 @@
     <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
-<section class="prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion">
+<section class="plex-layout prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion">
 
     <div class="row">
         <div class="col-3">
@@ -24,12 +24,23 @@
                     </p>
                 </div>
 
+
+
                 <div *ngIf="registros && registros.length">
 
                     <ng-container *ngFor="let elemento of registros; let i = index">
-                        <div class="rup-card" *ngIf="elemento.elementoRUP">
-                            <div class="type {{elemento.tipo}}">
-                                <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
+                            [dragOverClass]="'drag-hover-line'"
+                            class="drop-line-area" >
+                        </div>
+
+                        <div class="rup-card" *ngIf="elemento.elementoRUP"
+                            draggable
+                                [dragScope]="'orden-registros-rup'"
+                             [dragOverClass]="'drag-target-border'" [dragData]="elemento"
+                             >
+                            <div class="type {{elemento.tipo}} drag-handle">
+                                <i  class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                             </div>
                             <div class="rup-content">
                                 <div class="header">
@@ -52,8 +63,13 @@
                                 </div>
                             </div>
                         </div>
+
                     </ng-container>
 
+                    <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)"
+                        [dragOverClass]="'drag-hover-line'"
+                        class="drop-line-area" *ngIf="registros && registros.length">
+                    </div>
                 </div>
             </plex-box>
         </div>
