@@ -85,12 +85,12 @@ const appRoutes: Routes = [
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
 
   // Auditoria
-  { path: 'auditoria', component: AuditoriaComponent },
-  { path: 'auditoria2', component: Auditoria2Component },
-  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
+  { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
+  { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
+  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent ,canActivate: [RoutingGuard] },
 
   // Usuario
-  { path: 'busquedaUsuario', component: BusquedaUsuarioComponent },
+  { path: 'busquedaUsuario', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
   // RUP
   // Prestación Clínica General de Medicina
