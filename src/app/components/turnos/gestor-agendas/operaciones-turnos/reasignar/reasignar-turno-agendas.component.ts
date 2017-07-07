@@ -1,14 +1,14 @@
-import { IBloque } from './../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs/Rx';
-import { CalendarioComponent } from './../../dar-turnos/calendario.component';
-import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { ITurno } from './../../../../interfaces/turnos/ITurno';
-import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { TurnoService } from '../../../../services/turnos/turno.service';
-// import { SmsService } from './../../../../services/turnos/sms.service';
+import { CalendarioComponent } from './../../../dar-turnos/calendario.component';
+import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
+import { IBloque } from './../../../../../interfaces/turnos/IBloque';
+import { ITurno } from './../../../../../interfaces/turnos/ITurno';
+import { AgendaService } from '../../../../../services/turnos/agenda.service';
+import { TurnoService } from '../../../../../services/turnos/turno.service';
+// import { SmsService } from './../../../../../services/turnos/sms.service';
 import * as moment from 'moment';
 
 @Component({
