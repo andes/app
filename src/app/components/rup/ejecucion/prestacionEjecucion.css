@@ -1,27 +1,7 @@
-/*
-.prestacionEjecucion .elementosRup .card,
-.prestacionEjecucion .elementosRup .card-header:first-child {
-    border-radius: 0;
-}
-
-.prestacionEjecucion .elementosRup .card {
-    margin: 10px 0;
-}
-
-.prestacionEjecucion .elementosRup .card h5 {
-    text-transform: capitalize;
-}
-
-.conceptos.list-group > .list-group-item {
-    padding: 0;
-}
-*/
-
 .rup-card {
     width: 100%;
     display: flex;
     border: 1px solid #ccc;
-    margin-bottom: 20px;
 }
 
 .rup-card.mini {
@@ -70,12 +50,12 @@
 }
 
 .problemas {
-    background-color: #34a;
+    background-color: #b99e06;
 }
 
 .btn-primary.problemas {
-    background-color: #34a;
-    border-color: #34a;
+    background-color: #b99e06;
+    border-color: #b99e06;
 }
 
 .planes {
@@ -88,12 +68,12 @@
 }
 
 .prestaciones {
-    background-color: #b99e06;
+    background-color: #34a;
 }
 
 .btn-primary.prestaciones {
-    background-color: #b99e06;
-    border-color: #b99e06;
+    background-color: #34a;
+    border-color: #34a;
 }
 
 .procedimientos {
@@ -107,6 +87,10 @@
 
 
 /* drag and drop */
+.drag-handle {
+    cursor: -webkit-grab;
+    color: white;
+}
 
 .drag-over-border {
     border: #ff525b dashed 2px;
@@ -117,10 +101,11 @@
 .drag-target-border {
     border: #00bfff dashed 2px;
 }
-
+/*
 .drag-handle {
     cursor: move;
 }
+*/
 
 .droppable {
     width: 100%;
@@ -150,4 +135,15 @@
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
     transition: all 200ms;
+}
+
+.drop-line-area {
+    border: 1px solid white;
+    height: 1px;
+    margin: 10px;
+}
+.drag-hover-line {
+    border: 1px solid black;
+    height: 1px;
+    margin: 10px 0;
 }
