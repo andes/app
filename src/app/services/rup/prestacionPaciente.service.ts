@@ -164,8 +164,8 @@ export class PrestacionPacienteService {
         return this.server.put(this.prestacionesUrl + '/' + prestacion.id, prestacion);
     }
 
-    patch(prestacion: IPrestacionPaciente, cambios: any): Observable<IPrestacionPaciente> {
-        return this.server.patch(this.prestacionesUrl + '/' + prestacion.id, cambios);
+    patch(idPrestacion: string, cambios: any): Observable<IPrestacionPaciente> {
+        return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
 
     // tslint:disable-next-line:eofline

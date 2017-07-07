@@ -42,7 +42,6 @@ export class PuntoInicioComponent implements OnInit {
     // termino a buscar en Snomed
     public searchTerm: String = '';
 
-
     public listaPrestaciones: IPrestacionPaciente[] = [];
     public agendas: any = [];
     public breadcrumbs: any;
@@ -142,10 +141,11 @@ export class PuntoInicioComponent implements OnInit {
         // Buscamos los que solo tienen prestacion y no tienen turno
 
         this.todasLasPrestaciones.forEach(prestacion => {
+            debugger;
             unPacientePresente.idAgenda = null;
             unPacientePresente.turno = null;
             unPacientePresente.estado = prestacion.estados[prestacion.estados.length - 1].tipo;
-            unPacientePresente.fecha = prestacion.estados[prestacion.estados.length - 1].fecha;
+            unPacientePresente.fecha = prestacion.estados[prestacion.estados.length - 1].createdAt;
             unPacientePresente.profesionales = [prestacion.estados[prestacion.estados.length - 1].createdBy];
 
             if (unPacientePresente.estado === 'pendiente') {
@@ -228,10 +228,9 @@ export class PuntoInicioComponent implements OnInit {
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
-                this.router.navigate(['/rup/resumen', prestacion.id]);
-                /*this.paciente = null;
+                this.paciente = null;
                 this.mostrarPacientesSearch = true;
-                this.mostrarLista = true;*/
+                this.mostrarLista = true;
             });
         });
     }
@@ -244,7 +243,23 @@ export class PuntoInicioComponent implements OnInit {
      */
     elegirPrestacion(unPacientePresente) {
         if (unPacientePresente.idPrestacion) {
-            this.router.navigate(['/rup/resumen', unPacientePresente.idPrestacion]);
+            debugger;
+            if (unPacientePresente.estado === 'Programado') {
+                let cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'ejecucion' }
+                };
+
+                // Vamos a cambiar el estado de la prestación a ejecucion
+
+                this.servicioPrestacion.patch(unPacientePresente.idPrestacion, cambioEstado).subscribe(prestacion => {
+                    this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación');
+                });
+            } else {
+                this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
+            }
         } else {
             /*
             // Marcar la asistencia al turno
@@ -323,6 +338,29 @@ export class PuntoInicioComponent implements OnInit {
      */
     loadEstados($event) {
         return $event.callback([{ id: 'Programado', nombre: 'Programado' }, { id: 'En espera', nombre: 'En espera' }, { id: 'ejecucion', nombre: 'En ejecución' }, { id: 'validada', nombre: 'Validada' }, { id: 'Suspendido', nombre: 'Suspendido' }]);
+    }
+
+
+    /**
+     * Regenerar el listado de agendas filtradas por fechas
+     *
+     * @memberof PuntoInicioComponent
+     */
+    filtrarPorFecha() {
+        this.todasLasPrestaciones = [];
+        // this.pacientesPresentes = [];
+        let fechaDesde = moment(this.fechaDesde).startOf('day');
+        let fechaHasta = moment(this.fechaHasta).endOf('day');
+
+        if (fechaDesde.isValid() && fechaHasta.isValid()) {
+            let params = {
+                fechaDesde: fechaDesde.format(),
+                fechaHasta: fechaHasta.format()
+            };
+            this.TraetodasLasPrestacionesFiltradas(params);
+        } else {
+            this.plex.info('danger', 'ERROR: fechas invalidas');
+        }
     }
 
     /**
