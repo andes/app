@@ -30,7 +30,6 @@ export class EstadisticasPacientesComponent implements OnInit {
             fechaDesde: moment().startOf('day').format(),
             fechaHasta: moment().endOf('day').format()
         };
-
         this.fechaDesde = new Date(hoy.fechaDesde);
         this.fechaHasta = new Date(hoy.fechaHasta);
 

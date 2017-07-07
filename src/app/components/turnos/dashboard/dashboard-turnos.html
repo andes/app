@@ -1,5 +1,5 @@
 <section>
-    <div class="row"  *ngIf="showDashboard">
+    <div class="row" *ngIf="showDashboard">
         <div class="col-8">
             <plex-box>
                 <header>
@@ -7,18 +7,19 @@
                     <div class="clearfix">
                         <div class="page-title">PUNTO DE INICIO | GESTIÓN DE PACIENTES</div>
                     </div>
-                    
+
                 </header>
                 <div class="row">
-                     <div class="col-12">
+                    <div class="col-12">
                         <plex-button type="info" label="Codificaciones"></plex-button>
                         <plex-button type="info" label="Verificar Asistencia"></plex-button>
                         <plex-button icon="printer" type="info" label="Imprimir"></plex-button>
                     </div>
                 </div>
-                <div class="row" *ngIf="buscarMPI">
+                <div class="row">
                     <div class="col-12">
-                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm" (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" (blanqueaInput)="handleBlanqueo($event)"
+                            (sinResultados)="handleBlanqueo($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
                     </div>
                 </div>
             </plex-box>
@@ -29,8 +30,8 @@
                 <div *ngIf="showMostrarEstadisticasAgendas" type="info">
                     <estadisticas-agendas></estadisticas-agendas>
                 </div>
-                 <div *ngIf="showMostrarEstadisticasPacientes" type="info">
-                    <estadisticas-pacientes [paciente]= "paciente" ></estadisticas-pacientes>
+                <div *ngIf="showMostrarEstadisticasPacientes" type="info">
+                    <estadisticas-pacientes [paciente]="paciente"></estadisticas-pacientes>
                 </div>
                 <div *ngIf="showMostrarTurnosPaciente" type="info">
                     <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
