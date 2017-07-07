@@ -10,15 +10,19 @@
     </header>
     <!--Turnos-->
     <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
+
         <plex-accordion class="accordion-dashboard">
+
             <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-success">{{turno.asistencia}}</div>
             <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-danger">{{turno.asistencia}}</div>
             <plex-panel *ngIf="turnosPaciente.length>0" tituloPrincipal="{{ turno.tipoPrestacion.nombre }}" icon="arrow-down-drop-circle-outline">
+
                 <div class="row" *ngIf="turno.organizacion">
                     <div class="col">
                         <em class="small">{{turno.organizacion.nombre}}</em>
                     </div>
                 </div>
+
                 <div class="row" *ngIf="turno.profesionales">
                     <div class="col">
                         <strong>Profesional:</strong> {{ turno.profesionales[0]| profesional }}
@@ -27,21 +31,24 @@
                 <br>
                 <div class="row">
                     <div class="col-4" *ngIf="turno.horaInicio">
-                        {{ turno.horaInicio | date:"EEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy' }}
+                        {{ turno.horaInicio | date: 'dd/MM/yyyy' }}
+                        <em class="small">{{ turno.horaInicio | date:"EEEE" | uppercase }}</em>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4" *ngIf="turno.horaInicio">
                         <span *ngIf="turno.horaInicio"><i class="mdi mdi-timer"></i> 
                             {{ turno.horaInicio | date: 'HH:mm' }} hs.
                             </span>
                     </div>
                     <div class="col-4" style="text-align:right">
-                        <plex-button *ngIf="operacion=='anulacionTurno'" type="danger" icon="account-off"></plex-button>
+                        <plex-button *ngIf="operacion=='anulacionTurno' && turno.asistencia !== 'asistio'" type="danger" icon="account-off" (click)="eventosTurno(turno, 'liberarTurno')"></plex-button>
+                        <plex-button *ngIf="operacion=='registrarAsistencia' && turno.asistencia !== 'asistio'" type="success" icon="mdi mdi-account-check"
+                            (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
+                        <plex-button *ngIf="operacion=='registrarAsistencia' && turno.asistencia == 'asistio'" type="warning" icon="mdi mdi-account-remove"
+                            (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3">
 
-                    </div>
                 </div>
             </plex-panel>
         </plex-accordion>

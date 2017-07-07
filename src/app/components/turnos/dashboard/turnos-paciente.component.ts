@@ -7,6 +7,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { AgendaService } from '../../../services/turnos/agenda.service';
 
 @Component({
     selector: 'turnos-paciente',
@@ -16,10 +17,26 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 export class TurnosPacienteComponent implements OnInit {
 
     _paciente: IPaciente;
+    _operacion: string;
     tituloOperacion: string;
     turnosPaciente = [];
 
-    @Input() operacion: string;
+    @Input('operacion')
+    set operacion(value: string) {
+        this._operacion = value;
+        switch (this._operacion) {
+            case 'anulacionTurno':
+                this.tituloOperacion = 'Liberar Turno';
+                break;
+            case 'registrarAsistencia':
+                this.tituloOperacion = 'Registro de Asistencia del Paciente';
+                break;
+        }
+    }
+    get operacion(): string {
+        return this._operacion;
+    }
+
     @Input('paciente')
     set paciente(value: IPaciente) {
         this._paciente = value;
@@ -36,25 +53,42 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     // Inicialización
-    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
+    constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
-        // Se buscan los turnos del paciente
-        // debugger;
-        // let datosTurno = { pacienteId: this.paciente.id };
+    }
 
-        // this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-        //     debugger;
-        //     this.turnosPaciente = turnos;
-        // });
-        switch (this.operacion) {
-            case 'anulacionTurno':
-                this.tituloOperacion = 'Liberar Turno';
-                break;
-            case 'registrarAsistencia':
-                this.tituloOperacion = 'Registro de Asistencia del Paciente';
-                break;
-        }
+    eventosTurno(turno, operacion) {
+        let mensaje = '';
+        let tipoToast = 'info';
+        let patch: any = {
+            op: operacion,
+            turnos: [turno],
+            'idTurno': turno._id
+        };
+
+        // Patchea los turnosSeleccionados (1 o más turnos)
+        this.serviceAgenda.patchMultiple(turno.agenda_id, patch).subscribe(resultado => {
+            let agenda = resultado;
+            let datosTurno = { pacienteId: this._paciente.id };
+            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+                this.turnosPaciente = turnos;
+                switch (operacion) {
+                    case 'darAsistencia':
+                        mensaje = 'Se registro la asistencia del paciente';
+                        break;
+                    case 'sacarAsistencia':
+                        mensaje = 'Se registro la inasistencia del paciente';
+                        tipoToast = 'warning';
+                        break;
+                    case 'liberarTurno':
+                        mensaje = 'Se anuló el turno del paciente';
+                        tipoToast = 'danger';
+                        break;
+                }
+                this.plex.toast(tipoToast, mensaje);
+            });
+        });
 
     }
 

@@ -28,7 +28,6 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
         if (this.resultado == null) {
             this.sinResultados.emit(true);
         }
-
     }
 
 }
