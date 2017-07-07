@@ -227,11 +227,12 @@ export class PuntoInicioComponent implements OnInit {
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+
             this.plex.alert('Prestación creada.').then(() => {
-                this.paciente = null;
-                this.mostrarPacientesSearch = true;
-                this.mostrarLista = true;
+                this.router.navigate(['/rup/ejecucion', prestacion.id]);
             });
+        }, (err) => {
+            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
         });
     }
 
