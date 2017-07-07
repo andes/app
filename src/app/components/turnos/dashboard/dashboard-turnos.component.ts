@@ -31,13 +31,11 @@ export class DashboardTurnosComponent implements OnInit {
     public showMostrarEstadisticasPacientes = true;
 
     public paciente;
-    public searchTerm = '';
     public autorizado = false;
     operacionTurnos = '';
     showDarTurnos = false;
     showDashboard = true;
     showMostrarTurnosPaciente = false;
-    private buscarMPI = true;
     private esOperacion = false;
 
 
@@ -53,7 +51,6 @@ export class DashboardTurnosComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente): void {
-        debugger;
         this.paciente = paciente;
         this.showMostrarEstadisticasAgendas = false;
         if (this.esOperacion) {
@@ -63,19 +60,6 @@ export class DashboardTurnosComponent implements OnInit {
             this.showMostrarEstadisticasPacientes = true;
             this.showMostrarTurnosPaciente = false;
         }
-
-        /*if (paciente.id) {
-            this.searchTerm = '';
-            this.buscarMPI = false;
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.searchTerm = '';
-                    window.setTimeout(() => this.buscarMPI = true, 100);
-                });
-        }*/
-
-        // this.buscarMPI = false;
     }
 
     handleBlanqueo(event) {
@@ -84,7 +68,6 @@ export class DashboardTurnosComponent implements OnInit {
     }
 
     verificarOperacion(operacion) {
-        debugger;
         this.esOperacion = true;
         switch (operacion) {
             case 'darTurno':
