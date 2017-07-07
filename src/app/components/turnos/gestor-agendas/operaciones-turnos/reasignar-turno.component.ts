@@ -25,13 +25,13 @@ export class ReasignarTurnoComponent implements OnInit {
     };
     showReasignarTurno: boolean;
     agendasSimilares: IAgenda[];
+    agendaDestino: any = {};
 
     private _agendaAReasignar: any;
 
     @Input('agendaAReasignar')
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
-        this.actualizar();
     }
     get agendaAReasignar(): any {
         return this._agendaAReasignar;
@@ -59,115 +59,11 @@ export class ReasignarTurnoComponent implements OnInit {
         this.showReasignarTurno = true;
     }
 
-    actualizar() {
-        // this.turnosAReasignar = [];
-        // if (this.agendaAReasignar) {
-        //     this.agendaAReasignar.bloques.forEach(bloque => {
-        //         bloque.turnos.forEach(turno => {
-        //             if (turno.paciente) {
-
-        //                 let params = {
-        //                     idAgenda: this.agendaAReasignar.id,
-        //                     idBloque: bloque.id,
-        //                     idTurno: turno.id
-        //                 };
-
-        //                 this.serviceTurno.get(params).subscribe((agendas) => {
-        //                     this.agendaAReasignar = [... this.agendaAReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
-        //                     // this.calculosSimilitud(turno, agendas);
-
-        //                 });
-        //             }
-
-        //         });
-        //     });
-        // }
-    }
-
-    /**
-     * 
-     * @param array1 
-     * @param array2 
-     */
-    interseccion(array1: any[], array2: any[]) {
-        for (let i = 0; i < array1.length; i++) {
-            let prof1 = array1[i];
-            if (array2.find(x => String(x._id) === String(prof1._id))) {
-                return true;
-            }
-        }
-    }
-
-    calculosSimilitud(turno: ITurno, agendas: any[]) {
-
-        let calculos = 0;
-        agendas.forEach((ag) => {
-            ag.bloques.forEach((bl) => {
-                bl.turnos.forEach((tu) => {
-                    let calculoSimilitud = {
-                        tipoPrestacion: bl.tipoPrestaciones.findIndex(x => x._id === turno.tipoPrestacion.id) >= 0 ? 30 : 0,
-                        // horaInicio: (turno.horaInicio === tu.horaInicio ? 30 : 0),
-                        horaInicio: 20,
-                        duracionTurno: (this.agendaAReasignar.bloques.find(x => x.duracionTurno === bl.duracionTurno) ? 20 : 0),
-                        profesional: this.interseccion(ag.profesionales, this.agendaAReasignar.profesionales) === true ? 30 : 0
-                        // diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
-                    };
-                    calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
-                });
-            });
-            ag.similitud = calculos;
-        });
-
-        // if (calculos > 0) {
-        //     return calculos;
-        // }
-
-    }
-
     estaSeleccionado(turno: any) {
         return this.turnosSeleccionados.indexOf(turno) >= 0;
     }
 
-    cargarturnosAReasignar(idAgendaAReasignar, idBloque, idTurno) {
-
-        let params = {
-            idAgenda: idAgendaAReasignar,
-            idBloque: idBloque,
-            idTurno: idTurno
-        };
-
-        this.serviceTurno.get(params).subscribe((agendas) => {
-
-            let indice = this.turnosAReasignar.find(x => x.idTurno === idTurno);
-            let candidatas = {
-                idTurno: idTurno,
-                agendas: agendas
-            };
-            this.turnosAReasignar = [... this.turnosAReasignar, candidatas];
-        });
-    }
-
-    cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-
-        let params = {
-            idAgenda: idAgendaAReasignar,
-            idBloque: idBloque,
-            idTurno: idTurno
-        };
-
-        this.datosAgenda = params;
-
-        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
-            this.agendasSimilares = agendas;
-            console.log('agendasSimilares', this.agendasSimilares);
-            console.log('agendaAReasignar', this.agendaAReasignar);
-
-        });
-
-    }
-
-    seleccionarTurno(turno, bloque, multiple = false, sobreturno) {
-        turno.sobreturno = sobreturno;
+    seleccionarTurno(turno, bloque, multiple = false) {
 
         if (!multiple) {
             this.turnosSeleccionados = [];
@@ -193,11 +89,63 @@ export class ReasignarTurnoComponent implements OnInit {
         //     this.todos = true;
         // }
 
-        this.cargarAgendasSimilares(this.agendaAReasignar.id, bloque.id, turno.id);
+        let idAgenda, idBloque, idTurno;
+
+        console.log('turno', turno);
+
+        // this.turnoAReasignar = turno;
+
+        // Si es un turno ya reasignado cargamos la agenda a la cual se reasignó
+        if (typeof turno.reasignado !== 'undefined' && turno.reasignado.siguiente) {
+
+            this.cargarAgendaDestino(turno.reasignado.siguiente.idAgenda, turno.reasignado.siguiente.idBloque, turno.reasignado.siguiente.idTurno);
+
+        } else {
+
+            idAgenda = this.agendaAReasignar.id;
+            idBloque = bloque.id;
+            idTurno = turno.id;
+
+            this.cargarAgendasSimilares(idAgenda, idBloque, idTurno);
+        }
+
 
     }
 
+    cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
 
+        let params = {
+            idAgenda: idAgendaAReasignar,
+            idBloque: idBloque,
+            idTurno: idTurno
+        };
+
+        // Datos de referencia de la agenda origen para pasar al componente hijo (reasignar-turno-agendas)
+        this.datosAgenda = params;
+
+        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
+            this.agendasSimilares = agendas;
+        });
+    }
+
+
+    cargarAgendaDestino(idAgenda, idBloque, idTurno) {
+
+        this.serviceAgenda.getById(idAgenda).subscribe(agendaDestino => {
+            this.agendaDestino.agenda = agendaDestino;
+
+            let indiceBloque = agendaDestino.bloques.findIndex(x => x.id === idBloque);
+            this.agendaDestino.bloque = agendaDestino.bloques[indiceBloque];
+
+            let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === idTurno);
+            this.agendaDestino.turno = agendaDestino.bloques[indiceBloque].turnos[indiceTurno];
+        });
+
+    }
+
+    /**
+     * Volver al gestor
+     */
     cancelar() {
         this.volverAlGestor.emit(true);
         this.showReasignarTurno = false;

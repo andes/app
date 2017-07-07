@@ -29,10 +29,10 @@
 
                             <ng-template #reasignado>
                                 <ng-container *ngIf="turno.estado === 'asignado'">
-                                    <td>
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                     </td>
-                                    <td>
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
                                         <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
                                         <small>
@@ -44,10 +44,9 @@
                                         <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
                                         <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
                                         <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
-                                        <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
                                         <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                     </td>
-                                    <td>
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <div class="badge badge-success float-right">
                                             <i class="mdi mdi-check"></i> Turno ya reasignado
                                         </div>
@@ -57,10 +56,10 @@
 
                             <ng-template #noReasignado>
                                 <ng-container *ngIf="turno.estado === 'asignado'">
-                                    <td (click)="seleccionarTurno(turno, bloque, false, false)">
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                     </td>
-                                    <td (click)="seleccionarTurno(turno, bloque, false, false)">
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
                                         <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
                                         <small>
@@ -73,7 +72,7 @@
                                         <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
                                         <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                     </td>
-                                    <td>
+                                    <td (click)="seleccionarTurno(turno, bloque, false)">
                                         <div class="badge badge-warning float-right">
                                             <i class="mdi mdi-account-convert"></i> Turno sin reasignar
                                         </div>
@@ -89,7 +88,7 @@
         <div class="col-8">
             <plex-box>
                 <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" [agendaAReasignar]="agendaAReasignar"
-                    [datosAgenda]="datosAgenda" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+                    [datosAgenda]="datosAgenda" [agendaDestino]="agendaDestino" (reasignacionManualAgendasEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
             </plex-box>
         </div>
     </div>

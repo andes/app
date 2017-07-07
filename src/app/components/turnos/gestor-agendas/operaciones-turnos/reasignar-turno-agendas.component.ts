@@ -21,19 +21,29 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     delDiaDisponibles: number;
 
     private _agendasSimilares: any;
-
     @Input('agendasSimilares')
     set agendasSimilares(value: any) {
         this._agendasSimilares = value;
-        // this.actualizar();
     }
     get agendasSimilares(): any {
         return this._agendasSimilares;
     }
 
     @Input() turnoSeleccionado: any;
-    @Input() agendaAReasignar: IAgenda;
-    @Input() datosAgenda: any;
+    @Input() agendaAReasignar: IAgenda; // Agenda origen
+    @Input() datosAgenda: any; // IDs de agenda, bloque origen
+    agendaSeleccionada: any;
+
+    // Agenda destino
+    private _agendaDestino;
+    @Input('agendaDestino')
+    set agendaDestino(value: any) {
+        this._agendaDestino = value;
+    }
+    get agendaDestino(): any {
+        return this._agendaDestino;
+    }
+
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
@@ -63,7 +73,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.delDiaDisponibles = 0;
         this.agendasSimilares = [];
         let turnoAnterior = null;
-
 
         if (this.agendasSimilares) {
             this.agendasSimilares.forEach(agenda => {
@@ -105,87 +114,36 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     });
                     this.delDiaDisponibles = this.delDiaDisponibles + this.countBloques[indexBloque].delDia;
 
-                    // bloque.turnos.forEach(turno => {
-                    //     if (turno.paciente) {
-
-                    //         // let params = {
-                    //         //     idAgenda: this.agendasSimilares.id,
-                    //         //     idBloque: bloque.id,
-                    //         //     idTurno: turno.id
-                    //         // };
-
-                    //         this.serviceAgenda.get({}).subscribe((agendas) => {
-                    //             this.agendasSimilares = [... this.agendasSimilares, { turno: turno, bloque: bloque, agendas: agendas }];
-                    //             // this.calculosSimilitud(turno, agendas);
-                    //         });
-                    //     }
-
-                    // });
                 });
             });
         }
-    }
-
-    interseccion(array1: any[], array2: any[]) {
-        for (let i = 0; i < array1.length; i++) {
-            let prof1 = array1[i];
-            if (array2.find(x => String(x._id) === String(prof1._id))) {
-                return true;
-            }
-        }
-    }
-
-    calculosSimilitud(turno: ITurno, agendas: any[]) {
-
-        let calculos = 0;
-        agendas.forEach((ag) => {
-            ag.bloques.forEach((bl) => {
-                bl.turnos.forEach((tu) => {
-                    let calculoSimilitud = {
-                        tipoPrestacion: bl.tipoPrestaciones.findIndex(x => x._id === turno.tipoPrestacion.id) >= 0 ? 30 : 0,
-                        // horaInicio: (turno.horaInicio === tu.horaInicio ? 30 : 0),
-                        horaInicio: 20,
-                        duracionTurno: (this.agendasSimilares.bloques.find(x => x.duracionTurno === bl.duracionTurno) ? 20 : 0),
-                        profesional: this.interseccion(ag.profesionales, this.agendasSimilares.profesionales) === true ? 30 : 0
-                        // diaSemana: (moment(tu.horaInicio).weekday() === moment(ag.horaInicio).weekday() ? 10 : 0)
-                    };
-                    calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
-                });
-            });
-            ag.similitud = calculos;
-        });
-
-        // if (calculos > 0) {
-        //     return calculos;
-        // }
-
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
 
         let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
-        let agendaSeleccionada = this.agendasSimilares[indiceAgenda];
+        this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
         let tipoTurno;
 
         // Si la agenda es del día
-        if (agendaSeleccionada >= moment().startOf('day').toDate() &&
-            agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
+        if (this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
+            this.agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
-            if (agendaSeleccionada.estado === 'disponible') {
+            if (this.agendaSeleccionada.estado === 'disponible') {
                 tipoTurno = 'gestion';
             }
 
-            if (agendaSeleccionada.estado === 'publicada') {
+            if (this.agendaSeleccionada.estado === 'publicada') {
                 tipoTurno = 'programado';
             }
         }
 
         // Creo el Turno nuevo
         let datosTurno = {
-            idAgenda: agendaSeleccionada._id,
+            idAgenda: this.agendaSeleccionada._id,
             idBloque: bloque._id,
             idTurno: turno._id,
             paciente: this.turnoSeleccionado.paciente,
@@ -211,9 +169,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
                 let turnoReasignado = this.turnoSeleccionado;
                 let siguiente = {
-                    idAgenda: agendaSeleccionada._id,
-                    idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
-                    idTurno: agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno]._id
+                    idAgenda: this.agendaSeleccionada._id,
+                    idBloque: this.agendaSeleccionada.bloques[indiceBloque]._id,
+                    idTurno: this.agendaSeleccionada.bloques[indiceBloque].turnos[indiceTurno]._id
                 };
 
                 if (turnoReasignado.reasignado) {
