@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 
@@ -9,7 +10,7 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 })
 
 export class BuscadorComponent implements OnInit {
-
+    @Input() elementoRUPpretacion;
     /**
      * Devuelve un elemento seleccionado.
      */
@@ -18,8 +19,9 @@ export class BuscadorComponent implements OnInit {
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+    // emito el tipo de busqueda para que lo reciba el buscador SNOMED.
     @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
-
+    // Parametro que recibo por el input de planes.
     public searchPlanes: String = '';
     //Lista de planes.
     public listaPlanes: any[] = [];
@@ -34,14 +36,22 @@ export class BuscadorComponent implements OnInit {
     public showPlanes: boolean = false;
     public ejecucion: any[] = [];
 
+    //array de los mas frecuentes..
+    public masFrecuentes: any[] = [];
+    //Array de las mas frecuentes filtradas por semantictag de snomed
+    public masFrecuentesFiltradas: any[] = [];
+    public showFrecuentes: boolean = false;
+
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService) {
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
+    }
 
 
-    //drag and drop funciones
+    //drag and drop funciones. Hago los emit.
     dragStart(e) {
         this._onDragStart.emit(e);
     }
@@ -63,22 +73,43 @@ export class BuscadorComponent implements OnInit {
 
     //Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
+        this.masFrecuentesFiltradas = [];
+        this.masFrecuentes.forEach(element => {
+            console.log(tipoBusqueda);
+            console.log('tipoBusqueda');
+            console.log(element.semanticTag);
+            let semanticTag: String;
+            switch (element.semanticTag) {
+                case 'trastorno':
+                case 'hallazgo':
+                case 'problema':
+                    semanticTag = 'problemas';
+                    break;
+                case ('procedimiento'):
+                    semanticTag = 'procedimientos';
+                    break;
+            }
+
+            if (semanticTag === tipoBusqueda) {
+                this.masFrecuentesFiltradas.push(element);
+            }
+        });
+
         this.showPlanes = false;// Oculta el buscador de planes
-        console.log(tipoBusqueda);
         this.tipoBusqueda = tipoBusqueda;
         this._tipoDeBusqueda.emit(tipoBusqueda);
         //console.log(this.evtData);
     }
     //Muestra el buscador de planes
     busquedaPlanes() {
+        this.masFrecuentesFiltradas = [];
         this.tipoBusqueda = 'planes';
         this.showPlanes = true;
         this._tipoDeBusqueda.emit(this.tipoBusqueda);
     }
 
+    // Emito el concepto seleccionado
     seleccionBusqueda(concepto) {
-        // this.resultados = [];
-        // this.searchTerm = '';
         this.evtData.emit(concepto);
     }
 
@@ -87,5 +118,23 @@ export class BuscadorComponent implements OnInit {
     ejecutarConcepto(concepto) {
         console.log(concepto);
         this.evtData.emit(concepto);
+    }
+    // Recupero los mas frecuentes de los elementos rup y creo el objeto con los 
+    // conceptos de snomed
+    recuperaLosMasFrecuentes(elementoRUP) {
+        elementoRUP.frecuentes.forEach(element => {
+            let objFrecuente = {
+                concepId: element.conceptos[0].conceptId,
+                term: element.conceptos[0].term,
+                fsn: element.conceptos[0].fsn,
+                semanticTag: element.conceptos[0].semanticTag,
+                id: null
+            };
+            this.masFrecuentes.push(objFrecuente);
+        });
+    }
+    // Capturo el emit de snomed y seteo la variable para mostrar o ocultar los mas frecuentes.
+    mostrarMasfrecuentes(mostrar) {
+        this.showFrecuentes = mostrar;
     }
 }

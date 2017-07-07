@@ -48,6 +48,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+    // Output de un boolean para indicar cuando se tienen resultados de 
+    //busqueda o no.
+    @Output() _tengoResultado: EventEmitter<any> = new EventEmitter<any>();
+
     // cerrar si cliqueo fuera de los resultados
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
@@ -88,9 +92,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
-     }
+    }
 
-     ngOnChanges(changes: any) {
+    ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
         // y hubo algun cambio, entonces ejecuto la busqueda manual
         if (this.searchTermInput) {
@@ -144,6 +148,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm) {
+            this._tengoResultado.emit(true);
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
 
@@ -160,20 +165,20 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 this.loading = true;
                 this.resultados = [];
 
-               // alert(this.tipoBusqueda + " / " + search);
+                // alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
                 let apiMethod;
                 switch (this.tipoBusqueda) {
                     case 'problemas':
                         apiMethod = this.SNOMED.getProblemas(query);
-                    break;
+                        break;
                     case 'procedimientos':
                         apiMethod = this.SNOMED.getProcedimientos(query);
-                    break;
+                        break;
                     default:
                         apiMethod = this.SNOMED.get(query);
-                    break;
+                        break;
                 }
 
                 apiMethod.subscribe(problemas => {
@@ -188,6 +193,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             }, 300);
         } else {
             this.resultados = [];
+            this._tengoResultado.emit(false);
         }
     }
 
@@ -233,4 +239,5 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         this.evtData.emit(concepto);
     }
+
 }
