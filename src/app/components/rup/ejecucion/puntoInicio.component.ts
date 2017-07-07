@@ -91,8 +91,8 @@ export class PuntoInicioComponent implements OnInit {
             fechaHasta: moment().endOf('day').format()
         };
 
-        // this.fechaDesde = new Date(hoy.fechaDesde);
-        // this.fechaHasta = new Date(hoy.fechaHasta);
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
         // this.loadAgendasXDia(hoy);
 
         this.TraetodasLasPrestacionesFiltradas(hoy);
