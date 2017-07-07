@@ -224,16 +224,18 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     };
                 }
 
-                // Guardo los datos de la agenda "nueva" en el turno viejo
-                let reasignacion = {
+                let params = {
                     idAgenda: this.agendaAReasignar.id,
-                    idTurno: turno._id,
-                    idBloque: bloque._id,
-                    turno: turnoReasignado
+                    idTurno: this.datosAgenda.idTurno,
+                    idBloque: this.datosAgenda.idBloque,
+                    turno: turnoReasignado // Guardo los datos de la agenda "nueva" en el turno viejo
                 };
 
+                console.log('params', params);
+
+
                 // Agrego datos de reasignación al turno original (PUT)
-                this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
+                this.serviceTurno.put(params).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
                     this.actualizar();
                 });
