@@ -19,4 +19,8 @@ export class UsuarioService {
         return this.server.get(this.usuarioUrl + '/ldap/' + id);
     }
 
+    getByIdAndOrg(user: string, organizacion: string): Observable<any> {
+        return this.server.get(this.usuarioUrl + '/local/' + organizacion + '/' + user);
+    }
+
 }
