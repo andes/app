@@ -171,12 +171,33 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     buscarUsuario() {
-        this.userModel.nombre = 'Juan';
-        this.userModel.apellido = 'Perez';
-        this.userModel.usuario = this.documento;
-        this.plex.info('success', '', 'Usuario creado', );
-        this.showCreate = false;
-        this.showUpdate = true;
+        this.usuarioService.getByIdAndOrg(this.documento, this.auth.organizacion.id).subscribe(user => {
+            if (user.length < 1) {
+                this.usuarioService.getUser(this.documento).subscribe(res => {
+                    this.userModel.nombre = res.givenName;
+                    this.userModel.apellido = res.sn;
+                    this.userModel.usuario = res.uid;
+                    this.plex.info('success', '', 'Usuario creado', );
+                    this.showCreate = false;
+                    this.showUpdate = true;
+                }, err => {
+                    this.plex.info('warning', '', err);
+                }
+                );
+            } else {
+                this.userModel.nombre = user[0].nombre;
+                this.userModel.apellido = user[0].apellido;
+                this.userModel.usuario = user[0].usuario;
+                this.plex.info('info', '', 'Usuario existente', );
+                this.showCreate = false;
+                this.showUpdate = true;
+            }
+        }
+        );
+    }
+
+    onSave() {
+
     }
 
     devolverValores(event: any) {

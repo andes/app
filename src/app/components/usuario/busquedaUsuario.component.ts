@@ -1,30 +1,10 @@
-import {
-    Plex
-} from '@andes/plex';
-import {
-    Component,
-    OnInit,
-    HostBinding,
-    Output,
-    EventEmitter
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    Validators,
-    FormsModule,
-    ReactiveFormsModule
-} from '@angular/forms';
-import {
-    Server
-} from "@andes/shared";
-import {
-    Auth
-} from "@andes/auth";
+import { Plex } from '@andes/plex';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Server } from '@andes/shared';
+import { Auth } from '@andes/auth';
 // Services
-import {
-    UsuarioService
-} from "../../services/usuarios/usuario.service";
+import { UsuarioService } from '../../services/usuarios/usuario.service';
 
 @Component({
     selector: 'busquedaUsuario',

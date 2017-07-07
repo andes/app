@@ -16,7 +16,6 @@
                         </plex-button>
                     </div>
                     <!--Loader-->
-
                     <div *ngIf="users && !users.length" class="alert alert-danger">
                         <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
                     </div>
@@ -31,9 +30,6 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <plex-select [(ngModel)]="organizacion" [required]="true" name="organizacion" placeholder="Selecciona la organización" label="Organizacion"
-                    [data]="dataOrganizaciones">
-                </plex-select>
                 <plex-select [(ngModel)]="roles" name="roles" [required]="true" placeholder="Selecciona los roles" label="Roles"
                     [data]="dataRoles" (change)="updateRoles($event)">
                 </plex-select>
