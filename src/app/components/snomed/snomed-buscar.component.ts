@@ -44,6 +44,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
+    // Output de un boolean para indicar cuando se tienen resultados de 
+    //busqueda o no.
+    @Output() _tengoResultado: EventEmitter<any> = new EventEmitter<any>();
+
     // cerrar si cliqueo fuera de los resultados
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
@@ -94,11 +98,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     iniciarPrestacionesTurneables() {
         if (!this.cachePrestacionesTurneables) {
             this.servicioTipoPrestacion.get({}).subscribe(tiposPrestacion => {
-                debugger;
                 this.cachePrestacionesTurneables = tiposPrestacion;
             });
         }
     }
+
 
     ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
@@ -156,6 +160,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm) {
+            this._tengoResultado.emit(true);
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
 
@@ -207,6 +212,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             }, 300);
         } else {
             this.resultados = [];
+            this._tengoResultado.emit(false);
         }
     }
 
@@ -252,4 +258,5 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         this.evtData.emit(concepto);
     }
+
 }
