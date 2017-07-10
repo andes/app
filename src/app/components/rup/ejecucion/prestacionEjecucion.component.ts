@@ -58,7 +58,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     //Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingRegistro: Boolean = false;
 
+    // variables para la vista
     public elementosRUPcollapse: any[] = [];
+    // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
+    public confirmarDesvincular: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -115,9 +118,12 @@ export class PrestacionEjecucionComponent implements OnInit {
      *
      * @param posicionActual: posicion actual del registro
      * @param posicionNueva: posicion donde cargar el registro
-     * @param registro: objeto a mover en el array de registros
      */
-    moverRegistroEnPosicion(posicionActual: number, posicionNueva: number, registro: any) {
+    moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
+        debugger;
+
+        let registro = this.registros[posicionActual];
+
         this.registros.splice(posicionActual, 1);
         this.registros.splice(posicionNueva, 0, registro);
 
@@ -146,7 +152,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
         if ( (posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1) ) {
             // movemos
-            this.moverRegistroEnPosicion(posicionActual, posicionNueva, registro.dragData);
+            this.moverRegistroEnPosicion(posicionActual, posicionNueva);
         }
 
     }
@@ -159,29 +165,41 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         // si no existe lo agrego
-        let existe = this.registros.find(registro => registro.concepto.conceptId === registroOrigen.concepto.conceptId);
+        let existe = this.registros.find(r => ( registroOrigen.concepto && registroOrigen.concepto.conceptId === r.concepto.conceptId) || (r.concepto.conceptId === registroOrigen.conceptId));
         if (!existe) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
         }
 
+        let conceptIdOrigen = (registroOrigen.concepto) ? registroOrigen.concepto.conceptId : registroOrigen.conceptId;
+
         // buscamos en la posicion que se encuentra el registro de orgien y destino
-        let indexOrigen = this.registros.findIndex(r => (registroOrigen.concepto.conceptId === r.concepto.conceptId));
-        let indexDestino = this.registros.findIndex(r => (registroDestino.concepto.conceptId === r.concepto.conceptId));
+        let indexOrigen = this.registros.findIndex(r => (conceptIdOrigen === r.concepto.conceptId));
+        let indexDestino = this.registros.findIndex(r => (registroDestino.concepto && registroDestino.concepto.conceptId === r.concepto.conceptId) || (registroDestino.concepto.conceptId === r.concepto.conceptId));
 
         // solo vinculamos si no es el mismo elemento
-        if (registroOrigen.concepto.conceptId === registroDestino.concepto.conceptId) {
+        if (conceptIdOrigen === registroDestino.concepto.conceptId) {
             return false;
         }
 
         // si ya está vinculado a algun otro registro, no permitimos la vinculacion
+        /*
         if (registroDestino.relacionadoCon) {
             return false;
         }
+        */
 
         // buscamos todos los conceptos que tenga relacionados
         let relacionados = this.registros.filter(r => {
-            return (r.relacionadoCon && r.relacionadoCon.conceptId === registroOrigen.concepto.conceptId);
+            return (r.relacionadoCon && r.relacionadoCon.conceptId === conceptIdOrigen);
         });
+
+        /*
+        // si no tiene relacion con ninguno (es padre) y no tiene elementos relacionados
+        // entonces no permitimos mover el elemento
+        if (relacionados.length && !registroOrigen.relacionadoCon) {
+            return false;
+        }
+        */
 
         // vinculamos
         this.registros[indexOrigen].relacionadoCon = registroDestino.concepto;
@@ -199,6 +217,39 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         console.log(this.registros);
+    }
+
+    /**
+     * Mostrar opciones de confirmación de desvinculación
+     *
+     * @param {any} index Indice del elemento de los registros a desvincular
+     * @memberof PrestacionEjecucionComponent
+     */
+    desvincular(index) {
+        this.confirmarDesvincular[index] = true;
+    }
+
+    /**
+     * Quitamos vinculación de los registros
+     *
+     * @param {any} index Indice del elemento de los registros a desvincular
+     * @memberof PrestacionEjecucionComponent
+     */
+    confirmarDesvinculacion(index) {
+
+        // quitamos relacion si existe
+        if (this.registros[index].relacionadoCon) {
+            this.registros[index].relacionadoCon = null;
+
+            this.confirmarDesvincular[index] = false;
+
+            this.moverRegistroEnPosicion(index, this.registros.length);
+        }
+
+        // si no tiene ningun elemento relacionado entonces es un elemento padre
+        if (!this.registros[index].relacionadoCon) {
+            //this.registros.splice(index, 1);
+        }
     }
 
     crearRegistro(snomedConcept): any {
