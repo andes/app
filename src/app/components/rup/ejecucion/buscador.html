@@ -3,8 +3,8 @@
 <plex-button label="Planes" (click)="busquedaPlanes()" type="primary btn-sm planes"></plex-button>
 Buscador {{tipoBusqueda}}
 <div *ngIf="!showPlanes">
-    <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="'registros-rup'" (evtData)="ejecutarConcepto($event)" (_onDragStart)="dragStart(true)"
-        (_onDragEnd)="dragEnd(false)" (_tengoResultado)="mostrarMasfrecuentes($event)"></snomed-buscar>
+    <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" (_onDragStart)="dragStart(true)"
+        (_onDragEnd)="dragEnd(false)"></snomed-buscar>
 </div>
 
 <div *ngIf="showPlanes">
@@ -16,7 +16,10 @@ Buscador {{tipoBusqueda}}
     <div>
         <ul class="conceptos list-unstyled" *ngIf="listaPlanes">
             <ng-container *ngFor="let item of listaPlanes">
-                <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+
+                <li draggable [dragScope]="['registros-rup', 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)"
+                    (onDragEnd)="dragEnd($e)">
+
                     <div class="rup-card mini">
                         <div class="type {{tipoBusqueda}}">
                             <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>

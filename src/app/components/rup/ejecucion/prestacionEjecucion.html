@@ -27,43 +27,77 @@
 
 
                 <div *ngIf="registros && registros.length">
-
                     <ng-container *ngFor="let elemento of registros; let i = index">
+
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
                             [dragOverClass]="'drag-hover-line'"
                             class="drop-line-area" >
                         </div>
 
-                        <div class="rup-card" *ngIf="elemento.elementoRUP"
-                            draggable
-                                [dragScope]="'orden-registros-rup'"
-                             [dragOverClass]="'drag-target-border'" [dragData]="elemento"
-                             >
-                            <div class="type {{elemento.tipo}} drag-handle">
-                                <i  class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
-                            </div>
-                            <div class="rup-content">
-                                <div class="header">
-                                    <div class="title">
-                                        {{elemento.concepto.term}}
-                                    </div>
+                        <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)"
+                            [dragOverClass]="'drag-target-border'"
+                            [ngClass]="{'relacionado': elemento.relacionadoCon}" >
 
-                                    <div class="actions">
-                                        <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
+                            <div class="rup-card" *ngIf="elemento.elementoRUP"
+                                draggable
+                                [dragScope]="['orden-registros-rup', 'vincular-registros-rup']"
+                                [dragOverClass]="'drag-target-border'" [dragData]="elemento" >
 
-                                            <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : elementosRUPcollapse[i]}"></i>
-                                        </a>
-                                    </div>
+                                <div class="type {{elemento.tipo}} drag-handle">
+                                    <i  class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                 </div>
 
-                                <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
-                                    <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="conceptoSnomedSeleccionado" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
-                                            || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
-                                    </rup>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{elemento.concepto.term}}
+                                        </div>
+
+                                        <div class="actions">
+                                            <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
+
+                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                                || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
+                                        </rup>
+                                    </div>
+
+                                    <div class="rup-footer" *ngIf="elemento.relacionadoCon">
+                                        <div class="actions ">
+                                            <div class="relacionadoCon">
+                                                <div class="float-left" *ngIf="!confirmarDesvincular[i]">
+                                                    Relacionado con: {{elemento.relacionadoCon.term}}
+                                                </div>
+
+                                                    <div *ngIf="confirmarDesvincular[i]" class="confirmarDesvincular">
+                                                    ¿Confirmar desvinculación con <b>{{elemento.relacionadoCon.term}}</b>?
+
+                                                    <div class="float-right">
+                                                        <a  href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
+                                                            Cancelar
+                                                        </a>
+                                                        |
+                                                        <a  href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
+                                                            Desvincular
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </ng-container>
 
                     <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)"
@@ -73,8 +107,8 @@
                 </div>
             </plex-box>
         </div>
-        <div class="col-3">
 
+        <div class="col-3">
             <plex-box>
                 <header>
                     <div class="clearfix">
