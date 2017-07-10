@@ -345,6 +345,27 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     /* fin ordenamiento de los elementos */
 
+    guardarPrestacion() {
+        this.registros.forEach(r => {
+            this.prestacion.ejecucion.registros.push({
+                concepto: r.concepto,
+                destacado: r.destacado,
+                relacionadoCon: r.relacionadoCon,
+                valor: this.data[r.elementoRUP.key]
+            });
+        });
+
+        let params: any = {
+            op: 'registros',
+            registros: this.prestacion.ejecucion.registros
+        };
+
+        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+            this.router.navigate(['rup/validacion', this.prestacion.id]);
+        });
+    }
+
     /*
       * Event emmiter ejecutado cuando se devuelven valores
       * desde un átomo / molecula / fórmula desde RUP
