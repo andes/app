@@ -54,11 +54,11 @@
             <div class="col-3">
                 <label class="form-control-label">Filtrar por paciente</label>
                 <div class="btn-group full-width" data-toggle="buttons">
-                    <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: filtrosPacientes}">
+                    <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: filtrosPacientes}">
                         <input type="radio" name="options" id="inactivo" (click)="filtrarPacientes(true)">
                         Mis Pacientes
                     </label>
-                    <label class="col-6 btn btn-primary hover form-control-label" [ngClass]="{active: !this.filtrosPacientes}">
+                    <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: !this.filtrosPacientes}">
                         <input type="radio" name="options" id="inactivo" (click)="filtrarPacientes(false)">
                         Todos
                     </label>
@@ -69,13 +69,13 @@
         <!-- Buscador de Pacientes MPI -->
         <div class="row" *ngIf="mostrarPacientesSearch">
             <div class="col" *ngIf="!buscarMPI">
-                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escriba los datos del paciente" (selected)="onPacienteSelected($event)"></plex-text>
+                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Buscar pacientes" (selected)="onPacienteSelected($event)"></plex-text>
             </div>
             <div class="col" *ngIf="buscarMPI">
                 <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm" (blanqueaInput)="handleBlanqueo($event)"></pacientesSearch>
             </div>
         </div>
-
+        <div class="row">&nbsp;</div>
         <div class="row" *ngIf="mostrarLista">
             <div class="col-12">
                 <!--Resultados-->
@@ -91,16 +91,16 @@
                             <th><strong>Profesional</strong></th>
                             <th><strong>Estado</strong></th>
                             <th><strong>Tipo de prestacion</strong></th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let paciente of pacientesPresentes" (click)="elegirPrestacion(paciente)" [ngClass]="{'table-active': paciente.estado === 'Suspendido'}">
+                        <tr *ngFor="let paciente of pacientesPresentes" [ngClass]="{'table-active': paciente.estado === 'Suspendido'}">
                             <td>
                                 {{paciente.fecha | date: 'dd/MM/yyyy H:m'}}
                             </td>
                             <td>
-                                {{paciente.paciente | paciente}}<br>
-                                <small>DNI: {{paciente.paciente.documento}}</small>
+                                {{paciente.paciente | paciente}} (<small>DNI: {{paciente.paciente.documento}}</small>)
                             </td>
                             <td>
                                 <ng-container *ngFor="let profesional of paciente.profesionales">
@@ -112,6 +112,10 @@
                             </td>
                             <td>
                                 {{paciente.nombrePrestacion}}
+                            </td>
+                            <td class="text-center">
+                                <plex-button *ngIf="paciente.estado === 'Programado'" (click)="elegirPrestacion(paciente)" label="Iniciar Prestación" type="success btn-sm"></plex-button>
+                                <plex-button *ngIf="paciente.estado !== 'Programado'" (click)="elegirPrestacion(paciente)" label="Ver registros" type="primary btn-sm"></plex-button>
                             </td>
                         </tr>
                     </tbody>
