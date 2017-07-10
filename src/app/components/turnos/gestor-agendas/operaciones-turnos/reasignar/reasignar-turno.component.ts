@@ -54,7 +54,7 @@ export class ReasignarTurnoComponent implements OnInit {
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.showReasignarTurno = true;
     }
 

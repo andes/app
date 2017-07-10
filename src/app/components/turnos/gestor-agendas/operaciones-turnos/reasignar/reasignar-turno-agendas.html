@@ -7,7 +7,7 @@
                 <!--<pre>{{ turnoSeleccionado | json }}</pre>-->
                 <div class="col">
                     Paciente: {{turnoSeleccionado.paciente | paciente }}
-                    <small><span>| DNI {{turnoSeleccionado.paciente.documento | number}}</span></small>
+                    <small><span>| DNI {{turnoSeleccionado.paciente.documento | number}}</span></small> | <b>{{turnoSeleccionado.tipoPrestacion.nombre}}</b>
                 </div>
             </div>
             <hr>

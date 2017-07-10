@@ -16,6 +16,7 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAutomaticoComponent implements OnInit {
+    agendasOcultas: any[] = [];
 
     private _agendaAReasignar: any;
 
@@ -44,7 +45,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
     }
 
     actualizar() {
@@ -96,11 +97,11 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                         tipoPrestacion: bl.tipoPrestaciones.findIndex(x => x._id === turno.tipoPrestacion.id) >= 0 ? 30 : 0,
                         horaInicio: 20,
                         duracionTurno: (this.agendaAReasignar.bloques.find(x => x.duracionTurno === bl.duracionTurno) ? 20 : 0),
-                        profesional: this.interseccion(ag.profesionales, this.agendaAReasignar.profesionales) === true ? 30 : 0
+                        profesional: ag.profesionales && this.interseccion(ag.profesionales, this.agendaAReasignar.profesionales) === true ? 30 : 0
                     };
                     calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
 
-                    if (turno.reasignado !== undefined && turno.reasignado.siguiente.idTurno === tu._id) {
+                    if (turno.reasignado !== undefined && turno.reasignado.siguiente && turno.reasignado.siguiente.idTurno === tu._id) {
                         this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(reasignado => {
                             if (!agendaReasignada) {
 
@@ -173,14 +174,16 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                     idAgenda: agendaSeleccionada._id,
                     idBloque: agendaSeleccionada.bloques[indiceBloque]._id,
                     idTurno: agendaSeleccionada.bloques[indiceBloque].turnos[indTurno]._id
-                }
+                };
+
                 if (turnoReasignado.reasignado) {
                     turnoReasignado.reasignado.siguiente = siguiente;
                 } else {
                     turnoReasignado.reasignado = {
                         siguiente: siguiente
                     };
-                }
+                };
+
                 let reasignacion = {
                     idAgenda: this.agendaAReasignar.id,
                     idTurno: turno.id,
@@ -202,6 +205,22 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             });
         });
 
+    }
+
+    ocultarAgendaCandidata(idAgenda, indice) {
+
+        if (this.agendasOcultas.indexOf(idAgenda) > -1) {
+            this.agendasOcultas.splice(this.agendasOcultas.indexOf(idAgenda), 1);
+        } else {
+            this.agendasOcultas[indice] = idAgenda;
+        }
+
+        this.agendasOcultas = [... this.agendasOcultas];
+
+    }
+
+    estaOculta(idAgenda) {
+        return this.agendasOcultas.find(id => id === idAgenda) > 0;
     }
 
 

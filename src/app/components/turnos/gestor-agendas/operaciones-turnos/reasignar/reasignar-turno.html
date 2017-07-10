@@ -1,4 +1,4 @@
-<form *ngIf="showReasignarTurno" class="plex-layout">
+<form *ngIf="autorizado && showReasignarTurno" class="plex-layout">
     <section>
         <div class="row">
             <!-- Header -->
@@ -20,7 +20,7 @@
                     <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
                         <thead *ngIf="bloque.descripcion">
                             <tr>
-                                <th colspan="3">{{bloque.descripcion}}</th>
+                                <th colspan="3">Bloque: {{bloque.descripcion}}</th>
                             </tr>
                         </thead>
                         <tbody>

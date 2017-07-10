@@ -17,6 +17,8 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAgendasComponent implements OnInit {
+
+    // Para cálculos de disponibilidad de turnos programados y del día
     hoy: Date;
     delDiaDisponibles: number;
 
@@ -31,7 +33,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     @Input() turnoSeleccionado: any;
     @Input() agendaAReasignar: IAgenda; // Agenda origen
-    @Input() datosAgenda: any; // IDs de agenda, bloque origen
+    @Input() datosAgenda: any; // IDs de agenda y bloque del turno origen
+
+    // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
 
     // Agenda destino
@@ -44,18 +48,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this._agendaDestino;
     }
 
-
-    @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
-    @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
-    @Output() cancelaSuspenderTurno = new EventEmitter<boolean>();
-    @Output() reasignacionManualEmit = new EventEmitter<boolean>();
-
-    public turnoAReasignar: any;
-
-    public motivoSuspension: any[];
-    public motivoSuspensionSelect = { select: null };
-    public seleccionadosSMS = [];
-    public suspendio = false;
     autorizado: any;
     countBloques = [];
 
@@ -63,7 +55,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     ngOnInit() {
         this.hoy = new Date();
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.actualizar();
     }
 
