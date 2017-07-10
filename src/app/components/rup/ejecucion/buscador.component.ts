@@ -123,14 +123,7 @@ export class BuscadorComponent implements OnInit {
     // conceptos de snomed
     recuperaLosMasFrecuentes(elementoRUP) {
         elementoRUP.frecuentes.forEach(element => {
-            let objFrecuente = {
-                concepId: element.conceptos[0].conceptId,
-                term: element.conceptos[0].term,
-                fsn: element.conceptos[0].fsn,
-                semanticTag: element.conceptos[0].semanticTag,
-                id: null
-            };
-            this.masFrecuentes.push(objFrecuente);
+            this.masFrecuentes.push(element);
         });
     }
     // Capturo el emit de snomed y seteo la variable para mostrar o ocultar los mas frecuentes.
