@@ -57,6 +57,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     //Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingRegistro: Boolean = false;
+    // Opciones del desplegable para vincular y desvincular
+    items = [];
+    public showVincular = false;
 
     public elementosRUPcollapse: any[] = [];
 
@@ -144,7 +147,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // si la posicion a la que lo muevo es distinta a la actual
         // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
-        if ( (posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1) ) {
+        if ((posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1)) {
             // movemos
             this.moverRegistroEnPosicion(posicionActual, posicionNueva, registro.dragData);
         }
@@ -248,7 +251,10 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
-        debugger;
+        // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
+        if (this.registros.length > 0) {
+            this.showVincular = true;
+        }
 
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         if (existe) {
@@ -374,4 +380,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.tipoBusqueda = tipoDeBusqueda;
     }
 
+    cargaItems(elementoRup) {
+        // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
+        this.items = [];
+        let objItem = {};
+        this.items = this.registros.filter(registro => {
+            return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null );
+        }).map(registro => {
+            return {
+                label: 'vincular con: ' + registro.concepto.term,
+                handler: () => { this.vincularRegistros(elementoRup, registro) }
+            };
+        });
+    }
 }
