@@ -49,47 +49,44 @@
     float: right!important;
 }
 
+
+.rup-card .rup-content .rup-footer {
+    padding: 5px 15px;
+}
+/*
 .relacionado {
     width: 90%;
     margin-left: 10%;
 }
+*/
 
-.problemas {
-    background-color: #b99e06;
+a.desvincular {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    color: #333;
+
+    text-decoration: none;
+    border-radius: 20px;
+    text-align: center;
 }
 
-.btn-primary.problemas {
-    background-color: #b99e06;
-    border-color: #b99e06;
+a.desvincular:hover {
+    background: #eee;
+    text-align: center;
 }
 
-.planes {
-    background-color: #6A99AD;
+.confirmarDesvincular, .confirmarDesvincular a {
+    color: grey;
 }
 
-.btn-primary.planes {
-    background-color: #6A99AD;
-    border-color: #6A99AD;
+.confirmarDesvincular a.confirm{
+    color: white;
+    background-color: #e02f2f;
+    padding: 2px 10px;
+    border-radius: 10px;
 }
-
-.prestaciones {
-    background-color: #34a;
-}
-
-.btn-primary.prestaciones {
-    background-color: #34a;
-    border-color: #34a;
-}
-
-.procedimientos {
-    background-color: #92278E;
-}
-
-.btn-primary.procedimientos {
-    background-color: #92278E;
-    border-color: #92278E;
-}
-
 
 /* drag and drop */
 .drag-handle {
@@ -102,7 +99,6 @@
 }
 
 .droppable.drag-target-border,
-.list-group>.list-group-item.drag-target-border,
 .drag-target-border {
     border: #00bfff dashed 2px;
 }
@@ -152,3 +148,41 @@
     height: 1px;
     margin: 10px 0;
 }
+
+/* colores botones / acciones */
+.problemas {
+    background-color: #b99e06;
+}
+
+.btn-primary.problemas {
+    background-color: #b99e06;
+    border-color: #b99e06;
+}
+
+.planes {
+    background-color: #6A99AD;
+}
+
+.btn-primary.planes {
+    background-color: #6A99AD;
+    border-color: #6A99AD;
+}
+
+.prestaciones {
+    background-color: #34a;
+}
+
+.btn-primary.prestaciones {
+    background-color: #34a;
+    border-color: #34a;
+}
+
+.procedimientos {
+    background-color: #92278E;
+}
+
+.btn-primary.procedimientos {
+    background-color: #92278E;
+    border-color: #92278E;
+}
+/* fin colores botones / acciones */
