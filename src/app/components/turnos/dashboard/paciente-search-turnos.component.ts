@@ -11,10 +11,10 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
 
 
-    public operacionSeleccionada(operacion) {
+    public operacionSeleccionada(operacion, paciente) {
         if (operacion) {
             // Se habilita el calendario para seleccionar las agendas y permitir asignar turnos al paciente
-            this.operacion.emit(operacion);
+            this.operacion.emit({ operacion, paciente });
         }
     }
 

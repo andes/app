@@ -59,6 +59,7 @@ import { LogService } from './services/log.service';
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { AgendaService } from './services/turnos/agenda.service';
+import { AppMobileService } from './services/appMobile.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
@@ -390,6 +391,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         PlanificarAgendaComponent,
         // EspacioFisicoComponent,
         AgendaService,
+        AppMobileService,
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,

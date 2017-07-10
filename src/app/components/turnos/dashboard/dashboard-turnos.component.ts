@@ -12,6 +12,7 @@ import { IPaciente } from '../../../interfaces/IPaciente';
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { AppMobileService } from '../../../services/appMobile.service';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class DashboardTurnosComponent implements OnInit {
     constructor(
         public servicePaciente: PacienteService,
         public servicioAgenda: AgendaService, public auth: Auth,
+        public appMobile: AppMobileService,
         private router: Router,
         private plex: Plex) { }
 
@@ -67,7 +69,7 @@ export class DashboardTurnosComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = false;
     }
 
-    verificarOperacion(operacion) {
+    verificarOperacion({ operacion, paciente }) {
         this.esOperacion = true;
         switch (operacion) {
             case 'darTurno':
@@ -86,6 +88,20 @@ export class DashboardTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasPacientes = false;
                 this.operacionTurnos = 'registrarAsistencia';
                 this.showMostrarTurnosPaciente = true;
+                break;
+            case 'activarApp':
+                this.appMobile.create(paciente.id).subscribe((datos) => {
+                    if (datos.error) {
+                        if (datos.error == 'email_not_found') {
+                            this.plex.alert('El paciente no tiene asignado un email.');
+                        }
+                        if (datos.error == 'email_exists') {
+                            this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                        }
+                    } else {
+                        this.plex.alert('Se ha creado la cuenta para el paciente.');
+                    }
+                });
                 break;
         }
     }
