@@ -62,7 +62,8 @@
                                     </div>
 
                                     <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
-                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)"
+                                                *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
                                         </rup>
                                     </div>
@@ -130,9 +131,10 @@
     </div>
 </section>
 
-<!--
+
 <footer>
     <div class="row">
+        <!--
         <div class="col-3">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('rup/resumen')" type="danger"></plex-button>
         </div>
@@ -141,9 +143,10 @@
                 {{error}}
             </div>
         </div>
-        <div class="col-3 text-right ">
+        -->
+        <div class="col text-right ">
             <plex-button title="Guardar " label="Guardar " (click)="guardarPrestacion()" type="success"></plex-button>
         </div>
     </div>
 </footer>
--->
+
