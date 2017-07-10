@@ -23,4 +23,7 @@ export class UsuarioService {
         return this.server.get(this.usuarioUrl + '/local/' + organizacion + '/' + user);
     }
 
+    save(usuario: any): Observable<any> {
+        return this.server.post(this.usuarioUrl + '/alta', usuario);
+    }
 }
