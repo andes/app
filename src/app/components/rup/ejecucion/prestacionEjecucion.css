@@ -49,6 +49,11 @@
     float: right!important;
 }
 
+.relacionado {
+    width: 90%;
+    margin-left: 10%;
+}
+
 .problemas {
     background-color: #b99e06;
 }

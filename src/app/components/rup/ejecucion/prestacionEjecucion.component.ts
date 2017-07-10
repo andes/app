@@ -40,7 +40,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public elementoRUPprestacion: any;
 
     // concepto snomed seleccionado del buscador a ejecutar
-    public conceptoSnomedSeleccionado: any;
+    //public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
@@ -104,9 +104,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicion: posicion donde cargar el nuevo registro
      * @param registro: objeto a cargar en el array de registros
      */
+    /*
     cargarRegistroEnPosicion(posicion: number, registro: any) {
         this.registros.splice(posicion, 0, registro);
     }
+    */
 
     /**
      * Mover un registro a una posicion especifica
@@ -118,6 +120,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number, registro: any) {
         this.registros.splice(posicionActual, 1);
         this.registros.splice(posicionNueva, 0, registro);
+
+        // quitamos relacion si existe
+        if (this.registros[posicionNueva].relacionadoCon) {
+            this.registros[posicionNueva].relacionadoCon = null;
+        }
 
         console.log(this.registros);
     }
@@ -144,24 +151,66 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    /**
-     * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
-     * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
-     * a dicho concepto de snomed
-     * @param {any} snomedConcept
-     * @memberof PrestacionEjecucionComponent
-     */
-    ejecutarConcepto(snomedConcept) {
+    vincularRegistros(registroOrigen: any, registroDestino: any) {
+        debugger;
+        // si proviene del drag and drop
+        if (registroOrigen.dragData) {
+            registroOrigen = registroOrigen.dragData;
+        }
 
-        console.log('Ejecucion');
-        console.log(snomedConcept);
-        let conceptoIn = snomedConcept;
-        conceptoIn['id'] = snomedConcept.conceptId;
-        this.conceptoARelacionar.push(conceptoIn);
-        this.conceptoSnomedSeleccionado = snomedConcept;
+        // si no existe lo agrego
+        let existe = this.registros.find(registro => registro.concepto.conceptId === registroOrigen.concepto.conceptId);
+        if (!existe) {
+            this.ejecutarConcepto(registroOrigen, registroDestino);
+        }
+
+        // buscamos en la posicion que se encuentra el registro de orgien y destino
+        let indexOrigen = this.registros.findIndex(r => (registroOrigen.concepto.conceptId === r.concepto.conceptId));
+        let indexDestino = this.registros.findIndex(r => (registroDestino.concepto.conceptId === r.concepto.conceptId));
+
+        // solo vinculamos si no es el mismo elemento
+        if (registroOrigen.concepto.conceptId === registroDestino.concepto.conceptId) {
+            return false;
+        }
+
+        // si ya está vinculado a algun otro registro, no permitimos la vinculacion
+        if (registroDestino.relacionadoCon) {
+            return false;
+        }
+
+        // buscamos todos los conceptos que tenga relacionados
+        let relacionados = this.registros.filter(r => {
+            return (r.relacionadoCon && r.relacionadoCon.conceptId === registroOrigen.concepto.conceptId);
+        });
+
+        // vinculamos
+        this.registros[indexOrigen].relacionadoCon = registroDestino.concepto;
+
+        // movemos
+        let _registro = this.registros[indexOrigen];
+        this.registros.splice(indexOrigen, 1);
+        this.registros.splice(indexDestino + 1, 0, _registro);
+
+        //this.moverRegistroEnPosicion()
+        if (relacionados.length) {
+            relacionados.forEach(r => {
+                r.relacionadoCon = null;
+            });
+        }
+
+        console.log(this.registros);
+    }
+
+    crearRegistro(snomedConcept): any {
+        debugger;
+        // si proviene del drag and drop
+        if (snomedConcept.dragData) {
+            snomedConcept = snomedConcept.dragData;
+        }
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+
         // armamos el elemento data a agregar al array de registros
         let data = {
             tipo: snomedConcept.semanticTag,
@@ -188,20 +237,39 @@ export class PrestacionEjecucionComponent implements OnInit {
                 break;
         }
 
-        let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.id);
+        return data;
+    }
+    /**
+     * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
+     * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
+     * a dicho concepto de snomed
+     * @param {any} snomedConcept
+     * @param {any} registroVincular Registro al cual vamos a vincular el nuevo
+     * @memberof PrestacionEjecucionComponent
+     */
+    ejecutarConcepto(snomedConcept, registroDestino = null) {
+        debugger;
+
+        let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         if (existe) {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra agregado.');
 
             return false;
         }
 
+        // creamos el registro
+        let data = this.crearRegistro(snomedConcept);
+        if (!data) {
+            return false;
+        }
+
         // agregamos al array de registros
-        this.cargarRegistroEnPosicion(this.registros.length, data);
+        // this.cargarRegistroEnPosicion(this.registros.length, data);
+        this.registros.splice(this.registros.length, 0, data);
 
         // agregamos el elemento al collapse
         this.elementosRUPcollapse.push(this.data);
         this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
-
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
