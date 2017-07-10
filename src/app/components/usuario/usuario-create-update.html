@@ -30,12 +30,28 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <plex-select [(ngModel)]="roles" name="roles" [required]="true" placeholder="Selecciona los roles" label="Roles"
-                    [data]="dataRoles" (change)="updateRoles($event)">
-                </plex-select>
-                <plex-select [(ngModel)]="permisos" name="permisos" [required]="true" [multiple]="true" placeholder="Selecciona los permisos"
-                    label="Permisos" (change)="updatePermisos($event.value)" [data]="dataPermisos">
-                </plex-select>
+                <div class="row">
+                     <div class="col-8">
+                    <plex-text [(ngModel)]="nuevoPermiso" placeholder="Ingrese un nuevo permiso"></plex-text>
+                     </div>
+                      <div class="col-4">
+                               <plex-button label="" type="info" icon="plus" (click)="addPermiso()"></plex-button>
+                      </div>
+                </div>
+                <fieldset>
+                    <div class="row">&nbsp;</div>
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let _unPermiso of permisos; let i = index">
+                            <div class="row">
+                                <div class="col-11">{{_unPermiso}}
+                                </div>
+                                <div class="col-1 text-right">
+                                    <plex-button label="" type="danger btn-sm" icon="delete" (click)="removePermiso(i)"></plex-button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
             </plex-box>
         </div>
         <div class="col text-center">
@@ -67,7 +83,7 @@
     <div class="text-right">
         <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
         </plex-button>
-        <plex-button icon="content-save" label="Guardar" type="success">
+        <plex-button icon="content-save" label="Guardar" type="success" (click)="onSave()">
         </plex-button>
 
     </div>

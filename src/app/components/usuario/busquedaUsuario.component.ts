@@ -71,6 +71,7 @@ export class BusquedaUsuarioComponent implements OnInit {
     }
 
     afterCreateUpdate(user) {
+        this.loadUsuarios();
         this.showCreateUpdate = false;
         this.mostrarNuevo = true;
         this.seleccion = null;
