@@ -6,7 +6,8 @@
 
     <div class="row">
         <div class="col-3">
-            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
+                (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
         </div>
         <div class="col-6">
             <plex-box>
@@ -18,8 +19,9 @@
                     </div>
                 </header>
 
-                <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
-                     <p>
+                <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area"
+                    [hidden]="!isDraggingConcepto">
+                    <p>
                         Arrastre aquí para vincularlos a esta consulta
                     </p>
                 </div>
@@ -29,22 +31,18 @@
                 <div *ngIf="registros && registros.length">
                     <ng-container *ngFor="let elemento of registros; let i = index">
 
-                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)"
-                            [dragOverClass]="'drag-hover-line'"
-                            class="drop-line-area" >
+                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drag-hover-line'"
+                            class="drop-line-area">
                         </div>
 
-                        <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)"
-                            [dragOverClass]="'drag-target-border'"
-                            [ngClass]="{'relacionado': elemento.relacionadoCon}" >
+                        <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'"
+                            [ngClass]="{'relacionado': elemento.relacionadoCon}">
 
-                            <div class="rup-card" *ngIf="elemento.elementoRUP"
-                                draggable
-                                [dragScope]="['orden-registros-rup', 'vincular-registros-rup']"
-                                [dragOverClass]="'drag-target-border'" [dragData]="elemento" >
+                            <div class="rup-card" *ngIf="elemento.elementoRUP" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup']"
+                                [dragOverClass]="'drag-target-border'" [dragData]="elemento">
 
                                 <div class="type {{elemento.tipo}} drag-handle">
-                                    <i  class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
+                                    <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                 </div>
 
                                 <div class="rup-content">
@@ -58,12 +56,17 @@
 
                                                 <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
                                             </a>
+                                            <div *ngIf="showVincular">
+                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento)"
+                                                    [items]="items"></plex-dropdown>
+                                            </div>
                                         </div>
+
                                     </div>
 
                                     <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
-                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)"
-                                                *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto"
+                                            (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
                                         </rup>
                                     </div>
@@ -101,8 +104,7 @@
                         </div>
                     </ng-container>
 
-                    <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)"
-                        [dragOverClass]="'drag-hover-line'"
+                    <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drag-hover-line'"
                         class="drop-line-area" *ngIf="registros && registros.length">
                     </div>
                 </div>
@@ -122,7 +124,8 @@
                 <div class="row">
                     <div class="col">
 
-                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUPprestacion" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUPprestacion" (_tipoDeBusqueda)="recibeTipoBusqueda($event)"
+                            (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
 
                     </div>
                 </div>
@@ -149,4 +152,5 @@
         </div>
     </div>
 </footer>
+
 
