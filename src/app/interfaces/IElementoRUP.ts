@@ -18,6 +18,12 @@ export interface IElementoRUP {
             semanticTag: String
         }];
     requeridos: IElementoRUP[];
-    frecuentes: IElementoRUP[];
+    frecuentes: [
+        {
+            conceptId: String,
+            term: String,
+            fsn: String,
+            semanticTag: String
+    }];
 
 }
