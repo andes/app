@@ -22,7 +22,6 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     @Output() data: EventEmitter<string> = new EventEmitter<string>();
 
     private timeoutHandle: number;
-
     // Propiedades públicas
     public documento = '';
     public roles: any[] = [];
@@ -44,14 +43,12 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         organizacion: {},
         permisos: []
         // roles: [],
-        // 
-
+        //
     };
 
-
-
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService,
-        private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService) { }
+        private auth: Auth, private provinciaService: ProvinciaService,
+        private organizacionService: OrganizacionService) { }
 
     public ngOnInit() {
         if (this.seleccion) {
@@ -61,9 +58,8 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         }
     }
 
-
     addPermiso() {
-        let index = this.permisos.findIndex(permiso => (permiso === this.nuevoPermiso));
+        let index = this.permisos.findIndex(permiso => (permiso.trim() === this.nuevoPermiso.trim()));
         if (index < 0) {
             this.permisos.push(this.nuevoPermiso);
             this.permisos.sort(function (a, b) {
