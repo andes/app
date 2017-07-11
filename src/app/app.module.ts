@@ -135,6 +135,7 @@ import { EstadisticasPacientesComponent } from './components/turnos/dashboard/es
 import { PacienteSearchTurnosComponent } from './components/turnos/dashboard/paciente-search-turnos.component';
 import { TurnosPacienteComponent } from './components/turnos/dashboard/turnos-paciente.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
+import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -360,6 +361,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AgregarSobreturnoComponent, PanelAgendaComponent,
         DashboardTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        ActivarAppComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,

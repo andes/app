@@ -36,6 +36,9 @@
                 <div *ngIf="showMostrarTurnosPaciente" type="info">
                     <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
                 </div>
+                <div *ngIf="showActivarApp" type="info">
+                    <activar-app [paciente]="paciente"></activar-app>
+                </div>
             </plex-box>
         </div>
     </div>
