@@ -20,6 +20,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     public fechaDesde: any;
     public fechaHasta: any;
     turnosOtorgados = 125;
+    inasistencias = 0;
+    anulados = 0;
 
     // Inicialización
     constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
@@ -33,6 +35,10 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.fechaDesde = new Date(hoy.fechaDesde);
         this.fechaHasta = new Date(hoy.fechaHasta);
 
+        // Se muestran la cantidad de turnos otorgados, anulados e inasistencias
+
     }
+
+
 
 }

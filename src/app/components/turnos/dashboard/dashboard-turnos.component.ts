@@ -13,7 +13,6 @@ import { IPaciente } from '../../../interfaces/IPaciente';
 import { PacienteService } from '../../../services/paciente.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 
-
 @Component({
     selector: 'dashboard-turnos',
     templateUrl: 'dashboard-turnos.html'
@@ -22,21 +21,26 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 export class DashboardTurnosComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
-
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     public alerta = false;
     public mostrarLista = true;
     public mostrarPacientesSearch = true;
     public showMostrarEstadisticasAgendas = true;
-    public showMostrarEstadisticasPacientes = true;
-
+    public showMostrarEstadisticasPacientes = false;
     public paciente;
     public autorizado = false;
     operacionTurnos = '';
     showDarTurnos = false;
     showDashboard = true;
     showMostrarTurnosPaciente = false;
+    showCreateUpdate = false;
+    seleccion = null;
+    esEscaneado = false;
     private esOperacion = false;
+    textoPacienteSearch = '';
+    resultadoCreate;
 
 
     constructor(
@@ -47,24 +51,64 @@ export class DashboardTurnosComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-
     }
 
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-        this.showMostrarEstadisticasAgendas = false;
-        if (this.esOperacion) {
-            this.showMostrarEstadisticasPacientes = false;
-            this.esOperacion = false;
+        if (paciente.id) {
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.showMostrarEstadisticasAgendas = false;
+                    this.showMostrarEstadisticasPacientes = true;
+                    if (this.esOperacion) {
+                        this.esOperacion = false;
+                    } else {
+                        this.showMostrarEstadisticasPacientes = true;
+                        this.showMostrarTurnosPaciente = true;
+                    }
+                });
         } else {
-            this.showMostrarEstadisticasPacientes = true;
-            this.showMostrarTurnosPaciente = false;
+            this.showMostrarEstadisticasAgendas = false;
+            this.showMostrarEstadisticasPacientes = false;
+            this.seleccion = paciente;
+            this.esEscaneado = true;
+            this.escaneado.emit(this.esEscaneado);
+            this.selected.emit(this.seleccion);
+            this.showCreateUpdate = true;
+            this.showDarTurnos = false;
+            this.showDashboard = false;
+        }
+    }
+
+    afterCreateUpdate(paciente) {
+        this.showCreateUpdate = false;
+        this.showDashboard = true;
+        this.showDarTurnos = false;
+        if (paciente) {
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.selected.emit(this.paciente);
+                    this.resultadoCreate = [pacienteMPI];
+                    this.showMostrarEstadisticasAgendas = false;
+                    this.showMostrarEstadisticasPacientes = true;
+                    if (this.esOperacion) {
+                        this.showMostrarEstadisticasPacientes = false;
+                        this.esOperacion = false;
+                    } else {
+                        this.showMostrarTurnosPaciente = false;
+                    }
+                });
+        } else {
+            this.showDarTurnos = false;
         }
     }
 
     handleBlanqueo(event) {
         this.showMostrarEstadisticasAgendas = true;
         this.showMostrarEstadisticasPacientes = false;
+        this.showMostrarTurnosPaciente = false;
     }
 
     verificarOperacion(operacion) {
@@ -88,6 +132,11 @@ export class DashboardTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = true;
                 break;
         }
+    }
+
+    actualizarPaciente(actualizar) {
+        this.showCreateUpdate = actualizar;
+        this.showDashboard = !actualizar;
     }
 
     cancelarDarTurno() {
