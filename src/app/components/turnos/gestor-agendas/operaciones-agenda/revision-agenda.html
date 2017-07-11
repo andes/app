@@ -1,6 +1,6 @@
 <section *ngIf="showRevisionAgenda">
     <div class="row">
-        <div class="col">
+        <div class="col-4">
             <plex-box>
                 <header>
                     <div class="clearfix" *ngIf="modoCompleto">
@@ -50,111 +50,106 @@
                 </table>
             </plex-box>
         </div>
-        <div *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
-            <div class="col-8">
-
-
-
-                <plex-box>
-                    <!--REGISTRO DE ASISTENCIA-->
-                    <header>
-                        <div class="row">
-                            <div class="col">
-                                <div class="clearfix">
-                                    <h5>Registros del turno</h5>
-                                </div>
+        <div class="col-8" *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
+            <plex-box>
+                <!--REGISTRO DE ASISTENCIA-->
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            <div class="clearfix">
+                                <h5>Registros del turno</h5>
                             </div>
                         </div>
-                    </header>
-
-                    <div *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'" class="row">
-                        <div class="col-6" *ngIf="paciente">
-                            <div *ngIf="paciente"> {{paciente | paciente}}</div>
-                            <div *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado">
-                                <br>
-                                <label>Prestación: </label>
-                                <plex-select [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
-                                </plex-select>
-                            </div>
-                        </div>
-                        <div class="col" *ngIf="!pacientesSearch && !showCreateUpdate">
-                            <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
-                        </div>
-                        <br>
                     </div>
+                </header>
 
-                    <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente || paciente) && !pacientesSearch && !showCreateUpdate">
-                        <div class="row">
-                            <div class="col">
-                                <label>Asistencia</label>
-                                <div *ngFor="let estado of estadosAsistencia; let i=index">
-                                    <td (click)="seleccionarAsistencia(estado)">
-                                        <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
-                                        <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
-                                    </td>
-                                    <td (click)="asistenciaSeleccionada(estado)">
-                                        <strong>{{ estado.nombre }}</strong>
-                                    </td>
-                                </div>
+                <div *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'" class="row">
+                    <div class="col-6" *ngIf="paciente">
+                        <div *ngIf="paciente"> {{paciente | paciente}}</div>
+                        <div *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado">
+                            <br>
+                            <label>Prestación: </label>
+                            <plex-select [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="col" *ngIf="!pacientesSearch && !showCreateUpdate">
+                        <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
+                    </div>
+                    <br>
+                </div>
+
+                <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente || paciente) && !pacientesSearch && !showCreateUpdate">
+                    <div class="row">
+                        <div class="col">
+                            <label>Asistencia</label>
+                            <div *ngFor="let estado of estadosAsistencia; let i=index">
+                                <td (click)="seleccionarAsistencia(estado)">
+                                    <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
+                                </td>
+                                <td (click)="asistenciaSeleccionada(estado)">
+                                    <strong>{{ estado.nombre }}</strong>
+                                </td>
                             </div>
                         </div>
-                        <br>
+                    </div>
+                    <br>
 
-                        <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
-                            <!--CODIFICACION-->
-                            <h5>Codificación</h5>
-                            <hr>
-                            <h6><strong>Diagnóstico Principal</strong> </h6>
-                            <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.ilegible' name="ilegible" label="Ilegible" (click)="marcarIlegible()"></plex-bool>
-                            <div *ngIf="!turnoSeleccionado.diagnosticoPrincipal.ilegible">
-                                <plex-select [(ngModel)]="turnoSeleccionado.diagnosticoPrincipal.codificacion" [data]="codigoPrincipal" (change)="buscarCodificacion($event)"
-                                    name="searchCodPrincipal" labelField="codigo+' '+nombre" placeholder="Seleccione un código CIE10"></plex-select>
-                                <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
+                    <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
+                        <!--CODIFICACION-->
+                        <h5>Codificación</h5>
+                        <hr>
+                        <h6><strong>Diagnóstico Principal</strong> </h6>
+                        <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.ilegible' name="ilegible" label="Ilegible" (click)="marcarIlegible()"></plex-bool>
+                        <div *ngIf="!turnoSeleccionado.diagnosticoPrincipal.ilegible">
+                            <plex-select [(ngModel)]="turnoSeleccionado.diagnosticoPrincipal.codificacion" [data]="codigoPrincipal" (change)="buscarCodificacion($event)"
+                                name="searchCodPrincipal" labelField="codigo+' '+nombre" placeholder="Seleccione un código CIE10"></plex-select>
+                            <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
+                        </div>
+                        <label>Otros Diagnósticos</label>
+                        <div class="row">
+                            <div class="col-8">
+                                <plex-select [(ngModel)]="nuevoCodSecundario" name="searchCodSecundario" labelField="codigo+' '+nombre" (getData)="buscarCodificacionSecundaria($event)"
+                                    placeholder="Seleccione un ćodigo CIE10"></plex-select>
                             </div>
-                            <label>Otros Diagnósticos</label>
-                            <div class="row">
-                                <div class="col-8">
-                                    <plex-select [(ngModel)]="nuevoCodSecundario" name="searchCodSecundario" labelField="codigo+' '+nombre" (getData)="buscarCodificacionSecundaria($event)"
-                                        placeholder="Seleccione un ćodigo CIE10"></plex-select>
-                                </div>
-                                <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary " (click)="agregarDiagnosticoSecundario()"></plex-button>
-                            </div>
-                            <div class="list-group">
-                                <div *ngFor="let diagnostico of turnoSeleccionado.diagnosticoSecundario; let i = index; " class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-10">
-                                            {{diagnostico.codificacion.nombre}}
-                                        </div>
-                                        <div class="col-2 text-right">
-                                            <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
-                                        </div>
+                            <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary " (click)="agregarDiagnosticoSecundario()"></plex-button>
+                        </div>
+                        <div class="list-group">
+                            <div *ngFor="let diagnostico of turnoSeleccionado.diagnosticoSecundario; let i = index; " class="list-group-item">
+                                <div class="row">
+                                    <div class="col-10">
+                                        {{diagnostico.codificacion.nombre}}
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col text-right">
-                                <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
-                                <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col" *ngIf="pacientesSearch">
-                            <div class="panel panel-default">
-                                <div class="clear"></div>
-                                <pacientesSearch (selected)='onReturn($event)' [modoCompleto]="false"></pacientesSearch>
-                            </div>
-                        </div>
-                        <div class="col" *ngIf="showCreateUpdate">
-                            <div class="panel panel-default">
-                                <div class="clear"></div>
-                                <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
-                            </div>
+                        <div class="col text-right">
+                            <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
+                            <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>
                         </div>
                     </div>
-                </plex-box>
-            </div>
+                </div>
+                <div class="row">
+                    <div class="col" *ngIf="pacientesSearch">
+                        <div class="panel panel-default">
+                            <div class="clear"></div>
+                            <pacientesSearch (selected)='onReturn($event)' [modoCompleto]="false"></pacientesSearch>
+                        </div>
+                    </div>
+                    <div class="col" *ngIf="showCreateUpdate">
+                        <div class="panel panel-default">
+                            <div class="clear"></div>
+                            <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+                        </div>
+                    </div>
+                </div>
+            </plex-box>
         </div>
     </div>
 </section>
