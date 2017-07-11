@@ -1,0 +1,88 @@
+<!--Header de estadisticas-->
+
+<fieldset>
+    <legend>ACTIVACION DE APP MOBILE</legend>
+    <br>
+    <!--<header>
+    <div class="row">
+        <div class="col">
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">INFORMACIÓN ESTADÍSTICA</span>
+                    </div>
+                </legend>
+            </fieldset>
+        </div>
+    </div>
+</header>-->
+    <!--Estadisticas Ventanilla-->
+    <br>
+    <!--Datos básicos del Paciente-->
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5> <span style="color: #00A8E0">{{paciente | paciente}}</span> </h5>
+            </div>
+        </div>
+        <hr>
+    </header>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            <i class="mdi mdi-account-card-details"></i> <span style="color: #00A8E0">Documento</span>
+        </div>
+        <div class="col-6">
+            <i class="mdi mdi-calendar-today"></i> <span style="color: #00A8E0">Fecha de Nacimiento</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="paciente">
+            {{paciente.documento | number}}
+        </div>
+        <div class="col-6" *ngIf="paciente">
+            {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Correo electrónico (obligatorio)</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text [(ngModel)]="email" name="searchTerm" placeholder="e-mail"></plex-text>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-12">
+            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Celular</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text [(ngModel)]="celular" name="searchTerm" placeholder="Celular"></plex-text>
+        </div>
+    </div>
+    <br>
+
+    <plex-button *ngIf="!hideButton" label="Activar App" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+
+    <div *ngIf="!checkPass">
+        <h5>
+            <span style="color: red">
+                <i class="mdi mdi-alert-circle-outline"></i>
+                {{message}}
+            </span>
+        </h5>
+    </div>
+    <div *ngIf="checkPass">
+
+    </div>
+
+
+</fieldset>

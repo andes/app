@@ -14,4 +14,9 @@ export class AppMobileService {
     create(idPaciente: String): Observable<any> {
         return this.server.post(this.mobileUrl + 'create' + '/' + idPaciente, {});
     }
+
+    check(idPaciente: String): Observable<any> {
+        return this.server.get(this.mobileUrl + 'check' + '/' + idPaciente, {});
+    }
+
 }

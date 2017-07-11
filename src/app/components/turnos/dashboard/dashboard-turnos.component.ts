@@ -30,6 +30,7 @@ export class DashboardTurnosComponent implements OnInit {
     public mostrarPacientesSearch = true;
     public showMostrarEstadisticasAgendas = true;
     public showMostrarEstadisticasPacientes = true;
+    public showActivarApp = false;
 
     public paciente;
     public autorizado = false;
@@ -71,6 +72,7 @@ export class DashboardTurnosComponent implements OnInit {
 
     verificarOperacion({ operacion, paciente }) {
         this.esOperacion = true;
+        this.showActivarApp = false;
         switch (operacion) {
             case 'darTurno':
                 this.showDarTurnos = true;
@@ -90,18 +92,23 @@ export class DashboardTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'activarApp':
-                this.appMobile.create(paciente.id).subscribe((datos) => {
-                    if (datos.error) {
-                        if (datos.error == 'email_not_found') {
-                            this.plex.alert('El paciente no tiene asignado un email.');
-                        }
-                        if (datos.error == 'email_exists') {
-                            this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
-                        }
-                    } else {
-                        this.plex.alert('Se ha creado la cuenta para el paciente.');
-                    }
-                });
+                this.paciente = paciente;
+                this.showMostrarEstadisticasAgendas = false;
+                this.showMostrarEstadisticasPacientes = false;
+                this.showMostrarTurnosPaciente = false;
+                this.showActivarApp = true;
+                // this.appMobile.create(paciente.id).subscribe((datos) => {
+                //     if (datos.error) {
+                //         if (datos.error == 'email_not_found') {
+                //             this.plex.alert('El paciente no tiene asignado un email.');
+                //         }
+                //         if (datos.error == 'email_exists') {
+                //             this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                //         }
+                //     } else {
+                //         this.plex.alert('Se ha creado la cuenta para el paciente.');
+                //     }
+                // });
                 break;
         }
     }
