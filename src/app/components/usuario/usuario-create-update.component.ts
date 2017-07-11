@@ -126,10 +126,14 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     filtrar() {
-        this.permisos = this.seleccion.permisos.filter(permiso => {
-            let item: string = permiso.split(':', 2)[0];
-            return (item === this.unFiltro.id);
-        });
+        if (this.unFiltro) {
+            this.permisos = this.seleccion.permisos.filter(permiso => {
+                let item: string = permiso.split(':', 2)[0];
+                return (item === this.unFiltro.id);
+            });
+        } else {
+            this.permisos = this.seleccion.permisos;
+        }
 
     }
 
