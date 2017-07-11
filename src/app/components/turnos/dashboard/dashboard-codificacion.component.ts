@@ -39,7 +39,7 @@ export class DashboardCodificacionComponent implements OnInit {
             this.redirect('inicio');
         } else {
             let fecha = moment().format();
-            this.fechaDesde =moment(fecha).startOf('month');
+            this.fechaDesde = moment(fecha).startOf('month');
             this.fechaHasta = moment(fecha).endOf('day');
 
             this.loadAgendas();
@@ -73,5 +73,9 @@ export class DashboardCodificacionComponent implements OnInit {
                     console.log(err);
                 }
             });
+    }
+
+    volver() {
+        this.redirect('dashboard_turnos');
     }
 }

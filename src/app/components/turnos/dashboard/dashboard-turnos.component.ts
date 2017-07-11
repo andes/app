@@ -158,4 +158,20 @@ export class DashboardTurnosComponent implements OnInit {
         this.showMostrarTurnosPaciente = false;
     }
 
+    verificarCodificarAgendas() {
+        debugger;
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        // No está autorizado para ver esta pantalla
+        if (!this.autorizado) {
+            this.redirect('inicio');
+        } else {
+            this.redirect('dashboard_codificacion');
+        }
+    }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
+    }
+
 }
