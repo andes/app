@@ -9,12 +9,12 @@
                     <header>
                         <div class="row align-items-center">
                             <div class="col-4">
-                                <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
+                                <plex-select name="tipoPrestaciones" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
                                     (change)="filtrar()">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
+                                <plex-select name="profesionales" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                                     (change)="filtrar()">
                                 </plex-select>
                             </div>

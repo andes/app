@@ -34,6 +34,7 @@ export class RevisionAgendaComponent implements OnInit {
     get agenda(): any {
         return this._agenda;
     }
+    @Input() modoCompleto = true;
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();

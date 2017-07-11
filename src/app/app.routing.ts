@@ -40,6 +40,7 @@ import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operac
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
+import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -85,6 +86,7 @@ const appRoutes: Routes = [
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
   { path: 'dashboard_turnos', component: DashboardTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
 
   // Auditoria
   { path: 'auditoria', component: AuditoriaComponent },

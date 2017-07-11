@@ -1,0 +1,39 @@
+<section *ngIf="autorizado && showAgendasACodificar">
+    <div class="row">
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="clearfix">
+                        <div class="page-title float-left">AGENDAS A VERIFICAR</div>
+                    </div>
+                    <!--Filtros-->
+                    <div class="row">
+                        <div class="col-3">
+                            <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde" (change)="loadAgendas()">
+                            </plex-datetime>
+                        </div>
+                        <div class="col-3">
+                            <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta" (change)="loadAgendas()">
+                            </plex-datetime>
+                        </div>
+                    </div>
+                </header>
+                <div class="row">
+                    <div class="col-10">
+                        <div *ngFor="let agenda of agendasCodificar; let indiceAgenda = index" class="col-10">
+                            <plex-accordion>
+                                <plex-panel *ngIf="agendasCodificar.length>0" tituloPrincipal="Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
+            }} a {{ agenda.horaFin | date: 'HH:mm' }} hs 
+            Profesional : {{ agenda.profesionales[0]| profesional }} ">
+                                    <div class="row">
+                                        <revision-agenda [agenda]="agenda" [modoCompleto]="false"></revision-agenda>
+                                    </div>
+                                </plex-panel>
+                            </plex-accordion>
+                        </div>
+                    </div>
+                </div>
+            </plex-box>
+        </div>
+    </div>
+</section>
