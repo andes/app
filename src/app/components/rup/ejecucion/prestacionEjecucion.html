@@ -32,14 +32,15 @@
                     <ng-container *ngFor="let elemento of registros; let i = index">
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drag-hover-line'"
-                            class="drop-line-area">
+                            [hidden]="!dragg" class="drop-line-area" style="height: 20px; border: 1px solid red;">
                         </div>
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'"
                             [ngClass]="{'relacionado': elemento.relacionadoCon}">
 
                             <div class="rup-card" *ngIf="elemento.elementoRUP" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup']"
-                                [dragOverClass]="'drag-target-border'" [dragData]="elemento">
+                                [dragOverClass]="'drag-target-border'" [dragData]="elemento"
+                                (onDragStart)="arrastrando($e, true)" (onDragEnd)="arrastrando($e, false)">
 
                                 <div class="type {{elemento.tipo}} drag-handle">
                                     <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>

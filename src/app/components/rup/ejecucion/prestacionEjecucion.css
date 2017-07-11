@@ -49,10 +49,11 @@
     float: right!important;
 }
 
-
 .rup-card .rup-content .rup-footer {
     padding: 5px 15px;
 }
+
+
 /*
 .relacionado {
     width: 90%;
@@ -66,7 +67,6 @@ a.desvincular {
     line-height: 30px;
     display: inline-block;
     color: #333;
-
     text-decoration: none;
     border-radius: 20px;
     text-align: center;
@@ -77,18 +77,21 @@ a.desvincular:hover {
     text-align: center;
 }
 
-.confirmarDesvincular, .confirmarDesvincular a {
+.confirmarDesvincular,
+.confirmarDesvincular a {
     color: grey;
 }
 
-.confirmarDesvincular a.confirm{
+.confirmarDesvincular a.confirm {
     color: white;
     background-color: #e02f2f;
     padding: 2px 10px;
     border-radius: 10px;
 }
 
+
 /* drag and drop */
+
 .drag-handle {
     cursor: -webkit-grab;
     color: white;
@@ -102,6 +105,8 @@ a.desvincular:hover {
 .drag-target-border {
     border: #00bfff dashed 2px;
 }
+
+
 /*
 .drag-handle {
     cursor: move;
@@ -143,46 +148,235 @@ a.desvincular:hover {
     height: 1px;
     margin: 10px;
 }
+
 .drag-hover-line {
     border: 1px solid black;
     height: 1px;
     margin: 10px 0;
 }
 
+
 /* colores botones / acciones */
-.problemas {
-    background-color: #b99e06;
+
+.btn-problemas {
+    color: #FFFFFF;
+    background-color: #B99E06;
+    border-color: #968005;
 }
 
-.btn-primary.problemas {
-    background-color: #b99e06;
-    border-color: #b99e06;
+.btn-problemas:hover,
+.btn-problemas:focus,
+.btn-problemas:active,
+.btn-problemas.active,
+.open .dropdown-toggle.btn-problemas {
+    color: #FFFFFF;
+    background-color: #9E8706;
+    border-color: #968005;
 }
 
-.planes {
+.btn-problemas:active,
+.btn-problemas.active,
+.open .dropdown-toggle.btn-problemas {
+    background-image: none;
+}
+
+.btn-problemas.disabled,
+.btn-problemas[disabled],
+fieldset[disabled] .btn-problemas,
+.btn-problemas.disabled:hover,
+.btn-problemas[disabled]:hover,
+fieldset[disabled] .btn-problemas:hover,
+.btn-problemas.disabled:focus,
+.btn-problemas[disabled]:focus,
+fieldset[disabled] .btn-problemas:focus,
+.btn-problemas.disabled:active,
+.btn-problemas[disabled]:active,
+fieldset[disabled] .btn-problemas:active,
+.btn-problemas.disabled.active,
+.btn-problemas[disabled].active,
+fieldset[disabled] .btn-problemas.active {
+    background-color: #B99E06;
+    border-color: #968005;
+}
+
+.btn-problemas .badge {
+    color: #B99E06;
+    background-color: #FFFFFF;
+}
+
+.btn-planes {
+    color: #FFFFFF;
     background-color: #6A99AD;
+    border-color: #5C8799;
 }
 
-.btn-primary.planes {
+.btn-planes:hover,
+.btn-planes:focus,
+.btn-planes:active,
+.btn-planes.active,
+.open .dropdown-toggle.btn-planes {
+    color: #FFFFFF;
+    background-color: #3686A8;
+    border-color: #5C8799;
+}
+
+.btn-planes:active,
+.btn-planes.active,
+.open .dropdown-toggle.btn-planes {
+    background-image: none;
+}
+
+.btn-planes.disabled,
+.btn-planes[disabled],
+fieldset[disabled] .btn-planes,
+.btn-planes.disabled:hover,
+.btn-planes[disabled]:hover,
+fieldset[disabled] .btn-planes:hover,
+.btn-planes.disabled:focus,
+.btn-planes[disabled]:focus,
+fieldset[disabled] .btn-planes:focus,
+.btn-planes.disabled:active,
+.btn-planes[disabled]:active,
+fieldset[disabled] .btn-planes:active,
+.btn-planes.disabled.active,
+.btn-planes[disabled].active,
+fieldset[disabled] .btn-planes.active {
     background-color: #6A99AD;
-    border-color: #6A99AD;
+    border-color: #5C8799;
+}
+
+.btn-planes .badge {
+    color: #6A99AD;
+    background-color: #FFFFFF;
+}
+
+.btn-prestaciones {
+    color: #FFFFFF;
+    background-color: #3344AA;
+    border-color: #23307D;
+}
+
+.btn-prestaciones:hover,
+.btn-prestaciones:focus,
+.btn-prestaciones:active,
+.btn-prestaciones.active,
+.open .dropdown-toggle.btn-prestaciones {
+    color: #FFFFFF;
+    background-color: #1B2B85;
+    border-color: #23307D;
+}
+
+.btn-prestaciones:active,
+.btn-prestaciones.active,
+.open .dropdown-toggle.btn-prestaciones {
+    background-image: none;
+}
+
+.btn-prestaciones.disabled,
+.btn-prestaciones[disabled],
+fieldset[disabled] .btn-prestaciones,
+.btn-prestaciones.disabled:hover,
+.btn-prestaciones[disabled]:hover,
+fieldset[disabled] .btn-prestaciones:hover,
+.btn-prestaciones.disabled:focus,
+.btn-prestaciones[disabled]:focus,
+fieldset[disabled] .btn-prestaciones:focus,
+.btn-prestaciones.disabled:active,
+.btn-prestaciones[disabled]:active,
+fieldset[disabled] .btn-prestaciones:active,
+.btn-prestaciones.disabled.active,
+.btn-prestaciones[disabled].active,
+fieldset[disabled] .btn-prestaciones.active {
+    background-color: #3344AA;
+    border-color: #23307D;
+}
+
+.btn-prestaciones .badge {
+    color: #3344AA;
+    background-color: #FFFFFF;
+}
+
+.btn-procedimientos {
+    color: #FFFFFF;
+    background-color: #92278E;
+    border-color: #751E72;
+}
+
+.btn-procedimientos:hover,
+.btn-procedimientos:focus,
+.btn-procedimientos:active,
+.btn-procedimientos.active,
+.open .dropdown-toggle.btn-procedimientos {
+    color: #FFFFFF;
+    background-color: #6E1E6B;
+    border-color: #751E72;
+}
+
+.btn-procedimientos:active,
+.btn-procedimientos.active,
+.open .dropdown-toggle.btn-procedimientos {
+    background-image: none;
+}
+
+.btn-procedimientos.disabled,
+.btn-procedimientos[disabled],
+fieldset[disabled] .btn-procedimientos,
+.btn-procedimientos.disabled:hover,
+.btn-procedimientos[disabled]:hover,
+fieldset[disabled] .btn-procedimientos:hover,
+.btn-procedimientos.disabled:focus,
+.btn-procedimientos[disabled]:focus,
+fieldset[disabled] .btn-procedimientos:focus,
+.btn-procedimientos.disabled:active,
+.btn-procedimientos[disabled]:active,
+fieldset[disabled] .btn-procedimientos:active,
+.btn-procedimientos.disabled.active,
+.btn-procedimientos[disabled].active,
+fieldset[disabled] .btn-procedimientos.active {
+    background-color: #92278E;
+    border-color: #751E72;
+}
+
+.btn-procedimientos .badge {
+    color: #92278E;
+    background-color: #FFFFFF;
+}
+
+.borde-prestaciones input,
+.borde-prestaciones input:focus {
+    border-color: #3344AA;
 }
 
 .prestaciones {
-    background-color: #34a;
+    background-color: #3344AA;
 }
 
-.btn-primary.prestaciones {
-    background-color: #34a;
-    border-color: #34a;
+.borde-planes input,
+.borde-planes input:focus {
+    border-color: #5C8799;
+}
+
+.planes {
+    background-color: #5C8799;
+}
+
+.borde-problemas input,
+.borde-problemas input:focus {
+    border-color: #968005;
+}
+
+.problemas {
+    background-color: #968005;
+}
+
+.borde-procedimientos input,
+.borde-procedimientos input:focus {
+    border-color: #92278e;
 }
 
 .procedimientos {
-    background-color: #92278E;
+    background-color: #92278e;
 }
 
-.btn-primary.procedimientos {
-    background-color: #92278E;
-    border-color: #92278E;
-}
+
 /* fin colores botones / acciones */

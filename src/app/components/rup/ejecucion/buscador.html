@@ -1,16 +1,17 @@
-<plex-button label="Hallazgos" (click)="filtroBuscadorSnomed('problemas')" type="primary btn-sm problemas"></plex-button>
-<plex-button label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type="primary btn-sm procedimientos"></plex-button>
-<plex-button label="Planes" (click)="busquedaPlanes()" type="primary btn-sm planes"></plex-button>
-Buscador {{tipoBusqueda}}
+<plex-button label="Hallazgos" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
+<plex-button label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
+<plex-button label="Planes" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
+
 <div *ngIf="!showPlanes">
     <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" (_onDragStart)="dragStart(true)"
         (_onDragEnd)="dragEnd(false)"></snomed-buscar>
 </div>
 
 <div *ngIf="showPlanes">
+
     <form>
-        <div>
-            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscar ..."></plex-text>
+        <div class="{{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
+            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscador {{tipoBusqueda}} ..."></plex-text>
         </div>
     </form>
     <div>

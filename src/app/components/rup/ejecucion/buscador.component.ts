@@ -75,9 +75,7 @@ export class BuscadorComponent implements OnInit {
     filtroBuscadorSnomed(tipoBusqueda) {
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {
-            console.log(tipoBusqueda);
-            console.log('tipoBusqueda');
-            console.log(element.semanticTag);
+
             let semanticTag: String;
             switch (element.semanticTag) {
                 case 'trastorno':
@@ -100,6 +98,7 @@ export class BuscadorComponent implements OnInit {
         this._tipoDeBusqueda.emit(tipoBusqueda);
         //console.log(this.evtData);
     }
+
     //Muestra el buscador de planes
     busquedaPlanes() {
         this.masFrecuentesFiltradas = [];
@@ -114,12 +113,12 @@ export class BuscadorComponent implements OnInit {
     }
 
     // si hago clic en un concepto lo capturo y lo devuelvo
-    // Lo trae del buscador de SNOMED 
+    // Lo trae del buscador de SNOMED
     ejecutarConcepto(concepto) {
         console.log(concepto);
         this.evtData.emit(concepto);
     }
-    // Recupero los mas frecuentes de los elementos rup y creo el objeto con los 
+    // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed
     recuperaLosMasFrecuentes(elementoRUP) {
         elementoRUP.frecuentes.forEach(element => {

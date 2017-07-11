@@ -1,5 +1,5 @@
 <form *ngIf="!hideSearchInput">
-    <div>
+    <div class="{{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar ..."></plex-text>
     </div>
 </form>

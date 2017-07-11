@@ -24,6 +24,7 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
+    public dragg: Boolean = false;
     xconsole(e) {
         console.log(e);
     }
@@ -212,12 +213,14 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(indexOrigen, 1);
         this.registros.splice(indexDestino + 1, 0, _registro);
 
-        //this.moverRegistroEnPosicion()
+        // this.moverRegistroEnPosicion()
+        /*
         if (relacionados.length) {
             relacionados.forEach(r => {
                 r.relacionadoCon = null;
             });
         }
+        */
 
         console.log(this.registros);
     }
@@ -231,7 +234,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     desvincular(index) {
         this.confirmarDesvincular[index] = true;
     }
+arrastrando($e, val) {
+    console.log($e);
+    console.log(val);
+    setTimeout(() => {
+        this.dragg = val;
+    });
 
+}
     /**
      * Quitamos vinculación de los registros
      *
