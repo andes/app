@@ -23,6 +23,12 @@
                 </div>
             </plex-box>
         </div>
+        <!--Panel lateral-->
+        <div class="col-4">
+            <plex-box type="primary">
+                <div class="gestionUsuarios"></div>
+            </plex-box>
+        </div>
     </div>
     <div class="row" *ngIf="showUpdate">
         <div class="col-8">
@@ -31,12 +37,18 @@
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
                 <div class="row">
-                     <div class="col-8">
-                    <plex-text [(ngModel)]="nuevoPermiso" placeholder="Ingrese un nuevo permiso"></plex-text>
-                     </div>
-                      <div class="col-4">
-                               <plex-button label="" type="info" icon="plus" (click)="addPermiso()"></plex-button>
-                      </div>
+                    <div class="col-8">
+                        <plex-text [(ngModel)]="nuevoPermiso" placeholder="Ingrese un nuevo permiso"></plex-text>
+                    </div>
+                    <div class="col-4">
+                        <plex-button label="" type="info" icon="plus" (click)="addPermiso()"></plex-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <plex-select [data]="filtros" [(ngModel)]="unFiltro" (change)="filtrar()" placeholder="Seleccione..." label="Filtrar:">
+                        </plex-select>
+                    </div>
                 </div>
                 <fieldset>
                     <div class="row">&nbsp;</div>
@@ -46,7 +58,7 @@
                                 <div class="col-11">{{_unPermiso}}
                                 </div>
                                 <div class="col-1 text-right">
-                                    <plex-button label="" type="danger btn-sm" icon="delete" (click)="removePermiso(i)"></plex-button>
+                                    <plex-button label="" type="danger btn-sm" icon="close" (click)="removePermiso(i)"></plex-button>
                                 </div>
                             </div>
                         </li>

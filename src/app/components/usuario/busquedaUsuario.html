@@ -3,11 +3,12 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                 <header>
+                <header>
                     <h3>Administración de Permisos</h3>
                 </header>
 
-                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>" placeholder="Buscar por DNI, nombre o apellido">
+                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
+                    placeholder="Buscar por DNI, nombre o apellido">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -28,10 +29,10 @@
                         <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index">
                             <td>{{user.usuario}}</td>
                             <td *ngIf="user.apellido; else sinDatos">
-                                   {{user.apellido}}
+                                {{user.apellido}}
                             </td>
                             <td *ngIf="user.nombre; else sinDatos">
-                                    {{user.nombre}}
+                                {{user.nombre}}
                             </td>
                             <ng-template #sinDatos>
                                 <td> SIN DATOS</td>
@@ -56,7 +57,9 @@
 </section>
 
 <footer *ngIf="!showCreateUpdate">
-    <plex-button *ngIf="mostrarNuevo" label="Nuevo Usuario" icon="account-plus" type="primary" (click)="seleccionarUsuario(null)"></plex-button>
+    <div class="text-right">
+        <plex-button *ngIf="mostrarNuevo" label="Nuevo Usuario" icon="account-plus" type="primary" (click)="seleccionarUsuario(null)"></plex-button>
+    </div>
 </footer>
 
 <!--Componente de Alta/Modificación que hay que desarrollar-->

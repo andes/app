@@ -12,7 +12,7 @@ import { IOrganizacion } from './../../interfaces/IOrganizacion';
 @Component({
     selector: 'usuario-create-update',
     templateUrl: 'usuario-create-update.html',
-    // styleUrls: ['usuario-create-update.css']
+    styleUrls: ['usuarios.css']
 })
 
 export class UsuarioCreateUpdateComponent implements OnInit {
@@ -23,6 +23,8 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     private timeoutHandle: number;
     // Propiedades públicas
+    public unFiltro: any;
+    public filtros: any[] = [];
     public documento = '';
     public roles: any[] = [];
     public textoLibre: string = null;
@@ -58,6 +60,7 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         }
     }
 
+
     addPermiso() {
         let index = this.permisos.findIndex(permiso => (permiso.trim() === this.nuevoPermiso.trim()));
         if (index < 0) {
@@ -83,11 +86,8 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizacion = this.auth.organizacion;
         this.permisos = this.seleccion.permisos;
-        this.permisos.sort(function (a, b) {
-                if (a < b) { return -1; }
-                if (a > b) { return 1; }
-                return 0;
-            });
+        this.sortPermisos();
+        this.getFiltros();
     }
 
     newUser() {
@@ -114,12 +114,43 @@ export class UsuarioCreateUpdateComponent implements OnInit {
                 this.userModel.apellido = user[0].apellido;
                 this.userModel.usuario = user[0].usuario;
                 this.userModel.organizacion = this.auth.organizacion;
+                this.permisos = user[0].permisos;
+                this.sortPermisos();
+                this.getFiltros();
                 this.plex.info('info', '', 'Usuario existente', );
                 this.showCreate = false;
                 this.showUpdate = true;
             }
         }
         );
+    }
+
+    filtrar() {
+        this.permisos = this.seleccion.permisos.filter(permiso => {
+            let item: string = permiso.split(':', 2)[0];
+            return (item === this.unFiltro.id);
+        });
+
+    }
+
+    getFiltros() {
+        this.filtros = [];
+        this.permisos.forEach((permiso: string) => {
+            let indexItem = this.filtros.findIndex(filtro => (filtro === permiso.split(':', 2)[0]));
+            let filtro = permiso.split(':', 2)[0];
+            if (indexItem < 0) {
+                this.filtros.push({ id: filtro, nombre: filtro });
+            }
+        });
+        return this.filtros;
+    }
+
+    sortPermisos() {
+        this.permisos.sort(function (a, b) {
+            if (a < b) { return -1; }
+            if (a > b) { return 1; }
+            return 0;
+        });
     }
 
     onSave() {
