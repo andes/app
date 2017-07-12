@@ -10,12 +10,12 @@
                         <div class="row align-items-center">
                             <div class="col-4">
                                 <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
-                                    (change)="filtrar()">
+                                    (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
                             </div>
                             <div class="col-4">
                                 <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
-                                    (change)="filtrar()">
+                                    (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>
                             <div class="col-4 text-right">
@@ -253,6 +253,7 @@
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
+        <plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>
         <div class="float-right">
             <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
         </div>

@@ -34,6 +34,7 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 
 export class DarTurnosComponent implements OnInit {
 
+
     private _reasignaTurnos: any;
     private _pacienteSeleccionado: any;
     paciente: IPaciente;
@@ -58,6 +59,7 @@ export class DarTurnosComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
 
     public agenda: IAgenda;
     public agendas: IAgenda[];
@@ -993,6 +995,11 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.buscarPaciente();
         }
+    }
+
+    cancelar() {
+        this.showDarTurnos = false;
+        this.volverAlGestor.emit(true);
     }
 
     redirect(pagina: string) {
