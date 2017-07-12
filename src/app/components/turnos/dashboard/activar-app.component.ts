@@ -54,10 +54,10 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     this.checkPass = true;
                 } else {
                     this.checkPass = false;
-                    if (data.error == 'account_assigned') {
+                    if (data.error === 'account_assigned') {
                         this.message = 'Cuenta ya activada';
                         this.hideButton = true;
-                    } else if (data.error == 'email_exists') {
+                    } else if (data.error === 'email_exists') {
                         this.message = 'El email de contacto esta en uso';
                     }
                 }
@@ -103,10 +103,10 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         this.servicePaciente.patch(this.paciente.id, cambios).subscribe(() => {
             this.appMobile.create(this.paciente.id).subscribe((datos) => {
                 if (datos.error) {
-                    if (datos.error == 'email_not_found') {
+                    if (datos.error === 'email_not_found') {
                         this.plex.alert('El paciente no tiene asignado un email.');
                     }
-                    if (datos.error == 'email_exists') {
+                    if (datos.error === 'email_exists') {
                         this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
                     }
                 } else {

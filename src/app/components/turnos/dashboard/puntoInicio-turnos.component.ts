@@ -57,14 +57,12 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente): void {
-        debugger;
         this.paciente = paciente;
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.showMostrarEstadisticasAgendas = false;
-                    // this.showMostrarEstadisticasPacientes = true;
                     if (this.esOperacion) {
                         this.esOperacion = false;
                     } else {
