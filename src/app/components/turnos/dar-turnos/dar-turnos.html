@@ -9,7 +9,6 @@
                     <header>
                         <div class="row align-items-center">
                             <div class="col-4">
-<<<<<<< HEAD
                                 <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
                                     (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
@@ -17,15 +16,6 @@
                             <div class="col-4">
                                 <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                                     (change)="filtrar()" name="profesional">
-=======
-                                <plex-select name="tipoPrestaciones" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
-                                    (change)="filtrar()">
-                                </plex-select>
-                            </div>
-                            <div class="col-4">
-                                <plex-select name="profesionales" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
-                                    (change)="filtrar()">
->>>>>>> 2cef580d14b14ee52e20a87deb9b9178e759ba74
                                 </plex-select>
                             </div>
                             <div class="col-4 text-right">
