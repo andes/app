@@ -358,8 +358,9 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-prestaciones input,
 .borde-prestaciones input:focus {
     border-color: #3344AA;
-    background-color: rgba(51, 68, 170, 0.65) !important;
+    background-color: rgba(51, 68, 170, 0.45) !important;
     background-color: #3344AA;
+    color: white;
 }
 
 .prestaciones {
@@ -369,8 +370,9 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-planes input,
 .borde-planes input:focus {
     border-color: #5C8799;
-    background-color: rgba(92, 135, 153, 0.65) !important;
+    background-color: rgba(92, 135, 153, 0.45) !important;
     background-color: #5C8799;
+    color: white;
 }
 
 .planes {
@@ -380,8 +382,9 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-problemas input,
 .borde-problemas input:focus {
     border-color: #968005;
-    background-color: rgba(150, 128, 5, 0.65) !important;
+    background-color: rgba(150, 128, 5, 0.45) !important;
     background-color: #968005;
+    color: white;
 }
 
 .problemas {
@@ -391,8 +394,9 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-procedimientos input,
 .borde-procedimientos input:focus {
     border-color: #92278e;
-    background-color: rgba(146, 39, 142, 0.65) !important;
+    background-color: rgba(146, 39, 142, 0.45) !important;
     background-color: #92278e;
+    color: white;
 }
 
 .procedimientos {

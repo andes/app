@@ -117,7 +117,9 @@ export class PrestacionEjecucionComponent implements OnInit {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
+                debugger;
                 let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
+                console.log(elementoRUPRegistro);
                 // armamos el elemento data a agregar al array de registros
                 let data = {
                     tipo: registro.tipo,
@@ -461,7 +463,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     beforeSave() {
-        debugger;
+        let resultado = true;
+
         if (!this.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
@@ -475,11 +478,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             // verificamos si existe algun valor a devolver en data
             if (typeof this.data[r.elementoRUP.key] === 'undefined') {
                 this.errores[i] = 'Debe completar con algún valor';
+                resultado = false;
             }
         }
-        console.log(this.errores);
-        //});
-        return true;
+
+        return resultado;
     }
 
     /*
