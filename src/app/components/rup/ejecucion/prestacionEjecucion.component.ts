@@ -117,9 +117,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
-                debugger;
                 let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
-                console.log(elementoRUPRegistro);
                 // armamos el elemento data a agregar al array de registros
                 let data = {
                     tipo: registro.tipo,
@@ -129,6 +127,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     destacado: registro.destacado ? registro.destacado : false,
                     relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
                 };
+
                 this.registros.push(data);
                 this.data[elementoRUPRegistro.key] = registro.valor[elementoRUPRegistro.key];
             });
@@ -436,9 +435,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
         // validamos antes de guardar
-        if (!this.beforeSave()) {
+        let $a = this.beforeSave();
+        alert($a);
+        if (!$a) {
             return null;
         }
+
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -509,20 +511,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         //console.log(this.data);
     }
 
-    volver(ruta) {
-        /*
-        //valida si quedaron datos sin guardar..
-        if (this.prestacionesEjecucion.length > 0 || this.tiposPrestaciones.length > 0) {
-            this.plex.confirm('Se van a descartar los cambios sin guardar', 'Atención').then((confirmar) => {
-                if (confirmar === true) {
-                    this.router.navigate(['rup/resumen', this.prestacion.id]);
-                }
-            });
-        } else {
-            this.router.navigate(['rup/resumen', this.prestacion.id]);
-        }
-        */
-        this.router.navigate(['rup/resumen', this.prestacion.id]);
+    volver() {
+        this.router.navigate(['rup']);
     }
 
     onConceptoDrop(e: any) {

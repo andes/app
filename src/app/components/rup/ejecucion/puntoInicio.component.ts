@@ -558,6 +558,10 @@ export class PuntoInicioComponent implements OnInit {
     onReturn() {
         this.router.navigate(['/rup']);
     }
+
+    irResumen(id) {
+        this.router.navigate(['rup/validacion/', id]);
+    }
 } // export class Punto Inicio Component
 
 
