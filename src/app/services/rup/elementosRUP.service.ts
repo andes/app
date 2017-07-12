@@ -8,6 +8,7 @@ import { Server } from '@andes/shared';
 export class ElementosRupService {
     private evolucionPorDefecto = '594aa43a884431c25d9a0267';
     private evolucionProblemaPorDefecto = '594aa21a884431c25d9a0266';
+    private solicitudPorDefecto = '5964cc2aa784f4e1a8e2afe9';
 
     private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
@@ -67,28 +68,38 @@ export class ElementosRupService {
      * @returns elementoRUP
      * @memberof ElementosRupService
      */
-    buscarElementoRup(listaElementosRup: any, conceptoSnomed: any) {
+    buscarElementoRup(listaElementosRup: any, conceptoSnomed: any, tipo: string) {
         let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
-        if (conceptoSnomed.semanticTag === 'trastorno' || conceptoSnomed.semanticTag === 'hallazgo') {
-            elementoRUP = listaElementosRup.find(elemento => elemento.id  === this.evolucionProblemaPorDefecto);
+        if (tipo === 'problemas') {
+            elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
 
             return elementoRUP;
+        } else {
+            if (tipo === 'procedimientos') {
+                // si es un procedimiento buscamos su propia forma de evolucionar
+                elementoRUP = listaElementosRup.find(elemento => {
+                    return elemento.conceptos.find(concepto =>
+                        concepto.conceptId === conceptoSnomed.conceptId
+                    );
+                });
+
+                // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
+                if (!elementoRUP) {
+                    elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionPorDefecto);
+                }
+
+                return elementoRUP;
+            } else {
+                if (tipo === 'planes') {
+                    // si es un plan ejecutamos la solicitud por defecto
+                    elementoRUP = listaElementosRup.find(elemento => elemento.id === this.solicitudPorDefecto);
+                    return elementoRUP;
+                }
+            }
         }
 
-        // si es un procedimiento buscamos su propia forma de evolucionar
-        elementoRUP = listaElementosRup.find(elemento => {
-            return elemento.conceptos.find(concepto =>
-                concepto.conceptId === conceptoSnomed.conceptId
-            );
-        });
 
-        // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
-        if (!elementoRUP) {
-            elementoRUP = listaElementosRup.find(elemento => elemento.id  === this.evolucionPorDefecto);
-        }
-
-        return elementoRUP;
 
     }
 }
