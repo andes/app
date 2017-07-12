@@ -1,3 +1,5 @@
+import { PacienteService } from './../../../services/paciente.service';
+import { IPaciente } from './../../../interfaces/IPaciente';
 import { element } from 'protractor';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
@@ -66,6 +68,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public indexEliminar: any;
     public scopeEliminar: String;
 
+    public paciente: IPaciente;
+
 
     // errores
     public errores: any[] = [];
@@ -74,7 +78,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioElementosRUP: ElementosRupService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
-        public servicioTipoPrestacion: TipoPrestacionService) {
+        public servicioTipoPrestacion: TipoPrestacionService,
+        private servicioPaciente: PacienteService) {
     }
 
     /**
@@ -92,13 +97,14 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.paciente = paciente;
+                });
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
                     this.MostrarDatosEnEjecucion();
                 });
-
-
             }, (err) => {
                 if (err) {
                     this.plex.info('danger', err, 'Error');
