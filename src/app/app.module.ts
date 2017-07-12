@@ -129,7 +129,7 @@ import { PanelAgendaComponent } from './components/turnos/gestor-agendas/operaci
 import { BotonesAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/botones-agenda.component';
 import { RevisionAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/revision-agenda.component';
 import { PopoverAuditComponent } from './components/popover-audit/popover-audit.component';
-import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
+import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
 import { EstadisticasAgendasComponent } from './components/turnos/dashboard/estadisticas-agendas.component';
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { PacienteSearchTurnosComponent } from './components/turnos/dashboard/paciente-search-turnos.component';
@@ -359,7 +359,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
-        DashboardTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+        PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         ActivarAppComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,

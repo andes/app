@@ -990,7 +990,7 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (this._pacienteSeleccionado) {
-            this.router.navigate(['./' + 'dashboard_turnos']);
+            this.router.navigate(['./' + 'puntoInicioTurnos']);
             this.cancelarDarTurno.emit(true);
         } else {
             this.buscarPaciente();
