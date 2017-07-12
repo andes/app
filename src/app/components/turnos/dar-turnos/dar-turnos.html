@@ -240,15 +240,15 @@
             <div class="col col-sm-12" *ngIf="pacientesSearch">
                 <div class="panel panel-default plex-layout">
                     <div class="clear"></div>
-                    <pacientesSearch (selected)="afterSearch($event)"></pacientesSearch>
+                    <pacientesSearch (selected)="afterSearch($event)" [bloquearCreate]="true"></pacientesSearch>
                 </div>
             </div>
-            <div class="col col-sm-12" *ngIf="showCreateUpdate">
+            <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
                 <div class="panel panel-default plex-layout">
                     <div class="clear"></div>
                     <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
                 </div>
-            </div>
+            </div>-->
         </div>
     </section>
 

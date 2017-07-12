@@ -8,313 +8,319 @@ import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.c
 import { Auth } from '@andes/auth';
 
 @Component({
-  selector: 'pacientesSearch',
-  templateUrl: 'paciente-search.html',
-  styleUrls: ['paciente-search.css']
+    selector: 'pacientesSearch',
+    templateUrl: 'paciente-search.html',
+    styleUrls: ['paciente-search.css']
 })
 
 export class PacienteSearchComponent implements OnInit {
-  @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
-  private timeoutHandle: number;
+    private timeoutHandle: number;
 
-  // Propiedades públicas
-  public busquedaAvanzada = false;
-  public textoLibre: string = null;
-  public resultado = null;
-  public pacientesSimilares = null;
-  public seleccion = null;
-  public esEscaneado = false;
-  public loading = false;
-  public cantPacientesValidados: number;
-  public showCreateUpdate = false;
-  public mostrarNuevo = false;
-  public autoFocus = 0;
-  private permisoAgendas = false;
-  @Input() modoCompleto = true; // muestra/oculta panel derecho
-  @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
-  @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
-  // Eventos
-  @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-  @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-  @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
-
-
-
-  constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
-
-    this.actualizarContadores();
-  }
-
-  public ngOnInit() {
-    this.autoFocus = this.autoFocus + 1;
-    // Asigno el valor del string de búsqueda que se envío desde algún otro componente
-    if (this.textSearch) {
-      this.textoLibre = this.textSearch;
-    }
-    this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
-  }
+    // Propiedades públicas
+    public busquedaAvanzada = false;
+    public textoLibre: string = null;
+    public resultado = null;
+    public pacientesSimilares = null;
+    public seleccion = null;
+    public esEscaneado = false;
+    public loading = false;
+    public cantPacientesValidados: number;
+    public showCreateUpdate = false;
+    public mostrarNuevo = false;
+    public autoFocus = 0;
+    private permisoAgendas = false;
+    @Input() modoCompleto = true; // muestra/oculta panel derecho
+    @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
+    @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
+    // Eventos
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
 
 
-  /**
-   * Selecciona un paciente y emite el evento 'selected'
-   *
-   * @private
-   * @param {*} paciente Paciente para seleccionar
-   */
-  public seleccionarPaciente(paciente: any) {
-    if (paciente) {
-      this.seleccion = paciente;
-      if (this.esEscaneado) {
-        this.seleccion.scan = this.textoLibre;
-      }
-      this.selected.emit(paciente);
-      this.escaneado.emit(this.esEscaneado);
-    } else {
-      this.esEscaneado = false;
-      this.escaneado.emit(this.esEscaneado);
-    }
-    if (!this.bloquearCreate) {
-      this.showCreateUpdate = true;
-    }
-    this.textoLibre = null;
-    this.mostrarNuevo = false;
-  }
 
-  /**
-   * Actualiza los contadores de pacientes cada 1 minutos
-   *
-   * @private
-   */
-  private actualizarContadores() {
-    let actualizar = () => {
-      this.pacienteService.getConsultas('validados')
-        .subscribe(cantPacientesValidados => {
-          this.cantPacientesValidados = cantPacientesValidados;
-        });
-    };
+    constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
 
-    actualizar();
-    window.setInterval(actualizar, 1000 * 60); // Cada un minuto
-  }
-
-  /**
-   * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
-   *
-   * @returns {DocumentoEscaneado} Devuelve el documento encontrado
-   */
-  private comprobarDocumentoEscaneado(): DocumentoEscaneado {
-    for (let key in DocumentoEscaneados) {
-      if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
-        // Loggea el documento escaneado para análisis
-        this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
-        return DocumentoEscaneados[key];
-      }
-    }
-    if (this.textoLibre.length > 30) {
-      this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
-    }
-    return null;
-  }
-
-  /**
-   * Parsea el texto libre en un objeto paciente
-   *
-   * @param {DocumentoEscaneado} documento documento escaneado
-   * @returns {*} Datos del paciente
-   */
-  private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
-    let datos = this.textoLibre.match(documento.regEx);
-    let sexo = '';
-    if (documento.grupoSexo > 0) {
-      sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
+        this.actualizarContadores();
     }
 
-    let fechaNacimiento = null;
-    if (documento.grupoFechaNacimiento > 0) {
-      fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
+    public ngOnInit() {
+        this.autoFocus = this.autoFocus + 1;
+        // Asigno el valor del string de búsqueda que se envío desde algún otro componente
+        if (this.textSearch) {
+            this.textoLibre = this.textSearch;
+        }
+        this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
-    return {
-      documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
-      apellido: datos[documento.grupoApellido],
-      nombre: datos[documento.grupoNombre],
-      sexo: sexo,
-      fechaNacimiento: fechaNacimiento
-    };
-  }
 
-  /**
-   * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
-   *
-   * @private
-   * @returns {boolean} Indica si está bien configurado
-   */
-  private controlarScanner(): boolean {
-    if (this.textoLibre) {
-      let index = this.textoLibre.indexOf('"');
-      if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
-        /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
-        this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+    /**
+     * Selecciona un paciente y emite el evento 'selected'
+     *
+     * @private
+     * @param {*} paciente Paciente para seleccionar
+     */
+    public seleccionarPaciente(paciente: any) {
+        if (paciente) {
+            this.seleccion = paciente;
+            if (this.esEscaneado) {
+                this.seleccion.scan = this.textoLibre;
+            }
+            this.selected.emit(paciente);
+            this.escaneado.emit(this.esEscaneado);
+        } else {
+            this.esEscaneado = false;
+            this.escaneado.emit(this.esEscaneado);
+        }
+        if (!this.bloquearCreate) {
+            this.showCreateUpdate = true;
+        }
+
+        // Mostrar formulario update si no hay paciente
+        if (!paciente.id) {
+            this.showCreateUpdate = true;
+        }
+
         this.textoLibre = null;
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Busca paciente cada vez que el campo de busca cambia su valor
-   */
-  public buscar() {
-    // Cancela la búsqueda anterior
-    if (this.timeoutHandle) {
-      window.clearTimeout(this.timeoutHandle);
+        this.mostrarNuevo = false;
     }
 
-    // Limpia los resultados de la búsqueda anterior
-    this.resultado = null;
-    this.pacientesSimilares = null;
-    this.mostrarNuevo = false;
+    /**
+     * Actualiza los contadores de pacientes cada 1 minutos
+     *
+     * @private
+     */
+    private actualizarContadores() {
+        let actualizar = () => {
+            this.pacienteService.getConsultas('validados')
+                .subscribe(cantPacientesValidados => {
+                    this.cantPacientesValidados = cantPacientesValidados;
+                });
+        };
 
-    // Controla el scanner
-    if (!this.controlarScanner()) {
-      return;
+        actualizar();
+        window.setInterval(actualizar, 1000 * 60); // Cada un minuto
     }
 
-
-    // Devuelve verdadero diciendo que borró el input de la búsqueda
-    // Lo usamos para la interacción con el rehuso del componente (ej: RUP)
-    if (this.textoLibre === null) {
-      this.blanqueaInput.next(true);
+    /**
+     * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares
+     *
+     * @returns {DocumentoEscaneado} Devuelve el documento encontrado
+     */
+    private comprobarDocumentoEscaneado(): DocumentoEscaneado {
+        for (let key in DocumentoEscaneados) {
+            if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
+                // Loggea el documento escaneado para análisis
+                this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
+                return DocumentoEscaneados[key];
+            }
+        }
+        if (this.textoLibre.length > 30) {
+            this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
+        }
+        return null;
     }
 
+    /**
+     * Parsea el texto libre en un objeto paciente
+     *
+     * @param {DocumentoEscaneado} documento documento escaneado
+     * @returns {*} Datos del paciente
+     */
+    private parseDocumentoEscaneado(documento: DocumentoEscaneado): any {
+        let datos = this.textoLibre.match(documento.regEx);
+        let sexo = '';
+        if (documento.grupoSexo > 0) {
+            sexo = (datos[documento.grupoSexo].toUpperCase() === 'F') ? 'femenino' : 'masculino';
+        }
 
-    // Inicia búsqueda
-    if (this.textoLibre && this.textoLibre.trim()) {
-      this.timeoutHandle = window.setTimeout(() => {
-        this.timeoutHandle = null;
+        let fechaNacimiento = null;
+        if (documento.grupoFechaNacimiento > 0) {
+            fechaNacimiento = moment(datos[documento.grupoFechaNacimiento], 'DD/MM/YYYY');
+        }
 
-        // Si matchea una expresión regular, busca inmediatamente el paciente
-        let documentoEscaneado = this.comprobarDocumentoEscaneado();
-        if (documentoEscaneado) {
-          this.loading = true;
-          let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
-          // Consulta API
-          this.pacienteService.get({
-            type: 'simplequery',
-            apellido: pacienteEscaneado.apellido.toString(),
-            nombre: pacienteEscaneado.nombre.toString(),
-            documento: pacienteEscaneado.documento.toString(),
-            sexo: pacienteEscaneado.sexo.toString(),
-            escaneado: true
-          }).subscribe(resultado => {
-            this.loading = false;
-            this.resultado = resultado;
-            this.esEscaneado = true;
-            // Encontramos un matcheo al 100%
-            if (resultado.length) {
-              this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
-              this.showCreateUpdate = true;
-            } else {
-              // Realizamos una busqueda por Suggest
-              this.pacienteService.get({
-                type: 'suggest',
-                claveBlocking: 'documento',
-                percentage: true,
-                apellido: pacienteEscaneado.apellido.toString(),
-                nombre: pacienteEscaneado.nombre.toString(),
-                documento: pacienteEscaneado.documento.toString(),
-                sexo: pacienteEscaneado.sexo.toString(),
-                fechaNacimiento: pacienteEscaneado.fechaNacimiento,
-                escaneado: true
-              }).subscribe(resultSuggest => {
-                this.pacientesSimilares = resultSuggest;
-                if (this.pacientesSimilares.length > 0) {
+        return {
+            documento: datos[documento.grupoNumeroDocumento].replace(/\D/g, ''),
+            apellido: datos[documento.grupoApellido],
+            nombre: datos[documento.grupoNombre],
+            sexo: sexo,
+            fechaNacimiento: fechaNacimiento
+        };
+    }
 
-                  let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
-                    if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
-                      return valuePac.paciente;
-                    }
-                  });
+    /**
+     * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
+     *
+     * @private
+     * @returns {boolean} Indica si está bien configurado
+     */
+    private controlarScanner(): boolean {
+        if (this.textoLibre) {
+            let index = this.textoLibre.indexOf('"');
+            if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
+                /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
+                this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+                this.textoLibre = null;
+                return false;
+            }
+        }
+        return true;
+    }
 
-                  let datoDB = {
-                    id: this.pacientesSimilares[0].paciente.id,
-                    apellido: this.pacientesSimilares[0].paciente.apellido,
-                    nombre: this.pacientesSimilares[0].paciente.nombre,
-                    documento: this.pacientesSimilares[0].paciente.documento,
-                    sexo: this.pacientesSimilares[0].paciente.sexo,
-                    fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
-                    match: this.pacientesSimilares[0].match
-                  };
-                  if (pacienteEncontrado) {
-                    this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+    /**
+     * Busca paciente cada vez que el campo de busca cambia su valor
+     */
+    public buscar() {
+        // Cancela la búsqueda anterior
+        if (this.timeoutHandle) {
+            window.clearTimeout(this.timeoutHandle);
+        }
+
+        // Limpia los resultados de la búsqueda anterior
+        this.resultado = null;
+        this.pacientesSimilares = null;
+        this.mostrarNuevo = false;
+
+        // Controla el scanner
+        if (!this.controlarScanner()) {
+            return;
+        }
 
 
-                    this.seleccionarPaciente(pacienteEncontrado);
-                  } else {
-                    if (this.pacientesSimilares[0].match >= 0.94) {
-                      this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+        // Devuelve verdadero diciendo que borró el input de la búsqueda
+        // Lo usamos para la interacción con el rehuso del componente (ej: RUP)
+        if (this.textoLibre === null) {
+            this.blanqueaInput.next(true);
+        }
 
-                      //
-                      // Actualizamos los datos del paciente con los datos obtenidos del DNI
-                      //
-                      this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
-                      this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
-                      this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
-                      this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
-                      this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
-                    } else {
-                      if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
-                        this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
-                      }
-                      this.seleccionarPaciente(pacienteEscaneado);
-                    }
-                  }
+
+        // Inicia búsqueda
+        if (this.textoLibre && this.textoLibre.trim()) {
+            this.timeoutHandle = window.setTimeout(() => {
+                this.timeoutHandle = null;
+
+                // Si matchea una expresión regular, busca inmediatamente el paciente
+                let documentoEscaneado = this.comprobarDocumentoEscaneado();
+                if (documentoEscaneado) {
+                    this.loading = true;
+                    let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
+                    // Consulta API
+                    this.pacienteService.get({
+                        type: 'simplequery',
+                        apellido: pacienteEscaneado.apellido.toString(),
+                        nombre: pacienteEscaneado.nombre.toString(),
+                        documento: pacienteEscaneado.documento.toString(),
+                        sexo: pacienteEscaneado.sexo.toString(),
+                        escaneado: true
+                    }).subscribe(resultado => {
+                        this.loading = false;
+                        this.resultado = resultado;
+                        this.esEscaneado = true;
+                        // Encontramos un matcheo al 100%
+                        if (resultado.length) {
+                            this.seleccionarPaciente(resultado.length ? resultado[0] : pacienteEscaneado);
+                            this.showCreateUpdate = true;
+                        } else {
+                            // Realizamos una busqueda por Suggest
+                            this.pacienteService.get({
+                                type: 'suggest',
+                                claveBlocking: 'documento',
+                                percentage: true,
+                                apellido: pacienteEscaneado.apellido.toString(),
+                                nombre: pacienteEscaneado.nombre.toString(),
+                                documento: pacienteEscaneado.documento.toString(),
+                                sexo: pacienteEscaneado.sexo.toString(),
+                                fechaNacimiento: pacienteEscaneado.fechaNacimiento,
+                                escaneado: true
+                            }).subscribe(resultSuggest => {
+                                this.pacientesSimilares = resultSuggest;
+                                if (this.pacientesSimilares.length > 0) {
+
+                                    let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
+                                        if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
+                                            return valuePac.paciente;
+                                        }
+                                    });
+
+                                    let datoDB = {
+                                        id: this.pacientesSimilares[0].paciente.id,
+                                        apellido: this.pacientesSimilares[0].paciente.apellido,
+                                        nombre: this.pacientesSimilares[0].paciente.nombre,
+                                        documento: this.pacientesSimilares[0].paciente.documento,
+                                        sexo: this.pacientesSimilares[0].paciente.sexo,
+                                        fechaNacimiento: this.pacientesSimilares[0].paciente.fechaNacimiento,
+                                        match: this.pacientesSimilares[0].match
+                                    };
+                                    if (pacienteEncontrado) {
+                                        this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+
+
+                                        this.seleccionarPaciente(pacienteEncontrado);
+                                    } else {
+                                        if (this.pacientesSimilares[0].match >= 0.94) {
+                                            this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+
+                                            //
+                                            // Actualizamos los datos del paciente con los datos obtenidos del DNI
+                                            //
+                                            this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
+                                            this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
+                                            this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
+                                            this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
+                                        } else {
+                                            if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
+                                                this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+                                            }
+                                            this.seleccionarPaciente(pacienteEscaneado);
+                                        }
+                                    }
+
+                                } else {
+                                    this.pacientesSimilares = null;
+                                    this.seleccionarPaciente(pacienteEscaneado);
+                                }
+                            });
+
+                        }
+
+                    }, (err) => {
+                        this.loading = false;
+                    });
+
 
                 } else {
-                  this.pacientesSimilares = null;
-                  this.seleccionarPaciente(pacienteEscaneado);
+                    // Si no es un documento escaneado, hace una búsqueda multimatch
+                    this.pacienteService.get({
+                        type: 'multimatch',
+                        cadenaInput: this.textoLibre
+                    }).subscribe(resultado => {
+                        this.loading = false;
+                        this.resultado = resultado;
+                        this.esEscaneado = false;
+                        /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
+                         if (permisos) {*/
+                        this.mostrarNuevo = true;
+                        // }
+                    }, (err) => {
+                        this.loading = false;
+                    });
                 }
-              });
-
-            }
-
-          }, (err) => {
-            this.loading = false;
-          });
-
-
-        } else {
-          // Si no es un documento escaneado, hace una búsqueda multimatch
-          this.pacienteService.get({
-            type: 'multimatch',
-            cadenaInput: this.textoLibre
-          }).subscribe(resultado => {
-            this.loading = false;
-            this.resultado = resultado;
-            this.esEscaneado = false;
-            /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
-             if (permisos) {*/
-            this.mostrarNuevo = true;
-            // }
-          }, (err) => {
-            this.loading = false;
-          });
+            }, 200);
         }
-      }, 200);
     }
-  }
 
-  afterCreateUpdate(paciente) {
-    this.showCreateUpdate = false;
-    this.seleccion = null;
-    this.autoFocus = this.autoFocus + 1;
-    this.textoLibre = '';
-    if (paciente) {
-      this.resultado = [paciente];
-      // Comentado para evitar mal funcionamiento de turnos
-      // this.seleccionarPaciente(paciente);
+    afterCreateUpdate(paciente) {
+        this.showCreateUpdate = false;
+        this.seleccion = null;
+        this.autoFocus = this.autoFocus + 1;
+        this.textoLibre = '';
+        if (paciente) {
+            this.resultado = [paciente];
+            // Comentado para evitar mal funcionamiento de turnos
+            // this.seleccionarPaciente(paciente);
+        }
     }
-  }
 }
