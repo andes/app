@@ -255,6 +255,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
+    /**
+     * Quitamos elemento del array de registros
+     * En caso de tener elementos relacionados, se les quita la relacion
+     * hacia el elemento a eliminar
+     * @memberof PrestacionEjecucionComponent
+     */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
             let _registro = this.registros[this.indexEliminar];
@@ -277,11 +283,18 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
-    confirmarEliminarRegistro(e, scope) {
+    /**
+     * Mostramos dialogo de confirmacion en la interfaz
+     * para confirmar el borrado del registro
+     * @param {any} snomedConcept
+     * @param {any} scope
+     * @memberof PrestacionEjecucionComponent
+     */
+    confirmarEliminarRegistro(snomedConcept, scope) {
         this.scopeEliminar = scope;
-        let snomedConcept = (e.dragData) ? e.dragData : e;
+        let concept = (snomedConcept.dragData) ? snomedConcept.dragData : snomedConcept;
 
-        let index = this.registros.findIndex(r => (snomedConcept.concepto && snomedConcept.concepto.conceptId === r.concepto.conceptId));
+        let index = this.registros.findIndex(r => (concept.concepto && concept.concepto.conceptId === r.concepto.conceptId));
 
         this.indexEliminar = index;
         this.confirmarEliminar = true;

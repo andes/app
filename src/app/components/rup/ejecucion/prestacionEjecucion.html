@@ -75,8 +75,6 @@
                                         </rup>
                                     </div>
 
-                                     <!-- *ngIf="elemento.relacionadoCon" -->
-
                                     <div class="rup-footer">
                                         <div class="actions ">
                                             <div class="relacionadoCon">
@@ -98,7 +96,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div *ngIf="confirmarEliminar && scopeEliminar == 'card'" class="confirmarDesvincular">
+                                                <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
                                                     ¿Quitar de la consulta?
 
                                                     <div class="float-right">
@@ -113,7 +111,7 @@
                                                 </div>
                                             </div>
 
-                                            <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]" title="Desvincular">
+                                            <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
                                                 <i class="mdi mdi-link-variant-off"></i>
                                             </a>
 
