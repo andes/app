@@ -123,9 +123,13 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posicion donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
+        // buscamos el registro
         let registro = this.registros[posicionActual];
 
+        // lo quitamos de la posicion actual
         this.registros.splice(posicionActual, 1);
+
+        // agregamos a la nueva posicion
         this.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
@@ -252,7 +256,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     eliminarRegistro() {
-        debugger;
         if (this.confirmarEliminar) {
             let _registro = this.registros[this.indexEliminar];
 
@@ -384,27 +387,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     /* fin ordenamiento de los elementos */
 
     guardarPrestacion() {
-        console.log(this.registros);
-        debugger;
-        let i = 0;
-        let fin = this.registros.length;
-        //this.registros.forEach(r => {
-        for (i = 0; i < fin; i++) {
-            let r = this.registros[i];
-            let nuevoRegistro: any = {
-                concepto: r.concepto,
-                destacado: r.destacado,
-                relacionadoCon: r.relacionadoCon,
-                tipo: r.tipo,
-                valor: {}
-            };
-            console.log(nuevoRegistro);
-            console.log(this.data[r.elementoRUP.key]);
-            nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
-            this.prestacion.ejecucion.registros.push(nuevoRegistro);
-        }
-        //});
-        /*
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -416,7 +398,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
             this.prestacion.ejecucion.registros.push(nuevoRegistro);
         });
-        */
 
         let params: any = {
             op: 'registros',
@@ -468,18 +449,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         */
         this.router.navigate(['rup/resumen', this.prestacion.id]);
     }
-    // //Recibe el parametro y lo setea para realizar la busqueda en Snomed
-    // filtroBuscadorSnomed(tipoBusqueda) {
-    //     this.showPlanes = false;// Oculta el buscador de planes
-    //     console.log(tipoBusqueda);
-    //     this.tipoBusqueda = tipoBusqueda;
-    // }
-    // //Muestra el buscador de planes
-    // busquedaPlanes() {
-    //     this.tipoBusqueda = 'planes';
-    //     this.showPlanes = true;
-    // }
-
 
     onConceptoDrop(e: any) {
         if (e.dragData.tipo) {
