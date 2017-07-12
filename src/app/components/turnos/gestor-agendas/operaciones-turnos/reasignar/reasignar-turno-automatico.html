@@ -1,6 +1,6 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div *ngIf="!agendasCandidatas?.length > 0 && !agendasCandidatas[0].agendas?.length > 0">
+    <div *ngIf="!agendasCandidatas?.length > 0 && !agendasCandidatas && !agendasCandidatas[0].agendas?.length > 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
     </div>
     <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].agendas?.length > 0 && agendasCandidatas[0].turno">

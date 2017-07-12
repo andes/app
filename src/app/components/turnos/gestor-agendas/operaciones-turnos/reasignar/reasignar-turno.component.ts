@@ -108,6 +108,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     }
 
+    // Lista de agendas similares/candidatas
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
 
         let params = {
@@ -124,7 +125,7 @@ export class ReasignarTurnoComponent implements OnInit {
         });
     }
 
-
+    // Agenda seleccionada de las similares/candidatas
     cargarAgendaDestino(idAgenda, idBloque, idTurno) {
 
         this.serviceAgenda.getById(idAgenda).subscribe(agendaDestino => {

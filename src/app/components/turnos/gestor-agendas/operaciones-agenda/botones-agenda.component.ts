@@ -11,6 +11,8 @@ import * as moment from 'moment';
 
 export class BotonesAgendaComponent implements OnInit {
 
+    // @Input() turnosSuspendidos: any[];
+
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
@@ -32,6 +34,18 @@ export class BotonesAgendaComponent implements OnInit {
     get agendasSeleccionadas(): any {
         return this._agendasSeleccionadas;
     }
+
+    private _turnosSuspendidos: Array<any>;
+
+    @Input('turnosSuspendidos')
+    set turnosSuspendidos(value: any) {
+        this._turnosSuspendidos = value;
+    }
+    get turnosSuspendidos(): any {
+        return this._turnosSuspendidos;
+    }
+
+
 
     // Mantiene la combinación de condiciones para mostrar/ocultar botones
     vistaBotones: any = {};
@@ -152,7 +166,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar(),
+            reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos(),
         };
     }
 
@@ -209,6 +223,18 @@ export class BotonesAgendaComponent implements OnInit {
         return this.agendasSeleccionadas.filter((agenda) => {
             return moment(agenda.horaInicio).format() <= moment(today).format();
         }).length > 0;
+    }
+
+    hayTurnosSuspendidos() {
+        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
+            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
+                for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
+                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido') {
+                        return true;
+                    }
+                }
+            }
+        }
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado

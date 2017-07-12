@@ -48,6 +48,9 @@ export class GestorAgendasComponent implements OnInit {
     public estadosAgenda = enumerado.EstadosAgenda;
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
 
+    // Contador de turnos suspendidos por agenda, para mostrar notificaciones
+    turnosSuspendidos: any[] = [];
+
     searchForm: FormGroup;
 
     ag: IAgenda;
@@ -123,13 +126,27 @@ export class GestorAgendasComponent implements OnInit {
                     params['estado'] = value.estado.id;
                 }
 
-                this.serviceAgenda.get(params).subscribe(
-                    agendas => {
-                        this.hoy = false;
-                        this.agendas = agendas;
-                        this.fechaDesde = fechaDesde;
-                        this.fechaHasta = fechaHasta;
-                    },
+                this.serviceAgenda.get(params).subscribe(agendas => {
+
+                    agendas.forEach(agenda => {
+                        this.turnosSuspendidos[String(agenda.id)] = 0;
+                        agenda.bloques.forEach(bloque => {
+                            bloque.turnos.forEach(turno => {
+                                if (turno.estado === 'suspendido') {
+                                    this.turnosSuspendidos[String(agenda.id)]++;
+                                }
+                            });
+                        });
+                    });
+
+                    this.hoy = false;
+                    this.agendas = agendas;
+                    this.fechaDesde = fechaDesde;
+                    this.fechaHasta = fechaHasta;
+
+
+
+                },
                     err => {
                         if (err) {
                             console.log(err);
@@ -177,6 +194,7 @@ export class GestorAgendasComponent implements OnInit {
     // Volver al gestor luego de hacer algo
     volverAlGestor() {
         this.showGestorAgendas = true;
+        this.showDarTurnos = false;
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
@@ -250,6 +268,19 @@ export class GestorAgendasComponent implements OnInit {
             agendas => {
                 this.agendas = agendas;
                 this.agendasSeleccionadas = [];
+
+                agendas.forEach(agenda => {
+                    let count = 0;
+                    agenda.bloques.forEach(bloque => {
+                        bloque.turnos.forEach(turno => {
+                            if (turno.estado === 'suspendido') {
+                                count++;
+                            }
+                        });
+                    });
+                    this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
+                });
+
             },
             err => {
                 if (err) {
@@ -351,6 +382,11 @@ export class GestorAgendasComponent implements OnInit {
         this.showGestorAgendas = false;
     }
 
+    darTurnos() {
+        this.showGestorAgendas = false;
+        this.showDarTurnos = true;
+    }
+
     actualizarEstadoEmit() {
         this.showTurnos = false;
         this.showEditarAgenda = false;
@@ -358,12 +394,11 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showRevisionAgenda = false;
 
         let temporal = this.agendasSeleccionadas;
-        console.log('temporal ', temporal);
-        this.showRevisionAgenda = false;
+
         this.loadAgendas();
-        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
         this.agendasSeleccionadas = temporal;
         this.agendasSeleccionadas.forEach((as) => {
             if (this.agendasSeleccionadas.length === 1) {
@@ -372,7 +407,6 @@ export class GestorAgendasComponent implements OnInit {
                 this.verAgenda(as, true, null);
             }
         });
-        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
 
         if (this.agendasSeleccionadas.length === 1) {
             this.showTurnos = true;

@@ -10,7 +10,7 @@
                         <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
                             (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
                             (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)"
-                            (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)">
+                            (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)" [turnosSuspendidos]="turnosSuspendidos">
                         </botones-agenda>
                     </div>
 
@@ -68,7 +68,10 @@
                                 <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span></span>
+                                <div>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio
+                                    | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                    <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
+                                </div>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
@@ -84,7 +87,8 @@
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)" class="text-right">
-                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
+                                <span class="badge badge-danger" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
+                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -124,7 +128,7 @@
 
 <!--Componentes-->
 <clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-<dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" class="plex-layout"></dar-turnos>
+<dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar" class="plex-layout" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
 <sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
 <planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
