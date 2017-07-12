@@ -111,9 +111,33 @@ export class PlanificarAgendaComponent implements OnInit {
             event.callback(sectores);
         });
     }
+    // loadEspacios(event) {
+    //     // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
+    // }
+
     loadEspacios(event) {
         // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-        this.servicioEspacioFisico.get({}).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
+
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     horaInicioPlus() {
@@ -464,7 +488,8 @@ export class PlanificarAgendaComponent implements OnInit {
                         return agenda.id !== this.modelo.id || !this.modelo.id;
                     });
                     if (agds.length > 0) {
-                        alerta = 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese rango horario';
+                        let ef = this.modelo.espacioFisico.nombre + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
+                        alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
                         if (this.alertas.indexOf(alerta) < 0) {
                             this.alertas = [... this.alertas, alerta];
                         }

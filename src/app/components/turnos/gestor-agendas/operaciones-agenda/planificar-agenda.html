@@ -45,17 +45,24 @@
                                 <legend>Espacio físico</legend>
                             </fieldset>
                             <div class="row">
-                                <div class="col-4">
+                                <!--<div class="col-4">
                                     <plex-select [(ngModel)]="modelo.edificio" name="modelo.edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
                                     </plex-select>
-                                </div>
+                                </div>-->
+                                <!--
                                 <div class="col-4">
                                     <plex-select [(ngModel)]="modelo.sector" name="modelo.sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
                                     </plex-select>
-                                </div>
-                                <div class="col-4">
-                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" (getData)="loadEspacios($event)" (change)="validarTodo()"
+                                </div>-->
+                                <div class="col-12">
+                                    <!-- Espacio Físico -->
+                                    <!--<plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" (getData)="loadEspacios($event)" (change)="validarTodo()"
                                         label="Nombre" labelField="nombre">
+                                    </plex-select>-->
+                                    <!-- Espacio Físico -->
+                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                                        placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                                        (change)="validarTodo()">
                                     </plex-select>
                                 </div>
                             </div>
