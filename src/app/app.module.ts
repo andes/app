@@ -254,7 +254,7 @@ export const RUP_COMPONENTS = [
   PrestacionEjecucionComponent,
   ResumenComponent,
   HeaderPacienteComponent,
-  //PrestacionValidacionComponent,
+  PrestacionValidacionComponent,
   EdadGestacionalComponent,
   ScoreApgarComponent,
   NacimientoComponent,

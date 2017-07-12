@@ -32,6 +32,7 @@
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'"
                             [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length > 1">
                             Mover a esta posición
+
                         </div>
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'"
@@ -65,8 +66,8 @@
                                             </a>
 
                                             <div *ngIf="showVincular">
-                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento)"
-                                                    [items]="items"></plex-dropdown>
+                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)"
+                                                    [items]="elemento.items"></plex-dropdown>
                                             </div>
                                         </div>
 
