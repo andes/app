@@ -72,11 +72,9 @@
                                                 {{errores[i]}}
                                             </span>
                                         </div>
-
-                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="data" [datosIngreso]="data[elemento.elementoRUP.key]">
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="data" [datosIngreso]="data[elemento.elementoRUP.key]">
                                         </rup>
                                     </div>
-
                                     <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
                                         <div class="actions ">
                                             <div class="relacionadoCon">
