@@ -66,6 +66,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public indexEliminar: any;
     public scopeEliminar: String;
 
+
+    // errores
+    public errores: any[] = [];
+
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
         public plex: Plex, public auth: Auth,
@@ -277,6 +281,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // eliminamos el registro del array
             this.registros.splice(this.indexEliminar, 1);
 
+            this.errores[this.indexEliminar]  = null;
             this.indexEliminar = null;
             this.confirmarEliminar = false;
             this.scopeEliminar = '';
@@ -400,6 +405,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     /* fin ordenamiento de los elementos */
 
     guardarPrestacion() {
+        // validamos antes de guardar
+        if (!this.beforeSave()) {
+            return null;
+        }
+
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -421,6 +431,27 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
             this.router.navigate(['rup/validacion', this.prestacion.id]);
         });
+    }
+
+    beforeSave() {
+        debugger;
+        if (!this.registros.length) {
+            this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
+            return false;
+        }
+
+        //this.registros.forEach(r => {
+        for (let i = 0; i < this.registros.length; i++) {
+            let r = this.registros[i];
+            this.errores[i] = null;
+
+            // verificamos si existe algun valor a devolver en data
+            if (typeof this.data[r.elementoRUP.key] === 'undefined') {
+                this.errores[i] = 'Debe completar con algún valor';
+            }
+        }
+        console.log(this.errores);
+        //});
     }
 
     /*

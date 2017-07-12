@@ -52,6 +52,10 @@
                                         </div>
 
                                         <div class="actions">
+                                            <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
+                                                Error
+                                            </span>
+
                                             <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
                                                 <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
                                             </a>
@@ -69,13 +73,19 @@
                                     </div>
 
                                     <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
+                                        <div *ngIf="errores[i]">
+                                            <span class="badge badge-danger" >
+                                                {{errores[i]}}
+                                            </span>
+                                        </div>
+
                                         <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto"
                                             (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="elemento.concepto.semanticTag == 'trastorno'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'">
                                         </rup>
                                     </div>
 
-                                    <div class="rup-footer">
+                                    <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
                                         <div class="actions ">
                                             <div class="relacionadoCon">
                                                 <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
