@@ -31,14 +31,16 @@ export class LiberarTurnoComponent implements OnInit {
 
     liberarTurno() {
         let alertCount = 0;
-        // for (let x = 0; x < this.pacientes.length; x++) {
         let patch = {
-            'op': 'liberarTurno',
-            'idTurno': this.pacientes[0].id
+            op: 'liberarTurno',
+            turnos: this.pacientes
         };
 
+        let mensaje = this.pacientes.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
+
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
-            this.plex.toast('success', 'El turno seleccionado fue liberado');
+
+            this.plex.toast('success', mensaje, 'Liberar turno', 4000);
 
             this.saveLiberarTurno.emit(this.agenda);
         },
@@ -48,7 +50,6 @@ export class LiberarTurnoComponent implements OnInit {
                 }
             });
 
-        // }
     }
 
     agregarPacienteListaEspera() {

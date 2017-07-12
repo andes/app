@@ -49,6 +49,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
     actualizar() {
+        let sortCandidatas = function (a, b) {
+            return a.turno.horaInicio - b.turno.horaInicio;
+        };
         this.agendasCandidatas = [];
         if (this.agendaAReasignar) {
             this.agendaAReasignar.bloques.forEach(bloque => {
@@ -65,8 +68,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                         this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
                             this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
+                            this.agendasCandidatas.sort(sortCandidatas);
                             this.calculosSimilitud(turno, agendas);
-                            // console.log('agendasCandidatas', this.agendasCandidatas);
+                            console.log('agendasCandidatas', this.agendasCandidatas);
                         });
                     }
 
