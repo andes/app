@@ -34,7 +34,8 @@
 
     <div class="row">
         <div class="col-md-12">
-            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión" placeholder="Seleccione un espacio">
+            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
+                placeholder="Seleccione un espacio">
             </plex-select>
         </div>
     </div>
@@ -59,12 +60,12 @@
     </div>-->
 
     <div class="mt-3 float-right">
-        <plex-button *ngIf="!suspendio" type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        <plex-button *ngIf="!suspendio" type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
-        <plex-button *ngIf="!suspendio" type="success" icon="mdi-content-save" label="Suspender" (click)="suspenderTurno()" title="Suspender turno">
+        <plex-button *ngIf="!suspendio" type="success" label="Suspender" (click)="suspenderTurno()" title="Suspender turno">
         </plex-button>
-        <plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprog" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
-        </plex-button>
+        <!--<plex-button *ngIf="!suspendio" icon="mdi mdi-backup-restore" label="Reprogramar" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
+        </plex-button>-->
         <!--TODO: cheuquear que todos los mensajes a enviar tuvieron una respuesta-->
         <plex-button *ngIf="suspendio" type="info" icon="close-circle-outline" label="Cerrar" (click)="cerrar()" title="Cerrar">
         </plex-button>
