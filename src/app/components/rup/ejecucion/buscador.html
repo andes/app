@@ -10,7 +10,7 @@
 <div *ngIf="showPlanes">
 
     <form>
-        <div class="{{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
+        <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
             <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscador {{tipoBusqueda}} ..."></plex-text>
         </div>
     </form>

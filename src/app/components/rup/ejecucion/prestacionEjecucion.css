@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
 .rup-card.mini {
@@ -143,16 +144,16 @@ a.desvincular:hover {
     transition: all 200ms;
 }
 
-.drop-line-area {
-    border: 1px solid white;
-    height: 1px;
-    margin: 10px;
+.drop-posicion {
+    background: #f4f4f4;
+    color: #aaa;
+    padding: 5px;
+    border: 2px dashed white;
+    margin: 5px 0;
+    text-align: center;
 }
-
-.drag-hover-line {
-    border: 1px solid black;
-    height: 1px;
-    margin: 10px 0;
+.drop-posicion-hover {
+    border: 2px dashed #ddd;
 }
 
 
@@ -345,6 +346,13 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-prestaciones input,
 .borde-prestaciones input:focus {
     border-color: #3344AA;
+}
+
+.buscador {
+    margin-top: 5px;
+}
+.buscador input {
+    border-width: 2px;
 }
 
 .prestaciones {

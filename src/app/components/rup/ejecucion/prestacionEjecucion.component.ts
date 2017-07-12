@@ -24,11 +24,6 @@ import { ElementosRupService } from '../../../services/rup/elementosRUP.service'
 })
 
 export class PrestacionEjecucionComponent implements OnInit {
-    public dragg: Boolean = false;
-    xconsole(e) {
-        console.log(e);
-    }
-    listOne: Array<string> = ['Coffee', 'Orange Juice', 'Red Wine', 'Unhealty drink!', 'Water'];
     @HostBinding('class.plex-layout') layout = true;
     // Le pasamos la prestacion que se esta ejecutando.
     //  @Input() prestacionEjecucion: object;
@@ -66,6 +61,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public elementosRUPcollapse: any[] = [];
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
+
+    public confirmarEliminar: Boolean = false;
+    public indexEliminar: any;
+    public scopeEliminar: String;
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
@@ -124,8 +123,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posicion donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
-        debugger;
-
         let registro = this.registros[posicionActual];
 
         this.registros.splice(posicionActual, 1);
@@ -135,8 +132,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.registros[posicionNueva].relacionadoCon) {
             this.registros[posicionNueva].relacionadoCon = null;
         }
-
-        console.log(this.registros);
     }
 
 
@@ -162,7 +157,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        debugger;
         // si proviene del drag and drop
         if (registroOrigen.dragData) {
             registroOrigen = registroOrigen.dragData;
@@ -222,7 +216,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         */
 
-        console.log(this.registros);
     }
 
     /**
@@ -234,14 +227,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     desvincular(index) {
         this.confirmarDesvincular[index] = true;
     }
-arrastrando($e, val) {
-    console.log($e);
-    console.log(val);
-    setTimeout(() => {
-        this.dragg = val;
-    });
 
-}
     /**
      * Quitamos vinculación de los registros
      *
@@ -265,8 +251,40 @@ arrastrando($e, val) {
         }
     }
 
-    crearRegistro(snomedConcept): any {
+    eliminarRegistro() {
         debugger;
+        if (this.confirmarEliminar) {
+            let _registro = this.registros[this.indexEliminar];
+
+            // quitamos toda la vinculacion que puedan tener con el registro
+            let registrosVinculados = this.registros.filter(r => {
+                return (r.relacionadoCon && r.relacionadoCon.conceptId === _registro.concepto.conceptId);
+            });
+
+            registrosVinculados.forEach(registro => {
+                registro.relacionadoCon = null;
+            });
+
+            // eliminamos el registro del array
+            this.registros.splice(this.indexEliminar, 1);
+
+            this.indexEliminar = null;
+            this.confirmarEliminar = false;
+            this.scopeEliminar = '';
+        }
+    }
+
+    confirmarEliminarRegistro(e, scope) {
+        this.scopeEliminar = scope;
+        let snomedConcept = (e.dragData) ? e.dragData : e;
+
+        let index = this.registros.findIndex(r => (snomedConcept.concepto && snomedConcept.concepto.conceptId === r.concepto.conceptId));
+
+        this.indexEliminar = index;
+        this.confirmarEliminar = true;
+    }
+
+    crearRegistro(snomedConcept): any {
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -356,12 +374,34 @@ arrastrando($e, val) {
      * @memberof PrestacionEjecucionComponent
      */
     draggingRegistro(dragging: Boolean) {
-        console.log(dragging);
-        this.isDraggingRegistro = dragging;
+        setTimeout(() => {
+            this.isDraggingRegistro = dragging;
+        });
     }
     /* fin ordenamiento de los elementos */
 
     guardarPrestacion() {
+        console.log(this.registros);
+        debugger;
+        let i = 0;
+        let fin = this.registros.length;
+        //this.registros.forEach(r => {
+        for (i = 0; i < fin; i++) {
+            let r = this.registros[i];
+            let nuevoRegistro: any = {
+                concepto: r.concepto,
+                destacado: r.destacado,
+                relacionadoCon: r.relacionadoCon,
+                tipo: r.tipo,
+                valor: {}
+            };
+            console.log(nuevoRegistro);
+            console.log(this.data[r.elementoRUP.key]);
+            nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
+            this.prestacion.ejecucion.registros.push(nuevoRegistro);
+        }
+        //});
+        /*
         this.registros.forEach(r => {
             this.prestacion.ejecucion.registros.push({
                 concepto: r.concepto,
@@ -370,6 +410,7 @@ arrastrando($e, val) {
                 valor: this.data[r.elementoRUP.key]
             });
         });
+        */
 
         let params: any = {
             op: 'registros',
@@ -403,6 +444,7 @@ arrastrando($e, val) {
             // a nuestro array de valores data
             this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
+        //console.log(this.data);
     }
 
     volver(ruta) {
@@ -434,8 +476,6 @@ arrastrando($e, val) {
 
 
     onConceptoDrop(e: any) {
-        console.log('onConceptoDrop');
-        console.log(e.dragData);
         if (e.dragData.tipo) {
             switch (e.dragData.tipo) {
                 case 'prestacion':
