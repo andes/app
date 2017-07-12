@@ -93,7 +93,7 @@ const appRoutes: Routes = [
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
-  // { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
   // Auditoría RUP (prestacionPaciente)

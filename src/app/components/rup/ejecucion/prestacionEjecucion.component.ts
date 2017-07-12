@@ -94,6 +94,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
                 });
 
+
             }, (err) => {
                 if (err) {
                     this.plex.info('danger', err, 'Error');
@@ -400,6 +401,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     /* fin ordenamiento de los elementos */
 
     guardarPrestacion() {
+        console.log(this.registros);
+        console.log(this.data);
+        debugger;
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -490,12 +494,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.tipoBusqueda = tipoDeBusqueda;
     }
 
-    cargaItems(elementoRup) {
+    cargaItems(elementoRup , indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         this.items = [];
         let objItem = {};
         this.items = this.registros.filter(registro => {
             return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
+
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
