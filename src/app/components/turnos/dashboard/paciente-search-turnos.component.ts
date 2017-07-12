@@ -7,14 +7,23 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 })
 export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
+    @Input('resultadoCreateUpdate')
+    set resultadoCreateUpdate(value: any) {
+        if (value && value.length) {
+            this.resultado = value;
+        }
+    }
+    get resultadoCreateUpdate(): any {
+        return this.resultado;
+    }
     @Output() sinResultados: EventEmitter<any> = new EventEmitter<any>();
     @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
+    @Output() createUpdate: EventEmitter<any> = new EventEmitter<any>();
 
-
-    public operacionSeleccionada(operacion) {
+    public operacionSeleccionada(operacion, paciente) {
         if (operacion) {
             // Se habilita el calendario para seleccionar las agendas y permitir asignar turnos al paciente
-            this.operacion.emit(operacion);
+            this.operacion.emit({ operacion, paciente });
         }
     }
 
@@ -23,9 +32,18 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
         this.selected.emit(paciente);
     }
 
+    public seleccionarPaciente(paciente: any) {
+        super.seleccionarPaciente(paciente);
+        if (this.esEscaneado) {
+            this.sinResultados.emit(false);
+        } else {
+            this.createUpdate.emit(this.showCreateUpdate);
+        }
+    }
+
     public buscar() {
         super.buscar();
-        if (this.resultado == null) {
+        if (!this.resultado || this.resultado.length === 0) {
             this.sinResultados.emit(true);
         }
     }

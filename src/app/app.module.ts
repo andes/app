@@ -59,6 +59,7 @@ import { LogService } from './services/log.service';
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
 import { AgendaService } from './services/turnos/agenda.service';
+import { AppMobileService } from './services/appMobile.service';
 import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
@@ -133,6 +134,8 @@ import { EstadisticasAgendasComponent } from './components/turnos/dashboard/esta
 import { EstadisticasPacientesComponent } from './components/turnos/dashboard/estadisticas-pacientes.component';
 import { PacienteSearchTurnosComponent } from './components/turnos/dashboard/paciente-search-turnos.component';
 import { TurnosPacienteComponent } from './components/turnos/dashboard/turnos-paciente.component';
+import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
+import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -357,7 +360,8 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         DashboardTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        PacienteSearchTurnosComponent, TurnosPacienteComponent,
+        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        ActivarAppComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
@@ -390,6 +394,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         PlanificarAgendaComponent,
         // EspacioFisicoComponent,
         AgendaService,
+        AppMobileService,
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,
