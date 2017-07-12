@@ -245,7 +245,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            // this.resultados = [];
+            this.resultados = [];
             this.hideLista = true;
             this.searchTerm = '';
         }
@@ -255,7 +255,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     seleccionarConcepto(concepto) {
         this.resultados = [];
         this.searchTerm = '';
-
         this.evtData.emit(concepto);
     }
 

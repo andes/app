@@ -164,10 +164,6 @@ export class RupComponent implements OnInit, OnDestroy {
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
         this.componentReference.instance.conceptoSnomed = this.conceptoSnomed;
-
-        // console.log('this.datosIngreso:', this.datosIngreso);
-
-
         this.componentReference.changeDetectorRef.detectChanges();
 
         // En caso de haber valores cargados en los datos de ingreso

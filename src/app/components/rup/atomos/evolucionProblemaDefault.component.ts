@@ -19,8 +19,8 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     //estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
-    estados      = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
-    unidadTiempo = [{ id: 'anios', nombre: 'Año(s)' }, { id: 'mes', nombre: 'Mes(es)' }, { id: 'semanas', nombre: 'Semana(s)' } , { id: 'dias', nombre: 'Día(s)' }  ];
+    estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
+    unidadTiempo = [{ id: 'anios', nombre: 'Año(s)' }, { id: 'mes', nombre: 'Mes(es)' }, { id: 'semanas', nombre: 'Semana(s)' }, { id: 'dias', nombre: 'Día(s)' }];
 
 
     /* los atomos por defecto se inicializan en null porque generalmente tienen un solo input
@@ -37,27 +37,25 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
 
     calcularFecha() {
         let fechaCalc;
-            switch (true) {
-                case (this.inicioEstimadoTiempo.id === 'anios'):
-                    fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'mes'):
-                    fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'semanas'):
-                    fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
-                    break;
-                case (this.inicioEstimadoTiempo.id === 'dias'):
-                    fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
-                    break;
-                default:
-                    fechaCalc = new Date();
-            }
+        switch (true) {
+            case (this.inicioEstimadoTiempo.id === 'anios'):
+                fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
+                break;
+            case (this.inicioEstimadoTiempo.id === 'mes'):
+                fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
+                break;
+            case (this.inicioEstimadoTiempo.id === 'semanas'):
+                fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
+                break;
+            case (this.inicioEstimadoTiempo.id === 'dias'):
+                fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
+                break;
+            default:
+                fechaCalc = new Date();
+        }
 
-            this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
-
-
-            this.devolverValores();
+        this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
+        this.devolverValores();
     }
 
 }

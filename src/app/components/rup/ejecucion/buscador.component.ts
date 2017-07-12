@@ -50,7 +50,7 @@ export class BuscadorComponent implements OnInit {
         this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
 
-    //drag and drop funciones. Hago los emit.
+    // drag and drop funciones. Hago los emit.
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -93,13 +93,12 @@ export class BuscadorComponent implements OnInit {
             }
         });
 
-        this.showPlanes = false;// Oculta el buscador de planes
+        this.showPlanes = false; // Oculta el buscador de planes
         this.tipoBusqueda = tipoBusqueda;
         this._tipoDeBusqueda.emit(tipoBusqueda);
-        //console.log(this.evtData);
     }
 
-    //Muestra el buscador de planes
+    // Muestra el buscador de planes
     busquedaPlanes() {
         this.masFrecuentesFiltradas = [];
         this.tipoBusqueda = 'planes';
@@ -110,12 +109,12 @@ export class BuscadorComponent implements OnInit {
     // Emito el concepto seleccionado
     seleccionBusqueda(concepto) {
         this.evtData.emit(concepto);
+
     }
 
     // si hago clic en un concepto lo capturo y lo devuelvo
     // Lo trae del buscador de SNOMED
     ejecutarConcepto(concepto) {
-        console.log(concepto);
         this.evtData.emit(concepto);
     }
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los

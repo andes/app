@@ -88,10 +88,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
-
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
+                    this.MostrarDatosEnEjecucion();
                 });
 
             }, (err) => {
@@ -103,6 +103,32 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
+
+
+    MostrarDatosEnEjecucion() {
+        this.registros = [];
+        this.data = [];
+        if (this.prestacion) {
+            // recorremos los registros ya almacenados en la prestacion y rearmamos el
+            // arreglo registros y data en memoria
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
+                // armamos el elemento data a agregar al array de registros
+                let data = {
+                    tipo: registro.tipo,
+                    concepto: registro.concepto,
+                    elementoRUP: elementoRUPRegistro,
+                    valor: registro.valor,
+                    destacado: registro.destacado ? registro.destacado : false,
+                    relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
+                };
+                this.registros.push(data);
+                this.data[elementoRUPRegistro.key] = registro.valor[elementoRUPRegistro.key];
+            });
+        }
+    }
+
+
 
     /**
      * Carga un nuevo registro en el array en una posicion determinada
@@ -400,6 +426,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     /* fin ordenamiento de los elementos */
 
     guardarPrestacion() {
+        this.prestacion.ejecucion.registros = [];
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
