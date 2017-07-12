@@ -19,6 +19,8 @@ export class EstadisticasAgendasComponent implements OnInit {
     turnosPacientesTemporales = 0;
     cantTurnosRestantes = 0;
     cantTurnosSuspendidos = 0;
+    turnosVerificados = 0;
+    turnosCodificados = 0;
     // Inicialización
     constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
 
@@ -27,6 +29,8 @@ export class EstadisticasAgendasComponent implements OnInit {
         let cantTurnosPorPacientes;
         this.cantidadTurnosPorEstadoPaciente(this.auth.usuario);
         this.cantidadTotalDeTurnosAsignados();
+        this.cantidadTurnosconAsistenciaVerificada(this.auth.usuario);
+        this.cantidadTurnosCodificados();
     }
 
     cantidadTurnosPorEstadoPaciente(userLogged) {
@@ -51,9 +55,27 @@ export class EstadisticasAgendasComponent implements OnInit {
         let fecha = moment().format();
         let today = moment(fecha).startOf('day');
 
-        let datosTurno = { estado: 'asignado'};
+        let datosTurno = { estado: 'asignado' };
         this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
             this.cantTurnosAsignados = turnos.length;
+        });
+    }
+
+    cantidadTurnosconAsistenciaVerificada(userLogged?) {
+        // TurnosChequeados por usuario o total depende si se envia el usuario
+        let datosTurno = { asistencia: true };
+        if (userLogged) {
+            datosTurno['usuario'] = userLogged;
+        }
+        this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+            this.turnosVerificados = turnos.length;
+        });
+    }
+
+    cantidadTurnosCodificados() {
+        let datosTurno = { codificado: true };
+        this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+            this.turnosCodificados = turnos.length;
         });
     }
 
