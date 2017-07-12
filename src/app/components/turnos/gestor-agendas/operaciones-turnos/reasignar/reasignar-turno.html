@@ -28,7 +28,7 @@
                                 <ng-container *ngIf="turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                                 <ng-template #reasignado>
-                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || turno.estado === 'suspendido'">
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente)">
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                         </td>
@@ -55,7 +55,7 @@
                                 </ng-template>
 
                                 <ng-template #noReasignado>
-                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || turno.estado === 'suspendido'">
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente)">
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                         </td>
