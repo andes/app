@@ -125,6 +125,7 @@ import { OdontologiaComponent } from './components/rup/atomos/odontologia.compon
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 import { HeaderPacienteComponent } from "./components/paciente/headerPaciente.component";
 import { EvolucionProblemaDefaultComponent } from "./components/rup/atomos/evolucionProblemaDefault.component";
+import { SolicitudPrestacionDefaultComponent } from "./components/rup/atomos/solicitudPrestacionDefault.component";
 
 
 // // Servicios RUP //
@@ -258,7 +259,8 @@ export const RUP_COMPONENTS = [
   TomaHpvComponent,
   TomaPapComponent,
   SangreOcultaMateriaFecalComponent,
-  EvolucionProblemaDefaultComponent
+  EvolucionProblemaDefaultComponent,
+  SolicitudPrestacionDefaultComponent
   //     // NO VAPacienteComponent
 ];
 

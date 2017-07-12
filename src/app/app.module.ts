@@ -1,3 +1,4 @@
+import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
 
 
 /*
@@ -313,8 +314,8 @@ export const RUP_COMPONENTS = [
   SangreOcultaMateriaFecalComponent,
   EvolucionProblemaDefaultComponent,
   HudsBusquedaComponent,
-  BuscadorComponent
-
+  BuscadorComponent,
+  SolicitudPrestacionDefaultComponent
 ];
 
 // Locales

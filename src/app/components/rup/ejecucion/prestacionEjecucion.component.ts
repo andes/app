@@ -92,7 +92,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
-                    this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion);
+                    this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
                 });
 
             }, (err) => {
@@ -169,7 +169,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         // si no existe lo agrego
-        let existe = this.registros.find(r => ( registroOrigen.concepto && registroOrigen.concepto.conceptId === r.concepto.conceptId) || (r.concepto.conceptId === registroOrigen.conceptId));
+        let existe = this.registros.find(r => (registroOrigen.concepto && registroOrigen.concepto.conceptId === r.concepto.conceptId) || (r.concepto.conceptId === registroOrigen.conceptId));
         if (!existe) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
         }
@@ -272,12 +272,30 @@ arrastrando($e, val) {
             snomedConcept = snomedConcept.dragData;
         }
 
+        let tipo;
+        switch (snomedConcept.semanticTag) {
+            case 'trastorno':
+            case 'hallazgo':
+            case 'problema':
+                tipo = 'problemas';
+                break;
+            case ('procedimiento'):
+                if (this.tipoBusqueda === 'procedimientos') {
+                    tipo = 'procedimientos';
+                } else {
+                    tipo = 'planes';
+                }
+                // data.tipo = (this.tipoBusqueda) ? 'planes' : 'procedimientos';
+                break;
+        }
+
+
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-        let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept);
+        let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept, tipo);
 
         // armamos el elemento data a agregar al array de registros
         let data = {
-            tipo: snomedConcept.semanticTag,
+            tipo: tipo,
             concepto: snomedConcept,
             elementoRUP: elementoRUP,
             valor: null,
@@ -285,21 +303,6 @@ arrastrando($e, val) {
             relacionadoCon: null
         };
 
-        switch (snomedConcept.semanticTag) {
-            case 'trastorno':
-            case 'hallazgo':
-            case 'problema':
-                data.tipo = 'problemas';
-                break;
-            case ('procedimiento'):
-                if (this.tipoBusqueda === 'procedimientos') {
-                    data.tipo = 'procedimientos';
-                } else {
-                    data.tipo = 'planes';
-                }
-                // data.tipo = (this.tipoBusqueda) ? 'planes' : 'procedimientos';
-                break;
-        }
 
         return data;
     }
@@ -363,12 +366,15 @@ arrastrando($e, val) {
 
     guardarPrestacion() {
         this.registros.forEach(r => {
-            this.prestacion.ejecucion.registros.push({
+            let nuevoRegistro: any = {
                 concepto: r.concepto,
                 destacado: r.destacado,
                 relacionadoCon: r.relacionadoCon,
-                valor: this.data[r.elementoRUP.key]
-            });
+                tipo: r.tipo,
+                valor: {}
+            };
+            nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
+            this.prestacion.ejecucion.registros.push(nuevoRegistro);
         });
 
         let params: any = {
@@ -467,7 +473,7 @@ arrastrando($e, val) {
         this.items = [];
         let objItem = {};
         this.items = this.registros.filter(registro => {
-            return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null );
+            return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,

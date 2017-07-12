@@ -97,7 +97,6 @@ export class PuntoInicioComponent implements OnInit {
         this.fechaDesde = new Date(hoy.fechaDesde);
         this.fechaHasta = new Date(hoy.fechaHasta);
         this.loadAgendasXDia(hoy);
-        this.TraetodasLasPrestacionesFiltradas(hoy);
 
     }
 
@@ -142,6 +141,7 @@ export class PuntoInicioComponent implements OnInit {
                 agendas => {
                     this.agendas = agendas;
                     this.pacientesPresentes = [];
+                    this.TraetodasLasPrestacionesFiltradas(params);
                 },
                 err => {
                     if (err) {
@@ -444,7 +444,8 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: fechaDesde.format(),
                 fechaHasta: fechaHasta.format()
             };
-            this.TraetodasLasPrestacionesFiltradas(params);
+            this.loadAgendasXDia(params);
+
         } else {
             this.plex.info('danger', 'ERROR: fechas invalidas');
         }
