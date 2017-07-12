@@ -133,7 +133,7 @@ export class GestorAgendasComponent implements OnInit {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
-                                if (turno.estado === 'suspendido') {
+                                if (turno.estado === 'suspendido' && turno.paciente) {
                                     count++;
                                 }
                             });
@@ -277,7 +277,7 @@ export class GestorAgendasComponent implements OnInit {
                     let count = 0;
                     agenda.bloques.forEach(bloque => {
                         bloque.turnos.forEach(turno => {
-                            if (turno.estado === 'suspendido') {
+                            if (turno.estado === 'suspendido' && turno.paciente) {
                                 count++;
                             }
                         });

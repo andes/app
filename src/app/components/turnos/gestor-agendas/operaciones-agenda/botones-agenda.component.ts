@@ -225,11 +225,12 @@ export class BotonesAgendaComponent implements OnInit {
         }).length > 0;
     }
 
+    // Comprueba que haya algún turno con paciente, en estado suspendido
     hayTurnosSuspendidos() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
                 for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
-                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido') {
+                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente) {
                         return true;
                     }
                 }
