@@ -128,6 +128,7 @@ export class GestorAgendasComponent implements OnInit {
 
                 this.serviceAgenda.get(params).subscribe(agendas => {
 
+                    this.turnosSuspendidos = [];
                     agendas.forEach(agenda => {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
@@ -251,6 +252,7 @@ export class GestorAgendasComponent implements OnInit {
 
     loadAgendas() {
 
+
         let fecha = moment().format();
 
         if (this.hoy) {
@@ -269,6 +271,7 @@ export class GestorAgendasComponent implements OnInit {
             agendas => {
                 this.agendas = agendas;
                 this.agendasSeleccionadas = [];
+                this.turnosSuspendidos = [];
 
                 agendas.forEach(agenda => {
                     let count = 0;
