@@ -129,14 +129,15 @@ export class GestorAgendasComponent implements OnInit {
                 this.serviceAgenda.get(params).subscribe(agendas => {
 
                     agendas.forEach(agenda => {
-                        this.turnosSuspendidos[String(agenda.id)] = 0;
+                        let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
                                 if (turno.estado === 'suspendido') {
-                                    this.turnosSuspendidos[String(agenda.id)]++;
+                                    count++;
                                 }
                             });
                         });
+                        this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
                     });
 
                     this.hoy = false;
