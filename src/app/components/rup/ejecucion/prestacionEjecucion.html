@@ -29,6 +29,7 @@
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length > 1">
                             Mover a esta posición
+
                         </div>
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': elemento.relacionadoCon}">
@@ -46,6 +47,10 @@
                                         </div>
 
                                         <div class="actions">
+                                            <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
+                                                Error
+                                            </span>
+
                                             <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
                                                 <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
                                             </a>
@@ -55,20 +60,25 @@
                                             </a>
 
                                             <div *ngIf="showVincular">
-                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento)" [items]="items"></plex-dropdown>
+                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)" [items]="elemento.items"></plex-dropdown>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                    <div class="rup-body " [hidden]="elementosRUPcollapse[i]">
-                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="data" [datosIngreso]="data[elemento.elementoRUP.key]"
-                                            [valoresPrestacionEjecucion]="data">
+                                    <div class="rup-body " [hidden]="elementosRUPcollapse[i] || confirmarEliminar">
+                                        <div *ngIf="errores[i]">
+                                            <span class="badge badge-danger">
+                                                {{errores[i]}}
+                                            </span>
+                                        </div>
+
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="data" [datosIngreso]="data[elemento.elementoRUP.key]">
                                         </rup>
                                     </div>
 
-                                    <div class="rup-footer">
-                                        <div class="actions">
+                                    <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
+                                        <div class="actions ">
                                             <div class="relacionadoCon">
                                                 <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
                                                     Relacionado con: {{elemento.relacionadoCon.term}}

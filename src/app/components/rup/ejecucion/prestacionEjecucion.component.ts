@@ -66,6 +66,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public indexEliminar: any;
     public scopeEliminar: String;
 
+
+    // errores
+    public errores: any[] = [];
+
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
         public plex: Plex, public auth: Auth,
@@ -93,6 +97,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
                     this.MostrarDatosEnEjecucion();
                 });
+
 
             }, (err) => {
                 if (err) {
@@ -303,6 +308,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // eliminamos el registro del array
             this.registros.splice(this.indexEliminar, 1);
 
+            this.errores[this.indexEliminar] = null;
             this.indexEliminar = null;
             this.confirmarEliminar = false;
             this.scopeEliminar = '';
@@ -427,6 +433,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
+        // validamos antes de guardar
+        if (!this.beforeSave()) {
+            return null;
+        }
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -448,6 +458,28 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
             this.router.navigate(['rup/validacion', this.prestacion.id]);
         });
+    }
+
+    beforeSave() {
+        debugger;
+        if (!this.registros.length) {
+            this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
+            return false;
+        }
+
+        //this.registros.forEach(r => {
+        for (let i = 0; i < this.registros.length; i++) {
+            let r = this.registros[i];
+            this.errores[i] = null;
+
+            // verificamos si existe algun valor a devolver en data
+            if (typeof this.data[r.elementoRUP.key] === 'undefined') {
+                this.errores[i] = 'Debe completar con algún valor';
+            }
+        }
+        console.log(this.errores);
+        //});
+        return true;
     }
 
     /*
@@ -517,12 +549,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.tipoBusqueda = tipoDeBusqueda;
     }
 
-    cargaItems(elementoRup) {
+    cargaItems(elementoRup, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         this.items = [];
         let objItem = {};
         this.items = this.registros.filter(registro => {
             return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
+
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
