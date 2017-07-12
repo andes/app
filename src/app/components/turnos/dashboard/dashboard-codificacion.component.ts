@@ -76,6 +76,6 @@ export class DashboardCodificacionComponent implements OnInit {
     }
 
     volver() {
-        this.redirect('dashboard_turnos');
+        this.redirect('puntoInicioTurnos');
     }
 }

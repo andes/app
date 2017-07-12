@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -15,11 +15,11 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
-    selector: 'dashboard-turnos',
-    templateUrl: 'dashboard-turnos.html'
+    selector: 'puntoInicio-turnos',
+    templateUrl: 'puntoInicio-turnos.html'
 })
 
-export class DashboardTurnosComponent implements OnInit {
+export class PuntoInicioTurnosComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
@@ -57,6 +57,7 @@ export class DashboardTurnosComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente): void {
+        debugger;
         this.paciente = paciente;
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
@@ -68,7 +69,8 @@ export class DashboardTurnosComponent implements OnInit {
                         this.esOperacion = false;
                     } else {
                         this.showMostrarEstadisticasPacientes = true;
-                        this.showMostrarTurnosPaciente = true;
+                        this.showMostrarTurnosPaciente = false;
+                        this.showActivarApp = false;
                     }
                 });
         } else {
@@ -101,6 +103,7 @@ export class DashboardTurnosComponent implements OnInit {
                         this.esOperacion = false;
                     } else {
                         this.showMostrarTurnosPaciente = false;
+                        this.showActivarApp = false;
                     }
                 });
         } else {
@@ -159,7 +162,6 @@ export class DashboardTurnosComponent implements OnInit {
     }
 
     verificarCodificarAgendas() {
-        debugger;
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         // No está autorizado para ver esta pantalla
         if (!this.autorizado) {
