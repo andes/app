@@ -1,6 +1,6 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div *ngIf="!agendasCandidatas?.length > 0 && !agendasCandidatas && !agendasCandidatas[0].agendas?.length > 0">
+    <div *ngIf="agendasCandidatas?.length === 1 && agendasCandidatas[0].agendas?.length === 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
     </div>
     <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].agendas?.length > 0 && agendasCandidatas[0].turno">
@@ -15,10 +15,6 @@
                     <b>Turno:</b> {{ agendaCandidata?.turno?.horaInicio | date: 'HH:mm' }} {{ agendaCandidata?.turno?.horaInicio|date:'dd/MM/yyyy'}}
                     {{ agendaCandidata?.turno.horaInicio | date: 'HH:mm' }} hs.
                     <br>
-                    <b>Profesional: </b>
-                    <ng-container *ngIf="agendaAReasignar?.profesionales?.length > 0; then hayProfesional else noHayProfesional"></ng-container>
-                    <ng-template #hayProfesional>{{ agendaAReasignar?.profesionales[0] | profesional }}</ng-template>
-                    <ng-template #noHayProfesional>Sin profesional asignado</ng-template>
                 </div>
                 <plex-panel *ngIf="agendaCandidata?.agendas?.length > 0" tituloPrincipal="Ver Agendas candidatas">
                     <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
@@ -30,7 +26,7 @@
                                 <div class="col-12">
                                     Reasignado al Turno: {{ agenda.agendaReasignada?.horaInicio | date: 'EEE' | uppercase }} {{ agenda.agendaReasignada?.horaInicio
                                     | date: 'dd/MM/yyyy'}}, {{ agenda.turnoReasignado?.horaInicio| date: 'HH:mm'}} hs
-                                    <div>{{agenda.turnoReasignado?.tipoPrestacion.nombre}}</div>
+                                    <div>{{agenda.turnoReasignado?.tipoPrestacion?.nombre}}</div>
                                     <div *ngFor="let profesional of agenda.agendaReasignada?.profesionales">{{profesional | profesional}}</div>
                                 </div>
                             </div>
@@ -54,7 +50,7 @@
                                 <p class="mb-1">
                                     Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
                                 </p>
-                                <small *ngIf="agenda.profesionales?.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
+                                <small *ngFor="let profesional of agenda.agendaReasignada?.profesionales">{{profesional | profesional}}</small>
                             </a>
                         </ng-template>
                         <hr>
@@ -65,7 +61,7 @@
         </div>
     </div>
     <hr>
-    <div>
+    <div *ngIf="agendasCandidatas.agendas?.length > 0">
         <plex-button type="primary" label="Reasignación de Turnos" (click)="reasignarTurnos()"></plex-button>
     </div>
 </fieldset>
