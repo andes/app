@@ -20,6 +20,15 @@
                     <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
                         <thead *ngIf="bloque.descripcion">
                             <tr>
+                                <th colspan="3">
+                                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio
+                                    | date: 'dd/MM/yyyy'}} de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin
+                                    | date: 'HH:mm'}} hs <br>
+                                    <b>Tipos de Prestación:</b> <span *ngFor="let tp of agendaAReasignar.tipoPrestaciones">{{tp.nombre}} </span><br>
+                                    <b>Profesionales:</b> <span *ngFor="let p of agendaAReasignar.profesionales">{{p.nombre}} </span><br>
+                                </th>
+                            </tr>
+                            <tr>
                                 <th colspan="3">Bloque: {{bloque.descripcion}}</th>
                             </tr>
                         </thead>

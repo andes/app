@@ -1,40 +1,40 @@
-<form class="plex-layout">
+<form>
     <section>
-        <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
-        <div class="row" *ngIf="autorizado && showDarTurnos">
+        <header-paciente *ngIf="showDarTurnos " [paciente]="paciente "></header-paciente>
+        <div class="row " *ngIf="autorizado && showDarTurnos ">
             <!--Panel principal-->
-            <div class="col">
+            <div class="col ">
                 <plex-box>
                     <!--Filtros-->
                     <header>
-                        <div class="row align-items-center">
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación"
-                                    (change)="filtrar()" name="tipoPrestacion">
+                        <div class="row align-items-center ">
+                            <div class="col-4 ">
+                                <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación "
+                                    (change)="filtrar() " name="tipoPrestacion">
                                 </plex-select>
                             </div>
-                            <div class="col-4">
-                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
-                                    (change)="filtrar()" name="profesional">
+                            <div class="col-4 ">
+                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre "
+                                    (change)="filtrar() " name="profesional">
                                 </plex-select>
                             </div>
-                            <div class="col-4 text-right">
-                                <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
-                                <span class="text-120">{{ opciones.fecha | date: "MMM yyyy" | uppercase}}</span>
-                                <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
+                            <div class="col-4 text-right ">
+                                <plex-button type="link " icon="chevron-left " (click)="cambiarMes( '-') "></plex-button>
+                                <span class="text-120 ">{{ opciones.fecha | date: "MMM yyyy " | uppercase}}</span>
+                                <plex-button type="link " icon="chevron-right " (click)="cambiarMes( '+') "></plex-button>
                             </div>
                         </div>
                     </header>
                     <!--Calendario-->
-                    <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+                    <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" (agendaChanged)="seleccionarAgenda($event) "></app-calendario>
                 </plex-box>
             </div>
             <!--Lateral-->
-            <div class="col-4">
+            <div class="col-4 ">
                 <plex-box>
                     <plex-tabs>
                         <!-- Tab: Llaves -->
-                        <plex-tab *ngIf="llaves.length > 0" icon="key" label="Llaves">
+                        <plex-tab *ngIf="llaves.length> 0" icon="key" label="Llaves">
                             <fieldset>
                                 <legend class="pt-3 text-center">Llaves del paciente</legend>
                                 <ul class="list-group">
@@ -53,6 +53,7 @@
                             </fieldset>
                         </plex-tab>
                         <!-- Tab: Turnos -->
+
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
                                 <!--Ninguna agenda seleccionada-->
@@ -214,6 +215,7 @@
                             </fieldset>
                         </plex-tab>
 
+
                         <!-- Tab: Ultimos turnos -->
                         <plex-tab icon="history" label="Historial del paciente">
                             <fieldset>
@@ -238,7 +240,7 @@
         </div>
         <div class="row">
             <div class="col col-sm-12" *ngIf="pacientesSearch">
-                <div class="panel panel-default plex-layout">
+                <div class="panel panel-default">
                     <div class="clear"></div>
                     <pacientesSearch (selected)="afterSearch($event)" [bloquearCreate]="true"></pacientesSearch>
                 </div>
@@ -252,10 +254,10 @@
         </div>
     </section>
 
-    <footer *ngIf="autorizado && showDarTurnos">
-        <plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>
-        <div class="float-right">
-            <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
-        </div>
-    </footer>
 </form>
+<footer *ngIf="autorizado">
+    <plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>
+    <div class="float-right" *ngIf="showDarTurnos">
+        <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+    </div>
+</footer>

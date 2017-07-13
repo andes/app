@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="agendaAReasignar">
     <div class="row">
         <div class="col-12">
             <legend><span *ngIf="turnoSeleccionado?.reasignado?.siguiente">DETALLES DE LA REASIGNACIÓN</span></legend>
@@ -18,13 +18,14 @@
                         <div class="col"><b>Agenda Origen</b></div>
                         <div class="col"><b>Agenda Destino</b></div>
                     </div>
-                    <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
-                        <div class="col-6">{{agendaAReasignar.horaInicio|date:'EEEE' | uppercase }} {{agendaAReasignar.horaInicio|date:'dd/MM/yyyy'}}
-                            de {{agendaAReasignar.horaInicio|date: 'HH:mm'}} a {{agendaAReasignar.horaFin|date:'HH:mm'}}
-                            hs
+                    <div class="row">
+                        <div class="col-6" *ngIf="agendaAReasignar?.horaInicio">
+                            {{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy'}} de {{agendaAReasignar.horaInicio
+                            | date: 'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs
                         </div>
-                        <div class="col-6">{{agendaDestino?.agenda.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.agenda.horaInicio|date:'dd/MM/yyyy'}}
-                            de {{agendaDestino?.agenda.horaInicio|date: 'HH:mm'}} a {{agendaDestino?.agenda.horaFin|date:'HH:mm'}}
+                        <div class="col-6" *ngIf="agendaDestino?.agenda?.horaInicio">
+                            {{agendaDestino?.agenda.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                            de {{agendaDestino?.agenda.horaInicio | date: 'HH:mm'}} a {{agendaDestino?.agenda.horaFin | date:'HH:mm'}}
                             hs
                         </div>
                     </div>
@@ -32,16 +33,16 @@
                         <div class="col-6">Horario: {{turnoSeleccionado.horaInicio|date: 'HH:mm' }} hs</div>
                         <div class="col-6">Horario: {{agendaDestino.turno.horaInicio|date: 'HH:mm' }} hs</div>
                     </div>
-                    <div class="row">
-                        <div class="col-6">Tipo de Prestación: {{turnoSeleccionado.tipoPrestacion.nombre}}</div>
-                        <div class="col-6">Tipo de Prestación: {{agendaDestino.turno.tipoPrestacion.nombre}}</div>
+                    <div class="row" *ngIf="turnoSeleccionado?.tipoPrestacion && agendaDestino?.turno">
+                        <div class="col-6">Tipo de Prestación: {{turnoSeleccionado?.tipoPrestacion.nombre}}</div>
+                        <div class="col-6">Tipo de Prestación: {{agendaDestino.turno?.tipoPrestacion.nombre}}</div>
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
                         <div class="col-6" *ngIf="agendaAReasignar.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaAReasignar.profesionales">Profesional(es): {{profesional|profesional}}</span>
+                            <span *ngFor="let profesional of agendaAReasignar.profesionales">Profesional: {{profesional|profesional}}</span>
                         </div>
-                        <div class="col-6" *ngIf="agendaDestino.agenda.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaDestino.agenda.profesionales">Profesional(es): {{profesional|profesional}} </span>
+                        <div class="col-6" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
+                            <span *ngFor="let profesional of agendaDestino.agenda.profesionales">Profesional: {{profesional|profesional}} </span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +53,7 @@
                 <div class="col" *ngIf="agendasSimilares?.length === 0">
                     <i class="mdi mdi-emoticon-sad"></i> No hay agendas que contengan turnos que coincidan
                 </div>
-                <div class="col-4" *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
+                <div class="col" *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
                     <div class="card">
                         <div class="card-block">
                             <h4 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
@@ -64,7 +65,7 @@
                                         Bloque <span>{{bloque.descripcion}}</span>
                                     </div>
                                     <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
-                                        <ng-container *ngIf="turno.horaInicio">
+                                        <ng-container *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio)) ">
                                             <div class="reasignar" *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
                                                 <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default" [appHover]="'text-success outline-success'"
                                                     (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">

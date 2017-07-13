@@ -1,6 +1,6 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div *ngIf="!agendasCandidatas?.length > 0 && !agendasCandidatas && !agendasCandidatas[0].agendas?.length > 0">
+    <div *ngIf="agendasCandidatas?.length === 1 && agendasCandidatas[0].agendas?.length === 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
     </div>
     <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].agendas?.length > 0 && agendasCandidatas[0].turno">
@@ -30,7 +30,7 @@
                                     <!-- {{agenda.agendaReasignada | json}} -->
                                     Reasignado al Turno: {{ agenda.agendaReasignada?.horaInicio | date: 'EEE' | uppercase }} {{ agenda.agendaReasignada?.horaInicio
                                     | date: 'dd/MM/yyyy'}}, {{ agenda.turnoReasignado?.horaInicio| date: 'HH:mm'}} hs
-                                    <div>{{agenda.turnoReasignado?.tipoPrestacion.nombre}}</div>
+                                    <div>{{agenda.turnoReasignado?.tipoPrestacion?.nombre}}</div>
                                     <div *ngFor="let profesional of agenda.agendaReasignada?.profesionales">{{profesional | profesional}}</div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
         </div>
     </div>
     <hr>
-    <div>
+    <div *ngIf="agendasCandidatas.agendas?.length > 0">
         <plex-button type="primary" label="Reasignación de Turnos" (click)="reasignarTurnos()"></plex-button>
     </div>
 </fieldset>

@@ -133,7 +133,7 @@ export class GestorAgendasComponent implements OnInit {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
-                                if (turno.estado === 'suspendido' && turno.paciente) {
+                                if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
                                     count++;
                                 }
                             });
@@ -251,8 +251,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadAgendas() {
-
-
         let fecha = moment().format();
 
         if (this.hoy) {
@@ -277,13 +275,15 @@ export class GestorAgendasComponent implements OnInit {
                     let count = 0;
                     agenda.bloques.forEach(bloque => {
                         bloque.turnos.forEach(turno => {
-                            if (turno.estado === 'suspendido' && turno.paciente) {
+                            if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
                                 count++;
                             }
                         });
                     });
                     this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
                 });
+                console.log(this.turnosSuspendidos);
+
 
             },
             err => {
