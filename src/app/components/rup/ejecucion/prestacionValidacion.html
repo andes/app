@@ -27,8 +27,8 @@
                                 </div>
                             </div>
                             <div class="rup-body">
-                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="prestacion.paciente" [conceptoSnomed]="elemento.concepto"
-                                    *ngIf="elemento.concepto.semanticTag == 'trastorno'
+                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [conceptoSnomed]="elemento.concepto"
+                                    *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'"
                                     [datosIngreso]="elemento.valor[elemento.elementoRUP.key]" [soloValores]="true">
                                 </rup>
