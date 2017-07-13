@@ -139,8 +139,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let tipoTurno;
 
         // Si la agenda es del día
-        if (agendaSeleccionada >= moment().startOf('day').toDate() &&
-            agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
+        if (this.getFecha(agendaSeleccionada) === this.getFecha(this.hoy)) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
