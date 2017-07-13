@@ -7,7 +7,7 @@
     <header>
         <div class="row">
             <div class="col">
-                <h5> <span style="color: #00A8E0">{{paciente | paciente}}</span> </h5>
+                <h5> <span style="color: #00A8E0">{{pacienteSeleccionado | paciente}}</span> </h5>
             </div>
         </div>
         <hr>
@@ -21,27 +21,27 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="paciente">
-            {{paciente.documento | number}}
+        <div class="col-6" *ngIf="pacienteSeleccionado">
+            {{pacienteSeleccionado.documento | number}}
         </div>
-        <div class="col-6" *ngIf="paciente">
-            {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}
+        <div class="col-6" *ngIf="pacienteSeleccionado">
+            {{pacienteSeleccionado.fechaNacimiento | date:'dd-MM-yyyy'}}
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="paciente && paciente.direccion && paciente.direccion.length > 0">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion && pacienteSeleccionado.direccion.length > 0">
             <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Dirección</span>
         </div>
-        <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.contacto && pacienteSeleccionado.contacto.length > 0">
             <i class="mdi mdi-cellphone-android"></i> <span style="color: #00A8E0">Teléfono</span>
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="paciente && paciente.direccion && paciente.direccion.length > 0">
-            {{paciente.direccion[0].valor}}
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion && pacienteSeleccionado.direccion.length > 0">
+            {{pacienteSeleccionado.direccion[0].valor}}
         </div>
         <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
-            {{paciente.contacto[0].valor}}
+            {{pacienteSeleccionado.contacto[0].valor}}
         </div>
     </div>
     <br>
