@@ -83,7 +83,7 @@ export class PuntoInicioComponent implements OnInit {
 
         // buscamos los tipos de prestacion que tiene autorizado el usuario
         let tipoPrestacionesAuth = this.auth.getPermissions('rup:tipoPrestacion:?');
-        debugger;
+
         // buscamos los elementos rup de la api
         this.servicioTipoPrestacion.get({ 'incluir': tipoPrestacionesAuth.join(',') }).subscribe(tiposPrestacion => {
             this.selectPrestacionesProfesional = tiposPrestacion;
@@ -323,7 +323,6 @@ export class PuntoInicioComponent implements OnInit {
      * @memberof PuntoInicioComponent
      */
     elegirPrestacion(unPacientePresente) {
-        debugger;
         if (unPacientePresente.idPrestacion) {
 
             if (unPacientePresente.estado === 'Programado') {
@@ -351,7 +350,7 @@ export class PuntoInicioComponent implements OnInit {
                 };
                 this.servicioAgenda.patchMultiple(unPacientePresente.idAgenda, patch).subscribe(resultado => {
                     if (resultado) {
-                        //TODO: Ver si se muestra un mensaje
+                        // TODO: Ver si se muestra un mensaje
                     }
                 });
             }
@@ -471,11 +470,11 @@ export class PuntoInicioComponent implements OnInit {
                     let profesional = paciente.profesionales.find(profesional => {
                         // Si la prestacion ya esta en ejecucion tengo el documento del profesional
                         if (profesional.documento) {
-                            if (profesional.documento == this.auth.usuario.username) {
+                            if (profesional.documento === this.auth.usuario.username) {
                                 return profesional;
                             }
                         } else {
-                            if (profesional.id == this.auth.profesional.id) {
+                            if (profesional.id === this.auth.profesional.id) {
                                 return profesional;
                             }
                         }

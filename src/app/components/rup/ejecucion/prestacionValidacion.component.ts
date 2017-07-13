@@ -105,7 +105,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                         this.plex.alert('Prestación creada.').then(() => {
-                            //this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                            // this.router.navigate(['/rup/ejecucion', prestacion.id]);
                         });
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');

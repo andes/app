@@ -38,7 +38,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public elementoRUPprestacion: any;
 
     // concepto snomed seleccionado del buscador a ejecutar
-    //public conceptoSnomedSeleccionado: any;
+    // public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
@@ -50,10 +50,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public relacion = null;
     public conceptoARelacionar = [];
 
-    //Variable para mostrar el div dropable en el momento que se hace el drag
+    // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
 
-    //Variable para mostrar el div dropable en el momento que se hace el drag
+    // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingRegistro: Boolean = false;
     // Opciones del desplegable para vincular y desvincular
     items = [];
@@ -186,7 +186,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     moverRegistro(posicionNueva: number, registro: any) {
-        //buscamos posicion actual
+        // buscamos posicion actual
         let posicionActual = this.registros.findIndex(r => (registro.dragData.concepto.conceptId === r.concepto.conceptId));
 
         // si la posicion a la que lo muevo es distinta a la actual
@@ -289,7 +289,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // si no tiene ningun elemento relacionado entonces es un elemento padre
         if (!this.registros[index].relacionadoCon) {
-            //this.registros.splice(index, 1);
+            // this.registros.splice(index, 1);
         }
     }
 
@@ -441,9 +441,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
         // validamos antes de guardar
-        let $a = this.beforeSave();
-        alert($a);
-        if (!$a) {
+        if (!this.beforeSave()) {
             return null;
         }
 
@@ -514,7 +512,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             // a nuestro array de valores data
             this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
-        //console.log(this.data);
     }
 
     volver() {
