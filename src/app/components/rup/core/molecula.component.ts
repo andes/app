@@ -6,14 +6,14 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
     selector: 'molecula',
     templateUrl: 'molecula.html'
 })
-export class Molecula extends RupComponent {
+export class Molecula extends RupComponent implements OnInit {
 
     ngOnInit() {
-
         //VER SERVICIO PRESTACION SE REPITE EN RUP
 
         // como es una molécula buscamos sus atomos
         this.servicioElementosRUP.getById(this.elementoRUP.id).subscribe(tipoPrestacion => {
+            debugger;
             this.elementoRUP = tipoPrestacion;
             // si vienen datos por input, los asignamos a nuestro objeto data
             this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};

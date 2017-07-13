@@ -31,6 +31,8 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
+            //this.friendlyDate(this.datosIngreso.fechaInicio);
+
             this.devolverValores();
         }
     }
@@ -57,5 +59,16 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
         this.devolverValores();
     }
+/*
+    friendlyDate(fecha) {
+        oldDateMoment = moment(oldDate);
+        newDateMoment = moment(newDate);
 
+        numYears = newDateMoment.diff(oldDateMoment, 'years');
+        oldDateMoment = oldDateMoment.add(numYears, 'years');
+        numMonths = newDateMoment.diff(oldDateMoment, 'months');
+        oldDateMoment = oldDateMoment.add(numMonths, 'months');
+        numDays = newDateMoment.diff(oldDateMoment, 'days');
+    }
+    */
 }

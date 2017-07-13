@@ -41,7 +41,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
-    public data: any[] = [];
+    //public data: any[] = [];
+    public data: Object = {};
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
     public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
@@ -97,6 +98,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
+
+                if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                    this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                }
+
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                 });
@@ -118,7 +124,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     MostrarDatosEnEjecucion() {
         this.registros = [];
-        this.data = [];
+        //this.data = [];
         if (this.prestacion) {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
@@ -301,6 +307,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
+            console.log(this.registros);
+            console.log(this.data);
+            debugger;
             let _registro = this.registros[this.indexEliminar];
 
             // quitamos toda la vinculacion que puedan tener con el registro
@@ -314,6 +323,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // eliminamos el registro del array
             this.registros.splice(this.indexEliminar, 1);
+
+            // limpiamos el valor de data
+            delete this.data[_registro.elementoRUP.key];
 
             this.errores[this.indexEliminar] = null;
             this.indexEliminar = null;
@@ -438,8 +450,45 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     /* fin ordenamiento de los elementos */
 
+    /**
+     * Validamos si se puede guardar o no la prestacion
+     *
+     * @returns
+     * @memberof PrestacionEjecucionComponent
+     */
+    beforeSave() {
+        let resultado = true;
+
+        if (!this.registros.length) {
+            this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
+            return false;
+        }
+
+        this.registros.forEach( (r, i) => {
+        // for (let i = 0; i < this.registros.length; i++) {
+            // let r = this.registros[i];
+            this.errores[i] = null;
+
+            // verificamos si existe algun valor a devolver en data
+            if (typeof this.data[r.elementoRUP.key] === 'undefined') {
+                this.errores[i] = 'Debe completar con algún valor';
+                resultado = false;
+            }
+        // }
+        });
+
+        return resultado;
+    }
+
+    /**
+     * Guardamos la prestacion y vamos hacia la pantalla de validacion
+     *
+     * @returns
+     * @memberof PrestacionEjecucionComponent
+     */
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
+
         // validamos antes de guardar
         if (!this.beforeSave()) {
             return null;
@@ -456,6 +505,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
             this.prestacion.ejecucion.registros.push(nuevoRegistro);
         });
+        console.log(this.data);
 
         let params: any = {
             op: 'registros',
@@ -468,34 +518,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    beforeSave() {
-        let resultado = true;
-
-        if (!this.registros.length) {
-            this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
-            return false;
-        }
-
-        //this.registros.forEach(r => {
-        for (let i = 0; i < this.registros.length; i++) {
-            let r = this.registros[i];
-            this.errores[i] = null;
-
-            // verificamos si existe algun valor a devolver en data
-            if (typeof this.data[r.elementoRUP.key] === 'undefined') {
-                this.errores[i] = 'Debe completar con algún valor';
-                resultado = false;
-            }
-        }
-
-        return resultado;
-    }
-
-    /*
-      * Event emmiter ejecutado cuando se devuelven valores
-      * desde un átomo / molecula / fórmula desde RUP
-      */
+    /**
+     * Se ejecuta cuando se devuelven valores
+     * desde un átomo / molecula / fórmula desde RUP
+     * @param {any} datos
+     * @param {any} elementoRUP
+     * @memberof PrestacionEjecucionComponent
+     */
     getValoresRup(datos, elementoRUP) {
+        debugger;
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -512,6 +543,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // a nuestro array de valores data
             this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
+        console.log(this.data);
     }
 
     volver() {

@@ -20,7 +20,6 @@ import {
     moduleId: 'RupModule',
     selector: 'rup',
     template: ''
-
 })
 
 export class RupComponent implements OnInit, OnDestroy {
@@ -28,25 +27,24 @@ export class RupComponent implements OnInit, OnDestroy {
     @Input() paciente: IPaciente;
     // TODO:renombrar tipoPrestacion a elementosRUP
     @Input() elementoRUP: any;
-    @Input() datosIngreso: Object;
+    @Input() datosIngreso: any;
     @Input() soloValores: Boolean = null;
     @Input() conceptoSnomed: any;
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // array de prestaciones que se estan ejecutando actualmente en el proceso
     // TODO: revisar uso de prestacionesEJecucion
-    //@Input() prestacionesEjecucion: ITipoPrestacion;
+    // @Input() prestacionesEjecucion: ITipoPrestacion;
 
     // array de valores de las prestaciones que se estan ejecutando actualmente
     // se utiliza para enviarle a las formulas
     @Input() valoresPrestacionEjecucion: any = [];
     @Input() prestacion: IPrestacionPaciente;
 
-    //pacientePrestacion: any = {};
+    // pacientePrestacion: any = {};
     // resultados a devolver
     data: any = {};
     mensaje: any = {};
-
 
     // Componente a cargar
     private componentContainer: any;
@@ -87,45 +85,6 @@ export class RupComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() { }
-
-    devolverValores(obj?: any, elementoRUPactual?: any) {
-        // Átomo
-        if (this.elementoRUP.tipo === 'atomo' || this.elementoRUP.tipo === 'formula') {
-            // console.log('--> Átomo <--');
-            if (this.data[this.elementoRUP.key] === null) {
-                this.data = {};
-            }
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
-
-        } else {
-
-            // Molécula
-            // console.log('--> Molécula <--');
-            // valor: variable con el resultado qeu viene del input del formulario
-            let valor = (typeof obj !== 'undefined' && obj && obj[elementoRUPactual.key]) ? obj[elementoRUPactual.key] : null;
-            if (valor) {
-                if (!this.data[this.elementoRUP.key]) {
-                    this.data[this.elementoRUP.key] = {};
-                }
-                if (!this.data[this.elementoRUP.key][elementoRUPactual.key]) {
-                    this.data[this.elementoRUP.key][elementoRUPactual.key] = {};
-                }
-                this.data[this.elementoRUP.key][elementoRUPactual.key] = valor;
-            } else {
-                if (this.data[this.elementoRUP.key][elementoRUPactual.key] && valor == null) {
-                    delete this.data[this.elementoRUP.key][elementoRUPactual.key];
-                }
-            }
-            if (!Object.keys(this.data[this.elementoRUP.key]).length) {
-                this.data = {};
-            }
-        }
-        this.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-        this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
-
-    }
 
     getMensajes() { }
 
@@ -181,6 +140,45 @@ export class RupComponent implements OnInit, OnDestroy {
         if (this.elementoRUP.tipo === 'formula') {
             this.evtData.emit(this.componentReference.instance.data);
         }
+
+    }
+
+    devolverValores(obj?: any, elementoRUPactual?: any) {
+        // Átomo
+        if (this.elementoRUP.tipo === 'atomo' || this.elementoRUP.tipo === 'formula') {
+            // console.log('--> Átomo <--');
+            if (this.data[this.elementoRUP.key] === null) {
+                this.data = {};
+            }
+            this.mensaje = this.getMensajes();
+            this.evtData.emit(this.data);
+
+        } else {
+
+            // Molécula
+            // console.log('--> Molécula <--');
+            // valor: variable con el resultado qeu viene del input del formulario
+            let valor = (typeof obj !== 'undefined' && obj && obj[elementoRUPactual.key]) ? obj[elementoRUPactual.key] : null;
+            if (valor) {
+                if (!this.data[this.elementoRUP.key]) {
+                    this.data[this.elementoRUP.key] = {};
+                }
+                if (!this.data[this.elementoRUP.key][elementoRUPactual.key]) {
+                    this.data[this.elementoRUP.key][elementoRUPactual.key] = {};
+                }
+                this.data[this.elementoRUP.key][elementoRUPactual.key] = valor;
+            } else {
+                if (this.data[this.elementoRUP.key] && this.data[this.elementoRUP.key][elementoRUPactual.key] && valor == null) {
+                    delete this.data[this.elementoRUP.key][elementoRUPactual.key];
+                }
+            }
+            if (!Object.keys(this.data[this.elementoRUP.key]).length) {
+                this.data = {};
+            }
+        }
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
+        this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
 
     }
 
