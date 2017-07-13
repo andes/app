@@ -21,9 +21,10 @@
                         <ng-container *ngIf="agendaCandidata.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                         <ng-template #reasignado>
-                            <div *ngIf="i === 0">
+                            <div *ngIf="agenda.agendaReasignada">
                                 <!--TODO BOTHO: Hace tu gracia-->
                                 <div class="col-12">
+                                    <!-- {{agenda.agendaReasignada | json}} -->
                                     Reasignado al Turno: {{ agenda.agendaReasignada?.horaInicio | date: 'EEE' | uppercase }} {{ agenda.agendaReasignada?.horaInicio
                                     | date: 'dd/MM/yyyy'}}, {{ agenda.turnoReasignado?.horaInicio| date: 'HH:mm'}} hs
                                     <div>{{agenda.turnoReasignado?.tipoPrestacion?.nombre}}</div>
@@ -31,27 +32,31 @@
                                 </div>
                             </div>
                         </ng-template>
+                        <!-- {{getHora(agendaCandidata.turno.horaInicio)}} {{getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)}} -->
                         <ng-template #noReasignado>
-                            <div>
-                                <button *ngIf="agendaCandidata?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
+                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
+                                <div>
+                                    <button *ngIf="agendaCandidata?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
                                     <i *ngIf="agendasOcultas[i] === agenda._id" class="mdi mdi-eye"></i>
                                     <i *ngIf="agendasOcultas[i] !== agenda._id" class="mdi mdi-eye-off"></i>
                                 </button>
-                            </div>
-                            <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)"
-                                [hidden]="agendasOcultas[i] === agenda._id">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEEE' }} {{ agenda.horaInicio | date: 'dd/MM/yyyy' }}
-                                        <i class="mdi mdi-clock"></i> {{ agendaCandidata.turno.horaInicio | date:'HH:mm'}}
-                                        hs.
-                                    </h5>
-                                    <small>{{ agenda.similitud }}%</small>
                                 </div>
-                                <p class="mb-1">
-                                    Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
-                                </p>
-                                <small *ngFor="let profesional of agenda.agendaReasignada?.profesionales">{{profesional | profesional}}</small>
-                            </a>
+                                <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)"
+                                    [hidden]="agendasOcultas[i] === agenda._id">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEEE' }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'
+                                            }}
+                                            <i class="mdi mdi-clock"></i> {{ agendaCandidata.turno.horaInicio | date:'HH:mm'}}
+                                            hs.
+                                        </h5>
+                                        <small>{{ agenda.similitud }}%</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
+                                    </p>
+                                    <small *ngIf="agenda.profesionales?.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
+                                </a>
+                            </div>
                         </ng-template>
                         <hr>
                     </div>

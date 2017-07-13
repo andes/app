@@ -31,9 +31,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this._agendasSimilares;
     }
 
-    @Input() turnoSeleccionado: any;
-    @Input() agendaAReasignar: IAgenda; // Agenda origen
-    @Input() datosAgenda: any; // IDs de agenda y bloque del turno origen
+    @Input() agendaAReasignar: any;
+
 
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
@@ -48,6 +47,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this._agendaDestino;
     }
 
+    @Input() turnoSeleccionado: any;
+    @Input() datosAgenda: any; // IDs de agenda y bloque del turno origen
     autorizado: any;
     countBloques = [];
 
@@ -60,7 +61,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     actualizar() {
-        console.log(this.agendasSimilares);
 
         this.delDiaDisponibles = 0;
         this.agendasSimilares = [];
@@ -181,9 +181,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     turno: turnoReasignado // Guardo los datos de la agenda "nueva" en el turno viejo
                 };
 
-                console.log('params', params);
-
-
                 // Agrego datos de reasignación al turno original (PUT)
                 this.serviceTurno.put(params).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
@@ -217,6 +214,14 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             || (turno.horaInicio.getTime() !== bloque.turnos[(indiceT - 1)].horaInicio.getTime())
             || ((turno.horaInicio.getTime() === bloque.turnos[(indiceT - 1)].horaInicio.getTime())
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
+    }
+
+    getHora(fecha) {
+        return moment(fecha).format('HH:mm');
+    }
+
+    getFecha(fecha) {
+        return moment(fecha).format('DD/MM/YYYY');
     }
 
 

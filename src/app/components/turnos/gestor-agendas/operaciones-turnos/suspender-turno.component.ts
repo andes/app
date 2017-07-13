@@ -104,7 +104,7 @@ export class SuspenderTurnoComponent implements OnInit {
                 }
                 this.suspendio = true;
                 this.saveSuspenderTurno.emit(this.agenda);
-                this.plex.toast('danger', 'No se envío SMS', 'SMS', 4000);
+                this.plex.toast('danger', 'TODO: Activar envío SMS', 'SMS', 4000);
                 // TODO: Descomentar para que envíe SMS
                 // for (let x = 0; x < this.seleccionadosSMS.length; x++) {
                 //     this.enviarSMS(this.seleccionadosSMS[x], 'Su turno fue suspendido');

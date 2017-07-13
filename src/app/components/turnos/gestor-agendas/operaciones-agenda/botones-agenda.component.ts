@@ -132,6 +132,8 @@ export class BotonesAgendaComponent implements OnInit {
                 if (!confirmado) {
                     return false;
                 } else {
+                    // TODO: Enviar SMS a todos!
+                    this.plex.toast('danger', 'TODO: enviar SMS a todos', 'SMS', 4000);
                     this.confirmarEstado(estado);
                 }
             });

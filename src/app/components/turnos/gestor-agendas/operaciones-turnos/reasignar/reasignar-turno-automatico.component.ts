@@ -1,3 +1,4 @@
+import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -40,6 +41,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
     public suspendio = false;
+    public hoy = new Date();
     autorizado: any;
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
@@ -93,9 +95,10 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     calculosSimilitud(turno: ITurno, agendas: any[]) {
 
         let calculos = 0;
-        agendas.forEach((ag) => {
+        agendas.forEach((ag, iAgenda) => {
             let agendaReasignada = null;
-            ag.bloques.forEach((bl) => {
+            ag.bloques.forEach((bl, iBloque) => {
+                let turnosFiltrados = bl.turnos;
                 bl.turnos.forEach((tu) => {
                     let calculoSimilitud = {
                         tipoPrestacion: bl.tipoPrestaciones.findIndex(x => x._id === turno.tipoPrestacion.id) >= 0 ? 30 : 0,
@@ -119,6 +122,10 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                     }
                 });
+                // turnosFiltrados = bl.turnos.filter((x) => { return x.horaInicio > new Date(); });
+                // console.log('turnosFiltrados ', turnosFiltrados);
+                // agendas[iAgenda].bloques[iBloque].turnos = turnosFiltrados;
+                // bl.turnos = turnosFiltrados;
             });
             ag.similitud = calculos;
         });
@@ -232,6 +239,13 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         this.reasignarTurnosEmit.emit(this.agendaAReasignar);
     }
 
+    getHora(fecha) {
+        return moment(fecha).format('HH:mm');
+    }
+
+    getFecha(fecha) {
+        return moment(fecha).format('DD/MM/YYYY');
+    }
     // cancelar() {
     //     this.cancelaSuspenderTurno.emit(true);
     //     this.turnoAReasignar = null;
