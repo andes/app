@@ -1,6 +1,6 @@
 import { element } from 'protractor';
 import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { Auth } from '@andes/auth';
@@ -10,7 +10,10 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-prestacionValidacion',
-    templateUrl: 'prestacionValidacion.html'
+    templateUrl: 'prestacionValidacion.html',
+    styleUrls: ['prestacionValidacion.css'],
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
@@ -48,6 +51,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let data: any;
         this.prestacion.ejecucion.registros.forEach(element => {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
+           
             data = {
                 elementoRUP: elementoRUP,
                 concepto: element.concepto,
@@ -56,14 +60,14 @@ export class PrestacionValidacionComponent implements OnInit {
                 destacado: element.destacado ? element.destacado : false,
                 relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null
             };
-            console.log(data);
+            
             this.registros.push(data);
         });
-        console.log(this.registros);
+        
     }
 
     validar() {
-        console.log(this.registros);
+        
         // hacemos el patch y luego creamos los planes
         let cambioEstado: any = {
             op: 'estadoPush',
