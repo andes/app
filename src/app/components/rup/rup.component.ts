@@ -34,14 +34,14 @@ export class RupComponent implements OnInit, OnDestroy {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // array de prestaciones que se estan ejecutando actualmente en el proceso
     // TODO: revisar uso de prestacionesEJecucion
-    //@Input() prestacionesEjecucion: ITipoPrestacion;
+    // @Input() prestacionesEjecucion: ITipoPrestacion;
 
     // array de valores de las prestaciones que se estan ejecutando actualmente
     // se utiliza para enviarle a las formulas
     @Input() valoresPrestacionEjecucion: any = [];
     @Input() prestacion: IPrestacionPaciente;
 
-    //pacientePrestacion: any = {};
+    // pacientePrestacion: any = {};
     // resultados a devolver
     data: any = {};
     mensaje: any = {};

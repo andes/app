@@ -51,7 +51,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let data: any;
         this.prestacion.ejecucion.registros.forEach(element => {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
-           
+
             data = {
                 elementoRUP: elementoRUP,
                 concepto: element.concepto,
@@ -60,14 +60,14 @@ export class PrestacionValidacionComponent implements OnInit {
                 destacado: element.destacado ? element.destacado : false,
                 relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null
             };
-            
+
             this.registros.push(data);
         });
-        
+
     }
 
     validar() {
-        
+
         // hacemos el patch y luego creamos los planes
         let cambioEstado: any = {
             op: 'estadoPush',
@@ -126,6 +126,10 @@ export class PrestacionValidacionComponent implements OnInit {
 
     volver() {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
+    }
+
+    volverInicio() {
+        this.router.navigate(['rup']);
     }
 }
 
