@@ -2,19 +2,28 @@
     <plex-box>
         <header>
             <div class="clearfix">
-                <div class="page-title">prestación validar</div>
+                <div *ngIf="prestacion?.solicitud">
+                    <div class="page-title">Validar: {{prestacion.solicitud.tipoPrestacion.term}} </div>
+                </div>
             </div>
         </header>
         <div class="row">
-            <div class="col-6">
-                <ng-container *ngFor="let elemento of registros; let i = index">
+            <ng-container *ngFor="let elemento of registros; let i = index">
+                <div class="col-6">
                     <div class="rup-card">
                         <div class="type {{elemento.tipo}}">
                         </div>
                         <div class="rup-content">
                             <div class="header">
-                                <div class="title">
-                                    {{elemento.concepto.term}}
+                                <div class="row">
+                                    <div class="col-9">
+                                        <div class="title">
+                                            {{elemento.concepto.term}}
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <b>{{elemento.tipo}}</b>
+                                    </div>
                                 </div>
                             </div>
                             <div class="rup-body">
@@ -29,22 +38,19 @@
                                     <b>Relacionado con:</b> {{elemento.relacionadoCon.term}}
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                </ng-container>
-            </div>
+                </div>
+            </ng-container>
         </div>
     </plex-box>
 </section>
 <footer>
     <div class="row">
-
         <div class="col-3">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
-
         </div>
         <div class="col text-right ">
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
