@@ -7,6 +7,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { LogPacienteService } from '../../../services/logPaciente.service';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -24,7 +25,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
 
     // Inicialización
-    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
+    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth, public serviceLogPaciente: LogPacienteService) { }
 
     ngOnInit() {
         // Se cargan los datos calculados
@@ -40,7 +41,7 @@ export class EstadisticasPacientesComponent implements OnInit {
 
         let cantInasistencias = 0;
 
-        // Se muestran la cantidad de turnos otorgados, anulados e inasistencias
+        // Se muestra la cantidad de turnos otorgados e inasistencias
         this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
             turnos.forEach(turno => {
                 if (turno.asistencia === 'noAsistio') {
@@ -50,6 +51,15 @@ export class EstadisticasPacientesComponent implements OnInit {
             this.turnosOtorgados = turnos.length;
             this.inasistencias = cantInasistencias;
         });
+
+        // Se muestra la cantidad de turnos anulados
+        let datosLog = { idPaciente: this.paciente.id, operacion: 'turnos:liberar' };
+        this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+            if (logs && logs.length) {
+                this.anulaciones = logs.length;
+            }
+        });
+
     }
 
 
