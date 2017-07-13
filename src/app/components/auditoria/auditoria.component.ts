@@ -19,6 +19,7 @@ import { AgendaService } from './../../services/turnos/agenda.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
+import { AnsesService } from '../../services/fuentesAutenticas/servicioAnses.service';
 
 @Component({
   selector: 'auditoria',
