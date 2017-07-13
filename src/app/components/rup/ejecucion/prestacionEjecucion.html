@@ -34,9 +34,9 @@
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': elemento.relacionadoCon}">
 
-                            <div class="rup-card" *ngIf="elemento.elementoRUP" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(true)" (onDragEnd)="draggingRegistro(false)">
+                            <div class="rup-card" *ngIf="elemento.elementoRUP">
 
-                                <div class="type {{elemento.tipo}} drag-handle">
+                                <div class="type {{elemento.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(true)" (onDragEnd)="draggingRegistro(false)">
                                     <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                 </div>
 

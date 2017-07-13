@@ -1,12 +1,14 @@
 import { element } from 'protractor';
-import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+
 // Rutas
+import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
+import { PacienteService } from '../../../services/paciente.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -20,6 +22,7 @@ export class PrestacionValidacionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // prestacion actual en ejecucion
     public prestacion: any;
+    public paciente;
     // array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
     // elementoRUP de la prestacion actual
@@ -29,6 +32,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         private servicioElementosRUP: ElementosRupService,
+        private servicioPaciente: PacienteService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
 
@@ -38,6 +42,11 @@ export class PrestacionValidacionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
+
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.paciente = paciente;
+                });
+
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
                     // this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, prestacion.ejecucion.registros[0].tipo);
