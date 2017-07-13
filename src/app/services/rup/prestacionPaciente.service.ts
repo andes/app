@@ -81,7 +81,7 @@ export class PrestacionPacienteService {
      * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteHallazgo(idPaciente: String): Observable<any[]> {
+    getByPacienteHallazgo(idPaciente: any): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
 
             let registros = [];
@@ -124,10 +124,28 @@ export class PrestacionPacienteService {
                 }
 
             });
+            debugger;
+            this.cache[idPaciente]['registros'] = registroSalida;
             return registroSalida;
         });
     }
 
+
+    /**
+     * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
+     * @param {String} idPaciente
+     */
+    getHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        let registros = [];
+        if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
+            registros = this.cache[idPaciente]['registros'];
+            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        } else {
+            this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
+                return new Observable(resultado => resultado.next(hallazgos.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+            });
+        }
+    }
 
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
