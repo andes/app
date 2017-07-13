@@ -10,17 +10,16 @@
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && !agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
                 <div>
-                    <b>Paciente:</b> {{ agendaCandidata?.turno.paciente | paciente }} | <small>DNI {{ agendaCandidata?.turno.paciente.documento | number }}</small>
+                    <b>Paciente: </b> {{ agendaCandidata?.turno.paciente | paciente }} | <small>DNI {{ agendaCandidata?.turno.paciente.documento | number }}</small>
                     <br>
-                    <b>Turno:</b> {{ agendaCandidata?.turno?.horaInicio | date: 'HH:mm' }} {{ agendaCandidata?.turno?.horaInicio|date:'dd/MM/yyyy'}}
-                    {{ agendaCandidata?.turno.horaInicio | date: 'HH:mm' }} hs.
+                    <b>Turno: </b>{{ agendaCandidata?.turno.horaInicio | date: 'HH:mm' }} hs.
                     <br>
-                    <b>Profesional: </b>
-                    <ng-container *ngIf="agendaAReasignar?.profesionales?.length > 0; then hayProfesional else noHayProfesional"></ng-container>
-                    <ng-template #hayProfesional>{{ agendaAReasignar?.profesionales[0] | profesional }}</ng-template>
-                    <ng-template #noHayProfesional>Sin profesional asignado</ng-template>
+                    <!-- <b>Profesional: </b> -->
+                    <!-- <ng-container *ngIf="agendaAReasignar?.profesionales?.length > 0; then hayProfesional else noHayProfesional"></ng-container> -->
+                    <!-- <ng-template #hayProfesional>{{ agendaAReasignar?.profesionales[0] | profesional }}</ng-template>
+                    <ng-template #noHayProfesional>Sin profesional asignado</ng-template> -->
                 </div>
-                <plex-panel *ngIf="agendaCandidata?.agendas?.length > 0" tituloPrincipal="Ver Agendas candidatas">
+                <plex-panel *ngIf="agendaCandidata?.agendas?.length > 0" tituloPrincipal="Candidatas" icon="arrow-down-drop-circle-outline">
                     <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
                         <ng-container *ngIf="agendaCandidata.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
@@ -38,13 +37,14 @@
                         </ng-template>
                         <!-- {{getHora(agendaCandidata.turno.horaInicio)}} {{getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)}} -->
                         <ng-template #noReasignado>
+                            <!-- <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) "> -->
                             <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
-                                <div>
-                                    <button *ngIf="agendaCandidata?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
+                                <button *ngIf="agendaCandidata?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
                                     <i *ngIf="agendasOcultas[i] === agenda._id" class="mdi mdi-eye"></i>
                                     <i *ngIf="agendasOcultas[i] !== agenda._id" class="mdi mdi-eye-off"></i>
                                 </button>
-                                </div>
+                            </div>
+                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
                                 <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)"
                                     [hidden]="agendasOcultas[i] === agenda._id">
                                     <div class="d-flex w-100 justify-content-between">
