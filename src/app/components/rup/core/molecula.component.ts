@@ -14,6 +14,7 @@ export class Molecula extends RupComponent {
 
         // como es una molécula buscamos sus atomos
         this.servicioElementosRUP.getById(this.elementoRUP.id).subscribe(tipoPrestacion => {
+            debugger;
             this.elementoRUP = tipoPrestacion;
             // si vienen datos por input, los asignamos a nuestro objeto data
             this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
