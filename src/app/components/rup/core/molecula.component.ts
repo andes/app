@@ -6,10 +6,9 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
     selector: 'molecula',
     templateUrl: 'molecula.html'
 })
-export class Molecula extends RupComponent {
+export class Molecula extends RupComponent implements OnInit {
 
     ngOnInit() {
-
         //VER SERVICIO PRESTACION SE REPITE EN RUP
 
         // como es una molécula buscamos sus atomos

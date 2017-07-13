@@ -98,6 +98,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
+
+                if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                    this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                }
+
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                 });
@@ -483,6 +488,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
+
         // validamos antes de guardar
         if (!this.beforeSave()) {
             return null;
@@ -500,7 +506,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.prestacion.ejecucion.registros.push(nuevoRegistro);
         });
         console.log(this.data);
-debugger;
+
         let params: any = {
             op: 'registros',
             registros: this.prestacion.ejecucion.registros

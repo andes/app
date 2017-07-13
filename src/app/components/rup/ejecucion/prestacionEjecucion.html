@@ -72,7 +72,12 @@
                                                 {{errores[i]}}
                                             </span>
                                         </div>
-                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [conceptoSnomed]="elemento.concepto" (evtData)="getValoresRup($event, elemento.elementoRUP)" *ngIf="data" [datosIngreso]="data[elemento.elementoRUP.key]">
+                                        <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP"
+                                        [paciente]="paciente" [conceptoSnomed]="elemento.concepto"
+                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"
+                                        [datosIngreso]="data[elemento.elementoRUP.key]"
+                                        *ngIf="paciente && data"
+                                        >
                                         </rup>
                                     </div>
                                     <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
@@ -120,7 +125,7 @@
                         </div>
                     </ng-container>
 
-                    <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!dragg" class="drop-posicion" *ngIf="registros && registros.length">
+                    <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length">
                         Mover a esta posición
                     </div>
                 </div>
