@@ -55,6 +55,7 @@ import { FinanciadorService } from './services/financiador.service';
 import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
+import { LogPacienteService } from './services/logPaciente.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -418,6 +419,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
         SisaService,
         SintysService,
+        LogPacienteService
     ]
 })
 

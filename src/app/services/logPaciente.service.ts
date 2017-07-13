@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class LogPacienteService {
 
-    private logUrl = '/core/logPaciente';  // URL to web api
+    private logUrl = '/core/log/paciente';  // URL to web api
 
     constructor(private server: Server) { }
 

@@ -7,6 +7,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { LogPacienteService } from '../../../services/logPaciente.service';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -15,32 +16,17 @@ import { TurnoService } from '../../../services/turnos/turno.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
-    @Input('paciente') paciente: IPaciente;
-
-    public fechaDesde: any;
-    public fechaHasta: any;
-    turnosOtorgados = 0;
-    inasistencias = 0;
-    anulaciones = 0;
-
-    // Inicialización
-    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
-
-    ngOnInit() {
-        // Se cargan los datos calculados
-        let hoy = {
-            fechaDesde: moment().startOf('day').format(),
-            fechaHasta: moment().endOf('day').format()
-        };
-        this.fechaDesde = new Date(hoy.fechaDesde);
-        this.fechaHasta = new Date(hoy.fechaHasta);
-        let datosTurno = { pacienteId: this.paciente.id };
-
-        // TODO: filtrar los turnos por fechas
-
+    private _paciente: IPaciente;
+    @Input('paciente')
+    set paciente(value: any) {
+        this.turnosOtorgados = 0;
+        this.inasistencias = 0;
+        this.anulaciones = 0;
+        this._paciente = value;
+        this.pacienteSeleccionado = value;
+        let datosTurno = { pacienteId: this._paciente.id };
         let cantInasistencias = 0;
-
-        // Se muestran la cantidad de turnos otorgados, anulados e inasistencias
+        // Se muestra la cantidad de turnos otorgados e inasistencias
         this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
             turnos.forEach(turno => {
                 if (turno.asistencia === 'noAsistio') {
@@ -50,6 +36,36 @@ export class EstadisticasPacientesComponent implements OnInit {
             this.turnosOtorgados = turnos.length;
             this.inasistencias = cantInasistencias;
         });
+
+        // Se muestra la cantidad de turnos anulados
+        let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+        this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+            if (logs && logs.length) {
+                this.anulaciones = logs.length;
+            }
+        });
+    }
+    get agenda(): any {
+        return this._paciente;
+    }
+    pacienteSeleccionado: IPaciente;
+    public fechaDesde: any;
+    public fechaHasta: any;
+    turnosOtorgados = 0;
+    inasistencias = 0;
+    anulaciones = 0;
+
+    // Inicialización
+    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth, public serviceLogPaciente: LogPacienteService) { }
+
+    ngOnInit() {
+        // Se cargan los datos calculados
+        let hoy = {
+            fechaDesde: moment().startOf('month').format(),
+            fechaHasta: moment().endOf('day').format()
+        };
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
     }
 
 
