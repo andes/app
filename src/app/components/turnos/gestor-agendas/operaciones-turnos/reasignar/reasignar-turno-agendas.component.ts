@@ -47,7 +47,15 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return this._agendaDestino;
     }
 
-    @Input() turnoSeleccionado: any;
+    private _turnoSeleccionado;
+    @Input('turnoSeleccionado')
+    set turnoSeleccionado(value: any) {
+        this._turnoSeleccionado = value;
+    }
+    get turnoSeleccionado(): any {
+        return this._turnoSeleccionado;
+    }
+
     @Input() datosAgenda: any; // IDs de agenda y bloque del turno origen
     autorizado: any;
     countBloques = [];
@@ -184,6 +192,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 // Agrego datos de reasignación al turno original (PUT)
                 this.serviceTurno.put(params).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
+                    this.agendaDestino.agenda = resultado2;
                     this.actualizar();
                 });
 

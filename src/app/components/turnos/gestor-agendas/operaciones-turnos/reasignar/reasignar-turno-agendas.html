@@ -18,12 +18,12 @@
                         <div class="col"><b>Agenda Origen</b></div>
                         <div class="col"><b>Agenda Destino</b></div>
                     </div>
-                    <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
-                        <div class="col-6">
+                    <div class="row">
+                        <div class="col-6" *ngIf="agendaAReasignar?.horaInicio">
                             {{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy'}} de {{agendaAReasignar.horaInicio
                             | date: 'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs
                         </div>
-                        <div class="col-6">
+                        <div class="col-6" *ngIf="agendaDestino?.agenda?.horaInicio">
                             {{agendaDestino?.agenda.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.agenda.horaInicio | date: 'dd/MM/yyyy'}}
                             de {{agendaDestino?.agenda.horaInicio | date: 'HH:mm'}} a {{agendaDestino?.agenda.horaFin | date:'HH:mm'}}
                             hs
@@ -33,7 +33,7 @@
                         <div class="col-6">Horario: {{turnoSeleccionado.horaInicio|date: 'HH:mm' }} hs</div>
                         <div class="col-6">Horario: {{agendaDestino.turno.horaInicio|date: 'HH:mm' }} hs</div>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="turnoSeleccionado?.tipoPrestacion && agendaDestino?.turno">
                         <div class="col-6">Tipo de Prestación: {{turnoSeleccionado?.tipoPrestacion.nombre}}</div>
                         <div class="col-6">Tipo de Prestación: {{agendaDestino.turno?.tipoPrestacion.nombre}}</div>
                     </div>
