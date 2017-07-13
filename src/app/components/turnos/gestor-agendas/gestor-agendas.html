@@ -87,6 +87,7 @@
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
+                                <span class="badge badge-danger" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
                                 <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
                             </td>
                         </tr>

@@ -251,8 +251,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadAgendas() {
-
-
         let fecha = moment().format();
 
         if (this.hoy) {
@@ -284,6 +282,8 @@ export class GestorAgendasComponent implements OnInit {
                     });
                     this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
                 });
+                console.log(this.turnosSuspendidos);
+
 
             },
             err => {
