@@ -58,7 +58,7 @@
     </div>
 
 </section>
-<footer *ngIf="!showCreateUpdate && modoCompleto">
+<footer *ngIf="!showCreateUpdate && modoCompleto && mostrarNuevo">
     <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
     <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
 </footer>
