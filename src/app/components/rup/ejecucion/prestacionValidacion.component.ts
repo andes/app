@@ -1,6 +1,6 @@
 import { element } from 'protractor';
 import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { Auth } from '@andes/auth';
@@ -10,7 +10,10 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
     selector: 'rup-prestacionValidacion',
-    templateUrl: 'prestacionValidacion.html'
+    templateUrl: 'prestacionValidacion.html',
+    styleUrls: ['prestacionValidacion.css'],
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
@@ -48,16 +51,81 @@ export class PrestacionValidacionComponent implements OnInit {
         let data: any;
         this.prestacion.ejecucion.registros.forEach(element => {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
+           
             data = {
                 elementoRUP: elementoRUP,
                 concepto: element.concepto,
-                valor: element.valor
+                valor: element.valor,
+                tipo: element.tipo,
+                destacado: element.destacado ? element.destacado : false,
+                relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null
             };
-            console.log(data);
+            
             this.registros.push(data);
         });
-        console.log(this.registros);
+        
     }
 
+    validar() {
+        
+        // hacemos el patch y luego creamos los planes
+        let cambioEstado: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' }
+        };
+
+        // Vamos a cambiar el estado de la prestación a ejecucion
+        this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+
+            // buscamos los planes dentro de los registros
+            let planes = this.registros.filter(r => r.tipo === 'planes');
+
+            if (planes.length) {
+                planes.forEach(plan => {
+
+                    let nuevaPrestacion;
+                    nuevaPrestacion = {
+                        paciente: this.prestacion.paciente,
+                        solicitud: {
+                            tipoPrestacion: plan.concepto,
+                            fecha: new Date(),
+                            turno: null,
+                            hallazgos: [],
+                            prestacionOrigen: null,
+                            // profesional logueado
+                            profesional:
+                            {
+                                id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                                apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                            },
+                            // organizacion desde la que se solicita la prestacion
+                            organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
+                        },
+                        estados: {
+                            fecha: new Date(),
+                            tipo: 'pendiente'
+                        }
+                    };
+
+                    this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                        this.plex.alert('Prestación creada.').then(() => {
+                            // this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                        });
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+                    });
+
+
+                });
+            }
+        }, (err) => {
+            this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+        });
+
+    }
+
+    volver() {
+        this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
+    }
 }
 

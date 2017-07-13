@@ -51,7 +51,7 @@ export class PrestacionPacienteService {
     }
 
     /**
-     * Metodo getByPaciente. Busca todas las prestaciones de un paciente 
+     * Metodo getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
     getByPaciente(idPaciente: any): Observable<any[]> {

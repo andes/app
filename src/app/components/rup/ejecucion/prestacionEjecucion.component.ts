@@ -1,3 +1,5 @@
+import { PacienteService } from './../../../services/paciente.service';
+import { IPaciente } from './../../../interfaces/IPaciente';
 import { element } from 'protractor';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
@@ -36,7 +38,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public elementoRUPprestacion: any;
 
     // concepto snomed seleccionado del buscador a ejecutar
-    //public conceptoSnomedSeleccionado: any;
+    // public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
@@ -48,10 +50,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public relacion = null;
     public conceptoARelacionar = [];
 
-    //Variable para mostrar el div dropable en el momento que se hace el drag
+    // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
 
-    //Variable para mostrar el div dropable en el momento que se hace el drag
+    // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingRegistro: Boolean = false;
     // Opciones del desplegable para vincular y desvincular
     items = [];
@@ -66,6 +68,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public indexEliminar: any;
     public scopeEliminar: String;
 
+    public paciente: IPaciente;
+
 
     // errores
     public errores: any[] = [];
@@ -74,7 +78,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioElementosRUP: ElementosRupService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
-        public servicioTipoPrestacion: TipoPrestacionService) {
+        public servicioTipoPrestacion: TipoPrestacionService,
+        private servicioPaciente: PacienteService) {
     }
 
     /**
@@ -92,13 +97,14 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.paciente = paciente;
+                });
                 this.servicioElementosRUP.get({}).subscribe(elementosRup => {
                     this.elementosRUP = elementosRup;
                     this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, 'procedimientos');
                     this.MostrarDatosEnEjecucion();
                 });
-
-
             }, (err) => {
                 if (err) {
                     this.plex.info('danger', err, 'Error');
@@ -117,9 +123,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
-                debugger;
                 let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
-                console.log(elementoRUPRegistro);
                 // armamos el elemento data a agregar al array de registros
                 let data = {
                     tipo: registro.tipo,
@@ -129,6 +133,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     destacado: registro.destacado ? registro.destacado : false,
                     relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
                 };
+
                 this.registros.push(data);
                 this.data[elementoRUPRegistro.key] = registro.valor[elementoRUPRegistro.key];
             });
@@ -181,7 +186,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     moverRegistro(posicionNueva: number, registro: any) {
-        //buscamos posicion actual
+        // buscamos posicion actual
         let posicionActual = this.registros.findIndex(r => (registro.dragData.concepto.conceptId === r.concepto.conceptId));
 
         // si la posicion a la que lo muevo es distinta a la actual
@@ -284,7 +289,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // si no tiene ningun elemento relacionado entonces es un elemento padre
         if (!this.registros[index].relacionadoCon) {
-            //this.registros.splice(index, 1);
+            // this.registros.splice(index, 1);
         }
     }
 
@@ -439,6 +444,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.beforeSave()) {
             return null;
         }
+
         this.registros.forEach(r => {
             let nuevoRegistro: any = {
                 concepto: r.concepto,
@@ -506,23 +512,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             // a nuestro array de valores data
             this.data[elementoRUP.key] = datos[elementoRUP.key];
         }
-        //console.log(this.data);
     }
 
-    volver(ruta) {
-        /*
-        //valida si quedaron datos sin guardar..
-        if (this.prestacionesEjecucion.length > 0 || this.tiposPrestaciones.length > 0) {
-            this.plex.confirm('Se van a descartar los cambios sin guardar', 'Atención').then((confirmar) => {
-                if (confirmar === true) {
-                    this.router.navigate(['rup/resumen', this.prestacion.id]);
-                }
-            });
-        } else {
-            this.router.navigate(['rup/resumen', this.prestacion.id]);
-        }
-        */
-        this.router.navigate(['rup/resumen', this.prestacion.id]);
+    volver() {
+        this.router.navigate(['rup']);
     }
 
     onConceptoDrop(e: any) {

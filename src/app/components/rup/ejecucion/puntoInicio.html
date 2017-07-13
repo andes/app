@@ -115,7 +115,8 @@
                             </td>
                             <td class="text-center">
                                 <plex-button *ngIf="paciente.estado === 'Programado'" (click)="elegirPrestacion(paciente)" label="Iniciar Prestación" type="success btn-sm"></plex-button>
-                                <plex-button *ngIf="paciente.estado !== 'Programado'" (click)="elegirPrestacion(paciente)" label="Ver registros" type="primary btn-sm"></plex-button>
+                                <plex-button *ngIf="paciente.estado !== 'Programado' && paciente.estado !== 'validada'" (click)="elegirPrestacion(paciente)" label="Ver registros" type="primary btn-sm"></plex-button>
+                                <plex-button *ngIf="paciente.estado === 'validada'" (click)="irResumen(paciente.idPrestacion)" label="Ver resumen" type="primary btn-sm"></plex-button>
                             </td>
                         </tr>
                     </tbody>
