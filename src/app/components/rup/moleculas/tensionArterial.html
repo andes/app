@@ -1,4 +1,4 @@
-<div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id">
+<div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id && paciente">
     <div class="row">
         <ng-container *ngFor="let tp of elementoRUP.requeridos">
             <div class="col-12" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
