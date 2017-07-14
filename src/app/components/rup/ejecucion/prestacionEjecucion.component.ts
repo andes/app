@@ -309,7 +309,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.confirmarEliminar) {
             console.log(this.registros);
             console.log(this.data);
-            debugger;
             let _registro = this.registros[this.indexEliminar];
 
             // quitamos toda la vinculacion que puedan tener con el registro
@@ -364,6 +363,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'problema':
                 tipo = 'problemas';
                 break;
+            case ('entidad observable'):
             case ('procedimiento'):
                 if (this.tipoBusqueda === 'procedimientos') {
                     tipo = 'procedimientos';
@@ -464,8 +464,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
 
-        this.registros.forEach( (r, i) => {
-        // for (let i = 0; i < this.registros.length; i++) {
+        this.registros.forEach((r, i) => {
+            // for (let i = 0; i < this.registros.length; i++) {
             // let r = this.registros[i];
             this.errores[i] = null;
 
@@ -474,7 +474,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.errores[i] = 'Debe completar con algún valor';
                 resultado = false;
             }
-        // }
+            // }
         });
 
         return resultado;
@@ -579,9 +579,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cargaItems(elementoRup, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
-        this.items = [];
+        this.registros[indice].items = [];
         let objItem = {};
-        this.items = this.registros.filter(registro => {
+        this.registros[indice].items = this.registros.filter(registro => {
             return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
 
         }).map(registro => {
