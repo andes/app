@@ -107,7 +107,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: IPaciente;
     @Input('isScan') isScan: IPaciente;
     @Input('escaneado') escaneado: Boolean;
-    @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
+    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     foto = '';
     estados = [];
@@ -151,8 +151,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     esEscaneado = false;
     nuevaNota = '';
     autoFocus = 0;
-    hoy = new Date();
-
+    hoy = moment().endOf('day').toDate();
     contacto: IContacto = {
         tipo: 'celular',
         valor: '',
@@ -216,7 +215,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private barrioService: BarrioService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private financiadorService: FinanciadorService, public plex: Plex, private server: Server) {}
+        private financiadorService: FinanciadorService, public plex: Plex, private server: Server) { }
 
     ngOnInit() {
 
@@ -490,9 +489,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         pacienteScan: this.pacienteModel
                     }
                 }, {
-                    params: null,
-                    showError: false
-                }).subscribe(() => {});
+                        params: null,
+                        showError: false
+                    }).subscribe(() => { });
             }
 
             if (this.posibleDuplicado) {
@@ -501,12 +500,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         pacienteScan: this.pacienteModel
                     }
                 }, {
-                    params: null,
-                    showError: false
-                }).subscribe(() => {});
+                        params: null,
+                        showError: false
+                    }).subscribe(() => { });
             }
 
-            let operacionPac: Observable < IPaciente > ;
+            let operacionPac: Observable<IPaciente>;
 
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
@@ -625,9 +624,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                             pacienteScan: this.pacienteModel
                                         }
                                     }, {
-                                        params: null,
-                                        showError: false
-                                    }).subscribe(() => {});
+                                            params: null,
+                                            showError: false
+                                        }).subscribe(() => { });
                                     this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
@@ -640,9 +639,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                             pacienteScan: this.pacienteModel
                                         }
                                     }, {
-                                        params: null,
-                                        showError: false
-                                    }).subscribe(() => {});
+                                            params: null,
+                                            showError: false
+                                        }).subscribe(() => { });
                                     this.posibleDuplicado = true;
                                     this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
                                     this.enableIgnorarGuardar = true;
@@ -733,9 +732,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.server.post('/core/log/mpi/scan', {
                     data: this.buscarPacRel
                 }, {
-                    params: null,
-                    showError: false
-                }).subscribe(() => {});
+                        params: null,
+                        showError: false
+                    }).subscribe(() => { });
                 return DocumentoEscaneados[key];
             }
         }
@@ -743,9 +742,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.server.post('/core/log/mpi/scanFail', {
                 data: this.buscarPacRel
             }, {
-                params: null,
-                showError: false
-            }).subscribe(() => {});
+                    params: null,
+                    showError: false
+                }).subscribe(() => { });
         }
         return null;
     }
@@ -849,9 +848,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                                 pacienteScan: pacienteEscaneado
                                             }
                                         }, {
-                                            params: null,
-                                            showError: false
-                                        }).subscribe(() => {});
+                                                params: null,
+                                                showError: false
+                                            }).subscribe(() => { });
                                         this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                                     } else {
                                         if (this.PacientesRel[0].match >= 0.94) {
@@ -861,9 +860,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                                     pacienteScan: pacienteEscaneado
                                                 }
                                             }, {
-                                                params: null,
-                                                showError: false
-                                            }).subscribe(() => {});
+                                                    params: null,
+                                                    showError: false
+                                                }).subscribe(() => { });
                                             this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                                         } else {
                                             if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
@@ -873,9 +872,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                                         pacienteScan: pacienteEscaneado
                                                     }
                                                 }, {
-                                                    params: null,
-                                                    showError: false
-                                                }).subscribe(() => {});
+                                                        params: null,
+                                                        showError: false
+                                                    }).subscribe(() => { });
                                             }
                                         }
                                     }

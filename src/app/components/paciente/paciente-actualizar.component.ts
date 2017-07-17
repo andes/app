@@ -164,6 +164,7 @@ export class pacienteActualizarComponent implements OnInit {
     pacienteModel: IPaciente = {
         id: null,
         documento: '',
+        cuil: '',
         activo: true,
         estado: 'temporal',
         nombre: '',
