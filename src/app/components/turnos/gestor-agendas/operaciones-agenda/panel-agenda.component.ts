@@ -48,12 +48,15 @@ export class PanelAgendaComponent implements OnInit {
     guardarAgenda(agenda: IAgenda) {
 
         if (this.alertas.length === 0) {
+
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = this.modelo.profesionales.map((prof) => {
                 delete prof.$order;
                 return prof;
             });
+
             let espacioFisico = this.modelo.espacioFisico;
+            delete espacioFisico.$order;
 
             let patch = {
                 'op': 'editarAgenda',

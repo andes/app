@@ -12,9 +12,21 @@ export interface IAgenda {
         nombre: String,
         apellido: String
     }];
-    espacioFisico: {
+    organizacion: {
         id: String,
         nombre: String
+    };
+    espacioFisico: {
+        id: String,
+        nombre: String,
+        servicio: {
+            id: String,
+            nombre: String
+        };
+        sector: {
+            id: String,
+            nombre: String
+        };
     };
     horaInicio: Date;
     horaFin: Date;
@@ -24,9 +36,5 @@ export interface IAgenda {
     prePausada: String;
     turnosDisponibles: number;
     estadosAgendas: String[];
-    organizacion: {
-        id: String,
-        nombre: String
-    },
     nota: String;
 }

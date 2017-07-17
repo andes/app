@@ -39,6 +39,7 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -83,6 +84,7 @@ const appRoutes: Routes = [
   { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+  { path: 'dashboard_turnos', component: DashboardTurnosComponent, canActivate: [RoutingGuard] },
 
   // Auditoria
   { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },

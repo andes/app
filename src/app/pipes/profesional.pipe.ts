@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
 
 @Pipe({ name: 'profesional' })
 export class ProfesionalPipe implements PipeTransform {
@@ -7,6 +6,5 @@ export class ProfesionalPipe implements PipeTransform {
         if (value) {
             return value.apellido + ', ' + value.nombre;
         }
-        
     }
 }

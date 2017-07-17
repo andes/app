@@ -1,3 +1,4 @@
+import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
@@ -38,7 +39,7 @@ export class PlanificarAgendaComponent implements OnInit {
     showClonar = false;
     showAgenda = true;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -87,8 +88,32 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+
+    // loadServicios(event) {
+    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+    //         let servicios = respuesta.map((ef) => {
+    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
+    //         });
+    //         event.callback(servicios);
+    //     });
+    // }
+
+    loadEdificios(event) {
+        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+            event.callback(respuesta.edificio);
+        });
+    }
+    loadSectores(event) {
+        this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+            let sectores = respuesta.map((ef) => {
+                return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
+            });
+            event.callback(sectores);
+        });
+    }
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        this.servicioEspacioFisico.get({}).subscribe(event.callback);
     }
 
     horaInicioPlus() {
@@ -553,7 +578,7 @@ export class PlanificarAgendaComponent implements OnInit {
                     break;
                 }
             }
-            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva )) {
+            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
                 validaBloques = false;
                 break;
             }
@@ -574,8 +599,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     delete prestacion.$order;
                 });
             }
+            if (this.modelo.edificio) {
+                delete this.modelo.edificio.$order;
+            }
             if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
+            }
+            if (this.modelo.sector) {
+                delete this.modelo.sector.$order;
             }
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
