@@ -46,14 +46,14 @@
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <plex-select [data]="filtros" [(ngModel)]="unFiltro" (change)="filtrar()" placeholder="Seleccione..." label="Filtrar:">
+                        <plex-select [data]="filtros" [(ngModel)]="unFiltro" placeholder="Seleccione..." label="Filtrar:">
                         </plex-select>
                     </div>
                 </div>
                 <fieldset>
                     <div class="row">&nbsp;</div>
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let _unPermiso of permisos; let i = index">
+                        <li class="list-group-item" *ngFor="let _unPermiso of permisos | filterPermisos:unFiltro; let i = index">
                             <div class="row">
                                 <div class="col-11">{{_unPermiso}}
                                 </div>

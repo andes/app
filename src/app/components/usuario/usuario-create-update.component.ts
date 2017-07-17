@@ -60,7 +60,6 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         }
     }
 
-
     addPermiso() {
         let index = this.permisos.findIndex(permiso => (permiso.trim() === this.nuevoPermiso.trim()));
         if (index < 0) {
@@ -72,10 +71,13 @@ export class UsuarioCreateUpdateComponent implements OnInit {
             });
         }
         this.nuevoPermiso = '';
+        this.unFiltro = '';
+        this.getFiltros();
     }
 
     removePermiso(index) {
         this.permisos.splice(index, 1);
+        this.getFiltros();
     }
 
     loadUser() {
@@ -85,6 +87,7 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         this.userModel.nombre = this.seleccion.nombre;
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizacion = this.auth.organizacion;
+
         this.permisos = this.seleccion.permisos;
         this.sortPermisos();
         this.getFiltros();
@@ -125,18 +128,6 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         );
     }
 
-    filtrar() {
-        if (this.unFiltro) {
-            this.permisos = this.seleccion.permisos.filter(permiso => {
-                let item: string = permiso.split(':', 2)[0];
-                return (item === this.unFiltro.id);
-            });
-        } else {
-            this.permisos = this.seleccion.permisos;
-        }
-
-    }
-
     getFiltros() {
         this.filtros = [];
         this.permisos.forEach((permiso: string) => {
@@ -163,9 +154,6 @@ export class UsuarioCreateUpdateComponent implements OnInit {
             this.plex.info('success', '', 'Usuario guardado', );
             this.data.emit(user);
         });
-    }
-
-    devolverValores(event: any) {
     }
 
     onCancel() {
