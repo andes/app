@@ -181,6 +181,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     pacienteModel: IPaciente = {
         id: null,
         documento: '',
+        cuil: '',
         activo: true,
         estado: 'temporal',
         nombre: '',
