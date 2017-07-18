@@ -60,3 +60,9 @@
     .procedimientos {
         background-color: #92278e;
     }
+
+
+
+    .page-title b {
+        font-weight: 400;
+    }

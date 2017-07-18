@@ -1,9 +1,13 @@
-<section>
+<header *ngIf="prestacion">
+    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion" ></header-paciente>
+</header>
+
+<section  *ngIf="prestacion && registros && paciente">
     <plex-box>
         <header>
             <div class="clearfix">
                 <div *ngIf="prestacion?.solicitud">
-                    <div class="page-title">Validar: {{prestacion.solicitud.tipoPrestacion.term}} </div>
+                    <div class="page-title">Resumen <b>{{prestacion.solicitud.tipoPrestacion.term}}</b></div>
                 </div>
             </div>
         </header>

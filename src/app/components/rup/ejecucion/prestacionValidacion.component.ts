@@ -76,61 +76,68 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     validar() {
+        this.plex.confirm("Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?", "Confirmar validación").then(validar => {
+            if (!validar) {
+                return false;
+            } else {
 
-        // hacemos el patch y luego creamos los planes
-        let cambioEstado: any = {
-            op: 'estadoPush',
-            estado: { tipo: 'validada' }
-        };
+                // hacemos el patch y luego creamos los planes
+                let cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'validada' }
+                };
 
-        // Vamos a cambiar el estado de la prestación a ejecucion
-        this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                // Vamos a cambiar el estado de la prestación a ejecucion
+                this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                    this.prestacion = prestacion;
 
-            // buscamos los planes dentro de los registros
-            let planes = this.registros.filter(r => r.tipo === 'planes');
+                    // buscamos los planes dentro de los registros
+                    let planes = this.registros.filter(r => r.tipo === 'planes');
 
-            if (planes.length) {
-                planes.forEach(plan => {
+                    if (planes.length) {
+                        planes.forEach(plan => {
 
-                    let nuevaPrestacion;
-                    nuevaPrestacion = {
-                        paciente: this.prestacion.paciente,
-                        solicitud: {
-                            tipoPrestacion: plan.concepto,
-                            fecha: new Date(),
-                            turno: null,
-                            hallazgos: [],
-                            prestacionOrigen: null,
-                            // profesional logueado
-                            profesional:
-                            {
-                                id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                                apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                            },
-                            // organizacion desde la que se solicita la prestacion
-                            organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
-                        },
-                        estados: {
-                            fecha: new Date(),
-                            tipo: 'pendiente'
-                        }
-                    };
+                            let nuevaPrestacion;
+                            nuevaPrestacion = {
+                                paciente: this.prestacion.paciente,
+                                solicitud: {
+                                    tipoPrestacion: plan.concepto,
+                                    fecha: new Date(),
+                                    turno: null,
+                                    hallazgos: [],
+                                    prestacionOrigen: null,
+                                    // profesional logueado
+                                    profesional:
+                                    {
+                                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                                    },
+                                    // organizacion desde la que se solicita la prestacion
+                                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
+                                },
+                                estados: {
+                                    fecha: new Date(),
+                                    tipo: 'pendiente'
+                                }
+                            };
 
-                    this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                        this.plex.alert('Prestación creada.').then(() => {
-                            // this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                                this.plex.alert('Prestación creada.').then(() => {
+                                    // this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                                });
+                            }, (err) => {
+                                this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+                            });
+
+
                         });
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
-                    });
-
-
+                    }
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
             }
-        }, (err) => {
-            this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-        });
 
+        });
     }
 
     volver() {
