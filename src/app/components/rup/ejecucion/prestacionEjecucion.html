@@ -72,11 +72,12 @@
                                                 {{errores[i]}}
                                             </span>
                                         </div>
+
                                         <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP"
-                                        [paciente]="paciente" [conceptoSnomed]="elemento.concepto"
-                                        (evtData)="getValoresRup($event, elemento.elementoRUP)"
-                                        [datosIngreso]="data[elemento.elementoRUP.key]"
-                                        *ngIf="paciente && data"
+                                            [paciente]="paciente" [conceptoSnomed]="elemento.concepto"
+                                            (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)"
+                                            [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
+                                            *ngIf="paciente && data"
                                         >
                                         </rup>
                                     </div>

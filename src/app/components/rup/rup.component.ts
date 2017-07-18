@@ -127,9 +127,11 @@ export class RupComponent implements OnInit, OnDestroy {
         // En caso de haber valores cargados en los datos de ingreso
         // ejecutamos el evento para devolverlos y armar los valores
         // de cada átomo
+        /*
         if (this.datosIngreso) {
-            //this.evtData.emit(this.componentReference.instance.data);
+            this.evtData.emit(this.componentReference.instance.data);
         }
+        */
 
         // devolvemos los datos
         datosComponente.evtData.subscribe(e => {
@@ -144,15 +146,12 @@ export class RupComponent implements OnInit, OnDestroy {
     }
 
     devolverValores(obj?: any, elementoRUPactual?: any) {
-        debugger;
         // Átomo
         if (this.elementoRUP.tipo === 'atomo' || this.elementoRUP.tipo === 'formula') {
             // console.log('--> Átomo <--');
             if (this.data[this.elementoRUP.key] === null) {
                 this.data = {};
             }
-            //this.mensaje = this.getMensajes();
-            //this.evtData.emit(this.data);
 
         } else {
             // Molécula
