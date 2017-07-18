@@ -1,0 +1,11 @@
+<ng-container *ngIf="!soloValores">
+    <label for="observaciones">
+        Motivo de solicitud: 
+    </label>
+    <textarea class="form-control" [(ngModel)]="data[elementoRUP.key]" rows="4" id="motivo" name="motivo" placeholder="Ingrese el motivo de la solicitud" (keyup)="devolverValores()"></textarea>
+</ng-container>
+
+<p *ngIf="soloValores">
+    <label> Motivo de solicitud: </label>
+    <br /> {{data[elementoRUP.key]}}
+</p>

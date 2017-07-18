@@ -1,3 +1,6 @@
+import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
+
+
 /*
 @jgabriel | 04-03-2017
 
@@ -75,7 +78,7 @@ import { ObservarDatosService } from './services/rup/observarDatos.service';
 import { Cie10Service } from './services/term/cie10.service';
 
 // SNOMED
-import { SnomedService } from './services/snomed.service';
+import { SnomedService } from './services/term/snomed.service';
 
 // ... Llaves
 import { LlavesTipoPrestacionService } from './services/llaves/llavesTipoPrestacion.service';
@@ -151,8 +154,8 @@ import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaC
 import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
+import { TensionArterialComponent } from './components/rup/moleculas/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { NuevoProblemaComponent } from './components/rup/problemas-paciente/nuevoProblema.component';
@@ -161,7 +164,7 @@ import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
 import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
@@ -195,8 +198,14 @@ import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endos
 import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
 import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
 import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
+import { BuscadorComponent } from './components/rup/ejecucion/buscador.component';
+import { HudsBusquedaComponent } from './components/rup/ejecucion/hudsBusqueda.component';
+
 // snomed
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
+
+// Problemas
+import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -232,6 +241,8 @@ import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPre
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
 
+import { ElementosRupService } from "./services/rup/elementosRUP.service";
+
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
@@ -254,10 +265,10 @@ export const RUP_COMPONENTS = [
     TensionSistolicaComponent,
     TensionDiastolicaComponent,
     ObservacionesComponent,
-    ConsultaGeneralClinicaMedicaComponent,
-    NuevoProblemaComponent,
-    EvolucionProblemaComponent,
-    EvolucionTodosProblemasComponent,
+    ConsultaMedicinaGeneralComponent,
+    // NuevoProblemaComponent,
+    // EvolucionProblemaComponent,
+    // EvolucionTodosProblemasComponent,
     PuntoInicioComponent,
     PrestacionEjecucionComponent,
     ResumenComponent,
@@ -319,7 +330,11 @@ export const RUP_COMPONENTS = [
     EndoscopiaComponent,
     TomaHpvComponent,
     TomaPapComponent,
-    SangreOcultaMateriaFecalComponent
+    SangreOcultaMateriaFecalComponent,
+    EvolucionProblemaDefaultComponent,
+    HudsBusquedaComponent,
+    BuscadorComponent,
+    SolicitudPrestacionDefaultComponent
 ];
 
 // Locales
@@ -348,46 +363,25 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ],
 
     declarations: [
-        AppComponent,
-        InicioComponent,
-        LoginComponent,
-        OrganizacionComponent,
-        OrganizacionCreateUpdateComponent,
-        ProfesionalComponent,
+        AppComponent, InicioComponent, LoginComponent,
+        OrganizacionComponent, OrganizacionCreateUpdateComponent,
+        ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
-        ProfesionalCreateUpdateComponent,
-        EspecialidadComponent,
-        EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent,
-        PacienteSearchComponent,
-        DashboardComponent,
-        MapsComponent,
-        EdadPipe,
-        ProfesionalPipe,
-        FromNowPipe,
-        FechaPipe,
-        PacientePipe,
-        OrganizacionPipe,
-        SortBloquesPipe,
-        TextFilterPipe,
-        PlanificarAgendaComponent,
-        PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+        EspecialidadComponent, EspecialidadCreateUpdateComponent,
+        PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
+        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
-        PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
-        SolicitudTurnoVentanillaComponent,
-        ActivarAppComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-        HoverClassDirective,
-        BusquedaUsuarioComponent
+        HoverClassDirective
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],
@@ -414,7 +408,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         PlanificarAgendaComponent,
         // EspacioFisicoComponent,
         AgendaService,
-        AppMobileService,
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,
@@ -423,7 +416,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         PrestacionPacienteService,
         ProblemaPacienteService,
         TipoPrestacionService,
-
+        ElementosRupService,
         ObservarDatosService,
         LlavesTipoPrestacionService,
 
@@ -434,11 +427,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AuditoriaPrestacionPacienteService,
 
         SnomedService,
-        Cie10Service,
-
-        SisaService,
-        SintysService,
-        LogPacienteService
+        Cie10Service
     ]
 })
 

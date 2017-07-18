@@ -1,13 +1,12 @@
-<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 400" [(ngModel)]="data[tipoPrestacion.key]" name="peso"
-  label="Peso" suffix=" Kg " min="0" max="400" (keyup)="devolverValores()" required="true">
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 400" [(ngModel)]="data[elementoRUP.key]" name="peso" label="Peso" suffix=" Kg " min="0" max="400" (keyup)="devolverValores()" required="true">
 </plex-float>
 <p *ngIf="soloValores">
-  <label><b>Peso</b></label>
-  <br /> {{data[tipoPrestacion.key]}} Kg
+    <label><b>Peso</b></label>
+    <br /> {{data[elementoRUP.key]}} Kg
 </p>
 
 <p *ngIf="mensaje.texto">
-  <span class="badge-{{mensaje.class}}">
+    <span class="badge-{{mensaje.class}}">
     {{mensaje.texto}}
     </span>
 </p>

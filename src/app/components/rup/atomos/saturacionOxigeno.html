@@ -1,9 +1,9 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="data[tipoPrestacion.key]" name="saturacionOxigeno" label="SaO2" suffix=" % " min="0" max="100" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="data[elementoRUP.key]" name="saturacionOxigeno" label="SaO2" suffix=" % " min="0" max="100" (change)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
     <label>Saturación oxígeno</label>
-    <br /> {{data[tipoPrestacion.key]}} %
+    <br /> {{data[elementoRUP.key]}} %
 </p>
 
 <p *ngIf="mensaje.texto">

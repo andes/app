@@ -1,8 +1,8 @@
-import { TransformarProblemaComponent } from './../components/rup/problemas-paciente/transformarProblema.component';
+import { TransformarProblemaComponent } from './../../components/rup/problemas-paciente/transformarProblema.component';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 // import { Injectable } from '@angular/core';
 // import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
@@ -12,12 +12,21 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class SnomedService {
     private snomedURL = '/core/term/snomed';  // URL to web api
+    private snomedURLProblema = '/core/term/snomed/problema';  // URL to web api
 
     constructor(private server: Server) {
     }
 
     get(params: any): Observable<any[]> {
          return this.server.get(this.snomedURL, { params: params, showError: true });
+    }
+
+    getProblemas(params: any): Observable<any[]> {
+         return this.server.get(this.snomedURLProblema, { params: params, showError: true });
+    }
+
+    getProcedimientos(params: any): Observable<any[]> {
+         return this.server.get(this.snomedURL + '/procedimiento', { params: params, showError: true });
     }
 
     /*

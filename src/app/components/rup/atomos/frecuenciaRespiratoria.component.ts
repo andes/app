@@ -9,6 +9,7 @@ import { IPaciente } from "../../../interfaces/IPaciente";
 
 export class FrecuenciaRespiratoriaComponent extends Atomo {
 	getMensajes() {
+        debugger;
 		let Edad;
 		let Sexo;
 		let frecuenciaRespiratoria;
@@ -18,18 +19,18 @@ export class FrecuenciaRespiratoriaComponent extends Atomo {
 		};
 		Sexo = this.paciente.sexo
 		Edad = this.paciente.edad;
-		frecuenciaRespiratoria = this.data[this.tipoPrestacion.key];
+		frecuenciaRespiratoria = this.data[this.elementoRUP.key];
 		if (frecuenciaRespiratoria) {
 			// agregar validaciones
-			// Ver validacines para NEO - Ver unidad de la edad 
-			// Ver validaciones - Falta definición para lograr identidicarlos                                                                   
+			// Ver validacines para NEO - Ver unidad de la edad
+			// Ver validaciones - Falta definición para lograr identidicarlos
 			if (this.paciente.edadReal.unidad === 'Días' || this.paciente.edadReal.unidad === 'Meses' || this.paciente.edadReal.unidad === 'Horas') {
 
-				//Prematuro -ver el peso del paciente   
+				//Prematuro -ver el peso del paciente
 				if (frecuenciaRespiratoria >= 40 && frecuenciaRespiratoria <= 90) { mensaje.texto = 'Paciente Prematuro: Dentro de los parámetros normales' }
 				else { mensaje.texto = 'Paciente Prematuro: Fuera de los parámetros normales' }
 
-				// Recien Nacido a término     
+				// Recien Nacido a término
 				if (frecuenciaRespiratoria >= 30 && frecuenciaRespiratoria <= 80) { mensaje.texto = 'Paciente Recien Nacido a término: Dentro de los parámetros normales' }
 				else { mensaje.texto = 'Paciente Recien Nacido a término: Fuera de los parámetros normales' }
 			}
