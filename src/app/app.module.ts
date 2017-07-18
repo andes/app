@@ -381,7 +381,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-        HoverClassDirective
+        HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        SolicitudTurnoVentanillaComponent, ActivarAppComponent
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],
@@ -408,6 +410,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         PlanificarAgendaComponent,
         // EspacioFisicoComponent,
         AgendaService,
+        AppMobileService,
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,
@@ -427,7 +430,11 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AuditoriaPrestacionPacienteService,
 
         SnomedService,
-        Cie10Service
+        Cie10Service,
+
+        SisaService,
+        SintysService,
+        LogPacienteService
     ]
 })
 
