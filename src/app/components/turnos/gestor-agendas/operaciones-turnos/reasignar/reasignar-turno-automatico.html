@@ -3,12 +3,13 @@
     <div *ngIf="agendasCandidatas?.length === 1 && agendasCandidatas[0].agendas?.length === 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
     </div>
-    <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].agendas?.length > 0 && agendasCandidatas[0].turno">
+    <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].turno">
         <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
             <plex-accordion class="accordion-reasignar">
                 <!--Turno-->
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && !agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
+                <div *ngIf="agendaCandidata?.agendas?.length === 0" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i></div>
                 <div>
                     <b>Paciente: </b> {{ agendaCandidata?.turno.paciente | paciente }} | <small>DNI {{ agendaCandidata?.turno.paciente.documento | number }}</small>
                     <br>
@@ -21,6 +22,7 @@
                 </div>
                 <plex-panel *ngIf="agendaCandidata?.agendas?.length > 0" tituloPrincipal="Candidatas" icon="arrow-down-drop-circle-outline">
                     <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
+
                         <ng-container *ngIf="agendaCandidata.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                         <ng-template #reasignado>
@@ -35,6 +37,7 @@
                                 </div>
                             </div>
                         </ng-template>
+
                         <!-- {{getHora(agendaCandidata.turno.horaInicio)}} {{getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)}} -->
                         <ng-template #noReasignado>
                             <!-- <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) "> -->

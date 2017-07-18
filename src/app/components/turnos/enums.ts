@@ -39,3 +39,18 @@ export let EstadosAsistencia: IEnum = {
         class: 'warning'
     }
 };
+
+export let PrioridadesPrestacion: IEnum = {
+    'no prioritario': {
+        nombre: 'No Prioritario',
+        class: 'success'
+    },
+    'urgencia': {
+        nombre: 'Urgencia',
+        class: 'danger'
+    },
+    'emergencia': {
+        nombre: 'Emergencia',
+        class: 'warning'
+    }
+};

@@ -65,6 +65,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
+
 // ... RUP
 import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
 import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
@@ -137,6 +138,7 @@ import { PacienteSearchTurnosComponent } from './components/turnos/dashboard/pac
 import { TurnosPacienteComponent } from './components/turnos/dashboard/turnos-paciente.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
+import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -346,14 +348,30 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ],
 
     declarations: [
-        AppComponent, InicioComponent, LoginComponent,
-        OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        ProfesionalComponent, ProfesionalCreateUpdateComponent,
+        AppComponent,
+        InicioComponent,
+        LoginComponent,
+        OrganizacionComponent,
+        OrganizacionCreateUpdateComponent,
+        ProfesionalComponent,
         ProfesionalCreateUpdateComponent,
-        EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+        ProfesionalCreateUpdateComponent,
+        EspecialidadComponent,
+        EspecialidadCreateUpdateComponent,
+        PacienteCreateUpdateComponent,
+        PacienteSearchComponent,
+        DashboardComponent,
+        MapsComponent,
+        EdadPipe,
+        ProfesionalPipe,
+        FromNowPipe,
+        FechaPipe,
+        PacientePipe,
+        OrganizacionPipe,
+        SortBloquesPipe,
+        TextFilterPipe,
+        PlanificarAgendaComponent,
+        PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
@@ -362,6 +380,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AgregarSobreturnoComponent, PanelAgendaComponent,
         PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+        SolicitudTurnoVentanillaComponent,
         ActivarAppComponent,
         AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
         ...RUP_COMPONENTS,
