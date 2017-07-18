@@ -123,14 +123,15 @@ export class RupComponent implements OnInit, OnDestroy {
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
         this.componentReference.instance.conceptoSnomed = this.conceptoSnomed;
-        this.componentReference.changeDetectorRef.detectChanges();
 
         // En caso de haber valores cargados en los datos de ingreso
         // ejecutamos el evento para devolverlos y armar los valores
         // de cada átomo
+        /*
         if (this.datosIngreso) {
             this.evtData.emit(this.componentReference.instance.data);
         }
+        */
 
         // devolvemos los datos
         datosComponente.evtData.subscribe(e => {
@@ -141,6 +142,7 @@ export class RupComponent implements OnInit, OnDestroy {
             this.evtData.emit(this.componentReference.instance.data);
         }
 
+        this.componentReference.changeDetectorRef.detectChanges();
     }
 
     devolverValores(obj?: any, elementoRUPactual?: any) {
@@ -150,11 +152,8 @@ export class RupComponent implements OnInit, OnDestroy {
             if (this.data[this.elementoRUP.key] === null) {
                 this.data = {};
             }
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
 
         } else {
-
             // Molécula
             // console.log('--> Molécula <--');
             // valor: variable con el resultado qeu viene del input del formulario
@@ -176,9 +175,10 @@ export class RupComponent implements OnInit, OnDestroy {
                 this.data = {};
             }
         }
+
         this.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
-        this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
+        //this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
 
     }
 

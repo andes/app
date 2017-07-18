@@ -18,17 +18,35 @@
     <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col">
-            <ul *ngIf="prestaciones" class="list-group">
-                <li *ngFor="let prestacion of prestaciones; let i = index" class="list-group-item justify-content-between hover" (click)="devolverPrestacion(prestacion)">
-                    {{ prestacion.solicitud.tipoPrestacion.term }} <br>
-                    <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
-                    <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
-                </li>
-            </ul>
+            <div *ngIf="prestaciones" class="list-group">
+                <ng-container *ngFor="let prestacion of prestaciones; let i = index">
+                    <div class="rup-card mini">
+                        <div class="type prestaciones">
+                        </div>
+                        <div class="rup-content">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
+                                    </div>
+                                </div>
+                                <div class="title">
+                                    {{ prestacion.solicitud.tipoPrestacion.term }}
+                                </div>
+                            </div>
+                            <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
 
             <ul *ngIf="hallazgos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
+                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>

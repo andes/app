@@ -2,7 +2,8 @@
     <div class="row">
         <ng-container *ngFor="let tp of elementoRUP.requeridos">
             <div class="col-12" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
-                <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)"
+                <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente"
+                (evtData)="devolverValores($event,tp)"
                 [datosIngreso]="(datosIngreso && datosIngreso[tp.key]) ? datosIngreso[tp.key] : null">
                 </rup>
             </div>

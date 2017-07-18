@@ -141,7 +141,15 @@ export class PrestacionEjecucionComponent implements OnInit {
                 };
 
                 this.registros.push(data);
-                this.data[elementoRUPRegistro.key] = registro.valor[elementoRUPRegistro.key];
+
+                if (!this.data[elementoRUPRegistro.key]) {
+                    this.data[elementoRUPRegistro.key] = {};
+                }
+
+                if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
+                    this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
+                }
+                this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
             });
         }
     }
@@ -374,6 +382,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 break;
         }
 
+        if (!tipo) {
+            return false;
+        }
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, snomedConcept, tipo);
@@ -405,7 +416,17 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.showVincular = true;
         }
 
+        // nos fijamos si el concepto ya aparece en los registros
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+        // si no existe, verificamos si no está en alguno de los conceptos de los elementos RUP cargados
+        if (!existe) {
+            existe = this.registros.find(registro => {
+                return registro.elementoRUP.conceptos.find(r => {
+                    return (r.conceptId === snomedConcept.conceptId);
+                });
+            });
+        }
+
         if (existe) {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra agregado.');
 
@@ -423,7 +444,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(this.registros.length, 0, data);
 
         // agregamos el elemento al collapse
-        this.elementosRUPcollapse.push(this.data);
+        //this.elementosRUPcollapse.push(data);
         this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
     }
 
@@ -502,10 +523,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 tipo: r.tipo,
                 valor: {}
             };
-            nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key];
+            nuevoRegistro.valor[r.elementoRUP.key] = this.data[r.elementoRUP.key][r.concepto.conceptId];
             this.prestacion.ejecucion.registros.push(nuevoRegistro);
         });
-        console.log(this.data);
 
         let params: any = {
             op: 'registros',
@@ -525,8 +545,8 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} elementoRUP
      * @memberof PrestacionEjecucionComponent
      */
-    getValoresRup(datos, elementoRUP) {
-        debugger;
+    getValoresRup(datos, elementoRUP, snomedConcept) {
+
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -539,11 +559,15 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.data[elementoRUP.key] = {};
             }
 
+            if (!this.data[elementoRUP.key][snomedConcept.conceptId]) {
+                this.data[elementoRUP.key][snomedConcept.conceptId] = {};
+            }
+
             // asignamos los valores que devuelve RUP en la variable datos
             // a nuestro array de valores data
-            this.data[elementoRUP.key] = datos[elementoRUP.key];
+            this.data[elementoRUP.key][snomedConcept.conceptId] = datos[elementoRUP.key];
         }
-        console.log(this.data);
+
     }
 
     volver() {

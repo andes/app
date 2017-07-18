@@ -1,5 +1,5 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45" [(ngModel)]="data[elementoRUP.key]" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45" (keyup)="devolverValores()">
-</plex-int>
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45" [(ngModel)]="data[elementoRUP.key]" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45" (keyup)="devolverValores()">
+</plex-float>
 
 <p *ngIf="soloValores">
     <label>Temperatura</label>

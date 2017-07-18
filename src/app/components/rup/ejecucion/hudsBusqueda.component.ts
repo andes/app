@@ -1,5 +1,5 @@
 import { IPaciente } from './../../../interfaces/IPaciente';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
@@ -9,7 +9,10 @@ import { PrestacionPacienteService } from './../../../services/rup/prestacionPac
 
 @Component({
     selector: 'rup-hudsBusqueda',
-    templateUrl: 'hudsBusqueda.html'
+    templateUrl: 'hudsBusqueda.html',
+     styleUrls: ['hudsBusqueda.css'],
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None
 })
 export class HudsBusquedaComponent implements OnInit {
 
