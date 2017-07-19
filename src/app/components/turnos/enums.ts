@@ -28,7 +28,7 @@ export let EstadosAgenda: IEnum = {
     },
     'codificada': {
         nombre: 'Codificada',
-        class: 'success'
+        class: 'danger'
     }
 
 };
