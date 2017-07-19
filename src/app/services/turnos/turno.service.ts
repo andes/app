@@ -18,8 +18,6 @@ export class TurnoService {
     }
 
     save(turno: any): Observable<any> {
-        console.log(turno.paciente);
-
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno);
         }

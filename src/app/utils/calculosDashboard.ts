@@ -14,7 +14,6 @@ export function cantidadTurnosPorEstadoPaciente(userLogged, serviceTurno) {
                 countValidado++;
             }
         });
-        console.log([countTemporal, countValidado]);
         return countTemporal;
     });
 }

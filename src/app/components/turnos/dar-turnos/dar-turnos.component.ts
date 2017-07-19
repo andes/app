@@ -214,7 +214,6 @@ export class DarTurnosComponent implements OnInit {
                         band = false;
                     }
                 }, () => {
-                    console.log('index ', index);
                     if (tipoPrestaciones.length - 1 === index) {
                         // event.callback(this.filtradas);
                         // Se actualiza el calendario con las agendas filtradas por permisos y llaves

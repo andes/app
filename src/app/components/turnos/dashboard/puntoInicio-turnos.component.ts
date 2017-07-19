@@ -31,6 +31,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showMostrarEstadisticasAgendas = true;
     public showMostrarEstadisticasPacientes = false;
     public showActivarApp = false;
+    public showIngresarSolicitud = false;
     public paciente;
     public autorizado = false;
     operacionTurnos = '';
@@ -124,6 +125,12 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showDarTurnos = true;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
+                break;
+            case 'ingresarSolicitud':
+                this.paciente = paciente;
+                this.showIngresarSolicitud = true;
+                this.showMostrarTurnosPaciente = false;
+                this.showMostrarEstadisticasPacientes = false;
                 break;
             case 'anulacionTurno':
                 this.showMostrarEstadisticasAgendas = false;

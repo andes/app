@@ -39,7 +39,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     public seleccionarPaciente(paciente: any) {
         this.pacienteSeleccionado = paciente;
-        super.seleccionarPaciente(paciente);
+        super.seleccionarPaciente({});
         if (this.esEscaneado) {
             this.sinResultados.emit(false);
         } else {
