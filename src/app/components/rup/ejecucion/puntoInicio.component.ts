@@ -178,7 +178,7 @@ export class PuntoInicioComponent implements OnInit {
                 unPacientePresente.turno = turno;
                 unPacientePresente.tipoPrestacion = turno.tipoPrestacion;
                 // El estado para pacientes que aún no dieron asistencia es Programado
-                unPacientePresente.estado = 'Programado';
+                unPacientePresente.estado = 'programado';
                 unPacientePresente.fecha = turno.horaInicio;
                 unPacientePresente.profesionales = agenda.profesionales;
                 // Cargo el tipo de prestacion y el paciente del turno
@@ -189,7 +189,7 @@ export class PuntoInicioComponent implements OnInit {
                     unPacientePresente.estado = 'En espera';
                 } else {
                     if (turno.estado === 'suspendido') {
-                        unPacientePresente.estado = 'Suspendido';
+                        unPacientePresente.estado = 'suspendido';
                         unPacientePresente.fecha = turno.horaInicio;
                     }
                 }
@@ -232,7 +232,7 @@ export class PuntoInicioComponent implements OnInit {
             unPacientePresente.profesionales = [prestacion.estados[prestacion.estados.length - 1].createdBy];
 
             if (unPacientePresente.estado === 'pendiente') {
-                unPacientePresente.estado = 'Programado';
+                unPacientePresente.estado = 'programado';
             }
 
             unPacientePresente.idPrestacion = prestacion.id;
