@@ -21,7 +21,16 @@ export let EstadosAgenda: IEnum = {
     'pausada': {
         nombre: 'Pausada',
         class: 'warning'
+    },
+    'asistenciaCerrada': {
+        nombre: 'Asistencia Cerrada',
+        class: 'warning'
+    },
+    'codificada': {
+        nombre: 'Codificada',
+        class: 'danger'
     }
+
 };
 
 
