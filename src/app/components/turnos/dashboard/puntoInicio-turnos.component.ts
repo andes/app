@@ -53,7 +53,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
-        debugger;
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 

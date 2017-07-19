@@ -68,7 +68,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     }
 
     contacto(key) {
-        let index = this.paciente.contacto.findIndex(item => item.tipo == key);
+        let index = this.paciente.contacto.findIndex(item => item.tipo === key);
         if (index >= 0) {
             return this.paciente.contacto[index].valor;
         }
@@ -76,7 +76,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     }
 
     addContacto(key, value) {
-        let index = this.paciente.contacto.findIndex(item => item.tipo == key);
+        let index = this.paciente.contacto.findIndex(item => item.tipo === key);
         if (index >= 0) {
             return this.paciente.contacto[index].valor = value;
         } else {
