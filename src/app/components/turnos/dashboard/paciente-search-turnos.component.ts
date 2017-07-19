@@ -20,6 +20,8 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
     @Output() createUpdate: EventEmitter<any> = new EventEmitter<any>();
 
+    pacienteSeleccionado = null;
+
     public operacionSeleccionada(operacion, paciente) {
         if (operacion) {
             // Se habilita el calendario para seleccionar las agendas y permitir asignar turnos al paciente
@@ -29,11 +31,15 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     public seleccionar(paciente: any) {
         // Se muestran los datos básicos del paciente en el componente estadisticas Paciente
+        this.pacienteSeleccionado = paciente;
         this.selected.emit(paciente);
+        this.resultado = [paciente];
+        this.textoLibre = '';
     }
 
     public seleccionarPaciente(paciente: any) {
-        super.seleccionarPaciente(paciente);
+        this.pacienteSeleccionado = paciente;
+        super.seleccionarPaciente({});
         if (this.esEscaneado) {
             this.sinResultados.emit(false);
         } else {
@@ -42,6 +48,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     }
 
     public buscar() {
+        this.pacienteSeleccionado = null;
         super.buscar();
         if (!this.resultado || this.resultado.length === 0) {
             this.sinResultados.emit(true);

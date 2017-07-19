@@ -17,8 +17,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
-                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate" (blanqueaInput)="handleBlanqueo($event)"
-                            (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
+                            (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)"
+                            (operacion)="verificarOperacion($event)"></paciente-search-turnos>
                     </div>
                 </div>
             </plex-box>
@@ -32,6 +33,9 @@
                 <div *ngIf="showMostrarEstadisticasPacientes" type="info">
                     <estadisticas-pacientes [paciente]="paciente"></estadisticas-pacientes>
                 </div>
+                <div *ngIf="showIngresarSolicitud" type="info">
+                    <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)"></solicitud-turno-ventanilla>
+                </div>
                 <div *ngIf="showMostrarTurnosPaciente" type="info">
                     <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
                 </div>
@@ -42,7 +46,7 @@
         </div>
     </div>
     <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
-    para una mejor visualizacion de la carga de datos -->  
+    para una mejor visualizacion de la carga de datos -->
     <div class="row" *ngIf="showCreateUpdate">
         <div class="col-12">
             <div class="panel panel-default">
@@ -54,9 +58,9 @@
 </section>
 
 <!--Footer-->
-<footer *ngIf="paciente && showDashboard">
+<!-- <footer *ngIf="paciente && showDashboard">
     <plex-button icon="arrow-left" (click)="cancelar()" label="cancelar" type="danger"></plex-button>
-</footer>
+</footer> -->
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" (cancelarDarTurno)="cancelarDarTurno()"></dar-turnos>

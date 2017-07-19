@@ -8,8 +8,9 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
-// import { enumToArray } from '../../../../utils/enums';
-// import { PrioridadesPrestacion } from './../../enums';
+
+// Interfaces
+import { IPaciente } from './../../../../interfaces/IPaciente';
 
 @Component({
     selector: 'solicitud-turno-ventanilla',
@@ -20,6 +21,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
+    @Input('paciente') paciente: IPaciente;
     @Output() cancelarSolicitudVentanilla = new EventEmitter<boolean>();
 
     public autorizado = false;
@@ -39,7 +41,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
-
+        debugger;
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
         // No está autorizado para ver esta pantalla
@@ -53,16 +55,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'pendiente'
             });
 
-            // PACIENTE ACá NATIIIIII
-            this.modelo.paciente = {
-                '_id': '586e6e8427d3107fde10fa11',
-                'documento': '39083443',
-                'nombre': 'MONICA AINARA',
-                'apellido': 'CARRASCO',
-                'sexo': 'femenino',
-                'fechaNacimiento': '1995-10-14T03:00:00.000Z',
-                'telefono': '2995153807'
-            };
+            this.modelo.paciente = this.paciente;
 
         }
     }

@@ -12,23 +12,26 @@
                 <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                 </div>
-                <!--Tabla de resultados por SimpleQuery -->
+                <!--Tabla de resultados -->
                 <table *ngIf="resultado && resultado.length" class="table table-striped">
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
                             <td>{{this.paciente | paciente}} <br> | <b>D.N.I.</b> <span>{{paciente.documento | number}}</span>                                | <b>Fecha de Nacimiento</b> <span>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>                                | <b>Sexo</b> <span>{{paciente.sexo}}</span>
                             </td>
                             <td>
-                                <plex-button title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado"  title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
                             </td>
                             <td>
-                                <plex-button title="Anulación de Turno" icon="calendar-remove" (click)="operacionSeleccionada('anulacionTurno', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Ingresar Solicitud" icon="open-in-app" (click)="operacionSeleccionada('ingresarSolicitud', paciente)" ></plex-button>
                             </td>
                             <td>
-                                <plex-button title="Registro de Asistencia" icon="account-check" (click)="operacionSeleccionada('registrarAsistencia', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Anulación de Turno" icon="calendar-remove" (click)="operacionSeleccionada('anulacionTurno', paciente)"></plex-button>
                             </td>
                             <td>
-                                <plex-button title="Activar Apps" icon="cellphone-android" (click)="operacionSeleccionada('activarApp', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Registro de Asistencia" icon="account-check" (click)="operacionSeleccionada('registrarAsistencia', paciente)"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Activar Apps" icon="cellphone-android" (click)="operacionSeleccionada('activarApp', paciente)"></plex-button>
                             </td>
                         </tr>
                     </tbody>

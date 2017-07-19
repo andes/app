@@ -31,6 +31,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showMostrarEstadisticasAgendas = true;
     public showMostrarEstadisticasPacientes = false;
     public showActivarApp = false;
+    public showIngresarSolicitud = false;
     public paciente;
     public autorizado = false;
     operacionTurnos = '';
@@ -53,7 +54,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
-        debugger;
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
@@ -75,6 +75,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         } else {
             this.showMostrarEstadisticasAgendas = false;
             this.showMostrarEstadisticasPacientes = false;
+            this.showIngresarSolicitud = false;
             this.seleccion = paciente;
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
@@ -121,20 +122,29 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showActivarApp = false;
         switch (operacion) {
             case 'darTurno':
-                this.paciente = paciente;
-                this.showDarTurnos = true;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
+                this.showIngresarSolicitud = false;
+                this.paciente = paciente;
+                this.showDarTurnos = true;
+                break;
+            case 'ingresarSolicitud':
+                this.paciente = paciente;
+                this.showIngresarSolicitud = true;
+                this.showMostrarTurnosPaciente = false;
+                this.showMostrarEstadisticasPacientes = false;
                 break;
             case 'anulacionTurno':
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
+                this.showIngresarSolicitud = false;
                 this.operacionTurnos = 'anulacionTurno';
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'registrarAsistencia':
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
+                this.showIngresarSolicitud = false;
                 this.operacionTurnos = 'registrarAsistencia';
                 this.showMostrarTurnosPaciente = true;
                 break;
@@ -143,6 +153,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showMostrarTurnosPaciente = false;
+                this.showIngresarSolicitud = false;
                 this.showActivarApp = true;
                 break;
         }
@@ -163,6 +174,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
         }
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
+        this.showMostrarTurnosPaciente = false;
+    }
+
+    cancelarSolicitudVentanilla() {
+        this.showDashboard = true;
+        this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
+        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarTurnosPaciente = false;
     }
 
