@@ -55,17 +55,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'pendiente'
             });
 
-            // PACIENTE ACá NATIIIIII
-            // this.modelo.paciente = {
-            //     '_id': '586e6e8427d3107fde10fa11',
-            //     'documento': '39083443',
-            //     'nombre': 'MONICA AINARA',
-            //     'apellido': 'CARRASCO',
-            //     'sexo': 'femenino',
-            //     'fechaNacimiento': '1995-10-14T03:00:00.000Z',
-            //     'telefono': '2995153807'
-            // };
-
             this.modelo.paciente = this.paciente;
 
         }

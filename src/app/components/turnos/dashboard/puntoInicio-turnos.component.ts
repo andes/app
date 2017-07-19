@@ -75,6 +75,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         } else {
             this.showMostrarEstadisticasAgendas = false;
             this.showMostrarEstadisticasPacientes = false;
+            this.showIngresarSolicitud = false;
             this.seleccion = paciente;
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
@@ -121,10 +122,11 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showActivarApp = false;
         switch (operacion) {
             case 'darTurno':
-                this.paciente = paciente;
-                this.showDarTurnos = true;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
+                this.showIngresarSolicitud = false;
+                this.paciente = paciente;
+                this.showDarTurnos = true;
                 break;
             case 'ingresarSolicitud':
                 this.paciente = paciente;
@@ -135,12 +137,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
             case 'anulacionTurno':
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
+                this.showIngresarSolicitud = false;
                 this.operacionTurnos = 'anulacionTurno';
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'registrarAsistencia':
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
+                this.showIngresarSolicitud = false;
                 this.operacionTurnos = 'registrarAsistencia';
                 this.showMostrarTurnosPaciente = true;
                 break;
@@ -149,6 +153,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showMostrarTurnosPaciente = false;
+                this.showIngresarSolicitud = false;
                 this.showActivarApp = true;
                 break;
         }
@@ -169,6 +174,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
         }
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
+        this.showMostrarTurnosPaciente = false;
+    }
+
+    cancelarSolicitudVentanilla() {
+        this.showDashboard = true;
+        this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
+        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarTurnosPaciente = false;
     }
 

@@ -34,7 +34,7 @@
                     <estadisticas-pacientes [paciente]="paciente"></estadisticas-pacientes>
                 </div>
                 <div *ngIf="showIngresarSolicitud" type="info">
-                    <solicitud-turno-ventanilla [paciente]="paciente"></solicitud-turno-ventanilla>
+                    <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)"></solicitud-turno-ventanilla>
                 </div>
                 <div *ngIf="showMostrarTurnosPaciente" type="info">
                     <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
@@ -58,9 +58,9 @@
 </section>
 
 <!--Footer-->
-<footer *ngIf="paciente && showDashboard">
+<!-- <footer *ngIf="paciente && showDashboard">
     <plex-button icon="arrow-left" (click)="cancelar()" label="cancelar" type="danger"></plex-button>
-</footer>
+</footer> -->
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" (cancelarDarTurno)="cancelarDarTurno()"></dar-turnos>
