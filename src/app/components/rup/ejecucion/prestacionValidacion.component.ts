@@ -75,6 +75,10 @@ export class PrestacionValidacionComponent implements OnInit {
 
     }
 
+    /**
+     * Confirmamos validacion y guardamos
+     * @memberof PrestacionValidacionComponent
+     */
     validar() {
         this.plex.confirm("Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?", "Confirmar validación").then(validar => {
             if (!validar) {
@@ -134,6 +138,31 @@ export class PrestacionValidacionComponent implements OnInit {
                     }
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
+            }
+
+        });
+    }
+
+    romperValidacion() {
+        this.plex.confirm('Esta acción puede traer consecuencias 💀 ☠️💀 ☠️<br />¿Desea continuar?', "Romper validación").then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+
+                // hacemos el patch y luego creamos los planes
+                let cambioEstado: any = {
+                    op: 'romperValidacion',
+                    estado: { tipo: 'ejecucion' }
+                };
+
+                // Vamos a cambiar el estado de la prestación a ejecucion
+                this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+
+                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
 

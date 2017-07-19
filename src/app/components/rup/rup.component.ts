@@ -15,6 +15,7 @@ import {
     OnInit, OnDestroy,
     EventEmitter
 } from '@angular/core';
+import { ProfesionalService } from "../../services/profesional.service";
 
 @Component({
     moduleId: 'RupModule',
@@ -29,7 +30,6 @@ export class RupComponent implements OnInit, OnDestroy {
     @Input() elementoRUP: any;
     @Input() datosIngreso: any;
     @Input() soloValores: Boolean = null;
-    @Input() conceptoSnomed: any;
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // array de prestaciones que se estan ejecutando actualmente en el proceso
@@ -62,7 +62,8 @@ export class RupComponent implements OnInit, OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private pacienteService: PacienteService,
         public servicioElementosRUP: ElementosRupService, // Publico por que lo usa la molecula
-        public servicioObservarDatos: ObservarDatosService
+        public servicioObservarDatos: ObservarDatosService,
+        public serviceProfesional: ProfesionalService
     ) {
     }
 
@@ -122,7 +123,6 @@ export class RupComponent implements OnInit, OnDestroy {
         this.componentReference.instance.elementoRUP = this.elementoRUP;
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
-        this.componentReference.instance.conceptoSnomed = this.conceptoSnomed;
 
         // En caso de haber valores cargados en los datos de ingreso
         // ejecutamos el evento para devolverlos y armar los valores

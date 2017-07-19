@@ -113,7 +113,7 @@ export class PuntoInicioComponent implements OnInit {
      * @memberof PuntoInicioComponent
      */
     TraetodasLasPrestacionesFiltradas(params) {
-
+        debugger;
         let fechaActual = new Date();
         let fechaDesde = fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = fechaActual.setHours(23, 59, 0, 0);
@@ -280,7 +280,6 @@ export class PuntoInicioComponent implements OnInit {
             solicitud: {
                 tipoPrestacion: conceptoSnomed,
                 fecha: new Date(),
-                turno: null,
                 hallazgos: [],
                 prestacionOrigen: null,
                 // profesional logueado
@@ -294,6 +293,7 @@ export class PuntoInicioComponent implements OnInit {
             },
             ejecucion: {
                 fecha: new Date(),
+                turno: null,
                 registros: [],
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
@@ -368,7 +368,6 @@ export class PuntoInicioComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: unPacientePresente.tipoPrestacion,
                     fecha: new Date(),
-                    turno: unPacientePresente.turno.id,
                     hallazgos: [],
                     prestacionOrigen: null,
                     // profesional logueado
@@ -383,6 +382,7 @@ export class PuntoInicioComponent implements OnInit {
                 ejecucion: {
                     fecha: new Date(),
                     registros: [],
+                    turno: unPacientePresente.turno.id,
                     // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
                     // organizacion desde la que se solicita la prestacion
