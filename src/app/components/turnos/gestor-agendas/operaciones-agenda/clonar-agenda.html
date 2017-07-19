@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-12">
                             <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}} - </span>
-                            <br /><b>Prestaciones: </b><span *ngFor="let prestacion of agenda.prestaciones">{{prestacion.nombre}} - </span>
+                            <br /><b>Tipos Prestaciones: </b><span *ngFor="let prestacion of agenda.tipoPrestaciones">{{prestacion.nombre}} - </span>
                             <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
                         </div>
                     </div>
