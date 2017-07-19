@@ -236,7 +236,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     cerrarCodificacion() {
-        debugger;
         // Se verifica que todos los campos tengan el diagnostico codificado
         let turnoSinCodificar = null;
         turnoSinCodificar = this.turnos.find(t => {
