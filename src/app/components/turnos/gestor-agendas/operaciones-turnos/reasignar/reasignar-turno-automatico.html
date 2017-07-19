@@ -1,6 +1,6 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div *ngIf="agendasCandidatas?.length === 1 && agendasCandidatas[0].agendas?.length === 0">
+    <div *ngIf="agendasCandidatas[0].agendas?.length === 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
     </div>
     <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].turno">
@@ -9,7 +9,7 @@
                 <!--Turno-->
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
                 <div *ngIf="agendaCandidata?.agendas?.length > 0 && !agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
-                <div *ngIf="agendaCandidata?.agendas?.length === 0" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i></div>
+                <div *ngIf="agendaCandidata?.agendas?.length === 0 && !agendaCandidata?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i></div>
                 <div>
                     <b>Paciente: </b> {{ agendaCandidata?.turno.paciente | paciente }} | <small>DNI {{ agendaCandidata?.turno.paciente.documento | number }}</small>
                     <br>
