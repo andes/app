@@ -53,6 +53,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
+        debugger;
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
@@ -120,6 +121,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showActivarApp = false;
         switch (operacion) {
             case 'darTurno':
+                this.paciente = paciente;
                 this.showDarTurnos = true;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
@@ -154,8 +156,13 @@ export class PuntoInicioTurnosComponent implements OnInit {
     cancelarDarTurno() {
         this.showDarTurnos = false;
         this.showDashboard = true;
-        this.showMostrarEstadisticasAgendas = true;
-        this.showMostrarEstadisticasPacientes = false;
+        if (this.paciente && this.paciente.id) {
+            this.selected.emit(this.paciente);
+            this.resultadoCreate = [this.paciente];
+
+        }
+        this.showMostrarEstadisticasAgendas = false;
+        this.showMostrarEstadisticasPacientes = true;
         this.showMostrarTurnosPaciente = false;
     }
 

@@ -1,16 +1,21 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit, HostBinding } from '@angular/core';
+// import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
+import { enumToArray } from '../../../../utils/enums';
+import { EstadosAsistencia } from './../../enums';
+import { EstadosAgenda } from './../../enums';
+
+// Interfaces
+import { IPaciente } from './../../../../interfaces/IPaciente';
+
+// Servicios
+import { PacienteService } from './../../../../services/paciente.service';
+import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from './../../../../services/term/cie10.service';
-import {enumToArray} from '../../../../utils/enums';
-import { EstadosAsistencia } from './../../enums';
-import { TurnoService } from './../../../../services/turnos/turno.service';
-import { IPaciente } from './../../../../interfaces/IPaciente';
-import { PacienteService } from './../../../../services/paciente.service';
 
 
 @Component({
@@ -29,7 +34,14 @@ export class RevisionAgendaComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
         }
-        // this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
+        this.estadoAsistenciaCerrada = this.estadosAgendaArray.find(e => {
+            return e.nombre === 'Asistencia Cerrada';
+        });
+        this.estadoCodificado = this.estadosAgendaArray.find(e => {
+            return e.nombre === 'Codificada';
+        });
+        this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoAsistenciaCerrada.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
+        this.enableCodificada = (this._agenda.estado === this.estadoAsistenciaCerrada.id);
     }
     get agenda(): any {
         return this._agenda;
@@ -45,18 +57,23 @@ export class RevisionAgendaComponent implements OnInit {
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
-    nuevoCodSecundario: any;
+    nuevoCodigo: any;
     codigoPrincipal = [];
     paciente: IPaciente;
     cambioTelefono = false;
-    showCreateUpdate = false;
     turnoTipoPrestacion: any = {};
-    public showRegistrosTurno = false;
     pacientesSearch = false;
     telefono: String = '';
+    diagnosticos = [];
+    enableCodificada = false;
+    enableAsistenciaCerrada = true;
+    public showRegistrosTurno = false;
     public seleccion = null;
     public esEscaneado = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
+    private estadoAsistenciaCerrada;
+    private estadoCodificado;
+    public estadosAgendaArray = enumToArray(EstadosAgenda);
 
 
     constructor(public plex: Plex,
@@ -64,17 +81,11 @@ export class RevisionAgendaComponent implements OnInit {
         public auth: Auth,
         private serviceCie10: Cie10Service,
         public serviceTurno: TurnoService,
+        public serviceAgenda: AgendaService,
         public servicePaciente: PacienteService) {
     }
 
     ngOnInit() {
-        if (this.turnoSeleccionado && !this.turnoSeleccionado.diagnosticoPrincipal) {
-            this.turnoSeleccionado.diagnosticoPrincipal = {
-                codificacion: {},
-                ilegible: false,
-                primeraVez: false,
-            };
-        }
     }
 
     buscarPaciente() {
@@ -107,24 +118,11 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
-    afterCreateUpdate(paciente) {
-        this.showCreateUpdate = false;
-        this.showRegistrosTurno = true;
-
-        if (paciente) {
-            this.paciente = paciente;
-            // this.asignarPaciente(paciente);
-        } else {
-            this.buscarPaciente();
-        }
-    }
-
     onReturn(paciente: IPaciente): void {
         if (paciente.id) {
             this.paciente = paciente;
             this.showRegistrosTurno = true;
             this.pacientesSearch = false;
-            // this.asignarPaciente(paciente);
             window.setTimeout(() => this.pacientesSearch = false, 100);
         } else {
             this.seleccion = paciente;
@@ -132,34 +130,28 @@ export class RevisionAgendaComponent implements OnInit {
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
             this.pacientesSearch = false;
-            this.showCreateUpdate = true;
         }
     }
 
 
     seleccionarTurno(turno, bloque) {
+        this.diagnosticos = [];
         this.paciente = null;
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
 
         } else {
+            this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
             this.bloqueSeleccionado = bloque;
-            this.showCreateUpdate = false;
             this.pacientesSearch = false;
-            this.codigoPrincipal = this.turnoSeleccionado.diagnosticoPrincipal;
-            if (!this.turnoSeleccionado.diagnosticoPrincipal) {
-                this.turnoSeleccionado.diagnosticoPrincipal = {
-                    codificacion: {},
-                    ilegible: false,
-                    primeraVez: false,
-                };
-            } else {
-                delete this.turnoSeleccionado.diagnosticoPrincipal.codificacion.$order;
+            if (turno.diagnosticoPrincipal && turno.diagnosticoPrincipal.codificacion) {
+                this.diagnosticos.push(turno.diagnosticoPrincipal);
             }
-            this.codigoPrincipal = [this.turnoSeleccionado.diagnosticoPrincipal.codificacion];
+            if (turno.diagnosticoSecundario && turno.diagnosticoSecundario.length) {
+                this.diagnosticos = this.diagnosticos.concat(turno.diagnosticoSecundario);
+            }
         }
-
     }
 
     seleccionarAsistencia(asistencia, i) {
@@ -169,6 +161,14 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     asistenciaSeleccionada(asistencia) {
+        if (asistencia.id === 'asistio') {
+            if (!this.turnoSeleccionado.diagnosticoPrincipal) {
+                this.turnoSeleccionado.diagnosticoPrincipal = {
+                    codificacion: null,
+                    ilegible: false
+                };
+            }
+        }
         return (this.turnoSeleccionado.asistencia === asistencia.id);
     }
 
@@ -178,25 +178,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     buscarCodificacion(event) {
-        let diagnostico;
-        if (event && event.value) {
-            diagnostico = event.value;
-            delete diagnostico.$order;
-            this.turnoSeleccionado.diagnosticoPrincipal.codificacion = diagnostico;
-        } else {
-            if (event && event.target && event.target.value) {
-                let query = {
-                    nombre: event.target.value
-                };
-                this.serviceCie10.get(query).subscribe(result => { this.codigoPrincipal = [...result]; });
-            } else {
-                this.codigoPrincipal = [];
-            }
-        }
-    }
-
-
-    buscarCodificacionSecundaria(event) {
         let query = {
             nombre: event.query
         };
@@ -207,24 +188,76 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
-    agregarDiagnosticoSecundario() {
-        let nuevoDiagnostico = { codificacion: null };
-        if (this.nuevoCodSecundario) {
-            nuevoDiagnostico.codificacion = this.nuevoCodSecundario;
-            this.turnoSeleccionado.diagnosticoSecundario.push(nuevoDiagnostico);
+    agregarDiagnostico() {
+        let nuevoDiagnostico = { codificacion: null, ilegible: false };
+        if (this.nuevoCodigo) {
+            nuevoDiagnostico.codificacion = this.nuevoCodigo;
+            delete nuevoDiagnostico.codificacion.$order;
+            this.diagnosticos.push(nuevoDiagnostico);
+            this.nuevoCodigo = null;
         }
     }
 
     borrarDiagnostico(index) {
-        this.turnoSeleccionado.diagnosticoSecundario.splice(index, 1);
+        if (index === 0) {
+            this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
+        }
+        this.diagnosticos.splice(index, 1);
     }
 
-
     marcarIlegible() {
-        if (this.turnoSeleccionado && this.turnoSeleccionado.diagnosticoPrincipal && this.turnoSeleccionado.diagnosticoPrincipal.ilegible) {
-            this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
-            this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+        this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
+        this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+        this.diagnosticos = [];
+        this.turnoSeleccionado.diagnosticoSecundario = [];
+    }
+
+    cerrarAsistencia() {
+        // Se verifica que todos los campos tengan asistencia chequeada
+        let turnoSinVerificar = null;
+        turnoSinVerificar = this.turnos.find(t => {
+            return (t.paciente && !t.asistencia);
+        });
+
+        if (turnoSinVerificar) {
+            this.plex.alert('No se puede cerrar la asistencia debido a que existen turnos que no fueron verificados', 'Cerrar Asistencia');
+        } else {
+            // Se cambia de estado la agenda a asistenciaCerrada
+            let patch = {
+                'op': this.estadoAsistenciaCerrada.id,
+                'estado': this.estadoAsistenciaCerrada.id
+            };
+            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Asistencia Cerrada');
+                this.enableAsistenciaCerrada = false;
+                this.enableCodificada = true;
+            });
         }
+    }
+
+    cerrarCodificacion() {
+        debugger;
+        // Se verifica que todos los campos tengan el diagnostico codificado
+        let turnoSinCodificar = null;
+        turnoSinCodificar = this.turnos.find(t => {
+            return (t.paciente && t.asistencia && (!t.diagnosticoPrincipal || (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible)));
+        });
+
+        if (turnoSinCodificar) {
+            this.plex.alert('No se puede cerrar la codificación debido a que existen turnos que no fueron chequeados', 'Cerrar Codificación');
+        } else {
+            // Se cambia de estado la agenda a asistenciaCerrada
+            let patch = {
+                'op': this.estadoCodificado.id,
+                'estado': this.estadoCodificado.id
+            };
+            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Codificación Cerrada');
+                this.enableAsistenciaCerrada = false;
+                this.enableCodificada = false;
+            });
+        }
+
     }
 
     cancelar() {
@@ -246,6 +279,11 @@ export class RevisionAgendaComponent implements OnInit {
             idBloque: this.bloqueSeleccionado.id,
             turno: this.turnoSeleccionado,
         };
+
+        if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
+            this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
+            this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
+        }
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {

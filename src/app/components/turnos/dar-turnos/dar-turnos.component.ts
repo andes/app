@@ -858,7 +858,15 @@ export class DarTurnosComponent implements OnInit {
                 }
             };
         });
-        this.buscarPaciente();
+
+        if (this._pacienteSeleccionado) {
+            // this.router.navigate(['./' + 'puntoInicioTurnos']);
+            this.cancelarDarTurno.emit(true);
+            return false;
+        } else {
+            this.buscarPaciente();
+        }
+        // this.buscarPaciente();
     }
 
     enviarSMS(paciente: any, mensaje) {
@@ -990,7 +998,7 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (this._pacienteSeleccionado) {
-            this.router.navigate(['./' + 'puntoInicioTurnos']);
+           // this.router.navigate(['./' + 'puntoInicioTurnos']);
             this.cancelarDarTurno.emit(true);
         } else {
             this.buscarPaciente();
