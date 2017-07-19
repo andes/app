@@ -1,0 +1,87 @@
+<form>
+
+    <fieldset>
+        <legend>Cargar Solicitud</legend>
+        <div class="row">
+            <div class="col-8">
+                <label>Paciente</label> asdlkasd
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <span *ngIf="true">asljkdlkasd</span>
+            </div>
+        </div>
+
+        <!-- Fecha Origen -->
+        <div class="row">
+            <div class="col-12">
+                <plex-datetime type="date" [(ngModel)]="modelo.fechaSolicitud" [required]="true" name="modelo.fechaSolicitud" label="Fecha de solicitud"></plex-datetime>
+            </div>
+        </div>
+
+        <!-- Organización Origen  -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.organizacionOrigen" name="organizacionOrigen" (getData)="loadOrganizacion($event)" label="Organización origen"
+                    placeholder="Seleccione la organización" labelField="nombre">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Profesional Origen -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.profesionalDestino" name="profesionalOrigen" (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                    placeholder="Seleccione el profesional" labelField="apellido + ' ' + nombre">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Tipo Prestación  -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación solicitada"
+                    name="tipoPrestacion" label="Tipo de Prestación">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Prioridad -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.prioridad" [data]="prioridadesPrestacion" placeholder="Prioridad" name="prioridad" label="Prioridad">
+                </plex-select>
+            </div>
+        </div>
+
+
+        <!-- DESTINO  -->
+
+        <!-- Organización Destino  -->
+        <!-- <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.organizacionOrigen" name="organizacionOrigen" (getData)="loadOrganizacion($event)" label="Organización origen"
+                    placeholder="Seleccione la organización" labelField="nombre">
+                </plex-select>
+            </div>
+        </div> -->
+
+
+        <div class="row">
+            <div class="col-12">
+                <plex-text [(ngModel)]="modelo.motivoSolicitud" label="Notas / Diagnóstico / Motivo" name="motivoSolicitud" multiline="true"></plex-text>
+                <!-- <label for="">Notas / Diagnóstico / Motivo</label>
+                <textarea name="motivoSolicitud" id="" cols="30" rows="10">
+                    {{ modelo.solicitud.motivoSolicitud ? modelo.solicitud.motivoSolicitud : '' }}
+                </textarea> -->
+            </div>
+        </div>
+        <div class="mt-3 float-right">
+            <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button type="success" icon="mdi-content-save" label="Guardar" (click)="guardarSolicitud()" title="Guardar Solicitud">
+            </plex-button>
+        </div>
+    </fieldset>
+</form>

@@ -9,7 +9,7 @@ import { ObservarDatosService } from '../../../../services/rup/observarDatos.ser
 export class IndiceDeMasaCorporalComponent extends Formula {
 
   ngOnInit() {
-    this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : null;
+    this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
     this.servicioObservarDatos.getDato$('peso').subscribe(
       peso => {
         this.calculoIMC();
@@ -92,7 +92,7 @@ export class IndiceDeMasaCorporalComponent extends Formula {
           talla = talla / 100; // Paso a metros;
           imc = peso / Math.pow(talla, 2);
           this.mensaje.texto = "";
-          this.data[this.tipoPrestacion.key] = imc.toFixed(2);
+          this.data[this.elementoRUP.key] = imc.toFixed(2);
           this.evtData.emit(this.data);
           break;
         // Mostramos el  Alerta de talla

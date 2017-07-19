@@ -41,6 +41,7 @@ import { PanelEspacioComponent } from './components/turnos/configuracion/espacio
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
+import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -48,7 +49,6 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
@@ -67,54 +67,55 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 
 const appRoutes: Routes = [
-  // Tablas maestras
-  { path: 'organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
-  { path: 'profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
-  { path: 'especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
-  { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
-  { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
+    // Tablas maestras
+    { path: 'organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+    { path: 'profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
+    { path: 'especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
+    { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+    { path: 'espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
+    { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
 
-  { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
-  // Turnos
-  { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
-  { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
-  { path: 'panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingGuard] },
-  { path: 'agendas', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
-  { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
-  { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
-  { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
-  { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
+    // Turnos
+    { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
+    { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
+    { path: 'panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingGuard] },
+    { path: 'agendas', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
+    { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
+    { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
+    { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+    { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+    { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
 
-  // Auditoria
-  { path: 'auditoria', component: AuditoriaComponent },
-  { path: 'auditoria2', component: Auditoria2Component },
-  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
+    // Auditoria
+    { path: 'auditoria', component: AuditoriaComponent },
+    // { path: 'auditoria1', component: Auditoria1Component },
+    { path: 'auditoria2', component: Auditoria2Component },
+    { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
 
-  // Usuario
-  { path: 'busquedaUsuario', component: BusquedaUsuarioComponent },
+    // RUP
+    // Prestación Clínica General de Medicina
+    { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
+    { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
+    { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
+    { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
+    // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
-  // RUP
-  // Prestación Clínica General de Medicina
-  { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
-  // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
+    // Auditoría RUP (prestacionPaciente)
+    { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
 
-  // Auditoría RUP (prestacionPaciente)
-  { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
+    // Llaves
+    { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
 
-  // Llaves
-  { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
+    // TEMP: Solicitud Papelito
+    { path: 'papelito', component: SolicitudTurnoVentanillaComponent, canActivate: [RoutingGuard] },
 
-  // Principal
-  { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
-  { path: 'login', component: LoginComponent },
-  { path: 'logout', redirectTo: 'login', },
-  { path: '**', redirectTo: 'inicio' }
+    // Principal
+    { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
+    { path: 'login', component: LoginComponent },
+    { path: 'logout', redirectTo: 'login', },
+    { path: '**', redirectTo: 'inicio' }
 ];
 
 export const appRoutingProviders: any[] = [];

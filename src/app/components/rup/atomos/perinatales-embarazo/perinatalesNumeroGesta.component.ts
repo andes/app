@@ -8,15 +8,15 @@ import { IPaciente } from "../../../../interfaces/IPaciente";
     templateUrl: 'perinatalesNumeroGesta.html'
 })
 export class PerinatalesNumeroGestaComponent extends Atomo {
-   
+
     getMensajes() {
         let NroGesta;
         let mensaje: any = {
             texto: '',
             class: 'outline-danger'
         };
-        NroGesta = this.data[this.tipoPrestacion.key];
+        NroGesta = this.data[this.elementoRUP.key];
         if (NroGesta === 1) { mensaje.texto = 'Primigesta' }
         return mensaje;
-    } 
+    }
 }

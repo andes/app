@@ -1,9 +1,8 @@
-<div *ngIf="tipoPrestacion.ejecucion[0] && tipoPrestacion.ejecucion[0].id">
+<div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id">
     <div class="row">
-        <ng-container *ngFor="let tp of tipoPrestacion.ejecucion">
+        <ng-container *ngFor="let tp of elementoRUP.requeridos">
             <div class="col-6" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
-                <rup #rup [soloValores]="soloValores" [tipoPrestacion]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)"
-                    [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
+                <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
                 </rup>
             </div>
         </ng-container>

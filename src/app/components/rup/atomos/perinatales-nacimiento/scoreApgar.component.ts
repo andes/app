@@ -9,11 +9,11 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 export class ScoreApgarComponent extends Atomo {
 
     ngOnInit() {
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {
             valor: null,
             minutos: null
         };
-        if (this.data[this.tipoPrestacion.key].valor) {
+        if (this.data[this.elementoRUP.key].valor) {
             this.devolverValores();
         }
     }
@@ -25,17 +25,17 @@ export class ScoreApgarComponent extends Atomo {
             class: 'outline-danger'
         };
 
-        if (this.data[this.tipoPrestacion.key]) {
+        if (this.data[this.elementoRUP.key]) {
             //Validaciones con los mensajes.
-            if (this.data[this.tipoPrestacion.key].valor >= 7 && this.data[this.tipoPrestacion.key].valor <= 10) {
+            if (this.data[this.elementoRUP.key].valor >= 7 && this.data[this.elementoRUP.key].valor <= 10) {
                 mensaje.texto = "Excelente";
                 mensaje.class = "outline-succes";
             }
-            if (this.data[this.tipoPrestacion.key].valor >= 4 && this.data[this.tipoPrestacion.key].valor <= 6) {
+            if (this.data[this.elementoRUP.key].valor >= 4 && this.data[this.elementoRUP.key].valor <= 6) {
                 mensaje.texto = "Moderadamente Deprimido";
                 mensaje.class = "outline-warning";
             }
-            if (this.data[this.tipoPrestacion.key].valor >= 0 && this.data[this.tipoPrestacion.key].valor <= 3) {
+            if (this.data[this.elementoRUP.key].valor >= 0 && this.data[this.elementoRUP.key].valor <= 3) {
                 mensaje.texto = "Severamente Deprimido";
                 mensaje.class = "outline-danger";
             }
