@@ -25,9 +25,6 @@
                 </div>
 
                 <div *ngIf="registros && registros.length">
-                    <pre>
-                        {{registros | json}}
-                    </pre>
                     <ng-container *ngFor="let elemento of registros; let i = index">
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length > 1">

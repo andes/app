@@ -25,4 +25,15 @@
         <b> Autocitado: </b>
         <br /> {{data[elementoRUP.key].autocitado}}
     </p>
+    <div  *ngIf="data[elementoRUP.key].profesionales">
+
+        <p>
+            <b>Profesional/es:</b>
+            <br />
+            <span *ngFor="let profesional of data[elementoRUP.key].profesionales">
+                {{profesional.apellido}}, {{profesional.nombre}}
+                <br />
+            </span>
+        </p>
+    </div>
 </div>

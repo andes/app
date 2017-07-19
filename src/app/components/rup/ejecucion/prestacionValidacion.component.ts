@@ -109,7 +109,8 @@ export class PrestacionValidacionComponent implements OnInit {
                                     fecha: new Date(),
                                     turno: null,
                                     hallazgos: [],
-                                    prestacionOrigen: null,
+                                    registros: [],
+                                    prestacionOrigen: this.prestacion.id,
                                     // profesional logueado
                                     profesional:
                                     {
@@ -125,6 +126,15 @@ export class PrestacionValidacionComponent implements OnInit {
                                 }
                             };
 
+                            let nuevoRegistro: any = {
+                                concepto: plan.concepto,
+                                destacado: plan.destacado,
+                                relacionadoCon: plan.relacionadoCon,
+                                tipo: plan.tipo,
+                                valor: plan.valor
+                            };
+                            nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
+debugger;
                             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                                 this.plex.alert('Prestación creada.').then(() => {
                                     // this.router.navigate(['/rup/ejecucion', prestacion.id]);
