@@ -181,7 +181,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'codificada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
@@ -206,7 +206,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'codificada';
         }).length <= 0;
     }
 
@@ -225,7 +225,7 @@ export class BotonesAgendaComponent implements OnInit {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         return this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.nominalizada && moment(agenda.horaInicio).format() <= moment(today).format());
+            return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
         }).length > 0;
     }
 
