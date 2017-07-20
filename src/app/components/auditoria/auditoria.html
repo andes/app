@@ -23,7 +23,7 @@
                         </h3>
                     </header>
                   <div class="col"> 
-                    <div class="col">
+                    <div class="col" *ngIf="pacienteSelected.foto">
                             <img class="foto" src="{{pacienteSelected.foto}}">
                     </div>
                     <div class="row" *ngIf="pacienteSelected.apellido">
