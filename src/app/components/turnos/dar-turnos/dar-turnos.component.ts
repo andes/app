@@ -37,6 +37,7 @@ export class DarTurnosComponent implements OnInit {
     private _pacienteSeleccionado: any;
     private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
     paciente: IPaciente;
+    private opciones: any = {};
 
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
@@ -50,6 +51,11 @@ export class DarTurnosComponent implements OnInit {
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
+        this.paciente = this._solicitudPrestacion.paciente;
+        // this._solicitudPrestacion.solicitud.registros[0].concepto['$order'] = 1;
+        // console.log('aca ', this._solicitudPrestacion.solicitud.registros[0].concepto);
+        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+        // this.actualizar('');
     }
     get solicitudPrestacion() {
         return this._solicitudPrestacion;
@@ -63,11 +69,11 @@ export class DarTurnosComponent implements OnInit {
 
     public agenda: IAgenda;
     public agendas: IAgenda[];
-    public opciones = {
-        fecha: new Date(),
-        tipoPrestacion: null,
-        profesional: null,
-    };
+    // public opciones = {
+    //     fecha: new Date(),
+    //     tipoPrestacion: null,
+    //     profesional: null,
+    // };
     llaveTP: any;
     estadoT: EstadosDarTurnos;
 
@@ -129,6 +135,7 @@ export class DarTurnosComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
+        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
 
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
@@ -136,12 +143,7 @@ export class DarTurnosComponent implements OnInit {
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
-        if (this._solicitudPrestacion) {
-            this.paciente = this._solicitudPrestacion.paciente;
-            this.opciones.tipoPrestacion = this._solicitudPrestacion.tipoPrestacion;
-            this.pacientesSearch = false;
-            this.showDarTurnos = true;
-        }
+
     }
 
     loadTipoPrestaciones(event) {
@@ -226,8 +228,14 @@ export class DarTurnosComponent implements OnInit {
 
     cargarDatosLlaves(event) {
         if (this.llaves.length === 0) {
+
             event.callback(this.filtradas);
-            this.actualizar('sinFiltro');
+            if (!this._solicitudPrestacion) {
+                this.actualizar('sinFiltro');
+            } else {
+                this.actualizar('');
+            }
+
         } else {
             this.llaves.forEach((cadaLlave, indiceLlave) => {
                 let solicitudVigente = false;
@@ -326,6 +334,11 @@ export class DarTurnosComponent implements OnInit {
      * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
+        if (this._solicitudPrestacion) {
+            this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+            console.log('entro aca ', this.opciones.tipoPrestacion);
+
+        }
 
         // 1) Auth general (si puede ver esta pantalla)
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
@@ -352,6 +365,7 @@ export class DarTurnosComponent implements OnInit {
 
         } else {
             // Resetear opciones
+            console.log('ssdldslñslñadñdsla');
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
             params = {
@@ -611,6 +625,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarBusqueda(indice: number) {
+        // console.log("busquedas ", this.busquedas);
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === this.busquedas[indice].profesional);
         this.opciones.profesional = this.busquedas[indice].profesional;
@@ -986,7 +1001,7 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (this._pacienteSeleccionado) {
-           // this.router.navigate(['./' + 'puntoInicioTurnos']);
+            // this.router.navigate(['./' + 'puntoInicioTurnos']);
             this.cancelarDarTurno.emit(true);
         } else {
             this.buscarPaciente();

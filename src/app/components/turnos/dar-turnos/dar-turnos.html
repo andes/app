@@ -9,9 +9,12 @@
                     <header>
                         <div class="row align-items-center ">
                             <div class="col-4 ">
-                                <plex-select [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación "
+                                 <plex-select *ngIf="!_solicitudPrestacion" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación "
                                     (change)="filtrar() " name="tipoPrestacion">
-                                </plex-select>
+                                </plex-select> 
+                                 <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación "
+                                    (change)="filtrar() " name="tipoPrestacion" [readonly]="true">
+                                </plex-select> 
                             </div>
                             <div class="col-4 ">
                                 <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre "
