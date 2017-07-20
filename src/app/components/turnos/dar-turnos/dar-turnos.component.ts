@@ -34,18 +34,10 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 
 export class DarTurnosComponent implements OnInit {
 
-
-    private _reasignaTurnos: any;
     private _pacienteSeleccionado: any;
+    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
     paciente: IPaciente;
 
-    @Input('reasignar')
-    set reasignar(value: any) {
-        this._reasignaTurnos = value;
-    }
-    get reasignar(): any {
-        return this._reasignaTurnos;
-    }
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
@@ -53,6 +45,14 @@ export class DarTurnosComponent implements OnInit {
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
+    }
+
+    @Input('solicitudPrestacion')
+    set solicitudPrestacion(value: any) {
+        this._solicitudPrestacion = value;
+    }
+    get solicitudPrestacion() {
+        return this._solicitudPrestacion;
     }
 
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
@@ -124,20 +124,21 @@ export class DarTurnosComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
-        console.log('busquedas ', this.busquedas);
+        // console.log('busquedas ', this.busquedas);
 
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
 
-        if (this._reasignaTurnos) {
-            this.paciente = this._reasignaTurnos.paciente;
-            this.telefono = this.turno.paciente.telefono;
-
-        }
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
             this.paciente = this._pacienteSeleccionado;
+            this.pacientesSearch = false;
+            this.showDarTurnos = true;
+        }
+        if (this._solicitudPrestacion) {
+            this.paciente = this._solicitudPrestacion.paciente;
+            this.opciones.tipoPrestacion = this._solicitudPrestacion.tipoPrestacion;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
@@ -887,18 +888,6 @@ export class DarTurnosComponent implements OnInit {
                 if (err) {
                 }
             });
-    }
-
-    borrarTurnoAnterior() {
-        if (this._reasignaTurnos) {
-            let patch = {
-                'op': 'reasignarTurno',
-                'idAgenda': this._reasignaTurnos.idAgenda,
-                'idTurno': this._reasignaTurnos.idTurno
-            };
-
-            this.serviceAgenda.patch(this._reasignaTurnos.idAgenda, patch).subscribe();
-        }
     }
 
     buscarPaciente() {
