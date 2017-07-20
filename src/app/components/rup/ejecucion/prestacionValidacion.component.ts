@@ -134,7 +134,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                 valor: plan.valor
                             };
                             nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
-debugger;
+
                             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                                 this.plex.alert('Prestación creada.').then(() => {
                                     // this.router.navigate(['/rup/ejecucion', prestacion.id]);

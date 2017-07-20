@@ -196,7 +196,7 @@ export class PuntoInicioComponent implements OnInit {
 
                 // Buscar si existe una prestacion asociada al turno
                 let prestacionTurno = this.todasLasPrestaciones.find(x => {
-                    if (x.solicitud.turno && (x.solicitud.turno.toString() === turno._id.toString())) {
+                    if (x.ejecucion.turno && (x.ejecucion.turno.toString() === turno._id.toString())) {
                         return x;
                     }
                 });
@@ -216,15 +216,16 @@ export class PuntoInicioComponent implements OnInit {
             });
         });
 
-
+debugger;
         // Buscamos los que solo tienen prestacion y no tienen turno
         let prestacionesSinTurno = this.todasLasPrestaciones.filter(prestacion => {
-            if (prestacion.solicitud.turno === null) {
+            if (prestacion.ejecucion.turno === null) {
                 return prestacion;
             }
         });
 
         prestacionesSinTurno.forEach(prestacion => {
+            debugger;
             unPacientePresente.idAgenda = null;
             unPacientePresente.turno = null;
             unPacientePresente.estado = prestacion.estados[prestacion.estados.length - 1].tipo;
@@ -269,6 +270,7 @@ export class PuntoInicioComponent implements OnInit {
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
         nuevaPrestacion = {
+            /*
             paciente: {
                 id: this.paciente.id,
                 nombre: this.paciente.nombre,
@@ -277,6 +279,7 @@ export class PuntoInicioComponent implements OnInit {
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             },
+            */
             solicitud: {
                 tipoPrestacion: conceptoSnomed,
                 fecha: new Date(),
@@ -306,13 +309,13 @@ export class PuntoInicioComponent implements OnInit {
             }
         };
 
-        nuevaPrestacion.paciente['_id'] = this.paciente.id;
+        //nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
                 this.router.navigate(['/rup/ejecucion', prestacion.id]);
             });
         }, (err) => {
-            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+            //this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
         });
     }
 
@@ -459,7 +462,6 @@ export class PuntoInicioComponent implements OnInit {
      */
     filtrarPacientes(misPacientes: boolean) {
         this.filtrosPacientes = misPacientes;
-        debugger;
         let usu = this.auth.usuario;
         let listadoFiltrado = [... this.pacientesPresentesCompleto];
 
