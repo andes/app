@@ -289,7 +289,7 @@ export class PuntoInicioComponent implements OnInit {
                     apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
                 },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
             ejecucion: {
                 fecha: new Date(),
@@ -298,14 +298,16 @@ export class PuntoInicioComponent implements OnInit {
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
+                organizacion: {
+                     id: this.auth.organizacion.id,
+                     nombre: this.auth.organizacion.nombre
+                    }
             },
             estados: {
                 fecha: new Date(),
                 tipo: 'ejecucion'
             }
         };
-
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {

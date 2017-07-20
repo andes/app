@@ -13,9 +13,9 @@
         padding: 5px;
     }
     //Foto popover
-    .popover {
+    .fotoPopover {
         height: 70px;
-        padding: 5px;
+        padding: 2px;
     }
     // texto-popover
     .texto-popover{
@@ -26,4 +26,32 @@
         padding-left: 10px;
         padding-right: 10px;
     }
+
+    .popover {
+        visibility: hidden;
+    }
+
+    #muestraPopover:hover { 
+        background: #000; 
+    }
+
+    #muestraPopover:hover .popover { 
+         display: block;
+         margin-top: 18%;
+         cursor: default;
+         visibility: visible;	
+         transition:  visibility 0.2s ease 0.1s;
+     }
+ 
+    a {
+        color: #000;
+    }
+    a:hover { 
+         color: #0070BA;
+    }
+
+
+   
+
+
 }
