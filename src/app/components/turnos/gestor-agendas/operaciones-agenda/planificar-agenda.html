@@ -38,6 +38,14 @@
                             </plex-select>
                         </div>
                     </div>
+                    <!--Opcion agenda no nominalizada-->
+                    <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
+                        <div class="col-12">
+                            <plex-bool [(ngModel)]="noNominalizada" name="noNominalizada" label="No nominalizada" (change)="cambiarNominalizada($event)">
+                            </plex-bool>
+                        </div>
+                    </div>
+
                     <br>
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
@@ -115,21 +123,23 @@
                                     </plex-datetime>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <plex-int [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" (keyup)="cambiaTurnos( 'cantidad' )" label="Cantidad de Turnos"
-                                        [required]="true">
-                                    </plex-int>
+                            <ng-container *ngIf="modelo.nominalizada">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <plex-int [(ngModel)]="elementoActivo.cantidadTurnos" name="cantidadTurnos" (keyup)="cambiaTurnos( 'cantidad' )" label="Cantidad de Turnos"
+                                            [required]="true">
+                                        </plex-int>
+                                    </div>
+                                    <div class="col-6">
+                                        <plex-int [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" (keyup)="cambiaTurnos( 'duracion' )" label="Duración del Turno"
+                                            suffix="minutos" [required]="true">
+                                        </plex-int>
+                                    </div>
+                                    <div *ngIf="elementoActivo.duracionTurno" class="container">
+                                        <span class="text-primary">Nota: se van a generar turnos cada {{ elementoActivo.duracionTurno }} minutos.</span>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <plex-int [(ngModel)]="elementoActivo.duracionTurno" name="duracionTurno" (keyup)="cambiaTurnos( 'duracion' )" label="Duración del Turno"
-                                        suffix="minutos" [required]="true">
-                                    </plex-int>
-                                </div>
-                                <div *ngIf="elementoActivo.duracionTurno" class="container">
-                                    <span class="text-primary">Nota: se van a generar turnos cada {{ elementoActivo.duracionTurno }} minutos.</span>
-                                </div>
-                            </div>
+                            </ng-container>
                         </div>
                         <div class="col-6">
                             <label>Tipos de prestaciones asociadas</label>
@@ -140,96 +150,97 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row pt-3">
-                        <div class="col-6">
-                            <fieldset>
-                                <legend>Acceso Directo</legend>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label>Del día</label>
+                    <ng-container *ngIf="modelo.nominalizada">
+                        <div class="row pt-3">
+                            <div class="col-6">
+                                <fieldset>
+                                    <legend>Acceso Directo</legend>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label>Del día</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )" name="accesoDirectoDelDia">
+                                            </plex-int>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'accesoDirectoDelDia' )"
+                                                name="accesoDirectoDelDiaPorc" suffix="%">
+                                            </plex-int>
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )" name="accesoDirectoDelDia">
-                                        </plex-int>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label>Programados</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" [min]="0" (keyup)="cambiaCantTipo( 'accesoDirectoProgramado' )"
+                                                name="accesoDirectoProgramado">
+                                            </plex-int>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'accesoDirectoProgramado' )"
+                                                name="accesoDirectoProgramadoPorc" suffix="%">
+                                            </plex-int>
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDiaPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'accesoDirectoDelDia' )"
-                                            name="accesoDirectoDelDiaPorc" suffix="%">
-                                        </plex-int>
+                                </fieldset>
+                            </div>
+                            <div class="col-6">
+                                <fieldset>
+                                    <legend>Reservados</legend>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label>Con llave</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion">
+                                            </plex-int>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" [min]="0" (keyup)="cambiaPorcentajeTipo('reservadoGestion')"
+                                                name="reservadoGestionporc" suffix="%">
+                                            </plex-int>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label>Programados</label>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label class="no-wrap">Para profesional</label>
+                                        </div>
+                                        <div class="col-4">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional">
+                                            </plex-int>
+                                        </div>
+                                        <div class=" col-4 ">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'reservadoProfesional') "
+                                                name="progReservadoPorc " suffix="%">
+                                            </plex-int>
+                                        </div>
                                     </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" [min]="0" (keyup)="cambiaCantTipo( 'accesoDirectoProgramado' )"
-                                            name="accesoDirectoProgramado">
-                                        </plex-int>
-                                    </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramadoPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'accesoDirectoProgramado' )"
-                                            name="accesoDirectoProgramadoPorc" suffix="%">
-                                        </plex-int>
-                                    </div>
-                                </div>
-                            </fieldset>
+                                </fieldset>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <fieldset>
-                                <legend>Reservados</legend>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label>Con llave</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion">
-                                        </plex-int>
-                                    </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoGestionPorc" [min]="0" (keyup)="cambiaPorcentajeTipo('reservadoGestion')"
-                                            name="reservadoGestionporc" suffix="%">
-                                        </plex-int>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label class="no-wrap">Para profesional</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional">
-                                        </plex-int>
-                                    </div>
-                                    <div class=" col-4 ">
-                                        <plex-int [(ngModel)]="elementoActivo.reservadoProfesionalPorc" [min]="0" (keyup)="cambiaPorcentajeTipo( 'reservadoProfesional') "
-                                            name="progReservadoPorc " suffix="%">
-                                        </plex-int>
-                                    </div>
-                                </div>
-                            </fieldset>
+                        <div class="row pt-3">
+                            <div *ngIf="!elementoActivo.citarPorBloque " class="col-4 ">
+                                <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos " label="Pacientes simultáneos " name="pacienteSimultaneos "></plex-bool>
+                            </div>
+                            <div *ngIf="elementoActivo.pacienteSimultaneos " class="col-4 ">
+                                <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos " name="cantidadSimultaneos " suffix="Pacientes " required>
+                                </plex-int>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row pt-3">
-                        <div *ngIf="!elementoActivo.citarPorBloque " class="col-4 ">
-                            <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos " label="Pacientes simultáneos " name="pacienteSimultaneos "></plex-bool>
+                        <div class="row ">
+                            <div *ngIf="!elementoActivo.pacienteSimultaneos " class="col-4 ">
+                                <plex-bool [(ngModel)]="elementoActivo.citarPorBloque " label="Citar por segmento " name="citarPorBloque "></plex-bool>
+                            </div>
+                            <div *ngIf="elementoActivo.citarPorBloque " class="col-4 ">
+                                <plex-int [(ngModel)]="elementoActivo.cantidadBloque " [max]="elementoActivo.cantidadTurnos " name="cantidadBloque " suffix="Pacientes "
+                                    required>
+                                </plex-int>
+                            </div>
                         </div>
-                        <div *ngIf="elementoActivo.pacienteSimultaneos " class="col-4 ">
-                            <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos " name="cantidadSimultaneos " suffix="Pacientes " required>
-                            </plex-int>
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div *ngIf="!elementoActivo.pacienteSimultaneos " class="col-4 ">
-                            <plex-bool [(ngModel)]="elementoActivo.citarPorBloque " label="Citar por segmento " name="citarPorBloque "></plex-bool>
-                        </div>
-                        <div *ngIf="elementoActivo.citarPorBloque " class="col-4 ">
-                            <plex-int [(ngModel)]="elementoActivo.cantidadBloque " [max]="elementoActivo.cantidadTurnos " name="cantidadBloque " suffix="Pacientes "
-                                required>
-                            </plex-int>
-                        </div>
-                    </div>
-                    <br>
+                        <br>
+                    </ng-container>
                 </plex-box>
             </div>
         </div>
