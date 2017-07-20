@@ -270,7 +270,6 @@ debugger;
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
         nuevaPrestacion = {
-            /*
             paciente: {
                 id: this.paciente.id,
                 nombre: this.paciente.nombre,
@@ -279,7 +278,6 @@ debugger;
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             },
-            */
             solicitud: {
                 tipoPrestacion: conceptoSnomed,
                 fecha: new Date(),
