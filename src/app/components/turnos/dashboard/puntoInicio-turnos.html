@@ -57,7 +57,7 @@
 </section>
 
 <!--Footer-->
-<footer>
+<footer *ngIf="autorizado && !showDarTurnos">
     <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
 </footer>
 

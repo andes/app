@@ -29,6 +29,9 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     public modelo: any = {};
     public registros = [];
 
+    public showCargarSolicitud = false;
+    public showBotonCargarSolicitud = true;
+
     // VER SI HACE FALTA
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
 
@@ -45,7 +48,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
-        // No está autorizado para ver esta pantalla
+        // Está autorizado para ver esta pantalla?
         if (!this.autorizado) {
             this.redirect('inicio');
         } else {
@@ -56,9 +59,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'pendiente'
             });
 
-            // this.modelo.paciente = this.paciente;
-
-            let pacienteSave = {
+            // Se crea un paciente que coincida con el schema de la collection 'prestacion'
+            let paciente = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
                 apellido: this.paciente.apellido,
@@ -68,15 +70,9 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 telefono: ''
             };
 
-            this.modelo.paciente = pacienteSave;
+            // Se agrega el paciente al modelo
+            this.modelo.paciente = paciente;
 
-            // this.modelo.paciente.id = this.paciente.id;
-            // this.modelo.paciente._id = this.paciente.id;
-            // this.modelo.paciente.apellido = this.paciente.apellido;
-            // this.modelo.paciente.nombre = this.paciente.nombre;
-            // this.modelo.paciente.documento = this.paciente.documento;
-            // this.modelo.paciente.fechaNacimiento = this.paciente.fechaNacimiento;
-            // this.modelo.paciente.sexo = this.paciente.sexo;
         }
     }
 
@@ -98,6 +94,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         });
     }
 
+    formularioSolicitud() {
+        this.showCargarSolicitud = true;
+        this.showBotonCargarSolicitud = false;
+    }
+
     guardarSolicitud($event) {
 
         if ($event.formValid) {
@@ -111,22 +112,30 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'solicitud'
             };
 
-            let params = this.modelo;
-
-            this.servicioPrestacion.post(params).subscribe(respuesta => {
+            // Se guarda la solicitud 'pendiente' de prestación
+            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+                this.modelo.solicitud = {};
+                this.registros = [];
+                this.showCargarSolicitud = false;
+                this.showBotonCargarSolicitud = true;
             });
+
         } else {
             this.plex.alert('Debe completar los datos requeridos');
         }
     }
 
-    // Emite a <puntoInicio-turnos> la solicitud/prestación completa para usar en darTurno
+    // Emite a <puntoInicio-turnos> la solicitud/prestación completa que viene de <lista-solicitud-turno-ventanilla> para usarse en darTurno
     solicitudPrestacionDarTurno(event) {
         this.mostrarDarTurnoSolicitud.emit(event);
     }
 
     cancelar() {
+        this.modelo.solicitud = {};
+        this.registros = [];
+        this.showCargarSolicitud = false;
+        this.showBotonCargarSolicitud = true;
         this.cancelarSolicitudVentanilla.emit(true);
     }
 
