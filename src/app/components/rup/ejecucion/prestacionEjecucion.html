@@ -1,8 +1,11 @@
 <header *ngIf="prestacion">
-    <header-paciente [paciente]="prestacion.paciente" [prestacion]="prestacion" ></header-paciente>
+    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="prestacion.paciente" [prestacion]="prestacion" ></header-paciente>
 </header>
 
-<section class="plex-layout prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion">
+<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false" ></pacientesSearch>
+
+
+<section class="plex-layout prestacionEjecucion" *ngIf="prestacion && elementoRUPprestacion && !showCambioPaciente">
 
     <div class="row">
         <div class="col-3">
@@ -156,8 +159,10 @@
 
 <footer>
     <div class="row">
-
-        <div class="col-3">
+        <div class="col-3" *ngIf="showCambioPaciente">
+            <plex-button title="Cancelar" icon="mdi mdi-arrow-left-bold" label="Cancelar" (click)="cancelarCambioPaciente()" type="danger"></plex-button>
+        </div>
+        <div class="col-3" *ngIf="!showCambioPaciente">
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
@@ -178,7 +183,7 @@
                 </div>
             </div>
         </div>
-        <div class="col text-right ">
+        <div class="col text-right " *ngIf="!showCambioPaciente">
             <plex-button title="Guardar " label="Guardar " (click)="guardarPrestacion()" type="success"></plex-button>
         </div>
     </div>

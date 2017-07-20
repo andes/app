@@ -7,10 +7,19 @@
     color: white;
     white-space: nowrap;
     padding-right: 5px;
-    // Foto
-    img {
+    // Foto header
+    .header {
         height: 50px;
         padding: 5px;
+    }
+    //Foto popover
+    .popover {
+        height: 70px;
+        padding: 5px;
+    }
+    // texto-popover
+    .texto-popover{
+        color: #000;
     }
     // Texto
     .texto {

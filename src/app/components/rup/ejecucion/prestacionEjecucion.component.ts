@@ -70,7 +70,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public scopeEliminar: String;
 
     public paciente: IPaciente;
-
+    //Mustro mpi para cambiar de paciente.
+    public showCambioPaciente = false;
 
     // errores
     public errores: any[] = [];
@@ -613,6 +614,39 @@ export class PrestacionEjecucionComponent implements OnInit {
                 label: 'vincular con: ' + registro.concepto.term,
                 handler: () => { this.vincularRegistros(elementoRup, registro) }
             };
+        });
+    }
+    cambioDePaciente($event) {
+        this.showCambioPaciente = $event;
+    }
+    cancelarCambioPaciente() {
+        this.showCambioPaciente = false;
+    }
+    cambiarElPaciente($event) {
+        this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
+            if (resultado) {
+
+                let params: any = {
+                    op: 'paciente',
+                    paciente: {
+                        id: $event.id,
+                        nombre: $event.nombre,
+                        apellido: $event.apellido,
+                        documento: $event.documento,
+                        telefono: $event.telefono,
+                        sexo: $event.sexo,
+                        fechaNacimiento: $event.fechaNacimiento
+                    }
+                };
+
+                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                    this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
+                    this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        this.showCambioPaciente = false;
+                    });
+                });
+            }
         });
     }
 }
