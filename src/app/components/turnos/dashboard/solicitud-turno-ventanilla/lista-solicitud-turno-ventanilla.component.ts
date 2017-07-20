@@ -54,9 +54,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         if (!this.autorizado) {
             this.redirect('inicio');
         } else {
-
             this.cargarSolicitudes();
-
         }
     }
 

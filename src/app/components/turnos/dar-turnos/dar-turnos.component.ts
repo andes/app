@@ -360,7 +360,8 @@ export class DarTurnosComponent implements OnInit {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
-                organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion._id,
+                nominalizada: true
             };
 
         } else {
@@ -373,7 +374,8 @@ export class DarTurnosComponent implements OnInit {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 // tipoPrestaciones: this.permisos,
                 tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
-                organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion._id,
+                nominalizada: true
             };
 
         }

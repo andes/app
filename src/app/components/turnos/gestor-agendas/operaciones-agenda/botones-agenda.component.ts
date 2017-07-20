@@ -173,14 +173,15 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoReasignar() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'suspendida';
-        }).length;
+        let reasginar =  this.agendasSeleccionadas.filter((agenda) => {
+            return (agenda.nominalizada && agenda.estado === 'suspendida');
+        }).length > 0;
+        return reasginar;
     }
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'codificada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
@@ -191,9 +192,10 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoDisponer() {
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado !== 'planificacion';
+        let disponer = this.agendasSeleccionadas.filter((agenda) => {
+            return (agenda.estado !== 'planificacion' || !agenda.nominalizada );
         }).length <= 0;
+        return disponer;
     }
 
     puedoPublicar() {
@@ -204,7 +206,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'codificada';
         }).length <= 0;
     }
 
@@ -216,14 +218,14 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoAgregar() {
         let agenda = this.agendasSeleccionadas[0];
-        return agenda.estado === 'disponible' || agenda.estado === 'publicada';
+        return (agenda.nominalizada && (agenda.estado === 'disponible' || agenda.estado === 'publicada'));
     }
 
     puedoRevisar() {
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         return this.agendasSeleccionadas.filter((agenda) => {
-            return moment(agenda.horaInicio).format() <= moment(today).format();
+            return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
         }).length > 0;
     }
 

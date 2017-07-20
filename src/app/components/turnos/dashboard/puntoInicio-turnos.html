@@ -9,12 +9,11 @@
                     </div>
 
                 </header>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-12">
-                        <plex-button type="info" label="Verificar Asistencia y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
                         <plex-button icon="printer" type="info" label="Imprimir"></plex-button>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
                         <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
@@ -58,9 +57,9 @@
 </section>
 
 <!--Footer-->
-<!-- <footer *ngIf="paciente && showDashboard">
-    <plex-button icon="arrow-left" (click)="cancelar()" label="cancelar" type="danger"></plex-button>
-</footer> -->
+<footer *ngIf="autorizado && !showDarTurnos">
+    <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
+</footer>
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
