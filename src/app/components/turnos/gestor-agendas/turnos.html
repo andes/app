@@ -66,7 +66,7 @@
 <div class="row" *ngIf="showTurnos">
     <div class="col-12">
         <!--Botones / Acciones-->
-        <table class="table mb-0">
+        <table class="table mb-0" *ngIf="agenda.nominalizada">
             <tr>
                 <td>
                     <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos"></i>
@@ -98,12 +98,15 @@
                 </td>
             </tr>
         </table>
-
+        <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
         <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
             <thead *ngIf="bloque.descripcion">
                 <tr>
-                    <th colspan="4">{{bloque.descripcion}}
+                    <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                        hs
+                    </th>
+                    <th *ngIf="agenda.nominalizada" colspan="4">{{bloque.descripcion}}
                     </th>
                 </tr>
             </thead>

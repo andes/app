@@ -37,4 +37,5 @@ export interface IAgenda {
     turnosDisponibles: number;
     estadosAgendas: String[];
     nota: String;
+    nominalizada: Boolean;
 }

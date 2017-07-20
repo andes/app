@@ -127,7 +127,6 @@ export class GestorAgendasComponent implements OnInit {
                 }
 
                 this.serviceAgenda.get(params).subscribe(agendas => {
-
                     this.turnosSuspendidos = [];
                     agendas.forEach(agenda => {
                         let count = 0;
@@ -282,7 +281,6 @@ export class GestorAgendasComponent implements OnInit {
                     });
                     this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
                 });
-                console.log(this.turnosSuspendidos);
 
 
             },
