@@ -142,6 +142,8 @@ import { TurnosPacienteComponent } from './components/turnos/dashboard/turnos-pa
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
+import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
+
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -383,7 +385,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
-        SolicitudTurnoVentanillaComponent, ActivarAppComponent
+        SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],

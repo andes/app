@@ -41,7 +41,6 @@ import { PanelEspacioComponent } from './components/turnos/configuracion/espacio
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
 import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
-import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -107,9 +106,6 @@ const appRoutes: Routes = [
 
     // Llaves
     { path: 'llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
-
-    // TEMP: Solicitud Papelito
-    { path: 'papelito', component: SolicitudTurnoVentanillaComponent, canActivate: [RoutingGuard] },
 
     // Principal
     { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },

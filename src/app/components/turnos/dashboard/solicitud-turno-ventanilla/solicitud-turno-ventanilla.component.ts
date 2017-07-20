@@ -41,7 +41,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         private plex: Plex) { }
 
     ngOnInit() {
-        debugger;
+
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
 
         // No está autorizado para ver esta pantalla
@@ -55,8 +55,27 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'pendiente'
             });
 
-            this.modelo.paciente = this.paciente;
+            // this.modelo.paciente = this.paciente;
 
+            let pacienteSave = {
+                id: this.paciente.id,
+                documento: this.paciente.documento,
+                apellido: this.paciente.apellido,
+                nombre: this.paciente.nombre,
+                sexo: this.paciente.sexo,
+                fechaNacimiento: this.paciente.fechaNacimiento,
+                telefono: ''
+            };
+
+            this.modelo.paciente = pacienteSave;
+
+            // this.modelo.paciente.id = this.paciente.id;
+            // this.modelo.paciente._id = this.paciente.id;
+            // this.modelo.paciente.apellido = this.paciente.apellido;
+            // this.modelo.paciente.nombre = this.paciente.nombre;
+            // this.modelo.paciente.documento = this.paciente.documento;
+            // this.modelo.paciente.fechaNacimiento = this.paciente.fechaNacimiento;
+            // this.modelo.paciente.sexo = this.paciente.sexo;
         }
     }
 
