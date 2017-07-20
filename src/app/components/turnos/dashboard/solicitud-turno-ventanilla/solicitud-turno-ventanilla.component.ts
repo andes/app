@@ -23,6 +23,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     @Input('paciente') paciente: IPaciente;
     @Output() cancelarSolicitudVentanilla = new EventEmitter<boolean>();
+    @Output() mostrarDarTurnoSolicitud = new EventEmitter<any>();
 
     public autorizado = false;
     public modelo: any = {};
@@ -118,6 +119,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         } else {
             this.plex.alert('Debe completar los datos requeridos');
         }
+    }
+
+    // Emite a <puntoInicio-turnos> la solicitud/prestación completa para usar en darTurno
+    solicitudPrestacionDarTurno(event) {
+        this.mostrarDarTurnoSolicitud.emit(event);
     }
 
     cancelar() {

@@ -32,6 +32,8 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         return this._paciente;
     }
 
+    @Output() solicitudPrestacionEmit = new EventEmitter<any>();
+
     public autorizado = false;
     public solicitudesPrestaciones = [];
 
@@ -66,6 +68,11 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         this.servicioPrestacion.get(params).subscribe(resultado => {
             this.solicitudesPrestaciones = resultado;
         });
+    }
+
+    // Emite a <solicitud-turno-ventanilla> la solicitud/prestación completa para usar en darTurno
+    solicitudPrestacionDarTurno(prestacionSolicitud) {
+        this.solicitudPrestacionEmit.emit(prestacionSolicitud);
     }
 
 

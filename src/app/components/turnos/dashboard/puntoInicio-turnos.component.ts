@@ -195,6 +195,11 @@ export class PuntoInicioTurnosComponent implements OnInit {
         }
     }
 
+    darTurnoSolicitud() {
+        this.showDarTurnos = true;
+        this.showDashboard = false;
+    }
+
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;

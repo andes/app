@@ -1,5 +1,7 @@
-<lista-solicitud-turno-ventanilla [paciente]="paciente">
+<lista-solicitud-turno-ventanilla [paciente]="paciente" (solicitudPrestacionEmit)="solicitudPrestacionDarTurno($event)">
 </lista-solicitud-turno-ventanilla>
+
+
 
 <form #form="ngForm">
 
