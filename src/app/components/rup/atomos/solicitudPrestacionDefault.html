@@ -7,8 +7,9 @@
     <plex-bool [(ngModel)]="data[elementoRUP.key].autocitado" (change)="devolverValores()" name="autocitado" label="¿Autocitado?" type="slide"></plex-bool>
 
     <plex-select [(ngModel)]="data[elementoRUP.key].profesionales" (getData)="loadProfesionales($event)"
-        placeholder="Profesionales" labelField="apellido + ' ' + nombre" multiple="true"
-        (change)="quitarOrder()">
+        placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es"
+
+        (change)="quitarOrder()" *ngIf="!this.data[this.elementoRUP.key].autocitado">
     </plex-select>
 </ng-container>
 
