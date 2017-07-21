@@ -405,3 +405,7 @@ fieldset[disabled] .btn-procedimientos.active {
 
 
 /* fin colores botones / acciones */
+.dataSolicitud:hover {
+    color: #0070BA;
+    cursor: default;
+}
