@@ -23,6 +23,7 @@ export class HeaderPacienteComponent implements OnInit {
     ngOnInit() {
     }
     cambioDePaciente() {
+        this.cambiarPaciente = false;
         this.evtData.emit(true);
     }
 }

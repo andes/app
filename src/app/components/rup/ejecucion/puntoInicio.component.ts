@@ -113,7 +113,6 @@ export class PuntoInicioComponent implements OnInit {
      * @memberof PuntoInicioComponent
      */
     TraetodasLasPrestacionesFiltradas(params) {
-        debugger;
         let fechaActual = new Date();
         let fechaDesde = fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = fechaActual.setHours(23, 59, 0, 0);
@@ -196,7 +195,7 @@ export class PuntoInicioComponent implements OnInit {
 
                 // Buscar si existe una prestacion asociada al turno
                 let prestacionTurno = this.todasLasPrestaciones.find(x => {
-                    if (x.ejecucion.turno && (x.ejecucion.turno.toString() === turno._id.toString())) {
+                    if (x.solicitud.turno && (x.solicitud.turno.toString() === turno._id.toString())) {
                         return x;
                     }
                 });
@@ -216,16 +215,14 @@ export class PuntoInicioComponent implements OnInit {
             });
         });
 
-debugger;
         // Buscamos los que solo tienen prestacion y no tienen turno
         let prestacionesSinTurno = this.todasLasPrestaciones.filter(prestacion => {
-            if (prestacion.ejecucion.turno === null) {
+            if (prestacion.ejecucion.solicitud === null) {
                 return prestacion;
             }
         });
 
         prestacionesSinTurno.forEach(prestacion => {
-            debugger;
             unPacientePresente.idAgenda = null;
             unPacientePresente.turno = null;
             unPacientePresente.estado = prestacion.estados[prestacion.estados.length - 1].tipo;
@@ -281,6 +278,7 @@ debugger;
             solicitud: {
                 tipoPrestacion: conceptoSnomed,
                 fecha: new Date(),
+                turno: null,
                 hallazgos: [],
                 prestacionOrigen: null,
                 // profesional logueado
@@ -294,7 +292,6 @@ debugger;
             },
             ejecucion: {
                 fecha: new Date(),
-                turno: null,
                 registros: [],
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
@@ -310,9 +307,7 @@ debugger;
             }
         };
 
-
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
-
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
                 this.router.navigate(['/rup/ejecucion', prestacion.id]);
