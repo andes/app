@@ -24,7 +24,7 @@ export class PacienteService {
    * @param {String} id Busca por Id
    */
   getById(id: String): Observable<IPaciente> {
-    return this.server.get(this.pacienteUrl + '/' + id, null)
+    return this.server.get(this.pacienteUrl + '/' + id, null);
   }
 
   get(params: PacienteSearch): Observable<IPaciente[]> {
@@ -68,7 +68,7 @@ export class PacienteService {
    * @param {any} cambios Recibe any
    */
   patch(id: String, cambios: any): Observable<IPaciente> {
-    console.log("CAMBIOS PATCH",cambios);
+    console.log('CAMBIOS PATCH', cambios);
     return this.server.patch(this.pacienteUrl + '/' + id, cambios);
   }
 
