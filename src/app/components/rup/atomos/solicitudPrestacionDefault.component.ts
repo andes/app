@@ -9,7 +9,6 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
     public profesionales: any[] = [];
 
     ngOnInit() {
-        debugger;
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
 
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
@@ -28,6 +27,7 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.data[this.elementoRUP.key].profesionales);
+            //event.callback(this.quitarOrder());
         }
 
     }
@@ -47,7 +47,5 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
                 documento: profesional.documento
             };
         });
-
-        console.log(this.data[this.elementoRUP.key].profesionales);
     }
 }
