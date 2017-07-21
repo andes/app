@@ -432,16 +432,12 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ElementosRupService,
     ObservarDatosService,
     LlavesTipoPrestacionService,
-
     LogService,
     AuditoriaPorBloqueService,
     AuditoriaService,
-
     AuditoriaPrestacionPacienteService,
-
     SnomedService,
     Cie10Service,
-
     SisaService,
     SintysService,
     AnsesService,
