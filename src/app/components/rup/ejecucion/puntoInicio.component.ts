@@ -311,14 +311,14 @@ debugger;
         };
 
 
-        //nuevaPrestacion.paciente['_id'] = this.paciente.id;
+        nuevaPrestacion.paciente['_id'] = this.paciente.id;
 
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.plex.alert('Prestación creada.').then(() => {
                 this.router.navigate(['/rup/ejecucion', prestacion.id]);
             });
         }, (err) => {
-            //this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
         });
     }
 

@@ -1,5 +1,5 @@
 <header *ngIf="prestacion">
-    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="showBotonCambioPaciente" [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
 </header>
 
 <pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false"></pacientesSearch>
@@ -15,13 +15,13 @@
         <div class="col-6">
             <plex-box>
                 <header>
-                    <div class="clearfix">
-                        <div class="page-title">
+                    <div class="row">
+                        <div class="col-8 page-title">
                             {{prestacion.solicitud.tipoPrestacion.term}}
                         </div>
-                        <div class="float-right">
-                            <a *ngIf="!showDatosSolicitud"  (click)="mostrarDatosSolicitud(true)">Ver info solicitud</a>
-                            <a *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)" >Ver prestacion </a>
+                        <div class="col-4 float-right">
+                            <a class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)">Ver info solicitud</a>
+                            <a class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">Ver prestacion </a>
                         </div>
                     </div>
                 </header>
@@ -30,9 +30,7 @@
                 <div *ngIf="showDatosSolicitud">
                     <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3>
                     <p>
-                        Solicitada por el profesional:
-            
-                        {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
+                        Solicitada por el profesional: {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
                     </p>
                     <p>
                         Organizacion: {{prestacion.solicitud.organizacion.nombre}}
