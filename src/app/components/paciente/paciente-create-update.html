@@ -220,7 +220,7 @@
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="relacionTutores" [required]="true" placeholder="Seleccione..."
+                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione..."
                                                     label="Relacion:">
                                                 </plex-select>
                                             </div>
@@ -282,7 +282,7 @@
                                 <div class="row">&nbsp;</div>
                                 <div class="row">
                                     <div class="col">
-                                        <plex-button label="Agregar otro" icon="account-plus" type="primary" (click)="seleccionarPacienteRelacionado(null, false)"></plex-button>
+                                        <plex-button label="Nueva Relación" icon="account-plus" type="primary" (click)="seleccionarPacienteRelacionado(null, false)"></plex-button>
                                     </div>
                                 </div>
                             </fieldset>

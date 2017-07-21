@@ -115,7 +115,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     generos: any[];
     estadosCiviles: any[];
     tipoComunicacion: any[];
-    relacionTutores: any[];
+    parentescoModel: any[];
     relacionesBorradas: any[];
 
     provincias: IProvincia[] = [];
@@ -229,7 +229,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
         // Se cargan los parentescos para las relaciones
         this.parentescoService.get().subscribe(resultado => {
-            this.relacionTutores = resultado;
+            this.parentescoModel = resultado;
         });
 
         // Set País Argentina
@@ -453,7 +453,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.pacienteModel.contacto = [this.contacto];
         }
     }
-    save(valid) {
+    async save(valid) {
         if (valid.formValid) {
             let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -506,7 +506,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
 
             let operacionPac: Observable<IPaciente>;
-
+            // generamos pacientes temporales a partir de las nuevas relaciones
+            await this.crearTemporales(pacienteGuardar);
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
 
@@ -514,7 +515,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     // Borramos relaciones
                     if (this.relacionesBorradas.length > 0) {
                         this.relacionesBorradas.forEach(rel => {
-                            let relacionOpuesta = this.relacionTutores.find((elem) => {
+                            let relacionOpuesta = this.parentescoModel.find((elem) => {
                                 if (elem.nombre === rel.relacion.opuesto) {
                                     return elem;
                                 }
@@ -533,10 +534,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             }
                         });
                     }
+
                     // agregamos las relaciones opuestas
                     if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
                         pacienteGuardar.relaciones.forEach(rel => {
-                            let relacionOpuesta = this.relacionTutores.find((elem) => {
+                            let relacionOpuesta = this.parentescoModel.find((elem) => {
                                 if (elem.nombre === rel.relacion.opuesto) {
                                     return elem;
                                 }
@@ -560,6 +562,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     }
                     this.plex.alert('Los datos se actualizaron correctamente');
                     this.data.emit(result);
+
                 } else {
                     this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
                 }
@@ -568,6 +571,59 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.plex.alert('Debe completar los datos obligatorios');
         }
     }
+
+    crearTemporales(pacienteOrigen) {
+        // generamos pacientes temporales a partir de las nuevas relaciones
+        // y guardamos el id generado como referencia en el paciente de origen
+        return new Promise(async (resolve) => {
+            if (pacienteOrigen.relaciones && pacienteOrigen.relaciones.length > 0) {
+                for (let i = 0; i < pacienteOrigen.relaciones.length; i++) {
+                    if (!pacienteOrigen.relaciones[i].referencia) {
+                        let nuevoTemporal: any = {
+                            activo: true,
+                            apellido: pacienteOrigen.relaciones[i].apellido.toString(),
+                            nombre: pacienteOrigen.relaciones[i].nombre.toString(),
+                            documento: pacienteOrigen.relaciones[i].documento.toString(),
+                            sexo: 'otro',
+                            fechaNacimiento: '',
+                            genero: 'otro',
+                            estado: 'temporal',
+                            contacto: null,
+                            estadoCivil: null,
+                            entidadesValidadoras: [],
+                            scan: null,
+                            financiador: null,
+                            identificadores: null,
+                            direccion: null,
+                            reportarError: false,
+                            notaError: '',
+                            nombreCompleto: '',
+                            alias: '',
+                            edad: null,
+                            edadReal: null,
+                            fechaFallecimiento: null,
+                            foto: '',
+                            relaciones: [],
+                            claveBlocking: null,
+                            isScan: this.esEscaneado
+                        };
+                        let idNuevoTemporal = await this.saveNuevoTemporal(nuevoTemporal);
+                        pacienteOrigen.relaciones[i].referencia = idNuevoTemporal;
+                    }
+                }
+            }
+            resolve(pacienteOrigen);
+        });
+    }
+
+    saveNuevoTemporal(nuevoTemporal): any {
+        return new Promise((resolve) => {
+            this.pacienteService.save(nuevoTemporal).subscribe(res => {
+                resolve(res.id);
+            });
+        });
+    }
+
     onCancel() {
         this.data.emit(null);
     }
@@ -960,7 +1016,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             apellido: '',
             documento: ''
         });
-
         if (pacienteEncontrado) {
             if (esReferencia) {
                 unaRelacion.referencia = pacienteEncontrado.id;
@@ -968,7 +1023,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             unaRelacion.documento = pacienteEncontrado.documento;
             unaRelacion.apellido = pacienteEncontrado.apellido;
             unaRelacion.nombre = pacienteEncontrado.nombre;
-
         }
         if (this.pacienteModel.relaciones) {
             this.pacienteModel.relaciones.push(unaRelacion);
