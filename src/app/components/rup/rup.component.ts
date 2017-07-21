@@ -1,3 +1,4 @@
+import { PrestacionPacienteService } from './../../services/rup/prestacionPaciente.service';
 import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
@@ -63,7 +64,8 @@ export class RupComponent implements OnInit, OnDestroy {
         private pacienteService: PacienteService,
         public servicioElementosRUP: ElementosRupService, // Publico por que lo usa la molecula
         public servicioObservarDatos: ObservarDatosService,
-        public serviceProfesional: ProfesionalService
+        public serviceProfesional: ProfesionalService,
+        public servicioPrestacion: PrestacionPacienteService
     ) {
     }
 

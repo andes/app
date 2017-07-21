@@ -10,7 +10,6 @@ import * as moment from 'moment';
 
 export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     public fechaInicio: Date;
-    public descripcion: String; //
     public estado: String; // activo / inactivo / resuleto
     public esCronico: Boolean = false; //
     public esEnmienda: Boolean = false;
@@ -32,9 +31,11 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
             //this.friendlyDate(this.datosIngreso.fechaInicio);
-
             this.devolverValores();
+        }else {
+            this.data[this.elementoRUP.key].estado =  { id: 'activo', nombre: 'Activo' };
         }
+
     }
 
     calcularFecha() {
