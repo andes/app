@@ -1,6 +1,5 @@
 import { Atomo } from './../core/atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from "../../../interfaces/IPaciente";
 @Component({
     selector: 'rup-tension-sistolica',
     templateUrl: 'tensionSistolica.html'
@@ -10,7 +9,7 @@ export class TensionSistolicaComponent extends Atomo {
         let Edad;
         let percentiloTalla;
         let BajaTensionSistolica;
-        let tensionSistolica = this.data[this.tipoPrestacion.key];
+        let tensionSistolica = this.data[this.elementoRUP.key];
 
         let mensaje: any = {
             texto: '',
@@ -40,15 +39,15 @@ export class TensionSistolicaComponent extends Atomo {
                         mensaje.texto = 'Normal-alta';
                         break;
                     case (tensionSistolica >= 140 && tensionSistolica <= 159):
-                        //rango hipertension arterial grado 1 
+                        //rango hipertension arterial grado 1
                         mensaje.texto = 'Hipertensión arterial grado 1';
                         break;
                     case (tensionSistolica >= 160 && tensionSistolica <= 179):
-                        //rango hipertension arterial grado 2 
+                        //rango hipertension arterial grado 2
                         mensaje.texto = 'Hipertensión arterial grado 2';
                         break;
                     case (tensionSistolica >= 180):
-                        //rango hipertension arterial grado 3 
+                        //rango hipertension arterial grado 3
                         mensaje.texto = 'Hipertensión arterial grado 3';
                         break;
                     case (tensionSistolica <= 60 && tensionSistolica >= 80):

@@ -12,7 +12,7 @@ export class TensionDiastolicaComponent extends Atomo {
         let Edad;
         //let percentiloTalla;
         let BajaTensionDiastolica;
-        let tensionSistolica = this.data[this.tipoPrestacion.key];
+        let tensionSistolica = this.data[this.elementoRUP.key];
 
         let mensaje: any = {
             texto: '',
@@ -37,15 +37,15 @@ export class TensionDiastolicaComponent extends Atomo {
                         mensaje.texto = 'Normal-alta';
                         break;
                     case (tensionSistolica >= 90 && tensionSistolica <= 99):
-                        //rango hipertension arterial grado 1 
+                        //rango hipertension arterial grado 1
                         mensaje.texto = 'Hipertensión arterial grado 1';
                         break;
                     case (tensionSistolica >= 100 && tensionSistolica <= 109):
-                        //rango hipertension arterial grado 2 
+                        //rango hipertension arterial grado 2
                         mensaje.texto = 'Hipertensión arterial grado 2';
                         break;
                     case (tensionSistolica >= 110):
-                        //rango hipertension arterial grado 3 
+                        //rango hipertension arterial grado 3
                         mensaje.class = "danger";
                         mensaje.texto = 'Hipertensión arterial grado 3';
                         break;

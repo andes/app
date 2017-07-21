@@ -4,10 +4,22 @@
 
 .badge-reasignado {
     position: absolute !important;
-    top: 15px;
+    top: 5px;
     right: 8px;
     z-index: 1;
     i {
         margin-right: 0 !important;
     }
+}
+
+.badge-reasignar {
+    margin: 0;
+}
+
+.reasignar .outline-dashed-default {
+    padding: 0 !important;
+}
+
+.ocultar-agenda-candidata {
+    display: none;
 }

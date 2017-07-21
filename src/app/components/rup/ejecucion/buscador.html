@@ -1,0 +1,74 @@
+<plex-button label="Hallazgos" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
+<plex-button label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
+<plex-button label="Planes" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
+
+<div *ngIf="!showPlanes">
+    <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" (_onDragStart)="dragStart(true)"
+        (_onDragEnd)="dragEnd(false)"></snomed-buscar>
+</div>
+
+<div *ngIf="showPlanes">
+
+    <form>
+        <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
+            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscador {{tipoBusqueda}} ..."></plex-text>
+        </div>
+    </form>
+    <div>
+        <ul class="conceptos list-unstyled" *ngIf="listaPlanes">
+            <ng-container *ngFor="let item of listaPlanes">
+
+                <li draggable [dragScope]="['registros-rup', 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)"
+                    (onDragEnd)="dragEnd($e)">
+
+                    <div class="rup-card mini">
+                        <div class="type {{tipoBusqueda}}">
+                            <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                        </div>
+
+                        <div class="rup-content">
+                            <div class="header">
+                                <div class="title">
+                                    {{item.term}}
+                                </div>
+
+                                <div class="actions">
+                                    <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="!showFrecuentes">
+    <ul class="conceptos list-unstyled">
+        <ng-container *ngFor="let item of masFrecuentesFiltradas">
+            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                <div class="rup-card mini">
+                    <div class="type {{tipoBusqueda}}">
+                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                    </div>
+                    <div class="rup-content">
+                        <div class="header">
+                            <div class="title">
+                                {{item.term}}
+                            </div>
+                            <div class="actions">
+                                <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ng-container>
+    </ul>
+</div>
+

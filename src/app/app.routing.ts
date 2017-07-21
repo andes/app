@@ -39,7 +39,8 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { DashboardTurnosComponent } from './components/turnos/dashboard/dashboard-turnos.component';
+import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
+import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -47,7 +48,6 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
@@ -84,7 +84,8 @@ const appRoutes: Routes = [
   { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  { path: 'dashboard_turnos', component: DashboardTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
 
   // Auditoria
   { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },

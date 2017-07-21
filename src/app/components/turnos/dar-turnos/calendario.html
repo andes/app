@@ -1,4 +1,4 @@
-<table *ngIf="calendario">
+<table *ngIf="calendario" style="height: 70vh">
     <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
                 'weekend'          : day.weekend,

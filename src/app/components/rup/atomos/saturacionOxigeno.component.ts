@@ -9,7 +9,7 @@ import * as moment from 'moment';
 export class SaturacionOxigenoComponent extends Atomo {
 
         getMensajes() {
-        let saturacionOxigeno = this.data[this.tipoPrestacion.key];
+        let saturacionOxigeno = this.data[this.elementoRUP.key];
         let edadEnMeses;
 
         // Calculo Edad en Meses

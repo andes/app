@@ -1,29 +1,99 @@
 <!--Header de estadisticas-->
 <fieldset>
     <legend>INFORMACIÓN SOBRE EL PACIENTE</legend>
-      <br>
-    <!--<header>
+    <!--Datos básicos del Paciente-->
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5> <span style="color: #00A8E0">{{pacienteSeleccionado | paciente}}</span> </h5>
+            </div>
+        </div>
+        <hr>
+    </header>
     <div class="row">
-        <div class="col">
-            <fieldset>
-                <legend>
-                    <div class="clearfix">
-                        <span class="float-left">INFORMACIÓN ESTADÍSTICA</span>
-                    </div>
-                </legend>
-            </fieldset>
+        <div class="col-6">
+            <i class="mdi mdi-account-card-details"></i> <span style="color: #00A8E0">Documento</span>
+        </div>
+        <div class="col-6">
+            <i class="mdi mdi-calendar-today"></i> <span style="color: #00A8E0">Fecha de Nacimiento</span>
         </div>
     </div>
-</header>-->
-    <!--Estadisticas Ventanilla-->
-    <br>
-    <legend>Paciente | Datos Básicos</legend>
-    
-      <br>
     <div class="row">
-       
+        <div class="col-6" *ngIf="pacienteSeleccionado">
+            {{pacienteSeleccionado.documento | number}}
+        </div>
+        <div class="col-6" *ngIf="pacienteSeleccionado">
+            {{pacienteSeleccionado.fechaNacimiento | date:'dd-MM-yyyy'}}
+        </div>
     </div>
-      <br>
-    <legend>Paciente | Estadísticas</legend>
-      <br>
+    <div class="row">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion && pacienteSeleccionado.direccion.length > 0">
+            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Dirección</span>
+        </div>
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.contacto && pacienteSeleccionado.contacto.length > 0">
+            <i class="mdi mdi-cellphone-android"></i> <span style="color: #00A8E0">Teléfono</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion && pacienteSeleccionado.direccion.length > 0">
+            {{pacienteSeleccionado.direccion[0].valor}}
+        </div>
+        <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
+            {{pacienteSeleccionado.contacto[0].valor}}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <h5>Paciente | <span style="color: #00A8E0">Estadísticas</span> </h5>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col"><span>Filtrar por Fechas</span></div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
+            </plex-datetime>
+        </div>
+        <div class="col-6">
+            <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
+            </plex-datetime>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-account-check mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Cantidad de turnos</h5>
+        </div>
+        <div class="col-2 badge badge-success">
+            <span class="h3">{{turnosOtorgados}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-account-minus mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Inasistencias</h5>
+        </div>
+        <div class="col-2 badge badge-danger">
+            <span class="h3">{{inasistencias}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <i class="mdi mdi-calendar-remove mdi-36px"></i>
+        </div>
+        <div class="col">
+            <h5>Anulaciones</h5>
+        </div>
+        <div class="col-2 badge badge-warning">
+            <span class="h3">{{anulaciones}}</span>
+        </div>
+    </div>
 </fieldset>
