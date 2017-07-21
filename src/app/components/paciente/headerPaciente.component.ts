@@ -1,3 +1,4 @@
+import { Plex } from '@andes/plex';
 import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from '../../interfaces/IPaciente';
@@ -15,11 +16,11 @@ export class HeaderPacienteComponent implements OnInit {
     @Input() cambiarPaciente: boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(public auth: Auth) { };
+    public showPopover = false;
+
+    constructor(public auth: Auth, public plex: Plex) { };
 
     ngOnInit() {
-        //Sacarlo al fonailzar feer.
-        this.cambiarPaciente = true;
     }
     cambioDePaciente() {
         this.evtData.emit(true);

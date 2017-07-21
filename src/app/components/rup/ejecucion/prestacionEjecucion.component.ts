@@ -72,6 +72,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public paciente: IPaciente;
     //Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
+    showDatosSolicitud = false;
 
     // errores
     public errores: any[] = [];
@@ -648,5 +649,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             }
         });
+    }
+    mostrarDatosSolicitud(bool) {
+        this.showDatosSolicitud = bool;
     }
 }
