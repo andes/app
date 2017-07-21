@@ -34,10 +34,7 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 
 export class DarTurnosComponent implements OnInit {
 
-    private _pacienteSeleccionado: any;
-    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
-    paciente: IPaciente;
-    private opciones: any = {};
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
@@ -51,29 +48,26 @@ export class DarTurnosComponent implements OnInit {
     @Input('solicitudPrestacion')
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
-        this.paciente = this._solicitudPrestacion.paciente;
-        // this._solicitudPrestacion.solicitud.registros[0].concepto['$order'] = 1;
-        // console.log('aca ', this._solicitudPrestacion.solicitud.registros[0].concepto);
-        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
-        // this.actualizar('');
+        if (this._solicitudPrestacion) {
+            this.paciente = this._solicitudPrestacion.paciente;
+        }
     }
     get solicitudPrestacion() {
         return this._solicitudPrestacion;
     }
 
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
+    private _pacienteSeleccionado: any;
+    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+    private paciente: IPaciente;
+    private opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
-    // public opciones = {
-    //     fecha: new Date(),
-    //     tipoPrestacion: null,
-    //     profesional: null,
-    // };
+
     llaveTP: any;
     estadoT: EstadosDarTurnos;
 
@@ -366,7 +360,6 @@ export class DarTurnosComponent implements OnInit {
 
         } else {
             // Resetear opciones
-            console.log('ssdldslñslñadñdsla');
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
             params = {

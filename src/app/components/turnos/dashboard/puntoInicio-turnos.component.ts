@@ -34,7 +34,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showIngresarSolicitud = false;
     public paciente;
     public autorizado = false;
-    solicitudPrestacion: any; // Es la solicitud que se pasa como input a darTurnos
+    solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
     showDarTurnos = false;
     showDashboard = true;
@@ -136,6 +136,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarEstadisticasPacientes = false;
                 break;
             case 'anulacionTurno':
+                this.paciente = paciente;
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
@@ -143,6 +144,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'registrarAsistencia':
+                this.paciente = paciente;
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
@@ -198,7 +200,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     darTurnoSolicitud(event) {
         console.log('event ', event);
-        
+
         this.solicitudPrestacion = event;
         this.showDarTurnos = true;
         this.showDashboard = false;
