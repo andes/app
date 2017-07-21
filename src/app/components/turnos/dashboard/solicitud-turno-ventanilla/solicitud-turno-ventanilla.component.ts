@@ -26,8 +26,27 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     @Output() mostrarDarTurnoSolicitud = new EventEmitter<any>();
 
     public autorizado = false;
-    public modelo: any = {};
-    public registros = [];
+
+    public modelo: any = {
+        paciente: {},
+        profesional: {},
+        organizacion: {},
+        solicitud: {
+            fecha: null,
+            paciente: {},
+            profesional: {},
+            organizacion: {},
+            turno: null
+        },
+        estados: []
+    };
+    public registros: any = {
+        solicitudPrestacion: {
+            profesionales: [],
+            motivo: '',
+            autocitado: false
+        }
+    };
 
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
@@ -52,9 +71,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         if (!this.autorizado) {
             this.redirect('inicio');
         } else {
-
-            this.modelo.solicitud = {};
-            this.modelo.estados = [];
             this.modelo.estados.push({
                 tipo: 'pendiente'
             });
@@ -88,6 +104,25 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         });
     }
 
+    loadProfesionalesMulti(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.registros.solicitudPrestacion.profesionales) {
+                    listaProfesionales = (resultado) ? this.registros.solicitudPrestacion.profesionales.concat(resultado) : this.registros.solicitudPrestacion.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
+        } else {
+            event.callback(this.registros.solicitudPrestacion.profesionales || []);
+        }
+    }
+
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({}).subscribe(prestaciones => {
             event.callback(prestaciones);
@@ -106,17 +141,24 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;
             delete this.modelo.solicitud.tipoPrestacion.$order;
+
+            this.registros.solicitudPrestacion.profesionales.filter(profesional => {
+                return delete profesional.$order;
+            });
+
             this.modelo.solicitud.registros = {
                 concepto: this.modelo.solicitud.tipoPrestacion,
-                valor: this.registros,
+                valor: {
+                    solicitudPrestacion: this.registros.solicitudPrestacion
+                },
                 tipo: 'solicitud'
             };
 
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                this.modelo.solicitud = {};
-                this.registros = [];
+                this.modelo.solicitud.registros = {};
+                this.registros.solicitudPrestacion = {};
                 this.showCargarSolicitud = false;
                 this.showBotonCargarSolicitud = true;
             });

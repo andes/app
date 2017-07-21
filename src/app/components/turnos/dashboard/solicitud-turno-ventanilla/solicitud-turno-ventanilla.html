@@ -53,20 +53,27 @@
             </div>
         </div>
 
-        <!-- Prioridad (VER SI HACE FALTA) -->
-        <!-- <div class="row">
+        <!-- Autocitado? -->
+        <div class="row">
             <div class="col-12">
-                <plex-select [(ngModel)]="modelo.prioridad" [data]="prioridadesPrestacion" placeholder="Prioridad" name="prioridad" label="Prioridad">
+                <plex-bool [(ngModel)]="registros.solicitudPrestacion.autocitado" label="Autocitado" name="autocitado"></plex-bool>
+            </div>
+        </div>
+
+        <!-- Profesional Destino -->
+        <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
+            <div class="col-12">
+                <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesionales destino (sugeridos)" name="profesionales"
+                    (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido+' '+nombre">
                 </plex-select>
             </div>
-        </div> -->
-
+        </div>
 
         <div class="row">
             <div class="col-12">
                 <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
                 <label for="registros">Notas / Diagnóstico / Motivo</label>
-                <textarea class="form-control" [(ngModel)]="registros" name="registros" id="registros" rows="5"></textarea>
+                <textarea class="form-control" [(ngModel)]="registros.solicitudPrestacion.motivo" name="motivo" id="registros" rows="5"></textarea>
             </div>
         </div>
         <div class="mt-3 float-right">
