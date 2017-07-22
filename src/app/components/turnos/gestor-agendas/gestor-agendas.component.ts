@@ -19,18 +19,21 @@ import { enumToArray } from '../../../utils/enums';
 })
 
 export class GestorAgendasComponent implements OnInit {
+    showReasignarTurnoAgendas: boolean;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     agendasSeleccionadas: IAgenda[] = [];
 
-    public showGestorAgendas: Boolean = true;
-    public showTurnos: Boolean = false;
-    public showBotonesAgenda: Boolean = false;
-    public showClonar: Boolean = false;
-    public showDarTurnos: Boolean = false;
-    public showEditarAgenda: Boolean = false;
-    public showEditarAgendaPanel: Boolean = false;
-    public showInsertarAgenda: Boolean = false;
+    public showGestorAgendas = true;
+    public showTurnos = false;
+    public showReasignarTurno = false;
+    public showReasignarTurnoAutomatico = false;
+    public showBotonesAgenda = false;
+    public showClonar = false;
+    public showDarTurnos = false;
+    public showEditarAgenda = false;
+    public showEditarAgendaPanel = false;
+    public showInsertarAgenda = false;
     private showAgregarNotaAgenda = false;
     private showAgregarSobreturno = false;
     public showRevisionAgenda = false;
@@ -44,6 +47,9 @@ export class GestorAgendasComponent implements OnInit {
     public mostrarMasOpciones = false;
     public estadosAgenda = enumerado.EstadosAgenda;
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
+
+    // Contador de turnos suspendidos por agenda, para mostrar notificaciones
+    turnosSuspendidos: any[] = [];
 
     searchForm: FormGroup;
 
@@ -120,13 +126,28 @@ export class GestorAgendasComponent implements OnInit {
                     params['estado'] = value.estado.id;
                 }
 
-                this.serviceAgenda.get(params).subscribe(
-                    agendas => {
-                        this.hoy = false;
-                        this.agendas = agendas;
-                        this.fechaDesde = fechaDesde;
-                        this.fechaHasta = fechaHasta;
-                    },
+                this.serviceAgenda.get(params).subscribe(agendas => {
+                    this.turnosSuspendidos = [];
+                    agendas.forEach(agenda => {
+                        let count = 0;
+                        agenda.bloques.forEach(bloque => {
+                            bloque.turnos.forEach(turno => {
+                                if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                                    count++;
+                                }
+                            });
+                        });
+                        this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
+                    });
+
+                    this.hoy = false;
+                    this.agendas = agendas;
+                    this.fechaDesde = fechaDesde;
+                    this.fechaHasta = fechaHasta;
+
+
+
+                },
                     err => {
                         if (err) {
                             console.log(err);
@@ -145,6 +166,8 @@ export class GestorAgendasComponent implements OnInit {
         this.showEditarAgendaPanel = false;
         this.showTurnos = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -172,12 +195,15 @@ export class GestorAgendasComponent implements OnInit {
     // Volver al gestor luego de hacer algo
     volverAlGestor() {
         this.showGestorAgendas = true;
+        this.showDarTurnos = false;
         this.showEditarAgenda = false;
         this.showInsertarAgenda = false;
         this.showAgregarNotaAgenda = false;
         this.showAgregarSobreturno = false;
         this.showClonar = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
         this.loadAgendas();
     }
 
@@ -187,7 +213,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    showVistaTurnos(showTurnos: Boolean) {
+    showVistaTurnos(showTurnos: boolean) {
         this.showTurnos = showTurnos;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
@@ -213,16 +239,17 @@ export class GestorAgendasComponent implements OnInit {
         }
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
     }
 
 
     revisionAgenda(agenda) {
-      this.showGestorAgendas = false;
-      this.showRevisionAgenda = true;
+        this.showGestorAgendas = false;
+        this.showRevisionAgenda = true;
     }
 
     loadAgendas() {
-
         let fecha = moment().format();
 
         if (this.hoy) {
@@ -241,6 +268,21 @@ export class GestorAgendasComponent implements OnInit {
             agendas => {
                 this.agendas = agendas;
                 this.agendasSeleccionadas = [];
+                this.turnosSuspendidos = [];
+
+                agendas.forEach(agenda => {
+                    let count = 0;
+                    agenda.bloques.forEach(bloque => {
+                        bloque.turnos.forEach(turno => {
+                            if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                                count++;
+                            }
+                        });
+                    });
+                    this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
+                });
+
+
             },
             err => {
                 if (err) {
@@ -301,10 +343,24 @@ export class GestorAgendasComponent implements OnInit {
             this.showAgregarNotaAgenda = false;
             this.showAgregarSobreturno = false;
             this.showRevisionAgenda = false;
+            this.showTurnos = false;
+            this.showReasignarTurno = false;
+            this.showReasignarTurnoAutomatico = false;
             this.showBotonesAgenda = true;
-            this.showTurnos = true;
+
+            if (this.hayAgendasSuspendidas()) {
+                // this.showGestorAgendas = false;
+                this.showReasignarTurnoAutomatico = true;
+            } else {
+                this.showTurnos = true;
+            }
+
         });
 
+    }
+
+    hayAgendasSuspendidas() {
+        return this.agendasSeleccionadas.filter((x) => { return x.estado === 'suspendida'; }).length > 0;
     }
 
     estaSeleccionada(agenda: any) {
@@ -328,16 +384,23 @@ export class GestorAgendasComponent implements OnInit {
         this.showGestorAgendas = false;
     }
 
+    darTurnos() {
+        this.showGestorAgendas = false;
+        this.showDarTurnos = true;
+    }
+
     actualizarEstadoEmit() {
         this.showTurnos = false;
         this.showEditarAgenda = false;
         this.showEditarAgendaPanel = false;
         this.showAgregarNotaAgenda = false;
-        let temporal = this.agendasSeleccionadas;
-        console.log('temporal ', temporal);
+        this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = false;
         this.showRevisionAgenda = false;
+
+        let temporal = this.agendasSeleccionadas;
+
         this.loadAgendas();
-        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
         this.agendasSeleccionadas = temporal;
         this.agendasSeleccionadas.forEach((as) => {
             if (this.agendasSeleccionadas.length === 1) {
@@ -346,10 +409,19 @@ export class GestorAgendasComponent implements OnInit {
                 this.verAgenda(as, true, null);
             }
         });
-        console.log('agendasSeleccionadas ', this.agendasSeleccionadas);
 
         if (this.agendasSeleccionadas.length === 1) {
             this.showTurnos = true;
         }
     }
+
+    reasignarTurnos() {
+        this.showGestorAgendas = false;
+        this.showReasignarTurno = true;
+    }
+
+    reasignarTurnosAgendas() {
+        this.showReasignarTurnoAgendas = true;
+    }
+
 }

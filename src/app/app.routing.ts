@@ -39,6 +39,8 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
+import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
+import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 
 // MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -46,7 +48,6 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 // ... RUP
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { SignosVitalesComponent } from './components/rup/signos-vitales/signosVitales.component';
@@ -57,9 +58,10 @@ import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacio
 // Auditoria
 import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria1Component } from './components/auditoria/auditoria1.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
+// USUARIO
+import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 // ... Auditoría RUP (prestacionPaciente)
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 
@@ -82,12 +84,16 @@ const appRoutes: Routes = [
   { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
 
   // Auditoria
-  { path: 'auditoria', component: AuditoriaComponent },
-  { path: 'auditoria1', component: Auditoria1Component },
-  { path: 'auditoria2', component: Auditoria2Component },
-  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent },
+  { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
+  { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
+  { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent ,canActivate: [RoutingGuard] },
+
+  // Usuario
+  { path: 'busquedaUsuario', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
   // RUP
   // Prestación Clínica General de Medicina
@@ -97,7 +103,7 @@ const appRoutes: Routes = [
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   // { path: 'tiposPrestaciones', component: TipoPrestacionComponent},
 
-// Auditoría RUP (prestacionPaciente)
+  // Auditoría RUP (prestacionPaciente)
   { path: 'auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
 
   // Llaves

@@ -3,6 +3,7 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { OrganizacionService } from './../../../../services/organizacion.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Router } from '@angular/router';
@@ -37,7 +38,7 @@ export class PanelAgendaComponent implements OnInit {
     public alertas: any[] = [];
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public router: Router, public auth: Auth) {
+        public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService, public router: Router, public auth: Auth) {
     }
 
     ngOnInit() {
@@ -48,12 +49,20 @@ export class PanelAgendaComponent implements OnInit {
     guardarAgenda(agenda: IAgenda) {
 
         if (this.alertas.length === 0) {
+
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = this.modelo.profesionales.map((prof) => {
                 delete prof.$order;
                 return prof;
             });
+
             let espacioFisico = this.modelo.espacioFisico;
+            if (this.modelo.espacioFisico) {
+                delete espacioFisico.$order;
+            } else {
+                espacioFisico = null;
+            }
+
 
             let patch = {
                 'op': 'editarAgenda',
@@ -96,8 +105,46 @@ export class PanelAgendaComponent implements OnInit {
         }
     }
 
+
+    loadEdificios(event) {
+        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        //     event.callback(respuesta.edificio);
+        // });
+        if (event.query) {
+            let query = {
+                edificio: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
+                event.callback(listaEdificios);
+            });
+        } else {
+            event.callback(this.modelo.edificios || []);
+        }
+    }
+
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
+
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     /**
@@ -132,7 +179,7 @@ export class PanelAgendaComponent implements OnInit {
         } else if (tipo === 'espacioFisico') {
 
             // Loop Espacios Físicos
-            this.serviceAgenda.get({ 'idProfesional': this.modelo.espacioFisico.id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+            this.serviceAgenda.get({ 'idProfesional': this.modelo.espacioFisico._id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
                 subscribe(agendas => {
 
                     // Hay problemas de solapamiento?

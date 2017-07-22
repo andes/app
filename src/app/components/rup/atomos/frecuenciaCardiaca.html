@@ -1,9 +1,9 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 30 y 100" [(ngModel)]="data[tipoPrestacion.key]" name="frecuenciaCardiaca" label="Frecuencia cardíaca" suffix="PPM" min="30" max="100" (keyup)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 30 y 100" [(ngModel)]="data[elementoRUP.key]" name="frecuenciaCardiaca" label="Frecuencia cardíaca" suffix="PPM" min="30" max="100" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
     <label>Frecuencia cardíaca</label>
-    <br /> {{data[tipoPrestacion.key]}} PPM
+    <br /> {{data[elementoRUP.key]}} PPM
 </p>
 
 <p *ngIf="mensaje.texto">

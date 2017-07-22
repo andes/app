@@ -1,3 +1,4 @@
+import { IHallazgo } from './../../interfaces/rup/IHallazgo';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../../environments/environment';
@@ -9,6 +10,7 @@ import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
 export class PrestacionPacienteService {
 
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
+    private cache: any[] = [];
 
     constructor(private server: Server) { }
 
@@ -21,7 +23,7 @@ export class PrestacionPacienteService {
      *
      * @memberof PrestacionPacienteService
      */
-    get(params: any, options: any = {}): Observable<IPrestacionPaciente[]> {
+    get(params: any, options: any = {}): Observable<any[]> {
 
         if (typeof options.showError === 'undefined') {
             options.showError = true;
@@ -49,6 +51,107 @@ export class PrestacionPacienteService {
     }
 
     /**
+     * Metodo getByPaciente. Busca todas las prestaciones de un paciente
+     * @param {String} idPaciente
+     */
+    getByPaciente(idPaciente: any, idPrestacion?: any): Observable<any[]> {
+        if (this.cache[idPaciente]) {
+            return new Observable(resultado => resultado.next(this.cache[idPaciente]));
+        } else {
+            let opt;
+            opt = {
+                params: {
+                    'idPaciente': idPaciente,
+                    'ordenFecha': true
+                },
+                options: {
+                    showError: true
+                }
+            };
+
+            return this.server.get(this.prestacionesUrl, opt).map(data => {
+                if (idPrestacion) {
+                     data = data.filter(d => d.id !== idPrestacion);
+                }
+                this.cache[idPaciente] = data;
+                return this.cache[idPaciente];
+            });
+        }
+
+    }
+
+    /**
+     * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
+     * @param {String} idPaciente
+     */
+    getByPacienteHallazgo(idPaciente: any, idPrestacion?: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente, idPrestacion).map(prestaciones => {
+            let registros = [];
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                   let agregar =  prestacion.ejecucion.registros
+                    .filter(registro =>
+                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                    .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    registros = [...registros, ...agregar];
+
+                }
+            });
+            let registroSalida = [];
+            registros.forEach(registro => {
+                debugger;
+                let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
+                if (!registroEncontrado) {
+                    let dato = {
+                        concepto: registro.concepto,
+                        idPrestacion: registro.idPrestacion,
+                        evoluciones: [{
+                            fechaCarga: registro.createdAt,
+                            fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
+                            estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : '',
+                            esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                            esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
+                            evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
+                        }]
+                    };
+                    registroSalida.push(dato);
+                } else {
+                    let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                    let nuevaEvolucion = {
+                        fechaCarga: registro.createdAt,
+                        fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
+                        estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
+                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                        esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
+                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
+                    };
+                    registroEncontrado.evoluciones.push(nuevaEvolucion);
+                }
+
+            });
+            this.cache[idPaciente]['registros'] = registroSalida;
+            return registroSalida;
+        });
+    }
+
+
+    /**
+     * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
+     * @param {String} idPaciente
+     */
+    getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        let registros = [];
+        if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
+            registros = this.cache[idPaciente]['registros'];
+            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        } else {
+            this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
+                return new Observable(resultado => resultado.next(hallazgos.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+            });
+        }
+    }
+
+    /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
@@ -68,10 +171,10 @@ export class PrestacionPacienteService {
     }
 
     /**
-     * Metodo post. Inserta un objeto prestacionPaciente nuevo.
-     * @param {IPrestacionPaciente} prestacion Recibe IPrestacionPaciente
+     * Metodo post. Inserta un objeto nuevo.
+     * @param {any} prestacion Recibe solicitud RUP con paciente
      */
-    post(prestacion: any): Observable<IPrestacionPaciente> {
+    post(prestacion: any): Observable<any> {
         return this.server.post(this.prestacionesUrl, prestacion);
     }
 
@@ -83,9 +186,9 @@ export class PrestacionPacienteService {
         return this.server.put(this.prestacionesUrl + '/' + prestacion.id, prestacion);
     }
 
-    patch(prestacion: IPrestacionPaciente, cambios: any): Observable<IPrestacionPaciente> {
-        return this.server.patch(this.prestacionesUrl + '/' + prestacion.id, cambios);
+    patch(idPrestacion: string, cambios: any): Observable<IPrestacionPaciente> {
+        return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
 
-// tslint:disable-next-line:eofline
+    // tslint:disable-next-line:eofline
 }

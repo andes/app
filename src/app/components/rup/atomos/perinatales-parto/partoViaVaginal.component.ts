@@ -11,11 +11,11 @@ import { Plex } from '@andes/plex';
 export class PartoViaVaginalComponent extends Atomo {
 
    ngOnInit() {
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {
             valor: null,
             detalle: null
         };
-        if (this.data[this.tipoPrestacion.key].valor) {
+        if (this.data[this.elementoRUP.key].valor) {
             this.devolverValores();
         }
     }
@@ -24,5 +24,5 @@ export class PartoViaVaginalComponent extends Atomo {
         { id: 'Parto vaginal asistido con extractor de vacio', nombre: 'Parto vaginal asistido con extractor de vacio' },
         { id: 'Parto Vaginal con fórceps y cuidados postparto', nombre: 'Parto Vaginal con fórceps y cuidados postparto' },
     ];
-  
+
 }

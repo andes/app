@@ -7,8 +7,10 @@
                     <!--Botones / Acciones-->
                     <div class="clearfix">
                         <div class="page-title float-left">Gestor de Agendas</div>
-                        <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas" (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
-                            (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)" (revisionAgendaEmit)="revisionAgenda($event)">
+                        <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
+                            (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
+                            (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)"
+                            (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)" [turnosSuspendidos]="turnosSuspendidos">
                         </botones-agenda>
                     </div>
 
@@ -66,7 +68,10 @@
                                 <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <span>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span></span>
+                                <div>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio
+                                    | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                    <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
+                                </div>
                                 <div>
                                     <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
@@ -81,8 +86,10 @@
                                     </ng-container>
                                 </div>
                             </td>
-                            <td class="text-right">
-                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
+                            <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
+                                <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
+                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
+                                <span class="badge-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -101,24 +108,36 @@
                 </div>
                 <!-- Muestra el panel de Notas de Agendas -->
                 <div *ngIf="showAgregarNotaAgenda">
-                    <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)" (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
+                    <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
+                        (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
+                </div>
+                <!-- Panel Reasignar Turnos Automático -->
+                <div *ngIf="showReasignarTurnoAutomatico">
+                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
                 </div>
             </plex-box>
         </div>
+
     </div>
 </section>
 
 <!--Footer-->
 <footer *ngIf="autorizado && showGestorAgendas">
     <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
-    <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="redirect('turnos')"></plex-button>
+    <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
 </footer>
 
 <!--Componentes-->
 <clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-<dar-turnos *ngIf="autorizado && showDarTurnos" [reasignar]="reasignar"></dar-turnos>
+<dar-turnos *ngIf="autorizado && showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
 <sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
 <planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
 <planificar-agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-<revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
+<revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
+    (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
+
+<!-- Pantalla Reasignar Turnos -->
+<reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
+    class="plex-layout"></reasignar-turno>
+<reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>

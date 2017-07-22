@@ -7,7 +7,7 @@ import { IPaciente } from '../../../interfaces/IPaciente';
     templateUrl: 'frecuenciaCardiaca.html'
 })
 export class FrecuenciaCardiacaComponent extends Atomo {
-  
+
     getMensajes() {
         let Edad;
         let Sexo;
@@ -19,7 +19,7 @@ export class FrecuenciaCardiacaComponent extends Atomo {
 
         Sexo = this.paciente.sexo;
         Edad = 20; // this.paciente.edad; //Solo es para probar!!
-        frecuenciaCardiaca = this.data[this.tipoPrestacion.key];
+        frecuenciaCardiaca = this.data[this.elementoRUP.key];
 
         if (frecuenciaCardiaca) {
             if (Sexo === 'masculino') {

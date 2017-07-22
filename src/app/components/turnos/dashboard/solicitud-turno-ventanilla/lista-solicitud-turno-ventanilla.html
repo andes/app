@@ -1,0 +1,42 @@
+<fieldset>
+    <legend>Solicitudes pendientes de Turno</legend>
+    <div class="row">
+        <div class="col-12">
+            <ng-container *ngIf="solicitudesPrestaciones.length > 0; then lista else mensaje"></ng-container>
+            <ng-template #lista>
+                <!-- Lista de solicitudes -->
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Prestación</th>
+                            <th>Profesional</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let prestacion of solicitudesPrestaciones">
+                            <td>
+                                {{ prestacion.solicitud.fecha | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                {{ prestacion.solicitud.tipoPrestacion.term }}
+                            </td>
+                            <td>
+                                {{ prestacion.solicitud.profesional | profesional }}
+                            </td>
+                            <td>
+                                <plex-button type="success" icon="mdi mdi-account-check" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+
+            <!-- Mensaje -->
+            <ng-template #mensaje>
+                <i class="mdi mdi-information-variant"></i> No hay solicitudes pendientes
+                <hr>
+            </ng-template>
+        </div>
+    </div>
+</fieldset>

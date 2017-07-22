@@ -1,0 +1,40 @@
+<ng-container *ngIf="!soloValores">
+    <label for="observaciones">
+        Motivo de solicitud:
+    </label>
+    <textarea class="form-control" [(ngModel)]="data[elementoRUP.key].motivo" rows="4" id="motivo" name="motivo" placeholder="Ingrese el motivo de la solicitud" (keyup)="devolverValores()"></textarea>
+
+    <plex-bool [(ngModel)]="data[elementoRUP.key].autocitado" (change)="devolverValores()" name="autocitado" label="¿Autocitado?" type="slide"></plex-bool>
+
+    <plex-select [(ngModel)]="data[elementoRUP.key].profesionales" (getData)="loadProfesionales($event)"
+        placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es"
+
+        (change)="quitarOrder()" *ngIf="!this.data[this.elementoRUP.key].autocitado">
+    </plex-select>
+</ng-container>
+
+
+
+
+<div *ngIf="soloValores">
+    <p>
+        <label> Motivo de solicitud: </label>
+        <br /> {{data[elementoRUP.key].motivo}}
+    </p>
+
+    <p *ngIf="data[elementoRUP.key].autocitado">
+        <b> Autocitado: </b>
+        <br /> {{data[elementoRUP.key].autocitado}}
+    </p>
+    <div  *ngIf="data[elementoRUP.key].profesionales">
+
+        <p>
+            <b>Profesional/es:</b>
+            <br />
+            <span *ngFor="let profesional of data[elementoRUP.key].profesionales">
+                {{profesional.apellido}}, {{profesional.nombre}}
+                <br />
+            </span>
+        </p>
+    </div>
+</div>

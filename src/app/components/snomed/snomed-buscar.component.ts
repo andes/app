@@ -1,5 +1,6 @@
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges } from '@angular/core';
-import { SnomedService } from './../../services/snomed.service';
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -12,14 +13,11 @@ import { Observable } from 'rxjs/Rx';
     host: {
         '(document:click)': 'handleClick($event)'
     },
+    // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None,
     styles: [`
     .results {
         margin-top: 0;
-    }
-    
-    .results.list-group>.list-group-item {
-        padding: 5px;
-        cursor: -webkit-grab;
     }`
     ]
 })
@@ -36,12 +34,19 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // el text field para ingresar la busqueda a mano
     @Input() searchTermInput: String;
 
+    // tipo de busqueda a realizar por: problemas / procedimientos /
+    @Input() tipoBusqueda: String;
+
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+
+    // Output de un boolean para indicar cuando se tienen resultados de 
+    //busqueda o no.
+    @Output() _tengoResultado: EventEmitter<any> = new EventEmitter<any>();
 
     // cerrar si cliqueo fuera de los resultados
     // private closeListAfterClick: Boolean = false;
@@ -52,8 +57,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
-    // lista de problemas de resultados
-    public listaProblemasMaestro = [];
+
+    public resultados = [];
     public elementRef;
 
     // boolean para indicar si esta cargando o no
@@ -61,14 +66,20 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';
+    private dragAndDrop = false;
+
+    private cachePrestacionesTurneables = null;
+
+    /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
+    */
 
     // inyectamos servicio de snomed, plex y tambien ElementRef
-    // ElementRef lo utilizo para tener informacion del 
+    // ElementRef lo utilizo para tener informacion del
     // html del codigo de este componente en el DOM
     constructor(private SNOMED: SnomedService, private plex: Plex,
-        myElement: ElementRef) {
+        myElement: ElementRef, public servicioTipoPrestacion: TipoPrestacionService) {
         this.elementRef = myElement;
     }
 
@@ -79,12 +90,26 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
-     }
+        // Trae las prestaciones turneables y la guarda en memoria para luego 
+        // filtrar los resultados de las busquedas
+        this.iniciarPrestacionesTurneables();
+    }
 
-     ngOnChanges(changes: any) {
+    iniciarPrestacionesTurneables() {
+        if (!this.cachePrestacionesTurneables) {
+            this.servicioTipoPrestacion.get({}).subscribe(tiposPrestacion => {
+                this.cachePrestacionesTurneables = tiposPrestacion;
+            });
+        }
+    }
+
+
+    ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
         // y hubo algun cambio, entonces ejecuto la busqueda manual
-        this.busquedaManual();
+        if (this.searchTermInput) {
+            this.busquedaManual();
+        }
     }
 
     // iniciar busqueda es un metodo creado para poder buscar cuando
@@ -115,14 +140,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         this._onDragEnd.emit(e);
     }
 
-    setTipoBusqueda(tipoBusqueda): void {
-        // seteamos el tipo de busqueda que deseamos realizar
-        this.tipoBusqueda = tipoBusqueda;
-
-        // buscamos por la serpiente de SNOMED
-        this.buscar();
-    }
-
     /**
      * Buscar trastornos o hallazgos en el servicio de SNOMED
      * @param event  change event en el input buscar
@@ -131,9 +148,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     buscar(): void {
         // console.log($e);
         // if ($e.keyCode === 'Escape') {
-        //     this.listaProblemasMaestro = [];
+        //     this.resultados = [];
         // //     return false;
         // }
+
+        this.iniciarPrestacionesTurneables();
 
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
@@ -141,13 +160,14 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm) {
+            this._tengoResultado.emit(true);
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
 
             // armamos query para enviar al servicio
             let query = {
-                search: search,
-                tipo: this.tipoBusqueda
+                search: search
+                //,tipo: this.tipoBusqueda
             };
 
             // seteamos un timeout de 3 segundos luego que termino de escribir
@@ -155,13 +175,34 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
                 this.loading = true;
-                this.listaProblemasMaestro = [];
+                this.resultados = [];
+
+                // alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
-                //this.SNOMED.buscarTrastornosHallazgos(search).subscribe(problemas => {
-                this.SNOMED.get(query).subscribe(problemas => {
+                let apiMethod;
+                switch (this.tipoBusqueda) {
+                    case 'problemas':
+                        apiMethod = this.SNOMED.getProblemas(query);
+                        break;
+                    case 'procedimientos':
+                        apiMethod = this.SNOMED.getProcedimientos(query);
+                        break;
+                    default:
+                        apiMethod = this.SNOMED.get(query);
+                        break;
+                }
+
+                apiMethod.subscribe(problemas => {
                     this.loading = false;
-                    this.listaProblemasMaestro = problemas;
+                    this.resultados = problemas;
+
+                    if (this.tipoBusqueda === 'procedimientos') {
+                        // Filtrar de los resultado las prestaciones turneables
+                        this.resultados = this.resultados.filter(concepto => {
+                            return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
+                        });
+                    }
 
                 }, err => {
                     this.loading = false;
@@ -170,7 +211,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            this.listaProblemasMaestro = [];
+            this.resultados = [];
+            this._tengoResultado.emit(false);
         }
     }
 
@@ -203,13 +245,17 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            // this.listaProblemasMaestro = [];
+            this.resultados = [];
             this.hideLista = true;
+            this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
+        this.resultados = [];
+        this.searchTerm = '';
         this.evtData.emit(concepto);
     }
+
 }

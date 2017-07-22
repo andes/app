@@ -9,13 +9,13 @@
             </div>
             <div class="row login-content">
                 <div class="col">
-                    <plex-int label="Ingrese su usuario provincial OneLogin" prefix="<i class='mdi mdi-account-key'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
+                    <plex-int label="Ingrese su usuario provincial OneLogin" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-key'></i>" [(ngModel)]="usuario" name="usuario" [required]="true">
                     </plex-int>
                     <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-dialpad'></i>" [(ngModel)]="password" name="password" [password]="true" [required]="true">
                     </plex-text>
                     <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
                     </plex-select>
-                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" [disabled]="loading" (click)="login($event)"></plex-button>
+                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" [disabled]="deshabilitar" (click)="login($event)"></plex-button>
                     <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
                 </div>
             </div>

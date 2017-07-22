@@ -6,6 +6,13 @@ import { IProfesional } from './../IProfesional';
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IPaciente } from './../IPaciente';
 
+export interface SnomedConcept {
+    conceptId: String;
+    term: String;
+    fsn: String;
+    semanticTag: String;
+};
+
 export interface IPrestacionPaciente {
     id: String;
     idPrestacionOrigen: String; // prestacion desde la que se solicita
@@ -65,16 +72,31 @@ export interface IPrestacionPaciente {
 
 
     ejecucion: {
-        // prestaciones ejecutadas en el transcurso de la prestacion de origen
-        prestaciones: [IPrestacionPaciente],
-        listaProblemas: IProblemaPaciente[],
-        fecha: Date,
-        organizacion: IOrganizacion,
-        profesional: IProfesional,
-        // TODO: Definir evoluciones y prestacionesSolicitadas bajo
-        // que objeto van a estar,... solicitud .. ejecucion .. ¿postEjecucion?
-        evoluciones: [any],
-        datosPropios: Object
+        fecha: Date
+        turno: String,
+        organizacion: {
+            id: String,
+            nombre: String
+        },
+        registros: [{
+            concepto: SnomedConcept;
+            valor: String,
+            destacado: Boolean,
+            relacionadoCon: SnomedConcept,
+            tipo: string
+            createdBy: {
+                organizacion: {
+                    id: String,
+                    nombre: String
+                },
+                documento: String,
+                username: String,
+                apellido: String,
+                nombre: String,
+                nombreCompleto: String
+            };
+            createdAt: Date;
+        }];
     };
 
     // a futuro que se ejecuta
@@ -86,7 +108,7 @@ export interface IPrestacionPaciente {
             tipo: String,
             profesional: IProfesional
         }
-       
+
     ];
-// tslint:disable-next-line:eofline
+    // tslint:disable-next-line:eofline
 }

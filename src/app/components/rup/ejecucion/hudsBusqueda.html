@@ -1,0 +1,81 @@
+<plex-box>
+    <header>
+        <div class="clearfix">
+            <div class="page-title">
+                HUDS
+            </div>
+        </div>
+    </header>
+
+    <div class="row">
+        <div class="col">
+            <plex-button type="btn btn-sm btn-problemas" label="Problemas Crónicos" (click)="listarProblemasCronicos()">
+            </plex-button>
+            <!-- <plex-button type="btn btn-sm btn-problemas" label="Hallazgos" (click)="listarHallazgos()">
+            </plex-button> -->
+            <plex-button type="btn btn-sm btn-prestaciones" label="Prestaciones" (click)="listarPrestaciones()">
+            </plex-button>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col">
+            <div *ngIf="prestaciones" class="list-group">
+                <ng-container *ngFor="let prestacion of prestaciones; let i = index">
+                    <div class="rup-card mini">
+                        <div class="type prestaciones">
+                        </div>
+                        <div class="rup-content">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
+                                    </div>
+                                </div>
+                                <div class="title">
+                                    {{ prestacion.solicitud.tipoPrestacion.term }}
+                                </div>
+                            </div>
+                            <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+
+            <ul *ngIf="hallazgos" class="conceptos list-unstyled">
+                <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini">
+                            <div class="type problemas">
+                                <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                            </div>
+                            <div class="rup-content">
+                                <div class="header">
+                                    <div class="title">
+                                        {{ hallazgo.concepto.term }}
+                                    </div>
+                                    <br>
+                                    <small *ngIf="hallazgo.evoluciones">
+                                        ultima evolución: {{ hallazgo.evoluciones[hallazgo.evoluciones.length - 1].fechaCarga | fecha}}
+                                    </small><br>
+                                    <span *ngIf="hallazgo.evoluciones[hallazgo.evoluciones.length - 1].esCronico" class="badge-danger">
+                                        Crónico
+                                    </span>
+
+                                    <div class="actions">
+                                        <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)">
+                                            <i class="mdi mdi-plus-box-outline"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+</plex-box>
