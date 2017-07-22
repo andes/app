@@ -54,7 +54,7 @@ export class PrestacionPacienteService {
      * Metodo getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
-    getByPaciente(idPaciente: any): Observable<any[]> {
+    getByPaciente(idPaciente: any, idPrestacion?: any): Observable<any[]> {
         if (this.cache[idPaciente]) {
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
         } else {
@@ -70,6 +70,9 @@ export class PrestacionPacienteService {
             };
 
             return this.server.get(this.prestacionesUrl, opt).map(data => {
+                if (idPrestacion) {
+                     data = data.filter(d => d.id !== idPrestacion);
+                }
                 this.cache[idPaciente] = data;
                 return this.cache[idPaciente];
             });
@@ -81,31 +84,34 @@ export class PrestacionPacienteService {
      * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteHallazgo(idPaciente: String): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
-
+    getByPacienteHallazgo(idPaciente: any, idPrestacion?: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente, idPrestacion).map(prestaciones => {
             let registros = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
-                    registros = [...registros, ...prestacion.ejecucion.registros.filter(registro =>
-                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')];
+                   let agregar =  prestacion.ejecucion.registros
+                    .filter(registro =>
+                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                    .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    registros = [...registros, ...agregar];
 
                 }
             });
             let registroSalida = [];
             registros.forEach(registro => {
+                debugger;
                 let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
                 if (!registroEncontrado) {
                     let dato = {
                         concepto: registro.concepto,
+                        idPrestacion: registro.idPrestacion,
                         evoluciones: [{
                             fechaCarga: registro.createdAt,
-                            fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
-                            descripcion: registro.valor.descripcion ? registro.valor.descripcion : '',
-                            estado: registro.valor.estado ? registro.valor.estado : '',
-                            esCronico: registro.valor.esCronico ? registro.valor.esCronico : false,
-                            esEnmienda: registro.valor.esEnmienda ? registro.valor.esEnmienda : false,
-                            evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
+                            fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
+                            estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : '',
+                            esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                            esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
+                            evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                         }]
                     };
                     registroSalida.push(dato);
@@ -113,21 +119,37 @@ export class PrestacionPacienteService {
                     let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
-                        fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
-                        descripcion: registro.valor.descripcion ? registro.valor.descripcion : ultimaEvolucion.descripcion,
-                        estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                        esCronico: registro.valor.esCronico ? registro.valor.esCronico : false,
-                        esEnmienda: registro.valor.esEnmienda ? registro.valor.esEnmienda : false,
-                        evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
+                        fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
+                        estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
+                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                        esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
+                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                     };
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
                 }
 
             });
+            this.cache[idPaciente]['registros'] = registroSalida;
             return registroSalida;
         });
     }
 
+
+    /**
+     * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
+     * @param {String} idPaciente
+     */
+    getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        let registros = [];
+        if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
+            registros = this.cache[idPaciente]['registros'];
+            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        } else {
+            this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
+                return new Observable(resultado => resultado.next(hallazgos.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+            });
+        }
+    }
 
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.

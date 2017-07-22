@@ -16,8 +16,7 @@
 
         <div class="row" *ngIf="paciente">
             <div class="col">
-                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Tipos de prestaciones" labelField="term"
-                    (getData)="loadPrestacionesProfesional($event)" (change)="crearPrestacionVacia()">
+                <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Tipos de prestaciones" labelField="term" (getData)="loadPrestacionesProfesional($event)" (change)="crearPrestacionVacia()">
                 </plex-select>
                 <!--
                 <snomedConcept-buscar (evtData)="crearPrestacionVacia($event)"></snomedConcept-buscar>-->
@@ -49,8 +48,7 @@
                 <fieldset>
                     <!--<legend>Filtro tipo de prestacion</legend>-->
                 </fieldset>
-                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" [data]="selectPrestacionesProfesional"
-                    labelField="term" (change)="filtrarPacientes(filtrosPacientes)">
+                <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Prestaciones" [data]="selectPrestacionesProfesional" labelField="term" (change)="filtrarPacientes(filtrosPacientes)">
                 </plex-select>
             </div>
             <div class="col-3">
@@ -71,8 +69,7 @@
         <!-- Buscador de Pacientes MPI -->
         <div class="row" *ngIf="mostrarPacientesSearch">
             <div class="col" *ngIf="!buscarMPI">
-                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>"
-                    placeholder="Buscar pacientes" (selected)="onPacienteSelected($event)"></plex-text>
+                <plex-text [(ngModel)]="searchTerm" (change)="buscar() && mostrarLista = false" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Buscar pacientes" (selected)="onPacienteSelected($event)"></plex-text>
             </div>
             <div class="col" *ngIf="buscarMPI">
                 <pacientesSearch (change)="mostrarLista = false" (selected)="onPacienteSelected($event)" [modoCompleto]="false" [textSearch]="searchTerm"
@@ -98,7 +95,6 @@
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
-                    {{ pacientesPresentes | json }}
                     <tbody>
                         <tr *ngFor="let paciente of pacientesPresentes" [ngClass]="{'table-active': paciente.estado === 'Suspendido'}">
                             <td>
@@ -120,8 +116,7 @@
                             </td>
                             <td class="text-center">
                                 <plex-button *ngIf="paciente.estado === 'Programado'" (click)="elegirPrestacion(paciente)" label="Iniciar Prestación" type="success btn-sm"></plex-button>
-                                <plex-button *ngIf="paciente.estado !== 'Programado' && paciente.estado !== 'validada'" (click)="elegirPrestacion(paciente)"
-                                    label="Ver registros" type="primary btn-sm"></plex-button>
+                                <plex-button *ngIf="paciente.estado !== 'Programado' && paciente.estado !== 'validada'" (click)="elegirPrestacion(paciente)" label="Ver registros" type="primary btn-sm"></plex-button>
                                 <plex-button *ngIf="paciente.estado === 'validada'" (click)="irResumen(paciente.idPrestacion)" label="Ver resumen" type="primary btn-sm"></plex-button>
                             </td>
                         </tr>

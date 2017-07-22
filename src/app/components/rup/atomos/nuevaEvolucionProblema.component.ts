@@ -4,16 +4,18 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
 @Component({
-    selector: 'rup-evolucion-problema-default',
-    templateUrl: 'evolucionProblemaDefault.html'
+    selector: 'rup-nueva-evolucion-problema',
+    templateUrl: 'nuevaEvolucionProblema.html'
 })
 
-export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
+export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
     public fechaInicio: Date;
+    public descripcion: String; //
     public estado: String; // activo / inactivo / resuleto
     public esCronico: Boolean = false; //
     public esEnmienda: Boolean = false;
     public evolucion: String; //
+    public HallazgoCompleto;
 
     //estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
@@ -30,11 +32,11 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            //this.friendlyDate(this.datosIngreso.fechaInicio);
             this.devolverValores();
-        }else {
-            this.data[this.elementoRUP.key].estado =  { id: 'activo', nombre: 'Activo' };
         }
+
+
+
 
     }
 
@@ -60,16 +62,5 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
         this.devolverValores();
     }
-/*
-    friendlyDate(fecha) {
-        oldDateMoment = moment(oldDate);
-        newDateMoment = moment(newDate);
 
-        numYears = newDateMoment.diff(oldDateMoment, 'years');
-        oldDateMoment = oldDateMoment.add(numYears, 'years');
-        numMonths = newDateMoment.diff(oldDateMoment, 'months');
-        oldDateMoment = oldDateMoment.add(numMonths, 'months');
-        numDays = newDateMoment.diff(oldDateMoment, 'days');
-    }
-    */
 }

@@ -9,8 +9,10 @@
 
     <div class="row">
         <div class="col">
-            <plex-button type="btn btn-sm btn-problemas" label="Hallazgos" (click)="listarHallazgos()">
+            <plex-button type="btn btn-sm btn-problemas" label="Problemas Crónicos" (click)="listarProblemasCronicos()">
             </plex-button>
+            <!-- <plex-button type="btn btn-sm btn-problemas" label="Hallazgos" (click)="listarHallazgos()">
+            </plex-button> -->
             <plex-button type="btn btn-sm btn-prestaciones" label="Prestaciones" (click)="listarPrestaciones()">
             </plex-button>
         </div>
@@ -45,8 +47,7 @@
 
             <ul *ngIf="hallazgos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>

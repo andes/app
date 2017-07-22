@@ -113,7 +113,6 @@ export class PuntoInicioComponent implements OnInit {
      * @memberof PuntoInicioComponent
      */
     TraetodasLasPrestacionesFiltradas(params) {
-
         let fechaActual = new Date();
         let fechaDesde = fechaActual.setHours(0, 0, 0, 0);
         let fechaHasta = fechaActual.setHours(23, 59, 0, 0);
@@ -219,7 +218,7 @@ export class PuntoInicioComponent implements OnInit {
 
         // Buscamos los que solo tienen prestacion y no tienen turno
         let prestacionesSinTurno = this.todasLasPrestaciones.filter(prestacion => {
-            if (prestacion.solicitud.turno === null) {
+            if (prestacion.ejecucion.solicitud === null) {
                 return prestacion;
             }
         });
@@ -290,7 +289,7 @@ export class PuntoInicioComponent implements OnInit {
                     apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
                 },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
             ejecucion: {
                 fecha: new Date(),
@@ -298,7 +297,10 @@ export class PuntoInicioComponent implements OnInit {
                 // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
+                organizacion: {
+                     id: this.auth.organizacion.id,
+                     nombre: this.auth.organizacion.nombre
+                    }
             },
             estados: {
                 fecha: new Date(),
@@ -368,7 +370,6 @@ export class PuntoInicioComponent implements OnInit {
                 solicitud: {
                     tipoPrestacion: unPacientePresente.tipoPrestacion,
                     fecha: new Date(),
-                    turno: unPacientePresente.turno.id,
                     hallazgos: [],
                     prestacionOrigen: null,
                     // profesional logueado
@@ -383,6 +384,7 @@ export class PuntoInicioComponent implements OnInit {
                 ejecucion: {
                     fecha: new Date(),
                     registros: [],
+                    turno: unPacientePresente.turno.id,
                     // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
 
                     // organizacion desde la que se solicita la prestacion
@@ -402,6 +404,7 @@ export class PuntoInicioComponent implements OnInit {
             });
         }
     }
+
 
 
     /**
@@ -459,7 +462,6 @@ export class PuntoInicioComponent implements OnInit {
      */
     filtrarPacientes(misPacientes: boolean) {
         this.filtrosPacientes = misPacientes;
-        debugger;
         let usu = this.auth.usuario;
         let listadoFiltrado = [... this.pacientesPresentesCompleto];
 
