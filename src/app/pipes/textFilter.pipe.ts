@@ -11,7 +11,6 @@ export class TextFilterPipe implements PipeTransform {
             return items;
         }
         // value = value.trim();
-        debugger;
         // PARCHE HASTA CONTAR CON INTERFAZ DE PERMISOS
         items.forEach((item: any) => item.usuario = item.usuario.toString());
         return items.filter((item: any) =>

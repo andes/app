@@ -469,7 +469,6 @@ export class pacienteActualizarComponent implements OnInit {
                 this.pacienteService.get(dto).subscribe(resultado => {
                     this.pacientesSimilares = resultado;
                     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
-                        debugger;
                         if (this.pacientesSimilares.length === 1 && this.pacientesSimilares[0].paciente.id === this.pacienteModel.id) {
                             resolve(false);
 

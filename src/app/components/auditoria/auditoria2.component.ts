@@ -116,7 +116,6 @@ export class Auditoria2Component implements OnInit {
             idVinculados.forEach(identificador => {
                 if (identificador.entidad === 'ANDES') {
                     this.pacienteService.getById(identificador.valor).subscribe(pac => {
-                        debugger;
                         let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, pac,  this.weights, this.tipoDeMatching);
                         let patient = {
                             matching : 0,
@@ -248,7 +247,6 @@ export class Auditoria2Component implements OnInit {
         this.plex.confirm('¿Está seguro que desea desvincular a este paciente?').then((resultado) => {
             let rta = resultado;
             if (rta) {
-                debugger;
                 this.pacientesVinculados.splice(this.pacientesVinculados.indexOf(pac), 1);
                 this.pacientesDesvinculados.push(pac);
                 this.pacienteService.patch(this.pacienteSelected.id, {

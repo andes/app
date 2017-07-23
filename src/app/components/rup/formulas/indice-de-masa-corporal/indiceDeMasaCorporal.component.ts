@@ -53,13 +53,6 @@ export class IndiceDeMasaCorporalComponent extends Formula {
     return list;
   }
 
-  //  ngDoCheck(){
-  //    debugger;
-  //    this.calculoIMC();
-
-  // }
-
-
   calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
     // calcula el imc y/o devuelve alertas al usuario.
     let peso = null;

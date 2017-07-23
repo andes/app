@@ -99,7 +99,6 @@ export class PrestacionPacienteService {
             });
             let registroSalida = [];
             registros.forEach(registro => {
-                debugger;
                 let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
                 if (!registroEncontrado) {
                     let dato = {

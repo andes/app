@@ -145,7 +145,6 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
     // ****************************************** //
     onSave() {
-        //debugger;
         // if (this.reglas.nombre && this.reglas.valor && this.reglas.condicion) {
         //     this.arrayReglas.push(this.reglas);
         //     console.log(this.arrayReglas);
@@ -159,7 +158,6 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         this.modelo.tipo = this.tipo.id;
         // Modo Update
         // console.log(this.modelo);
-        // debugger;
         // //delete this.modelo.ejecucion //.$order;
         // for (var i in this.modelo.ejecucion) {
         //     delete this.modelo.ejecucion[i].$order;

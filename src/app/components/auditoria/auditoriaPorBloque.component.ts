@@ -56,7 +56,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   constructor(public plex: Plex, private duplicadosService: AuditoriaPorBloqueService) { }
 
   ngOnInit() {
-    debugger;
     //this.loadClaves();
     this.claveActual = this.claves[0];
     //Radio button contains one value from a set of pre defined values
@@ -94,7 +93,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // verClave(suma: boolean) {
-  //   debugger;
   //   if (this.claves) {
   //     var condiciones = suma ? ((this.indice + 1) < this.claves.length) : ((this.indice - 1) >= 0);
   //     if (condiciones) {
@@ -112,7 +110,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // onChageOneKey() {
-  //   debugger;
   //   if (this.claves) {
   //     let index = this.claves.indexOf(this.claveActual);
   //     if (index >= 0) {
@@ -125,9 +122,7 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // loadPacientedPorBloque() {
-  //   debugger;
   //   this.duplicadosService.getPacientesBloque(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-  //     debugger;
   //     if (resultado) {
   //       this.numeroPacientes = [];
   //       for (let i = 0; i < resultado.length; i++) {
@@ -147,7 +142,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
 
   // validarSisa() {
   //   this.duplicadosService.getBloqueValidarSisa(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-  //     debugger;
   //     if (resultado) {
   //       this.pacientes = resultado;
   //     }
@@ -156,7 +150,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
 
   // validarSintys() {
   //   this.duplicadosService.getBloqueValidarSintys(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-  //     debugger;
   //     if (resultado) {
   //       this.pacientes = resultado;
   //     }
@@ -165,10 +158,8 @@ export class AuditoriaPorBloqueComponent implements OnInit {
 
   // eliminarPaciente(paciente: IPaciente) {
   //   this.plex.confirm('Esta seguro que desea eliminar al paciente: ' + paciente.apellido + ' ' + paciente.nombre + '?').then(resultado => {
-  //     debugger;
   //     if (resultado) {
   //       this.duplicadosService.deletePacienteBloque(paciente).subscribe(resultado => {
-  //         debugger;
   //         if (resultado) {
   //           this.loadPacientedPorBloque()
   //         }
@@ -178,11 +169,9 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // fusionaPaciente(paciente: IPaciente, pacFusiona: IPaciente) {
-  //   debugger;
   //   this.plex.confirm('Esta seguro que desea fusionar al paciente seleccionado? ').then(resultado => {
   //     if (resultado) {
   //       this.duplicadosService.fusionarPacienteBloque(paciente, pacFusiona).subscribe(resultado => {
-  //         debugger;
   //         if (resultado) {
   //           this.loadPacientedPorBloque()
   //         }
@@ -192,11 +181,9 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // validarPaciente(paciente: IPaciente, entidad: String) {
-  //   debugger;
   //   this.plex.confirm('Esta seguro que desea validar al paciente ?').then(resultado => {
   //     if (resultado) {
   //       this.duplicadosService.validarPaciente(paciente, entidad).subscribe(resultado => {
-  //         debugger;
   //         if (resultado) {
   //           this.loadPacientedPorBloque();
   //         }
@@ -206,7 +193,6 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   // }
 
   // validarActualizarPaciente(paciente: IPaciente, entidad: String, pacienteEntidad: IPaciente) {
-  //   debugger;
   //   this.plex.confirm('Esta seguro que desea validar al paciente ' + paciente.apellido + ' ?').then(resultado => {
   //     if (resultado) {
   //       this.duplicadosService.validarActualizarPaciente(paciente, entidad, pacienteEntidad).subscribe(resultado => {
