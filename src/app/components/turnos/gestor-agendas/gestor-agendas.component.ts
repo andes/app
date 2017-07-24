@@ -253,8 +253,8 @@ export class GestorAgendasComponent implements OnInit {
         let fecha = moment().format();
 
         if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day');
-            this.fechaHasta = moment(fecha).endOf('day');
+            this.fechaDesde = moment(fecha).startOf('day').toISOString();
+            this.fechaHasta = moment(fecha).endOf('day').toISOString();
         }
 
         this.serviceAgenda.get({

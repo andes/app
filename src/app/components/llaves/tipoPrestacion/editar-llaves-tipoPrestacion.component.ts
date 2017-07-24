@@ -5,7 +5,9 @@ import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoP
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
-import * as enumerados from './../../../utils/enumerados';
+// import * as enumerados from './../../../utils/enumerados';
+import { enumToArray } from '../../../utils/enums';
+import { TiposSexos, TiposEdades } from './../enums';
 
 @Component({
     selector: 'editar-llaves-tipoPrestacion',
@@ -40,6 +42,9 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     permisos = [];
     showEditarLlave = false;
     unidadesValidas = true;
+
+    public tiposSexos = enumToArray(TiposSexos);
+    public tiposDeEdades = enumToArray(TiposEdades);
 
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
@@ -169,11 +174,11 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     loadSexo(event) {
-        event.callback(enumerados.getObjSexos());
+        event.callback(this.tiposSexos);
     }
 
     loadUnidadesEdad(event) {
-        event.callback(enumerados.getObjUnidadesEdad());
+        event.callback(this.tiposDeEdades);
     }
 
     // UTILS

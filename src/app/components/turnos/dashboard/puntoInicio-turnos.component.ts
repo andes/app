@@ -60,6 +60,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
+
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {

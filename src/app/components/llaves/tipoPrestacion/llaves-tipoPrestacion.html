@@ -47,7 +47,6 @@
                                 </td>
 
                                 <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
-                                    <!-- plex-bool... otra mentira de @jgabriel... xD -->
                                     <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable', !llaveTP.auditable)"></plex-bool>
                                 </td>
 
@@ -59,18 +58,19 @@
                         </template>
                     </tbody>
                 </table>
-
-            </plex-box>
-
         </div>
-        <div class="col-5" *ngIf="showVistaLlavesTP">
-            <plex-box>
-                <editar-llaves-tipoPrestacion *ngIf="llavesTPSeleccionadas.length == 0" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)"
-                    (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
-                <editar-llaves-tipoPrestacion *ngIf="llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)"
-                    (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
-            </plex-box>
-        </div>
+
+        </plex-box>
+
+    </div>
+    <div class="col-5" *ngIf="showVistaLlavesTP">
+        <plex-box>
+            <editar-llaves-tipoPrestacion *ngIf="llavesTPSeleccionadas.length == 0" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)"
+                (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
+            <editar-llaves-tipoPrestacion *ngIf="llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)"
+                (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
+        </plex-box>
+    </div>
     </div>
 </section>
 
