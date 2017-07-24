@@ -405,7 +405,18 @@ fieldset[disabled] .btn-procedimientos.active {
 
 
 /* fin colores botones / acciones */
+
+.dataSolicitud {
+    margin-top: 5px;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding-top: 5px;
+    display: block;
+}
 .dataSolicitud:hover {
+    margin-top: 5px;
     color: #0070BA;
     cursor: default;
+    text-decoration: none;
+    font-size: 1.2em;
 }
