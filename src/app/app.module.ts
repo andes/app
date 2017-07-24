@@ -1,8 +1,3 @@
-
-import { UsuarioService } from './services/usuarios/usuario.service';
-
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -72,10 +67,8 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 
-// ... RUP
-import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
-import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-import { ObservarDatosService } from './services/rup/observarDatos.service';
+// ... Usuarios
+import { UsuarioService } from './services/usuarios/usuario.service';
 
 // ... term
 import { Cie10Service } from './services/term/cie10.service';
@@ -207,10 +200,11 @@ import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sa
 import { BuscadorComponent } from './components/rup/ejecucion/buscador.component';
 import { HudsBusquedaComponent } from './components/rup/ejecucion/hudsBusqueda.component';
 import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
-// snomed
+import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
+import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+import { ObservarDatosService } from './services/rup/observarDatos.service';
+import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-
-// Problemas
 import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 
 // ATOMO SOCIOECONOMICO
@@ -247,7 +241,7 @@ import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPre
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
 
-import { ElementosRupService } from "./services/rup/elementosRUP.service";
+import { ElementosRupService } from './services/rup/elementosRUP.service';
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -341,7 +335,8 @@ export const RUP_COMPONENTS = [
   EvolucionProblemaDefaultComponent,
   HudsBusquedaComponent,
   BuscadorComponent,
-  SolicitudPrestacionDefaultComponent
+  SolicitudPrestacionDefaultComponent,
+  PrestacionCrearComponent 
 ];
 
 // Locales
