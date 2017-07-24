@@ -1,5 +1,6 @@
 <header *ngIf="prestacion">
-    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="showBotonCambioPaciente" [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="showBotonCambioPaciente" [paciente]="prestacion.paciente"
+        [prestacion]="prestacion"></header-paciente>
 </header>
 
 <pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false"></pacientesSearch>
@@ -21,7 +22,7 @@
                         </div>
                         <div class="col-3 float-right">
                             <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"><i class="mdi mdi-eye mdi-12px"></i> Solicitud</a>
-                            <a  href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
+                            <a href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
                         </div>
                     </div>
                 </header>
@@ -93,8 +94,11 @@
                                             </a>
 
                                             <!--<div *ngIf="showVincular">-->
-                                            <div>
-
+                                               
+                                              <div *ngIf="registros.length > 1 && elemento.relacionadoCon === null && elemento?.items.length > 0">  
+                                                   <!-- <pre>{{elemento?.items.length | json}}</pre>  -->
+                                             <!-- <div>  -->
+                                                  <!-- {{elemento | json}} -->
                                                 <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)"
                                                     [items]="elemento.items"></plex-dropdown>
                                             </div>
