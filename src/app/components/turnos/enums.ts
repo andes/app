@@ -21,7 +21,16 @@ export let EstadosAgenda: IEnum = {
     'pausada': {
         nombre: 'Pausada',
         class: 'warning'
+    },
+    'asistenciaCerrada': {
+        nombre: 'Asistencia Cerrada',
+        class: 'warning'
+    },
+    'codificada': {
+        nombre: 'Codificada',
+        class: 'danger'
     }
+
 };
 
 
@@ -36,6 +45,21 @@ export let EstadosAsistencia: IEnum = {
     },
     'sinDatos': {
         nombre: 'Sin Datos',
+        class: 'warning'
+    }
+};
+
+export let PrioridadesPrestacion: IEnum = {
+    'no prioritario': {
+        nombre: 'No Prioritario',
+        class: 'success'
+    },
+    'urgencia': {
+        nombre: 'Urgencia',
+        class: 'danger'
+    },
+    'emergencia': {
+        nombre: 'Emergencia',
         class: 'warning'
     }
 };

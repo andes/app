@@ -1,0 +1,66 @@
+   .rup-card {
+        width: 100%;
+        display: flex;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .rup-card .type {
+        padding: 5px;
+        width: 20px;
+        float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .rup-card .type i {
+        color: white;
+    }
+
+    .rup-card .rup-content {
+        margin: 0;
+        width: 100%;
+    }
+
+    .rup-card .rup-content .rup-body {
+        padding: 15px;
+    }
+
+    .rup-card .rup-content .header {
+        padding: 5px 15px;
+        text-transform: capitalize;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .rup-card .rup-content .header .title {
+        display: inline-flex;
+    }
+
+    .rup-card .rup-content .header .actions {
+        float: right!important;
+    }
+
+    .rup-card .rup-content .rup-footer {
+        padding: 5px 15px;
+    }
+
+    .prestaciones {
+        background-color: #3344AA;
+    }
+
+    .planes {
+        background-color: #5C8799;
+    }
+
+    .problemas {
+        background-color: #968005;
+    }
+
+    .procedimientos {
+        background-color: #92278e;
+    }
+
+    .page-title b {
+        font-weight: 400;
+    }

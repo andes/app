@@ -1,0 +1,87 @@
+<lista-solicitud-turno-ventanilla [paciente]="paciente" (solicitudPrestacionEmit)="solicitudPrestacionDarTurno($event)" #listaSolicitudTurnoVentanilla>
+</lista-solicitud-turno-ventanilla>
+
+<plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud nueva" (click)="formularioSolicitud()"></plex-button>
+
+<form #form="ngForm" *ngIf="showCargarSolicitud">
+
+    <fieldset>
+        <legend>Cargar Solicitud Nueva</legend>
+        <div class="row">
+            <div class="col-8">
+                <label>Paciente</label> {{ modelo.paciente | paciente }}
+                <span>{{ modelo.paciente.documento | number }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+            </div>
+        </div>
+
+        <!-- Fecha Origen -->
+        <div class="row">
+            <div class="col-12">
+                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud" label="Fecha de solicitud" [required]="true"
+                    [required]="true"></plex-datetime>
+            </div>
+        </div>
+
+        <!-- Organización Origen  -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionOrigen" (getData)="loadOrganizacion($event)" label="Organización origen"
+                    [required]="true" placeholder="Seleccione la organización" labelField="nombre">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Profesional Origen -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesionalOrigen" (getData)="loadProfesionales($event)" label="Profesional solicitante"
+                    [required]="true" placeholder="Seleccione el profesional" labelField="apellido + ' ' + nombre">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Tipo Prestación -->
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación solicitada"
+                    [required]="true" name="tipoPrestacion" label="Tipo de Prestación">
+                </plex-select>
+            </div>
+        </div>
+
+        <!-- Autocitado? -->
+        <div class="row">
+            <div class="col-12">
+                <plex-bool [(ngModel)]="registros.solicitudPrestacion.autocitado" label="Autocitado" name="autocitado"></plex-bool>
+            </div>
+        </div>
+
+        <!-- Profesional Destino -->
+        <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
+            <div class="col-12">
+                <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesionales destino (sugeridos)" name="profesionales"
+                    (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido+' '+nombre">
+                </plex-select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
+                <label for="registros">Notas / Diagnóstico / Motivo</label>
+                <textarea class="form-control" [(ngModel)]="registros.solicitudPrestacion.motivo" name="motivo" id="registros" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="mt-3 float-right">
+            <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+            </plex-button>
+            <plex-button type="success" icon="mdi-content-save" label="Guardar" (click)="guardarSolicitud($event); listaSolicitudTurnoVentanilla.cargarSolicitudes()"
+                title="Guardar Solicitud" validateForm="true">
+            </plex-button>
+        </div>
+    </fieldset>
+</form>

@@ -9,11 +9,11 @@ import { IPaciente } from "../../../../interfaces/IPaciente";
 
 export class ViviendaSostenEconomicoComponent extends Atomo {
        ngOnInit() {
-        this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : {
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {
             trabaja: null,
             horas: null
         };
-        if (this.data[this.tipoPrestacion.key].valor) {
+        if (this.data[this.elementoRUP.key].valor) {
             this.devolverValores();
         }
     }

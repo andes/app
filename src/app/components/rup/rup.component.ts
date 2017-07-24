@@ -1,8 +1,9 @@
+import { PrestacionPacienteService } from './../../services/rup/prestacionPaciente.service';
 import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { IPaciente } from './../../interfaces/IPaciente';
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { ElementosRupService } from './../../services/rup/elementosRUP.service';
 import { PacienteService } from './../../services/paciente.service';
 import { ObservarDatosService } from './../../services/rup/observarDatos.service';
 
@@ -15,37 +16,41 @@ import {
     OnInit, OnDestroy,
     EventEmitter
 } from '@angular/core';
+import { ProfesionalService } from "../../services/profesional.service";
 
 @Component({
     moduleId: 'RupModule',
     selector: 'rup',
     template: ''
-
 })
 
 export class RupComponent implements OnInit, OnDestroy {
 
     @Input() paciente: IPaciente;
-    @Input() tipoPrestacion: any; // Ver que sea de tipo IPrestacion..
-    @Input() datosIngreso: Object;
+    // TODO:renombrar tipoPrestacion a elementosRUP
+    @Input() elementoRUP: any;
+    @Input() datosIngreso: any;
     @Input() soloValores: Boolean = null;
+
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // array de prestaciones que se estan ejecutando actualmente en el proceso
-    @Input() prestacionesEjecucion: ITipoPrestacion;
+    // TODO: revisar uso de prestacionesEJecucion
+    // @Input() prestacionesEjecucion: ITipoPrestacion;
+
     // array de valores de las prestaciones que se estan ejecutando actualmente
+    // se utiliza para enviarle a las formulas
     @Input() valoresPrestacionEjecucion: any = [];
     @Input() prestacion: IPrestacionPaciente;
 
-    pacientePrestacion: any = {};
+    // pacientePrestacion: any = {};
     // resultados a devolver
     data: any = {};
     mensaje: any = {};
 
-
     // Componente a cargar
     private componentContainer: any;
 
-    tiposPrestaciones: Object[] = [];
+    elementosRUP: Object[] = [];
 
     // Referencia al componente para poder manejarlo
     private componentReference: any;
@@ -57,20 +62,21 @@ export class RupComponent implements OnInit, OnDestroy {
     constructor(private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef,
         private pacienteService: PacienteService,
-        private tipoPrestacionService: TipoPrestacionService,
-        public servicioTipoPrestacion: TipoPrestacionService, // Publico por que lo usa la molecula
-        public servicioObservarDatos: ObservarDatosService
+        public servicioElementosRUP: ElementosRupService, // Publico por que lo usa la molecula
+        public servicioObservarDatos: ObservarDatosService,
+        public serviceProfesional: ProfesionalService,
+        public servicioPrestacion: PrestacionPacienteService
     ) {
     }
 
     ngOnInit() {
-        // console.log('RUP', this.tipoPrestacion.granularidad);
+        // console.log('RUP', this.elementosRUP.tipo);
         // El View ya está inicializado
         this.isViewInitialized = true;
 
         // Inicializamos la lista de Componentes RUP
         for (let comp of RUP_COMPONENTS) {
-            this.tiposPrestaciones.push({
+            this.elementosRUP.push({
                 'nombre': comp.name,
                 'component': comp
             });
@@ -83,44 +89,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() { }
 
-    devolverValores(obj?: any, tipoPrestacion?: any) {
-
-        // Átomo
-        if (this.tipoPrestacion.granularidad === 'atomos' || this.tipoPrestacion.granularidad === 'formulas') {
-            // console.log('--> Átomo <--');
-            if (this.data[this.tipoPrestacion.key] === null) {
-                this.data = {};
-            }
-            this.mensaje = this.getMensajes();
-            this.evtData.emit(this.data);
-
-        } else {
-
-            // Molécula
-            // console.log('--> Molécula <--');
-            // valor: variable con el resultado qeu viene del input del formulario
-            let valor = (typeof obj !== 'undefined' && obj && obj[tipoPrestacion.key]) ? obj[tipoPrestacion.key] : null;
-            if (valor) {
-                if (!this.data[this.tipoPrestacion.key]) {
-                    this.data[this.tipoPrestacion.key] = {};
-                }
-                if (!this.data[this.tipoPrestacion.key][tipoPrestacion.key]) {
-                    this.data[this.tipoPrestacion.key][tipoPrestacion.key] = {};
-                }
-                this.data[this.tipoPrestacion.key][tipoPrestacion.key] = valor;
-            } else if (this.data[this.tipoPrestacion.key][tipoPrestacion.key] && valor == null) {
-                delete this.data[this.tipoPrestacion.key][tipoPrestacion.key];
-            }
-            if (!Object.keys(this.data[this.tipoPrestacion.key]).length) {
-                this.data = {};
-            }
-        }
-        this.mensaje = this.getMensajes();
-        this.evtData.emit(this.data);
-        this.servicioObservarDatos.actualizarDatos(this.data, this.tipoPrestacion.key);
-
-    }
-
     getMensajes() { }
 
     // Método para cargar Components
@@ -132,10 +100,10 @@ export class RupComponent implements OnInit, OnDestroy {
         }
 
         // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
-        this.componentContainer = this.tiposPrestaciones.find(prestacion => {
+        this.componentContainer = this.elementosRUP.find(prestacion => {
             let p;
             p = prestacion;
-            return p.nombre === this.tipoPrestacion.componente.nombre;
+            return p.nombre === this.elementoRUP.componente.nombre;
         });
 
 
@@ -152,32 +120,67 @@ export class RupComponent implements OnInit, OnDestroy {
         // TODO: debe ser un array?
         this.componentReference.instance.prestacion = this.prestacion;
         this.componentReference.instance.valoresPrestacionEjecucion = this.valoresPrestacionEjecucion;
-        this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
+        // this.componentReference.instance.prestacionesEjecucion = this.prestacionesEjecucion;
         this.componentReference.instance.soloValores = this.soloValores;
-        this.componentReference.instance.tipoPrestacion = this.tipoPrestacion;
+        this.componentReference.instance.elementoRUP = this.elementoRUP;
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
-
-        // console.log('this.datosIngreso:', this.datosIngreso);
-
-
-        this.componentReference.changeDetectorRef.detectChanges();
 
         // En caso de haber valores cargados en los datos de ingreso
         // ejecutamos el evento para devolverlos y armar los valores
         // de cada átomo
+        /*
         if (this.datosIngreso) {
             this.evtData.emit(this.componentReference.instance.data);
         }
+        */
 
         // devolvemos los datos
         datosComponente.evtData.subscribe(e => {
             this.evtData.emit(this.componentReference.instance.data);
         });
 
-        if (this.tipoPrestacion.granularidad === 'formulas') {
+        if (this.elementoRUP.tipo === 'formula') {
             this.evtData.emit(this.componentReference.instance.data);
         }
+
+        this.componentReference.changeDetectorRef.detectChanges();
+    }
+
+    devolverValores(obj?: any, elementoRUPactual?: any) {
+        // Átomo
+        if (this.elementoRUP.tipo === 'atomo' || this.elementoRUP.tipo === 'formula') {
+            // console.log('--> Átomo <--');
+            if (this.data[this.elementoRUP.key] === null) {
+                this.data = {};
+            }
+
+        } else {
+            // Molécula
+            // console.log('--> Molécula <--');
+            // valor: variable con el resultado qeu viene del input del formulario
+            let valor = (typeof obj !== 'undefined' && obj && obj[elementoRUPactual.key]) ? obj[elementoRUPactual.key] : null;
+            if (valor) {
+                if (!this.data[this.elementoRUP.key]) {
+                    this.data[this.elementoRUP.key] = {};
+                }
+                if (!this.data[this.elementoRUP.key][elementoRUPactual.key]) {
+                    this.data[this.elementoRUP.key][elementoRUPactual.key] = {};
+                }
+                this.data[this.elementoRUP.key][elementoRUPactual.key] = valor;
+            } else {
+                if (this.data[this.elementoRUP.key] && this.data[this.elementoRUP.key][elementoRUPactual.key] && valor == null) {
+                    delete this.data[this.elementoRUP.key][elementoRUPactual.key];
+                }
+            }
+            if (!Object.keys(this.data[this.elementoRUP.key]).length) {
+                this.data = {};
+            }
+        }
+
+        this.mensaje = this.getMensajes();
+        this.evtData.emit(this.data);
+        //this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
 
     }
 

@@ -1,0 +1,65 @@
+//
+// Variables
+$color-celeste: #039ac6;
+$color-violeta: #9B2A79;
+$color-rosa: #002B3A;
+//
+// Clases
+.logo {
+    background-image: url('../../assets/img/logo-wide.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 60%;
+    max-width: 600px;
+    min-height: 100px;
+    display: inline-block;
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.boton {
+    padding: .5em;
+    color: white;
+    cursor: pointer;
+    transition: all .5s;
+    // Contenido
+    .icono {
+        font-size: 3em;
+    }
+    .titulo {
+        text-transform: uppercase;
+        font-size: 2em;
+        font-weight: 100;
+        line-height: .8em;
+        padding-bottom: 1em;
+    }
+    .subtitulo {
+        text-transform: uppercase;
+        font-size: 1.5em;
+        font-weight: 100;
+        line-height: 1em;
+        padding-bottom: 1em;
+    }
+    .detalle {
+        font-weight: 100;
+    }
+    // Colores
+    &.color-celeste {
+        background: $color-celeste;
+    }
+    &.color-celeste:hover {
+        background: darken($color-celeste, 20%);
+    }
+    &.color-violeta {
+        background: $color-violeta;
+    }
+    &.color-violeta:hover {
+        background: darken($color-violeta, 20%);
+    }
+    &.color-rosa {
+        background: $color-rosa;
+    }
+    &.color-rosa:hover {
+        background: darken($color-rosa, 10%);
+    }
+}

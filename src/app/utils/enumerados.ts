@@ -27,13 +27,16 @@ export enum relacionTutor {
 }
 
 export enum UnidadEdad {
-    'Años', 'Meses', 'Días', 'Horas'
+    'años', 'meses', 'días', 'horas'
 }
 
 export enum EstadosAuditorias {
     'pendiente', 'aprobada', 'desaprobada'
 }
 
+export enum PrioridadesPrestacion {
+    'no prioritario', 'urgencia', 'emergencia'
+}
 
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
@@ -117,6 +120,12 @@ export function getEstados() {
     let arrEstados = Object.keys(estados);
     arrEstados = arrEstados.slice(arrEstados.length / 2);
     return arrEstados;
+}
+
+export function getPrioridades() {
+    let arrPrioridades = Object.keys(PrioridadesPrestacion);
+    arrPrioridades = arrPrioridades.slice(arrPrioridades.length / 2);
+    return arrPrioridades;
 }
 
 export function getEstadosAuditorias() {

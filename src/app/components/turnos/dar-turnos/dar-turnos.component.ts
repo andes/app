@@ -33,28 +33,44 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 })
 
 export class DarTurnosComponent implements OnInit {
-    private _reasignaTurnos: any;
-    @Input('reasignar')
-    set reasignar(value: any) {
-        this._reasignaTurnos = value;
-    }
-    get reasignar(): any {
-        return this._reasignaTurnos;
-    }
+
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+
+    @Input('pacienteSeleccionado')
+    set pacienteSeleccionado(value: any) {
+        this._pacienteSeleccionado = value;
+        this.paciente = value;
+    }
+    get pacienteSeleccionado() {
+        return this._pacienteSeleccionado;
+    }
+
+    @Input('solicitudPrestacion')
+    set solicitudPrestacion(value: any) {
+        this._solicitudPrestacion = value;
+        if (this._solicitudPrestacion) {
+            this.paciente = this._solicitudPrestacion.paciente;
+        }
+    }
+    get solicitudPrestacion() {
+        return this._solicitudPrestacion;
+    }
+
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
 
+    private _pacienteSeleccionado: any;
+    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+    private paciente: IPaciente;
+    private opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
-    public opciones = {
-        fecha: new Date(),
-        tipoPrestacion: null,
-        profesional: null,
-    };
+
     llaveTP: any;
     estadoT: EstadosDarTurnos;
-    paciente: IPaciente;
+
     turnoDoble = false;
     telefono: String = '';
     countBloques: any[];
@@ -108,16 +124,20 @@ export class DarTurnosComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
+        // console.log('busquedas ', this.busquedas);
+
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
+        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
 
-        if (this._reasignaTurnos) {
-            this.paciente = this._reasignaTurnos.paciente;
-            this.telefono = this.turno.paciente.telefono;
-
-        }
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+        if (this._pacienteSeleccionado) {
+            this.paciente = this._pacienteSeleccionado;
+            this.pacientesSearch = false;
+            this.showDarTurnos = true;
+        }
+
     }
 
     loadTipoPrestaciones(event) {
@@ -131,10 +151,12 @@ export class DarTurnosComponent implements OnInit {
         // Si el siguiente turno está disponible, se habilita la opción de turno doble
         let cantidadTurnos;
         this.permitirTurnoDoble = false;
+        let tipoTurnoDoble = this.tiposTurnosSelect.toString();
+        let cantidadDisponible = this.countBloques[this.indiceBloque];
         if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
             cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
             cantidadTurnos--;
-            if (this.indiceTurno < cantidadTurnos) {
+            if (this.indiceTurno < cantidadTurnos && (cantidadDisponible[tipoTurnoDoble] >= 2)) {
                 // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
                 if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
                     this.permitirTurnoDoble = true;
@@ -199,67 +221,78 @@ export class DarTurnosComponent implements OnInit {
     }
 
     cargarDatosLlaves(event) {
-        this.llaves.forEach((cadaLlave, indiceLlave) => {
-          let solicitudVigente = false;
-          // Si la llave requiere solicitud, verificamos en prestacionPaciente la fecha de solicitud
-          if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
-            let params = {
-              estado: 'pendiente',
-              idPaciente: this.paciente.id,
-              idTipoPrestacion: cadaLlave.tipoPrestacion.id
-            };
-            this.servicioPrestacionPaciente.get(params).subscribe(
-              prestacionPaciente => {
-                if (prestacionPaciente.length > 0) {
-                  if (cadaLlave.llave.solicitud.vencimiento) {
+        if (this.llaves.length === 0) {
 
-                    if (cadaLlave.llave.solicitud.vencimiento.unidad === 'Días') {
-                      this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
-                      this.llaves[indiceLlave].organizacion = prestacionPaciente[0].solicitud.organizacion;
-                      this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
-                      // Controla si la solicitud está vigente
-                      let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
-                      solicitudVigente = moment().isBefore(end);
-                      this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
-                      if (!solicitudVigente) {
-                        let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-                        this.filtradas.splice(indiceFiltradas, 1);
-                        this.filtradas = [...this.filtradas];
-                      }
-                    }
-                  }
-                } else {
-                  // Si no existe una solicitud para el paciente y el tipo de prestacion, saco la llave de la lista y saco la prestacion del select
-                  this.llaves.splice(indiceLlave, 1);
-                  this.llaves = [...this.llaves];
-
-                  let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-                  this.filtradas.splice(indiceFiltradas, 1);
-                  this.filtradas = [...this.filtradas];
-                }
-              },
-              err => {
-                if (err) {
-                }
-              },
-              () => {
-                event.callback(this.filtradas);
+            event.callback(this.filtradas);
+            if (!this._solicitudPrestacion) {
                 this.actualizar('sinFiltro');
-              }
-            );
+            } else {
+                this.actualizar('');
+            }
 
-          } else {
-            // Elimino la llave del arreglo
-            let ind = this.llaves.indexOf(cadaLlave);
-            this.llaves.splice(ind, 1);
-            this.llaves = [...this.llaves];
+        } else {
+            this.llaves.forEach((cadaLlave, indiceLlave) => {
+                let solicitudVigente = false;
+                // Si la llave requiere solicitud, verificamos en prestacionPaciente la fecha de solicitud
+                if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
+                    let params = {
+                        estado: 'pendiente',
+                        idPaciente: this.paciente.id,
+                        idTipoPrestacion: cadaLlave.tipoPrestacion.id
+                    };
+                    this.servicioPrestacionPaciente.get(params).subscribe(
+                        prestacionPaciente => {
+                            if (prestacionPaciente.length > 0) {
+                                if (cadaLlave.llave.solicitud.vencimiento) {
 
-            let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-            this.filtradas.splice(indiceFiltradas, 1);
-            this.filtradas = [...this.filtradas];
-          }
-        });
-      }
+                                    if (cadaLlave.llave.solicitud.vencimiento.unidad === 'Días') {
+                                        this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
+                                        this.llaves[indiceLlave].organizacion = prestacionPaciente[0].solicitud.organizacion;
+                                        this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
+                                        // Controla si la solicitud está vigente
+                                        let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
+                                        solicitudVigente = moment().isBefore(end);
+                                        this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
+                                        if (!solicitudVigente) {
+                                            let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+                                            this.filtradas.splice(indiceFiltradas, 1);
+                                            this.filtradas = [...this.filtradas];
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Si no existe una solicitud para el paciente y el tipo de prestacion, saco la llave de la lista y saco la prestacion del select
+                                this.llaves.splice(indiceLlave, 1);
+                                this.llaves = [...this.llaves];
+
+                                let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+                                this.filtradas.splice(indiceFiltradas, 1);
+                                this.filtradas = [...this.filtradas];
+                            }
+                        },
+                        err => {
+                            if (err) {
+                            }
+                        },
+                        () => {
+                            event.callback(this.filtradas);
+                            this.actualizar('sinFiltro');
+                        }
+                    );
+
+                } else {
+                    // Elimino la llave del arreglo
+                    let ind = this.llaves.indexOf(cadaLlave);
+                    this.llaves.splice(ind, 1);
+                    this.llaves = [...this.llaves];
+
+                    let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
+                    this.filtradas.splice(indiceFiltradas, 1);
+                    this.filtradas = [...this.filtradas];
+                }
+            });
+        }
+    }
 
     loadProfesionales(event) {
         if (event.query) {
@@ -295,6 +328,11 @@ export class DarTurnosComponent implements OnInit {
      * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
+        if (this._solicitudPrestacion) {
+            this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+            console.log('entro aca ', this.opciones.tipoPrestacion);
+
+        }
 
         // 1) Auth general (si puede ver esta pantalla)
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
@@ -316,7 +354,8 @@ export class DarTurnosComponent implements OnInit {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
-                organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion._id,
+                nominalizada: true
             };
 
         } else {
@@ -328,7 +367,8 @@ export class DarTurnosComponent implements OnInit {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 // tipoPrestaciones: this.permisos,
                 tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
-                organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion._id,
+                nominalizada: true
             };
 
         }
@@ -346,7 +386,7 @@ export class DarTurnosComponent implements OnInit {
 
             // Ordena las Agendas por fecha/hora de inicio
             this.agendas = this.agendas.sort(
-                function(a, b) {
+                function (a, b) {
                     let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
                     let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
                     {
@@ -366,6 +406,7 @@ export class DarTurnosComponent implements OnInit {
         // Asigno agenda
         this.agenda = agenda;
         let turnoAnterior = null;
+        this.turnoDoble = false;
 
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
@@ -389,8 +430,8 @@ export class DarTurnosComponent implements OnInit {
 
                 /*Filtra los bloques segun el filtro tipoPrestacion*/
                 this.bloques = this.agenda.bloques.filter(
-                    function(value) {
-                        let prestacionesBlq = value.tipoPrestaciones.map(function(obj) {
+                    function (value) {
+                        let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
                             return obj.id;
                         });
                         if (tipoPrestacion) {
@@ -442,7 +483,6 @@ export class DarTurnosComponent implements OnInit {
                             isDelDia = true;
                             this.tiposTurnosSelect = 'delDia';
                             this.tiposTurnosLabel = 'Del día';
-
                             // Recorro los bloques y cuento los turnos programados como "delDia", luego descuento los ya asignados
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
 
@@ -452,13 +492,12 @@ export class DarTurnosComponent implements OnInit {
                                     gestion: bloque.reservadoGestion,
                                     profesional: bloque.reservadoProfesional
                                 });
-
                                 bloque.turnos.forEach((turno) => {
                                     // Si el turno está asignado o está disponible pero ya paso la hora
-                                    if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                        //     turno = turnoAnterior;
-                                        // }
+                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
+                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                            turno = turnoAnterior;
+                                        }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -478,7 +517,7 @@ export class DarTurnosComponent implements OnInit {
                                         }
                                     }
 
-                                    // turnoAnterior = turno;
+                                    turnoAnterior = turno;
 
                                 });
                                 this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
@@ -500,10 +539,10 @@ export class DarTurnosComponent implements OnInit {
                                 });
 
                                 bloque.turnos.forEach((turno) => {
-                                    if (turno.estado === 'asignado') {
-                                        // if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                        //     turno = turnoAnterior;
-                                        // }
+                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
+                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                            turno = turnoAnterior;
+                                        }
                                         switch (turno.tipoTurno) {
                                             case ('delDia'):
                                                 countBloques[indexBloque].delDia--;
@@ -519,7 +558,7 @@ export class DarTurnosComponent implements OnInit {
                                                 break;
                                         }
                                     }
-                                    // turnoAnterior = turno;
+                                    turnoAnterior = turno;
                                 });
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
                                 this.programadosDisponibles = + countBloques[indexBloque].programado;
@@ -563,6 +602,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
+        this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
             this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
@@ -580,6 +620,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarBusqueda(indice: number) {
+        // console.log("busquedas ", this.busquedas);
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === this.busquedas[indice].profesional);
         this.opciones.profesional = this.busquedas[indice].profesional;
@@ -681,7 +722,7 @@ export class DarTurnosComponent implements OnInit {
                     };
                     this.servicePaciente.patch(pacienteActualizar.id, cambios).subscribe(resultado => {
                         if (resultado) {
-                          this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
+                            this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
                         }
                     });
 
@@ -777,9 +818,9 @@ export class DarTurnosComponent implements OnInit {
                             };
                             // Patchea el turno doble
                             this.serviceAgenda.patchMultiple(agendaid, patch).subscribe((agendaActualizada) => {
-                              if (agendaActualizada) {
-                                this.plex.toast('info', 'Se asignó un turno doble');
-                              }
+                                if (agendaActualizada) {
+                                    this.plex.toast('info', 'Se asignó un turno doble');
+                                }
                             });
                         }
                     }
@@ -827,7 +868,15 @@ export class DarTurnosComponent implements OnInit {
                 }
             };
         });
-        this.buscarPaciente();
+
+        if (this._pacienteSeleccionado) {
+            // this.router.navigate(['./' + 'puntoInicioTurnos']);
+            this.cancelarDarTurno.emit(true);
+            return false;
+        } else {
+            this.buscarPaciente();
+        }
+        // this.buscarPaciente();
     }
 
     enviarSMS(paciente: any, mensaje) {
@@ -849,18 +898,6 @@ export class DarTurnosComponent implements OnInit {
                 if (err) {
                 }
             });
-    }
-
-    borrarTurnoAnterior() {
-        if (this._reasignaTurnos) {
-            let patch = {
-                'op': 'reasignarTurno',
-                'idAgenda': this._reasignaTurnos.idAgenda,
-                'idTurno': this._reasignaTurnos.idTurno
-            };
-
-            this.serviceAgenda.patch(this._reasignaTurnos.idAgenda, patch).subscribe();
-        }
     }
 
     buscarPaciente() {
@@ -907,8 +944,8 @@ export class DarTurnosComponent implements OnInit {
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
-            this.pacientesSearch = false;
-            this.showCreateUpdate = true;
+            // this.pacientesSearch = false;
+            // this.showCreateUpdate = true;
             this.showDarTurnos = false;
         }
     }
@@ -917,7 +954,7 @@ export class DarTurnosComponent implements OnInit {
         // se busca entre los contactos si tiene un celular
         this.telefono = '';
         this.cambioTelefono = false;
-        if (paciente.contacto) {
+        if (paciente && paciente.contacto) {
             if (paciente.contacto.length > 0) {
                 paciente.contacto.forEach((contacto) => {
                     if (contacto.tipo === 'celular') {
@@ -957,7 +994,18 @@ export class DarTurnosComponent implements OnInit {
             operacion = this.serviceListaEspera.post(listaEspera);
             operacion.subscribe();
         }
-        this.buscarPaciente();
+
+        if (this._pacienteSeleccionado) {
+            // this.router.navigate(['./' + 'puntoInicioTurnos']);
+            this.cancelarDarTurno.emit(true);
+        } else {
+            this.buscarPaciente();
+        }
+    }
+
+    cancelar() {
+        this.showDarTurnos = false;
+        this.volverAlGestor.emit(true);
     }
 
     redirect(pagina: string) {

@@ -1,7 +1,33 @@
-<div class="jumbotron">
-    <h1 class="display-4 margin-bottom">Bienvenido a la plataforma de la Historia Digital de Salud</h1>
-    <p>
-        <a class="btn btn-primary btn-lg" href="#" role="button" routerLink="/pacientes"><i class="mdi mdi-account-card-details"></i> Ingresar a la Validación Digital de Pacientes</a>
-        <a *ngIf="auth.check('turnos:planificarAgenda:prestacion')" class="btn btn-primary btn-lg" href="#" role="button" routerLink="/gestor_agendas"><i class="mdi mdi-account-multiple"></i> Ingresar al Gestor de Agendas y Turnos</a>
-    </p>
-</div>
+<section>
+    <plex-box>
+        <div class="text-center">
+            <div class="logo"></div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="boton color-celeste" routerLink="/mpi">
+                        <i class="icono mdi mdi-account-multiple-outline"></i>
+                        <div class="titulo">MPI</div>
+                        <div class="subtitulo">Indice Maestro<br>de Pacientes</div>
+                        <div class="detalle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="boton color-violeta" routerLink="/citas/gestor_agendas">
+                        <i class="icono mdi mdi-calendar"></i>
+                        <div class="titulo">CITAS</div>
+                        <div class="subtitulo">Centro Inteligente<br>de Agendas &amp; Turnos</div>
+                        <div class="detalle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="boton color-rosa" routerLink="/rup">
+                        <i class="icono mdi mdi-contacts"></i>
+                        <div class="titulo">RUP</div>
+                        <div class="subtitulo">Registro Universal<br>de Prestaciones</div>
+                        <div class="detalle">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </plex-box>
+</section>

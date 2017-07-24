@@ -24,7 +24,6 @@ export class ListaEsperaService {
     }
 
     postXIdAgenda(id: String, cambios: any): Observable<IListaEspera> {
-        debugger;
         return this.server.post(this.listaEsperaUrl + '/IdAgenda/' + id, cambios);
     }
 

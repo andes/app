@@ -1,10 +1,9 @@
-<section *ngIf="!showCreateUpdate">
+<section *ngIf="!showCreateUpdate || bloquearCreate" class="plex-layout">
     <div class="row">
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
-                    placeholder="Escanee un DNI digital para registrar al paciente">
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escanee un DNI digital para registrar al paciente">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -27,7 +26,7 @@
                     </thead>
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado">
-                            <td [title]="paciente.estado">
+                            <td>
                                 <i *ngIf="paciente.estado == 'validado'" class="mdi mdi-brightness-1 text-success"></i>
                                 <i *ngIf="paciente.estado != 'validado'" class="mdi mdi-brightness-1 text-warning"></i>
                             </td>
@@ -57,12 +56,12 @@
     </div>
 
 </section>
-<footer *ngIf="!showCreateUpdate && modoCompleto">
-    <plex-button *ngIf="mostrarNuevo" label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
-    <!--boton provisorio hasta tener el menu desplegable-->
-    <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
-    <plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>
+<footer *ngIf="!showCreateUpdate">
+    <div class="float-right">
+        <plex-button label="Volver" icon="mdi mdi-arrow-left" type="danger" (click)="cancelar()"></plex-button>
+        <plex-button *ngIf="mostrarNuevo && !bloquearCreate" label="Registrar paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+    </div>
 </footer>
 
 <!--Componente de Alta/Modificación-->
-<paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+<paciente-create-update *ngIf="showCreateUpdate && !bloquearCreate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>

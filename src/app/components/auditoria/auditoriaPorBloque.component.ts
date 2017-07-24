@@ -56,8 +56,7 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   constructor(public plex: Plex, private duplicadosService: AuditoriaPorBloqueService) { }
 
   ngOnInit() {
-    debugger;
-    this.loadClaves();
+    //this.loadClaves();
     this.claveActual = this.claves[0];
     //Radio button contains one value from a set of pre defined values
 
@@ -67,155 +66,142 @@ export class AuditoriaPorBloqueComponent implements OnInit {
     return a - b;
   }
 
-  loadClaves() {
-    this.duplicadosService.getListaBloques(this.tipoClave.id).subscribe(resultado => {
-      if (resultado) {
-        let lista;
-        lista = resultado;
+  // loadClaves() {
+  //   this.duplicadosService.getListaBloques(this.tipoClave.id).subscribe(resultado => {
+  //     if (resultado) {
+  //       let lista;
+  //       lista = resultado;
 
-        if (lista.length > 0) {
-          lista = lista.sort(this.sortNumber);
-          this.claves = lista;
-          this.claveActual = this.claves[0];
-          this.indice = 0;
-          this.numeroPacientes = [];
-          this.pacFusionar = -1;
-          this.loadPacientedPorBloque();
-        } else {
-          this.claves = [];
-          this.numeroPacientes = [];
-          this.pacFusionar = -1;
-          this.claveActual = '';
-          this.indice = -1;
-        }
-      }
-    });
+  //       if (lista.length > 0) {
+  //         lista = lista.sort(this.sortNumber);
+  //         this.claves = lista;
+  //         this.claveActual = this.claves[0];
+  //         this.indice = 0;
+  //         this.numeroPacientes = [];
+  //         this.pacFusionar = -1;
+  //         this.loadPacientedPorBloque();
+  //       } else {
+  //         this.claves = [];
+  //         this.numeroPacientes = [];
+  //         this.pacFusionar = -1;
+  //         this.claveActual = '';
+  //         this.indice = -1;
+  //       }
+  //     }
+  //   });
 
-  }
+  // }
 
-  verClave(suma: boolean) {
-    debugger;
-    if (this.claves) {
-      var condiciones = suma ? ((this.indice + 1) < this.claves.length) : ((this.indice - 1) >= 0);
-      if (condiciones) {
-        if (suma) {
-          this.indice++;
-        } else {
-          this.indice--;
-        }
+  // verClave(suma: boolean) {
+  //   if (this.claves) {
+  //     var condiciones = suma ? ((this.indice + 1) < this.claves.length) : ((this.indice - 1) >= 0);
+  //     if (condiciones) {
+  //       if (suma) {
+  //         this.indice++;
+  //       } else {
+  //         this.indice--;
+  //       }
 
-        this.claveActual = this.claves[this.indice];
-        this.loadPacientedPorBloque()
+  //       this.claveActual = this.claves[this.indice];
+  //       this.loadPacientedPorBloque()
 
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
 
-  onChageOneKey() {
-    debugger;
-    if (this.claves) {
-      let index = this.claves.indexOf(this.claveActual);
-      if (index >= 0) {
-        this.indice = index;
-        this.loadPacientedPorBloque()
-      } else {
-        this.pacientes = [];
-      }
-    }
-  }
+  // onChageOneKey() {
+  //   if (this.claves) {
+  //     let index = this.claves.indexOf(this.claveActual);
+  //     if (index >= 0) {
+  //       this.indice = index;
+  //       this.loadPacientedPorBloque()
+  //     } else {
+  //       this.pacientes = [];
+  //     }
+  //   }
+  // }
 
-  loadPacientedPorBloque() {
-    debugger;
-    this.duplicadosService.getPacientesBloque(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-      debugger;
-      if (resultado) {
-        this.numeroPacientes = [];
-        for (let i = 0; i < resultado.length; i++) {
-          this.numeroPacientes.push(i);
-        }
-        this.pacFusionar = 0;
-        this.pacientes = resultado;
-      }
-    });
+  // loadPacientedPorBloque() {
+  //   this.duplicadosService.getPacientesBloque(this.tipoClave.id, this.claveActual).subscribe(resultado => {
+  //     if (resultado) {
+  //       this.numeroPacientes = [];
+  //       for (let i = 0; i < resultado.length; i++) {
+  //         this.numeroPacientes.push(i);
+  //       }
+  //       this.pacFusionar = 0;
+  //       this.pacientes = resultado;
+  //     }
+  //   });
 
-  }
+  // }
 
   onClaveChange(dato) {
     this.tipoClave = dato.value;
-    this.loadClaves();
+    //this.loadClaves();
   }
 
-  validarSisa() {
-    this.duplicadosService.getBloqueValidarSisa(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-      debugger;
-      if (resultado) {
-        this.pacientes = resultado;
-      }
-    });
-  }
+  // validarSisa() {
+  //   this.duplicadosService.getBloqueValidarSisa(this.tipoClave.id, this.claveActual).subscribe(resultado => {
+  //     if (resultado) {
+  //       this.pacientes = resultado;
+  //     }
+  //   });
+  // }
 
-  validarSintys() {
-    this.duplicadosService.getBloqueValidarSintys(this.tipoClave.id, this.claveActual).subscribe(resultado => {
-      debugger;
-      if (resultado) {
-        this.pacientes = resultado;
-      }
-    });
-  }
+  // validarSintys() {
+  //   this.duplicadosService.getBloqueValidarSintys(this.tipoClave.id, this.claveActual).subscribe(resultado => {
+  //     if (resultado) {
+  //       this.pacientes = resultado;
+  //     }
+  //   });
+  // }
 
-  eliminarPaciente(paciente: IPaciente) {
-    this.plex.confirm('Esta seguro que desea eliminar al paciente: ' + paciente.apellido + ' ' + paciente.nombre + '?').then(resultado => {
-      debugger;
-      if (resultado) {
-        this.duplicadosService.deletePacienteBloque(paciente).subscribe(resultado => {
-          debugger;
-          if (resultado) {
-            this.loadPacientedPorBloque()
-          }
-        });
-      }
-    });
-  }
+  // eliminarPaciente(paciente: IPaciente) {
+  //   this.plex.confirm('Esta seguro que desea eliminar al paciente: ' + paciente.apellido + ' ' + paciente.nombre + '?').then(resultado => {
+  //     if (resultado) {
+  //       this.duplicadosService.deletePacienteBloque(paciente).subscribe(resultado => {
+  //         if (resultado) {
+  //           this.loadPacientedPorBloque()
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
-  fusionaPaciente(paciente: IPaciente, pacFusiona: IPaciente) {
-    debugger;
-    this.plex.confirm('Esta seguro que desea fusionar al paciente seleccionado? ').then(resultado => {
-      if (resultado) {
-        this.duplicadosService.fusionarPacienteBloque(paciente, pacFusiona).subscribe(resultado => {
-          debugger;
-          if (resultado) {
-            this.loadPacientedPorBloque()
-          }
-        });
-      }
-    });
-  }
+  // fusionaPaciente(paciente: IPaciente, pacFusiona: IPaciente) {
+  //   this.plex.confirm('Esta seguro que desea fusionar al paciente seleccionado? ').then(resultado => {
+  //     if (resultado) {
+  //       this.duplicadosService.fusionarPacienteBloque(paciente, pacFusiona).subscribe(resultado => {
+  //         if (resultado) {
+  //           this.loadPacientedPorBloque()
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
-  validarPaciente(paciente: IPaciente, entidad: String) {
-    debugger;
-    this.plex.confirm('Esta seguro que desea validar al paciente ?').then(resultado => {
-      if (resultado) {
-        this.duplicadosService.validarPaciente(paciente, entidad).subscribe(resultado => {
-          debugger;
-          if (resultado) {
-            this.loadPacientedPorBloque();
-          }
-        });
-      }
-    });
-  }
+  // validarPaciente(paciente: IPaciente, entidad: String) {
+  //   this.plex.confirm('Esta seguro que desea validar al paciente ?').then(resultado => {
+  //     if (resultado) {
+  //       this.duplicadosService.validarPaciente(paciente, entidad).subscribe(resultado => {
+  //         if (resultado) {
+  //           this.loadPacientedPorBloque();
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
-  validarActualizarPaciente(paciente: IPaciente, entidad: String, pacienteEntidad: IPaciente) {
-    debugger;
-    this.plex.confirm('Esta seguro que desea validar al paciente ' + paciente.apellido + ' ?').then(resultado => {
-      if (resultado) {
-        this.duplicadosService.validarActualizarPaciente(paciente, entidad, pacienteEntidad).subscribe(resultado => {
-          if (resultado) {
-            this.loadPacientedPorBloque()
-          }
-        });
-      }
-    });
-  }
+  // validarActualizarPaciente(paciente: IPaciente, entidad: String, pacienteEntidad: IPaciente) {
+  //   this.plex.confirm('Esta seguro que desea validar al paciente ' + paciente.apellido + ' ?').then(resultado => {
+  //     if (resultado) {
+  //       this.duplicadosService.validarActualizarPaciente(paciente, entidad, pacienteEntidad).subscribe(resultado => {
+  //         if (resultado) {
+  //           this.loadPacientedPorBloque()
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
 }

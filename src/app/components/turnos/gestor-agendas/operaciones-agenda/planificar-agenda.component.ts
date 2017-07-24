@@ -1,3 +1,4 @@
+import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
@@ -28,7 +29,8 @@ export class PlanificarAgendaComponent implements OnInit {
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    public modelo: any = {};
+    public modelo: any = { nominalizada: true };
+    public noNominalizada = false;
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
@@ -38,7 +40,7 @@ export class PlanificarAgendaComponent implements OnInit {
     showClonar = false;
     showAgenda = true;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -87,8 +89,52 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+
+    // loadServicios(event) {
+    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+    //         let servicios = respuesta.map((ef) => {
+    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
+    //         });
+    //         event.callback(servicios);
+    //     });
+    // }
+
+    loadEdificios(event) {
+        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+            event.callback(respuesta.edificio);
+        });
+    }
+    loadSectores(event) {
+        this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+            let sectores = respuesta.map((ef) => {
+                return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
+            });
+            event.callback(sectores);
+        });
+    }
+    // loadEspacios(event) {
+    //     // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
+    // }
+
     loadEspacios(event) {
-        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     horaInicioPlus() {
@@ -117,6 +163,10 @@ export class PlanificarAgendaComponent implements OnInit {
                 bloque.tipoPrestaciones[0].activo = true;
             }
         }
+    }
+
+    cambiarNominalizada(cambio) {
+        this.modelo.nominalizada = !this.noNominalizada;
     }
 
     public calculosInicio() {
@@ -163,10 +213,10 @@ export class PlanificarAgendaComponent implements OnInit {
         this.modelo.bloques.push({
             indice: longitud,
             // 'descripcion': `Bloque {longitud + 1}°`,
-            'cantidadTurnos': null,
+            'cantidadTurnos': 0,
             'horaInicio': null,
             'horaFin': null,
-            'duracionTurno': null,
+            'duracionTurno': 0,
             'cantidadSimultaneos': null,
             'cantidadBloque': null,
             'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
@@ -439,7 +489,8 @@ export class PlanificarAgendaComponent implements OnInit {
                         return agenda.id !== this.modelo.id || !this.modelo.id;
                     });
                     if (agds.length > 0) {
-                        alerta = 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese rango horario';
+                        let ef = this.modelo.espacioFisico.nombre + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
+                        alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
                         if (this.alertas.indexOf(alerta) < 0) {
                             this.alertas = [... this.alertas, alerta];
                         }
@@ -508,8 +559,6 @@ export class PlanificarAgendaComponent implements OnInit {
                     if (bloqueMap) {
                         let bloqueMapIni = this.combinarFechas(this.fecha, bloqueMap.horaInicio);
                         let bloqueMapFin = this.combinarFechas(this.fecha, bloqueMap.horaFin);
-                        console.log('inicio ', inicio);
-                        console.log('bloqueMapFin ', bloqueMapFin);
                         // if (this.compararFechas(inicio, bloqueMapFin) < 0 && this.compararFechas(bloqueMapIni, inicio) < 0) {
                         if (this.compararFechas(bloqueMapIni, fin) < 0 && this.compararFechas(inicio, bloqueMapFin) < 0) {
                             alerta = 'El bloque ' + (bloque.indice + 1) + ' se solapa con el ' + (index1 + 1);
@@ -553,9 +602,11 @@ export class PlanificarAgendaComponent implements OnInit {
                     break;
                 }
             }
-            if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva )) {
-                validaBloques = false;
-                break;
+            if (this.modelo.nominalizada) {
+                if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
+                    validaBloques = false;
+                    break;
+                }
             }
         }
         if ($event.formValid && validaBloques) {
@@ -574,8 +625,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     delete prestacion.$order;
                 });
             }
+            if (this.modelo.edificio) {
+                delete this.modelo.edificio.$order;
+            }
             if (this.modelo.espacioFisico) {
                 delete this.modelo.espacioFisico.$order;
+            }
+            if (this.modelo.sector) {
+                delete this.modelo.sector.$order;
             }
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;

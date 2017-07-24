@@ -5,39 +5,40 @@ import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
 
 
 export interface IPaciente {
-    id: String;
-    documento: String;
+    id: string;
+    documento: string;
+    cuil: string;
     activo: Boolean;
-    estado: String;
-    nombre: String;
-    apellido: String;
-    nombreCompleto: String;
-    alias: String;
+    estado: string;
+    nombre: string;
+    apellido: string;
+    nombreCompleto: string;
+    alias: string;
     contacto: IContacto[];
-    sexo: String;
-    genero: String;
+    sexo: string;
+    genero: string;
     fechaNacimiento: Date; // Fecha Nacimiento
     edad: Number;
-    edadReal: { valor: Number, unidad: String };
+    edadReal: { valor: Number, unidad: string };
     fechaFallecimiento: Date;
     direccion: IDireccion[];
     estadoCivil: EstadoCivil;
-    foto: String;
+    foto: string;
     relaciones: [{
         relacion: {
-            id: String,
-            nombre: String,
-            opuesto: String
+            id: string,
+            nombre: string,
+            opuesto: string
         };
-        referencia: String;
-        nombre: String;
-        apellido: String;
-        documento: String
+        referencia: string;
+        nombre: string;
+        apellido: string;
+        documento: string
     }];
     financiador: [{
         entidad: {
-            id: String;
-            nombre: String
+            id: string;
+            nombre: string
         };
         activo: Boolean;
         fechaAlta: Date;
@@ -45,24 +46,24 @@ export interface IPaciente {
         ranking: Number;
     }];
     identificadores: [{
-        entidad: String,
-        valor: String
+        entidad: string,
+        valor: string
     }];
-    claveBlocking: [String];
-    entidadesValidadoras: [String];
-    scan: String;
+    claveBlocking: [string];
+    entidadesValidadoras: [string];
+    scan: string;
     reportarError: Boolean;
-    notaError: String;
+    notaError: string;
     carpetaEfectores?: [{
         organizacion: {
-            id: String,
-            nombre: String
+            id: string,
+            nombre: string
         },
-        nroCarpeta: String
+        nroCarpeta: string
     }];
     notas?: [{
         fecha: Date,
-        nota: String,
+        nota: string,
         destacada: Boolean
     }];
 }

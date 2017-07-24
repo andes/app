@@ -18,19 +18,19 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Descripción</th>
                         <th>Edificio</th>
-                        <th>Ubicación</th>
+                        <th>Servicio</th>
+                        <th>Sector</th>
                         <th>Activo</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let espacioFisico of espaciosFisicos">
-                        <td>{{espacioFisico.nombre}}</td>
-                        <td>{{espacioFisico.descripcion}}</td>
-                        <td>{{espacioFisico.edificio?.descripcion}}</td>
-                        <td>{{espacioFisico.detalle}}</td>
+                        <td>{{espacioFisico?.nombre}}</td>
+                        <td>{{espacioFisico?.edificio.descripcion}}</td>
+                        <td>{{espacioFisico.servicio?.nombre}}</td>
+                        <td>{{espacioFisico.sector?.nombre}}</td>
                         <td>
                             <plex-bool [(ngModel)]="espacioFisico.activo" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
                         </td>

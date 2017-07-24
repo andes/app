@@ -8,8 +8,7 @@ import * as moment from 'moment';
 })
 export class PesoComponent extends Atomo{
     getMensajes() {
-        // debugger;
-        let peso = this.data[this.tipoPrestacion.key];
+        let peso = this.data[this.elementoRUP.key];
         let edadEnMeses;
         let sexo = this.paciente.sexo;
         // edadEnMeses = 8; //Falta la edad en meses esta asi para probar..
@@ -316,8 +315,8 @@ export class PesoComponent extends Atomo{
                         break;
 
                     default: mensaje.texto = '';
-                } 
-        } 
+                }
+        }
         return mensaje;
-    } 
-} 
+    }
+}

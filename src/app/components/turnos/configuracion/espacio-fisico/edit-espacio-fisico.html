@@ -1,38 +1,46 @@
 <section *ngIf="autorizado">
-  <plex-box>
-    <div class="row">
-      <div class="col-6">
-        <plex-text [(ngModel)]="modelo.nombre" id="nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre del espacio físico"
-          required>
-        </plex-text>
-        <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripción" placeholder="Ingrese la descripción del espacio físico">
-        </plex-text>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <plex-select [(ngModel)]="modelo.edificio" name="edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
-        </plex-select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <plex-text [(ngModel)]="modelo.detalle" label="Detalle Ubicación">
-        </plex-text>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <plex-bool [(ngModel)]="modelo.activo" label="Activo" name="activo"></plex-bool>
-      </div>
-    </div>
-  </plex-box>
+    <plex-box>
+        <div class="row">
+            <div class="col-6">
+                <plex-text [(ngModel)]="modelo.nombre" id="nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre del espacio físico"
+                    required>
+                </plex-text>
+                <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripción" placeholder="Ingrese la descripción del espacio físico">
+                </plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-select [(ngModel)]="modelo.edificio" name="edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-select [(ngModel)]="modelo.sector" name="sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-select [(ngModel)]="modelo.servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" labelField="nombre">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-text [(ngModel)]="modelo.detalle" label="Detalle Ubicación">
+                </plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <plex-bool [(ngModel)]="modelo.activo" label="Activo" name="activo"></plex-bool>
+            </div>
+        </div>
+    </plex-box>
 </section>
 <footer *ngIf="autorizado">
-  <div class="row">
-    <div class="col-6">
-      <plex-button label="Guardar" icon="content-save" (click)="onClick(this.modelo)"></plex-button>
-      <plex-button label="Cancelar" icon="close-circle-outline" (click)="onCancel()"></plex-button>
-    </div>
-  </div>
+    <plex-button label="Guardar" icon="content-save" (click)="onClick(this.modelo)"></plex-button>
+    <plex-button label="Cancelar" icon="close-circle-outline" (click)="onCancel()"></plex-button>
 </footer>

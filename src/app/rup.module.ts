@@ -64,7 +64,7 @@ import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sa
 // import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
 
 // RUP
-import { ConsultaGeneralClinicaMedicaComponent } from './components/rup/moleculas/consulta-general-clinica-medica/consultaGeneralClinicaMedica.component';
+import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
 import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
@@ -78,8 +78,8 @@ import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaC
 import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
 import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
-import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
-import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
+import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
+import { TensionArterialComponent } from './components/rup/moleculas/tensionArterial.component';
 import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
@@ -124,6 +124,8 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 import { HeaderPacienteComponent } from "./components/paciente/headerPaciente.component";
+import { EvolucionProblemaDefaultComponent } from "./components/rup/atomos/evolucionProblemaDefault.component";
+import { SolicitudPrestacionDefaultComponent } from "./components/rup/atomos/solicitudPrestacionDefault.component";
 
 
 // // Servicios RUP //
@@ -200,7 +202,7 @@ export const RUP_COMPONENTS = [
   TensionSistolicaComponent,
   TensionDiastolicaComponent,
   ObservacionesComponent,
-  ConsultaGeneralClinicaMedicaComponent,
+  ConsultaMedicinaGeneralComponent,
   EvolucionProblemaComponent,
   EvolucionTodosProblemasComponent,
   PuntoInicioComponent,
@@ -256,39 +258,8 @@ export const RUP_COMPONENTS = [
   EndoscopiaComponent,
   TomaHpvComponent,
   TomaPapComponent,
-  SangreOcultaMateriaFecalComponent
+  SangreOcultaMateriaFecalComponent,
+  EvolucionProblemaDefaultComponent,
+  SolicitudPrestacionDefaultComponent
   //     // NO VAPacienteComponent
 ];
-
-// @NgModule({
-//     declarations: [
-//         RupComponent,
-//         ...RUP_COMPONENTS
-//     ],
-//     imports: [
-//         BrowserModule,
-//         FormsModule,
-//         HttpModule,
-//         PlexModule,
-//         routing
-//     ],
-//     exports: RUP_COMPONENTS,
-//     // [Andrrr] 2017-02-07: Requerido para poder crear componentes dinámicamente (Angular RC5-7)
-//     entryComponents: RUP_COMPONENTS,
-//     // bootstrap: [
-//     //     PuntoInicioComponent
-//     // ],
-//     providers: [
-//         { provide: LOCALE_ID, useValue: 'es-AR' },
-//         // PacienteService,
-//         // appRoutingProviders,
-//         // Plex,
-//         // Server,
-//         // PrestacionPacienteService,
-//         // ProblemaPacienteService,
-//         // TipoProblemaService,
-//         // TipoPrestacionService,
-
-//     ]
-// })
-// export class RupModule { debugger; }
