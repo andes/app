@@ -16,12 +16,12 @@
             <plex-box>
                 <header>
                     <div class="row">
-                        <div class="col-8 page-title">
+                        <div class="col-9 page-title">
                             {{prestacion.solicitud.tipoPrestacion.term}}
                         </div>
-                        <div class="col-4 float-right">
-                            <a class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)">Ver info solicitud</a>
-                            <a class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)">Ver prestacion </a>
+                        <div class="col-3 float-right">
+                            <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"><i class="mdi mdi-eye mdi-12px"></i> Solicitud</a>
+                            <a  href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
                         </div>
                     </div>
                 </header>
