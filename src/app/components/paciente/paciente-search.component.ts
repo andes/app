@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, HostBinding, Input } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -13,10 +13,11 @@ import { Auth } from '@andes/auth';
     styleUrls: ['paciente-search.css']
 })
 
-export class PacienteSearchComponent implements OnInit {
+export class PacienteSearchComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private timeoutHandle: number;
+    private intervalHandle: number;
 
     // Propiedades públicas
     public busquedaAvanzada = false;
@@ -36,6 +37,7 @@ export class PacienteSearchComponent implements OnInit {
     @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
 
@@ -55,11 +57,13 @@ export class PacienteSearchComponent implements OnInit {
         this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
+    ngOnDestroy(): void {
+        clearInterval(this.intervalHandle);
+    }
 
     /**
      * Selecciona un paciente y emite el evento 'selected'
      *
-     * @private
      * @param {*} paciente Paciente para seleccionar
      */
     public seleccionarPaciente(paciente: any) {
@@ -88,6 +92,14 @@ export class PacienteSearchComponent implements OnInit {
     }
 
     /**
+     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
+     *
+     */
+    public cancelar() {
+        this.cancel.emit();
+    }
+
+    /**
      * Actualiza los contadores de pacientes cada 1 minutos
      *
      * @private
@@ -101,7 +113,7 @@ export class PacienteSearchComponent implements OnInit {
         };
 
         actualizar();
-        window.setInterval(actualizar, 1000 * 60); // Cada un minuto
+        this.intervalHandle = window.setInterval(actualizar, 1000 * 60); // Cada un minuto
     }
 
     /**

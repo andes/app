@@ -83,6 +83,13 @@ export class PuntoInicioComponent implements OnInit {
         // No implementado
     }
 
+    /**
+     * Navega para crear una nueva prestación
+     */
+    crearPrestacion(){
+        this.router.navigate(['/rup/crear']);
+    }
+
     // volverAlInicio() {
     //     this.paciente = null;
     //     this.mostrarLista = true;
@@ -244,6 +251,7 @@ export class PuntoInicioComponent implements OnInit {
     // irResumen(id) {
     //     this.router.navigate(['rup/validacion/', id]);
     // }
+
 }
 
 
