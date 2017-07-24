@@ -263,36 +263,3 @@ export const RUP_COMPONENTS = [
   SolicitudPrestacionDefaultComponent
   //     // NO VAPacienteComponent
 ];
-
-// @NgModule({
-//     declarations: [
-//         RupComponent,
-//         ...RUP_COMPONENTS
-//     ],
-//     imports: [
-//         BrowserModule,
-//         FormsModule,
-//         HttpModule,
-//         PlexModule,
-//         routing
-//     ],
-//     exports: RUP_COMPONENTS,
-//     // [Andrrr] 2017-02-07: Requerido para poder crear componentes dinámicamente (Angular RC5-7)
-//     entryComponents: RUP_COMPONENTS,
-//     // bootstrap: [
-//     //     PuntoInicioComponent
-//     // ],
-//     providers: [
-//         { provide: LOCALE_ID, useValue: 'es-AR' },
-//         // PacienteService,
-//         // appRoutingProviders,
-//         // Plex,
-//         // Server,
-//         // PrestacionPacienteService,
-//         // ProblemaPacienteService,
-//         // TipoProblemaService,
-//         // TipoPrestacionService,
-
-//     ]
-// })
-// export class RupModule { debugger; }

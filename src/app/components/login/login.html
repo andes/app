@@ -15,7 +15,7 @@
                     </plex-text>
                     <plex-select label="Seleccione su efector" [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)" [required]="true">
                     </plex-select>
-                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" [disabled]="loading" (click)="login($event)"></plex-button>
+                    <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" [disabled]="deshabilitar" (click)="login($event)"></plex-button>
                     <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
                 </div>
             </div>

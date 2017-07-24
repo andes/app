@@ -30,7 +30,7 @@ export class HudsBusquedaComponent implements OnInit {
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     /**
-     * Devuelve un elemento seleccionado que puede ser 
+     * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -52,7 +52,7 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
-            this.listarHallazgos();
+            this.listarProblemasCronicos();
         }
 
     }
@@ -86,16 +86,23 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     listarPrestaciones() {
-        this.servicioPrestacion.getByPaciente(this.paciente.id).subscribe(prestaciones => {
+        this.servicioPrestacion.getByPaciente(this.paciente.id,this.prestacionActual).subscribe(prestaciones => {
             this.hallazgos = null;
-            this.prestaciones = prestaciones.filter(d => d.id !== this.prestacionActual);
+            this.prestaciones = prestaciones;
         });
     }
 
     listarHallazgos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id).subscribe(hallazgos => {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id,this.prestacionActual).subscribe(hallazgos => {
             this.prestaciones = null;
             this.hallazgos = hallazgos;
+        });
+    }
+
+    listarProblemasCronicos(){
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id,this.prestacionActual).subscribe(hallazgos => {
+            this.prestaciones = null;
+            this.hallazgos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }
 

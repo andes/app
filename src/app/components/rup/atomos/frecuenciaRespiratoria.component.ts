@@ -9,7 +9,6 @@ import { IPaciente } from "../../../interfaces/IPaciente";
 
 export class FrecuenciaRespiratoriaComponent extends Atomo {
 	getMensajes() {
-        debugger;
 		let Edad;
 		let Sexo;
 		let frecuenciaRespiratoria;

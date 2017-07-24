@@ -1,15 +1,66 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <div class="col">
-                <plex-box type="danger">
-                    <header>
-                        <div class="page-title">Gestión de Usuarios</div>
-                    </header>
-                    
-                </plex-box>
-            </div>
+<section *ngIf="!showCreateUpdate">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box type="primary">
+                <header>
+                    <h3>Administración de Permisos</h3>
+                </header>
+
+                <plex-text [(ngModel)]="textoLibre" [autoFocus]="autoFocus" (change)="loadUsuarios()" prefix="<i class='mdi mdi-account-search'></i>"
+                    placeholder="Buscar por DNI, nombre o apellido">
+                </plex-text>
+                <!--Loader-->
+                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                <div *ngIf="users && !users.length" class="alert alert-danger">
+                    <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+                </div>
+                <!--Tabla de resultados por SimpleQuery -->
+                <table *ngIf="users && users.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Apellido</th>
+                            <th>Nombre</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let user of users  | textFilter:textoLibre ; let i=index">
+                            <td>{{user.usuario}}</td>
+                            <td *ngIf="user.apellido; else sinDatos">
+                                {{user.apellido}}
+                            </td>
+                            <td *ngIf="user.nombre; else sinDatos">
+                                {{user.nombre}}
+                            </td>
+                            <ng-template #sinDatos>
+                                <td> SIN DATOS</td>
+                            </ng-template>
+
+                            <td>
+                                <plex-button title="Seleccionar Usuario" icon="check-circle-outline" type="link" (click)="seleccionarUsuario(user)"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </plex-box>
         </div>
-    </section>
-    
-</form>
+        <!--Panel lateral-->
+        <div class="col-4">
+            <plex-box type="primary">
+                <div class="gestionUsuarios"></div>
+            </plex-box>
+        </div>
+    </div>
+
+</section>
+
+<footer *ngIf="!showCreateUpdate">
+    <div class="text-right">
+        <plex-button *ngIf="mostrarNuevo" label="Nuevo Usuario" icon="account-plus" type="primary" (click)="seleccionarUsuario(null)"></plex-button>
+    </div>
+</footer>
+
+<!--Componente de Alta/Modificación que hay que desarrollar-->
+<usuario-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" (data)='afterCreateUpdate($event)'></usuario-create-update>

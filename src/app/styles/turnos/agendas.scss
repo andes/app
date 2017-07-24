@@ -1,18 +1,32 @@
-.table-striped {
-    font-size: 0.85em;
-    .text-success {
-        color: $green !important;
-    }
-    .bg-primary {
-        background-color: $dark-blue !important;
-    }
-}
-
-.plex-box-content .h4 {
-    display: inline-block;
-    height: 38px;
-}
-
+// POR FAVOR NO SOBREESCRIBIR ESTILOS GLOBALES
+// Ver @jfgabriel para incoporar a Plex
+// .table-striped {
+//     font-size: 0.85em;
+//     .text-success {
+//         color: $green !important;
+//     }
+//     .bg-primary {
+//         background-color: $dark-blue !important;
+//     }
+// }
+// .plex-box-content .h4 {
+//     display: inline-block;
+//     height: 38px;
+// }
+// [class^="badge-"],
+// [class^="label-"] {
+//     margin: 0px !important;
+// }
+// .plex-box header {
+//     padding-bottom: 10px;
+// }
+// legend {
+//     padding-bottom: 10px;
+// }
+// .invert {
+//     background-color: #002738;
+//     color: white;
+// }
 .agendas-headings {
     width: 100%;
     padding-top: 15px;
@@ -37,11 +51,6 @@
 }
 
 .consulta {
-    color: white;
-}
-
-.invert {
-    background-color: #002738;
     color: white;
 }
 
@@ -73,17 +82,4 @@ h6.subdata-paciente {
 h6.subdata-descripcion {
     font-weight: 400;
     line-height: 2px;
-}
-
-[class^="badge-"],
-[class^="label-"] {
-    margin: 0px !important;
-}
-
-.plex-box header {
-    padding-bottom: 10px;
-}
-
-legend {
-    padding-bottom: 10px;
 }

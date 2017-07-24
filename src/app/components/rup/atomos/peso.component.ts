@@ -8,7 +8,6 @@ import * as moment from 'moment';
 })
 export class PesoComponent extends Atomo{
     getMensajes() {
-        // debugger;
         let peso = this.data[this.elementoRUP.key];
         let edadEnMeses;
         let sexo = this.paciente.sexo;

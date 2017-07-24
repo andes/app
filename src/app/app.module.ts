@@ -1,6 +1,3 @@
-import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -42,6 +39,7 @@ import { PacientePipe } from './pipes/paciente.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
+import { FilterPermisos } from './pipes/filterPermisos.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -69,10 +67,8 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 
-// ... RUP
-import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
-import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-import { ObservarDatosService } from './services/rup/observarDatos.service';
+// ... Usuarios
+import { UsuarioService } from './services/usuarios/usuario.service';
 
 // ... term
 import { Cie10Service } from './services/term/cie10.service';
@@ -91,6 +87,7 @@ import { AuditoriaService } from './services/auditoria/auditoria.service';
 import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditoriaPrestacionPaciente.service';
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
+import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -202,11 +199,12 @@ import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.co
 import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
 import { BuscadorComponent } from './components/rup/ejecucion/buscador.component';
 import { HudsBusquedaComponent } from './components/rup/ejecucion/hudsBusqueda.component';
-
-// snomed
+import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
+import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
+import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
+import { ObservarDatosService } from './services/rup/observarDatos.service';
+import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-
-// Problemas
 import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 
 // ATOMO SOCIOECONOMICO
@@ -243,7 +241,7 @@ import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPre
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
 
-import { ElementosRupService } from "./services/rup/elementosRUP.service";
+import { ElementosRupService } from './services/rup/elementosRUP.service';
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -252,91 +250,93 @@ import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPor
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
 
 
 
 export const RUP_COMPONENTS = [
-    TensionArterialComponent,
-    SignosVitalesComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    PesoComponent,
-    SaturacionOxigenoComponent,
-    TallaComponent,
-    TemperaturaComponent,
-    TensionSistolicaComponent,
-    TensionDiastolicaComponent,
-    ObservacionesComponent,
-    ConsultaMedicinaGeneralComponent,
-    // NuevoProblemaComponent,
-    // EvolucionProblemaComponent,
-    // EvolucionTodosProblemasComponent,
-    PuntoInicioComponent,
-    PrestacionEjecucionComponent,
-    ResumenComponent,
-    HeaderPacienteComponent,
-    PrestacionValidacionComponent,
-    EdadGestacionalComponent,
-    ScoreApgarComponent,
-    NacimientoComponent,
-    EdadGestacionalFetalComponent,
-    ViviendaAsistenciaEconomicaComponent,
-    ViviendaCombustionComponent,
-    ViviendaContaminantesComponent,
-    ViviendaFamiliaComponent,
-    ViviendaPisoComponent,
-    ViviendaResiduosComponent,
-    ViviendaSituacionSocioEconomicaComponent,
-    ViviendaSostenEconomicoComponent,
-    ViviendaNivelInstruccionComponent,
-    ViviendaCondicionesAlojamientoComponent,
-    PerinatalesEmbarazoNormalComponent,
-    PerinatalesEmbarazoAnormalComponent,
-    PerinatalesNumeroGestaComponent,
-    PerinatalesGestacionMultipleComponent,
-    HallazgoRelacionadoPartoComponent,
-    PartoCesareaComponent,
-    PartoVaginalAsistidoExtractorVacioComponent,
-    PartoViaVaginalForcepsComponent,
-    PartoViaVaginalComponent,
-    EvolucionProblemaComponent,
-    EnmendarProblemaComponent,
-    TransformarProblemaComponent,
-    verProblemaComponent,
-    PruebaOtoemisionesAcusticasComponent,
-    PesquisaNeonatalComponent,
-    PercentiloTallaComponent,
-    PercentiloCircunferenciaCefalicaNinoComponent,
-    DesarrolloMotorComponent,
-    ActitudAnteLosCuidadosComponent,
-    ControlDeEsfinteresComponent,
-    DesarrolloIntelectualyJuegosComponent,
-    EscalaDeDesarrolloComponent,
-    EstadoNutricionalComponent,
-    OdontologiaComponent,
-    IndiceDeMasaCorporalComponent,
-    FactoresDeRiesgoNinoSanoComponent,
-    Atomo,
-    Molecula,
-    NinoSanoComponent,
-    DatosPerinatalesComponent,
-    RegistrosVisitasComponent,
-    Formula,
-    EcografiaComponent,
-    InterConsultaComponent,
-    LaboratorioComponent,
-    RadiografiaComponent,
-    SnomedBuscarComponent,
-    TomografiaComponent,
-    MamografiaComponent,
-    EndoscopiaComponent,
-    TomaHpvComponent,
-    TomaPapComponent,
-    SangreOcultaMateriaFecalComponent,
-    EvolucionProblemaDefaultComponent,
-    HudsBusquedaComponent,
-    BuscadorComponent,
-    SolicitudPrestacionDefaultComponent
+  TensionArterialComponent,
+  SignosVitalesComponent,
+  FrecuenciaCardiacaComponent,
+  FrecuenciaRespiratoriaComponent,
+  PesoComponent,
+  SaturacionOxigenoComponent,
+  TallaComponent,
+  TemperaturaComponent,
+  TensionSistolicaComponent,
+  TensionDiastolicaComponent,
+  ObservacionesComponent,
+  ConsultaMedicinaGeneralComponent,
+  // NuevoProblemaComponent,
+  // EvolucionProblemaComponent,
+  // EvolucionTodosProblemasComponent,
+  PuntoInicioComponent,
+  PrestacionEjecucionComponent,
+  ResumenComponent,
+  HeaderPacienteComponent,
+  PrestacionValidacionComponent,
+  EdadGestacionalComponent,
+  ScoreApgarComponent,
+  NacimientoComponent,
+  EdadGestacionalFetalComponent,
+  ViviendaAsistenciaEconomicaComponent,
+  ViviendaCombustionComponent,
+  ViviendaContaminantesComponent,
+  ViviendaFamiliaComponent,
+  ViviendaPisoComponent,
+  ViviendaResiduosComponent,
+  ViviendaSituacionSocioEconomicaComponent,
+  ViviendaSostenEconomicoComponent,
+  ViviendaNivelInstruccionComponent,
+  ViviendaCondicionesAlojamientoComponent,
+  PerinatalesEmbarazoNormalComponent,
+  PerinatalesEmbarazoAnormalComponent,
+  PerinatalesNumeroGestaComponent,
+  PerinatalesGestacionMultipleComponent,
+  HallazgoRelacionadoPartoComponent,
+  PartoCesareaComponent,
+  PartoVaginalAsistidoExtractorVacioComponent,
+  PartoViaVaginalForcepsComponent,
+  PartoViaVaginalComponent,
+  EvolucionProblemaComponent,
+  EnmendarProblemaComponent,
+  TransformarProblemaComponent,
+  verProblemaComponent,
+  PruebaOtoemisionesAcusticasComponent,
+  PesquisaNeonatalComponent,
+  PercentiloTallaComponent,
+  PercentiloCircunferenciaCefalicaNinoComponent,
+  DesarrolloMotorComponent,
+  ActitudAnteLosCuidadosComponent,
+  ControlDeEsfinteresComponent,
+  DesarrolloIntelectualyJuegosComponent,
+  EscalaDeDesarrolloComponent,
+  EstadoNutricionalComponent,
+  OdontologiaComponent,
+  IndiceDeMasaCorporalComponent,
+  FactoresDeRiesgoNinoSanoComponent,
+  Atomo,
+  Molecula,
+  NinoSanoComponent,
+  DatosPerinatalesComponent,
+  RegistrosVisitasComponent,
+  Formula,
+  EcografiaComponent,
+  InterConsultaComponent,
+  LaboratorioComponent,
+  RadiografiaComponent,
+  SnomedBuscarComponent,
+  TomografiaComponent,
+  MamografiaComponent,
+  EndoscopiaComponent,
+  TomaHpvComponent,
+  TomaPapComponent,
+  SangreOcultaMateriaFecalComponent,
+  EvolucionProblemaDefaultComponent,
+  HudsBusquedaComponent,
+  BuscadorComponent,
+  SolicitudPrestacionDefaultComponent,
+  PrestacionCrearComponent 
 ];
 
 // Locales
@@ -348,96 +348,98 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 // Main module
 @NgModule({
-    imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HttpModule,
-        PlexModule,
-        Ng2DragDropModule,
-        routing,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        ConfirmationPopoverModule.forRoot({
-            confirmButtonType: 'danger' // set defaults here
-        })
-    ],
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpModule,
+    PlexModule,
+    Ng2DragDropModule,
+    routing,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
+    }),
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger' // set defaults here
+    })
+  ],
 
-    declarations: [
-        AppComponent, InicioComponent, LoginComponent,
-        OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        ProfesionalComponent, ProfesionalCreateUpdateComponent,
-        ProfesionalCreateUpdateComponent,
-        EspecialidadComponent, EspecialidadCreateUpdateComponent,
-        PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe,
-        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
-        TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
-        DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
-        TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
-        ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
-        AgregarSobreturnoComponent, PanelAgendaComponent,
-        AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
-        ...RUP_COMPONENTS,
-        LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
-        AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
-        HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, ReasignarTurnoAgendasComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
-        SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent
-    ],
-    entryComponents: RUP_COMPONENTS,
-    bootstrap: [AppComponent],
-    providers: [{
-        provide: LOCALE_ID,
-        useValue: 'es-AR'
-    },
-        Plex,
-        Auth,
-        RoutingGuard,
-        OrganizacionService,
-        ProvinciaService,
-        TipoEstablecimientoService,
-        EspecialidadService,
-        ProfesionalService,
-        PaisService,
-        LocalidadService,
-        BarrioService,
-        PacienteService,
-        FinanciadorService,
-        ParentescoService,
-        appRoutingProviders,
-        ConfigPrestacionService,
-        PlanificarAgendaComponent,
-        // EspacioFisicoComponent,
-        AgendaService,
-        AppMobileService,
-        TurnoService,
-        EspacioFisicoService,
-        ListaEsperaService,
-        Server,
-        SmsService,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
-        TipoPrestacionService,
-        ElementosRupService,
-        ObservarDatosService,
-        LlavesTipoPrestacionService,
 
-        LogService,
-        AuditoriaPorBloqueService,
-        AuditoriaService,
-
-        AuditoriaPrestacionPacienteService,
-
-        SnomedService,
-        Cie10Service,
-
-        SisaService,
-        SintysService,
-        LogPacienteService
-    ]
+  declarations: [
+    AppComponent, InicioComponent, LoginComponent,
+    OrganizacionComponent, OrganizacionCreateUpdateComponent,
+    ProfesionalComponent, ProfesionalCreateUpdateComponent,
+    ProfesionalCreateUpdateComponent,
+    EspecialidadComponent, EspecialidadCreateUpdateComponent,
+    PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+    FilterPermisos,
+    PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
+    TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
+    DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
+    TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
+    ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
+    RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
+    AgregarSobreturnoComponent, PanelAgendaComponent,
+    ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
+    AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
+    ...RUP_COMPONENTS,
+    LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
+    AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
+    HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
+    PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
+    SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
+    BusquedaUsuarioComponent, UsuarioCreateUpdateComponent
+  ],
+  entryComponents: RUP_COMPONENTS,
+  bootstrap: [AppComponent],
+  providers: [{
+    provide: LOCALE_ID,
+    useValue: 'es-AR'
+  },
+    Plex,
+    Auth,
+    RoutingGuard,
+    OrganizacionService,
+    ProvinciaService,
+    TipoEstablecimientoService,
+    EspecialidadService,
+    ProfesionalService,
+    PaisService,
+    LocalidadService,
+    BarrioService,
+    PacienteService,
+    FinanciadorService,
+    ParentescoService,
+    appRoutingProviders,
+    ConfigPrestacionService,
+    PlanificarAgendaComponent,
+    // EspacioFisicoComponent,
+    AgendaService,
+    AppMobileService,
+    TurnoService,
+    EspacioFisicoService,
+    ListaEsperaService,
+    Server,
+    SmsService,
+    PrestacionPacienteService,
+    ProblemaPacienteService,
+    TipoPrestacionService,
+    ElementosRupService,
+    ObservarDatosService,
+    LlavesTipoPrestacionService,
+    LogService,
+    AuditoriaPorBloqueService,
+    AuditoriaService,
+    AuditoriaPrestacionPacienteService,
+    SnomedService,
+    Cie10Service,
+    SisaService,
+    SintysService,
+    AnsesService,
+    LogPacienteService,
+    UsuarioService
+  ]
 })
 
 export class AppModule { }

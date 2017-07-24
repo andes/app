@@ -23,7 +23,7 @@
                         </h3>
                     </header>
                   <div class="col"> 
-                    <div class="col">
+                    <div class="col" *ngIf="pacienteSelected.foto">
                             <img class="foto" src="{{pacienteSelected.foto}}">
                     </div>
                     <div class="row" *ngIf="pacienteSelected.apellido">
@@ -63,6 +63,6 @@
     
 </form>
 
-<auditoria2 *ngIf="showAuditoria2" [pacienteInput]="pacienteSelected" (data)='afterAuditoria2($event)'></auditoria2>
+<auditoria2 *ngIf="showAuditoria2" [pacienteInput]="pacienteSelected" (data)='afterAuditoria($event)'></auditoria2>
 
 

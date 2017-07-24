@@ -28,7 +28,6 @@ export class EstadoNutricionalComponent extends Atomo {
             texto: null,
             class: 'danger'
         };
-        debugger;
         if (edad >= 2) {
 
             switch (true) {

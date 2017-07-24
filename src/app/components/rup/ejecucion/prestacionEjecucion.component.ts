@@ -70,8 +70,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     public scopeEliminar: String;
 
     public paciente: IPaciente;
-
-
+    //Mustro mpi para cambiar de paciente.
+    public showCambioPaciente = false;
+    showDatosSolicitud = false;
+    showBotonCambioPaciente = true;
     // errores
     public errores: any[] = [];
 
@@ -369,6 +371,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             case 'problema':
                 tipo = 'problemas';
                 break;
+            case ('entidad observable'):
             case ('procedimiento'):
                 if (this.tipoBusqueda === 'procedimientos') {
                     tipo = 'procedimientos';
@@ -482,8 +485,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
 
-        this.registros.forEach( (r, i) => {
-        // for (let i = 0; i < this.registros.length; i++) {
+        this.registros.forEach((r, i) => {
+            // for (let i = 0; i < this.registros.length; i++) {
             // let r = this.registros[i];
             this.errores[i] = null;
 
@@ -492,7 +495,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.errores[i] = 'Debe completar con algún valor';
                 resultado = false;
             }
-        // }
+            // }
         });
 
         return resultado;
@@ -600,9 +603,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cargaItems(elementoRup, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
-        this.items = [];
+        this.registros[indice].items = [];
         let objItem = {};
-        this.items = this.registros.filter(registro => {
+        this.registros[indice].items = this.registros.filter(registro => {
             return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
 
         }).map(registro => {
@@ -611,5 +614,41 @@ export class PrestacionEjecucionComponent implements OnInit {
                 handler: () => { this.vincularRegistros(elementoRup, registro) }
             };
         });
+    }
+    cambioDePaciente($event) {
+        this.showCambioPaciente = $event;
+    }
+    cancelarCambioPaciente() {
+        this.showCambioPaciente = false;
+    }
+    cambiarElPaciente($event) {
+        this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
+            if (resultado) {
+                this.showBotonCambioPaciente = true;
+                let params: any = {
+                    op: 'paciente',
+                    paciente: {
+                        id: $event.id,
+                        nombre: $event.nombre,
+                        apellido: $event.apellido,
+                        documento: $event.documento,
+                        telefono: $event.telefono,
+                        sexo: $event.sexo,
+                        fechaNacimiento: $event.fechaNacimiento
+                    }
+                };
+
+                this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                    this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
+                    this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        this.showCambioPaciente = false;
+                    });
+                });
+            }
+        });
+    }
+    mostrarDatosSolicitud(bool) {
+        this.showDatosSolicitud = bool;
     }
 }
