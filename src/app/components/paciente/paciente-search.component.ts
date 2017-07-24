@@ -31,15 +31,29 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
+<<<<<<< HEAD
     @Input() modoCompleto = true; // muestra/oculta panel derecho
     @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
+=======
+    /**
+     * Indica si muestra el botón Cancelar/Volver en el footer
+     */
+    @Input() mostrarCancelar = false;
+    /**
+     * Indica si muestra el panel lateral en la selección de pacientes
+     */
+    @Input() modoCompleto = true;
+    /**
+     * Indica si quiere bloquear la modificación del paciente una vez seleccionado
+     */
+    @Input() bloquearCreate = false;
+>>>>>>> mpi
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
-
         this.actualizarContadores();
     }
 
@@ -74,7 +88,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         }
 
         // Mostrar formulario update si no hay paciente
-        if (!paciente.id) {
+        if (!paciente) {
             this.showCreateUpdate = true;
         }
 
@@ -151,6 +165,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             sexo: sexo,
             fechaNacimiento: fechaNacimiento
         };
+    }
+
+    /**
+     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
+     */
+    public cancelar() {
+        this.cancel.emit();
     }
 
     /**

@@ -36,6 +36,7 @@ import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
 import { FechaPipe } from './pipes/fecha.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
+import { SexoPipe } from './pipes/sexo.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
@@ -336,7 +337,7 @@ export const RUP_COMPONENTS = [
   HudsBusquedaComponent,
   BuscadorComponent,
   SolicitudPrestacionDefaultComponent,
-  PrestacionCrearComponent 
+  PrestacionCrearComponent
 ];
 
 // Locales
@@ -372,7 +373,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
     PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
-    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+    MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
     FilterPermisos,
     PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
     TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
