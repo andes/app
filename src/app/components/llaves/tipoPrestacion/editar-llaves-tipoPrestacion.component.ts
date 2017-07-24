@@ -71,7 +71,8 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                     this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
                 }
             } else {
-                delete this.modelo.llave.edad.desde;
+                this.modelo.llave.edad.desde = 0;
+                this.modelo.llave.edad.hasta = 0;
             }
 
             if (this.modelo.llave.edad.hasta.unidad) {
@@ -80,7 +81,8 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                     this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
                 }
             } else {
-                delete this.modelo.llave.edad.hasta;
+                this.modelo.llave.edad.desde = 0;
+                this.modelo.llave.edad.hasta = 0;
             }
 
             if (this.modelo.llave.solicitud.vencimiento.unidad) {
@@ -93,7 +95,8 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
             }
 
             if (this.modelo.llave.solicitud.requerida === false) {
-                delete this.modelo.llave.solicitud;
+                // delete this.modelo.llave.solicitud;
+                this.modelo.llave.solicitud = {};
             }
 
             // PUT/UPDATE
