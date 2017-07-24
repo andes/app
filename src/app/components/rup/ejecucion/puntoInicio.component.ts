@@ -15,6 +15,8 @@ import { PrestacionPacienteService } from './../../../services/rup/prestacionPac
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
+import { EstadosAgenda } from './../../turnos/enums';
+
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html'
@@ -34,6 +36,9 @@ export class PuntoInicioComponent implements OnInit {
     public prestaciones: any = [];
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
+
+
+    public estadosAgenda = EstadosAgenda;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -73,6 +78,8 @@ export class PuntoInicioComponent implements OnInit {
                 this.agendaSeleccionada = this.agendas[0];
             }
             this.prestaciones = data[1];
+
+            this.vincularTurnosPrestaciones();
         });
     }
 
@@ -86,8 +93,18 @@ export class PuntoInicioComponent implements OnInit {
     /**
      * Navega para crear una nueva prestación
      */
-    crearPrestacion(){
+    crearPrestacion() {
         this.router.navigate(['/rup/crear']);
+    }
+
+    iniciarPrestacion(paciente, snomedConcept, turno) {
+        this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+            this.plex.alert('Prestación creada.').then(() => {
+                this.router.navigate(['/rup/ejecucion', prestacion.id]);
+            });
+        }, (err) => {
+            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+        });
     }
 
     // volverAlInicio() {
@@ -95,6 +112,29 @@ export class PuntoInicioComponent implements OnInit {
     //     this.mostrarLista = true;
     // }
 
+    vincularTurnosPrestaciones() {
+        // loopeamos agendas
+        this.agendas.forEach(agenda => {
+            // loopeamos los bloques de la agendas
+            agenda.bloques.forEach(bloques => {
+                // loopeamos los turnos dentro de los bloques
+                bloques.turnos.forEach(turno => {
+                    let indexPrestacion = this.prestaciones.findIndex(prestacion => (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id) );
+
+                    turno['prestacion'] = this.prestaciones[indexPrestacion];
+                });
+            });
+        });
+    }
+
+    cargarTurnos(agenda) {
+        this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
+    }
+
+
+    routeTo(action, id) {
+        this.router.navigate(['rup/' + action + '/', id]);
+    }
 
     /**
      * Generar listado de posibles pacientes que serán o fueron atendidos
