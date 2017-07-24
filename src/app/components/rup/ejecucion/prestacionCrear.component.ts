@@ -48,8 +48,13 @@ export class PrestacionCrearComponent implements OnInit {
         });
     }
 
-    onPacienteSelected(paciente: IPaciente): void {
+    onPacienteSelected(paciente: IPaciente) {
         this.paciente = paciente;
+        this.buscandoPaciente = false;
+    }
+
+    onPacienteCancel() {
+        this.buscandoPaciente = false;
     }
 
     /**
@@ -75,11 +80,8 @@ export class PrestacionCrearComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento
             },
             solicitud: {
-                tipoPrestacion: conceptoSnomed,
                 fecha: this.fecha,
-                turno: null,
-                hallazgos: [],
-                prestacionOrigen: null,
+                tipoPrestacion: conceptoSnomed,
                 // profesional logueado
                 profesional:
                 {
@@ -92,13 +94,8 @@ export class PrestacionCrearComponent implements OnInit {
             ejecucion: {
                 fecha: this.fecha,
                 registros: [],
-                // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
-
                 // organizacion desde la que se solicita la prestacion
-                organizacion: {
-                    id: this.auth.organizacion.id,
-                    nombre: this.auth.organizacion.nombre
-                }
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
             },
             estados: {
                 fecha: new Date(),

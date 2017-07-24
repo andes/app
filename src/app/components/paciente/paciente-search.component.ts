@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, HostBinding, Input } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -13,10 +13,11 @@ import { Auth } from '@andes/auth';
     styleUrls: ['paciente-search.css']
 })
 
-export class PacienteSearchComponent implements OnInit {
+export class PacienteSearchComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private timeoutHandle: number;
+    private intervalHandle: number;
 
     // Propiedades públicas
     public busquedaAvanzada = false;
@@ -30,36 +31,38 @@ export class PacienteSearchComponent implements OnInit {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
-    private permisoAgendas = false;
-    @Input() modoCompleto = true; // muestra/oculta panel derecho
-    @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
-    @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
+    /**
+     * Indica si muestra el botón Cancelar/Volver en el footer
+     */
+    @Input() mostrarCancelar = false;
+    /**
+     * Indica si muestra el panel lateral en la selección de pacientes
+     */
+    @Input() modoCompleto = true;
+    /**
+     * Indica si quiere bloquear la modificación del paciente una vez seleccionado
+     */
+    @Input() bloquearCreate = false;
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-    @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
-
-
 
     constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
-
         this.actualizarContadores();
     }
 
     public ngOnInit() {
         this.autoFocus = this.autoFocus + 1;
-        // Asigno el valor del string de búsqueda que se envío desde algún otro componente
-        if (this.textSearch) {
-            this.textoLibre = this.textSearch;
-        }
-        this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
+    ngOnDestroy(): void {
+        clearInterval(this.intervalHandle);
+    }
 
     /**
      * Selecciona un paciente y emite el evento 'selected'
      *
-     * @private
      * @param {*} paciente Paciente para seleccionar
      */
     public seleccionarPaciente(paciente: any) {
@@ -79,7 +82,7 @@ export class PacienteSearchComponent implements OnInit {
         }
 
         // Mostrar formulario update si no hay paciente
-        if (!paciente.id) {
+        if (!paciente) {
             this.showCreateUpdate = true;
         }
 
@@ -101,7 +104,7 @@ export class PacienteSearchComponent implements OnInit {
         };
 
         actualizar();
-        window.setInterval(actualizar, 1000 * 60); // Cada un minuto
+        this.intervalHandle = window.setInterval(actualizar, 1000 * 60); // Cada un minuto
     }
 
     /**
@@ -151,6 +154,13 @@ export class PacienteSearchComponent implements OnInit {
     }
 
     /**
+     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
+     */
+    public cancelar() {
+        this.cancel.emit();
+    }
+
+    /**
      * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
      *
      * @private
@@ -187,14 +197,6 @@ export class PacienteSearchComponent implements OnInit {
         if (!this.controlarScanner()) {
             return;
         }
-
-
-        // Devuelve verdadero diciendo que borró el input de la búsqueda
-        // Lo usamos para la interacción con el rehuso del componente (ej: RUP)
-        if (this.textoLibre === null) {
-            this.blanqueaInput.next(true);
-        }
-
 
         // Inicia búsqueda
         if (this.textoLibre && this.textoLibre.trim()) {
