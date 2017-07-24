@@ -457,11 +457,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // this.cargarRegistroEnPosicion(this.registros.length, data);
         this.registros.splice(this.registros.length, 0, data);
 
-        // agregamos el elemento al collapse
-        // this.elementosRUPcollapse.push(data);
-        this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
-
-
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
             this.cargaItems(this.registros[i], i)
