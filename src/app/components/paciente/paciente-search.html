@@ -2,8 +2,11 @@
     <div class="row">
         <!--Panel central-->
         <div class="col">
-            <plex-box type="primary">
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Escanee un DNI digital para registrar al paciente">
+            <plex-box>
+                <header>
+                    <div class="page-title">Buscar un paciente</div>
+                </header>
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mpi-barcode'></i>" placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -17,27 +20,23 @@
                         <tr>
                             <th>Estado</th>
                             <th>Documento</th>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
+                            <th>Apellido y Nombre</th>
                             <th>Fecha de Nacimiento</th>
                             <th>Sexo</th>
-                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let paciente of resultado">
+                        <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionarPaciente(paciente)">
                             <td>
-                                <i *ngIf="paciente.estado == 'validado'" class="mdi mdi-brightness-1 text-success"></i>
-                                <i *ngIf="paciente.estado != 'validado'" class="mdi mdi-brightness-1 text-warning"></i>
+                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>
                             </td>
                             <td>{{paciente.documento}}</td>
-                            <td>{{paciente.apellido}}</td>
-                            <td>{{paciente.nombre}}</td>
-                            <td>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</td>
-                            <td>{{paciente.sexo}}</td>
+                            <td>{{paciente | paciente}}</td>
                             <td>
-                                <plex-button title="Seleccionar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPaciente(paciente)"></plex-button>
+                                {{paciente.fechaNacimiento | fecha}}<br>{{paciente | edad}}
                             </td>
+                            <td>{{paciente | sexo}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,13 +55,12 @@
     </div>
 
 </section>
-<footer *ngIf="!showCreateUpdate">
-    <!--<plex-button *ngIf="permisoAgendas" label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" routerLink="/gestor_agendas"></plex-button>-->
-    <div class="float-left">
-        <plex-button label="Volver" icon="mdi mdi-arrow-left" type="danger" (click)="cancelar()"></plex-button>
-    </div>
+
+<!-- Muestra el footer sólo si no está en modo edición -->
+<footer *ngIf="!showCreateUpdate && (mostrarCancelar || mostrarNuevo)">
     <div class="float-right">
-        <plex-button *ngIf="mostrarNuevo" label="Registrar paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+        <plex-button *ngIf="mostrarCancelar" label="Volver" icon="mdi mdi-arrow-left" type="danger" (click)="cancelar()"></plex-button>
+        <plex-button *ngIf="mostrarNuevo && !bloquearCreate" label="Registrar paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
     </div>
 </footer>
 

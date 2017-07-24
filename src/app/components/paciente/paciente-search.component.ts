@@ -31,30 +31,29 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
-    private permisoAgendas = false;
-    @Input() modoCompleto = true; // muestra/oculta panel derecho
-    @Input() textSearch; // texto que se envía desde otro componente que utiliza esta búsqueda
-    @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
+    /**
+     * Indica si muestra el botón Cancelar/Volver en el footer
+     */
+    @Input() mostrarCancelar = false;
+    /**
+     * Indica si muestra el panel lateral en la selección de pacientes
+     */
+    @Input() modoCompleto = true;
+    /**
+     * Indica si quiere bloquear la modificación del paciente una vez seleccionado
+     */
+    @Input() bloquearCreate = false;
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-    @Output() blanqueaInput: EventEmitter<boolean> = new EventEmitter<boolean>(); // devuelve verdadero cuando blanquea la búsqueda
-
-
 
     constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
-
         this.actualizarContadores();
     }
 
     public ngOnInit() {
         this.autoFocus = this.autoFocus + 1;
-        // Asigno el valor del string de búsqueda que se envío desde algún otro componente
-        if (this.textSearch) {
-            this.textoLibre = this.textSearch;
-        }
-        this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
     ngOnDestroy(): void {
@@ -83,20 +82,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         }
 
         // Mostrar formulario update si no hay paciente
-        if (!paciente.id) {
+        if (!paciente) {
             this.showCreateUpdate = true;
         }
 
         this.textoLibre = null;
         this.mostrarNuevo = false;
-    }
-
-    /**
-     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
-     *
-     */
-    public cancelar() {
-        this.cancel.emit();
     }
 
     /**
@@ -163,6 +154,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
+     */
+    public cancelar() {
+        this.cancel.emit();
+    }
+
+    /**
      * Controla si se ingresó el caracter " en la primera parte del string, indicando que el scanner no está bien configurado
      *
      * @private
@@ -199,14 +197,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         if (!this.controlarScanner()) {
             return;
         }
-
-
-        // Devuelve verdadero diciendo que borró el input de la búsqueda
-        // Lo usamos para la interacción con el rehuso del componente (ej: RUP)
-        if (this.textoLibre === null) {
-            this.blanqueaInput.next(true);
-        }
-
 
         // Inicia búsqueda
         if (this.textoLibre && this.textoLibre.trim()) {
