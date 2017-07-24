@@ -31,10 +31,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
-<<<<<<< HEAD
-    @Input() modoCompleto = true; // muestra/oculta panel derecho
-    @Input() bloquearCreate = false; // no disparamos en create update luego de seleccionar
-=======
     /**
      * Indica si muestra el botón Cancelar/Volver en el footer
      */
@@ -47,7 +43,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      * Indica si quiere bloquear la modificación del paciente una vez seleccionado
      */
     @Input() bloquearCreate = false;
->>>>>>> mpi
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
@@ -71,7 +66,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      * @param {*} paciente Paciente para seleccionar
      */
     public seleccionarPaciente(paciente: any) {
-        debugger;;
         if (paciente) {
             this.seleccion = paciente;
             if (this.esEscaneado) {
@@ -94,14 +88,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
 
         this.textoLibre = null;
         this.mostrarNuevo = false;
-    }
-
-    /**
-     * Emite el evento 'cancel' cuando no se selecciona ningún paciente
-     *
-     */
-    public cancelar() {
-        this.cancel.emit();
     }
 
     /**
