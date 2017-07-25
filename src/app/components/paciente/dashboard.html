@@ -65,7 +65,7 @@
     </div>
     <div class="row" *ngIf="!loading">
         <div class="col-6">
-            <div class="tarjeta color1">
+            <div class="tarjeta bg-success">
                 <i class="mdi mdi-account-check"></i>
                 <div class="contenedor">
                     <div>{{validados}}</div>
@@ -74,7 +74,7 @@
             </div>
         </div>
         <div class="col-6">
-            <div class="tarjeta color2">
+            <div class="tarjeta bg-warning">
                 <i class="mdi mdi-account-off"></i>
                 <div class="contenedor">
                     <div>{{temporales}}</div>
@@ -85,7 +85,7 @@
     </div>
     <div class="row mt-3" *ngIf="!loading">
         <div class="col-6">
-            <div class="tarjeta color3">
+            <div class="tarjeta bg-primary">
                 <i class="mdi mdi-barcode-scan"></i>
                 <div class="contenedor">
                     <div>{{scan}}</div>
@@ -94,7 +94,7 @@
             </div>
         </div>
         <div class="col-6">
-            <div class="tarjeta color4">
+            <div class="tarjeta bg-danger">
                 <i class="mdi mdi-alert"></i>
                 <div class="contenedor">
                     <div>{{scansFallidos}}</div>
