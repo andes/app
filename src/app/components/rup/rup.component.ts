@@ -93,7 +93,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
     // Método para cargar Components
     loadComponent() {
-
+        debugger;
         // La creación dinámica de un Component tiene que darse después que se inicialize el View
         if (!this.isViewInitialized) {
             return;

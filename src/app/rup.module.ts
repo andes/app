@@ -1,3 +1,4 @@
+import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
 import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
 import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
 import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
@@ -260,6 +261,7 @@ export const RUP_COMPONENTS = [
   TomaPapComponent,
   SangreOcultaMateriaFecalComponent,
   EvolucionProblemaDefaultComponent,
-  SolicitudPrestacionDefaultComponent
+  SolicitudPrestacionDefaultComponent,
+  NuevaEvolucionProblemaComponent
   //     // NO VAPacienteComponent
 ];
