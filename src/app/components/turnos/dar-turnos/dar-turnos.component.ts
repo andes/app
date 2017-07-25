@@ -803,7 +803,6 @@ export class DarTurnosComponent implements OnInit {
                     this.estadoT = 'noSeleccionada';
                     this.agenda = null;
                     this.actualizar('sinFiltro');
-                    // this.borrarTurnoAnterior();
                     this.plex.toast('info', 'El turno se asignó correctamente');
 
                     // Enviar SMS
