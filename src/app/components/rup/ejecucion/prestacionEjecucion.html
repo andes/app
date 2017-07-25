@@ -58,10 +58,12 @@
                     <ng-container *ngFor="let elemento of registros; let i = index">
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'"
-                            [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length > 1">
+                            [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
                             Mover a esta posición
 
                         </div>
+
+
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'"
                             [ngClass]="{'relacionado': elemento.relacionadoCon}">
@@ -69,11 +71,10 @@
                             <div class="rup-card" *ngIf="elemento.elementoRUP">
 
                                 <div class="type {{elemento.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                    [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(true)"
-                                    (onDragEnd)="draggingRegistro(false)">
+                                    [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(i ,elemento, true)"
+                                    (onDragEnd)="draggingRegistro(i, elemento, false)">
                                     <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                 </div>
-
                                 <div class="rup-content">
                                     <div class="header">
                                         <div class="title">
@@ -161,8 +162,8 @@
                     </ng-container>
 
                     <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'"
-                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length">
-                        Mover a esta posición
+                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
+                        Mover a esta posición 
                     </div>
                 </div>
             </plex-box>

@@ -72,6 +72,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public showCambioPaciente = false;
     showDatosSolicitud = false;
     showBotonCambioPaciente = true;
+    public elementoOnDrag: any;
+    public posicionOnDrag;
     // errores
     public errores: any[] = [];
 
@@ -381,7 +383,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-        this.showPlanes = false;
         let tipo;
         switch (snomedConcept.semanticTag) {
             case 'trastorno':
@@ -416,8 +417,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             destacado: false,
             relacionadoCon: null
         };
-
-
         return data;
     }
     /**
@@ -433,6 +432,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.registros.length > 0) {
             this.showVincular = true;
         }
+
 
         // nos fijamos si el concepto ya aparece en los registros
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
@@ -460,7 +460,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         // this.cargarRegistroEnPosicion(this.registros.length, data);
         this.registros.splice(this.registros.length, 0, data);
-
+        this.showDatosSolicitud = false;
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
             this.cargaItems(this.registros[i], i)
@@ -484,7 +484,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      *
      * @memberof PrestacionEjecucionComponent
      */
-    draggingRegistro(dragging: Boolean) {
+    draggingRegistro(i, e, dragging: Boolean) {
+        this.elementoOnDrag = e.concepto.conceptId;
+        this.posicionOnDrag = i + 1;
         setTimeout(() => {
             this.isDraggingRegistro = dragging;
         });
