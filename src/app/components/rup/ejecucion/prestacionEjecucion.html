@@ -85,8 +85,8 @@
                                                 Error
                                             </span>
         
-                                            <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
-                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
+                                            <a href="javascript:void(0);" (click)="elemento.collapse = !elemento.collapse">
+                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
                                             </a>
 
                                             <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(elemento, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
@@ -106,7 +106,7 @@
 
                                     </div>
 
-                                    <div class="rup-body " [hidden]="elementosRUPcollapse[i] || confirmarEliminar">
+                                    <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
                                         <div *ngIf="errores[i]">
                                             <span class="badge badge-danger">
                                                 {{errores[i]}}

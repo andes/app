@@ -60,8 +60,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     items = [];
     public showVincular = false;
 
-    // variables para la vista
-    public elementosRUPcollapse: any[] = [];
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
