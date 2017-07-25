@@ -1,0 +1,115 @@
+@import "node_modules/bootstrap/scss/variables";
+.texto {
+    .top-block {
+        border-radius: 20px;
+        font-size: 22px;
+        text-align: center;
+        padding: 5px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        position: relative;
+        display: block;
+        line-height: 45px;
+        text-shadow: 0 0 1px #DDD;
+        text-decoration: none;
+    }
+    .large {
+        font-size: xx-large;
+    }
+    .success {
+        background-color: #A9F5A9
+    }
+    .info {
+        background-color: #5bc0de;
+    }
+    .warning {
+        background-color: #F3F781
+    }
+    .danger {
+        background-color: #d9534f;
+    }
+    .patient {
+        background-image: url('../../assets/img/patients.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        align-self: center;
+        width: 100%;
+        min-height: 250px;
+    }
+    .patientTemp {
+        background-image: url('../../assets/img/patientTemp.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        align-self: center;
+        width: 100%;
+        min-height: 250px;
+    }
+    .qrCode {
+        background-image: url('../../assets/img/QRCode.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+        min-height: 250px;
+    }
+    .qrCodeFail {
+        background-image: url('../../assets/img/QRCodeFail.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+        min-height: 250px;
+    }
+    .tarjeta {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+        transition: 0.1s;
+        width: 80%;
+    }
+    .tarjeta:hover {
+        box-shadow: 0 8px 16px 0 rgba(070, 130, 180, 192);
+    }
+    .contenedor {
+        padding: 5px 20px;
+        text-align: center;
+        background-color: lightgray;
+    }
+}
+
+.charts {
+    .chart-container {
+        width: 100%;
+        text-align: center;
+    }
+    .chart {
+        display: inline-block;
+        width: 150px;
+        height: 150px;
+    }
+    .tarjeta {
+        text-align: center;
+        padding: 10px;
+        text-transform: uppercase;
+        font-weight: 400;
+        .contenedor {
+            >DIV:first-child {
+                font-size: 2em;
+            }
+        }
+        // Icono
+        i {
+            font-size: 2em;
+            line-height: 1em;
+        }
+        // Colores
+        &.color1 {
+            background: $green;
+        }
+        &.color2 {
+            background: $orange;
+        }
+        &.color3 {
+            background: $blue;
+        }
+        &.color4 {
+            background: $red;
+        }
+    }
+}

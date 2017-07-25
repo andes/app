@@ -30,6 +30,8 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { ChartsModule } from 'ng2-charts';
+
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
@@ -357,6 +359,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     HttpModule,
     PlexModule,
     Ng2DragDropModule,
+    ChartsModule,
     routing,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
