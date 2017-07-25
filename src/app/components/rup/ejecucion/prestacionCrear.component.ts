@@ -68,12 +68,11 @@ export class PrestacionCrearComponent implements OnInit {
      * Guarda la prestación
      */
     guardar() {
-        if (!this.paciente){
+        if (!this.paciente) {
             this.plex.info('warning', 'Debe seleccionar un paciente');
             return;
         }
 
-        debugger;
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
         nuevaPrestacion = {
