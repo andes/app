@@ -151,6 +151,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
                 this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
             });
+
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i)
+                // Actualizamos cuando se agrega el array..
+            }
         }
     }
 
@@ -560,7 +566,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     getValoresRup(datos, elementoRUP, snomedConcept) {
-
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -610,6 +615,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
+        this.showDatosSolicitud = false;
     }
     recibeTipoBusqueda(tipoDeBusqueda) {
         this.tipoBusqueda = tipoDeBusqueda;

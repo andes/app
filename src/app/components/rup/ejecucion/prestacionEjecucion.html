@@ -93,12 +93,8 @@
                                                 <i class="mdi mdi-delete"></i>
                                             </a>
 
-                                            <!--<div *ngIf="showVincular">-->
-                                               
-                                              <div *ngIf="registros.length > 1 && elemento.relacionadoCon === null && elemento?.items.length > 0">  
-                                                   <!-- <pre>{{elemento?.items.length | json}}</pre>  -->
-                                             <!-- <div>  -->
-                                                  <!-- {{elemento | json}} -->
+                                              <div *ngIf="elemento.relacionadoCon === null && elemento?.items.length > 0">  
+
                                                 <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)"
                                                     [items]="elemento.items"></plex-dropdown>
                                             </div>
