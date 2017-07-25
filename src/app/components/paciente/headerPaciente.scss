@@ -4,54 +4,28 @@
     top: 0px;
     z-index: 3000;
     background: #0070BA;
-    color: white;
-    white-space: nowrap;
     padding-right: 5px;
+    cursor: help;
+    // Texto
+    .texto {
+        color: white;
+        white-space: nowrap;
+    }
     // Foto header
-    .header {
+    .foto {
         height: 50px;
         padding: 5px;
     }
-    //Foto popover
-    .fotoPopover {
-        height: 70px;
-        padding: 2px;
-    }
-    // texto-popover
-    .texto-popover{
-        color: #000;
-    }
-    // Texto
-    .texto {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
+    // Popover con detalles de paciente
     .popover {
         visibility: hidden;
     }
-
-    #muestraPopover:hover { 
-        background: #000; 
+    &:hover .popover {
+        display: block;
+        margin-top: 18%;
+        cursor: default;
+        visibility: visible;
+        font-size: 1em;
+        transition: visibility 0.2s ease 0.1s;
     }
-
-    #muestraPopover:hover .popover { 
-         display: block;
-         margin-top: 18%;
-         cursor: default;
-         visibility: visible;	
-         transition:  visibility 0.2s ease 0.1s;
-     }
- 
-    a {
-        color: #000;
-    }
-    a:hover { 
-         color: #0070BA;
-    }
-
-
-   
-
-
 }

@@ -71,7 +71,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
     showDatosSolicitud = false;
-    showBotonCambioPaciente = true;
     public elementoOnDrag: any;
     public posicionOnDrag;
     // errores
@@ -646,7 +645,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     cambiarElPaciente($event) {
         this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
             if (resultado) {
-                this.showBotonCambioPaciente = true;
                 let params: any = {
                     op: 'paciente',
                     paciente: {
