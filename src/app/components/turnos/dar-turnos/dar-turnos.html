@@ -90,11 +90,6 @@
                                         <div *ngFor="let profesional of agenda.profesionales let i=index">
                                             {{profesional | profesional}}
                                         </div>
-                                        <div class="row">
-                                            <pre>
-                                                {{ _solicitudPrestacion | json }}
-                                            </pre>
-                                        </div>
                                     </legend>
                                     <!-- Tiene turnos disponibles -->
                                     <ng-container *ngIf="estadoT == 'seleccionada'">
