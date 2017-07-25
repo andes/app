@@ -41,7 +41,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
-    //public data: any[] = [];
+    // public data: any[] = [];
     public data: Object = {};
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
@@ -70,7 +70,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public scopeEliminar: String;
 
     public paciente: IPaciente;
-    //Mustro mpi para cambiar de paciente.
+    // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
     showDatosSolicitud = false;
     showBotonCambioPaciente = true;
@@ -126,7 +126,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     MostrarDatosEnEjecucion() {
         this.registros = [];
-        //this.data = [];
+        // this.data = [];
         if (this.prestacion) {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
@@ -187,8 +187,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
-        if (this.registros[posicionNueva].relacionadoCon) {
-            this.registros[posicionNueva].relacionadoCon = null;
+        if (this.registros[posicionNueva]) {
+            if (this.registros[posicionNueva].relacionadoCon) {
+                this.registros[posicionNueva].relacionadoCon = null;
+            }
         }
     }
 
@@ -265,6 +267,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(indexOrigen, 1);
         this.registros.splice(indexDestino + 1, 0, _registro);
 
+
+
+        // tslint:disable-next-line:forin
+        for (let i in this.registros) {
+            this.cargaItems(this.registros[i], i)
+            // Actualizamos cuando se agrega el array..
+        }
         // this.moverRegistroEnPosicion()
         /*
         if (relacionados.length) {
@@ -301,6 +310,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.confirmarDesvincular[index] = false;
 
             this.moverRegistroEnPosicion(index, this.registros.length);
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i)
+                // Actualizamos cuando se agrega el array..
+            }
         }
 
         // si no tiene ningun elemento relacionado entonces es un elemento padre
@@ -443,9 +457,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         // this.cargarRegistroEnPosicion(this.registros.length, data);
         this.registros.splice(this.registros.length, 0, data);
 
-        // agregamos el elemento al collapse
-        //this.elementosRUPcollapse.push(data);
-        this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
+        // tslint:disable-next-line:forin
+        for (let i in this.registros) {
+            this.cargaItems(this.registros[i], i)
+            // Actualizamos cuando se agrega el array..
+        }
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
@@ -611,7 +627,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
-                handler: () => { this.vincularRegistros(elementoRup, registro) }
+                handler: () => { this.vincularRegistros(elementoRup, registro); }
             };
         });
     }

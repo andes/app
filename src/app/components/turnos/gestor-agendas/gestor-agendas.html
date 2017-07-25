@@ -90,6 +90,8 @@
                                 <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                 <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
                                 <span class="badge-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
+
+                                <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
                             </td>
                         </tr>
                     </tbody>

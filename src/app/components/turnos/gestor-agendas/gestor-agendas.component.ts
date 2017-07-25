@@ -253,8 +253,8 @@ export class GestorAgendasComponent implements OnInit {
         let fecha = moment().format();
 
         if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toISOString();
-            this.fechaHasta = moment(fecha).endOf('day').toISOString();
+            this.fechaDesde = moment(fecha).startOf('day').toDate();
+            this.fechaHasta = moment(fecha).endOf('day').toDate();
         }
 
         this.serviceAgenda.get({
@@ -373,6 +373,13 @@ export class GestorAgendasComponent implements OnInit {
         } else {
             agenda.agendaSeleccionadaColor = 'success';
         }
+    }
+
+    suspensionAvisada(agenda: any) {
+        if (agenda.avisos) {
+            return agenda.avisos.findIndex(item => item.estado == 'suspende') >= 0;
+        }
+        return false;
     }
 
     redirect(pagina: string) {

@@ -1,21 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
-@Pipe({ name: 'paciente' })
+@Pipe({ name: 'paciente', pure: false })
+// pure: false - Info: https://stackoverflow.com/questions/34456430/ngfor-doesnt-update-data-with-pipe-in-angular2
 export class PacientePipe implements PipeTransform {
     transform(value: any, args: string[]): any {
-        let fullName = '';
-
         if (!value) {
-            return fullName;
-        }
-
-        if (value.alias) {
-            fullName = value.apellido + ', ' + value.alias;
+            return null;
+        } else if (value.alias) {
+            return value.apellido + ', ' + value.alias;
         } else {
-            fullName = value.apellido + ', ' + value.nombre;
+            return value.apellido + ', ' + value.nombre;
         }
-
-        return fullName;
     }
 }
