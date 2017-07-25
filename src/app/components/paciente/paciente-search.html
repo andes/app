@@ -6,7 +6,7 @@
                 <header>
                     <div class="page-title">Buscar un paciente</div>
                 </header>
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mpi-barcode'></i>" placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>" placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
                 </plex-text>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -43,13 +43,12 @@
             </plex-box>
         </div>
         <!--Panel lateral-->
-        <div class="col-4" *ngIf="modoCompleto">
-            <plex-box type="primary">
+        <div class="col-3" *ngIf="modoCompleto">
+            <plex-box>
                 <header>
-                    <h3>Validación digital de pacientes</h3>
+                    <div class="page-title">Estado de <span title="Indice Maestro de Pacientes">MPI</span></div>
                 </header>
-                <div class="label-info margin-bottom" style="font-size: 1em">Pacientes registrados en la Historia Digital de Salud: <strong>{{cantPacientesValidados}}</strong></div>
-                <div class="nuevoDNI"></div>
+                <pacientes-dashboard [showCharts]="true"></pacientes-dashboard>
             </plex-box>
         </div>
     </div>

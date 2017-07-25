@@ -2,6 +2,7 @@ import { IHallazgo } from './../../interfaces/rup/IHallazgo';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../../environments/environment';
+import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { IProblemaPaciente } from './../../interfaces/rup/IProblemaPaciente';
@@ -12,7 +13,7 @@ export class PrestacionPacienteService {
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
 
-    constructor(private server: Server) { }
+    constructor(private server: Server, public auth: Auth) { }
 
     /**
      * Metodo get. Trae lista de objetos prestacion.
@@ -187,6 +188,71 @@ export class PrestacionPacienteService {
 
     patch(idPrestacion: string, cambios: any): Observable<IPrestacionPaciente> {
         return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
+    }
+
+    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+        let prestacion = {
+            paciente: {
+                id: paciente.id,
+                nombre: paciente.nombre,
+                apellido: paciente.apellido,
+                documento: paciente.documento,
+                sexo: paciente.sexo,
+                fechaNacimiento: paciente.fechaNacimiento
+            }
+        };
+
+        if (momento === 'solicitud') {
+            prestacion['solicitud'] = {
+                fecha: fecha,
+                turno: turno,
+                tipoPrestacion: snomedConcept,
+                // profesional logueado
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+            };
+
+            prestacion['estados'] = {
+                fecha: fecha,
+                tipo: 'ejecucion'
+            };
+
+        } else if (momento === 'ejecucion') {
+            prestacion['solicitud'] = {
+                fecha: fecha,
+                turno: turno,
+                tipoPrestacion: snomedConcept,
+                // profesional logueado
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+            };
+
+            prestacion['ejecucion'] = {
+                fecha: fecha,
+                registros: [],
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+            };
+
+            prestacion['estados'] = {
+                fecha: fecha,
+                tipo: 'ejecucion'
+            };
+        };
+
+        prestacion.paciente['_id'] = paciente.id;
+
+        return this.post(prestacion);
     }
 
     // tslint:disable-next-line:eofline

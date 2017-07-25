@@ -30,6 +30,8 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { ChartsModule } from 'ng2-charts';
+
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
@@ -107,6 +109,7 @@ import { PacienteSearchComponent } from './components/paciente/paciente-search.c
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
+import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -356,6 +359,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     HttpModule,
     PlexModule,
     Ng2DragDropModule,
+    ChartsModule,
     routing,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
@@ -372,7 +376,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     ProfesionalComponent, ProfesionalCreateUpdateComponent,
     ProfesionalCreateUpdateComponent,
     EspecialidadComponent, EspecialidadCreateUpdateComponent,
-    PacienteCreateUpdateComponent, PacienteSearchComponent, DashboardComponent,
+    PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
     MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
     FilterPermisos,
     PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
