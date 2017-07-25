@@ -759,9 +759,9 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /**
-     *
+     * DAR TURNO
      */
-    onSave() {
+    darTurno() {
         // Ver si cambió el estado de la agenda desde otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
@@ -787,6 +787,8 @@ export class DarTurnosComponent implements OnInit {
                 this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                 let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
                 let agendaid = this.agenda.id;
+
+                // Datos del Turno
                 let datosTurno = {
                     idAgenda: this.agenda.id,
                     idTurno: this.turno.id,
@@ -796,9 +798,8 @@ export class DarTurnosComponent implements OnInit {
                     tipoTurno: this.tiposTurnosSelect
                 };
 
-                let operacion: Observable<any>;
-                operacion = this.serviceTurno.save(datosTurno);
-                operacion.subscribe(resultado => {
+                // let operacion: Observable<any>;
+                this.serviceTurno.save(datosTurno).subscribe(resultado => {
                     this.estadoT = 'noSeleccionada';
                     this.agenda = null;
                     this.actualizar('sinFiltro');
