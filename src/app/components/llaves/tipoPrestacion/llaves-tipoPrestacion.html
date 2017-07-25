@@ -1,70 +1,64 @@
-<section *ngIf="!showcreate && !showupdate">
+<section *ngIf="!showcreate && !showupdate" class="plex-layout">
     <div class="row">
-        <div class="col-9 col-sm-8">
+        <div class="col">
             <plex-box>
                 <header>
                     <h5 class="page-title">Configuración de Llaves por Tipo de Prestación</h5>
-                    <div>
-                        <table class="table titles" *ngIf="llavesTP?.length">
-                            <tr class="row text-center">
-                                <td class="col-1"><i class="mdi"></i></td>
-                                <td class="col-4"><strong>Tipo de Prestación</strong></td>
-                                <td class="col-3"><strong>Rango Edad</strong></td>
-                                <td class="col-2"><strong>Sexo</strong></td>
-                                <td class="col-1"><strong>Auditable</strong></td>
-                                <td class="col-1"><strong>Activa</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-                </header>
-                <div>
-
-                    <table class="table table-striped">
-                        <tbody>
-                            <template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
-
-                                <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llaveTP)}">
-
-                                    <td class="col-1" (click)="verLlave(llaveTP, true, $event)">
-                                        <i *ngIf="estaSeleccionada(llaveTP)" class="mdi mdi-check-circle btn btn-sm" [ngClass]="{'text-success': estaSeleccionada(llaveTP)}"></i>
-                                        <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline btn btn-sm"></i>
-                                    </td>
-
-                                    <td class="col-4" (click)="verLlave(llaveTP, false, $event)">
-                                        <span class="btn btn-sm">{{llaveTP.tipoPrestacion.nombre}}</span>
-                                    </td>
-
-                                    <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
-                                        <div class="btn btn-sm">
-                                            <span *ngIf="llaveTP.llave.edad?.desde && !llaveTP.llave.edad?.hasta">Desde los</span>
-                                            <span *ngIf="llaveTP.llave.edad?.desde">{{llaveTP.llave.edad?.desde?.valor + ' ' + llaveTP.llave.edad?.desde?.unidad}}</span>
-                                            <span *ngIf="llaveTP.llave.edad?.desde && llaveTP.llave.edad?.hasta">hasta los</span>
-                                            <span *ngIf="llaveTP.llave.edad?.hasta">{{llaveTP.llave.edad?.hasta?.valor + ' ' + llaveTP.llave.edad?.hasta?.unidad}}</span>
-                                            <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
-                                        </div>
-                                    </td>
-
-                                    <td class="col-2" (click)="verLlave(llaveTP, false, $event)">
-                                        <span class="btn btn-sm" *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
-                                        <span class="btn btn-sm" *ngIf="!llaveTP.llave.sexo">no aplica</span>
-                                    </td>
-
-                                    <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
-                                        <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable', !llaveTP.auditable)"></plex-bool>
-                                    </td>
-
-                                    <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
-                                        <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.activa" name="activa" (click)="cambiarEstado(llaveTP, 'activa', !llaveTP.activa)"></plex-bool>
-                                    </td>
-
-                                </tr>
-                            </template>
-                        </tbody>
+                    <table class="table titles" *ngIf="llavesTP?.length">
+                        <tr class="row text-center">
+                            <td class="col-1"><i class="mdi"></i></td>
+                            <td class="col-4"><strong>Tipo de Prestación</strong></td>
+                            <td class="col-3"><strong>Rango Edad</strong></td>
+                            <td class="col-2"><strong>Sexo</strong></td>
+                            <td class="col-1"><strong>Auditable</strong></td>
+                            <td class="col-1"><strong>Activa</strong></td>
+                        </tr>
                     </table>
-                </div>
+                </header>
 
+                <table class="table table-striped">
+                    <tbody>
+                        <template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
+
+                            <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llaveTP)}">
+
+                                <td class="col-1" (click)="verLlave(llaveTP, true, $event)">
+                                    <i *ngIf="estaSeleccionada(llaveTP)" class="mdi mdi-check-circle btn btn-sm" [ngClass]="{'text-success': estaSeleccionada(llaveTP)}"></i>
+                                    <i *ngIf="!estaSeleccionada(llaveTP)" class="mdi mdi-checkbox-blank-circle-outline btn btn-sm"></i>
+                                </td>
+
+                                <td class="col-4" (click)="verLlave(llaveTP, false, $event)">
+                                    <span class="btn btn-sm">{{llaveTP.tipoPrestacion.nombre}}</span>
+                                </td>
+
+                                <td class="col-3" (click)="verLlave(llaveTP, false, $event)">
+                                    <div class="btn btn-sm">
+                                        <span *ngIf="llaveTP.llave.edad?.desde && !llaveTP.llave.edad?.hasta">Desde los</span>
+                                        <span *ngIf="llaveTP.llave.edad?.desde">{{llaveTP.llave.edad?.desde?.valor + ' ' + llaveTP.llave.edad?.desde?.unidad}}</span>
+                                        <span *ngIf="llaveTP.llave.edad?.desde && llaveTP.llave.edad?.hasta">hasta los</span>
+                                        <span *ngIf="llaveTP.llave.edad?.hasta">{{llaveTP.llave.edad?.hasta?.valor + ' ' + llaveTP.llave.edad?.hasta?.unidad}}</span>
+                                        <span *ngIf="!llaveTP.llave.edad">sin rango definido</span>
+                                    </div>
+                                </td>
+
+                                <td class="col-2" (click)="verLlave(llaveTP, false, $event)">
+                                    <span class="btn btn-sm" *ngIf="llaveTP.llave.sexo">{{llaveTP.llave.sexo}}</span>
+                                    <span class="btn btn-sm" *ngIf="!llaveTP.llave.sexo">no aplica</span>
+                                </td>
+
+                                <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
+                                    <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.auditable" name="auditable" (click)="cambiarEstado(llaveTP, 'auditable', !llaveTP.auditable)"></plex-bool>
+                                </td>
+
+                                <td class="col-1" (click)="verLlave(llaveTP, false, $event)">
+                                    <plex-bool class="btn btn-sm" [(ngModel)]="llaveTP.activa" name="activa" (click)="cambiarEstado(llaveTP, 'activa', !llaveTP.activa)"></plex-bool>
+                                </td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
             </plex-box>
-
         </div>
         <div class="col-3 col-sm-4">
             <plex-box>
@@ -76,6 +70,8 @@
         </div>
     </div>
 </section>
+
+<!-- Footer -->
 <footer *ngIf="!showcreate && !showupdate">
     <div class="row">
         <div class="col">

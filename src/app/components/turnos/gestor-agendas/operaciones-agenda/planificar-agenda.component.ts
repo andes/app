@@ -65,7 +65,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id); });
+
+            console.log(data);
+            let dataF = data.filter(x => {
+                console.log('turnos:planificarAgenda:prestacion:' + x.id);
+                return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
+            });
             event.callback(dataF);
         });
     }
@@ -463,6 +468,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
+
         // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {

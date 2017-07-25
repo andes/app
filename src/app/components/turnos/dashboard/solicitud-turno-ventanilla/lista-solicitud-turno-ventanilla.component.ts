@@ -59,10 +59,19 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cargarSolicitudes() {
+
+        // Solicitudes que no tienen prestacionOrigen ni turno
+        // Si tienen prestacionOrigen son generadas por RUP y no se listan
+        // Si tienen turno, dejan de estar pendientes de turno y no se listan
         let params = {
             idPaciente: this.paciente.id,
-            idPrestacionOrigen: null
+            tienePrestacionOrigen: 'no',
+            tieneTurno: 'no'
         };
+        // let options = {
+        //     idPrestacionOrigen: '',
+        //     turnos: []
+        // }
         this.servicioPrestacion.get(params).subscribe(resultado => {
             this.solicitudesPrestaciones = resultado;
         });
