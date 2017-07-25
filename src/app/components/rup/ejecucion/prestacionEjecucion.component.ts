@@ -381,7 +381,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-
+        this.showPlanes = false;
         let tipo;
         switch (snomedConcept.semanticTag) {
             case 'trastorno':
