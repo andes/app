@@ -1,5 +1,6 @@
 <header *ngIf="prestacion">
-    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="showBotonCambioPaciente" [paciente]="prestacion.paciente" [prestacion]="prestacion"></header-paciente>
+    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="showBotonCambioPaciente" [paciente]="prestacion.paciente"
+        [prestacion]="prestacion"></header-paciente>
 </header>
 
 <pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false"></pacientesSearch>
@@ -19,9 +20,9 @@
                         <div class="col-9 page-title">
                             {{prestacion.solicitud.tipoPrestacion.term}}
                         </div>
-                        <div class="col-3 float-right">
+                        <div class="col-3 float-right text-right">
                             <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"><i class="mdi mdi-eye mdi-12px"></i> Solicitud</a>
-                            <a  href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
+                            <a href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
                         </div>
                     </div>
                 </header>
@@ -57,10 +58,12 @@
                     <ng-container *ngFor="let elemento of registros; let i = index">
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'"
-                            [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length > 1">
+                            [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
                             Mover a esta posición
 
                         </div>
+
+
 
                         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'"
                             [ngClass]="{'relacionado': elemento.relacionadoCon}">
@@ -68,11 +71,10 @@
                             <div class="rup-card" *ngIf="elemento.elementoRUP">
 
                                 <div class="type {{elemento.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                    [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(true)"
-                                    (onDragEnd)="draggingRegistro(false)">
+                                    [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(i ,elemento, true)"
+                                    (onDragEnd)="draggingRegistro(i, elemento, false)">
                                     <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                 </div>
-
                                 <div class="rup-content">
                                     <div class="header">
                                         <div class="title">
@@ -83,17 +85,16 @@
                                             <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
                                                 Error
                                             </span>
-
-                                            <a href="javascript:void(0);" (click)="elementosRUPcollapse[i] = !elementosRUPcollapse[i]">
-                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elementosRUPcollapse[i]}"></i>
+        
+                                            <a href="javascript:void(0);" (click)="elemento.collapse = !elemento.collapse">
+                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
                                             </a>
 
                                             <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(elemento, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                 <i class="mdi mdi-delete"></i>
                                             </a>
 
-                                            <!--<div *ngIf="showVincular">-->
-                                            <div>
+                                              <div *ngIf="elemento.relacionadoCon === null && elemento?.items.length > 0">  
 
                                                 <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)"
                                                     [items]="elemento.items"></plex-dropdown>
@@ -102,7 +103,7 @@
 
                                     </div>
 
-                                    <div class="rup-body " [hidden]="elementosRUPcollapse[i] || confirmarEliminar">
+                                    <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
                                         <div *ngIf="errores[i]">
                                             <span class="badge badge-danger">
                                                 {{errores[i]}}
@@ -161,8 +162,8 @@
                     </ng-container>
 
                     <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'"
-                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length">
-                        Mover a esta posición
+                        [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
+                        Mover a esta posición 
                     </div>
                 </div>
             </plex-box>

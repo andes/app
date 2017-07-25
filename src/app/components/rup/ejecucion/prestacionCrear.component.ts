@@ -65,9 +65,14 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     /**
-     * Guarda la prestación (presupone que el formulario es válido)
+     * Guarda la prestación
      */
     guardar() {
+        if (!this.paciente) {
+            this.plex.info('warning', 'Debe seleccionar un paciente');
+            return;
+        }
+
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
         nuevaPrestacion = {
@@ -105,11 +110,9 @@ export class PrestacionCrearComponent implements OnInit {
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            this.plex.alert('Prestación creada.').then(() => {
-                this.router.navigate(['/rup/ejecucion', prestacion.id]);
-            });
+            this.router.navigate(['/rup/ejecucion', prestacion.id]);
         }, (err) => {
-            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+            this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
         });
     }
 

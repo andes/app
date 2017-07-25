@@ -41,7 +41,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // public conceptoSnomedSeleccionado: any;
 
     // array de resultados a guardar devueltos por RUP
-    //public data: any[] = [];
+    // public data: any[] = [];
     public data: Object = {};
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
@@ -60,8 +60,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     items = [];
     public showVincular = false;
 
-    // variables para la vista
-    public elementosRUPcollapse: any[] = [];
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
@@ -70,10 +68,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     public scopeEliminar: String;
 
     public paciente: IPaciente;
-    //Mustro mpi para cambiar de paciente.
+    // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
     showDatosSolicitud = false;
     showBotonCambioPaciente = true;
+    public elementoOnDrag: any;
+    public posicionOnDrag;
     // errores
     public errores: any[] = [];
 
@@ -126,7 +126,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     MostrarDatosEnEjecucion() {
         this.registros = [];
-        //this.data = [];
+        // this.data = [];
         if (this.prestacion) {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
@@ -153,6 +153,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
                 this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
             });
+
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i)
+                // Actualizamos cuando se agrega el array..
+            }
         }
     }
 
@@ -187,8 +193,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
-        if (this.registros[posicionNueva].relacionadoCon) {
-            this.registros[posicionNueva].relacionadoCon = null;
+        if (this.registros[posicionNueva]) {
+            if (this.registros[posicionNueva].relacionadoCon) {
+                this.registros[posicionNueva].relacionadoCon = null;
+            }
         }
     }
 
@@ -265,6 +273,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(indexOrigen, 1);
         this.registros.splice(indexDestino + 1, 0, _registro);
 
+
+
+        // tslint:disable-next-line:forin
+        for (let i in this.registros) {
+            this.cargaItems(this.registros[i], i)
+            // Actualizamos cuando se agrega el array..
+        }
         // this.moverRegistroEnPosicion()
         /*
         if (relacionados.length) {
@@ -301,6 +316,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.confirmarDesvincular[index] = false;
 
             this.moverRegistroEnPosicion(index, this.registros.length);
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i)
+                // Actualizamos cuando se agrega el array..
+            }
         }
 
         // si no tiene ningun elemento relacionado entonces es un elemento padre
@@ -363,7 +383,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-
         let tipo;
         switch (snomedConcept.semanticTag) {
             case 'trastorno':
@@ -398,8 +417,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             destacado: false,
             relacionadoCon: null
         };
-
-
         return data;
     }
     /**
@@ -415,6 +432,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.registros.length > 0) {
             this.showVincular = true;
         }
+
 
         // nos fijamos si el concepto ya aparece en los registros
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
@@ -442,10 +460,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         // this.cargarRegistroEnPosicion(this.registros.length, data);
         this.registros.splice(this.registros.length, 0, data);
-
-        // agregamos el elemento al collapse
-        //this.elementosRUPcollapse.push(data);
-        this.elementosRUPcollapse[this.elementosRUPcollapse.length - 1] = false;
+        this.showDatosSolicitud = false;
+        // tslint:disable-next-line:forin
+        for (let i in this.registros) {
+            this.cargaItems(this.registros[i], i)
+            // Actualizamos cuando se agrega el array..
+        }
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
@@ -464,7 +484,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      *
      * @memberof PrestacionEjecucionComponent
      */
-    draggingRegistro(dragging: Boolean) {
+    draggingRegistro(i, e, dragging: Boolean) {
+        this.elementoOnDrag = e.concepto.conceptId;
+        this.posicionOnDrag = i + 1;
         setTimeout(() => {
             this.isDraggingRegistro = dragging;
         });
@@ -546,7 +568,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     getValoresRup(datos, elementoRUP, snomedConcept) {
-
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -596,6 +617,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
+        this.showDatosSolicitud = false;
     }
     recibeTipoBusqueda(tipoDeBusqueda) {
         this.tipoBusqueda = tipoDeBusqueda;
@@ -611,7 +633,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
-                handler: () => { this.vincularRegistros(elementoRup, registro) }
+                handler: () => { this.vincularRegistros(elementoRup, registro); }
             };
         });
     }
