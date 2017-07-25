@@ -6,20 +6,20 @@
             </header>
             <div class="row">
                 <div class="col-4">
-                    <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
-                    </plex-datetime>
+                    <fieldset>
+                        <legend>Datos principales</legend>
+                        <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
+                        </plex-datetime>
+                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion" [required]="true">
+                        </plex-select>
+                    </fieldset>
                 </div>
-                <div class="col-4">
-                    <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion" [required]="true">
-                    </plex-select>
-                </div>
-                <!-- Paciente -->
-                <div class="col">
-                    <div class="row mb-3">
-                        <label class="block">Paciente</label>
-                        <div>{{ paciente | paciente}}</div>
-                        <plex-button label="Seleccionar" icon="mdi mdi-account" type="success" (click)="buscandoPaciente = true"></plex-button>
-                    </div>
+                <div class="col-3">
+                    <fieldset>
+                        <legend>Datos del paciente</legend>
+                        <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
+                        <plex-button label="Seleccionar paciente" icon="mdi mdi-account" type="success" (click)="buscandoPaciente = true"></plex-button>
+                    </fieldset>
                 </div>
             </div>
         </plex-box>
