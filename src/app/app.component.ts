@@ -33,5 +33,14 @@ export class AppComponent {
 
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
+
+        // Menú principal
+        this.plex.updateMenu([
+            { label: 'Página principal', icon: 'home', route: '/inicio' },
+            { divider: true },
+            { label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' },
+            { label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' },
+            { label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' },
+        ]);
     }
 }
