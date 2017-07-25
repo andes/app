@@ -67,7 +67,10 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge-info float-right">{{this.agenda.turnos}} pacientes</span>
+                                    <span class="badge-info float-right">pacientes
+                                        {{this.agenda.cantidadPacientes}} /
+                                        {{this.agenda.cantidadTurnos}}
+                                    </span>
                                 </td>
                             </tr>
                         </ng-container>
@@ -194,7 +197,7 @@
                                         (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
 
                                     <plex-button *ngIf="turno && turno.paciente && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'"
-                                        label="Ver registros" type="success btn-sm"
+                                        label="Ver registros" type="primary btn-sm"
                                         (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
                                         <plex-button *ngIf="turno && turno.paciente && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada'"

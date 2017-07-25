@@ -113,15 +113,22 @@ export class PuntoInicioComponent implements OnInit {
     // }
 
     vincularTurnosPrestaciones() {
+        console.log(this.prestaciones);
         // loopeamos agendas
         this.agendas.forEach(agenda => {
+            agenda['cantidadPacientes'] = 0;
+            agenda['cantidadTurnos'] = 0;
             // loopeamos los bloques de la agendas
             agenda.bloques.forEach(bloques => {
+                agenda['cantidadTurnos'] += bloques.turnos.length;
                 // loopeamos los turnos dentro de los bloques
                 bloques.turnos.forEach(turno => {
                     let indexPrestacion = this.prestaciones.findIndex(prestacion => (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id) );
-
+                    // asignamos la prestacion al turno
                     turno['prestacion'] = this.prestaciones[indexPrestacion];
+                    // sumamos la cantidad de pacientes
+                    //agenda['cantidadPacientes'] += (indexPrestacion !== -1) ? 1 : 0;
+                    agenda['cantidadPacientes'] += (turno.paciente) ? 1 : 0;
                 });
             });
         });
