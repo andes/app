@@ -461,14 +461,25 @@ export class DarTurnosComponent implements OnInit {
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
                     if (cal.estado !== 'ocupado') {
 
-                        if (this.agenda.estado === 'disponible') {
-                            this.tiposTurnosSelect = 'gestion';
-                            this.tiposTurnosLabel = 'Para gestión de pacientes';
-                        }
+                        // Si tiene solicitud "papelito"
+                        if (this._solicitudPrestacion) {
+                            if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+                                this.tiposTurnosSelect = 'profesional';
+                                this.tiposTurnosLabel = 'Para Profesional';
+                            } else {
+                                this.tiposTurnosSelect = 'gestion';
+                                this.tiposTurnosLabel = 'Con llave';
+                            }
+                        } else {
+                            if (this.agenda.estado === 'disponible') {
+                                this.tiposTurnosSelect = 'gestion';
+                                this.tiposTurnosLabel = 'Para gestión de pacientes';
+                            }
 
-                        if (this.agenda.estado === 'publicada') {
-                            this.tiposTurnosSelect = 'programado';
-                            this.tiposTurnosLabel = 'Programado';
+                            if (this.agenda.estado === 'publicada') {
+                                this.tiposTurnosSelect = 'programado';
+                                this.tiposTurnosLabel = 'Programado';
+                            }
                         }
 
                         let countBloques = [];
@@ -810,6 +821,19 @@ export class DarTurnosComponent implements OnInit {
                     // let tm = moment(this.turno.horaInicio).format('HH:mm');
                     // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
                     // this.enviarSMS(pacienteSave, mensaje);
+
+                    let params = {
+                        op: 'asignarTurno',
+                        idTurno: this.turno.id
+                    };
+
+                    this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                        // Se seteó el id del turno en la solicitud
+                        console.log('Se seteó el id del turno en la solicitud', prestacion);
+
+                    });
+
+
                     if (this.turnoDoble) {
                         if (turnoSiguiente.estado === 'disponible') {
                             let patch: any = {

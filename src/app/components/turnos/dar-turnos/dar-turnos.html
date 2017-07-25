@@ -17,7 +17,7 @@
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre "
+                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                                     (change)="filtrar() " name="profesional">
                                 </plex-select>
                             </div>
@@ -106,16 +106,30 @@
                                                         <tr>
                                                             <td>Del día</td>
                                                             <td>Programados</td>
-                                                            <td>Con llave</td>
-                                                            <!--<td class="text-sm">Profesional</td>-->
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitud else llaveComun"></ng-container>
+                                                            <ng-template #llaveComun>
+                                                                <td>Con llave</td>
+                                                            </ng-template>
+                                                            <ng-template #llaveSolicitud>
+                                                                <td><b>Con llave</b></td>
+                                                            </ng-template>
+                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr>
                                                             <td>{{countBloques[indiceBq].delDia}}</td>
                                                             <td>{{countBloques[indiceBq].programado}}</td>
-                                                            <td>{{countBloques[indiceBq].gestion}}</td>
-                                                            <!--<td class="text-sm">{{countBloques[indiceBq].profesional}}</td>-->
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor"></ng-container>
+                                                            <ng-template #llaveComunValor>
+                                                                <td>{{countBloques[indiceBq].gestion}}</td>
+                                                            </ng-template>
+                                                            <ng-template #llaveSolicitudValor>
+                                                                <td><b>{{countBloques[indiceBq].gestion}}</b></td>
+                                                            </ng-template>
+
+
+                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
