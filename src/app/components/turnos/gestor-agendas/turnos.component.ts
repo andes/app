@@ -88,32 +88,32 @@ export class TurnosComponent implements OnInit {
     }
 
     // Métodos públicos
-    actualizarCarpetaPaciente(agendaActualizar: any) {
-        let turnosBloque;
-        let turnosModificados = [];
-        for (let i = 0; i < agendaActualizar.bloques.length; i++) {
-            turnosBloque = agendaActualizar.bloques[i].turnos;
-            turnosModificados = turnosBloque.map(turno => {
-                if (turno.paciente) {
-                    this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-                        if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
-                            let carpetaEfector = null;
-                            carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                                return (data.organizacion.id === this.auth.organizacion.id);
-                            });
-                            // this.turnos[t].paciente.carpetaEfectores = new Object();
-                            turno.paciente.carpetaEfectores = carpetaEfector;
-                            return turno;
-                        }
-                    });
-                } else {
-                    return turno;
-                }
-            });
-            agendaActualizar.bloques[i].turnos = turnosModificados;
-        }
-        return agendaActualizar;
-    }
+    // actualizarCarpetaPaciente(agendaActualizar: any) {
+    //     let turnosBloque;
+    //     let turnosModificados = [];
+    //     for (let i = 0; i < agendaActualizar.bloques.length; i++) {
+    //         turnosBloque = agendaActualizar.bloques[i].turnos;
+    //         turnosModificados = turnosBloque.map(turno => {
+    //             if (turno.paciente) {
+    //                 this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+    //                     if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
+    //                         let carpetaEfector = null;
+    //                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+    //                             return (data.organizacion.id === this.auth.organizacion.id);
+    //                         });
+    //                         // this.turnos[t].paciente.carpetaEfectores = new Object();
+    //                         turno.paciente.carpetaEfectores = carpetaEfector;
+    //                         return turno;
+    //                     }
+    //                 });
+    //             } else {
+    //                 return turno;
+    //             }
+    //         });
+    //         agendaActualizar.bloques[i].turnos = turnosModificados;
+    //     }
+    //     return agendaActualizar;
+    // }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
         turno.sobreturno = sobreturno;
