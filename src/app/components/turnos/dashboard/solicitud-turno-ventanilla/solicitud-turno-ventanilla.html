@@ -8,13 +8,14 @@
     <fieldset>
         <legend>Cargar Solicitud Nueva</legend>
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
                 <label>Paciente</label> {{ modelo.paciente | paciente }}
-                <span>{{ modelo.paciente.documento | number }}</span>
+                <span>DNI {{ modelo.paciente.documento | number }}</span>
+                <span>Fecha de nacimiento {{ modelo.paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{modelo.paciente | edad}})</span>
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
             </div>
         </div>
 
@@ -63,7 +64,7 @@
         <!-- Profesional Destino -->
         <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
             <div class="col-12">
-                <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesionales destino (sugeridos)" name="profesionales"
+                <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesional(es) destino" name="profesionales"
                     (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido+' '+nombre">
                 </plex-select>
             </div>

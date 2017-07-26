@@ -26,7 +26,7 @@
                                 <span class="text-danger" *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true">(autocitado)</span>
                             </td>
                             <td>
-                                <plex-button type="success" icon="mdi mdi-account-check" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
+                                <plex-button type="success" icon="mdi mdi-calendar-plus" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -35,7 +35,7 @@
 
             <!-- Mensaje -->
             <ng-template #mensaje>
-                <i class="mdi mdi-information-variant"></i> No hay solicitudes pendientes
+                <i class="mdi mdi-information-outline"></i> No hay solicitudes pendientes
                 <hr>
             </ng-template>
         </div>

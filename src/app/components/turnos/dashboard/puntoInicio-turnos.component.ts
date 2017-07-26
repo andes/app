@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 // Interfaces
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -32,7 +32,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showMostrarEstadisticasPacientes = false;
     public showActivarApp = false;
     public showIngresarSolicitud = false;
-    public paciente;
+    public paciente: IPaciente;
     public autorizado = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
@@ -42,9 +42,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
     showCreateUpdate = false;
     seleccion = null;
     esEscaneado = false;
-    private esOperacion = false;
     textoPacienteSearch = '';
     resultadoCreate;
+    private esOperacion = false;
 
 
     constructor(

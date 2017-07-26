@@ -27,7 +27,32 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
-    @Input('paciente') paciente: IPaciente;
+    // @Input('paciente') paciente: IPaciente;
+
+    private _paciente: any;
+
+    @Input('paciente')
+    set paciente(value: any) {
+        this._paciente = value;
+        // Se crea un paciente que coincida con el schema de la collection 'prestacion'
+        let paciente = {
+            id: this.paciente.id,
+            documento: this.paciente.documento,
+            apellido: this.paciente.apellido,
+            nombre: this.paciente.nombre,
+            sexo: this.paciente.sexo,
+            fechaNacimiento: this.paciente.fechaNacimiento,
+            telefono: ''
+        };
+
+
+        // Se agrega el paciente al modelo
+        this.modelo.paciente = paciente;
+    }
+    get paciente(): any {
+        return this._paciente;
+    }
+
     @Output() cancelarSolicitudVentanilla = new EventEmitter<boolean>();
     @Output() mostrarDarTurnoSolicitud = new EventEmitter<any>();
 
@@ -45,7 +70,9 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             organizacion: {},
             turno: null
         },
-        estados: []
+        estados: [
+            { tipo: 'pendiente' }
+        ]
     };
     public registros: any = {
         solicitudPrestacion: {
@@ -82,30 +109,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.showCargarSolicitud = false;
 
         // Está autorizado para ver esta pantalla?
         if (!this.autorizado) {
             this.redirect('inicio');
-        } else {
-            this.modelo.estados.push({
-                tipo: 'pendiente'
-            });
-
-            // Se crea un paciente que coincida con el schema de la collection 'prestacion'
-            let paciente = {
-                id: this.paciente.id,
-                documento: this.paciente.documento,
-                apellido: this.paciente.apellido,
-                nombre: this.paciente.nombre,
-                sexo: this.paciente.sexo,
-                fechaNacimiento: this.paciente.fechaNacimiento,
-                telefono: ''
-            };
-
-            // Se agrega el paciente al modelo
-            this.modelo.paciente = paciente;
-            this.showCargarSolicitud = false;
-
         }
     }
 
@@ -306,10 +314,32 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                this.modelo.solicitud.registros = {};
-                this.registros.solicitudPrestacion = {};
                 this.showCargarSolicitud = false;
                 this.showBotonCargarSolicitud = true;
+
+                this.modelo = {
+                    paciente: this.paciente,
+                    profesional: {},
+                    organizacion: {},
+                    solicitud: {
+                        fecha: null,
+                        paciente: {},
+                        profesional: {},
+                        organizacion: {},
+                        turno: null
+                    },
+                    estados: [
+                        { tipo: 'pendiente' }
+                    ]
+                };
+                this.registros = {
+                    solicitudPrestacion: {
+                        profesionales: [],
+                        motivo: '',
+                        autocitado: false
+                    }
+                };
+
             });
 
         } else {
@@ -323,11 +353,36 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cancelar() {
-        this.modelo.solicitud = {};
-        this.registros = [];
+        // this.modelo.solicitud = {};
+        // this.registros = [];
         this.showCargarSolicitud = false;
         this.showBotonCargarSolicitud = true;
-        this.cancelarSolicitudVentanilla.emit(true);
+        this.showCargarSolicitud = false;
+        // this.cancelarSolicitudVentanilla.emit(true);
+
+        this.modelo = {
+            paciente: this.paciente,
+            profesional: {},
+            organizacion: {},
+            solicitud: {
+                fecha: null,
+                paciente: {},
+                profesional: {},
+                organizacion: {},
+                turno: null
+            },
+            estados: [
+                { tipo: 'pendiente' }
+            ]
+        };
+        this.registros = {
+            solicitudPrestacion: {
+                profesionales: [],
+                motivo: '',
+                autocitado: false
+            }
+        };
+
     }
 
     redirect(pagina: string) {
