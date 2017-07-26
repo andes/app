@@ -380,10 +380,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
-            this.localidadService.get({
-                'provincia': provincia.id
-            }).subscribe(result => {
-                this.localidadesNeuquen = [...result];
+            this.localidadService.getXProvincia(provincia.id).subscribe(result => {
+                this.localidadesNeuquen = result;
             });
         }
     }
@@ -409,7 +407,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
-            this.changeLocalidadNeuquen(false);
             this.localidadesNeuquen = [];
         }
 
