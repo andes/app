@@ -157,61 +157,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-
-    MostrarDatosEnEjecucion() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        this.registros = [];
-        // this.data = [];
-        if (this.prestacion) {
-
-
-            // recorremos los registros ya almacenados en la prestacion y rearmamos el
-            // arreglo registros y data en memoria
-            this.prestacion.ejecucion.registros.forEach(registro => {
-                debugger;
-                // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-                if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
-                    this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto)
-                        .subscribe(dato => {
-                            debugger;
-                            if (dato) {
-                                // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-                                let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
-
-                                // armamos el elemento data a agregar al array de registros
-                                let data = {
-                                    tipo: 'problemas',
-                                    concepto: registro.concepto,
-                                    elementoRUP: elementoRUP,
-                                    valor: dato,
-                                    destacado: false,
-                                    relacionadoCon: null
-                                };
-                                this.registros.splice(this.registros.length, 0, data);
-                                if (!this.data[elementoRUP.key]) {
-                                    this.data[elementoRUP.key] = {};
-                                }
-                                this.data[elementoRUP.key][registro.concepto.conceptId] = dato;
-                            } else {
-                                let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
+    mostrarUnRegistro(registro){
+let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
                                 // armamos el elemento data a agregar al array de registros
                                 let data = {
                                     tipo: registro.tipo,
@@ -232,9 +179,46 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
                                 }
                                 this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
-                            }
-                        });
-                }
+
+    }
+
+    MostrarDatosEnEjecucion() {
+
+        this.registros = [];
+        // this.data = [];
+        if (this.prestacion) {
+            // recorremos los registros ya almacenados en la prestacion y rearmamos el
+            // arreglo registros y data en memoria
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
+                // if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
+                //     debugger;
+                //     let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto);
+                //         hallazgo.subscribe(dato => {
+                //             if (dato) {
+                //                 // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+                //                 let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
+                //                 // armamos el elemento data a agregar al array de registros
+                //                 let data = {
+                //                     tipo: 'problemas',
+                //                     concepto: registro.concepto,
+                //                     elementoRUP: elementoRUP,
+                //                     valor: dato,
+                //                     destacado: false,
+                //                     relacionadoCon: null
+                //                 };
+                //                 this.registros.splice(this.registros.length, 0, data);
+                //                 if (!this.data[elementoRUP.key]) {
+                //                     this.data[elementoRUP.key] = {};
+                //                 }
+                //                 this.data[elementoRUP.key][registro.concepto.conceptId] = dato;
+                //             } else {
+                //                 this.mostrarUnRegistro(registro);
+                //             }
+                //         });
+                // }else{
+                    this.mostrarUnRegistro(registro);
+               // }
 
             });
 
