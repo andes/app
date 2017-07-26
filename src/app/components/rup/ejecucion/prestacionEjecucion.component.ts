@@ -109,6 +109,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     showDatosSolicitud = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
+    //Copiadel registro actual para volver todo a la normalidad luego de hacer el drop.
+    public copiaRegistro: any;
     // errores
     public errores: any[] = [];
 
@@ -117,7 +119,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
-        private servicioPaciente: PacienteService) {}
+        private servicioPaciente: PacienteService) { }
 
     /**
      * Inicializamos prestacion a traves del id que viene como parametro de la url
@@ -138,7 +140,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                     this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                 }
-
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                 });
@@ -159,29 +160,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     MostrarDatosEnEjecucion() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         this.registros = [];
         // this.data = [];
         if (this.prestacion) {
-
 
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
@@ -531,11 +512,14 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+        //  this.registros = this.copiaRegistro;
+        // console.log(this.copiaRegistro);
+        //  console.log(this.registros);
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
         if (this.registros.length > 0) {
             this.showVincular = true;
         }
-
+        debugger;
         // nos fijamos si el concepto ya aparece en los registros
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         // si no existe, verificamos si no está en alguno de los conceptos de los elementos RUP cargados
@@ -737,6 +721,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     arrastrandoConcepto(dragging: boolean) {
+        if (dragging === true) {
+            this.colapsarPrestaciones();
+        } else {
+            this.registros = this.copiaRegistro;
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i);
+                // Actualizamos cuando se agrega el array..
+            }
+        }
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
     }
@@ -794,5 +788,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
+    }
+
+    colapsarPrestaciones() {
+        if (this.registros) {
+            this.copiaRegistro = this.registros;
+            this.registros.forEach(element => {
+                element.collapse = true;
+                element.items = [];
+            });
+        }
     }
 }
