@@ -98,6 +98,7 @@ export class DarTurnosComponent implements OnInit {
     turno: ITurno;
     programadosDisponibles: number;
     gestionDisponibles: number;
+    profesionalDisponibles: number;
     turnoTipoPrestacion: any = {};
     alternativas: any[] = [];
     reqfiltros = false;
@@ -136,7 +137,7 @@ export class DarTurnosComponent implements OnInit {
             this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
-            this.actualizarCarpetaPaciente(this.paciente);
+            // this.actualizarCarpetaPaciente(this.paciente);
         }
 
     }
@@ -408,7 +409,6 @@ export class DarTurnosComponent implements OnInit {
         this.agenda = agenda;
         let turnoAnterior = null;
         this.turnoDoble = false;
-
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
@@ -487,6 +487,7 @@ export class DarTurnosComponent implements OnInit {
                         this.programadosDisponibles = 0;
                         this.gestionDisponibles = 0;
                         this.delDiaDisponibles = 0;
+                        this.profesionalDisponibles = 0;
                         // let tiposTurnosSelect = [];
 
                         // Si la agenda es de hoy, los turnos deberán sumarse al contador "delDia"
@@ -563,10 +564,14 @@ export class DarTurnosComponent implements OnInit {
                                                 countBloques[indexBloque].programado--;
                                                 break;
                                             case ('profesional'):
-                                                countBloques[indexBloque].profesional--;
+                                                if (this.agenda.estado === 'disponible') {
+                                                    countBloques[indexBloque].profesional--;
+                                                }
                                                 break;
                                             case ('gestion'):
-                                                countBloques[indexBloque].gestion--;
+                                                if (this.agenda.estado === 'disponible') {
+                                                    countBloques[indexBloque].gestion--;
+                                                }
                                                 break;
                                         }
                                     }
@@ -575,9 +580,11 @@ export class DarTurnosComponent implements OnInit {
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
                                 this.programadosDisponibles += countBloques[indexBloque].programado;
                                 this.gestionDisponibles += countBloques[indexBloque].gestion;
+                                this.profesionalDisponibles += countBloques[indexBloque].profesional;
                             });
                             if (this.agenda.estado === 'disponible') {
-                                (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                                console.log('disponible ', this.profesionalDisponibles);
+                                (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                             if (this.agenda.estado === 'publicada') {
                                 (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
@@ -707,7 +714,7 @@ export class DarTurnosComponent implements OnInit {
         let carpetaEfector = null;
         let listaCarpetas = [];
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0 ) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
                 return (data.organizacion.id === this.auth.organizacion.id);
             });
