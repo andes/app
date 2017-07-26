@@ -572,8 +572,8 @@ export class DarTurnosComponent implements OnInit {
                                     turnoAnterior = turno;
                                 });
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
-                                this.programadosDisponibles = + countBloques[indexBloque].programado;
-                                this.gestionDisponibles = + countBloques[indexBloque].gestion;
+                                this.programadosDisponibles += countBloques[indexBloque].programado;
+                                this.gestionDisponibles += countBloques[indexBloque].gestion;
                             });
                             if (this.agenda.estado === 'disponible') {
                                 (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
@@ -822,16 +822,19 @@ export class DarTurnosComponent implements OnInit {
                     // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
                     // this.enviarSMS(pacienteSave, mensaje);
 
-                    let params = {
-                        op: 'asignarTurno',
-                        idTurno: this.turno.id
-                    };
+                    if (this._solicitudPrestacion) {
 
-                    this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
-                        // Se seteó el id del turno en la solicitud
-                        console.log('Se seteó el id del turno en la solicitud', prestacion);
+                        let params = {
+                            op: 'asignarTurno',
+                            idTurno: this.turno.id
+                        };
 
-                    });
+                        this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                            // Se seteó el id del turno en la solicitud
+                            console.log('Se seteó el id del turno en la solicitud', prestacion);
+
+                        });
+                    }
 
 
                     if (this.turnoDoble) {
