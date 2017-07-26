@@ -791,7 +791,8 @@ export class DarTurnosComponent implements OnInit {
                     documento: this.paciente.documento,
                     apellido: this.paciente.apellido,
                     nombre: this.paciente.nombre,
-                    telefono: this.telefono
+                    telefono: this.telefono,
+                    carpetaEfectores: this.paciente.carpetaEfectores
                 };
 
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
