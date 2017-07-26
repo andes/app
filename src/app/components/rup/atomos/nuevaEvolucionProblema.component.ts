@@ -27,7 +27,6 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
      */
     ngOnInit() {
         this.data[this.elementoRUP.key] = {};
-        debugger;
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
             this.HallazgoCompleto = this.datosIngreso;
@@ -48,7 +47,6 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
 
 
     cambiarEvolucion(signo) {
-        debugger;
         if (signo === '+') {
             if(this.indice < (this.HallazgoCompleto.evoluciones.length - 1)){
                 this.indice = this.indice + 1;
