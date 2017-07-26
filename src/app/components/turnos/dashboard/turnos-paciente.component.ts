@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -8,10 +8,11 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
-
 @Component({
     selector: 'turnos-paciente',
-    templateUrl: 'turnos-paciente.html'
+    templateUrl: 'turnos-paciente.html',
+    styleUrls: ['../../../styles/turnos/dashboard.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
 export class TurnosPacienteComponent implements OnInit {
