@@ -69,7 +69,6 @@ export class RupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        debugger;
         // console.log('RUP', this.elementosRUP.tipo);
         // El View ya está inicializado
         this.isViewInitialized = true;
@@ -93,7 +92,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
     // Método para cargar Components
     loadComponent() {
-        debugger;
         // La creación dinámica de un Component tiene que darse después que se inicialize el View
         if (!this.isViewInitialized) {
             return;
@@ -101,7 +99,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
         this.componentContainer = this.elementosRUP.find(prestacion => {
-            debugger;
             let p;
             p = prestacion;
             return p.nombre === this.elementoRUP.componente.nombre;
