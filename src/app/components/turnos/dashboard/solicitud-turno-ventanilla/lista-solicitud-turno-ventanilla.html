@@ -23,6 +23,7 @@
                             </td>
                             <td>
                                 {{ prestacion.solicitud.profesional | profesional }}
+                                <span class="text-danger" *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true">(autocitado)</span>
                             </td>
                             <td>
                                 <plex-button type="success" icon="mdi mdi-account-check" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>

@@ -12,7 +12,7 @@ export class SexoPipe implements PipeTransform {
         if (!genero) {
             result = sexo;
         } else {
-            if (genero === sexo) {
+            if (genero.toUpperCase() === sexo.toUpperCase()) {
                 result = sexo;
             } else {
                 result = genero + ' (autopercibido)';

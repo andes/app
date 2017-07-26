@@ -38,4 +38,9 @@ export interface IAgenda {
     estadosAgendas: String[];
     nota: String;
     nominalizada: Boolean;
+    avisos: [{
+        profenionalId: String,
+        estado: String,
+        fecha: Date
+    }]
 }

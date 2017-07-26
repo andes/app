@@ -160,11 +160,11 @@ export class LlavesTipoPrestacionComponent implements OnInit {
                 edad: {
                     desde: {
                         valor: 0,
-                        hasta: ''
+                        unidad: null
                     },
                     hasta: {
                         valor: 0,
-                        hasta: ''
+                        unidad: null
                     }
                 },
                 solicitud: {

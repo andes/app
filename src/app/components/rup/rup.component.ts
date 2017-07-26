@@ -8,7 +8,7 @@ import { PacienteService } from './../../services/paciente.service';
 import { ObservarDatosService } from './../../services/rup/observarDatos.service';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
-import { RUP_COMPONENTS } from '../../app.module';
+import { RUP_ELEMENTS } from '../../app.module';
 
 import {
     Component, ViewContainerRef, ComponentFactoryResolver,
@@ -16,10 +16,9 @@ import {
     OnInit, OnDestroy,
     EventEmitter
 } from '@angular/core';
-import { ProfesionalService } from "../../services/profesional.service";
+import { ProfesionalService } from '../../services/profesional.service';
 
 @Component({
-    moduleId: 'RupModule',
     selector: 'rup',
     template: ''
 })
@@ -70,15 +69,16 @@ export class RupComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        debugger;
         // console.log('RUP', this.elementosRUP.tipo);
         // El View ya está inicializado
         this.isViewInitialized = true;
 
         // Inicializamos la lista de Componentes RUP
-        for (let comp of RUP_COMPONENTS) {
+        for (let element of RUP_ELEMENTS) {
             this.elementosRUP.push({
-                'nombre': comp.name,
-                'component': comp
+                'nombre': element.key,
+                'component': element.component
             });
         }
 
@@ -93,6 +93,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
     // Método para cargar Components
     loadComponent() {
+        debugger;
         // La creación dinámica de un Component tiene que darse después que se inicialize el View
         if (!this.isViewInitialized) {
             return;
@@ -100,6 +101,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
         // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
         this.componentContainer = this.elementosRUP.find(prestacion => {
+            debugger;
             let p;
             p = prestacion;
             return p.nombre === this.elementoRUP.componente.nombre;
@@ -179,8 +181,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         this.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
-        //this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
-
     }
 
 }

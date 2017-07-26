@@ -5,7 +5,9 @@ import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoP
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
-import * as enumerados from './../../../utils/enumerados';
+// import * as enumerados from './../../../utils/enumerados';
+import { enumToArray } from '../../../utils/enums';
+import { TiposSexos, TiposEdades } from './../enums';
 
 @Component({
     selector: 'editar-llaves-tipoPrestacion',
@@ -41,6 +43,9 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     showEditarLlave = false;
     unidadesValidas = true;
 
+    public tiposSexos = enumToArray(TiposSexos);
+    public tiposDeEdades = enumToArray(TiposEdades);
+
     constructor(public plex: Plex, public auth: Auth, public llaveTipoPrestacionService: LlavesTipoPrestacionService, public serviceTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -58,6 +63,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
             this.showEditarLlave = false;
 
+            // Sexo 
             if (this.modelo.llave.sexo) {
                 delete this.modelo.llave.sexo.$order;
                 this.modelo.llave.sexo = this.modelo.llave.sexo.id;
@@ -65,24 +71,29 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 delete this.modelo.llave.sexo;
             }
 
+            // Edad desde
             if (this.modelo.llave.edad.desde.unidad) {
                 if (this.modelo.llave.edad.desde.unidad.$order) {
                     delete this.modelo.llave.edad.desde.unidad.$order;
                     this.modelo.llave.edad.desde.unidad = this.modelo.llave.edad.desde.unidad.id;
                 }
             } else {
-                delete this.modelo.llave.edad.desde;
+                this.modelo.llave.edad.desde.unidad = null;
+                this.modelo.llave.edad.hasta.valor = 0;
             }
 
+            // Edad hasta
             if (this.modelo.llave.edad.hasta.unidad) {
                 if (this.modelo.llave.edad.hasta.unidad.$order) {
                     delete this.modelo.llave.edad.hasta.unidad.$order;
                     this.modelo.llave.edad.hasta.unidad = this.modelo.llave.edad.hasta.unidad.id;
                 }
             } else {
-                delete this.modelo.llave.edad.hasta;
+                this.modelo.llave.edad.desde.unidad = null;
+                this.modelo.llave.edad.hasta.valor = 0;
             }
 
+            // Solicitud vence
             if (this.modelo.llave.solicitud.vencimiento.unidad) {
                 if (this.modelo.llave.solicitud.vencimiento.unidad.$order) {
                     delete this.modelo.llave.solicitud.vencimiento.unidad.$order;
@@ -92,8 +103,10 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 delete this.modelo.llave.edad.vencimiento;
             }
 
+            // Solicitud requerida
             if (this.modelo.llave.solicitud.requerida === false) {
-                delete this.modelo.llave.solicitud;
+                // delete this.modelo.llave.solicitud;
+                this.modelo.llave.solicitud = {};
             }
 
             // PUT/UPDATE
@@ -131,7 +144,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     comprobarUnidades() {
-        if (this.modelo.llave.edad && this.modelo.llave.edad.desde.unidad && this.modelo.llave.edad.hasta.unidad) {
+        if (this.modelo.llave.edad && (this.modelo.llave.edad.desde && this.modelo.llave.edad.desde.unidad) && (this.modelo.llave.edad.hasta && this.modelo.llave.edad.hasta.unidad)) {
             if (this.modelo.llave.edad.desde.unidad.$order < this.modelo.llave.edad.hasta.unidad.$order) {
                 this.unidadesValidas = false;
             } else {
@@ -166,11 +179,11 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
     }
 
     loadSexo(event) {
-        event.callback(enumerados.getObjSexos());
+        event.callback(this.tiposSexos);
     }
 
     loadUnidadesEdad(event) {
-        event.callback(enumerados.getObjUnidadesEdad());
+        event.callback(this.tiposDeEdades);
     }
 
     // UTILS

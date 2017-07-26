@@ -27,7 +27,7 @@ export enum relacionTutor {
 }
 
 export enum UnidadEdad {
-    'Años', 'Meses', 'Días', 'Horas'
+    'años', 'meses', 'días', 'horas'
 }
 
 export enum EstadosAuditorias {

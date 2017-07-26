@@ -56,7 +56,7 @@ import {
 @Component({
     selector: 'rup-prestacionEjecucion',
     templateUrl: 'prestacionEjecucion.html',
-    styleUrls: ['prestacionEjecucion.css'],
+    styleUrls: ['prestacionEjecucion.scss'],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })

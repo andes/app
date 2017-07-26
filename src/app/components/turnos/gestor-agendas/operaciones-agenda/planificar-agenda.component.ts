@@ -65,7 +65,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id); });
+
+            console.log(data);
+            let dataF = data.filter(x => {
+                console.log('turnos:planificarAgenda:prestacion:' + x.id);
+                return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
+            });
             event.callback(dataF);
         });
     }
@@ -463,10 +468,11 @@ export class PlanificarAgendaComponent implements OnInit {
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
+
         // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.ServicioAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda }).
+                this.ServicioAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicaada', 'pausada'] }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
@@ -483,7 +489,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
         // Verifica que el espacio fisico no esté ocupado en ese rango horario
         if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
-            this.ServicioAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda }).
+            this.ServicioAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicaada', 'pausada'] }).
                 subscribe(agendas => {
                     let agds = agendas.filter(agenda => {
                         return agenda.id !== this.modelo.id || !this.modelo.id;

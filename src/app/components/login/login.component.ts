@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
-                    this.deshabilitar = true;
+                    this.deshabilitar = false;
                 });
         } 
     }
