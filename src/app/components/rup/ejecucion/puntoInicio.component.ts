@@ -36,9 +36,17 @@ export class PuntoInicioComponent implements OnInit {
     public prestaciones: any = [];
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
-
-
+    // Prestaciones que están fuera de la agenda
+    public fueraDeAgenda: any = [];
+    // estados a utilizarse en la agenda
     public estadosAgenda = EstadosAgenda;
+
+
+    // FILTROS
+    private resultadosOriginales: any = {agendas: [], prestaciones: []};
+    private agendasOriginales: any = [];
+    public prestacionSeleccion: any;
+    public paciente: any;
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -79,7 +87,16 @@ export class PuntoInicioComponent implements OnInit {
             }
             this.prestaciones = data[1];
 
+            //Object.assign(this.agendasOriginales, data[0]);
+            this.agendasOriginales = JSON.parse(JSON.stringify(data[0]));
+            Object.assign(this.resultadosOriginales.prestaciones, data[1]);
+
+            // vinculamos las prestaciones a los turnos
             this.vincularTurnosPrestaciones();
+            // buscamos las que estan fuera de agenda para poder listarlas
+            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno));
+            // filtramos los resultados
+            this.filtrar();
         });
     }
 
@@ -87,7 +104,104 @@ export class PuntoInicioComponent implements OnInit {
      * Filtra el listado de agendas y prestaciones
      */
     filtrar() {
-        // No implementado
+        this.agendas = this.agendasOriginales;
+        this.prestaciones = this.resultadosOriginales.prestaciones;
+
+        debugger;
+       /*
+        // por tipo de prestación
+        if (this.prestacionSeleccion) {
+            this.agendas.forEach((agenda, indexAgenda, agendas) => {
+
+                // loopeamos los bloques de la agendas
+                agenda.bloques.forEach((bloque, indexBloque, bloques) => {
+                    // loopeamos los turnos dentro de los bloques
+                    bloque.turnos.forEach( (turno, indexTurno, turnos) => {
+                        if (typeof turno.tipoPrestacion === 'undefined' ||
+                            (typeof turno.tipoPrestacion !== 'undefined' && turno.tipoPrestacion && turno.tipoPrestacion.conceptId !== this.prestacionSeleccion.conceptId) ) {
+                            // agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                            turnos.splice(indexTurno, 1);
+                            console.log(turnos);
+                        }
+
+                    });
+                });
+            });
+            console.log(this.agendas);
+        }
+        */
+
+        if (typeof this.paciente !== 'undefined' && this.paciente) {
+            let search = this.paciente.toLowerCase();
+
+            for (let indexAgenda = 0; indexAgenda < this.agendas.length; indexAgenda++) {
+
+                let lengthBloques = this.agendas[indexAgenda].bloques.length;
+                for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
+                    // let _turnos = [];
+                    // let lengthTurnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.length;
+                    // for (let indexTurno = 0; indexTurno < lengthTurnos; indexTurno++) {
+                        let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
+                            return (t.paciente &&
+                               (t.paciente.nombre.toLowerCase().indexOf(search) >= 0 || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
+                                    ||  t.paciente.documento.toLowerCase().indexOf(search) >= 0));
+                        });
+
+                        /* let turno = this.agendas[indexAgenda].bloques[indexBloque].turnos[indexTurno];
+                        if (turno.paciente) {
+
+                            let nombreCompleto = turno.paciente.apellido + ' ' +  turno.paciente.nombre;
+                            if (nombreCompleto.indexOf(search) === -1 &&  turno.paciente.nombre.indexOf(search) === -1
+                                && turno.paciente.apellido.indexOf(search) === -1 &&  turno.paciente.documento.indexOf(search) == -1) {
+
+                                // this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                                this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                                // turnos.splice(indexTurno, 1);
+                            }
+                        }else {
+                             // turnos.splice(indexTurno, 1);
+                             // this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                             this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                        } */
+                    //}
+
+                    this.agendas[indexAgenda].bloques[indexBloque].turnos = _turnos;
+                    debugger;
+                }
+            }
+
+            /* this.agendas.forEach( function (agenda, indexAgenda, agendas)  {
+
+                // loopeamos los bloques de la agendas
+                agenda.bloques.forEach( function (bloque, indexBloque, bloques) {
+                    // loopeamos los turnos dentro de los bloques
+                    // bloque.turnos = bloque.turnos.filter(turno => {
+                    //    return (turno.paciente &&
+                    //           (turno.paciente.nombre.indexOf(search) === -1 && turno.paciente.apellido.indexOf(search) === -1
+                    //                &&  turno.paciente.documento.indexOf(search) === -1));
+                    // });
+                    bloque.turnos.forEach( function (turno, indexTurno, turnos) {
+                        if (turno.paciente) {
+
+                            let nombreCompleto = turno.paciente.apellido + ' ' +  turno.paciente.nombre;
+                            if (nombreCompleto.indexOf(search) === -1 &&  turno.paciente.nombre.indexOf(search) === -1
+                                && turno.paciente.apellido.indexOf(search) === -1 &&  turno.paciente.documento.indexOf(search) == -1) {
+
+                                // this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                                turnos.splice(indexTurno, 1);
+                                // turnos.splice(indexTurno, 1);
+                            }
+                        }else {
+                             // turnos.splice(indexTurno, 1);
+                             // this.agendas[indexAgenda].bloques[indexBloque].turnos.splice(indexTurno, 1);
+                             turnos.splice(indexTurno, 1);
+                        }
+
+                    });
+                });
+            }); */
+        }
+        console.log(this.agendas);
     }
 
     /**
@@ -113,7 +227,6 @@ export class PuntoInicioComponent implements OnInit {
     // }
 
     vincularTurnosPrestaciones() {
-        console.log(this.prestaciones);
         // loopeamos agendas
         this.agendas.forEach(agenda => {
             agenda['cantidadPacientes'] = 0;
@@ -123,11 +236,11 @@ export class PuntoInicioComponent implements OnInit {
                 agenda['cantidadTurnos'] += bloques.turnos.length;
                 // loopeamos los turnos dentro de los bloques
                 bloques.turnos.forEach(turno => {
-                    let indexPrestacion = this.prestaciones.findIndex(prestacion => (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id) );
+                    let indexPrestacion = this.prestaciones.findIndex(prestacion => (prestacion.solicitud.turno && prestacion.solicitud.turno === turno.id));
                     // asignamos la prestacion al turno
                     turno['prestacion'] = this.prestaciones[indexPrestacion];
                     // sumamos la cantidad de pacientes
-                    //agenda['cantidadPacientes'] += (indexPrestacion !== -1) ? 1 : 0;
+                    // agenda['cantidadPacientes'] += (indexPrestacion !== -1) ? 1 : 0;
                     agenda['cantidadPacientes'] += (turno.paciente) ? 1 : 0;
                 });
             });

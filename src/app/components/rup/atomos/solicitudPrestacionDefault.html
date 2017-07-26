@@ -23,10 +23,9 @@
     </p>
 
     <p *ngIf="data[elementoRUP.key].autocitado">
-        <b> Autocitado: </b>
-        <br /> {{data[elementoRUP.key].autocitado}}
+        <b> Autocitado: </b> Si
     </p>
-    <div  *ngIf="data[elementoRUP.key].profesionales">
+    <div  *ngIf="!data[elementoRUP.key].autocitado && data[elementoRUP.key].profesionales">
 
         <p>
             <b>Profesional/es:</b>
