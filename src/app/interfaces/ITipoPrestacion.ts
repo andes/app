@@ -1,5 +1,5 @@
 export interface ITipoPrestacion {
-    /*
+
     id: String;
     key: String;
     nombre: String;
@@ -19,11 +19,12 @@ export interface ITipoPrestacion {
         ruta: String
     };
     granularidad: String;
-    */
+    /*
     id: String; // mmm
     activo: Boolean; // mmm
     conceptId: String;
     term: String;
     fsn: String;
     semanticTag: String;
+    */
 }
