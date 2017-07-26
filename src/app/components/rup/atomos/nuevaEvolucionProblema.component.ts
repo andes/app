@@ -10,12 +10,9 @@ import * as moment from 'moment';
 
 export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
     public fechaInicio: Date;
-    public descripcion: String; //
-    public estado: String; // activo / inactivo / resuleto
-    public esCronico: Boolean = false; //
-    public esEnmienda: Boolean = false;
-    public evolucion: String; //
     public HallazgoCompleto;
+    public unaEvolucion;
+    public indice = 0;
 
     //estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
@@ -29,38 +26,61 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
-        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
+        this.data[this.elementoRUP.key] = {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
+            this.HallazgoCompleto = this.datosIngreso;
+            this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
+            this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
+            //this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+            this.data[this.elementoRUP.key].evolucion = '';
+
+            if(this.HallazgoCompleto.evoluciones){
+                this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+            }
+            
+
             this.devolverValores();
         }
 
-
-
-
     }
 
-    calcularFecha() {
-        let fechaCalc;
-        switch (true) {
-            case (this.inicioEstimadoTiempo.id === 'anios'):
-                fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'mes'):
-                fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'semanas'):
-                fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
-                break;
-            case (this.inicioEstimadoTiempo.id === 'dias'):
-                fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
-                break;
-            default:
-                fechaCalc = new Date();
+
+    cambiarEvolucion(signo) {
+        if (signo === '+') {
+            if(this.indice < (this.HallazgoCompleto.evoluciones.length - 1)){
+                this.indice = this.indice + 1;
+                this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
+            }
+        } else {
+            if(this.indice > 0){
+                this.indice = this.indice - 1;
+                this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
+            }
         }
-
-        this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
-        this.devolverValores();
     }
+
+    // calcularFecha() {
+    //     let fechaCalc;
+    //     switch (true) {
+    //         case (this.inicioEstimadoTiempo.id === 'anios'):
+    //             fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
+    //             break;
+    //         case (this.inicioEstimadoTiempo.id === 'mes'):
+    //             fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
+    //             break;
+    //         case (this.inicioEstimadoTiempo.id === 'semanas'):
+    //             fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
+    //             break;
+    //         case (this.inicioEstimadoTiempo.id === 'dias'):
+    //             fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
+    //             break;
+    //         default:
+    //             fechaCalc = new Date();
+    //     }
+
+    //     this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
+    //     this.devolverValores();
+    // }
 
 }

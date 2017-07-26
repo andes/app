@@ -1,21 +1,57 @@
-import { PacienteService } from './../../../services/paciente.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { element } from 'protractor';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import {
+    PacienteService
+} from './../../../services/paciente.service';
+import {
+    IPaciente
+} from './../../../interfaces/IPaciente';
+import {
+    element
+} from 'protractor';
+import {
+    Component,
+    OnInit,
+    Output,
+    Input,
+    EventEmitter,
+    AfterViewInit,
+    HostBinding,
+    ViewEncapsulation
+} from '@angular/core';
+import {
+    FormGroup,
+    Validators
+} from '@angular/forms';
+import {
+    Router,
+    ActivatedRoute,
+    Params
+} from '@angular/router';
 
-import { DropdownItem } from '@andes/plex';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
+import {
+    DropdownItem
+} from '@andes/plex';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    Auth
+} from '@andes/auth';
 
 // servicios
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import {
+    PrestacionPacienteService
+} from './../../../services/rup/prestacionPaciente.service';
+import {
+    TipoPrestacionService
+} from './../../../services/tipoPrestacion.service';
 
 // interfaces
-import { IProfesional } from './../../../interfaces/IProfesional';
-import { ElementosRupService } from '../../../services/rup/elementosRUP.service';
+import {
+    IProfesional
+} from './../../../interfaces/IProfesional';
+import {
+    ElementosRupService
+} from '../../../services/rup/elementosRUP.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -60,8 +96,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     items = [];
     public showVincular = false;
 
-    // variables para la vista
-    public elementosRUPcollapse: any[] = [];
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
     public confirmarDesvincular: any[] = [];
 
@@ -73,7 +107,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
     showDatosSolicitud = false;
-    showBotonCambioPaciente = true;
+    public elementoOnDrag: any;
+    public posicionOnDrag;
     // errores
     public errores: any[] = [];
 
@@ -82,8 +117,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
-        private servicioPaciente: PacienteService) {
-    }
+        private servicioPaciente: PacienteService) {}
 
     /**
      * Inicializamos prestacion a traves del id que viene como parametro de la url
@@ -125,34 +159,90 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     MostrarDatosEnEjecucion() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         this.registros = [];
         // this.data = [];
         if (this.prestacion) {
+
+
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
-                let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
-                // armamos el elemento data a agregar al array de registros
-                let data = {
-                    tipo: registro.tipo,
-                    concepto: registro.concepto,
-                    elementoRUP: elementoRUPRegistro,
-                    valor: registro.valor,
-                    destacado: registro.destacado ? registro.destacado : false,
-                    relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
-                };
+                debugger;
+                // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
+                if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
+                    this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto)
+                        .subscribe(dato => {
+                            debugger;
+                            if (dato) {
+                                // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+                                let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
 
-                this.registros.push(data);
+                                // armamos el elemento data a agregar al array de registros
+                                let data = {
+                                    tipo: 'problemas',
+                                    concepto: registro.concepto,
+                                    elementoRUP: elementoRUP,
+                                    valor: dato,
+                                    destacado: false,
+                                    relacionadoCon: null
+                                };
+                                this.registros.splice(this.registros.length, 0, data);
+                                if (!this.data[elementoRUP.key]) {
+                                    this.data[elementoRUP.key] = {};
+                                }
+                                this.data[elementoRUP.key][registro.concepto.conceptId] = dato;
+                            } else {
+                                let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
+                                // armamos el elemento data a agregar al array de registros
+                                let data = {
+                                    tipo: registro.tipo,
+                                    concepto: registro.concepto,
+                                    elementoRUP: elementoRUPRegistro,
+                                    valor: registro.valor,
+                                    destacado: registro.destacado ? registro.destacado : false,
+                                    relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
+                                };
 
-                if (!this.data[elementoRUPRegistro.key]) {
-                    this.data[elementoRUPRegistro.key] = {};
+                                this.registros.push(data);
+
+                                if (!this.data[elementoRUPRegistro.key]) {
+                                    this.data[elementoRUPRegistro.key] = {};
+                                }
+
+                                if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
+                                    this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
+                                }
+                                this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
+                            }
+                        });
                 }
 
-                if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
-                    this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
-                }
-                this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
             });
+
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                this.cargaItems(this.registros[i], i)
+                // Actualizamos cuando se agrega el array..
+            }
         }
     }
 
@@ -377,7 +467,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-
         let tipo;
         switch (snomedConcept.semanticTag) {
             case 'trastorno':
@@ -412,10 +501,27 @@ export class PrestacionEjecucionComponent implements OnInit {
             destacado: false,
             relacionadoCon: null
         };
-
-
         return data;
     }
+
+    cargarNuevoRegistro(snomedConcept) {
+        // creamos el registro
+        let data = this.crearRegistro(snomedConcept);
+        if (!data) {
+            return false;
+        }
+        // agregamos al array de registros
+        // this.cargarRegistroEnPosicion(this.registros.length, data);
+        this.registros.splice(this.registros.length, 0, data);
+        this.showDatosSolicitud = false;
+        // tslint:disable-next-line:forin
+        for (let i in this.registros) {
+            this.cargaItems(this.registros[i], i)
+            // Actualizamos cuando se agrega el array..
+        }
+    }
+
+
     /**
      * Al hacer clic en un resultado de SNOMED search se ejecuta esta funcion
      * y se agrega a un array de elementos en ejecucion el elemento rup perteneciente
@@ -443,32 +549,51 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         if (existe) {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra agregado.');
-
             return false;
         }
 
-        // creamos el registro
-        let data = this.crearRegistro(snomedConcept);
-        if (!data) {
-            return false;
-        }
+        // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
+        if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
+            this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
+                .subscribe(dato => {
+                    if (dato) {
+                        // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+                        let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
+                        // armamos el elemento data a agregar al array de registros
+                        let data = {
+                            tipo: 'problemas',
+                            concepto: snomedConcept,
+                            elementoRUP: elementoRUP,
+                            valor: dato,
+                            destacado: false,
+                            relacionadoCon: null
+                        };
+                        this.registros.splice(this.registros.length, 0, data);
+                        if (!this.data[elementoRUP.key]) {
+                            this.data[elementoRUP.key] = {};
+                        }
+                        this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
+                        for (let i in this.registros) {
+                            this.cargaItems(this.registros[i], i);
+                            // Actualizamos cuando se agrega el array..
+                        }
+                    } else {
+                        this.cargarNuevoRegistro(snomedConcept);
 
-        // agregamos al array de registros
-        // this.cargarRegistroEnPosicion(this.registros.length, data);
-        this.registros.splice(this.registros.length, 0, data);
+                    }
+                });
 
-        // tslint:disable-next-line:forin
-        for (let i in this.registros) {
-            this.cargaItems(this.registros[i], i)
-            // Actualizamos cuando se agrega el array..
+        } else {
+            this.cargarNuevoRegistro(snomedConcept);
         }
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
+        console.log(resultadoHuds);
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            this.ejecutarConcepto(resultadoHuds.data.concepto);
+            this.ejecutarConcepto(resultadoHuds.data);
         }
     }
 
@@ -480,7 +605,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      *
      * @memberof PrestacionEjecucionComponent
      */
-    draggingRegistro(dragging: Boolean) {
+    draggingRegistro(i, e, dragging: Boolean) {
+        this.elementoOnDrag = e.concepto.conceptId;
+        this.posicionOnDrag = i + 1;
         setTimeout(() => {
             this.isDraggingRegistro = dragging;
         });
@@ -562,7 +689,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     getValoresRup(datos, elementoRUP, snomedConcept) {
-
         // si esta seteado el valor en data, pero no tiene ninguna key con valores dentro
         // ej: data[signosVitales]: {}
         if (this.data[elementoRUP.key] !== 'undefined' && !Object.keys(datos).length) {
@@ -612,6 +738,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
+        this.showDatosSolicitud = false;
     }
     recibeTipoBusqueda(tipoDeBusqueda) {
         this.tipoBusqueda = tipoDeBusqueda;
@@ -627,7 +754,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
-                handler: () => { this.vincularRegistros(elementoRup, registro); }
+                handler: () => {
+                    this.vincularRegistros(elementoRup, registro);
+                }
             };
         });
     }
@@ -640,7 +769,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     cambiarElPaciente($event) {
         this.plex.confirm('¿Esta seguro que desea cambiar al paciente actual con el paciente ' + $event.nombre + ' ' + $event.apellido + '?').then(resultado => {
             if (resultado) {
-                this.showBotonCambioPaciente = true;
                 let params: any = {
                     op: 'paciente',
                     paciente: {
