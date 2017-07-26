@@ -1,17 +1,21 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
-@Pipe({ name: 'sexo' })
+@Pipe({ name: 'sexo', pure: false })
+// pure: false - Info: https://stackoverflow.com/questions/34456430/ngfor-doesnt-update-data-with-pipe-in-angular2
 export class SexoPipe implements PipeTransform {
     transform(value: any, args: string[]): any {
         let result: string;
-        if (!value.genero) {
-            result = value.sexo;
+        let sexo = value && (value.sexo.nombre || value.sexo);
+        let genero = value && (value.genero.nombre || value.genero);
+
+        if (!genero) {
+            result = sexo;
         } else {
-            if (value.genero === value.sexo) {
-                result = value.sexo;
+            if (genero === sexo) {
+                result = sexo;
             } else {
-                result = value.genero + ' (autopercibido)';
+                result = genero + ' (autopercibido)';
             }
         }
         if (result) {
