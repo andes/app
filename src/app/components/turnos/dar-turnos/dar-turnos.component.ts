@@ -302,7 +302,7 @@ export class DarTurnosComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
-        } else if (this._solicitudPrestacion.solicitud.profesional) {
+        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
             let query = {
                 nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
             }
