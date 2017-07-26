@@ -72,6 +72,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                         this.showMostrarEstadisticasPacientes = true;
                         this.showMostrarTurnosPaciente = false;
                         this.showActivarApp = false;
+                        this.showIngresarSolicitud = false;
                     }
                 });
         } else {
@@ -117,6 +118,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarEstadisticasAgendas = true;
         this.showMostrarEstadisticasPacientes = false;
         this.showMostrarTurnosPaciente = false;
+        this.showIngresarSolicitud = false;
     }
 
     verificarOperacion({ operacion, paciente }) {
@@ -174,18 +176,18 @@ export class PuntoInicioTurnosComponent implements OnInit {
         if (this.paciente && this.paciente.id) {
             this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];
-
         }
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
     }
 
     cancelarSolicitudVentanilla() {
         this.showDashboard = true;
+        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
-        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarTurnosPaciente = false;
     }
 
@@ -200,8 +202,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     darTurnoSolicitud(event) {
-        console.log('event ', event);
-
         this.solicitudPrestacion = event;
         this.showDarTurnos = true;
         this.showDashboard = false;
