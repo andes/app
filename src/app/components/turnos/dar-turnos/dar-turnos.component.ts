@@ -907,14 +907,13 @@ export class DarTurnosComponent implements OnInit {
             };
         });
 
-        if (this._pacienteSeleccionado) {
+        if (this.paciente) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
             this.cancelarDarTurno.emit(true);
             return false;
         } else {
             this.buscarPaciente();
         }
-        // this.buscarPaciente();
     }
 
     enviarSMS(paciente: any, mensaje) {
