@@ -98,6 +98,7 @@ export class DarTurnosComponent implements OnInit {
     turno: ITurno;
     programadosDisponibles: number;
     gestionDisponibles: number;
+    profesionalDisponibles: number;
     turnoTipoPrestacion: any = {};
     alternativas: any[] = [];
     reqfiltros = false;
@@ -301,6 +302,11 @@ export class DarTurnosComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
+        } else if (this._solicitudPrestacion.solicitud.profesional) {
+            let query = {
+                nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
+            }
+            this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.opciones.profesional || []);
         }
@@ -331,8 +337,7 @@ export class DarTurnosComponent implements OnInit {
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
-            console.log('entro aca ', this.opciones.tipoPrestacion);
-
+            this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
         }
 
         // 1) Auth general (si puede ver esta pantalla)
@@ -572,10 +577,14 @@ export class DarTurnosComponent implements OnInit {
                                     }
                                     turnoAnterior = turno;
                                 });
+
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
                                 this.programadosDisponibles += countBloques[indexBloque].programado;
                                 this.gestionDisponibles += countBloques[indexBloque].gestion;
+                                this.profesionalDisponibles += countBloques[indexBloque].profesional;
+
                             });
+
                             if (this.agenda.estado === 'disponible') {
                                 (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
@@ -707,7 +716,7 @@ export class DarTurnosComponent implements OnInit {
         let carpetaEfector = null;
         let listaCarpetas = [];
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0 ) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
                 return (data.organizacion.id === this.auth.organizacion.id);
             });
