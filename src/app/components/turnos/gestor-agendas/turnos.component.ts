@@ -29,24 +29,24 @@ export class TurnosComponent implements OnInit {
         //   this.turnos = this.agenda.bloques[i].turnos;
         // }
 
-        this.bloques = this.agenda.bloques;
-        for (let i = 0; i < this.bloques.length; i++) {
-            this.turnos = this.agenda.bloques[i].turnos;
-            this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
-            for (let t = 0; t < this.turnosAsignados.length; t++) {
-                // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.carpetaEfectores) {
-                        let carpetaEfector = null;
-                        carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                            return (data.organizacion.id === this.auth.organizacion.id);
-                        });
-                        this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
-                    }
-                });
-            }
-            // this.bloques[i].turnos = this.turnos;
-        }
+        // this.bloques = this.agenda.bloques;
+        // for (let i = 0; i < this.bloques.length; i++) {
+        //     this.turnos = this.agenda.bloques[i].turnos;
+        //     this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
+        //     for (let t = 0; t < this.turnosAsignados.length; t++) {
+        //         // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
+        //         this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
+        //             if (paciente && paciente.carpetaEfectores) {
+        //                 let carpetaEfector = null;
+        //                 carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+        //                     return (data.organizacion.id === this.auth.organizacion.id);
+        //                 });
+        //                 this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
+        //             }
+        //         });
+        //     }
+        //     // this.bloques[i].turnos = this.turnos;
+        // }
         this.actualizarBotones();
     }
     get agenda(): any {
@@ -88,32 +88,32 @@ export class TurnosComponent implements OnInit {
     }
 
     // Métodos públicos
-    actualizarCarpetaPaciente(agendaActualizar: any) {
-        let turnosBloque;
-        let turnosModificados = [];
-        for (let i = 0; i < agendaActualizar.bloques.length; i++) {
-            turnosBloque = agendaActualizar.bloques[i].turnos;
-            turnosModificados = turnosBloque.map(turno => {
-                if (turno.paciente) {
-                    this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-                        if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
-                            let carpetaEfector = null;
-                            carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                                return (data.organizacion.id === this.auth.organizacion.id);
-                            });
-                            // this.turnos[t].paciente.carpetaEfectores = new Object();
-                            turno.paciente.carpetaEfectores = carpetaEfector;
-                            return turno;
-                        }
-                    });
-                } else {
-                    return turno;
-                }
-            });
-            agendaActualizar.bloques[i].turnos = turnosModificados;
-        }
-        return agendaActualizar;
-    }
+    // actualizarCarpetaPaciente(agendaActualizar: any) {
+    //     let turnosBloque;
+    //     let turnosModificados = [];
+    //     for (let i = 0; i < agendaActualizar.bloques.length; i++) {
+    //         turnosBloque = agendaActualizar.bloques[i].turnos;
+    //         turnosModificados = turnosBloque.map(turno => {
+    //             if (turno.paciente) {
+    //                 this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+    //                     if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
+    //                         let carpetaEfector = null;
+    //                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+    //                             return (data.organizacion.id === this.auth.organizacion.id);
+    //                         });
+    //                         // this.turnos[t].paciente.carpetaEfectores = new Object();
+    //                         turno.paciente.carpetaEfectores = carpetaEfector;
+    //                         return turno;
+    //                     }
+    //                 });
+    //             } else {
+    //                 return turno;
+    //             }
+    //         });
+    //         agendaActualizar.bloques[i].turnos = turnosModificados;
+    //     }
+    //     return agendaActualizar;
+    // }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
         turno.sobreturno = sobreturno;

@@ -136,6 +136,7 @@ export class DarTurnosComponent implements OnInit {
             this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
+            this.actualizarCarpetaPaciente(this.paciente);
         }
 
     }
@@ -706,7 +707,7 @@ export class DarTurnosComponent implements OnInit {
         let carpetaEfector = null;
         let listaCarpetas = [];
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0 ) {
             carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
                 return (data.organizacion.id === this.auth.organizacion.id);
             });
@@ -791,7 +792,8 @@ export class DarTurnosComponent implements OnInit {
                     documento: this.paciente.documento,
                     apellido: this.paciente.apellido,
                     nombre: this.paciente.nombre,
-                    telefono: this.telefono
+                    telefono: this.telefono,
+                    carpetaEfectores: this.paciente.carpetaEfectores
                 };
 
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
@@ -851,7 +853,7 @@ export class DarTurnosComponent implements OnInit {
                             });
                         }
                     }
-                    this.actualizarCarpetaPaciente(pacienteSave);
+                    // this.actualizarCarpetaPaciente(pacienteSave);
                 });
 
                 // Si cambió el teléfono lo actualizo en el MPI
