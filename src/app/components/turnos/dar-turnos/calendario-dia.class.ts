@@ -15,9 +15,9 @@ export class CalendarioDia {
 
     constructor(public fecha: Date, public agenda: any) {
         this.hoy = new Date();
+        this.turnosDisponibles = 0;
         if (!agenda) {
             this.estado = 'vacio';
-            this.turnosDisponibles = 0;
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             if (disponible) {
@@ -62,7 +62,7 @@ export class CalendarioDia {
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                     });
                     // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
-                    this.turnosDisponibles = this.delDiaDisponibles + this.gestionDisponibles;
+                    this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles + this.gestionDisponibles;
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
 
                 } else {
@@ -87,8 +87,8 @@ export class CalendarioDia {
                                 }
                             }
                         });
-                        this.programadosDisponibles = + countBloques[indexBloque].programado;
-                        this.gestionDisponibles = + countBloques[indexBloque].gestion;
+                        this.programadosDisponibles += countBloques[indexBloque].programado;
+                        this.gestionDisponibles += countBloques[indexBloque].gestion;
                         if (this.agenda.estado === 'disponible') {
                             this.estado = (this.gestionDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
@@ -96,7 +96,7 @@ export class CalendarioDia {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
                     });
-                    this.turnosDisponibles = this.programadosDisponibles + this.gestionDisponibles;
+                    this.turnosDisponibles = this.turnosDisponibles + this.programadosDisponibles + this.gestionDisponibles;
                 }
             } else {
                 this.estado = 'ocupado';

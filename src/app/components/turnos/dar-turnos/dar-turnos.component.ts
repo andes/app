@@ -572,8 +572,8 @@ export class DarTurnosComponent implements OnInit {
                                     turnoAnterior = turno;
                                 });
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
-                                this.programadosDisponibles = + countBloques[indexBloque].programado;
-                                this.gestionDisponibles = + countBloques[indexBloque].gestion;
+                                this.programadosDisponibles += countBloques[indexBloque].programado;
+                                this.gestionDisponibles += countBloques[indexBloque].gestion;
                             });
                             if (this.agenda.estado === 'disponible') {
                                 (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
