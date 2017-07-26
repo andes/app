@@ -36,7 +36,6 @@ import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operac
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
-import { DashboardCodificacionComponent } from './components/turnos/dashboard/dashboard-codificacion.component';
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -79,7 +78,6 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  { path: 'citas/dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
@@ -100,7 +98,6 @@ const appRoutes: Routes = [
   /* ELIMINAR ==> */ { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'dashboard_codificacion', component: DashboardCodificacionComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
