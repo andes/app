@@ -9,6 +9,22 @@ export class ElementosRupService {
     private evolucionPorDefecto = '594aa43a884431c25d9a0267';
     private evolucionProblemaPorDefecto = '594aa21a884431c25d9a0266';
     private solicitudPorDefecto = '5964cc2aa784f4e1a8e2afe9';
+    public nuevaEvolucion = {
+                                '_id' : '596769fea784f4e1a8e2afec',
+                                'key' : 'evolucionProblema',
+                                'nombre' : 'Evolucionar problema',
+                                'activo' : true,
+                                'autonomo' : false,
+                                'componente' : {
+                                    'ruta' : 'rup/atomos/nuevaEvolucionProblema.component.ts',
+                                    'nombre' : 'NuevaEvolucionProblemaComponent'
+                                },
+                                'tipo' : 'atomo',
+                                'conceptos' : [],
+                                'requeridos' : [],
+                                'frecuentes' : [],
+                                'turneable' : false
+                            };
 
     private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
@@ -72,8 +88,9 @@ export class ElementosRupService {
         let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
         if (tipo === 'problemas') {
+            
             elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
-
+ 
             return elementoRUP;
         } else {
             if (tipo === 'procedimientos') {
@@ -88,7 +105,6 @@ export class ElementosRupService {
                 if (!elementoRUP) {
                     elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionPorDefecto);
                 }
-
                 return elementoRUP;
             } else {
                 if (tipo === 'planes') {

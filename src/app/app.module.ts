@@ -1,3 +1,4 @@
+import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -340,7 +341,8 @@ export const RUP_COMPONENTS = [
   HudsBusquedaComponent,
   BuscadorComponent,
   SolicitudPrestacionDefaultComponent,
-  PrestacionCrearComponent
+  PrestacionCrearComponent,
+  NuevaEvolucionProblemaComponent
 ];
 
 // Locales

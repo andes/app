@@ -107,6 +107,7 @@ export class PrestacionPacienteService {
                         idPrestacion: registro.idPrestacion,
                         evoluciones: [{
                             fechaCarga: registro.createdAt,
+                            profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
                             estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : '',
                             esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
@@ -119,9 +120,10 @@ export class PrestacionPacienteService {
                     let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
+                        profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
-                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : ultimaEvolucion.esCronico,
                         esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
                         evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                     };
@@ -140,13 +142,18 @@ export class PrestacionPacienteService {
      * @param {String} idPaciente
      */
     getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        
+        // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
         if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
             registros = this.cache[idPaciente]['registros'];
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
             this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
-                return new Observable(resultado => resultado.next(hallazgos.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+                debugger;
+                registros = this.cache[idPaciente]['registros'];
+                let unHallazgo = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
+                return new Observable(r => r.next(unHallazgo));
             });
         }
     }
