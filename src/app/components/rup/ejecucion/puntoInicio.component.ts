@@ -125,6 +125,8 @@ export class PuntoInicioComponent implements OnInit {
      * Filtra el listado de agendas y prestaciones
      */
     filtrar() {
+        // filtrar solo por las prestaciones que el profesional tenga disponibles
+
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
         // this.agendas = this.agendasOriginales;
         this.fueraDeAgenda = this.prestacionesOriginales;
