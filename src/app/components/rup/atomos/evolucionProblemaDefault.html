@@ -27,9 +27,10 @@
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <label class="box-title-secundario" for="comment">Evolución:</label>
-                <hr>
-                <textarea autofocus="autofocus" class="form-control" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea>
+                <!-- <label class="box-title-secundario" for="comment">Evolución:</label>
+                <hr> -->
+                <plex-text label="Evolución" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()"></plex-text>
+                <!-- <textarea autofocus="autofocus" class="form-control" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea> -->
             </div>
         </div>
     </div>

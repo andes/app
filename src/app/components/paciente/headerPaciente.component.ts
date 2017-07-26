@@ -1,5 +1,4 @@
 import { Plex } from '@andes/plex';
-import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { IPaciente } from '../../interfaces/IPaciente';
 import { Auth } from '@andes/auth';
@@ -9,21 +8,20 @@ import { Auth } from '@andes/auth';
     templateUrl: 'headerPaciente.html',
     styleUrls: ['headerPaciente.scss']
 })
-export class HeaderPacienteComponent implements OnInit {
-
+export class HeaderPacienteComponent {
+    public hidePopup = false;
     @Input() paciente: IPaciente;
-    @Input() prestacion: IPrestacionPaciente;
     @Input() cambiarPaciente: boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    public showPopover = false;
+    constructor() { };
 
-    constructor(public auth: Auth, public plex: Plex) { };
-
-    ngOnInit() {
-    }
     cambioDePaciente() {
-        this.cambiarPaciente = false;
+        // Oculta el popup (genera una suerte de mouseout)
+        this.hidePopup = true;
+        setTimeout(() => this.hidePopup = false);
+
+        // Emite el evento
         this.evtData.emit(true);
     }
 }
