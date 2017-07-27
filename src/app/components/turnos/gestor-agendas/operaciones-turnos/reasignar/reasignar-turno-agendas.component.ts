@@ -207,9 +207,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
-    public tieneTurnos(bloque: IBloque): boolean {
+    tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
+    }
+
+    hayTurnosDisponibles(tipoTurno: String) {
+        return true;
     }
 
     existePrestacion(bloque: any, idPrestacion: string) {

@@ -1,5 +1,5 @@
 .accordion-dashboard div {
-    position: relative;
+    position: relative !important;
 }
 
 .badge-dashboard {
@@ -10,7 +10,7 @@
 }
 
 .badge-dashboard i {
-    margin-right: 0!important;
+    margin-right: 0 !important;
 }
 
 .vertical-center {

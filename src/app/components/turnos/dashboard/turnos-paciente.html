@@ -13,8 +13,8 @@
 
         <plex-accordion class="accordion-dashboard">
 
-            <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-success">{{turno.asistencia}}</div>
-            <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-danger">{{turno.asistencia}}</div>
+            <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-success" style="position: absolute !important;">{{turno.asistencia}}</div>
+            <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-danger" style="position: absolute !important;">{{turno.asistencia}}</div>
             <plex-panel *ngIf="turnosPaciente.length>0" tituloPrincipal="{{ turno.tipoPrestacion.term }}" icon="arrow-down-drop-circle-outline">
 
                 <div class="row" *ngIf="turno.organizacion">

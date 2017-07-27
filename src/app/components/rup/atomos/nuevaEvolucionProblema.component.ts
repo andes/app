@@ -38,7 +38,6 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
             if (this.HallazgoCompleto.evoluciones) {
                 this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
             }
-
             this.devolverValores();
         }
 

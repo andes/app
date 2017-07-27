@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 // Interfaces
 import { IAgenda } from '../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
@@ -32,7 +32,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
     public showMostrarEstadisticasPacientes = false;
     public showActivarApp = false;
     public showIngresarSolicitud = false;
-    public paciente;
+    public paciente: IPaciente;
     public autorizado = false;
     solicitudPrestacion: any = null; // Es la solicitud que se pasa como input a darTurnos
     operacionTurnos = '';
@@ -42,9 +42,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
     showCreateUpdate = false;
     seleccion = null;
     esEscaneado = false;
-    private esOperacion = false;
     textoPacienteSearch = '';
     resultadoCreate;
+    private esOperacion = false;
 
 
     constructor(
@@ -72,6 +72,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                         this.showMostrarEstadisticasPacientes = true;
                         this.showMostrarTurnosPaciente = false;
                         this.showActivarApp = false;
+                        this.showIngresarSolicitud = false;
                     }
                 });
         } else {
@@ -117,6 +118,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarEstadisticasAgendas = true;
         this.showMostrarEstadisticasPacientes = false;
         this.showMostrarTurnosPaciente = false;
+        this.showIngresarSolicitud = false;
     }
 
     verificarOperacion({ operacion, paciente }) {
@@ -174,18 +176,18 @@ export class PuntoInicioTurnosComponent implements OnInit {
         if (this.paciente && this.paciente.id) {
             this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];
-
         }
         this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
+        this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
     }
 
     cancelarSolicitudVentanilla() {
         this.showDashboard = true;
+        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
-        this.showMostrarEstadisticasAgendas = false;
         this.showMostrarTurnosPaciente = false;
     }
 
@@ -200,8 +202,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     darTurnoSolicitud(event) {
-        console.log('event ', event);
-
         this.solicitudPrestacion = event;
         this.showDarTurnos = true;
         this.showDashboard = false;

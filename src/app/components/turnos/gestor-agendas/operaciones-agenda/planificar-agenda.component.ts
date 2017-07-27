@@ -644,10 +644,10 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-                let delDiaCount = bloque.accesoDirectoDelDia;
-                let programadoCount = bloque.accesoDirectoProgramado;
-                let profesionalCount = bloque.reservadoGestion;
-                let gestionCount = bloque.reservadoProfesional;
+                bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                bloque.restantesGestion = bloque.reservadoGestion;
+                bloque.restantesProfesional = bloque.reservadoProfesional;
 
                 bloque.turnos = [];
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {

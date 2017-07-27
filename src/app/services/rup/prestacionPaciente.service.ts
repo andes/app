@@ -145,6 +145,7 @@ export class PrestacionPacienteService {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
         if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
+            debugger;
             registros = this.cache[idPaciente]['registros'];
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
