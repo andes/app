@@ -48,10 +48,14 @@ export class CalendarioDia {
                                         countBloques[indexBloque].delDia--;
                                         break;
                                     case ('profesional'):
-                                        countBloques[indexBloque].profesional--;
+                                        if (this.agenda.estado === 'disponible') {
+                                            countBloques[indexBloque].profesional--;
+                                        }
                                         break;
                                     case ('gestion'):
-                                        countBloques[indexBloque].gestion--;
+                                        if (this.agenda.estado === 'disponible') {
+                                            countBloques[indexBloque].gestion--;
+                                        }
                                         break;
                                     default:
                                         this.delDiaDisponibles--;
@@ -85,7 +89,9 @@ export class CalendarioDia {
                                         countBloques[indexBloque].programado--;
                                         break;
                                     case ('gestion'):
-                                        countBloques[indexBloque].gestion--;
+                                        if (this.agenda.estado === 'disponible') {
+                                            countBloques[indexBloque].gestion--;
+                                        }
                                         break;
                                 }
                             }
@@ -94,7 +100,7 @@ export class CalendarioDia {
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                         this.profesionalDisponibles += countBloques[indexBloque].profesional;
                         if (this.agenda.estado === 'disponible') {
-                            this.estado = (this.gestionDisponibles > 0 || this.profesionalDisponibles)  ? 'disponible' : 'ocupado';
+                            this.estado = (this.gestionDisponibles > 0 || this.profesionalDisponibles) ? 'disponible' : 'ocupado';
                         }
                         if (this.agenda.estado === 'publicada') {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
