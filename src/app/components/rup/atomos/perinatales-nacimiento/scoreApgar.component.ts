@@ -6,7 +6,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     selector: 'rup-scoreApgar',
     templateUrl: 'scoreApgar.html'
 })
-export class ScoreApgarComponent extends Atomo {
+export class ScoreApgarComponent extends Atomo implements OnInit {
 
     ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {

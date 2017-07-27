@@ -13,7 +13,7 @@ import {
     selector: 'rup-indice-de-masa-corporal',
     templateUrl: 'indiceDeMasaCorporal.html'
 })
-export class IndiceDeMasaCorporalComponent extends Formula {
+export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
 
     ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;

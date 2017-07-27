@@ -5,7 +5,7 @@ import { IPaciente } from '../../../../interfaces/IPaciente';
     selector: 'rup-ViviendaNivelInstruccion',
     templateUrl: 'viviendaNivelInstruccion.html'
 })
-export class ViviendaNivelInstruccionComponent extends Atomo{
+export class ViviendaNivelInstruccionComponent extends Atomo {
     public SelectNivel: Array<Object> = [{ id: 'Primario Completo', nombre: 'Primario Completo' },
     { id: 'Secundario Completo', nombre: 'Secundario Completo' },
     { id: 'Terciario/Universitario', nombre: 'Terciario/Universitario' },

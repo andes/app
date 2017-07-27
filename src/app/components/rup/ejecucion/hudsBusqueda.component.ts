@@ -87,7 +87,7 @@ export class HudsBusquedaComponent implements OnInit {
         let resultado = {
             tipo: 'prestacion',
             data: prestacion
-        }
+        };
         this.evtData.emit(resultado);
     }
 
@@ -95,7 +95,7 @@ export class HudsBusquedaComponent implements OnInit {
         let resultado = {
             tipo: 'hallazgo',
             data: hallazgo
-        }
+        };
         this.evtData.emit(resultado);
     }
 

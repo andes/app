@@ -10,7 +10,7 @@ import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
     selector: 'rup-verProblemaPaciente',
     templateUrl: 'verProblema.html'
 })
-export class verProblemaComponent implements OnInit {
+export class VerProblemaComponent implements OnInit {
 
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 

@@ -143,7 +143,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
             let dataFiltrada = data.filter(x => { return this.permisos.indexOf(x.id) >= 0; });
-            let dataLlaves = data.filter(x => { return this.filtradas.indexOf(x.id) });
+            let dataLlaves = data.filter(x => { return this.filtradas.indexOf(x.id);
+            });
             this.verificarLlaves(dataLlaves, event);
         });
     }

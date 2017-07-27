@@ -167,7 +167,7 @@ import { EvolucionTodosProblemasComponent } from './components/rup/problemas-pac
 import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
 import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
 import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
-import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
+import { VerProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
 import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
 import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
 import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
@@ -306,7 +306,7 @@ export const RUP_COMPONENTS = [
     EvolucionProblemaComponent,
     EnmendarProblemaComponent,
     TransformarProblemaComponent,
-    verProblemaComponent,
+    VerProblemaComponent,
     PruebaOtoemisionesAcusticasComponent,
     PesquisaNeonatalComponent,
     PercentiloTallaComponent,
@@ -388,7 +388,7 @@ export const RUP_COMPONENTS = [
     EvolucionProblemaComponent,
     EnmendarProblemaComponent,
     TransformarProblemaComponent,
-    verProblemaComponent,
+    VerProblemaComponent,
     PruebaOtoemisionesAcusticasComponent,
     PesquisaNeonatalComponent,
     PercentiloTallaComponent,

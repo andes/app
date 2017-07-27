@@ -32,7 +32,7 @@ export class BuscadorComponent implements OnInit {
     public data: any[] = [];
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    public tipoBusqueda = 'problemas'; //Por defecto trae los problemas
+    public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
     public showPlanes = false;
     public ejecucion: any[] = [];
 

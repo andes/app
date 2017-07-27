@@ -22,7 +22,7 @@ import {
     selector: 'rup-partoViaVaginal',
     templateUrl: 'partoViaVaginal.html'
 })
-export class PartoViaVaginalComponent extends Atomo {
+export class PartoViaVaginalComponent extends Atomo implements OnInit {
 
     public selectPartoViaVaginal: Array < Object > = [{
             id: 'Parto vaginal asistido con extractor de vacio',

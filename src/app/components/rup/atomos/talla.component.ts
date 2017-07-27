@@ -237,7 +237,7 @@ export class TallaComponent extends Atomo {
                     break;
                 case (edadEnMeses >= 153 && edadEnMeses <= 159):
                     // 144 meses
-                    if (talla < 130.8) { //p3;
+                    if (talla < 130.8) { // p3;
                         mensaje.texto = 'Baja estatura';
                     }
                     if (talla > 159.6) { // p97

@@ -7,7 +7,7 @@ import { IPaciente } from '../../../../interfaces/IPaciente';
     templateUrl: 'viviendaSostenEconomico.html'
 })
 
-export class ViviendaSostenEconomicoComponent extends Atomo {
+export class ViviendaSostenEconomicoComponent extends Atomo implements OnInit {
        ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {
             trabaja: null,

@@ -5,7 +5,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     selector: 'formula',
     templateUrl: 'formula.html'
 })
-export class Formula extends RupComponent {
+export class Formula extends RupComponent implements OnInit {
 
     ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
