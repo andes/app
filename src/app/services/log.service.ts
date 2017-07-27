@@ -15,5 +15,9 @@ export class LogService {
         return this.server.get(this.logUrl + '/' + modulo, { params: params, showError: true });
     }
 
+    post(modulo: any, operacion: any, params: any): Observable<any> {
+        return this.server.post(this.logUrl + '/' + modulo + '/' + operacion, { params: params, showError: true });
+    }
+
 }
 
