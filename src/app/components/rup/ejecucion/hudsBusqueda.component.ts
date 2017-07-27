@@ -59,9 +59,10 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarProblemasCronicos();
+            this.listarPrestaciones();
         }
-    }
 
+    }
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -80,8 +81,6 @@ export class HudsBusquedaComponent implements OnInit {
     actualizarVista(vista) {
         this.vista = vista;
     }
-
-
 
     devolverPrestacion(prestacion) {
         let resultado = {
@@ -102,21 +101,21 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
-            this.hallazgos = null;
+            // this.hallazgos = null;
             this.prestaciones = prestaciones;
         });
     }
 
     listarHallazgos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
-            this.prestaciones = null;
+            // this.prestaciones = null;
             this.hallazgos = hallazgos;
         });
     }
 
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
-            this.prestaciones = null;
+            // this.prestaciones = null;
             this.hallazgos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }

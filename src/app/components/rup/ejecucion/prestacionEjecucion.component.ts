@@ -498,6 +498,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         // this.cargarRegistroEnPosicion(this.registros.length, data);
         this.registros.splice(this.registros.length, 0, data);
+        this.registros[this.registros.length - 1].collapse = false; // verificar.. fer
         this.showDatosSolicitud = false;
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
@@ -560,6 +561,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.data[elementoRUP.key] = {};
                         }
                         this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
+                        // tslint:disable-next-line:forin
                         for (let i in this.registros) {
                             if (this.registros[i]) {
                                 this.cargaItems(this.registros[i], i);
@@ -581,7 +583,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            this.ejecutarConcepto(resultadoHuds.data);
+            this.ejecutarConcepto(resultadoHuds.data.concepto);
         }
     }
 
@@ -728,7 +730,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (dragging === true) {
             this.colapsarPrestaciones();
         } else {
-            this.registros = this.copiaRegistro;
+            if (this.registros.length === this.copiaRegistro.length) {
+                this.registros = JSON.parse(JSON.stringify(this.copiaRegistro));
+            }
             // tslint:disable-next-line:forin
             for (let i in this.registros) {
                 this.cargaItems(this.registros[i], i);
@@ -793,10 +797,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
+    cambiaValorCollapse(valor: boolean, indice) {
+        this.registros[indice].collapse = valor;
+    }
 
     colapsarPrestaciones() {
         if (this.registros) {
-            this.copiaRegistro = this.registros;
+            this.copiaRegistro = JSON.parse(JSON.stringify(this.registros));
             this.registros.forEach(element => {
                 element.collapse = true;
                 element.items = [];
