@@ -79,8 +79,8 @@
                                             <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
                                                 Error
                                             </span>
-
-                                            <a href="javascript:void(0);" (click)="elemento.collapse = !elemento.collapse">
+                       
+                                            <a href="javascript:void(0);" (click)="cambiaValorCollapse(!elemento.collapse, i)">
                                                 <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
                                             </a>
 

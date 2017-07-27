@@ -148,20 +148,18 @@
                                                         </div>
                                                     </div>
                                                     <div *ngIf="bloque.pacienteSimultaneos">
-                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                                                            <div class="col col-md-12">
-                                                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
-                                                            </div>
+                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'" 
+                                                            (click)="seleccionarTurno(bloque,i)">
+                                                            {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
-                                                        <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length">
+                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
                                                     </div>
                                                     <div *ngIf="bloque.citarPorBloque">
-                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="row">
-                                                            <div class="col col-md-12">
-                                                                <a class="hover" (click)="seleccionarTurno(bloque,i)">{{turno.horaInicio | date: 'HH:mm'}} </a>
-                                                            </div>
+                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'" 
+                                                            (click)="seleccionarTurno(bloque,i)">
+                                                            {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
-                                                        <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length">
+                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
                                                     </div>
                                                 </ng-container>
                                             </div>
@@ -227,7 +225,7 @@
                                         </div>
                                     </div>
                                     <!--Otros datos-->
-                                    <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"></plex-select>
+                                    <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones" name="turnoTipoPrestacion"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                     <div class="text-right mt-3">
                                         <plex-button label="Volver" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>

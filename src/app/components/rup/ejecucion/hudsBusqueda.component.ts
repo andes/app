@@ -59,9 +59,10 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarProblemasCronicos();
+            this.listarPrestaciones();
         }
-    }
 
+    }
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -80,8 +81,6 @@ export class HudsBusquedaComponent implements OnInit {
     actualizarVista(vista) {
         this.vista = vista;
     }
-
-
 
     devolverPrestacion(prestacion) {
         let resultado = {
