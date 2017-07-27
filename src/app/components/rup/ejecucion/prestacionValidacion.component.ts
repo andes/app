@@ -27,7 +27,15 @@ export class PrestacionValidacionComponent implements OnInit {
     public elementosRUP: any[];
     // elementoRUP de la prestacion actual
     public elementoRUPprestacion: any;
-
+    /**
+     * Indica si muestra el calendario para dar turno autocitado
+     */
+    public showDarTurnos = false;
+    /**
+     * Solicitud de prestación para dar un turno autocitado
+     */
+    public: any;
+    solicitudTurno
     public registros: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -91,7 +99,8 @@ export class PrestacionValidacionComponent implements OnInit {
                     estado: { tipo: 'validada' }
                 };
 
-                // Vamos a cambiar el estado de la prestación a ejecucion
+                // Creamos las prestaciones en pendiente
+                // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
                 this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                     this.prestacion = prestacion;
 
@@ -135,15 +144,10 @@ export class PrestacionValidacionComponent implements OnInit {
                             };
                             nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
 
-                            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion2 => {
-                                this.plex.alert('Prestación creada.').then(() => {
-                                    // this.router.navigate(['/rup/ejecucion', prestacion2.id]);
-                                });
-                            }, (err) => {
-                                this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+                            this.servicioPrestacion.post(nuevaPrestacion).subscribe((data) => {
+                                // jfgabriel // ESTO ES UN RECONTRA-PARCHE !!! SOLO A LOS EFECTOS DE MOSTRAR LA FUNCIONALIDAD
+                                this.solicitudTurno = data;
                             });
-
-
                         });
                     }
                 }, (err) => {
@@ -185,6 +189,13 @@ export class PrestacionValidacionComponent implements OnInit {
 
     volverInicio() {
         this.router.navigate(['rup']);
+    }
+
+    darTurnoAutocitado(solicitud) {
+        debugger;
+        this.showDarTurnos = true;
+        // DEBERÍA VENIR POR PARÁMETRO --- VER LINEA 148
+        // this.solicitudTurno = null;
     }
 }
 

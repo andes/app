@@ -98,6 +98,7 @@ export class DarTurnosComponent implements OnInit {
     turno: ITurno;
     programadosDisponibles: number;
     gestionDisponibles: number;
+    profesionalDisponibles: number;
     turnoTipoPrestacion: any = {};
     alternativas: any[] = [];
     reqfiltros = false;
@@ -136,6 +137,7 @@ export class DarTurnosComponent implements OnInit {
             this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
+            // this.actualizarCarpetaPaciente(this.paciente);
         }
 
     }
@@ -300,6 +302,11 @@ export class DarTurnosComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
+        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+            let query = {
+                nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
+            }
+            this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.opciones.profesional || []);
         }
@@ -330,8 +337,7 @@ export class DarTurnosComponent implements OnInit {
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
-            console.log('entro aca ', this.opciones.tipoPrestacion);
-
+            this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
         }
 
         // 1) Auth general (si puede ver esta pantalla)
@@ -407,7 +413,6 @@ export class DarTurnosComponent implements OnInit {
         this.agenda = agenda;
         let turnoAnterior = null;
         this.turnoDoble = false;
-
         // Ver si cambió el estado de la agenda en otro lado
         this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
 
@@ -486,6 +491,7 @@ export class DarTurnosComponent implements OnInit {
                         this.programadosDisponibles = 0;
                         this.gestionDisponibles = 0;
                         this.delDiaDisponibles = 0;
+                        this.profesionalDisponibles = 0;
                         // let tiposTurnosSelect = [];
 
                         // Si la agenda es de hoy, los turnos deberán sumarse al contador "delDia"
@@ -562,21 +568,28 @@ export class DarTurnosComponent implements OnInit {
                                                 countBloques[indexBloque].programado--;
                                                 break;
                                             case ('profesional'):
-                                                countBloques[indexBloque].profesional--;
+                                                if (this.agenda.estado === 'disponible') {
+                                                    countBloques[indexBloque].profesional--;
+                                                }
                                                 break;
                                             case ('gestion'):
-                                                countBloques[indexBloque].gestion--;
+                                                if (this.agenda.estado === 'disponible') {
+                                                    countBloques[indexBloque].gestion--;
+                                                }
                                                 break;
                                         }
                                     }
                                     turnoAnterior = turno;
                                 });
+
                                 this.delDiaDisponibles = countBloques[indexBloque].delDia;
-                                this.programadosDisponibles = + countBloques[indexBloque].programado;
-                                this.gestionDisponibles = + countBloques[indexBloque].gestion;
+                                this.programadosDisponibles += countBloques[indexBloque].programado;
+                                this.gestionDisponibles += countBloques[indexBloque].gestion;
+                                this.profesionalDisponibles += countBloques[indexBloque].profesional;
                             });
+
                             if (this.agenda.estado === 'disponible') {
-                                (this.gestionDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                                (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                             if (this.agenda.estado === 'publicada') {
                                 (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
@@ -706,7 +719,7 @@ export class DarTurnosComponent implements OnInit {
         let carpetaEfector = null;
         let listaCarpetas = [];
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
                 return (data.organizacion.id === this.auth.organizacion.id);
             });
@@ -791,7 +804,8 @@ export class DarTurnosComponent implements OnInit {
                     documento: this.paciente.documento,
                     apellido: this.paciente.apellido,
                     nombre: this.paciente.nombre,
-                    telefono: this.telefono
+                    telefono: this.telefono,
+                    carpetaEfectores: this.paciente.carpetaEfectores
                 };
 
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
@@ -822,16 +836,19 @@ export class DarTurnosComponent implements OnInit {
                     // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
                     // this.enviarSMS(pacienteSave, mensaje);
 
-                    let params = {
-                        op: 'asignarTurno',
-                        idTurno: this.turno.id
-                    };
+                    if (this._solicitudPrestacion) {
 
-                    this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
-                        // Se seteó el id del turno en la solicitud
-                        console.log('Se seteó el id del turno en la solicitud', prestacion);
+                        let params = {
+                            op: 'asignarTurno',
+                            idTurno: this.turno.id
+                        };
 
-                    });
+                        this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                            // Se seteó el id del turno en la solicitud
+                            console.log('Se seteó el id del turno en la solicitud', prestacion);
+
+                        });
+                    }
 
 
                     if (this.turnoDoble) {
@@ -848,7 +865,7 @@ export class DarTurnosComponent implements OnInit {
                             });
                         }
                     }
-                    this.actualizarCarpetaPaciente(pacienteSave);
+                    // this.actualizarCarpetaPaciente(pacienteSave);
                 });
 
                 // Si cambió el teléfono lo actualizo en el MPI
@@ -893,14 +910,13 @@ export class DarTurnosComponent implements OnInit {
             };
         });
 
-        if (this._pacienteSeleccionado) {
+        if (this.paciente) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
             this.cancelarDarTurno.emit(true);
             return false;
         } else {
             this.buscarPaciente();
         }
-        // this.buscarPaciente();
     }
 
     enviarSMS(paciente: any, mensaje) {

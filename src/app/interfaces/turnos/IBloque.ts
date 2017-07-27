@@ -9,9 +9,13 @@ export interface IBloque {
     descripcion: String;
     tipoPrestaciones: ITipoPrestacion[];
     accesoDirectoDelDia: Number;
+    restantesDelDia: Number;
     accesoDirectoProgramado: Number;
+    restantesProgramados: Number;
     reservadoGestion: Number;
+    restantesGestion: Number;
     reservadoProfesional: Number;
+    restantesProfesional: Number;
     pacienteSimultaneos: Boolean;
     cantidadSimultaneos: Number;
     citarPorBloque: Boolean;

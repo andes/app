@@ -443,7 +443,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         })
     ],
 
-
     declarations: [
         AppComponent, InicioComponent, LoginComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
