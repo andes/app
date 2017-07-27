@@ -910,8 +910,7 @@ export class DarTurnosComponent implements OnInit {
             };
         });
 
-        if (this.paciente) {
-            // this.router.navigate(['./' + 'puntoInicioTurnos']);
+        if (this.paciente && this._pacienteSeleccionado) {
             this.cancelarDarTurno.emit(true);
             return false;
         } else {

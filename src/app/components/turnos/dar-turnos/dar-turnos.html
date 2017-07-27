@@ -66,7 +66,8 @@
                                 <ng-container *ngIf="estadoT == 'noSeleccionada'">
                                     <legend class="pt-3 text-center">Búsquedas recientes</legend>
                                     <ul class="list-group">
-                                        <li *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" [appHover]="'active'" title="Buscar turnos similares" (click)="seleccionarBusqueda(i)">
+                                        <li *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" [appHover]="'active'" title="Buscar turnos similares"
+                                            (click)="seleccionarBusqueda(i)">
                                             <div class="list-group-item-text">
                                                 <div *ngIf="busqueda.tipoPrestacion">
                                                     {{busqueda.tipoPrestacion.nombre}}
@@ -115,7 +116,9 @@
                                                             <ng-template #llaveSolicitud>
                                                                 <td><b>Con llave</b></td>
                                                             </ng-template>
-                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td>
+                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td> -->
+                                                            <td>Profesional</td>
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -129,9 +132,9 @@
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td><b>{{countBloques[indiceBq].gestion}}</b></td>
                                                             </ng-template>
+                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td> -->
+                                                            <td>{{countBloques[indiceBq].profesional}}</td>
 
-
-                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -139,7 +142,8 @@
                                             <div *ngFor="let turno of bloque.turnos; let i=index">
                                                 <ng-container *ngIf="turno.horaInicio >= hoy">
                                                     <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                                                        <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                                        <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
+                                                            (click)="seleccionarTurno(bloque,i)">
                                                             {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
                                                     </div>
@@ -205,7 +209,8 @@
                                     <!--Header-->
                                     <div class="alert alert-default">
                                         <label>Turno</label>
-                                        <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio | date: 'HH:mm'}}
+                                        <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |
+                                            date: 'HH:mm'}}
                                         </div>
                                         <div *ngIf="turno.tipoPrestacion"><label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                         <div *ngIf="agenda.profesionales">
@@ -255,26 +260,27 @@
                 </plex-box>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col col-sm-12" *ngIf="pacientesSearch">
                 <div class="panel panel-default">
                     <div class="clear"></div>
                     <pacientesSearch (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
                 </div>
-            </div>
-            <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
+            </div> -->
+        <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
                 <div class="panel panel-default plex-layout">
                     <div class="clear"></div>
                     <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
                 </div>
             </div>-->
-        </div>
+        <!-- </div> -->
     </section>
 
+    <footer *ngIf="autorizado && showDarTurnos">
+        <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
+        <div class="float-right">
+            <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+        </div>
+    </footer>
 </form>
-<footer *ngIf="autorizado && showDarTurnos">
-    <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
-    <div class="float-right">
-        <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
-    </div>
-</footer>
+<pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>

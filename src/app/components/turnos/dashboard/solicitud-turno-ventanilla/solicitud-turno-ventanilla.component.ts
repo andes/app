@@ -123,10 +123,29 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         });
     }
 
+    // loadProfesionales(event) {
+    //     this.servicioProfesional.get({}).subscribe(profesionales => {
+    //         event.callback(profesionales);
+    //     });
+    // }
+
     loadProfesionales(event) {
-        this.servicioProfesional.get({}).subscribe(profesionales => {
-            event.callback(profesionales);
-        });
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.modelo.profesionales) {
+                    listaProfesionales = (resultado) ? this.modelo.solicitud.profesional.concat(resultado) : this.modelo.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
+        } else {
+            event.callback(this.modelo.solicitud.profesional || []);
+        }
     }
 
     loadProfesionalesMulti(event) {
