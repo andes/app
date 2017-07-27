@@ -185,9 +185,16 @@
                                     <small><span *ngIf="turno.paciente && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
 
 
-                                    <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno.estado === 'turnoDoble'">Turno Doble</span>
-                                    <span class="badge badge-danger" *ngIf="turno.estado === 'suspendido'">Suspendido</span>
-                                    <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+                                    <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                    <span class="badge badge-danger" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                                    <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+
+                                    <span *ngIf="turno && turno.confirmatedAt">
+                                        <br />
+                                        <span class="badge badge-default" title="{{turno.confirmatedAt | date: 'medium'}}">
+                                        Confirmado
+                                        </span>
+                                    </span>
                                 </td>
 
                                 <td class="text-right">
