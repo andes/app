@@ -589,7 +589,6 @@ export class DarTurnosComponent implements OnInit {
                             });
 
                             if (this.agenda.estado === 'disponible') {
-                                console.log('disponible ', this.profesionalDisponibles);
                                 (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                             if (this.agenda.estado === 'publicada') {
