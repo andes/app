@@ -46,7 +46,6 @@ export class TipoPrestacionService {
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     disable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        tipoPrestacion.activo = false;
         return this.put(tipoPrestacion);
     }
     /**
@@ -54,7 +53,6 @@ export class TipoPrestacionService {
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     enable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        tipoPrestacion.activo = true;
         return this.put(tipoPrestacion);
     }
 }

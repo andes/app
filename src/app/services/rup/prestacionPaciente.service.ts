@@ -72,7 +72,7 @@ export class PrestacionPacienteService {
 
             return this.server.get(this.prestacionesUrl, opt).map(data => {
                 if (idPrestacion) {
-                     data = data.filter(d => d.id !== idPrestacion);
+                    data = data.filter(d => d.id !== idPrestacion);
                 }
                 this.cache[idPaciente] = data;
                 return this.cache[idPaciente];
@@ -90,10 +90,10 @@ export class PrestacionPacienteService {
             let registros = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
-                   let agregar =  prestacion.ejecucion.registros
-                    .filter(registro =>
-                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
-                    .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     registros = [...registros, ...agregar];
 
                 }
@@ -149,11 +149,9 @@ export class PrestacionPacienteService {
             registros = this.cache[idPaciente]['registros'];
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
-            this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
-                registros = this.cache[idPaciente]['registros'];
-                let unHallazgo = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
-                return new Observable(r => r.next(unHallazgo));
-            });
+            return this.getByPacienteHallazgo(idPaciente).flatMapTo(hallazgos =>
+                hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
+            );
         }
     }
 
