@@ -13,7 +13,7 @@ import { PacienteService } from '../../../services/paciente.service';
 @Component({
     selector: 'rup-prestacionValidacion',
     templateUrl: 'prestacionValidacion.html',
-    styleUrls: ['prestacionValidacion.css'],
+    styleUrls: ['prestacionValidacion.scss'],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })

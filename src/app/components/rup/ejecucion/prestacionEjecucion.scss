@@ -1,9 +1,4 @@
-@import 'node_modules/@andes/plex/src/lib/css/variables';
-// Variables
-$problemas: $yellow;
-$hallazgos: red;
-$procedimientos: #92278E;
-$planes: $dark-blue;
+@import '../variables';
 //
 .rup-card {
     width: 100%;
@@ -168,7 +163,7 @@ a.desvincular:hover {
 /* colores botones / acciones */
 
 .btn-problemas {
-    color: #FFFFFF;
+    color: white;
     background-color: $problemas;
     border-color: $problemas;
 }
@@ -307,8 +302,8 @@ fieldset[disabled] .btn-prestaciones.active {
 
 .btn-procedimientos {
     color: white;
-    background-color: #92278E;
-    border-color: #751E72;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-procedimientos:hover,
@@ -316,7 +311,7 @@ fieldset[disabled] .btn-prestaciones.active {
 .btn-procedimientos:active,
 .btn-procedimientos.active,
 .open .dropdown-toggle.btn-procedimientos {
-    color: #FFFFFF;
+    color: white;
     background-color: $procedimientos;
     border-color: $procedimientos;
 }
@@ -377,38 +372,38 @@ fieldset[disabled] .btn-procedimientos.active {
 
 .borde-planes input,
 .borde-planes input:focus {
-    border-color: #5C8799;
-    background-color: rgba(92, 135, 153, 0.45) !important;
-    background-color: #5C8799;
+    border-color: $planes;
+    background-color: $planes !important;
+    background-color: $planes;
     color: white;
 }
 
 .planes {
-    background-color: #5C8799;
+    background-color: $planes;
 }
 
 .borde-problemas input,
 .borde-problemas input:focus {
-    border-color: #968005;
-    background-color: rgba(150, 128, 5, 0.45) !important;
-    background-color: #968005;
+    border-color: $problemas;
+    background-color: $problemas !important;
+    background-color: $problemas;
     color: white;
 }
 
 .problemas {
-    background-color: #968005;
+    background-color: $problemas;
 }
 
 .borde-procedimientos input,
 .borde-procedimientos input:focus {
-    border-color: #92278e;
-    background-color: rgba(146, 39, 142, 0.45) !important;
-    background-color: #92278e;
+    border-color: $procedimientos;
+    background-color: $procedimientos !important;
+    background-color: $procedimientos;
     color: white;
 }
 
 .procedimientos {
-    background-color: #92278e;
+    background-color: $procedimientos;
 }
 
 
@@ -424,7 +419,7 @@ fieldset[disabled] .btn-procedimientos.active {
 
 .dataSolicitud:hover {
     margin-top: 5px;
-    color: #0070BA;
+    color: $planes;
     cursor: default;
     text-decoration: none;
     font-size: 1.2em;
