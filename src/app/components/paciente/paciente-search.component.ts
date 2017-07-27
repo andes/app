@@ -2,11 +2,10 @@ import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy 
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
 import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Auth } from '@andes/auth';
-
+import { LogService } from './../../services/log.service';
 @Component({
     selector: 'pacientesSearch',
     templateUrl: 'paciente-search.html',
@@ -48,7 +47,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private server: Server, private pacienteService: PacienteService, private auth: Auth) {
+    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService) {
         this.actualizarContadores();
     }
 
@@ -116,12 +115,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
                 // Loggea el documento escaneado para análisis
-                this.server.post('/core/log/mpi/scan', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
+                this.logService.post('mpi', 'scan', { data: this.textoLibre });
                 return DocumentoEscaneados[key];
             }
         }
         if (this.textoLibre.length > 30) {
-            this.server.post('/core/log/mpi/scanFail', { data: this.textoLibre }, { params: null, showError: false }).subscribe(() => { });
+            this.logService.post('mpi', 'scanFail', { data: this.textoLibre });
         }
         return null;
     }
@@ -256,14 +255,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                         match: this.pacientesSimilares[0].match
                                     };
                                     if (pacienteEncontrado) {
-                                        this.server.post('/core/log/mpi/validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+                                        this.logService.post('mpi', 'validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
 
 
                                         this.seleccionarPaciente(pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
-                                            this.server.post('/core/log/mpi/macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
-
+                                            this.logService.post('mpi', 'macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
                                             //
                                             // Actualizamos los datos del paciente con los datos obtenidos del DNI
                                             //
@@ -274,7 +272,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                             this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                                         } else {
                                             if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
-                                                this.server.post('/core/log/mpi/posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } }, { params: null, showError: false }).subscribe(() => { });
+                                                this.logService.post('mpi', 'posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
                                             }
                                             this.seleccionarPaciente(pacienteEscaneado);
                                         }
