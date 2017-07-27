@@ -93,6 +93,11 @@ export class CalendarioDia {
                                             countBloques[indexBloque].gestion--;
                                         }
                                         break;
+                                    case ('profesional'):
+                                        if (this.agenda.estado === 'disponible') {
+                                            countBloques[indexBloque].profesional--;
+                                        }
+                                        break;
                                 }
                             }
                         });
