@@ -109,7 +109,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     showDatosSolicitud = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
-    //Copiadel registro actual para volver todo a la normalidad luego de hacer el drop.
+    // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
     public copiaRegistro: any;
     // errores
     public errores: any[] = [];
@@ -225,7 +225,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // tslint:disable-next-line:forin
             for (let i in this.registros) {
-                this.cargaItems(this.registros[i], i)
+                this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
             }
         }
@@ -346,7 +346,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
-            this.cargaItems(this.registros[i], i)
+            this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
         }
         // this.moverRegistroEnPosicion()
@@ -387,7 +387,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.moverRegistroEnPosicion(index, this.registros.length);
             // tslint:disable-next-line:forin
             for (let i in this.registros) {
-                this.cargaItems(this.registros[i], i)
+                this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
             }
         }
@@ -501,7 +501,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showDatosSolicitud = false;
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
-            this.cargaItems(this.registros[i], i)
+            this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
         }
     }
@@ -523,7 +523,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.registros.length > 0) {
             this.showVincular = true;
         }
-        debugger;
         // nos fijamos si el concepto ya aparece en los registros
         let existe = this.registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         // si no existe, verificamos si no está en alguno de los conceptos de los elementos RUP cargados
@@ -562,8 +561,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                         this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
                         for (let i in this.registros) {
-                            this.cargaItems(this.registros[i], i);
-                            // Actualizamos cuando se agrega el array..
+                            if (this.registros[i]) {
+                                this.cargaItems(this.registros[i], i);
+                            }
                         }
                     } else {
                         this.cargarNuevoRegistro(snomedConcept);

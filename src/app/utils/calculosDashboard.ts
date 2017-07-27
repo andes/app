@@ -29,7 +29,7 @@ export function cantidadTotalDeTurnosAsignados(serviceTurno) {
 /**
  * Devuelve la cantidad de turnos a los que se hizo revisión de la asistencia,
  * Posee el valor de asistió, no asistió o sin datos
- * 
+ *
  * @export
  * @param {any} userLogged
  */

@@ -145,7 +145,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     addDireccion(unaDireccion?) {
-        // agrega formMatricula 
+        // agrega formMatricula
         const control = <FormArray>this.createForm.controls['direccion'];
         control.push(this.iniDireccion(unaDireccion));
     }
@@ -200,7 +200,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     addMatricula() {
-        // agrega formMatricula 
+        // agrega formMatricula
         const control = <FormArray>this.createForm.controls['matriculas'];
         control.push(this.iniMatricula());
     }

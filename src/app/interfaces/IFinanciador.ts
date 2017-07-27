@@ -1,4 +1,4 @@
-export interface IFinanciador{
-    id: String,
-    nombre: String
+export interface IFinanciador {
+    id: String;
+    nombre: String;
 }

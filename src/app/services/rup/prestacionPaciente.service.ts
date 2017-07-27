@@ -150,7 +150,6 @@ export class PrestacionPacienteService {
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
             this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
-                debugger;
                 registros = this.cache[idPaciente]['registros'];
                 let unHallazgo = registros.find(registro => registro.concepto.conceptId === concepto.conceptId);
                 return new Observable(r => r.next(unHallazgo));

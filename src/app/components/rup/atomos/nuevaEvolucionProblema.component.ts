@@ -1,5 +1,5 @@
 import { Atomo } from './../core/atomoComponent';
-//import { RupComponent } from './../rup.component';
+// import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -14,7 +14,7 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
     public unaEvolucion;
     public indice = 0;
 
-    //estadoActual: any = { id: 'activo', nombre: 'Activo' };
+    // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
     estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
@@ -32,10 +32,10 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
             this.HallazgoCompleto = this.datosIngreso;
             this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
             this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
-            //this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+            // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
             this.data[this.elementoRUP.key].evolucion = '';
 
-            if(this.HallazgoCompleto.evoluciones){
+            if (this.HallazgoCompleto.evoluciones) {
                 this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
             }
             this.devolverValores();
@@ -46,12 +46,12 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
 
     cambiarEvolucion(signo) {
         if (signo === '+') {
-            if(this.indice < (this.HallazgoCompleto.evoluciones.length - 1)){
+            if (this.indice < (this.HallazgoCompleto.evoluciones.length - 1)) {
                 this.indice = this.indice + 1;
                 this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
             }
         } else {
-            if(this.indice > 0){
+            if (this.indice > 0) {
                 this.indice = this.indice - 1;
                 this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
             }

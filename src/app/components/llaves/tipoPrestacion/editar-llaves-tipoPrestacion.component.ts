@@ -63,7 +63,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
             this.showEditarLlave = false;
 
-            // Sexo 
+            // Sexo
             if (this.modelo.llave.sexo) {
                 delete this.modelo.llave.sexo.$order;
                 this.modelo.llave.sexo = this.modelo.llave.sexo.id;

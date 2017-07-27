@@ -14,17 +14,17 @@ const limit = 25;
 
 
 export class TipoPrestacionComponent implements OnInit {
-    showcreate: boolean = false;
-    showupdate: boolean = false;
+    showcreate = false;
+    showupdate = false;
     datos: ITipoPrestacion[];
     searchForm: FormGroup;
     seleccion: ITipoPrestacion;
-    skip: number = 0;
-    loader: boolean = false;
-    finScroll: boolean = false;
+    skip  = 0;
+    loader = false;
+    finScroll = false;
     value: any;
-    tengoDatos: boolean = true;
-    nombre: String= '';
+    tengoDatos = true;
+    nombre: String = '';
     granularidad:  {
                     id: '',
                     nombre: ''
@@ -94,4 +94,4 @@ export class TipoPrestacionComponent implements OnInit {
     }// activate
 
 
-}// export class TipoPrestacionComponent
+} // export class TipoPrestacionComponent

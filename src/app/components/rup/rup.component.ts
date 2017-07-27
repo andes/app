@@ -155,7 +155,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         } else {
             // Molécula
-            // console.log('--> Molécula <--');
             // valor: variable con el resultado qeu viene del input del formulario
             let valor = (typeof obj !== 'undefined' && obj && obj[elementoRUPactual.key]) ? obj[elementoRUPactual.key] : null;
             if (valor) {

@@ -26,7 +26,7 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.data[this.elementoRUP.key].profesionales);
-            //event.callback(this.quitarOrder());
+            // event.callback(this.quitarOrder());
         }
 
     }

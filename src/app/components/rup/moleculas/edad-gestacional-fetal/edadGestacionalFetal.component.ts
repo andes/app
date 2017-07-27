@@ -9,19 +9,19 @@ import { Plex } from '@andes/plex';
 })
 export class EdadGestacionalFetalComponent implements OnInit {
     @Input('paciente') paciente: any;
-    //paciente: any; // será un IPaciente
+    // paciente: any; // será un IPaciente
     @Input('tipoPrestacion') tipoPrestacion: any;
-    //tipoPrestacion: any;
+    // tipoPrestacion: any;
     @Input('required') required: Boolean;
     @Input('datosIngreso') datosIngreso: any;
 
     @Output() evtData: EventEmitter<Number> = new EventEmitter<Number>();
 
     data: any = {
-        //valor: '',
+        // valor: '',
         mensaje: {
-            class: "",
-            texto: ""
+            class: '',
+            texto: ''
         },
     };
 
@@ -65,10 +65,9 @@ export class EdadGestacionalFetalComponent implements OnInit {
 
     devolverValores() {
         this.data.mensaje = this.getMensajes();
-        if (this.data[this.tipoPrestacion.key].nombre == 'Fecha ultima menstruación') {
+        if (this.data[this.tipoPrestacion.key].nombre === 'Fecha ultima menstruación') {
             this.showCampoFecha = true;
-        }
-        else {
+        } else {
             this.showCampoFecha = false;
             this.data[this.tipoPrestacion.key].fecha = null;
         }

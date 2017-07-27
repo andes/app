@@ -377,7 +377,7 @@ export class GestorAgendasComponent implements OnInit {
 
     suspensionAvisada(agenda: any) {
         if (agenda.avisos) {
-            return agenda.avisos.findIndex(item => item.estado == 'suspende') >= 0;
+            return agenda.avisos.findIndex(item => item.estado === 'suspende') >= 0;
         }
         return false;
     }

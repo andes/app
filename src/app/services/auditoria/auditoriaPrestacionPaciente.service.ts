@@ -18,7 +18,7 @@ export class AuditoriaPrestacionPacienteService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IAuditoriaPrestacionPaciente> {
-        return this.server.get(this.auditoriaURL + '/' + id, null)
+        return this.server.get(this.auditoriaURL + '/' + id, null);
     }
 
     post(llaveTP: IAuditoriaPrestacionPaciente): Observable<IAuditoriaPrestacionPaciente> {

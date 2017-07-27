@@ -27,8 +27,8 @@ export class ResumenComponent implements OnInit {
     public breadcrumbs: any;
 
     // Para cargar Indicadores
-    //public prestacionPeso: IPrestacionPaciente = null;
-    //public prestacionTalla: IPrestacionPaciente = null;
+    // public prestacionPeso: IPrestacionPaciente = null;
+    // public prestacionTalla: IPrestacionPaciente = null;
 
     constructor(private servicioProblemasPaciente: ProblemaPacienteService,
         private servicioPrestacionPaciente: PrestacionPacienteService,
@@ -42,9 +42,9 @@ export class ResumenComponent implements OnInit {
             let id = params['id'];
             this.servicioPrestacionPaciente.getById(id, {showError: false}).subscribe(prestacion => {
                 this.prestacion = prestacion;
-                //this.loadProblemas();
+                // this.loadProblemas();
                 this.buscarPrestacionesPendientes();
-                //this.cargarIndicadores();
+                // this.cargarIndicadores();
             }, (err) => {
                 if (err) {
                     this.plex.info('danger', err, 'Error');
@@ -121,11 +121,11 @@ export class ResumenComponent implements OnInit {
             }
         };
 
-        //this.prestacion.estados.push(cambioEstado);
+        // this.prestacion.estados.push(cambioEstado);
 
         // Si la prestion tiene problemas en la solicitud,
         // lo cargamos en el listado de problemas a ejecutar en la consulta
-        //this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
+        // this.prestacion.ejecucion.listaProblemas = this.prestacion.solicitud.listaProblemas;
 
         this.servicioPrestacionPaciente.patch(this.prestacion, cambioEstado).subscribe(prestacion => {
             this.router.navigate(['/rup/ejecucion', id]);
@@ -162,9 +162,9 @@ export class ResumenComponent implements OnInit {
     }
 
     onReturn(prestacion) {
-        //this.loadProblemas();
+        // this.loadProblemas();
         this.buscarPrestacionesPendientes();
-        //this.cargarIndicadores();
+        // this.cargarIndicadores();
     }
 
 }

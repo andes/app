@@ -41,5 +41,5 @@ export interface ILog {
     };
     servidor: {
         ip: String,
-    }
+    };
 }

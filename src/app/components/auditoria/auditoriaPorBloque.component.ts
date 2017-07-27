@@ -56,9 +56,9 @@ export class AuditoriaPorBloqueComponent implements OnInit {
   constructor(public plex: Plex, private duplicadosService: AuditoriaPorBloqueService) { }
 
   ngOnInit() {
-    //this.loadClaves();
+    // this.loadClaves();
     this.claveActual = this.claves[0];
-    //Radio button contains one value from a set of pre defined values
+    // Radio button contains one value from a set of pre defined values
 
   }
 
@@ -137,7 +137,7 @@ export class AuditoriaPorBloqueComponent implements OnInit {
 
   onClaveChange(dato) {
     this.tipoClave = dato.value;
-    //this.loadClaves();
+    // this.loadClaves();
   }
 
   // validarSisa() {
