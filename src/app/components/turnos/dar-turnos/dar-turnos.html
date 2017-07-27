@@ -9,13 +9,19 @@
                     <header>
                         <div class="row align-items-center ">
                             <div class="col-4 ">
-                                <plex-select *ngIf="!_solicitudPrestacion" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar() " name="tipoPrestacion">
+                                <plex-select *ngIf="!_solicitudPrestacion" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                                    placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar() " name="tipoPrestacion" [readonly]="true">
+                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto" (getData)="loadTipoPrestaciones($event)"
+                                    placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre" (change)="filtrar() " name="profesional">
+                                <plex-select *ngIf="!_solicitudPrestacion" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" placeholder="Profesionales"
+                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                </plex-select>
+                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
+                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>
                             <div class="col-4 text-right ">
@@ -253,7 +259,7 @@
             <div class="col col-sm-12" *ngIf="pacientesSearch">
                 <div class="panel panel-default">
                     <div class="clear"></div>
-                    <pacientesSearch (selected)="afterSearch($event)" [bloquearCreate]="true"></pacientesSearch>
+                    <pacientesSearch (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
                 </div>
             </div>
             <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
@@ -266,9 +272,9 @@
     </section>
 
 </form>
-<footer *ngIf="autorizado">
-    <plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>
-    <div class="float-right" *ngIf="showDarTurnos">
+<footer *ngIf="autorizado && showDarTurnos">
+    <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
+    <div class="float-right">
         <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
     </div>
 </footer>

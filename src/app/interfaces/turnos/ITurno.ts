@@ -28,5 +28,12 @@ export interface ITurno {
             idTurno: String
         }
     };
+    carpetaEfectores?: [{
+        organizacion: {
+            id: string,
+            nombre: string
+        },
+        nroCarpeta: string
+    }];
     nota: String;
 }

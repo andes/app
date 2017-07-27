@@ -12,12 +12,13 @@ export class CalendarioDia {
     public programadosDisponibles = 0;
     public gestionDisponibles = 0;
     public delDiaDisponibles = 0;
+    public profesionalDisponibles = 0;
 
     constructor(public fecha: Date, public agenda: any) {
         this.hoy = new Date();
+        this.turnosDisponibles = 0;
         if (!agenda) {
             this.estado = 'vacio';
-            this.turnosDisponibles = 0;
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             if (disponible) {
@@ -32,6 +33,7 @@ export class CalendarioDia {
                             delDia: bloque.cantidadTurnos,
                             programado: 0,
                             gestion: bloque.reservadoGestion,
+                            profesional: bloque.reservadoProfesional
                         });
 
                         bloque.turnos.forEach((turno) => {
@@ -62,7 +64,7 @@ export class CalendarioDia {
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                     });
                     // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
-                    this.turnosDisponibles = this.delDiaDisponibles + this.gestionDisponibles;
+                    this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles + this.gestionDisponibles;
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
 
                 } else {
@@ -73,7 +75,8 @@ export class CalendarioDia {
                         countBloques.push({
                             // Asignamos a contadores dinamicos la cantidad inicial de c/u
                             programado: bloque.accesoDirectoProgramado,
-                            gestion: bloque.reservadoGestion
+                            gestion: bloque.reservadoGestion,
+                            profesional: bloque.reservadoProfesional
                         });
                         bloque.turnos.forEach((turno) => {
                             if (turno.estado === 'asignado') {
@@ -87,16 +90,17 @@ export class CalendarioDia {
                                 }
                             }
                         });
-                        this.programadosDisponibles = + countBloques[indexBloque].programado;
-                        this.gestionDisponibles = + countBloques[indexBloque].gestion;
+                        this.programadosDisponibles += countBloques[indexBloque].programado;
+                        this.gestionDisponibles += countBloques[indexBloque].gestion;
+                        this.profesionalDisponibles += countBloques[indexBloque].profesional;
                         if (this.agenda.estado === 'disponible') {
-                            this.estado = (this.gestionDisponibles > 0) ? 'disponible' : 'ocupado';
+                            this.estado = (this.gestionDisponibles > 0 || this.profesionalDisponibles)  ? 'disponible' : 'ocupado';
                         }
                         if (this.agenda.estado === 'publicada') {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
                     });
-                    this.turnosDisponibles = this.programadosDisponibles + this.gestionDisponibles;
+                    this.turnosDisponibles = this.turnosDisponibles + this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
                 }
             } else {
                 this.estado = 'ocupado';

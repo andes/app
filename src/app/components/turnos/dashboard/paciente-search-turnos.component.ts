@@ -22,6 +22,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     pacienteSeleccionado = null;
 
+    // Emite al componente puntoInicio
     public operacionSeleccionada(operacion, paciente) {
         if (operacion) {
             // Se habilita el calendario para seleccionar las agendas y permitir asignar turnos al paciente
