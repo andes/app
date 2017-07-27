@@ -1,4 +1,4 @@
-import { TransformarProblemaComponent } from './../../components/rup/problemas-paciente/transformarProblema.component';
+
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
