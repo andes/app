@@ -84,13 +84,13 @@ export class TipoPrestacionComponent implements OnInit {
 
     activate(objTipoPrestacion: ITipoPrestacion) {
 
-        if (objTipoPrestacion.activo) {
+        /* if (objTipoPrestacion.activo) {
             this.tipoPrestacionService.disable(objTipoPrestacion)
                 .subscribe(datos => this.loadDatos());  // Bind to view
         } else {
             this.tipoPrestacionService.enable(objTipoPrestacion)
                 .subscribe(datos => this.loadDatos());  // Bind to view
-        }
+        } */
     }// activate
 
 

@@ -172,35 +172,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" >
+                            <ng-container *ngFor="let turno of bloque.turnos; let i=index" >
+                            <tr *ngIf="turno" class="hover" >
                                 <td>
-                                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                    <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                 </td>
                                 <td>
-                                    <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
+                                    <span *ngIf="turno.paciente">{{ turno.paciente  | paciente }} </span>
 
-                                    <small><span *ngIf="turno && turno.paciente"><br /> DNI {{turno.paciente.documento|number}}</span></small>
+                                    <small><span *ngIf="turno.paciente"><br /> DNI {{turno.paciente.documento|number}}</span></small>
+                                    <br *ngIf="turno.paciente && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
+                                    <small><span *ngIf="turno.paciente && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
 
-                                    <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestaciones[0].nombre}}</span></small>
 
-                                    <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
-                                    <span class="badge badge-danger" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
-                                    <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+                                    <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno.estado === 'turnoDoble'">Turno Doble</span>
+                                    <span class="badge badge-danger" *ngIf="turno.estado === 'suspendido'">Suspendido</span>
+                                    <span *ngIf="turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                 </td>
 
-                                <td>
-                                    <plex-button *ngIf="turno && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion" label="Iniciar Prestación" type="success btn-sm"
+                                <td class="text-right">
+                                    <div  *ngIf="turno?.prestacion?.estados">
+                                        <span class="badge badge-default">
+                                            {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
+                                        </span>
+                                        <br />
+                                    </div>
+
+                                    <plex-button *ngIf="turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion)" label="Iniciar Prestación" type="success btn-sm"
                                         (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
 
-                                    <plex-button *ngIf="turno && turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'"
+                                    <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion)"
                                         label="Ver registros" type="primary btn-sm"
                                         (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
-                                        <plex-button *ngIf="turno && turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada'"
+                                    <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion)"
                                         label="Ver resumen" type="success btn-sm"
                                         (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
                                 </td>
                             </tr>
+                            </ng-container>
                         </tbody>
                     </table>
 
