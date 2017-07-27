@@ -29,255 +29,255 @@ export class TallaComponent extends Atomo {
 
             switch (true) {
                 case (edadEnMeses >= 3 && edadEnMeses <= 9):
-                    //6 meses
-                    if (talla < 63.34) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 6 meses
+                    if (talla < 63.34) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 71.9) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 71.9) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 9 && edadEnMeses <= 15):
-                    //12 meses
-                    if (talla < 70.99) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 12 meses
+                    if (talla < 70.99) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 80.51) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 80.51) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 15 && edadEnMeses <= 21):
-                    //18 meses
-                    if (talla < 76.86) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 18 meses
+                    if (talla < 76.86) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 87.66) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 87.66) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 21 && edadEnMeses <= 27):
-                    //24 meses
-                    if (talla < 81.7) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 24 meses
+                    if (talla < 81.7) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 93.94) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 93.94) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 27 && edadEnMeses <= 33):
-                    //30 meses
-                    if (talla < 85.11) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 30 meses
+                    if (talla < 85.11) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 98.75) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 98.75) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 33 && edadEnMeses <= 39):
-                    //36 meses
-                    if (talla < 88.66) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 36 meses
+                    if (talla < 88.66) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 103.5) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 103.5) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 39 && edadEnMeses <= 45):
-                    //42 meses
-                    if (talla < 91.91) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 42 meses
+                    if (talla < 91.91) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 107.79) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 107.79) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 45 && edadEnMeses <= 51):
-                    //48 meses
-                    if (talla < 94.95) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 48 meses
+                    if (talla < 94.95) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 111.71) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 111.71) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 51 && edadEnMeses <= 57):
-                    //54 meses
-                    if (talla < 97.83) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 54 meses
+                    if (talla < 97.83) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 115.51) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 115.51) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 57 && edadEnMeses <= 63):
-                    //60 meses
-                    if (talla < 100.72) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 60 meses
+                    if (talla < 100.72) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 119.2) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 119.2) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 63 && edadEnMeses <= 69):
-                    //66 meses
-                    if (talla < 103.43) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 66 meses
+                    if (talla < 103.43) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 122.39) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 122.39) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 69 && edadEnMeses <= 75):
-                    //72 meses
-                    if (talla < 104.48) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 72 meses
+                    if (talla < 104.48) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 123.6) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 123.6) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 75 && edadEnMeses <= 81):
-                    //78 meses
-                    if (talla < 107.49) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 78 meses
+                    if (talla < 107.49) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 127.1) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 127.1) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 87 && edadEnMeses <= 93):
-                    //84 meses
-                    if (talla < 110.2) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 84 meses
+                    if (talla < 110.2) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 130.4) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 130.4) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 93 && edadEnMeses <= 99):
-                    //90 meses
-                    if (talla < 112.64) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 90 meses
+                    if (talla < 112.64) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 133.56) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 133.56) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 99 && edadEnMeses <= 105):
-                    //96 meses
-                    if (talla < 115.1) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 96 meses
+                    if (talla < 115.1) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 136.7) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 136.7) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 105 && edadEnMeses <= 111):
-                    //102 meses
-                    if (talla < 117.34) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 102 meses
+                    if (talla < 117.34) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 139.66) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 139.66) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 111 && edadEnMeses <= 117):
-                    //108 meses
-                    if (talla < 119.6) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 108 meses
+                    if (talla < 119.6) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 142.6) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 142.6) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 117 && edadEnMeses <= 123):
-                    //114 meses
-                    if (talla < 121.44) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 114 meses
+                    if (talla < 121.44) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 145.56) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 145.56) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 123 && edadEnMeses <= 129):
-                    //120 meses
-                    if (talla < 123.3) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 120 meses
+                    if (talla < 123.3) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 148.5) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 148.5) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 135 && edadEnMeses <= 141):
-                    //126 meses
-                    if (talla < 125.15) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 126 meses
+                    if (talla < 125.15) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 150.95) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 150.95) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 141 && edadEnMeses <= 147):
-                    //132 meses
-                    if (talla < 127) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 132 meses
+                    if (talla < 127) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 153.4) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 153.4) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 147 && edadEnMeses <= 153):
-                    //138 meses
-                    if (talla < 128.9) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 138 meses
+                    if (talla < 128.9) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 156.5) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 156.5) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 153 && edadEnMeses <= 159):
-                    //144 meses
-                    if (talla < 130.8) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 144 meses
+                    if (talla < 130.8) { //p3;
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 159.6) { //p97
-                        mensaje.texto = 'Demasiado alto'
-                    }
-                    break;
-                case (edadEnMeses >= 159 && edadEnMeses <= 165):
-                    //150 meses
-                    if (talla < 132.19) { //p3
-                        mensaje.texto = 'Baja estatura'
-                    }
-                    if (talla > 164.31) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 159.6) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 159 && edadEnMeses <= 165):
-                    //156 meses
-                    if (talla < 133.6) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 150 meses
+                    if (talla < 132.19) { // p3;
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 169) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 164.31) { // p97
+                        mensaje.texto = 'Demasiado alto';
+                    }
+                    break;
+                case (edadEnMeses >= 159 && edadEnMeses <= 165):
+                    // 156 meses
+                    if (talla < 133.6) { // p3
+                        mensaje.texto = 'Baja estatura';
+                    }
+                    if (talla > 169) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 165 && edadEnMeses <= 171):
-                    //162 meses
-                    if (talla < 137.59) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 162 meses
+                    if (talla < 137.59) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 172.31) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 172.31) { // p97
+                        mensaje.texto = 'Demasiado alto';
                     }
                     break;
                 case (edadEnMeses >= 171 && edadEnMeses <= 177):
-                    //168 meses
-                    if (talla < 141.6) { //p3
-                        mensaje.texto = 'Baja estatura'
+                    // 168 meses
+                    if (talla < 141.6) { // p3
+                        mensaje.texto = 'Baja estatura';
                     }
-                    if (talla > 175.6) { //p97
-                        mensaje.texto = 'Demasiado alto'
+                    if (talla > 175.6) { // p97
+                        mensaje.texto = 'Demasiado alto';
 
                     }
                     break;
@@ -295,8 +295,8 @@ export class TallaComponent extends Atomo {
 
 
 
- //NO BORRAR.
-            //Funciones para calcular percentilo.. Falta calcular el percentilo VER EL EXCEL DE EJEMPLO (Tablas de crecimiento)
+ // NO BORRAR.
+            // Funciones para calcular percentilo.. Falta calcular el percentilo VER EL EXCEL DE EJEMPLO (Tablas de crecimiento)
             // var tablasExcel = [
             //     tablasExcel['ScolumnaAcondroplasia'] = [
             //         0.05050, 0.04950, 0.04860, 0.04770, 0.04670, 0.04585, 0.04500, 0.04420, 0.04340, 0.04270, 0.04200, 0.04140, 0.04082, 0.04031, 0.03990,
@@ -409,15 +409,15 @@ export class TallaComponent extends Atomo {
             // }
             // else {
             //     $valorZcore = $zind;
-            //}
-            //Fin calculo valorzcore
+            // }
+            // Fin calculo valorzcore
 
 
-            //N = zind -> =((($H12)/L12)^1/K12-1)/(M12*K12)
-            //O = SD + 3 -> =$L2*(1+$K2* $M2*3)^(1/$K2)
-            //Q = SD +23 -> =O5-$L5*(1+$K5* $M5*2)^(1/$K5)
-            //P = SD - 3 -> =$L2*(1+$K2* $M2*-3)^(1/$K2)
-            //R = SD -23 -> =$L2*(1+$K2* $M2*-2)^(1/$K2)-P2
-            //K = L -> =SI($G2="si";BUSCARV($C2;acondropl!$A$5:$M$59;2+SI($F2="V";;3));BUSCARV($C2;garrahan!$A$5:$M$59;2+SI($F2="V";;3)))
-            //L = M -> =SI($G2="si";BUSCARV($C2;acondropl!$A$5:$M$59;3+SI($F2="V";;3));BUSCARV($C2;garrahan!$A$5:$M$59;3+SI($F2="V";;3)))
-            //M = S -> =SI($G5="si";BUSCARV($C5;acondropl!$A$5:$M$59;4+SI($F5="V";;3));BUSCARV($C5;garrahan!$A$5:$M$59;4+SI($F5="V";;3)))
+            // N = zind -> =((($H12)/L12)^1/K12-1)/(M12*K12)
+            // O = SD + 3 -> =$L2*(1+$K2* $M2*3)^(1/$K2)
+            // Q = SD +23 -> =O5-$L5*(1+$K5* $M5*2)^(1/$K5)
+            // P = SD - 3 -> =$L2*(1+$K2* $M2*-3)^(1/$K2)
+            // R = SD -23 -> =$L2*(1+$K2* $M2*-2)^(1/$K2)-P2
+            // K = L -> =SI($G2="si";BUSCARV($C2;acondropl!$A$5:$M$59;2+SI($F2="V";;3));BUSCARV($C2;garrahan!$A$5:$M$59;2+SI($F2="V";;3)))
+            // L = M -> =SI($G2="si";BUSCARV($C2;acondropl!$A$5:$M$59;3+SI($F2="V";;3));BUSCARV($C2;garrahan!$A$5:$M$59;3+SI($F2="V";;3)))
+            // M = S -> =SI($G5="si";BUSCARV($C5;acondropl!$A$5:$M$59;4+SI($F5="V";;3));BUSCARV($C5;garrahan!$A$5:$M$59;4+SI($F5="V";;3)))

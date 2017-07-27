@@ -16,7 +16,7 @@ import {
     OnInit, OnDestroy,
     EventEmitter
 } from '@angular/core';
-import { ProfesionalService } from "../../services/profesional.service";
+import { ProfesionalService } from '../../services/profesional.service';
 
 @Component({
     moduleId: 'RupModule',
@@ -156,7 +156,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         } else {
             // Molécula
-            // console.log('--> Molécula <--');
             // valor: variable con el resultado qeu viene del input del formulario
             let valor = (typeof obj !== 'undefined' && obj && obj[elementoRUPactual.key]) ? obj[elementoRUPactual.key] : null;
             if (valor) {
@@ -179,7 +178,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
         this.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
-        //this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
+        // this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
 
     }
 

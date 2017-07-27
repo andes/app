@@ -127,7 +127,7 @@ export class PuntoInicioComponent implements OnInit {
                     // asignamos la prestacion al turno
                     turno['prestacion'] = this.prestaciones[indexPrestacion];
                     // sumamos la cantidad de pacientes
-                    //agenda['cantidadPacientes'] += (indexPrestacion !== -1) ? 1 : 0;
+                    // agenda['cantidadPacientes'] += (indexPrestacion !== -1) ? 1 : 0;
                     agenda['cantidadPacientes'] += (turno.paciente) ? 1 : 0;
                 });
             });

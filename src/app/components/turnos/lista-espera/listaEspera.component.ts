@@ -11,17 +11,17 @@ const limit = 50;
     templateUrl: 'listaEspera.html'
 })
 export class ListaEsperaComponent implements OnInit {
-    showcreate: boolean = false;
+    showcreate = false;
     datos: IListaEspera[] = [];
     searchForm: FormGroup;
     value: any;
-    skip: number = 0;
-    nombre: string = '';
-    activo: Boolean = null;
-    loader: boolean = false;
-    finScroll: boolean = false;
-    tengoDatos: boolean = true;
-    checked: boolean = true;
+    skip = 0;
+    nombre = '';
+    activo = null;
+    loader = false;
+    finScroll = false;
+    tengoDatos = true;
+    checked = true;
 
     constructor(private formBuilder: FormBuilder, private listaEsperaService: ListaEsperaService) { }
 

@@ -16,7 +16,7 @@ export class ScoreApgarComponent extends Atomo {
         if (this.data[this.elementoRUP.key].valor) {
             this.devolverValores();
         }
-    }
+    };
 
     getMensajes() {
 
@@ -26,18 +26,18 @@ export class ScoreApgarComponent extends Atomo {
         };
 
         if (this.data[this.elementoRUP.key]) {
-            //Validaciones con los mensajes.
+            // Validaciones con los mensajes.
             if (this.data[this.elementoRUP.key].valor >= 7 && this.data[this.elementoRUP.key].valor <= 10) {
-                mensaje.texto = "Excelente";
-                mensaje.class = "outline-succes";
+                mensaje.texto = 'Excelente';
+                mensaje.class = 'outline-succes';
             }
             if (this.data[this.elementoRUP.key].valor >= 4 && this.data[this.elementoRUP.key].valor <= 6) {
-                mensaje.texto = "Moderadamente Deprimido";
-                mensaje.class = "outline-warning";
+                mensaje.texto = 'Moderadamente Deprimido';
+                mensaje.class = 'outline-warning';
             }
             if (this.data[this.elementoRUP.key].valor >= 0 && this.data[this.elementoRUP.key].valor <= 3) {
-                mensaje.texto = "Severamente Deprimido";
-                mensaje.class = "outline-danger";
+                mensaje.texto = 'Severamente Deprimido';
+                mensaje.class = 'outline-danger';
             }
         }
         return mensaje;

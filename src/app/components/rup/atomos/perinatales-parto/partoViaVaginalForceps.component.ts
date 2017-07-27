@@ -5,5 +5,5 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
   selector: 'rup-PartoViaVaginalForceps',
   templateUrl: 'partoViaVaginalForceps.html'
 })
-export class PartoViaVaginalForcepsComponent extends Atomo {  
+export class PartoViaVaginalForcepsComponent extends Atomo {
 }

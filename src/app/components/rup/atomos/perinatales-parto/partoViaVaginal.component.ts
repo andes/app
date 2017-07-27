@@ -1,8 +1,22 @@
-import { Atomo } from './../../core/atomoComponent';
-import { ITipoPrestacion } from './../../../../interfaces/ITipoPrestacion';
-import { IPaciente } from '../../../../interfaces/IPaciente';
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { Plex } from '@andes/plex';
+import {
+    Atomo
+} from './../../core/atomoComponent';
+import {
+    ITipoPrestacion
+} from './../../../../interfaces/ITipoPrestacion';
+import {
+    IPaciente
+} from '../../../../interfaces/IPaciente';
+import {
+    Component,
+    Output,
+    Input,
+    EventEmitter,
+    OnInit
+} from '@angular/core';
+import {
+    Plex
+} from '@andes/plex';
 
 @Component({
     selector: 'rup-partoViaVaginal',
@@ -10,7 +24,17 @@ import { Plex } from '@andes/plex';
 })
 export class PartoViaVaginalComponent extends Atomo {
 
-   ngOnInit() {
+    public selectPartoViaVaginal: Array < Object > = [{
+            id: 'Parto vaginal asistido con extractor de vacio',
+            nombre: 'Parto vaginal asistido con extractor de vacio'
+        },
+        {
+            id: 'Parto Vaginal con fórceps y cuidados postparto',
+            nombre: 'Parto Vaginal con fórceps y cuidados postparto'
+        },
+    ];
+
+    ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {
             valor: null,
             detalle: null
@@ -20,9 +44,5 @@ export class PartoViaVaginalComponent extends Atomo {
         }
     }
 
-    public selectPartoViaVaginal: Array<Object> = [
-        { id: 'Parto vaginal asistido con extractor de vacio', nombre: 'Parto vaginal asistido con extractor de vacio' },
-        { id: 'Parto Vaginal con fórceps y cuidados postparto', nombre: 'Parto Vaginal con fórceps y cuidados postparto' },
-    ];
 
 }

@@ -5,5 +5,5 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
     selector: 'rup-nino-sano',
     templateUrl: 'ninoSano.html'
 })
-export class NinoSanoComponent  extends Molecula{
+export class NinoSanoComponent  extends Molecula {
 }

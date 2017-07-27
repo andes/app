@@ -12,25 +12,25 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
     public modelo: any = {};
     @Input('seleccion') seleccion: IEspecialidad;
     @Output() data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
-    //createForm: FormGroup;
+    // createForm: FormGroup;
     constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
         Object.assign(this.modelo, this.seleccion);
-        if (!this.seleccion){
+        if (!this.seleccion) {
         this.modelo = {
-            nombre: "" ,
-            descripcion: "" ,
-            disciplina: "" ,
-            complejidad: "" ,
+            nombre: '' ,
+            descripcion: '' ,
+            disciplina: '' ,
+            complejidad: '' ,
             codigo: {
-                sisa: "" ,
+                sisa: '' ,
                      },
             activo: true,
-        }
-        }
-        //console.log(this.modelo.codigo.sisa);
-        //this.modelo.codigo.sisa = " ";
+        };
+    }
+        // console.log(this.modelo.codigo.sisa);
+        // this.modelo.codigo.sisa = " ";
     }
 
     onSave(isvalid: boolean) {
@@ -56,7 +56,7 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
     }
 
     onCancel() {
-        this.data.emit(null)
+        this.data.emit(null);
         return false;
     }
 

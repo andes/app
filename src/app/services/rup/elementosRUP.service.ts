@@ -88,9 +88,7 @@ export class ElementosRupService {
         let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
         if (tipo === 'problemas') {
-            
             elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
- 
             return elementoRUP;
         } else {
             if (tipo === 'procedimientos') {

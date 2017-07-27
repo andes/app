@@ -44,8 +44,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    // Output de un boolean para indicar cuando se tienen resultados de 
-    //busqueda o no.
+    // Output de un boolean para indicar cuando se tienen resultados de
+    // busqueda o no.
     @Output() _tengoResultado: EventEmitter<any> = new EventEmitter<any>();
 
     // cerrar si cliqueo fuera de los resultados
@@ -90,7 +90,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
-        // Trae las prestaciones turneables y la guarda en memoria para luego 
+        // Trae las prestaciones turneables y la guarda en memoria para luego
         // filtrar los resultados de las busquedas
         this.iniciarPrestacionesTurneables();
     }
@@ -167,7 +167,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // armamos query para enviar al servicio
             let query = {
                 search: search
-                //,tipo: this.tipoBusqueda
+                // tipo: this.tipoBusqueda
             };
 
             // seteamos un timeout de 3 segundos luego que termino de escribir

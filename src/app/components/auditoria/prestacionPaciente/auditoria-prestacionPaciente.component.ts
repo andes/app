@@ -320,7 +320,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
 
     // Botón 'Nueva Auditoría'
     nuevaAuditoriaPP() {
-        
+
         this.auditoriaPP = {
             paciente: {
                 'createdBy': {

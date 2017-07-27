@@ -1,5 +1,5 @@
 import { Atomo } from './../core/atomoComponent';
-//import { RupComponent } from './../rup.component';
+// import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -15,7 +15,7 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     public esEnmienda: Boolean = false;
     public evolucion: String; //
 
-    //estadoActual: any = { id: 'activo', nombre: 'Activo' };
+    // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
     estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
@@ -30,7 +30,7 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            //this.friendlyDate(this.datosIngreso.fechaInicio);
+            // this.friendlyDate(this.datosIngreso.fechaInicio);
             this.devolverValores();
         }else {
             this.data[this.elementoRUP.key].estado =  { id: 'activo', nombre: 'Activo' };

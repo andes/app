@@ -11,8 +11,8 @@ export class PesquisaNeonatalComponent extends Atomo {
       texto: null,
       class: 'danger'
     };
-    if (this.data[this.elementoRUP.key] == false) {
-      mensaje.texto = 'Alarma'; //Ver el texto.
+    if (this.data[this.elementoRUP.key] === false) {
+      mensaje.texto = 'Alarma'; // Ver el texto.
     }
     return mensaje;
   }

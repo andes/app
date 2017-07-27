@@ -50,7 +50,7 @@ export class Wizard {
 
     /**
      * Muestra el wizard
-     * 
+     *
      * @param {boolean} [forceShow=false] Indica si fuerza el wizard, independiente si el usuario eligió no volver a verlo
      * @returns {Promise<any>} Si el wizard está oculto devuelve null, sino devuelve un Promise que recibe un parámetro booleano, indicado si el usuario vio todo el wizard o no
      *

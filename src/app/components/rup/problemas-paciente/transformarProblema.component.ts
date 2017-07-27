@@ -93,8 +93,8 @@ export class TransformarProblemaComponent implements OnInit {
                         tipoProblema: this.tipoProblema,
                         idProblemaOrigen: problemasOrigen,
                         paciente: this.paciente.id,
-                        fechaIdentificacion: null, //ver despues
-                        descripcion: null, //ver despues
+                        fechaIdentificacion: null, // ver despues
+                        descripcion: null, // ver despues
                         fechaInicio: new Date(),
                         evoluciones: [unaEvolucion]
                     };

@@ -10,7 +10,7 @@ export class TensionDiastolicaComponent extends Atomo {
 
     getMensajes() {
         let Edad;
-        //let percentiloTalla;
+        // let percentiloTalla;
         let BajaTensionDiastolica;
         let tensionSistolica = this.data[this.elementoRUP.key];
 
@@ -24,37 +24,37 @@ export class TensionDiastolicaComponent extends Atomo {
 
         if (tensionSistolica) {
             // agregar validaciones aca en base al paciente y el tipo de prestacion
-            //Rango de edad del paciente ADULTOS
+            // Rango de edad del paciente ADULTOS
             if (Edad > 17 && Edad < 110) {
                 switch (true) {
-                    //Rengo de tension sistolica
+                    // Rengo de tension sistolica
                     case (tensionSistolica > 80 && tensionSistolica <= 84):
-                        //rango normal
+                        // rango normal
                         mensaje.texto = 'normal';
                         break;
                     case (tensionSistolica >= 85 && tensionSistolica <= 89):
-                        //rango normal-alta
+                        // rango normal-alta
                         mensaje.texto = 'Normal-alta';
                         break;
                     case (tensionSistolica >= 90 && tensionSistolica <= 99):
-                        //rango hipertension arterial grado 1
+                        // rango hipertension arterial grado 1
                         mensaje.texto = 'Hipertensión arterial grado 1';
                         break;
                     case (tensionSistolica >= 100 && tensionSistolica <= 109):
-                        //rango hipertension arterial grado 2
+                        // rango hipertension arterial grado 2
                         mensaje.texto = 'Hipertensión arterial grado 2';
                         break;
                     case (tensionSistolica >= 110):
-                        //rango hipertension arterial grado 3
-                        mensaje.class = "danger";
+                        // rango hipertension arterial grado 3
+                        mensaje.class = 'danger';
                         mensaje.texto = 'Hipertensión arterial grado 3';
                         break;
                     case (tensionSistolica >= 40 && tensionSistolica <= 60):
-                        //rango hipotension
+                        // rango hipotension
                         mensaje.texto = 'hipotensión';
                         break;
                     case (tensionSistolica <= 35):
-                        //rango coma
+                        // rango coma
                         mensaje.texto = 'Coma';
                         break;
                 }

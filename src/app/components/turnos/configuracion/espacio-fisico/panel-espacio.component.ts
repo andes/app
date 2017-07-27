@@ -175,7 +175,7 @@ export class PanelEspacioComponent implements OnInit {
                     } else {
                         this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
                     }
-                    //this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
+                    // this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
                     for (let i = i1Horarios; i < i2Horarios; i++) {
                         let ind = this.horarios[i].lista.map(function (obj) {
                             return obj.espacio.id;

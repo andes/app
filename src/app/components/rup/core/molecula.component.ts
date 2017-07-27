@@ -9,7 +9,7 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 export class Molecula extends RupComponent implements OnInit {
 
     ngOnInit() {
-        //VER SERVICIO PRESTACION SE REPITE EN RUP
+        // VER SERVICIO PRESTACION SE REPITE EN RUP
 
         // como es una molécula buscamos sus atomos
         this.servicioElementosRUP.getById(this.elementoRUP.id).subscribe(tipoPrestacion => {

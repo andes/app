@@ -174,7 +174,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     estaSeleccionado(turno: any) {
         this.showRegistrosTurno = true;
-        return (this.turnoSeleccionado == turno); // .indexOf(turno) >= 0;
+        return (this.turnoSeleccionado === turno); // .indexOf(turno) >= 0;
     }
 
     buscarCodificacion(event) {

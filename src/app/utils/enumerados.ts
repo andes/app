@@ -3,39 +3,64 @@
  */
 
 export enum Sexo {
-    'femenino', 'masculino', 'otro'
+    'femenino',
+    'masculino',
+    'otro'
 }
 
 export enum Genero {
-    'femenino', 'masculino', 'otro'
+    'femenino',
+    'masculino',
+    'otro'
 }
 
 export enum EstadoCivil {
-    'casado', 'separado', 'divorciado', 'viudo', 'soltero', 'otro'
+    'casado',
+    'separado',
+    'divorciado',
+    'viudo',
+    'soltero',
+    'otro'
 }
 
 export enum tipoComunicacion {
-    'Teléfono Fijo', 'Teléfono Celular', 'Email'
+    'Teléfono Fijo',
+    'Teléfono Celular',
+    'Email'
 }
 
 export enum estados {
-    'temporal', 'identificado', 'validado', 'recienNacido', 'extranjero'
+    'temporal',
+    'identificado',
+    'validado',
+    'recienNacido',
+    'extranjero'
 }
 
 export enum relacionTutor {
-    'padre', 'madre', 'hijo', 'tutor'
+    'padre',
+    'madre',
+    'hijo',
+    'tutor'
 }
 
 export enum UnidadEdad {
-    'años', 'meses', 'días', 'horas'
+    'años',
+    'meses',
+    'días',
+    'horas'
 }
 
 export enum EstadosAuditorias {
-    'pendiente', 'aprobada', 'desaprobada'
+    'pendiente',
+    'aprobada',
+    'desaprobada'
 }
 
 export enum PrioridadesPrestacion {
-    'no prioritario', 'urgencia', 'emergencia'
+    'no prioritario',
+    'urgencia',
+    'emergencia'
 }
 
 export function titleCase(str) {
@@ -60,7 +85,12 @@ export function getSexo() {
 export function getObjSexos() {
     let arrSexo = Object.keys(Sexo);
     arrSexo = arrSexo.slice(arrSexo.length / 2);
-    let salida = arrSexo.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+    let salida = arrSexo.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
     return salida;
 }
 
@@ -68,7 +98,10 @@ export function getObjUnidadesEdad() {
     let arrUnidadEdad = Object.keys(UnidadEdad);
     arrUnidadEdad = arrUnidadEdad.slice(arrUnidadEdad.length / 2);
     let salida = arrUnidadEdad.map(elem => {
-        return { id: elem, nombre: titleCase(elem) }
+        return {
+            id: elem,
+            nombre: titleCase(elem)
+        };
     });
     return salida;
 }
@@ -85,7 +118,10 @@ export function getObjTipoComunicacion() {
     let salida = arrTC.map(elem => {
         let idEnumerado = elem.split(' ')[1] ? elem.split(' ')[1] : elem.split(' ')[0];
         console.log(idEnumerado);
-        return { 'id': idEnumerado.toLowerCase(), 'nombre': titleCase(elem) }
+        return {
+            'id': idEnumerado.toLowerCase(),
+            'nombre': titleCase(elem)
+        };
     });
     return salida;
 }
@@ -99,7 +135,12 @@ export function getGenero() {
 export function getObjGeneros() {
     let arrGenero = Object.keys(Genero);
     arrGenero = arrGenero.slice(arrGenero.length / 2);
-    let salida = arrGenero.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+    let salida = arrGenero.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
     return salida;
 }
 
@@ -112,7 +153,12 @@ export function getEstadoCivil() {
 export function getObjEstadoCivil() {
     let arrEstadoC = Object.keys(EstadoCivil);
     arrEstadoC = arrEstadoC.slice(arrEstadoC.length / 2);
-    let salida = arrEstadoC.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+    let salida = arrEstadoC.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
     return salida;
 }
 
@@ -131,7 +177,12 @@ export function getPrioridades() {
 export function getEstadosAuditorias() {
     let arrEstados = Object.keys(EstadosAuditorias);
     arrEstados = arrEstados.slice(arrEstados.length / 2);
-    let salida = arrEstados.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+    let salida = arrEstados.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
     return salida;
 }
 
@@ -144,6 +195,11 @@ export function getRelacionTutor() {
 export function getObjRelacionTutor() {
     let arrRT = Object.keys(relacionTutor);
     arrRT = arrRT.slice(arrRT.length / 2);
-    let salida = arrRT.map(elem => { return { 'id': elem, 'nombre': titleCase(elem) } });
+    let salida = arrRT.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
     return salida;
 }

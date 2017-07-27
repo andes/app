@@ -186,12 +186,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
-                debugger;
                 // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
                 if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
                     this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto)
                         .subscribe(dato => {
-                            debugger;
                             if (dato) {
                                 // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
                                 let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
@@ -240,7 +238,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // tslint:disable-next-line:forin
             for (let i in this.registros) {
-                this.cargaItems(this.registros[i], i)
+                this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
             }
         }
@@ -361,7 +359,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
-            this.cargaItems(this.registros[i], i)
+            this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
         }
         // this.moverRegistroEnPosicion()
@@ -402,7 +400,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.moverRegistroEnPosicion(index, this.registros.length);
             // tslint:disable-next-line:forin
             for (let i in this.registros) {
-                this.cargaItems(this.registros[i], i)
+                this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
             }
         }
@@ -516,7 +514,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showDatosSolicitud = false;
         // tslint:disable-next-line:forin
         for (let i in this.registros) {
-            this.cargaItems(this.registros[i], i)
+            this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
         }
     }
@@ -574,8 +572,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                         this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
                         for (let i in this.registros) {
-                            this.cargaItems(this.registros[i], i);
-                            // Actualizamos cuando se agrega el array..
+                            if (this.registros[i]) {
+                                this.cargaItems(this.registros[i], i);
+                            }
                         }
                     } else {
                         this.cargarNuevoRegistro(snomedConcept);

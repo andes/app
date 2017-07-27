@@ -1,12 +1,11 @@
 import { Atomo } from './../../core/atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from "../../../../interfaces/IPaciente";
+import { IPaciente } from '../../../../interfaces/IPaciente';
 @Component({
   selector: 'rup-ViviendaPiso',
   templateUrl: 'viviendaPiso.html'
 })
 export class ViviendaPisoComponent extends Atomo {
-                        
   public SelectPisos: Array<Object> = [{ id: 'Pisos de ladrillo', nombre: 'Pisos de ladrillo' },
   { id: 'Pisos de madera', nombre: 'Pisos de madera' },
   { id: 'Pisos cerámicos', nombre: 'Pisos cerámicos' },
