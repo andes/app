@@ -262,8 +262,9 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     tienePermisos(tipoPrestacion) {
+        console.log(tipoPrestacion);
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-        let existe = permisos.find(permiso => (permiso === tipoPrestacion.id));
+        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
         return existe;
         //return true;

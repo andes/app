@@ -109,7 +109,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     showDatosSolicitud = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
-    //Copiadel registro actual para volver todo a la normalidad luego de hacer el drop.
+    // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
     public copiaRegistro: any;
     // errores
     public errores: any[] = [];
