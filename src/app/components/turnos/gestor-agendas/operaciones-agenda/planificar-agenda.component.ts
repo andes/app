@@ -10,6 +10,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
+import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 
 @Component({
     selector: 'planificar-agenda',
@@ -39,6 +40,10 @@ export class PlanificarAgendaComponent implements OnInit {
     public today = new Date();
     showClonar = false;
     showAgenda = true;
+    efector: any;
+    tipoEspacioFisico = 'propios';
+    espaciosRegistrados = [];
+    espacioNuevo: IEspacioFisico;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -46,6 +51,7 @@ export class PlanificarAgendaComponent implements OnInit {
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         this.today.setHours(0, 0, 0, 0);
+        this.efector = this.auth.organizacion;
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
@@ -140,6 +146,83 @@ export class PlanificarAgendaComponent implements OnInit {
             event.callback(this.modelo.espacioFisico || []);
         }
 
+    }
+
+    loadEfectores(event) {
+        let listaOrganizaciones = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.OrganizacionService.get(query).subscribe(resultado => {
+                if (this.efector) {
+                    listaOrganizaciones = resultado ? resultado.concat(this.efector) : this.efector;
+                } else {
+                    listaOrganizaciones = resultado;
+                }
+                event.callback(listaOrganizaciones);
+                this.modelo.espacioFisico = null;
+            });
+        } else {
+            event.callback(this.efector || []);
+        }
+    }
+
+    /**
+     * Tipos de Filtro para los espacios fisicos
+     * @param {any} tipoFiltro
+     * @memberof PlanificarAgendaComponent
+     */
+    filtrarEspacioFisico(tipoFiltro) {
+        this.tipoEspacioFisico = tipoFiltro;
+        this.modelo.espacioFisico = null;
+        this.efector = null;
+        switch (tipoFiltro) {
+            case 'propios':
+                this.efector = this.auth.organizacion;
+                break;
+            case 'registrados':
+                this.loadEspaciosRegistrados();
+                break;
+            case 'nuevo':
+                this.espaciosRegistrados = [];
+                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null };
+                break;
+        }
+
+    }
+
+    loadEspacioFisicoPorFiltro(event) {
+        let query = {
+            organizacion: this.efector.id,
+        };
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            query['nombre'] = event.query;
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+    }
+
+    /**
+     * Se cargan los espacios fisicos registrados manualmente
+     * que no pertenecen a ningun establecimiento de salud
+     * @memberof PlanificarAgendaComponent
+     */
+    loadEspaciosRegistrados() {
+        this.servicioEspacioFisico.get({
+            'sinOrganizacion': true
+        }).subscribe(result => {
+            this.espaciosRegistrados = [...result];
+        });
     }
 
     horaInicioPlus() {
@@ -640,6 +723,20 @@ export class PlanificarAgendaComponent implements OnInit {
             if (this.modelo.sector) {
                 delete this.modelo.sector.$order;
             }
+
+            // Se guarda el nuevo espacio físico
+            if (this.tipoEspacioFisico === 'nuevo') {
+                if (this.espacioNuevo) {
+                    this.servicioEspacioFisico.post(this.espacioNuevo).subscribe(resultado => {
+                        if (resultado) {
+                            this.modelo.espacioFisico = resultado;
+                        } else {
+                            this.plex.alert('Error al guardar el nuevo Espacio Fisico');
+                        }
+                    });
+                }
+            }
+
             this.modelo.organizacion = this.auth.organizacion;
             let bloques = this.modelo.bloques;
 
@@ -711,3 +808,4 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cargarAgenda(agenda);
     }
 }
+
