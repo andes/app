@@ -77,8 +77,9 @@ export class ClonarAgendaComponent implements OnInit {
     private cargarCalendario() {
         let dia: any = {};
         this.calendario = [];
+        let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
 
-        for (let r = 1; r <= 5; r++) {
+        for (let r = 1; r <= cantidadSemanas; r++) {
             let week = [];
             this.calendario.push(week);
             for (let c = 1; c <= 7; c++) {
