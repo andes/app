@@ -58,7 +58,6 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
-            this.listarProblemasCronicos();
             this.listarPrestaciones();
         }
 
@@ -103,6 +102,7 @@ export class HudsBusquedaComponent implements OnInit {
         this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
             // this.hallazgos = null;
             this.prestaciones = prestaciones;
+            this.listarProblemasCronicos();
         });
     }
 
