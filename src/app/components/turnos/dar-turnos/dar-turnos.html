@@ -64,16 +64,16 @@
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
                                 <!--Ninguna agenda seleccionada-->
-                                <ng-container *ngIf="estadoT == 'noSeleccionada'">
-                                    <legend class="pt-3 text-center">Búsquedas recientes</legend>
-                                    <ul class="list-group">
-                                        <li *ngFor="let busqueda of busquedas; let i=index" class="list-group-item hover" [appHover]="'active'" title="Buscar turnos similares"
-                                            (click)="seleccionarBusqueda(i)">
-                                            <div class="list-group-item-text">
-                                                <div *ngIf="busqueda.tipoPrestacion">
+                                <ng-container *ngIf="estadoT === 'noSeleccionada' || !_solicitudPrestacion">
+                                    <legend class=" pt-3 text-center ">Búsquedas recientes</legend>
+                                    <ul class="list-group ">
+                                        <li *ngFor="let busqueda of busquedas; let i=index " class="list-group-item hover
+                                    " [appHover]=" 'active' " title="Buscar turnos similares " (click)="seleccionarBusqueda(i) ">
+                                            <div class="list-group-item-text ">
+                                                <div *ngIf="busqueda.tipoPrestacion ">
                                                     {{busqueda.tipoPrestacion.nombre}}
                                                 </div>
-                                                <div *ngIf="busqueda.profesional">
+                                                <div *ngIf="busqueda.profesional ">
                                                     {{busqueda.profesional | profesional}}
                                                 </div>
                                             </div>
@@ -82,11 +82,11 @@
                                 </ng-container>
 
                                 <!--Agenda seleccionada-->
-                                <ng-container *ngIf="estadoT == 'seleccionada' || estadoT == 'noTurnos'">
+                                <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' ">
                                     <!--Header agenda-->
-                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
-                                    <legend class="pt-3 text-center">
-                                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
+                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right ">{{ estadosAgenda[agenda.estado].nombre }}</span>
+                                    <legend class="pt-3 text-center ">
+                                        <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
                                         <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span>
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
