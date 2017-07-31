@@ -57,8 +57,8 @@ export class HudsBusquedaComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-        if (this.paciente) {
-            this.listarProblemasCronicos();
+        debugger;
+        if (this.paciente) {           
             this.listarPrestaciones();
         }
 
@@ -101,8 +101,9 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
-            // this.hallazgos = null;
+            debugger;
             this.prestaciones = prestaciones;
+            this.listarProblemasCronicos();
         });
     }
 

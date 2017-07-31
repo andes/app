@@ -12,6 +12,7 @@ export class PrestacionPacienteService {
 
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
+    private cacheRegistros: any[] = [];
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -56,9 +57,9 @@ export class PrestacionPacienteService {
      * @param {String} idPaciente
      */
     getByPaciente(idPaciente: any, idPrestacion?: any): Observable<any[]> {
-        if (this.cache[idPaciente]) {
+        /*if (this.cache[idPaciente] && this.cache[idPaciente].length > 0) {
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
-        } else {
+        } else {*/
             let opt;
             opt = {
                 params: {
@@ -77,7 +78,7 @@ export class PrestacionPacienteService {
                 this.cache[idPaciente] = data;
                 return this.cache[idPaciente];
             });
-        }
+        //}
 
     }
 
@@ -131,7 +132,7 @@ export class PrestacionPacienteService {
                 }
 
             });
-            this.cache[idPaciente]['registros'] = registroSalida;
+            this.cacheRegistros[idPaciente] = registroSalida;
             return registroSalida;
         });
     }
@@ -144,9 +145,8 @@ export class PrestacionPacienteService {
     getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
-        if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
-            debugger;
-            registros = this.cache[idPaciente]['registros'];
+        if (this.cacheRegistros[idPaciente]) {
+            registros = this.cacheRegistros[idPaciente];
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
             return this.getByPacienteHallazgo(idPaciente).flatMapTo(hallazgos =>
