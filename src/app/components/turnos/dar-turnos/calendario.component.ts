@@ -71,10 +71,10 @@ export class CalendarioComponent {
     private actualizar() {
         if (this.fecha && this.agendas) {
             let inicio = moment(this.fecha).startOf('month').startOf('week');
+            let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
             this.diaSeleccionado = null;
             this.calendario = [];
-
-            for (let r = 1; r <= 5; r++) {
+            for (let r = 1; r <= cantidadSemanas; r++) {
                 let week = [];
                 this.calendario.push(week);
 
