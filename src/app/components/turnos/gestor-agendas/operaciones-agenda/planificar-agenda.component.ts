@@ -42,8 +42,8 @@ export class PlanificarAgendaComponent implements OnInit {
     showAgenda = true;
     efector: any;
     tipoEspacioFisico = 'propios';
-    espaciosRegistrados = [];
     espacioNuevo: IEspacioFisico;
+    espaciosFisicosEfector = [];
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -58,11 +58,21 @@ export class PlanificarAgendaComponent implements OnInit {
         } else {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
+            this.loadEspaciosFisicos('', this.efector);
         }
     }
 
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
+        // se carga el espacio Fisico
+        if (!this.modelo.espacioFisico.organizacion) {
+            this.tipoEspacioFisico = 'registrados';
+        } else {
+            if (this.modelo.espacio.organizacion !== this.auth.organizacion.id) {
+                this.tipoEspacioFisico = 'otroEfector';
+            }
+        }
+        this.espaciosFisicosEfector = [this.modelo.espacioFisico];
         if (!this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
         }
@@ -180,12 +190,15 @@ export class PlanificarAgendaComponent implements OnInit {
         switch (tipoFiltro) {
             case 'propios':
                 this.efector = this.auth.organizacion;
+                this.loadEspaciosFisicos(this.modelo.espacioFisico, this.efector);
+                break;
+            case 'otroEfector':
+                this.espaciosFisicosEfector = [];
                 break;
             case 'registrados':
-                this.loadEspaciosRegistrados();
+                this.loadEspaciosFisicos(this.modelo.espacioFisico);
                 break;
             case 'nuevo':
-                this.espaciosRegistrados = [];
                 this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null };
                 break;
         }
@@ -212,16 +225,21 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-    /**
-     * Se cargan los espacios fisicos registrados manualmente
-     * que no pertenecen a ningun establecimiento de salud
-     * @memberof PlanificarAgendaComponent
-     */
-    loadEspaciosRegistrados() {
-        this.servicioEspacioFisico.get({
-            'sinOrganizacion': true
-        }).subscribe(result => {
-            this.espaciosRegistrados = [...result];
+    loadEspaciosFisicos(nombreEspacio: string, efector?) {
+        let query;
+        if (!efector) {
+            // Corresponde a los espacios físicos cargados manualmente sin efector asociado
+            query = {
+                'sinOrganizacion': true
+            };
+        } else {
+            query = { 'organizacion': efector.id };
+        }
+        if (nombreEspacio) {
+            query['nombre'] = nombreEspacio;
+        }
+        this.servicioEspacioFisico.get(query).subscribe(result => {
+            this.espaciosFisicosEfector = [...result];
         });
     }
 

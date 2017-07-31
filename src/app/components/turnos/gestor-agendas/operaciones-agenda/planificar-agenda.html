@@ -77,11 +77,11 @@
                             </div>
                             <div class="row" *ngIf="tipoEspacioFisico=='otroEfector'">
                                 <div class="col">
-                                    <plex-select label="Seleccione el efector" [(ngModel)]="efector" name="efector" (getData)="loadEfectores($event)">
+                                    <plex-select label="Seleccione el efector" [(ngModel)]="efector" name="efector" (getData)="loadEfectores($event)" (change)="loadEspaciosFisicos(modelo.espacioFisico,efector)">
                                     </plex-select>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="efector">
+                            <div class="row" *ngIf="tipoEspacioFisico!=='nuevo'">
                                 <!--<div class="col-4">
                                     <plex-select [(ngModel)]="modelo.edificio" name="modelo.edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
                                     </plex-select>
@@ -93,20 +93,13 @@
                                 </div>-->
                                 <div class="col-12">
                                     <!-- Espacio Físico -->
-                                    <!--<plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" (getData)="loadEspacios($event)" (change)="validarTodo()"
-                                        label="Nombre" labelField="nombre">
-                                    </plex-select>-->
-                                    <!-- Espacio Físico -->
-                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacioFisicoPorFiltro($event)" label="Espacio Físico"
+                                    <!--<plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacioFisicoPorFiltro($event)" label="Espacio Físico"
                                         placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
                                         (change)="validarTodo()">
-                                    </plex-select>
-                                </div>
-                            </div>
-                            <div class="row" *ngIf="tipoEspacioFisico=='registrados'">
-                                <div class="col-12">
-                                    <plex-select name="espacioRegistrado" [(ngModel)]="modelo.espacioFisico" [data]="espaciosRegistrados" placeholder="Seleccione un espacio registrado"
-                                        label="Espacio Fisico">
+                                    </plex-select>-->
+                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
+                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                                        (change)="validarTodo()">
                                     </plex-select>
                                 </div>
                             </div>
