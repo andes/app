@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { EstadoCalendarioDia } from './enums';
 
 export class CalendarioDia {
-    estadoAgenda: any;
+    public estadoAgenda: any;
     public seleccionado: boolean;
     public estado: EstadoCalendarioDia;
     public weekend: boolean; // https://www.youtube.com/watch?v=VxuNP0RwwdA
@@ -22,6 +22,7 @@ export class CalendarioDia {
             this.estado = 'vacio';
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
+            this.estadoAgenda = this.agenda.estado;
 
             if (disponible) {
                 let countBloques = [];
@@ -108,7 +109,6 @@ export class CalendarioDia {
                         this.programadosDisponibles += countBloques[indexBloque].programado;
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                         this.profesionalDisponibles += countBloques[indexBloque].profesional;
-                        this.estadoAgenda = this.agenda.estado;
 
                         if (this.agenda.estado === 'disponible') {
                             if (solicitudPrestacion) {
@@ -122,8 +122,11 @@ export class CalendarioDia {
                                     this.turnosDisponibles = 0;
                                 }
                             } else {
+                                // Turnos de gestión, pero sin solicitud
                                 if (this.gestionDisponibles > 0) {
                                     this.estado = 'disponible';
+                                } else {
+                                    this.estado = 'vacio';
                                 }
                             }
                         }
