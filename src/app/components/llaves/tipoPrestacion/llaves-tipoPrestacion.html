@@ -18,7 +18,7 @@
 
                 <table class="table table-striped">
                     <tbody>
-                        <template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
+                        <ng-template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
 
                             <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llaveTP)}">
 
@@ -55,7 +55,7 @@
                                 </td>
 
                             </tr>
-                        </template>
+                        </ng-template>
                     </tbody>
                 </table>
             </plex-box>
