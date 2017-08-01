@@ -42,5 +42,5 @@ export interface IAgenda {
         profenionalId: String,
         estado: String,
         fecha: Date
-    }]
+    }];
 }

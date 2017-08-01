@@ -23,7 +23,7 @@ export class BuscadorComponent implements OnInit {
     @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
     // Parametro que recibo por el input de planes.
     public searchPlanes: String = '';
-    //Lista de planes.
+    // Lista de planes.
     public listaPlanes: any[] = [];
     // concepto snomed seleccionado del buscador a ejecutar
     public conceptoSnomedSeleccionado: any;
@@ -31,16 +31,16 @@ export class BuscadorComponent implements OnInit {
     // array de resultados a guardar devueltos por RUP
     public data: any[] = [];
 
-    //Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    public tipoBusqueda: string = 'problemas'; //Por defecto trae los problemas
-    public showPlanes: boolean = false;
+    // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
+    public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
+    public showPlanes = false;
     public ejecucion: any[] = [];
 
-    //array de los mas frecuentes..
+    // array de los mas frecuentes..
     public masFrecuentes: any[] = [];
-    //Array de las mas frecuentes filtradas por semantictag de snomed
+    // Array de las mas frecuentes filtradas por semantictag de snomed
     public masFrecuentesFiltradas: any[] = [];
-    public showFrecuentes: boolean = false;
+    public showFrecuentes = false;
 
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService) {
@@ -71,7 +71,7 @@ export class BuscadorComponent implements OnInit {
         }
     }
 
-    //Recibe el parametro y lo setea para realizar la busqueda en Snomed
+    // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {

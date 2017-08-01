@@ -6,7 +6,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     templateUrl: 'estadoNutricional.html'
 })
 
-export class EstadoNutricionalComponent extends Atomo {
+export class EstadoNutricionalComponent extends Atomo implements OnInit {
     suffix: String;
     ngOnInit() {
         if (this.paciente.edad >= 2) {

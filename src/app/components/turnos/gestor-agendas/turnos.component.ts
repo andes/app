@@ -45,7 +45,6 @@ export class TurnosComponent implements OnInit {
                     }
                 });
             }
-            // this.bloques[i].turnos = this.turnos;
         }
         this.actualizarBotones();
     }

@@ -72,7 +72,7 @@ export class PrestacionPacienteService {
 
             return this.server.get(this.prestacionesUrl, opt).map(data => {
                 if (idPrestacion) {
-                     data = data.filter(d => d.id !== idPrestacion);
+                    data = data.filter(d => d.id !== idPrestacion);
                 }
                 this.cache[idPaciente] = data;
                 return this.cache[idPaciente];
@@ -90,10 +90,10 @@ export class PrestacionPacienteService {
             let registros = [];
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
-                   let agregar =  prestacion.ejecucion.registros
-                    .filter(registro =>
-                        registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
-                    .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     registros = [...registros, ...agregar];
 
                 }
@@ -107,6 +107,7 @@ export class PrestacionPacienteService {
                         idPrestacion: registro.idPrestacion,
                         evoluciones: [{
                             fechaCarga: registro.createdAt,
+                            profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
                             estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : '',
                             esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
@@ -119,9 +120,10 @@ export class PrestacionPacienteService {
                     let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
+                        profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
-                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
+                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : ultimaEvolucion.esCronico,
                         esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
                         evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                     };
@@ -140,14 +142,16 @@ export class PrestacionPacienteService {
      * @param {String} idPaciente
      */
     getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+        // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
         if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
+            debugger;
             registros = this.cache[idPaciente]['registros'];
             return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         } else {
-            this.getByPacienteHallazgo(idPaciente).subscribe(hallazgos => {
-                return new Observable(resultado => resultado.next(hallazgos.find(registro => registro.concepto.conceptId === concepto.conceptId)));
-            });
+            return this.getByPacienteHallazgo(idPaciente).flatMapTo(hallazgos =>
+                hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
+            );
         }
     }
 

@@ -2,7 +2,7 @@ import { IBloque } from './../interfaces/turnos/IBloque';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'sortBloques' })
-export class SortBloquesPipe implements PipeTransform{
+export class SortBloquesPipe implements PipeTransform {
   transform(array: Array<IBloque>, args: IBloque): Array<IBloque> {
     array.sort((fecha1, fecha2): number => {
         let indiceAux: Number;

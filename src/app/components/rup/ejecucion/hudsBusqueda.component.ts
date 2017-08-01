@@ -10,7 +10,7 @@ import { PrestacionPacienteService } from './../../../services/rup/prestacionPac
 @Component({
     selector: 'rup-hudsBusqueda',
     templateUrl: 'hudsBusqueda.html',
-     styleUrls: ['hudsBusqueda.css'],
+    styleUrls: ['hudsBusqueda.scss'],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
@@ -18,7 +18,6 @@ export class HudsBusquedaComponent implements OnInit {
 
     @Input() paciente: any;
     @Input() prestacionActual: any;
-
 
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
@@ -30,16 +29,23 @@ export class HudsBusquedaComponent implements OnInit {
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     /**
+     * Vista actual
+     */
+    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'destacados';
+    /**
+     * Listado de prestaciones validadas
+     */
+    public prestaciones: any = [];
+    /**
+     * Listado de prestaciones validadas
+     */
+    public hallazgos: any = [];
+
+    /**
      * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-    // Listado de prestaciones validadas
-    public prestaciones: any = [];
-
-    // Listado de prestaciones validadas
-    public hallazgos: any = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
         public plex: Plex, public auth: Auth) {
@@ -53,10 +59,10 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarProblemasCronicos();
+            this.listarPrestaciones();
         }
 
     }
-
 
     dragStart(e) {
         this._onDragStart.emit(e);
@@ -66,13 +72,21 @@ export class HudsBusquedaComponent implements OnInit {
         this._onDragEnd.emit(e);
     }
 
-
+    /**
+     * Actualiza la vista. En un futuro, podría cargar a demanda los datos requeridos
+     *
+     * @param {any} vista Vista actual
+     * @memberof HudsBusquedaComponent
+     */
+    actualizarVista(vista) {
+        this.vista = vista;
+    }
 
     devolverPrestacion(prestacion) {
         let resultado = {
             tipo: 'prestacion',
             data: prestacion
-        }
+        };
         this.evtData.emit(resultado);
     }
 
@@ -80,33 +94,29 @@ export class HudsBusquedaComponent implements OnInit {
         let resultado = {
             tipo: 'hallazgo',
             data: hallazgo
-        }
+        };
         this.evtData.emit(resultado);
     }
 
 
     listarPrestaciones() {
-        this.servicioPrestacion.getByPaciente(this.paciente.id,this.prestacionActual).subscribe(prestaciones => {
-            this.hallazgos = null;
+        this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
+            // this.hallazgos = null;
             this.prestaciones = prestaciones;
         });
     }
 
     listarHallazgos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id,this.prestacionActual).subscribe(hallazgos => {
-            this.prestaciones = null;
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
+            // this.prestaciones = null;
             this.hallazgos = hallazgos;
         });
     }
 
-    listarProblemasCronicos(){
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id,this.prestacionActual).subscribe(hallazgos => {
-            this.prestaciones = null;
+    listarProblemasCronicos() {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
+            // this.prestaciones = null;
             this.hallazgos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }
-
-
-
-
 }

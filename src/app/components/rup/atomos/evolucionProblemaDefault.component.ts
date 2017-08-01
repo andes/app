@@ -1,5 +1,5 @@
 import { Atomo } from './../core/atomoComponent';
-//import { RupComponent } from './../rup.component';
+// import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
@@ -15,7 +15,7 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     public esEnmienda: Boolean = false;
     public evolucion: String; //
 
-    //estadoActual: any = { id: 'activo', nombre: 'Activo' };
+    // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
     estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
@@ -27,13 +27,14 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
+
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            //this.friendlyDate(this.datosIngreso.fechaInicio);
+            this.friendlyDate(this.datosIngreso.fechaInicio);
             this.devolverValores();
-        }else {
-            this.data[this.elementoRUP.key].estado =  { id: 'activo', nombre: 'Activo' };
+        } else {
+            this.data[this.elementoRUP.key].estado = { id: 'activo', nombre: 'Activo' };
         }
 
     }
@@ -60,16 +61,30 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
         this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
         this.devolverValores();
     }
-/*
-    friendlyDate(fecha) {
-        oldDateMoment = moment(oldDate);
-        newDateMoment = moment(newDate);
 
-        numYears = newDateMoment.diff(oldDateMoment, 'years');
-        oldDateMoment = oldDateMoment.add(numYears, 'years');
-        numMonths = newDateMoment.diff(oldDateMoment, 'months');
-        oldDateMoment = oldDateMoment.add(numMonths, 'months');
-        numDays = newDateMoment.diff(oldDateMoment, 'days');
+    friendlyDate(fecha) {
+
+        let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
+        console.log(fecha);
+        let newDateMoment = moment();
+
+        let numYears = newDateMoment.diff(oldDateMoment, 'years');
+        let numMonths = newDateMoment.diff(oldDateMoment, 'months');
+        let numDays = newDateMoment.diff(oldDateMoment, 'days');
+
+        if (numYears > 0) {
+            this.inicioEstimadoUnidad = numYears;
+            this.inicioEstimadoTiempo = { id: 'anios', nombre: 'Año(s)' };
+        } else {
+            if (numMonths > 0) {
+                this.inicioEstimadoUnidad = numMonths;
+                this.inicioEstimadoTiempo = { id: 'mes', nombre: 'Mes(es)' };
+            } else {
+                this.inicioEstimadoUnidad = numDays;
+                this.inicioEstimadoTiempo = { id: 'dias', nombre: 'Día(s)' };
+            }
+        }
     }
-    */
+
 }
+

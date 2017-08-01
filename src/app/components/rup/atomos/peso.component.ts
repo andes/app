@@ -6,7 +6,7 @@ import * as moment from 'moment';
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
-export class PesoComponent extends Atomo{
+export class PesoComponent extends Atomo {
     getMensajes() {
         let peso = this.data[this.elementoRUP.key];
         let edadEnMeses;

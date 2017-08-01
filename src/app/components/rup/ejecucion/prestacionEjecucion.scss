@@ -1,3 +1,5 @@
+@import '../variables';
+//
 .rup-card {
     width: 100%;
     display: flex;
@@ -67,7 +69,7 @@ a.desvincular {
     height: 30px;
     line-height: 30px;
     display: inline-block;
-    color: #333;
+    color: $dark-grey;
     text-decoration: none;
     border-radius: 20px;
     text-align: center;
@@ -80,12 +82,12 @@ a.desvincular:hover {
 
 .confirmarDesvincular,
 .confirmarDesvincular a {
-    color: grey;
+    color: $dark-grey;
 }
 
 .confirmarDesvincular a.confirm {
     color: white;
-    background-color: #e02f2f;
+    background-color: $red;
     padding: 2px 10px;
     border-radius: 10px;
 }
@@ -99,12 +101,12 @@ a.desvincular:hover {
 }
 
 .drag-over-border {
-    border: #ff525b dashed 2px;
+    border: $red dashed 2px;
 }
 
 .droppable.drag-target-border,
 .drag-target-border {
-    border: #00bfff dashed 2px;
+    border: $dark-grey dashed 2px;
 }
 
 
@@ -117,12 +119,12 @@ a.desvincular:hover {
 .droppable {
     width: 100%;
     height: auto;
-    border: 2px dashed #eee;
+    border: 2px dashed $dark-grey;
     padding: 10px 0;
     margin: 20px 0;
     text-align: center;
     text-transform: uppercase;
-    color: #999999;
+    color: $dark-grey;
 }
 
 .drop-area {
@@ -145,24 +147,25 @@ a.desvincular:hover {
 }
 
 .drop-posicion {
-    background: #f4f4f4;
-    color: #aaa;
+    background: $light-grey;
+    color: $dark-grey;
     padding: 5px;
     border: 2px dashed white;
     margin: 5px 0;
     text-align: center;
 }
+
 .drop-posicion-hover {
-    border: 2px dashed #ddd;
+    border: 2px dashed $dark-grey;
 }
 
 
 /* colores botones / acciones */
 
 .btn-problemas {
-    color: #FFFFFF;
-    background-color: #B99E06;
-    border-color: #968005;
+    color: white;
+    background-color: $problemas;
+    border-color: $problemas;
 }
 
 .btn-problemas:hover,
@@ -170,9 +173,9 @@ a.desvincular:hover {
 .btn-problemas:active,
 .btn-problemas.active,
 .open .dropdown-toggle.btn-problemas {
-    color: #FFFFFF;
-    background-color: #9E8706;
-    border-color: #968005;
+    color: white;
+    background-color: $problemas;
+    border-color: $problemas;
 }
 
 .btn-problemas:active,
@@ -196,19 +199,19 @@ fieldset[disabled] .btn-problemas:active,
 .btn-problemas.disabled.active,
 .btn-problemas[disabled].active,
 fieldset[disabled] .btn-problemas.active {
-    background-color: #B99E06;
-    border-color: #968005;
+    background-color: $problemas;
+    border-color: $problemas;
 }
 
 .btn-problemas .badge {
-    color: #B99E06;
-    background-color: #FFFFFF;
+    color: $problemas;
+    background-color: white;
 }
 
 .btn-planes {
-    color: #FFFFFF;
-    background-color: #6A99AD;
-    border-color: #5C8799;
+    color: white;
+    background-color: $planes;
+    border-color: $planes;
 }
 
 .btn-planes:hover,
@@ -216,9 +219,9 @@ fieldset[disabled] .btn-problemas.active {
 .btn-planes:active,
 .btn-planes.active,
 .open .dropdown-toggle.btn-planes {
-    color: #FFFFFF;
-    background-color: #3686A8;
-    border-color: #5C8799;
+    color: white;
+    background-color: $planes;
+    border-color: $planes;
 }
 
 .btn-planes:active,
@@ -242,19 +245,19 @@ fieldset[disabled] .btn-planes:active,
 .btn-planes.disabled.active,
 .btn-planes[disabled].active,
 fieldset[disabled] .btn-planes.active {
-    background-color: #6A99AD;
-    border-color: #5C8799;
+    background-color: $planes;
+    border-color: $planes;
 }
 
 .btn-planes .badge {
-    color: #6A99AD;
-    background-color: #FFFFFF;
+    color: $planes;
+    background-color: white;
 }
 
 .btn-prestaciones {
-    color: #FFFFFF;
-    background-color: #3344AA;
-    border-color: #23307D;
+    color: white;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-prestaciones:hover,
@@ -262,9 +265,9 @@ fieldset[disabled] .btn-planes.active {
 .btn-prestaciones:active,
 .btn-prestaciones.active,
 .open .dropdown-toggle.btn-prestaciones {
-    color: #FFFFFF;
-    background-color: #1B2B85;
-    border-color: #23307D;
+    color: white;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-prestaciones:active,
@@ -288,19 +291,19 @@ fieldset[disabled] .btn-prestaciones:active,
 .btn-prestaciones.disabled.active,
 .btn-prestaciones[disabled].active,
 fieldset[disabled] .btn-prestaciones.active {
-    background-color: #3344AA;
-    border-color: #23307D;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-prestaciones .badge {
-    color: #3344AA;
-    background-color: #FFFFFF;
+    color: $procedimientos;
+    background-color: white;
 }
 
 .btn-procedimientos {
-    color: #FFFFFF;
-    background-color: #92278E;
-    border-color: #751E72;
+    color: white;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-procedimientos:hover,
@@ -308,9 +311,9 @@ fieldset[disabled] .btn-prestaciones.active {
 .btn-procedimientos:active,
 .btn-procedimientos.active,
 .open .dropdown-toggle.btn-procedimientos {
-    color: #FFFFFF;
-    background-color: #6E1E6B;
-    border-color: #751E72;
+    color: white;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-procedimientos:active,
@@ -334,73 +337,73 @@ fieldset[disabled] .btn-procedimientos:active,
 .btn-procedimientos.disabled.active,
 .btn-procedimientos[disabled].active,
 fieldset[disabled] .btn-procedimientos.active {
-    background-color: #92278E;
-    border-color: #751E72;
+    background-color: $procedimientos;
+    border-color: $procedimientos;
 }
 
 .btn-procedimientos .badge {
-    color: #92278E;
-    background-color: #FFFFFF;
+    color: $procedimientos;
+    background-color: white;
 }
 
 .borde-prestaciones input,
 .borde-prestaciones input:focus {
-    border-color: #3344AA;
+    border-color: $dark-blue;
 }
 
 .buscador {
     margin-top: 5px;
 }
+
 .buscador input {
     border-width: 2px;
 }
 
 .borde-prestaciones input,
 .borde-prestaciones input:focus {
-    border-color: #3344AA;
-    background-color: rgba(51, 68, 170, 0.45) !important;
-    background-color: #3344AA;
+    border-color: $dark-blue;
+    background-color: $dark-blue;
     color: white;
 }
 
 .prestaciones {
-    background-color: #3344AA;
+    background-color: $dark-blue;
 }
 
 .borde-planes input,
 .borde-planes input:focus {
-    border-color: #5C8799;
-    background-color: rgba(92, 135, 153, 0.45) !important;
-    background-color: #5C8799;
+    border-color: $planes;
+    background-color: $planes !important;
+    background-color: $planes;
     color: white;
 }
 
 .planes {
-    background-color: #5C8799;
+    background-color: $planes;
 }
 
 .borde-problemas input,
 .borde-problemas input:focus {
-    border-color: #968005;
-    background-color: rgba(150, 128, 5, 0.45) !important;
-    background-color: #968005;
+    border-color: $problemas;
+    background-color: $problemas !important;
+    background-color: $problemas;
     color: white;
 }
 
 .problemas {
-    background-color: #968005;
+    background-color: $problemas;
 }
 
 .borde-procedimientos input,
 .borde-procedimientos input:focus {
-    border-color: #92278e;
-    background-color: rgba(146, 39, 142, 0.45) !important;
-    background-color: #92278e;
+    border-color: $procedimientos;
+    background-color: $procedimientos !important;
+    background-color: $procedimientos;
     color: white;
 }
 
 .procedimientos {
-    background-color: #92278e;
+    background-color: $procedimientos;
 }
 
 
@@ -413,9 +416,10 @@ fieldset[disabled] .btn-procedimientos.active {
     padding-top: 5px;
     display: block;
 }
+
 .dataSolicitud:hover {
     margin-top: 5px;
-    color: #0070BA;
+    color: $planes;
     cursor: default;
     text-decoration: none;
     font-size: 1.2em;

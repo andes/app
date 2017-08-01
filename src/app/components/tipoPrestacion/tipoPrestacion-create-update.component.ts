@@ -49,7 +49,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 autonoma: false,
                 activo: true,
                 granularidad: String,
-                 ejecucion: [//{
+                 ejecucion: [// {
                 //     idTipoPrestacion: String,
                 //     reglas: [{
                 //         nombre: String,
@@ -140,7 +140,6 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
 
     getTiposProblemas(event) {
-        
     }
 
     // ****************************************** //
@@ -164,7 +163,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         // }
         // console.log('----------------------');
         // console.log(this.modelo);
-        //console.log('----------------------');
+        // console.log('----------------------');
         //  this.modelo.ejecucion[0].idTipoPrestacion = "2222";
         // this.modelo.ejecucion[0].reglas[0].nombre = "prueba22";
         // this.modelo.ejecucion[0].reglas[0].valor = 33;

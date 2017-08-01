@@ -5,9 +5,7 @@ import {
     DocumentoEscaneado,
     DocumentoEscaneados
 } from './documento-escaneado.const';
-import {
-    Server
-} from '@andes/shared';
+
 import {
     IUbicacion
 } from './../../interfaces/IUbicacion';
@@ -38,6 +36,9 @@ import {
 import {
     Observable
 } from 'rxjs/Rx';
+import {
+    LogService
+} from './../../services/log.service';
 import {
     BarrioService
 } from './../../services/barrio.service';
@@ -210,10 +211,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
+        private logService: LogService,
         private barrioService: BarrioService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
-        private financiadorService: FinanciadorService, public plex: Plex, private server: Server) { }
+        private financiadorService: FinanciadorService, public plex: Plex) { }
 
     ngOnInit() {
 
@@ -380,10 +382,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
-            this.localidadService.get({
-                'provincia': provincia.id
-            }).subscribe(result => {
-                this.localidadesNeuquen = [...result];
+            this.localidadService.getXProvincia(provincia.id).subscribe(result => {
+                this.localidadesNeuquen = result;
             });
         }
     }
@@ -409,7 +409,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
-            this.changeLocalidadNeuquen(false);
             this.localidadesNeuquen = [];
         }
 
@@ -477,25 +476,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
 
             if (this.altoMacheo) {
-                this.server.post('/core/log/mpi/macheoAlto', {
-                    data: {
-                        pacienteScan: this.pacienteModel
-                    }
-                }, {
-                        params: null,
-                        showError: false
-                    }).subscribe(() => { });
+                this.logService.post('mpi', 'macheoAlto', { pacienteScan: this.pacienteModel });
+
             }
 
             if (this.posibleDuplicado) {
-                this.server.post('/core/log/mpi/posibleDuplicado', {
-                    data: {
-                        pacienteScan: this.pacienteModel
-                    }
-                }, {
-                        params: null,
-                        showError: false
-                    }).subscribe(() => { });
+                this.logService.post('mpi', 'posibleDuplicado', { pacienteScan: this.pacienteModel });
+
             }
 
             let operacionPac: Observable<IPaciente>;
@@ -667,30 +654,20 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.pacientesSimilares = null;
                                     this.enableIgnorarGuardar = false;
                                 } else {
-                                    this.server.post('/core/log/mpi/macheoAlto', {
-                                        data: {
-                                            pacienteDB: this.pacientesSimilares[0],
-                                            pacienteScan: this.pacienteModel
-                                        }
-                                    }, {
-                                            params: null,
-                                            showError: false
-                                        }).subscribe(() => { });
+                                    this.logService.post('mpi', 'macheoAlto', {
+                                        pacienteDB: this.pacientesSimilares[0],
+                                        pacienteScan: this.pacienteModel
+                                    });
                                     this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
                                 }
                             } else {
                                 if (!this.verificarDNISexo(this.pacientesSimilares)) {
-                                    this.server.post('/core/log/mpi/posibleDuplicado', {
-                                        data: {
-                                            pacienteDB: this.pacientesSimilares[0],
-                                            pacienteScan: this.pacienteModel
-                                        }
-                                    }, {
-                                            params: null,
-                                            showError: false
-                                        }).subscribe(() => { });
+                                    this.logService.post('mpi', 'posibleDuplicado', {
+                                        pacienteDB: this.pacientesSimilares[0],
+                                        pacienteScan: this.pacienteModel
+                                    });
                                     this.posibleDuplicado = true;
                                     this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
                                     this.enableIgnorarGuardar = true;
@@ -778,22 +755,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.buscarPacRel)) {
                 // Loggea el documento escaneado para análisis
-                this.server.post('/core/log/mpi/scan', {
+                this.logService.post('mpi', 'scan', {
                     data: this.buscarPacRel
-                }, {
-                        params: null,
-                        showError: false
-                    }).subscribe(() => { });
+                });
                 return DocumentoEscaneados[key];
             }
         }
         if (this.buscarPacRel.length > 30) {
-            this.server.post('/core/log/mpi/scanFail', {
+            this.logService.post('mpi', 'scanFail', {
                 data: this.buscarPacRel
-            }, {
-                    params: null,
-                    showError: false
-                }).subscribe(() => { });
+            });
         }
         return null;
     }
@@ -891,39 +862,24 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     };
 
                                     if (pacienteEncontrado) {
-                                        this.server.post('/core/log/mpi/validadoScan', {
-                                            data: {
-                                                pacienteDB: datoDB,
-                                                pacienteScan: pacienteEscaneado
-                                            }
-                                        }, {
-                                                params: null,
-                                                showError: false
-                                            }).subscribe(() => { });
+                                        this.logService.post('mpi', 'validadoScan', {
+                                            pacienteDB: datoDB,
+                                            pacienteScan: pacienteEscaneado
+                                        });
                                         this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                                     } else {
                                         if (this.PacientesRel[0].match >= 0.94) {
-                                            this.server.post('/core/log/mpi/macheoAlto', {
-                                                data: {
-                                                    pacienteDB: datoDB,
-                                                    pacienteScan: pacienteEscaneado
-                                                }
-                                            }, {
-                                                    params: null,
-                                                    showError: false
-                                                }).subscribe(() => { });
+                                            this.logService.post('mpi', 'macheoAlto', {
+                                                pacienteDB: datoDB,
+                                                pacienteScan: pacienteEscaneado
+                                            });
                                             this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                                         } else {
                                             if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
-                                                this.server.post('/core/log/mpi/posibleDuplicado', {
-                                                    data: {
-                                                        pacienteDB: datoDB,
-                                                        pacienteScan: pacienteEscaneado
-                                                    }
-                                                }, {
-                                                        params: null,
-                                                        showError: false
-                                                    }).subscribe(() => { });
+                                                this.logService.post('mpi', 'posibleDuplicado', {
+                                                    pacienteDB: datoDB,
+                                                    pacienteScan: pacienteEscaneado
+                                                });
                                             }
                                         }
                                     }

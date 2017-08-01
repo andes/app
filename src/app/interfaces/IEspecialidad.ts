@@ -5,7 +5,7 @@ export interface IEspecialidad {
     descripcion: String;
     disciplina: String;
     complejidad: Number;
-    codigo:{
+    codigo: {
        sisa: String,
     };
    activo: Boolean;

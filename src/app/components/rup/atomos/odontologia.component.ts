@@ -24,19 +24,19 @@ export class OdontologiaComponent implements OnInit {
         { id: '4A', nombre: '4 Años' },
         { id: '5A', nombre: '5 Años' },
         { id: '6A', nombre: '6 Años' },
-    ]; //EdadControl:Array
+    ]; // EdadControl:Array
 
 
     public SelectSanoOactividades: Array<Object> = [
         { id: 'Sano', nombre: 'Sano' },
         { id: 'SoloAct', nombre: 'Sólo actividades de prevención' },
-    ]; //SelectSanoOactividades:Array
+    ]; // SelectSanoOactividades:Array
 
 
     public SelectPatologiaOTratamiento: Array<Object> = [
         { id: 'Patologia', nombre: 'Patología' },
         { id: 'Necesitatratamiento', nombre: 'Necesita tratamiento' },
-    ]; //SelectPatologiaOTratamiento:Array
+    ]; // SelectPatologiaOTratamiento:Array
 
 
 

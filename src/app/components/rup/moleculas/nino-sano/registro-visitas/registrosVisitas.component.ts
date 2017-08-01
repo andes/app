@@ -5,5 +5,5 @@ import { TipoPrestacionService } from './../../../../../services/tipoPrestacion.
     selector: 'rup-registros-visitas',
     templateUrl: 'registrosVisitas.html'
 })
-export class RegistrosVisitasComponent  extends Molecula{
+export class RegistrosVisitasComponent  extends Molecula {
 }

@@ -1,7 +1,7 @@
 import { IPrestacion } from './IPrestacion';
 import { IUbicacion } from './../IUbicacion';
 
-export interface IConfigPrestacion{
+export interface IConfigPrestacion {
     prestacion: IPrestacion;
     deldiaAccesoDirecto: Boolean;
     deldiaReservado: Boolean;

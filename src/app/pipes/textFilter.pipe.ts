@@ -19,6 +19,6 @@ export class TextFilterPipe implements PipeTransform {
             ((item.documento) ? (item.documento.trim().toUpperCase().search(value.toUpperCase()) > -1) : '') ||
             ((item.nombre) ? (item.nombre.trim().toUpperCase().search(value.toUpperCase()) > -1) : '') ||
             ((item.apellido) ? (item.apellido.trim().toUpperCase().search(value.toUpperCase()) > -1) : '')
-        )
+        );
     }
 }

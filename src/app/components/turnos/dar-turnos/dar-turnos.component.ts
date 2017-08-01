@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
+import { EstadosAgenda } from './../enums';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -67,6 +68,7 @@ export class DarTurnosComponent implements OnInit {
     private opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
+    public estadosAgenda = EstadosAgenda;
 
     llaveTP: any;
     estadoT: EstadosDarTurnos;
@@ -305,7 +307,7 @@ export class DarTurnosComponent implements OnInit {
         } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
             let query = {
                 nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
-            }
+            };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             event.callback(this.opciones.profesional || []);
@@ -461,13 +463,15 @@ export class DarTurnosComponent implements OnInit {
 
                     // Usamos CalendarioDia para hacer chequeos
                     // TODO: Cleanup y usar sólo la clase donde se pueda
-                    let cal = new CalendarioDia(null, this.agenda);
+                    let cal = new CalendarioDia(null, this.agenda, this._solicitudPrestacion);
 
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
                     if (cal.estado !== 'ocupado') {
 
-                        // Si tiene solicitud "papelito"
+                        // Tiene solicitud "papelito"?
                         if (this._solicitudPrestacion) {
+
+                            // Es autocitado?
                             if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
                                 this.tiposTurnosSelect = 'profesional';
                                 this.tiposTurnosLabel = 'Para Profesional';
@@ -589,7 +593,6 @@ export class DarTurnosComponent implements OnInit {
                             });
 
                             if (this.agenda.estado === 'disponible') {
-                                console.log('disponible ', this.profesionalDisponibles);
                                 (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                             if (this.agenda.estado === 'publicada') {
@@ -911,8 +914,7 @@ export class DarTurnosComponent implements OnInit {
             };
         });
 
-        if (this.paciente) {
-            // this.router.navigate(['./' + 'puntoInicioTurnos']);
+        if (this.paciente && this._pacienteSeleccionado) {
             this.cancelarDarTurno.emit(true);
             return false;
         } else {

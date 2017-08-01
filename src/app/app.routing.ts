@@ -111,7 +111,6 @@ const appRoutes: Routes = [
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'logout', redirectTo: 'login', },
   { path: '**', redirectTo: 'inicio' }
 ];
 

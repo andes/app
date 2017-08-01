@@ -12,7 +12,7 @@ export class Atomo extends RupComponent implements OnInit {
 
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            //this.devolverValores();
+            // this.devolverValores();
             this.mensaje = this.getMensajes();
         }
     }

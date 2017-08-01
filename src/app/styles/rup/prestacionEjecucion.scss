@@ -1,3 +1,4 @@
+@import 'components/rup/variables';
 div.scroll-list {
     overflow: auto;
     max-height: 70vh;
@@ -108,13 +109,13 @@ h5.box-title-secundario {
 /* Item lista */
 
 .list-group .list-group-item.problema {
-    border-left: solid 15px #92278E;
+    border-left: solid 15px $problemas;
 }
 
 .plan {
-    border-left: solid 15px #6A99AD;
+    border-left: solid 15px $planes;
 }
 
 .prestacion .card-header {
-    border-left: solid 15px #FFD800;
+    border-left: solid 15px $procedimientos;
 }

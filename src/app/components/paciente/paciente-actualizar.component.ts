@@ -82,7 +82,7 @@ import {
     selector: 'paciente-actualizar',
     templateUrl: 'paciente-actualizar.html'
 })
-export class pacienteActualizarComponent implements OnInit {
+export class PacienteActualizarComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Input('idPaciente') idPaciente: string;
@@ -517,7 +517,7 @@ export class pacienteActualizarComponent implements OnInit {
         let cond = false;
         let sexoPac = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
         while (i < listaSimilares.length && !cond) {
-            if ((listaSimilares[i].paciente.documento == this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo == sexoPac)) {
+            if ((listaSimilares[i].paciente.documento === this.pacienteModel.documento) && (listaSimilares[i].paciente.sexo === sexoPac)) {
                 this.enableIgnorarGuardar = false;
                 cond = true;
             }

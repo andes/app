@@ -44,8 +44,8 @@ export class ListaEsperaCreateUpdateComponent implements OnInit {
             activo: true
         }]
     };*/
-    pacientesSearch: boolean = false;
-    checkout: boolean = false;
+    pacientesSearch = false;
+    checkout = false;
 
     constructor(
         public formBuilder: FormBuilder,

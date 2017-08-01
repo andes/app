@@ -9,5 +9,4 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 
 export class PartoCesareaComponent extends Atomo {
 
-
 }

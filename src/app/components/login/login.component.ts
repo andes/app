@@ -13,8 +13,8 @@ export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
     public organizacion: any;
-    public loading:boolean = false;
-    public deshabilitar:boolean = false;
+    public loading = false;
+    public deshabilitar = false;
 
     constructor(private plex: Plex, private auth: Auth, private router: Router) { }
 
@@ -34,9 +34,9 @@ export class LoginComponent implements OnInit {
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
-                    this.deshabilitar = true;
+                    this.deshabilitar = false;
                 });
-        } 
+        }
     }
 
     loadOrganizaciones(event) {

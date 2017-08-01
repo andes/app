@@ -18,13 +18,13 @@ export class EspecialidadService {
     get(params: any): Observable<IEspecialidad[]> {
         return this.server.get(this.especialidadUrl, {params: params, showError: true});
     }
-    
+
     /**
      * Metodo getById. Trae el objeto especialidad por su Id.
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IEspecialidad> {
-        return this.server.get(this.especialidadUrl + '/' + id, null)
+        return this.server.get(this.especialidadUrl + '/' + id, null);
     }
 
     /**
@@ -40,7 +40,7 @@ export class EspecialidadService {
      * @param {IEspecialidad} especialidad Recibe IEspecialidad
      */
     put(especialidad: IEspecialidad): Observable<IEspecialidad> {
-        return this.server.put(this.especialidadUrl + '/' + especialidad.id, especialidad)
+        return this.server.put(this.especialidadUrl + '/' + especialidad.id, especialidad);
     }
 
     /**

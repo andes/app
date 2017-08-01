@@ -58,7 +58,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         if (this.agendaAReasignar) {
             this.agendaAReasignar.bloques.forEach(bloque => {
                 bloque.turnos.forEach(turno => {
-                    if (turno.paciente) {
+                    if (turno.paciente && turno.estado === 'asignado') {
 
                         let params = {
                             idAgenda: this.agendaAReasignar.id,

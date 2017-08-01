@@ -21,8 +21,8 @@ export class PruebaOtoemisionesAcusticasComponent extends Atomo {
             texto: '',
             class: 'danger'
         };
-        if (this.data[this.elementoRUP.key].id != 'si') {
-            mensaje.texto = 'alarma'; //ver el texto que va a alertar
+        if (this.data[this.elementoRUP.key].id !== 'si') {
+            mensaje.texto = 'alarma'; // ver el texto que va a alertar
         }
         return mensaje;
     }

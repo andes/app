@@ -1,11 +1,11 @@
 import { Atomo } from './../../core/atomoComponent';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { IPaciente } from "../../../../interfaces/IPaciente";
+import { IPaciente } from '../../../../interfaces/IPaciente';
 
 @Component({
   selector: 'rup-PerinatalesEmbarazoAnormal',
   templateUrl: 'perinatalesEmbarazoAnormal.html'
-})//@Component
+})// @Component
 
 export class PerinatalesEmbarazoAnormalComponent extends Atomo {
 
@@ -25,7 +25,7 @@ export class PerinatalesEmbarazoAnormalComponent extends Atomo {
   //   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
   // } //ngOnInit()
 
-  // devolverValores() { //Hacer las validaciones                                              
+  // devolverValores() { //Hacer las validaciones
   //   this.data.mensaje = this.getMensajes();
   //   this.evtData.emit(this.data);
   // }//devolverValores()
