@@ -20,7 +20,7 @@ export class PanelEspacioComponent implements OnInit {
     public agendas: any[];
     public sinConsultorio: any[];
     public colores: any[];
-    private espacios: any[] = [];
+    public espacios: any[] = [];
     private espacioSeleccionados: any[];
     public agenda: any;
     public agendaSel: any = null;

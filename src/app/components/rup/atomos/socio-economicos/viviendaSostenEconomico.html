@@ -1,24 +1,22 @@
 <div *ngIf="!soloValores">
-  <plex-bool [(ngModel)]="data[tipoPrestacion.key].trabaja" name="trabajaActualmente" label="Trabaja Actualmente" type="slide"
-    (change)="devolverValores()">
-  </plex-bool>
+    <plex-bool [(ngModel)]="data[elementoRUP.key].trabaja" name="trabajaActualmente" label="Trabaja Actualmente" type="slide" (change)="devolverValores()">
+    </plex-bool>
 
-  <plex-int [(ngModel)]="data[tipoPrestacion.key].horas" placeholder="Ingrese un valor entre 0 y 24" name="cantidadHoras" suffix=" Hs/Día "
-    min="0" max="24" (change)="devolverValores()" *ngIf="data[tipoPrestacion.key].trabaja">
-  </plex-int>
+    <plex-int [(ngModel)]="data[elementoRUP.key].horas" placeholder="Ingrese un valor entre 0 y 24" name="cantidadHoras" suffix=" Hs/Día " min="0" max="24" (change)="devolverValores()" *ngIf="data[elementoRUP.key].trabaja">
+    </plex-int>
 </div>
 
 <div *ngIf="soloValores">
-  <b> Trabaja Actualmente </b>
-  <br />
-  <p *ngIf='data[tipoPrestacion.key].trabaja'>
-    Si
-  </p>
-  <p *ngIf='!data[tipoPrestacion.key].trabaja'>
-    No
-  </p>
-  <b>Horas al dia</b>
-  <p>
-    {{data[tipoPrestacion.key].horas}}
-  </p>
+    <b> Trabaja Actualmente </b>
+    <br />
+    <p *ngIf='data[elementoRUP.key].trabaja'>
+        Si
+    </p>
+    <p *ngIf='!data[elementoRUP.key].trabaja'>
+        No
+    </p>
+    <b>Horas al dia</b>
+    <p>
+        {{data[elementoRUP.key].horas}}
+    </p>
 </div>

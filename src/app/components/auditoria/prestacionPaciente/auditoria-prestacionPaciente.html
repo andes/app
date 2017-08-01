@@ -49,14 +49,13 @@
         <div class="col-4">
             <plex-box>
                 <!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
-                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada"
-                    (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
+                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
             </plex-box>
         </div>
     </div>
 
 </section>
-<footer *ngIf="!showcreate && !showupdate">
+<footer *ngIf="!showupdate">
     <div class="row">
         <div class="col">
             <plex-button type="primary" label="Nueva Auditoría" title="Nueva Auditoría" (click)="nuevaAuditoriaPP()">

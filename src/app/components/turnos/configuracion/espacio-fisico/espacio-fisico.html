@@ -1,4 +1,4 @@
-<section *ngIf="!showcreate && !showupdate">
+<section *ngIf="!showupdate">
     <plex-box>
         <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
         <form [formGroup]="searchForm">
@@ -48,7 +48,7 @@
         </div>
     </plex-box>
 </section>
-<footer *ngIf="!showcreate && !showupdate">
+<footer *ngIf="!showupdate">
     <div class="row">
         <div class="col">
             <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showupdate = !showupdate">

@@ -1,10 +1,9 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="contaminantes" [data]="SelectContaminantes" label="Presencia de contaminantes"
-  placeholder="Seleccionar presencia contaminantes" [multiple]="true" (change)="devolverValores()">
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="contaminantes" [data]="SelectContaminantes" label="Presencia de contaminantes" placeholder="Seleccionar presencia contaminantes" [multiple]="true" (change)="devolverValores()">
 </plex-select>
 
 <div *ngIf="soloValores">
-  <b> Presencia de contaminantes </b>
-  <div *ngFor="let dato of data[tipoPrestacion.key]">
-    {{dato.nombre}}
-  </div>
+    <b> Presencia de contaminantes </b>
+    <div *ngFor="let dato of data[elementoRUP.key]">
+        {{dato.nombre}}
+    </div>
 </div>
