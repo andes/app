@@ -68,7 +68,7 @@ export class PlanificarAgendaComponent implements OnInit {
         if (!this.modelo.espacioFisico.organizacion) {
             this.tipoEspacioFisico = 'registrados';
         } else {
-            if (this.modelo.espacio.organizacion !== this.auth.organizacion.id) {
+            if (this.modelo.espacioFisico.organizacion !== this.auth.organizacion.id) {
                 this.tipoEspacioFisico = 'otroEfector';
             }
         }
