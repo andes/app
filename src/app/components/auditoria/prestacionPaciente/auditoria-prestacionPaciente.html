@@ -1,65 +1,66 @@
 <h5 class="page-title">Auditoría de Prestaciones de Pacientes</h5>
 <section>
-	<div class="row">
-		<div class="col-3">
-			<plex-box>
-				<!--<div>
+    <div class="row">
+        <div class="col-3">
+            <plex-box>
+                <!--<div>
 					<pacientesSearch (selected)='onReturn($event)'></pacientesSearch>
 				</div>-->
-				<h5>Datos del Paciente</h5>
-				<div>
-					<i class="mdi mdi-account-card-details mdi-36px"></i>
-				</div>
-				<div><strong>Nombre: </strong>{{ auditoriaPP.paciente.nombre + ' ' + auditoriaPP.paciente.apellido }}</div>
-				<div><strong>Documento: </strong>{{ auditoriaPP.paciente.documento}}</div>
-				<div><strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</div>
-			</plex-box>
-		</div>
-		<div class="col">
-			<plex-box>
-				<h5 *ngIf="prestacionesPaciente.length > 0">Solicitudes</h5>
-				<table class="table table-striped table-responsive" *ngIf="prestacionesPaciente.length > 0">
-					<thead>
-						<tr>
-							<td class="col-5"><strong>Prestación</strong></td>
-							<td class="col-4"><strong>Propósito</strong></td>
-							<td class="col-3"><strong>Estado Auditoría</strong></td>
-						</tr>
-					</thead>
-					<tbody>
-						<template ngFor let-p="$implicit" [ngForOf]="prestacionesPaciente" let-i="index">
-						<tr class="hover" (click)="auditar(p, false, $event)" [ngClass]="{'bg-primary text-white': estaSeleccionada(p)}">
-							<td class="col-5">
-								{{ p.solicitud.tipoPrestacion.nombre }}
-							</td>
-							<td class="col-4">
-								<span *ngFor="let prop of p.solicitud.proposito, let i = index">
+                <h5>Datos del Paciente</h5>
+                <div>
+                    <i class="mdi mdi-account-card-details mdi-36px"></i>
+                </div>
+                <div><strong>Nombre: </strong>{{ auditoriaPP.paciente.nombre + ' ' + auditoriaPP.paciente.apellido }}</div>
+                <div><strong>Documento: </strong>{{ auditoriaPP.paciente.documento}}</div>
+                <div><strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</div>
+            </plex-box>
+        </div>
+        <div class="col">
+            <plex-box>
+                <h5 *ngIf="prestacionesPaciente.length > 0">Solicitudes</h5>
+                <table class="table table-striped table-responsive" *ngIf="prestacionesPaciente.length > 0">
+                    <thead>
+                        <tr>
+                            <td class="col-5"><strong>Prestación</strong></td>
+                            <td class="col-4"><strong>Propósito</strong></td>
+                            <td class="col-3"><strong>Estado Auditoría</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-template ngFor let-p="$implicit" [ngForOf]="prestacionesPaciente" let-i="index">
+                            <tr class="hover" (click)="auditar(p, false, $event)" [ngClass]="{'bg-primary text-white': estaSeleccionada(p)}">
+                                <td class="col-5">
+                                    {{ p.solicitud.tipoPrestacion.nombre }}
+                                </td>
+                                <td class="col-4">
+                                    <span *ngFor="let prop of p.solicitud.proposito, let i = index">
 									{{ prop }} <span *ngIf="i < p.solicitud.proposito.length - 1">, </span>
-								</span>
-							</td>
-							<td class="col-3">
-								<span class="text-warning">pendiente</span>
-							</td>
-						</tr>
-						</template>
-					</tbody>
-				</table>
-			</plex-box>
-		</div>
-		<div class="col-4">
-			<plex-box>
-				<!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
-				<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
-			</plex-box>
-		</div>
-	</div>
+                                    </span>
+                                </td>
+                                <td class="col-3">
+                                    <span class="text-warning">pendiente</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </plex-box>
+        </div>
+        <div class="col-4">
+            <plex-box>
+                <!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
+                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada"
+                    (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
+            </plex-box>
+        </div>
+    </div>
 
 </section>
 <footer *ngIf="!showcreate && !showupdate">
-  <div class="row">
-    <div class="col">
-      <plex-button type="primary" label="Nueva Auditoría" title="Nueva Auditoría" (click)="nuevaAuditoriaPP()">
-      </plex-button>
+    <div class="row">
+        <div class="col">
+            <plex-button type="primary" label="Nueva Auditoría" title="Nueva Auditoría" (click)="nuevaAuditoriaPP()">
+            </plex-button>
+        </div>
     </div>
-  </div>
 </footer>
