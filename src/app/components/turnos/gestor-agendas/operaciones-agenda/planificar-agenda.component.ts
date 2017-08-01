@@ -23,6 +23,11 @@ export class PlanificarAgendaComponent implements OnInit {
     @Input('editaAgenda')
     set editaAgenda(value: any) {
         this._editarAgenda = value;
+        // if (this._editarAgenda.espacioFisico && (this._editarAgenda.espacioFisico.organizacion) && (this._editarAgenda.espacioFisico.organizacion._id)) {
+        //     if (this._editarAgenda.espacioFisico.organizacion._id !== this.auth.organizacion.id) {
+        //         this.efector = this._editarAgenda.espacioFisico.organizacion;
+        //     }
+        // }
     }
     get editaAgenda(): any {
         return this._editarAgenda;
@@ -58,21 +63,28 @@ export class PlanificarAgendaComponent implements OnInit {
         } else {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
+            this.efector = this.auth.organizacion;
             this.loadEspaciosFisicos('', this.efector);
         }
     }
 
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
-        // se carga el espacio Fisico
+        // se carga el tipo de espacio Fisico
         if (!this.modelo.espacioFisico.organizacion) {
             this.tipoEspacioFisico = 'registrados';
+            this.loadEspaciosFisicos('');
         } else {
-            if (this.modelo.espacioFisico.organizacion !== this.auth.organizacion.id) {
-                this.tipoEspacioFisico = 'otroEfector';
+            if (this.modelo.espacioFisico && (this.modelo.espacioFisico.organizacion) && (this.modelo.espacioFisico.organizacion._id)) {
+                if (this.modelo.espacioFisico.organizacion._id !== this.auth.organizacion.id) {
+                    this.efector = this.modelo.espacioFisico.organizacion;
+                    this.efector['id'] = this.efector._id;
+                    this.tipoEspacioFisico = 'otroEfector';
+                }
             }
+            this.loadEspaciosFisicos('', this.efector);
         }
-        this.espaciosFisicosEfector = [this.modelo.espacioFisico];
+        // this.espaciosFisicosEfector = [this.modelo.espacioFisico];
         if (!this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
         }
@@ -81,10 +93,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-
-            console.log(data);
             let dataF = data.filter(x => {
-                console.log('turnos:planificarAgenda:prestacion:' + x.id);
                 return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
             });
             event.callback(dataF);
@@ -174,7 +183,14 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.modelo.espacioFisico = null;
             });
         } else {
-            event.callback(this.efector || []);
+            if (this.efector && this.efector._id) {
+                this.OrganizacionService.getById(this.efector._id).subscribe(org => {
+                    this.efector = org;
+                    event.callback(org);
+                });
+            } else {
+                event.callback(this.efector || []);
+            }
         }
     }
 
