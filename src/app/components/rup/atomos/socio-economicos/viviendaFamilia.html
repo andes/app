@@ -1,8 +1,6 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="familia" [data]="SelectFamiliar" label="Familiar"
-  placeholder="Seleccionar familiar" (change)="devolverValores()">
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="familia" [data]="SelectFamiliar" label="Familiar" placeholder="Seleccionar familiar" (change)="devolverValores()">
 </plex-select>
 <div *ngIf="soloValores">
-  <b> Familiar </b>
-  <br/>
-   {{data[tipoPrestacion.key].nombre}}
+    <b> Familiar </b>
+    <br/> {{data[elementoRUP.key].nombre}}
 </div>
