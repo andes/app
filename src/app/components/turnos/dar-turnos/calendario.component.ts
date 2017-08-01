@@ -12,9 +12,9 @@ export class CalendarioComponent {
     private _agenda: any;
     private _agendas: Array<any>;
     private _estado: String;
-    private calendario: any = [];
     private diaSeleccionado: CalendarioDia;
-
+    public calendario: any = [];
+    
     // Propiedades
     @Output('agendaChanged') agendaChanged = new EventEmitter();
     @Input('fecha') fecha: Date;
