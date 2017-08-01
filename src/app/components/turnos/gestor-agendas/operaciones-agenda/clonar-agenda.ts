@@ -63,6 +63,7 @@ export class ClonarAgendaComponent implements OnInit {
         let params = {
             fechaDesde: this.inicioAgenda,
             fechaHasta: this.finMesDate,
+            organizacion: this.auth.organizacion.id
         };
         if (this.agenda.espacioFisico) {
             params['espacioFisico'] = this.agenda.espacioFisico.id;
