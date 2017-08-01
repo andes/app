@@ -64,7 +64,7 @@
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
                                 <!--Ninguna agenda seleccionada-->
-                                <ng-container *ngIf="estadoT === 'noSeleccionada' || !_solicitudPrestacion">
+                                <ng-container *ngIf="estadoT === 'noSeleccionada' || !_solicitudPrestacion?.solicitud">
                                     <legend class=" pt-3 text-center ">Búsquedas recientes</legend>
                                     <ul class="list-group ">
                                         <li *ngFor="let busqueda of busquedas; let i=index " class="list-group-item hover
