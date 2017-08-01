@@ -1,4 +1,4 @@
-<section *ngIf="!showcreate && !showupdate" class="plex-layout">
+<section *ngIf="!showupdate" class="plex-layout">
     <div class="row">
         <div class="col">
             <plex-box>
@@ -18,7 +18,7 @@
 
                 <table class="table table-striped">
                     <tbody>
-                        <template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
+                        <ng-template ngFor let-llaveTP="$implicit" [ngForOf]="llavesTP" let-i="index">
 
                             <tr class="row text-center" style="cursor: pointer; pointer-events: all" [ngClass]="{'bg-primary text-white': estaSeleccionada(this.llaveTP)}">
 
@@ -55,24 +55,22 @@
                                 </td>
 
                             </tr>
-                        </template>
+                        </ng-template>
                     </tbody>
                 </table>
             </plex-box>
         </div>
         <div class="col-3 col-sm-4">
             <plex-box>
-                <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 0" [llaveTPSeleccionada]="llaveTPSeleccionada"
-                    (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
-                <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada"
-                    (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
+                <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 0" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
+                <editar-llaves-tipoPrestacion *ngIf="showVistaLlavesTP && llavesTPSeleccionadas.length == 1" [llaveTPSeleccionada]="llaveTPSeleccionada" (saveLlaveTP)="saveLlaveTP($event)" (cancelaEditarLlaveTP)="cancelaEditarLlaveTP($event)"></editar-llaves-tipoPrestacion>
             </plex-box>
         </div>
     </div>
 </section>
 
 <!-- Footer -->
-<footer *ngIf="!showcreate && !showupdate">
+<footer *ngIf="!showupdate">
     <div class="row">
         <div class="col">
             <plex-button type="primary" label="Nueva Configuración" title="Nueva Configuración" (click)="nuevaConfigLlavesTP()">

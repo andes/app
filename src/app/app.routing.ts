@@ -39,7 +39,7 @@ import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoI
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
-import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+// import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
@@ -66,7 +66,7 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
-  { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
+  // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // Turnos
@@ -100,7 +100,6 @@ const appRoutes: Routes = [
   /* ELIMINAR ==> */ { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes

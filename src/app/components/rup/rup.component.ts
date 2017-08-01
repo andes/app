@@ -177,8 +177,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         this.mensaje = this.getMensajes();
         this.evtData.emit(this.data);
-        // this.servicioObservarDatos.actualizarDatos(this.data, this.elementoRUP.key);
-
     }
 
 }
