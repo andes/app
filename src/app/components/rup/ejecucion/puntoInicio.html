@@ -129,7 +129,8 @@
 
                                         <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                             <br />
-                                            <span class="badge badge-default">
+                                            <span class="badge " [ngClass]="{'badge-success': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada',
+                                                'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                                 {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                             </span>
                                             <br />
@@ -190,7 +191,8 @@
                                     <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                     <br />
 
-                                    <span class="badge badge-default">
+                                    <span class="badge " [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
+                                                'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                     </span>
                                 </td>

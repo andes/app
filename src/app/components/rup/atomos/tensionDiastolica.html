@@ -1,4 +1,4 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="data[elementoRUP.key]" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="20" max="300" (keyup)="devolverValores()">
+<plex-int  autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="data[elementoRUP.key]" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="20" max="300" (keyup)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">

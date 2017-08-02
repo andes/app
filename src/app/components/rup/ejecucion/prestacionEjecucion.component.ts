@@ -620,23 +620,24 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     beforeSave() {
         let resultado = true;
-
         if (!this.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         }
-
         this.registros.forEach((r, i) => {
             // for (let i = 0; i < this.registros.length; i++) {
             // let r = this.registros[i];
             this.errores[i] = null;
-
             // verificamos si existe algun valor a devolver en data
             if (typeof this.data[r.elementoRUP.key] === 'undefined') {
                 this.errores[i] = 'Debe completar con algún valor';
                 resultado = false;
+            } else {
+                if (!this.data[r.elementoRUP.key][r.concepto.conceptId]) {
+                    this.errores[i] = 'Debe completar con algún valor';
+                    resultado = false;
+                }
             }
-            // }
         });
 
         return resultado;
@@ -651,7 +652,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
         this.prestacion.ejecucion.registros = [];
 
-        // validamos antes de guardar
+       // validamos antes de guardar
         if (!this.beforeSave()) {
             return null;
         }
