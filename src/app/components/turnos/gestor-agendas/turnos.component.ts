@@ -25,10 +25,6 @@ export class TurnosComponent implements OnInit {
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 
-        // for (let i = 0; i < this.agenda.bloques.length; i++) {
-        //   this.turnos = this.agenda.bloques[i].turnos;
-        // }
-
         this.bloques = this.agenda.bloques;
         for (let i = 0; i < this.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
@@ -184,7 +180,7 @@ export class TurnosComponent implements OnInit {
 
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
-            return turno.paciente;
+            return turno.paciente && turno.paciente.id;
         }).length === this.turnosSeleccionados.length;
     }
 
