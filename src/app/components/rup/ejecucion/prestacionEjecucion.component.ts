@@ -791,7 +791,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros[indice].items = [];
         let objItem = {};
         this.registros[indice].items = this.registros.filter(registro => {
-            return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon === null && registro.relacionadoCon === null);
+            return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon !== registro.concepto.conceptId);
 
         }).map(registro => {
             return {
