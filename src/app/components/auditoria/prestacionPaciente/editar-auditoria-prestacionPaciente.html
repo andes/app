@@ -1,48 +1,48 @@
 <form>
     <plex-box>
-      <header>
-        <div>
-          <h5 *ngIf="!modelo.id">Nueva Auditoría</h5>
-          <h5 *ngIf="modelo.id">Auditoría</h5>
+        <header>
+            <div>
+                <h5 *ngIf="!modelo.id">Nueva Auditoría</h5>
+                <h5 *ngIf="modelo.id">Auditoría</h5>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-12">
+                <h6>Organización: {{ modelo.auditoria?.organizacion?.nombre }}</h6>
+                <h6>Auditor: {{ modelo.auditoria?.auditor?.apellido + ', ' + modelo.auditoria?.auditor?.nombre }}</h6>
+                <h6>Paciente: {{ modelo.paciente?.apellido + ', ' + modelo.paciente?.nombre }}</h6>
+                <h6>Prestación: {{ modelo.solicitud?.tipoPrestacion.nombre }}</h6>
+                <h6>Estado: {{ modelo.auditoria?.estado }}</h6>
+            </div>
         </div>
-      </header>
-      <div class="row">
-        <div class="col-12">
-          <h6>Organización: {{ modelo.auditoria?.organizacion?.nombre }}</h6>
-          <h6>Auditor: {{ modelo.auditoria?.auditor?.apellido + ', ' + modelo.auditoria?.auditor?.nombre }}</h6>
-          <h6>Paciente: {{ modelo.paciente?.apellido + ', ' + modelo.paciente?.nombre }}</h6>
-          <h6>Prestación: {{ modelo.solicitud?.tipoPrestacion.nombre }}</h6>
-          <h6>Estado: {{ modelo.auditoria?.estado }}</h6>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <ng-template [ngIf]="modelo.auditoria">
+                    <plex-select [(ngModel)]="modelo.auditoria.estado" name="estado" label="Pasar a estado:" (getData)="loadEstados($event)" [required]="true"></plex-select>
+                </ng-template>
+            </div>
         </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-12">
-            <template [ngIf]="modelo.auditoria">
-              <plex-select [(ngModel)]="modelo.auditoria.estado" name="estado" label="Pasar a estado:" (getData)="loadEstados($event)" [required]="true"></plex-select>
-            </template>
+        <hr>
+        <!-- <ng-template [ngIf]="auditoriaPP">
+            <h5>Solicitud de Prestación nueva</h5>
+            <div class="row">
+                <div class="col-12">
+                    <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" name="modelo.fecha" label="Inicio">
+                    </plex-datetime>
+                </div>
+            </div>
+            <hr>
+        </ng-template> -->
+        <div class="row">
+            <div class="col-12">
+                <plex-button icon="mdi mdi-content-save" label="Aplicar" (click)="guardarAuditoriaPP($event)" title="Aplicar" validateForm="true"></plex-button>
+                <plex-button icon="mdi mdi-arrow-left" label="Cancelar" (click)="cancelar()" title="Cancelar"></plex-button>
+            </div>
         </div>
-      </div>
-      <hr>
-      <template [ngIf]="auditoriaPP">
-      <h5>Solicitud de Prestación nueva</h5>
-      <div class="row">
-        <div class="col-12">
-          <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" name="modelo.fecha" label="Inicio">
-            </plex-datetime>
-        </div>
-      </div>
-      <hr>
-      </template>
-      <div class="row">
-        <div class="col-12">
-          <plex-button icon="mdi mdi-content-save" label="Aplicar" (click)="guardarAuditoriaPP($event)" title="Aplicar" validateForm="true"></plex-button>
-          <plex-button icon="mdi mdi-arrow-left" label="Cancelar" (click)="cancelar()" title="Cancelar"></plex-button>
-        </div>
-      </div>
     </plex-box>
-  <footer>
-    <!--<div class="alert alert-warning" role="alert">
+    <footer>
+        <!--<div class="alert alert-warning" role="alert">
     </div>-->
-  </footer>
+    </footer>
 </form>

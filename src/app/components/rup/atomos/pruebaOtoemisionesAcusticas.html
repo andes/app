@@ -1,8 +1,8 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="pruebaOtoemisionesAcusticas" [data]="selectPruebaOtoemisionesAcusticas" label="Prueba de otoemisiones acusticas" (change)="devolverValores()" placeholder="Seleccionar método">
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="pruebaOtoemisionesAcusticas" [data]="selectPruebaOtoemisionesAcusticas" label="Prueba de otoemisiones acusticas" (change)="devolverValores()" placeholder="Seleccionar método">
 </plex-select>
 <p *ngIf="soloValores">
     <label><b>Prueba de otoemisiones acusticas</b></label>
-    <br /> {{data[tipoPrestacion.key].nombre}}
+    <br /> {{data[elementoRUP.key].nombre}}
 </p>
 
 <p *ngIf="mensaje.texto">

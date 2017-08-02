@@ -1,23 +1,23 @@
 <plex-box type="">
-        <div class="row">
-            <div class="col-sm-12">
-                <plex-text [(ngModel)]="modelo.nombre" label="Nombre:" placeholder="Ingrese nombre..."></plex-text>
-            </div>
-            <div class="col-sm-12">
-                <plex-text [(ngModel)]="modelo.descripcion" label="Descripción:" placeholder="Ingrese descripción..."></plex-text>
-            </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <plex-text [(ngModel)]="modelo.nombre" label="Nombre:" placeholder="Ingrese nombre..."></plex-text>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <plex-text [(ngModel)]="modelo.disciplina" label="Disciplina:" placeholder="Ingrese la disciplina..."></plex-text>
-            </div>
-            <div class="col-sm-4">
-                <plex-int [(ngModel)]="modelo.complejidad" label="Complejidad:" placeholder="Ingrese nivel de complejidad..."></plex-int>
-            </div>
-            <div class="col-sm-4">
-                <plex-text [(ngModel)]="modelo.codigo.sisa" label="Codigo Sisa:" placeholder="Ingresar código..."></plex-text>
-            </div>
+        <div class="col-sm-12">
+            <plex-text [(ngModel)]="modelo.descripcion" label="Descripción:" placeholder="Ingrese descripción..."></plex-text>
         </div>
-            <plex-button label="Guardar" type="primary" (click)="onSave()"></plex-button>
-            <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <plex-text [(ngModel)]="modelo.disciplina" label="Disciplina:" placeholder="Ingrese la disciplina..."></plex-text>
+        </div>
+        <div class="col-sm-4">
+            <plex-int [(ngModel)]="modelo.complejidad" label="Complejidad:" placeholder="Ingrese nivel de complejidad..."></plex-int>
+        </div>
+        <div class="col-sm-4">
+            <plex-text [(ngModel)]="modelo.codigo.sisa" label="Codigo Sisa:" placeholder="Ingresar código..."></plex-text>
+        </div>
+    </div>
+    <plex-button label="Guardar" type="primary" (click)="onSave()"></plex-button>
+    <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
 </plex-box>

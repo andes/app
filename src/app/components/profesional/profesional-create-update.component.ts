@@ -24,6 +24,13 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: IProfesional;
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
+    public fechaNacimiento: Date;
+    public fechaFallecimiento: Date;
+
+    // Getter que previene el error de AOT
+    // https://github.com/angular/angular-cli/issues/6099
+    get formData(): any { return this.createForm; };
+
     createForm: FormGroup;
     // Definición de arreglos
     sexos: any[];
@@ -218,12 +225,12 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     loadProvincias(event, pais) {
         console.log('pais' + pais.value.id);
-        this.provinciaService.get({'pais': pais.value.id }).subscribe(event.callback);
+        this.provinciaService.get({ 'pais': pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
         console.log('provincia' + provincia.value.id);
-        this.localidadService.get({'provincia': provincia.value.id }).subscribe(event.callback);
+        this.localidadService.get({ 'provincia': provincia.value.id }).subscribe(event.callback);
     }
 
     /*Código de contactos*/
