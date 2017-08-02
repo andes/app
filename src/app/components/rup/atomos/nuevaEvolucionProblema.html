@@ -1,4 +1,4 @@
-<div *ngIf="HallazgoCompleto && elementoRUP && data[elementoRUP.key]">
+<div *ngIf="HallazgoCompleto && HallazgoCompleto.evoluciones && elementoRUP && data[elementoRUP.key]">
 
     <!--DESCRIPCION ALTA PROBLEMA-->
     <div class="row">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <!--Listado de evoluciones-->
-    <ng-container *ngIf="HallazgoCompleto?.evoluciones && HallazgoCompleto?.evoluciones.length > 0">
+    <ng-container *ngIf="evoluciones && evoluciones.length > 0">
         <div class="row">
             <div class="col-12">
                 <label class="box-title-secundario" for="comment">Evoluciones Anteriores:</label>
@@ -44,7 +44,7 @@
                 </span>
             </div>
             <div class="col-2 text-120">
-                <plex-button *ngIf="HallazgoCompleto.evoluciones.length > 1 && indice < (HallazgoCompleto.evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
             </div>
         </div>
         <div class="row">

@@ -57,8 +57,10 @@ export class PrestacionPacienteService {
      * @param {String} idPaciente
      */
     getByPaciente(idPaciente: any, recargarCache: boolean = false, idPrestacion?: any): Observable<any[]> {
-        debugger;
         if (this.cache[idPaciente] && !recargarCache) {
+            if (idPrestacion) {
+                this.cache[idPaciente] = this.cache[idPaciente].filter(d => d.id !== idPrestacion);
+            }
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
         } else {
             let opt;
@@ -145,17 +147,17 @@ export class PrestacionPacienteService {
      * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
      * @param {String} idPaciente
      */
-    getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+    getUnHallazgoPaciente(idPaciente: any, concepto: any, idPrestacion?: any): Observable<any> {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
-        if (this.cacheRegistros[idPaciente]) {
-            registros = this.cacheRegistros[idPaciente];
-            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
-        } else {
-            return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
-                hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
-            );
-        }
+        // if (this.cacheRegistros[idPaciente]) {
+        //     registros = this.cacheRegistros[idPaciente];
+        //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        // } else {
+        return this.getByPacienteHallazgo(idPaciente, idPrestacion).map(hallazgos =>
+            hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
+        );
+        // }
     }
 
     /**

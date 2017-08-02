@@ -13,6 +13,7 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
     public HallazgoCompleto;
     public unaEvolucion;
     public indice = 0;
+    public evoluciones;
 
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
@@ -27,25 +28,25 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
      */
     ngOnInit() {
         this.data[this.elementoRUP.key] = {};
-        debugger;
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
             if (this.datosIngreso.datoCompleto) {
                 this.HallazgoCompleto = this.datosIngreso.datoCompleto;
-                this.HallazgoCompleto.evoluciones.shift();
+                this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
+                this.evoluciones.shift();
                 this.data[this.elementoRUP.key].estado = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.estado : 'activo';
                 this.data[this.elementoRUP.key].esCronico = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.esCronico : false;
                 // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
                 this.data[this.elementoRUP.key].evolucion = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.evolucion : '';
 
-                if (this.HallazgoCompleto.evoluciones) {
-                    this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+                if (this.evoluciones) {
+                    this.unaEvolucion = this.evoluciones[0];
                 }
             } else {
                 this.HallazgoCompleto = this.datosIngreso;
 
                 if (this.HallazgoCompleto.evoluciones) {
-
+                    this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
                     this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
                     this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
                     this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
@@ -62,39 +63,16 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
 
     cambiarEvolucion(signo) {
         if (signo === '+') {
-            if (this.indice < (this.HallazgoCompleto.evoluciones.length - 1)) {
+            if (this.indice < (this.evoluciones.length - 1)) {
                 this.indice = this.indice + 1;
-                this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
+                this.unaEvolucion = this.evoluciones[this.indice];
             }
         } else {
             if (this.indice > 0) {
                 this.indice = this.indice - 1;
-                this.unaEvolucion = this.HallazgoCompleto.evoluciones[this.indice];
+                this.unaEvolucion = this.evoluciones[this.indice];
             }
         }
     }
-
-    // calcularFecha() {
-    //     let fechaCalc;
-    //     switch (true) {
-    //         case (this.inicioEstimadoTiempo.id === 'anios'):
-    //             fechaCalc = moment().subtract('years', this.inicioEstimadoUnidad);
-    //             break;
-    //         case (this.inicioEstimadoTiempo.id === 'mes'):
-    //             fechaCalc = moment().subtract('months', this.inicioEstimadoUnidad);
-    //             break;
-    //         case (this.inicioEstimadoTiempo.id === 'semanas'):
-    //             fechaCalc = moment().subtract('week', this.inicioEstimadoUnidad);
-    //             break;
-    //         case (this.inicioEstimadoTiempo.id === 'dias'):
-    //             fechaCalc = moment().subtract('days', this.inicioEstimadoUnidad);
-    //             break;
-    //         default:
-    //             fechaCalc = new Date();
-    //     }
-
-    //     this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
-    //     this.devolverValores();
-    // }
 
 }

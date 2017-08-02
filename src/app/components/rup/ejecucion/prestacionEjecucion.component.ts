@@ -214,11 +214,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.prestacion.ejecucion.registros.forEach(registro => {
                 // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
                 if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
-                    let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto);
+                    let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto, this.prestacion.id);
                     hallazgo.subscribe(dato => {
                         if (dato) {
                             // vamos a comprobar si se trata de hallazgo cronico
-                            if (dato.evoluciones && dato.evoluciones[0].esCronico) {
+                            if (dato.evoluciones && dato.evoluciones.length > 1 && dato.evoluciones[0].esCronico) {
                                 let datoModificar = {
                                     datoCompleto: dato,
                                     ultimaEvolucion: dato.evoluciones[0] ? dato.evoluciones[0] : null
