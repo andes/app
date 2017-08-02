@@ -30,7 +30,7 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
         debugger;
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            if(this.datosIngreso.datoCompleto){
+            if (this.datosIngreso.datoCompleto) {
                 this.HallazgoCompleto = this.datosIngreso.datoCompleto;
                 this.HallazgoCompleto.evoluciones.shift();
                 this.data[this.elementoRUP.key].estado = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.estado : 'activo';
@@ -41,16 +41,18 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
                 if (this.HallazgoCompleto.evoluciones) {
                     this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
                 }
-            }else{
-            this.HallazgoCompleto = this.datosIngreso;
-            this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
-            this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
-            // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
-            this.data[this.elementoRUP.key].evolucion = '';
+            } else {
+                this.HallazgoCompleto = this.datosIngreso;
 
-            if (this.HallazgoCompleto.evoluciones) {
-                this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
-            }
+                if (this.HallazgoCompleto.evoluciones) {
+
+                    this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+                    this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
+                    this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
+                    // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+                    this.data[this.elementoRUP.key].evolucion = '';
+
+                }
             }
             this.devolverValores();
         }

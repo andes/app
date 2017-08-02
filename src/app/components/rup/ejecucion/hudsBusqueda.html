@@ -38,8 +38,8 @@
             <ng-container *ngIf="vista == 'destacados'">
                 <div class="vista-titulo">Problemas crónicos</div>
 
-                <ul *ngIf="hallazgos" class="conceptos list-unstyled">
-                    <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
+                <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
                         <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <div class="rup-card mini">
                                 <div class="type problemas">
@@ -86,7 +86,7 @@
                 <div>No se encontraron registros</div>
             </ng-container>
 
-            <!-- Vista: Hallazgos -->
+            <!-- Vista: prestaciones -->
             <ng-container *ngIf="vista == 'prestaciones'">
                 <div class="vista-titulo">Prestaciones</div>
 
