@@ -1,3 +1,5 @@
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { Auth } from '@andes/auth';
 import { PrestacionPacienteService } from './../../services/rup/prestacionPaciente.service';
 import { IPrestacionPaciente } from './../../interfaces/rup/IPrestacionPaciente';
 import { PrestacionEjecucionComponent } from './ejecucion/prestacionEjecucion.component';
@@ -41,6 +43,8 @@ export class RupComponent implements OnInit, OnDestroy {
     @Input() valoresPrestacionEjecucion: any = [];
     @Input() prestacion: IPrestacionPaciente;
 
+    @Input() snomedConcept: any;
+
     // pacientePrestacion: any = {};
     // resultados a devolver
     data: any = {};
@@ -64,8 +68,9 @@ export class RupComponent implements OnInit, OnDestroy {
         public servicioElementosRUP: ElementosRupService, // Publico por que lo usa la molecula
         public servicioObservarDatos: ObservarDatosService,
         public serviceProfesional: ProfesionalService,
-        public servicioPrestacion: PrestacionPacienteService
-    ) {
+        public servicioPrestacion: PrestacionPacienteService,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public auth: Auth) {
     }
 
     ngOnInit() {
@@ -123,6 +128,7 @@ export class RupComponent implements OnInit, OnDestroy {
         this.componentReference.instance.elementoRUP = this.elementoRUP;
         this.componentReference.instance.paciente = this.paciente;
         this.componentReference.instance.datosIngreso = this.datosIngreso;
+        this.componentReference.instance.snomedConcept = this.snomedConcept;
 
         // En caso de haber valores cargados en los datos de ingreso
         // ejecutamos el evento para devolverlos y armar los valores
