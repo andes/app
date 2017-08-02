@@ -56,7 +56,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?')}).subscribe(data => {
             this.tiposPrestacion = data;
 
             this.actualizar();
@@ -71,12 +71,14 @@ export class PuntoInicioComponent implements OnInit {
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: this.fecha,
-                fechaHasta: this.fecha
+                fechaHasta: this.fecha,
+                organizacion: this.auth.organizacion.id
             }),
             // Prestaciones
             this.servicioPrestacion.get({
                 fechaDesde: this.fecha,
-                fechaHasta: this.fecha
+                fechaHasta: this.fecha,
+                organizacion: this.auth.organizacion.id
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
                 // this.auth.getPermissions('rup:tipoPrestacion:?')
             })
