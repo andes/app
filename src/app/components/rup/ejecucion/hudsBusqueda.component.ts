@@ -37,9 +37,15 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public prestaciones: any = [];
     /**
-     * Listado de prestaciones validadas
+     * Listado de todos los hallazgos
      */
     public hallazgos: any = [];
+
+    /**
+     * Listado de todos los hallazgos
+     */
+    public hallazgosCronicos: any = [];
+
 
     /**
      * Devuelve un elemento seleccionado que puede ser
@@ -99,7 +105,7 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     listarPrestaciones() {
-        this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
+        this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
             // this.hallazgos = null;
             this.prestaciones = prestaciones;
             this.listarProblemasCronicos();
@@ -116,7 +122,7 @@ export class HudsBusquedaComponent implements OnInit {
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
             // this.prestaciones = null;
-            this.hallazgos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
+            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }
 }
