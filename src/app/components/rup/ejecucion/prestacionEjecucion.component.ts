@@ -525,6 +525,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+        this.colapsarPrestaciones();
         //  this.registros = this.copiaRegistro;
         // console.log(this.copiaRegistro);
         //  console.log(this.registros);
