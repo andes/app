@@ -5,32 +5,34 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     templateUrl: 'solicitudPrestacionDefault.html'
 })
 export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit {
-    public profesionales: any[] = [];
-    public copiaPofesionales: any[] = [];
+    private listaPlanes: any = [];
+
+    public puedeAutocitar: Boolean = false;
+
     ngOnInit() {
-        // debugger;
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
-            // if (this.data[this.elementoRUP.key].profesionales) {
 
-            //     this.data[this.elementoRUP.key].profesionales.forEach(profesional => {
-            //         delete profesional.$order;
-            //         this.copiaPofesionales.push(profesional);
-            //         console.log(profesional);
-
-            //         // return {
-            //         //     id: profesional.id,
-            //         //     nombre: profesional.nombre,
-            //         //     apellido: profesional.apellido,
-            //         //     documento: profesional.documento
-            //         // };
-            //     });
-            //     this.data[this.elementoRUP.key].profesionales = JSON.parse(JSON.stringify(this.copiaPofesionales));
-            // }
             this.mensaje = this.getMensajes();
         } else {
             this.data[this.elementoRUP.key].autocitado = true;
+
+            // obtenemos todos los planes
+            this.servicioTipoPrestacion.get({}).subscribe(planes => {
+                this.listaPlanes = planes;
+
+                // buscamos el concepto turneable al cual pertenece el concepto a cargar
+                let conceptoTurneable = planes.find(plan => (plan.conceptId === this.snomedConcept.conceptId) );
+
+                // verificamos si tenemos permisos sobre ese concepto
+                let tienePermisos = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => permiso === conceptoTurneable.id);
+
+                if (tienePermisos) {
+                    this.puedeAutocitar = true;
+                }
+            });
+
         }
     }
 
@@ -41,33 +43,25 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
+            // let profesionales = {};
+
+            // if (this.data[this.elementoRUP.key].profesionales) {
+            //     this.quitarOrder();
+            //     profesionales = JSON.parse(JSON.stringify(this.data[this.elementoRUP.key].profesionales));
+            // }
+
+            // event.callback(profesionales);
+            
             event.callback(this.data[this.elementoRUP.key].profesionales);
-            event.callback(this.quitarOrder());
         }
 
     }
 
     quitarOrder() {
         if (this.data[this.elementoRUP.key].profesionales) {
-            this.data[this.elementoRUP.key].profesionales = [... this.data[this.elementoRUP.key].profesionales.map(profesional => {
-                // delete profesional.$order;
-                return {
-                    id: profesional.id,
-                    nombre: profesional.nombre,
-                    apellido: profesional.apellido,
-                    documento: profesional.documento
-                };
-            })];
-            return this.data[this.elementoRUP.key].profesionales;
+            this.data[this.elementoRUP.key].profesionales.forEach(profesional => {
+                delete profesional.$order;
+            });
         }
-        // console.log(this.data[this.elementoRUP.key]);
-        // this.data[this.elementoRUP.key].profesionales = this.data[this.elementoRUP.key].profesionales.map(profesional => {
-        //     return {
-        //         id: profesional.id,
-        //         nombre: profesional.nombre,
-        //         apellido: profesional.apellido,
-        //         documento: profesional.documento
-        //     };
-        // });
     }
 }
