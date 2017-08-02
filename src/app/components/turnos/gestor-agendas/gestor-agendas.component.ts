@@ -132,7 +132,7 @@ export class GestorAgendasComponent implements OnInit {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
-                                if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                                if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente.id) || (agenda.estado === 'suspendida' && (turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
                                     count++;
                                 }
                             });
@@ -257,14 +257,16 @@ export class GestorAgendasComponent implements OnInit {
             this.fechaHasta = moment(fecha).endOf('day').toDate();
         }
 
-        this.serviceAgenda.get({
+        const params = {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id,
             idTipoPrestacion: '',
             idProfesional: '',
             idEspacioFisico: ''
-        }).subscribe(
+        };
+
+        this.serviceAgenda.get(params).subscribe(
             agendas => {
                 this.agendas = agendas;
                 this.agendasSeleccionadas = [];
@@ -274,7 +276,7 @@ export class GestorAgendasComponent implements OnInit {
                     let count = 0;
                     agenda.bloques.forEach(bloque => {
                         bloque.turnos.forEach(turno => {
-                            if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                            if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente))))) {
                                 count++;
                             }
                         });
@@ -290,6 +292,8 @@ export class GestorAgendasComponent implements OnInit {
                 }
             });
     }
+
+
 
     loadPrestaciones(event) {
         this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
