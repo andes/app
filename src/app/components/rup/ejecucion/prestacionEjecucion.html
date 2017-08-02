@@ -71,6 +71,7 @@
                                         (onDragEnd)="draggingRegistro(i, elemento, false)">
                                         <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                     </div>
+
                                     <div class="rup-content">
                                         <div class="header">
                                             <div class="title">
@@ -95,59 +96,60 @@
                                                 </div>
 
                                             </div>
+                                        </div>
 
-                                            <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
-                                                <div *ngIf="errores[i]">
-                                                    <span class="badge badge-danger">
+                                        <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
+                                            <div *ngIf="errores[i]">
+                                                <span class="badge badge-danger">
                                                         {{errores[i]}}
                                                     </span>
-                                                </div>
-
-                                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
-                                                    [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
-                                                </rup>
                                             </div>
-                                            <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
-                                                <div class="actions ">
-                                                    <div class="relacionadoCon">
-                                                        <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
-                                                            Relacionado con: {{elemento.relacionadoCon.term}}
-                                                        </div>
 
-                                                        <div *ngIf="elemento.relacionadoCon && confirmarDesvincular[i]" class="confirmarDesvincular">
-                                                            ¿Confirmar desvinculación con <b>{{elemento.relacionadoCon.term}}</b>?
+                                            <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
+                                                [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
+                                            </rup>
+                                        </div>
+                                        <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
+                                            <div class="actions ">
+                                                <div class="relacionadoCon">
+                                                    <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
+                                                        Relacionado con: {{elemento.relacionadoCon.term}}
+                                                    </div>
 
-                                                            <div class="float-right">
-                                                                <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
+                                                    <div *ngIf="elemento.relacionadoCon && confirmarDesvincular[i]" class="confirmarDesvincular">
+                                                        ¿Confirmar desvinculación con <b>{{elemento.relacionadoCon.term}}</b>?
+
+                                                        <div class="float-right">
+                                                            <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
                                                                     Cancelar
                                                                 </a> |
-                                                                <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
+                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
                                                                     Desvincular
                                                                 </a>
-                                                            </div>
-                                                        </div>
-
-                                                        <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
-                                                            ¿Quitar de la consulta?
-
-                                                            <div class="float-right">
-                                                                <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
-                                                                    Cancelar
-                                                                </a> |
-                                                                <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
-                                                                    Quitar
-                                                                </a>
-                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
-                                                        <i class="mdi mdi-link-variant-off"></i>
-                                                    </a>
+                                                    <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
+                                                        ¿Quitar de la consulta?
 
+                                                        <div class="float-right">
+                                                            <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
+                                                                    Cancelar
+                                                                </a> |
+                                                            <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
+                                                                    Quitar
+                                                                </a>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
+                                                <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
+                                                    <i class="mdi mdi-link-variant-off"></i>
+                                                </a>
+
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

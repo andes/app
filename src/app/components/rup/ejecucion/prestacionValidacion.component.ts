@@ -35,7 +35,7 @@ export class PrestacionValidacionComponent implements OnInit {
      * Solicitud de prestación para dar un turno autocitado
      */
     public: any;
-    solicitudTurno
+    solicitudTurno;
     public registros: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -98,6 +98,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     op: 'estadoPush',
                     estado: { tipo: 'validada' }
                 };
+                let planes = this.registros.filter(r => r.tipo === 'planes');
 
                 // Creamos las prestaciones en pendiente
                 // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
@@ -105,7 +106,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.prestacion = prestacion;
 
                     // buscamos los planes dentro de los registros
-                    let planes = this.registros.filter(r => r.tipo === 'planes');
 
                     if (planes.length) {
                         planes.forEach(plan => {
