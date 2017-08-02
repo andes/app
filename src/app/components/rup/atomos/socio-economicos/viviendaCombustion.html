@@ -1,9 +1,9 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="combustion" [data]="SelectCombustion" label="Fuente de combustión" placeholder="Seleccion
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="combustion" [data]="SelectCombustion" label="Fuente de combustión" placeholder="Seleccion
   de fuente de combustión" [multiple]="true" (change)="devolverValores()">
 </plex-select>
 <div *ngIf="soloValores">
-  <b> Fuente de combustión </b>
-  <div *ngFor="let dato of data[tipoPrestacion.key]">
-    {{dato.nombre}}
-  </div>
+    <b> Fuente de combustión </b>
+    <div *ngFor="let dato of data[elementoRUP.key]">
+        {{dato.nombre}}
+    </div>
 </div>

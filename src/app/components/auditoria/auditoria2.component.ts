@@ -1,7 +1,4 @@
 import {
-    AuditoriaPorBloqueComponent
-} from './auditoriaPorBloque.component';
-import {
     Plex
 } from '@andes/plex';
 import {

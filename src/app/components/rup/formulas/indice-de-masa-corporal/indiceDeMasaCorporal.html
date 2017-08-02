@@ -1,14 +1,14 @@
 <div *ngIf="!soloValores">
-<plex-float label="{{tipoPrestacion.nombre}}"  [(ngModel)]="data[tipoPrestacion.key]" name="imc" (keyup)="devolverValores()">
-</plex-float>
+    <plex-float label="{{tipoPrestacion.nombre}}" [(ngModel)]="data[elementoRUP.key]" name="imc" (keyup)="devolverValores()">
+    </plex-float>
 
-<p *ngIf="mensaje && mensaje.texto">
-    <span class="badge-{{mensaje.class}}">
+    <p *ngIf="mensaje && mensaje.texto">
+        <span class="badge-{{mensaje.class}}">
     {{mensaje.texto}}
     </span>
-</p>
+    </p>
 </div>
 <p *ngIf="soloValores">
     <label><b>{{tipoPrestacion.nombre}}</b></label>
-    <br /> {{data[tipoPrestacion.key]}} 
+    <br /> {{data[elementoRUP.key]}}
 </p>

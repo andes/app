@@ -13,7 +13,7 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 })
 
 export class EditEspacioFisicoComponent implements OnInit {
-    @Input('selectedEspacioFisico') espacioFisicoHijo: IEspacioFisico;
+    @Input() espacioFisicoHijo: IEspacioFisico;
 
     @Output()
     data: EventEmitter<IEspacioFisico> = new EventEmitter<IEspacioFisico>();

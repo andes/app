@@ -2,9 +2,10 @@ import * as moment from 'moment';
 import { EstadoCalendarioDia } from './enums';
 
 export class CalendarioDia {
+    public estadoAgenda: any;
     public seleccionado: boolean;
     public estado: EstadoCalendarioDia;
-    public weekend: boolean;
+    public weekend: boolean; // https://www.youtube.com/watch?v=VxuNP0RwwdA
     public cantidadAgendas: number;
     public hoy: Date;
     public turnosDisponibles: number;
@@ -14,13 +15,15 @@ export class CalendarioDia {
     public delDiaDisponibles = 0;
     public profesionalDisponibles = 0;
 
-    constructor(public fecha: Date, public agenda: any) {
+    constructor(public fecha: Date, public agenda: any, solicitudPrestacion: any) {
         this.hoy = new Date();
         this.turnosDisponibles = 0;
         if (!agenda) {
             this.estado = 'vacio';
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
+            this.estadoAgenda = this.agenda.estado;
+
             if (disponible) {
                 let countBloques = [];
 
@@ -82,6 +85,7 @@ export class CalendarioDia {
                             gestion: bloque.reservadoGestion,
                             profesional: bloque.reservadoProfesional
                         });
+
                         bloque.turnos.forEach((turno) => {
                             if (turno.estado === 'asignado') {
                                 switch (turno.tipoTurno) {
@@ -101,17 +105,41 @@ export class CalendarioDia {
                                 }
                             }
                         });
+
                         this.programadosDisponibles += countBloques[indexBloque].programado;
                         this.gestionDisponibles += countBloques[indexBloque].gestion;
                         this.profesionalDisponibles += countBloques[indexBloque].profesional;
+
                         if (this.agenda.estado === 'disponible') {
-                            this.estado = (this.gestionDisponibles > 0 || this.profesionalDisponibles) ? 'disponible' : 'ocupado';
+                            if (solicitudPrestacion) {
+                                if (this.gestionDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false) {
+                                    this.estado = 'disponible';
+                                } else if (this.profesionalDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+                                    this.estado = 'disponible';
+                                } else {
+                                    this.estado = 'vacio';
+                                    disponible = false;
+                                    this.turnosDisponibles = 0;
+                                }
+                            } else {
+                                // Turnos de gestión, pero sin solicitud
+                                if (this.gestionDisponibles > 0) {
+                                    this.estado = 'disponible';
+                                } else {
+                                    this.estado = 'vacio';
+                                }
+                            }
                         }
-                        if (this.agenda.estado === 'publicada') {
+
+                        if (this.agenda.estado === 'publicada' && !solicitudPrestacion) {
                             this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
                         }
+
                     });
-                    this.turnosDisponibles = this.turnosDisponibles + this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
+
+                    if (disponible) {
+                        this.turnosDisponibles = this.turnosDisponibles + this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
+                    }
                 }
             } else {
                 this.estado = 'ocupado';

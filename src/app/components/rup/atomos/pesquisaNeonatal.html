@@ -1,12 +1,12 @@
-<plex-bool *ngIf="!soloValores" label="Pesquisa neonatal" [(ngModel)]="data[tipoPrestacion.key]" name="pesquisaNeonatal" (change)="devolverValores()">
+<plex-bool *ngIf="!soloValores" label="Pesquisa neonatal" [(ngModel)]="data[elementoRUP.key]" name="pesquisaNeonatal" (change)="devolverValores()">
 </plex-bool>
 <div *ngIf="soloValores">
     <b>Pesquisa neonatal</b>
     <br />
-    <p *ngIf='data[tipoPrestacion.key]'>
+    <p *ngIf='data[elementoRUP.key]'>
         Si
     </p>
-    <p *ngIf='!data[tipoPrestacion.key]'>
+    <p *ngIf='!data[elementoRUP.key]'>
         No
     </p>
 </div>

@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!showcreate && !pacientesSearch">
+<div class="row" *ngIf="!pacientesSearch">
     <div class="col-md-7">
         <plex-box type="info" title="Búsqueda de Pacientes">
             <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
@@ -42,7 +42,7 @@
 
     <!--panel lateral con detalles paciente-->
     <div class="col-md-5">
-        <div *ngIf="!showcreate && !pacientesSearch && checkout">
+        <div *ngIf="!pacientesSearch && checkout">
             <plex-box type="info" title="Paciente Seleccionado">
                 <div class="row">
                     <div class="col-md-12">

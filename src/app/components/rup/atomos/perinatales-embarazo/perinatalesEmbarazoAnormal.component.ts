@@ -22,7 +22,7 @@ export class PerinatalesEmbarazoAnormalComponent extends Atomo {
   // };
 
   // ngOnInit() {
-  //   this.data[this.tipoPrestacion.key] = (this.datosIngreso) ? this.datosIngreso : false;
+  //   this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : false;
   // } //ngOnInit()
 
   // devolverValores() { //Hacer las validaciones
