@@ -55,112 +55,106 @@
                     <div *ngIf="registros && registros.length && !showDatosSolicitud">
                         <ng-container *ngFor="let elemento of registros; let i = index">
 
-                            <<<<<<< HEAD <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
+                            <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
                                 Mover a esta posición
 
-                    </div>
+                            </div>
 
 
 
-                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': elemento.relacionadoCon}">
-                        =======
-                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
-                            Mover a esta posición
-                        </div>
+                            <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': elemento.relacionadoCon}">
 
-                        <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, elemento)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': elemento.relacionadoCon}">
-                            >>>>>>> scope-autocitados
 
-                            <div class="rup-card" *ngIf="elemento.elementoRUP">
+                                <div class="rup-card" *ngIf="elemento.elementoRUP">
 
-                                <div class="type {{elemento.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(i ,elemento, true)"
-                                    (onDragEnd)="draggingRegistro(i, elemento, false)">
-                                    <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
-                                </div>
-                                <div class="rup-content">
-                                    <div class="header">
-                                        <div class="title">
-                                            {{elemento.concepto.term}}
-                                        </div>
+                                    <div class="type {{elemento.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="elemento" (onDragStart)="draggingRegistro(i ,elemento, true)"
+                                        (onDragEnd)="draggingRegistro(i, elemento, false)">
+                                        <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="rup-content">
+                                        <div class="header">
+                                            <div class="title">
+                                                {{elemento.concepto.term}}
+                                            </div>
 
-                                        <div class="actions">
-                                            <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
+                                            <div class="actions">
+                                                <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
                                                 Error
                                             </span>
 
-                                            <a href="javascript:void(0);" (click)="cambiaValorCollapse(!elemento.collapse, i)">
-                                                <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
-                                            </a>
-
-                                            <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(elemento, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
-                                                <i class="mdi mdi-delete"></i>
-                                            </a>
-
-                                            <div *ngIf="elemento.relacionadoCon === null && elemento?.items.length > 0">
-                                                <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)" [items]="elemento.items"></plex-dropdown>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
-                                            <div *ngIf="errores[i]">
-                                                <span class="badge badge-danger">
-                                                {{errores[i]}}
-                                            </span>
-                                            </div>
-
-                                            <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
-                                                [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
-                                            </rup>
-                                        </div>
-                                        <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
-                                            <div class="actions ">
-                                                <div class="relacionadoCon">
-                                                    <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
-                                                        Relacionado con: {{elemento.relacionadoCon.term}}
-                                                    </div>
-
-                                                    <div *ngIf="elemento.relacionadoCon && confirmarDesvincular[i]" class="confirmarDesvincular">
-                                                        ¿Confirmar desvinculación con <b>{{elemento.relacionadoCon.term}}</b>?
-
-                                                        <div class="float-right">
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
-                                                            Cancelar
-                                                        </a> |
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
-                                                            Desvincular
-                                                        </a>
-                                                        </div>
-                                                    </div>
-
-                                                    <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
-                                                        ¿Quitar de la consulta?
-
-                                                        <div class="float-right">
-                                                            <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
-                                                            Cancelar
-                                                        </a> |
-                                                            <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
-                                                            Quitar
-                                                        </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
-                                                    <i class="mdi mdi-link-variant-off"></i>
+                                                <a href="javascript:void(0);" (click)="cambiaValorCollapse(!elemento.collapse, i)">
+                                                    <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
                                                 </a>
 
+                                                <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(elemento, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </a>
+
+                                                <div *ngIf="elemento.relacionadoCon === null && elemento?.items.length > 0">
+                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(elemento, i)" [items]="elemento.items"></plex-dropdown>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
+                                                <div *ngIf="errores[i]">
+                                                    <span class="badge badge-danger">
+                                                {{errores[i]}}
+                                            </span>
+                                                </div>
+
+                                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
+                                                    [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
+                                                </rup>
+                                            </div>
+                                            <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">
+                                                <div class="actions ">
+                                                    <div class="relacionadoCon">
+                                                        <div class="float-left" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i]">
+                                                            Relacionado con: {{elemento.relacionadoCon.term}}
+                                                        </div>
+
+                                                        <div *ngIf="elemento.relacionadoCon && confirmarDesvincular[i]" class="confirmarDesvincular">
+                                                            ¿Confirmar desvinculación con <b>{{elemento.relacionadoCon.term}}</b>?
+
+                                                            <div class="float-right">
+                                                                <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
+                                                            Cancelar
+                                                        </a> |
+                                                                <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
+                                                            Desvincular
+                                                        </a>
+                                                            </div>
+                                                        </div>
+
+                                                        <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
+                                                            ¿Quitar de la consulta?
+
+                                                            <div class="float-right">
+                                                                <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
+                                                            Cancelar
+                                                        </a> |
+                                                                <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
+                                                            Quitar
+                                                        </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="elemento.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
+                                                        <i class="mdi mdi-link-variant-off"></i>
+                                                    </a>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            </ng-container>
+                        </ng-container>
 
-                            <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
-                                Mover a esta posición
-                            </div>
+                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
+                            Mover a esta posición
+                        </div>
                         </div>
                 </plex-box>
                 </div>
