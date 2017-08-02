@@ -79,8 +79,8 @@
 
                                             <div class="actions">
                                                 <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">
-                                                Error
-                                            </span>
+                                                    Error
+                                                </span>
 
                                                 <a href="javascript:void(0);" (click)="cambiaValorCollapse(!elemento.collapse, i)">
                                                     <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !elemento.collapse}"></i>
@@ -99,8 +99,8 @@
                                             <div class="rup-body " [hidden]="elemento.collapse || confirmarEliminar">
                                                 <div *ngIf="errores[i]">
                                                     <span class="badge badge-danger">
-                                                {{errores[i]}}
-                                            </span>
+                                                        {{errores[i]}}
+                                                    </span>
                                                 </div>
 
                                                 <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
@@ -119,11 +119,11 @@
 
                                                             <div class="float-right">
                                                                 <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
-                                                            Cancelar
-                                                        </a> |
+                                                                    Cancelar
+                                                                </a> |
                                                                 <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
-                                                            Desvincular
-                                                        </a>
+                                                                    Desvincular
+                                                                </a>
                                                             </div>
                                                         </div>
 
@@ -132,11 +132,11 @@
 
                                                             <div class="float-right">
                                                                 <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
-                                                            Cancelar
-                                                        </a> |
+                                                                    Cancelar
+                                                                </a> |
                                                                 <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
-                                                            Quitar
-                                                        </a>
+                                                                    Quitar
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -150,27 +150,28 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         </ng-container>
 
                         <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
                             Mover a esta posición
                         </div>
-                        </div>
+                    </div>
                 </plex-box>
-                </div>
-
-                <!-- Panel de Búsqueda -->
-                <div class="col-3">
-                    <plex-box>
-                        <header>
-                            <div class="page-title">Buscar</div>
-                        </header>
-                        <div class="mt-3">
-                            <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUPprestacion" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
-                        </div>
-                    </plex-box>
-                </div>
             </div>
+
+            <!-- Panel de Búsqueda -->
+            <div class="col-3">
+                <plex-box>
+                    <header>
+                        <div class="page-title">Buscar</div>
+                    </header>
+                    <div class="mt-3">
+                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUPprestacion" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
     </section>
 
     <!-- Footer -->
