@@ -668,7 +668,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
-        return resultado;
+        //return resultado;
+        return true;
     }
 
     /**

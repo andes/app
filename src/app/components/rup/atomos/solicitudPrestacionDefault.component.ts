@@ -11,29 +11,33 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
 
     ngOnInit() {
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
-        // si tengo valores cargados entonces devuelvo los resultados y mensajes
-        if (this.datosIngreso) {
 
-            this.mensaje = this.getMensajes();
-        } else {
-            this.data[this.elementoRUP.key].autocitado = true;
+        // obtenemos todos los planes
+        this.servicioTipoPrestacion.get({}).subscribe(planes => {
+            this.listaPlanes = planes;
 
-            // obtenemos todos los planes
-            this.servicioTipoPrestacion.get({}).subscribe(planes => {
-                this.listaPlanes = planes;
+            // buscamos el concepto turneable al cual pertenece el concepto a cargar
+            let conceptoTurneable = planes.find(plan => (plan.conceptId === this.snomedConcept.conceptId) );
 
-                // buscamos el concepto turneable al cual pertenece el concepto a cargar
-                let conceptoTurneable = planes.find(plan => (plan.conceptId === this.snomedConcept.conceptId) );
+            // verificamos si tenemos permisos sobre ese concepto
+            let tienePermisos = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => permiso === conceptoTurneable.id);
 
-                // verificamos si tenemos permisos sobre ese concepto
-                let tienePermisos = this.auth.getPermissions('rup:tipoPrestacion:?').find(permiso => permiso === conceptoTurneable.id);
+            if (tienePermisos) {
+                this.puedeAutocitar = true;
+            }
 
-                if (tienePermisos) {
-                    this.puedeAutocitar = true;
-                }
-            });
+            // si tengo valores cargados entonces devuelvo los resultados y mensajes
+            if (this.datosIngreso) {
 
-        }
+                this.mensaje = this.getMensajes();
+            } else {
+                this.data[this.elementoRUP.key].autocitado = true;
+
+                
+
+            }
+        });
+
     }
 
     loadProfesionales(event) {
@@ -43,6 +47,7 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
+            let callback = (this.data[this.elementoRUP.key].profesionales) ? this.data[this.elementoRUP.key].profesionales : null;
             // let profesionales = {};
 
             // if (this.data[this.elementoRUP.key].profesionales) {
@@ -51,17 +56,20 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
             // }
 
             // event.callback(profesionales);
-            
-            event.callback(this.data[this.elementoRUP.key].profesionales);
+
+            //event.callback(this.data[this.elementoRUP.key].profesionales);
+            event.callback(callback);
         }
 
     }
 
-    quitarOrder() {
-        if (this.data[this.elementoRUP.key].profesionales) {
-            this.data[this.elementoRUP.key].profesionales.forEach(profesional => {
-                delete profesional.$order;
-            });
+    cambioAutocitado() {
+        // si cambio autocitado y lo puse en false, entonces limpio los profesionales
+        if (!this.data[this.elementoRUP.key].autocitado) {
+            this.data[this.elementoRUP.key].profesionales = null;
         }
+
+        // emitimos los valores
+        this.devolverValores();
     }
 }
