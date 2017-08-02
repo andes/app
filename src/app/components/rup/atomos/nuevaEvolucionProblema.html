@@ -3,7 +3,7 @@
     <!--DESCRIPCION ALTA PROBLEMA-->
     <div class="row">
         <div class="col">
-            <strong>Inicio del Hallazgo: {{HallazgoCompleto.evoluciones[HallazgoCompleto.evoluciones.length -1].fechaInicio | fecha}} </strong>
+            <strong>Inicio del Hallazgo: {{HallazgoCompleto?.evoluciones[HallazgoCompleto?.evoluciones.length -1].fechaInicio | fecha}} </strong>
         </div>
         <div class="col text-right">
             <!--ES CRONICO?-->
@@ -28,7 +28,7 @@
         </div>
     </div>
     <!--Listado de evoluciones-->
-    <ng-container *ngIf="HallazgoCompleto.evoluciones && HallazgoCompleto.evoluciones.length > 0">
+    <ng-container *ngIf="HallazgoCompleto?.evoluciones && HallazgoCompleto?.evoluciones.length > 0">
         <div class="row">
             <div class="col-12">
                 <label class="box-title-secundario" for="comment">Evoluciones Anteriores:</label>

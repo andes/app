@@ -192,34 +192,42 @@ export class PrestacionEjecucionComponent implements OnInit {
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
                 // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-                // if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
-                //     debugger;
-                //     let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto);
-                //         hallazgo.subscribe(dato => {
-                //             if (dato) {
-                //                 // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-                //                 let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
-                //                 // armamos el elemento data a agregar al array de registros
-                //                 let data = {
-                //                     tipo: 'problemas',
-                //                     concepto: registro.concepto,
-                //                     elementoRUP: elementoRUP,
-                //                     valor: dato,
-                //                     destacado: false,
-                //                     relacionadoCon: null
-                //                 };
-                //                 this.registros.splice(this.registros.length, 0, data);
-                //                 if (!this.data[elementoRUP.key]) {
-                //                     this.data[elementoRUP.key] = {};
-                //                 }
-                //                 this.data[elementoRUP.key][registro.concepto.conceptId] = dato;
-                //             } else {
-                //                 this.mostrarUnRegistro(registro);
-                //             }
-                //         });
-                // }else{
+                if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
+                    let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto);
+                        hallazgo.subscribe(dato => {
+                            debugger;
+                            if (dato) {
+                                let datoModificar = {
+                                    datoCompleto: dato,
+                                    ultimaEvolucion: dato.evoluciones[0] ? dato.evoluciones[0] : null
+                                };
+                                // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+                                let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
+                                // armamos el elemento data a agregar al array de registros
+                                let data = {
+                                    tipo: 'problemas',
+                                    concepto: registro.concepto,
+                                    elementoRUP: elementoRUP,
+                                    valor: datoModificar,
+                                    destacado: false,
+                                    relacionadoCon: null
+                                };
+                                this.registros.splice(this.registros.length, 0, data);
+                                if (!this.data[elementoRUP.key]) {
+                                    this.data[elementoRUP.key] = {};
+                                }
+                                this.data[elementoRUP.key][registro.concepto.conceptId] = datoModificar;
+                                 for (let i in this.registros) {
+                                    this.cargaItems(this.registros[i], i);
+                                    // Actualizamos cuando se agrega el array..
+                                }
+                            } else {
+                                this.mostrarUnRegistro(registro);
+                            }
+                        });
+                }else{
                 this.mostrarUnRegistro(registro);
-                // }
+                 }
 
             });
 

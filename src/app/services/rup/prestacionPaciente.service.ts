@@ -144,15 +144,15 @@ export class PrestacionPacienteService {
      */
     getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
-        let registros = [];
-        if (this.cacheRegistros[idPaciente]) {
-            registros = this.cacheRegistros[idPaciente];
-            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
-        } else {
-            return this.getByPacienteHallazgo(idPaciente).flatMapTo(hallazgos =>
+        // let registros = [];
+        // if (this.cacheRegistros[idPaciente]) {
+        //     registros = this.cacheRegistros[idPaciente];
+        //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        // } else {
+            return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
                 hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
             );
-        }
+      //  }
     }
 
     /**

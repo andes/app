@@ -27,8 +27,21 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
      */
     ngOnInit() {
         this.data[this.elementoRUP.key] = {};
+        debugger;
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
         if (this.datosIngreso) {
+            if(this.datosIngreso.datoCompleto){
+                this.HallazgoCompleto = this.datosIngreso.datoCompleto;
+                this.HallazgoCompleto.evoluciones.shift();
+                this.data[this.elementoRUP.key].estado = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.estado : 'activo';
+                this.data[this.elementoRUP.key].esCronico = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.esCronico : false;
+                // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+                this.data[this.elementoRUP.key].evolucion = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.evolucion : '';
+
+                if (this.HallazgoCompleto.evoluciones) {
+                    this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+                }
+            }else{
             this.HallazgoCompleto = this.datosIngreso;
             this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
             this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
@@ -37,6 +50,7 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
 
             if (this.HallazgoCompleto.evoluciones) {
                 this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+            }
             }
             this.devolverValores();
         }
