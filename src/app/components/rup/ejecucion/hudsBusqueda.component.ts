@@ -48,6 +48,12 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     /**
+     * Listado de todos los hallazgos
+     */
+    public problemasActivos: any = [];
+
+
+    /**
      * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
@@ -65,6 +71,9 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
+            this.listarProblemasCronicos();
+            this.listarHallazgos();
+            this.listarProblemasActivos();
         }
 
     }
@@ -108,7 +117,6 @@ export class HudsBusquedaComponent implements OnInit {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
             // this.hallazgos = null;
             this.prestaciones = prestaciones;
-            this.listarProblemasCronicos();
         });
     }
 
@@ -123,6 +131,12 @@ export class HudsBusquedaComponent implements OnInit {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
             // this.prestaciones = null;
             this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
+        });
+    }
+
+       listarProblemasActivos() {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].estado.id === 'activo' && !h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }
 }
