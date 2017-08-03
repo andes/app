@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-12">
             <legend><span *ngIf="turnoSeleccionado?.reasignado?.siguiente">DETALLES DE LA REASIGNACIÓN</span></legend>
+            <legend><span *ngIf="!turnoSeleccionado?.reasignado?.siguiente">SELECCIÓN DE TURNO PARA REASIGNACIÓN</span></legend>
             <!-- Hay turno? -->
             <div class="row" *ngIf="turnoSeleccionado">
                 <!--<pre>{{ turnoSeleccionado | json }}</pre>-->

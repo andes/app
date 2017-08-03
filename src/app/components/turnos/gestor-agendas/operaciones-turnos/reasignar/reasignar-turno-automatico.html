@@ -1,35 +1,125 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <div *ngIf="agendasCandidatas[0]?.agendas?.length === 0">
+    <!-- <div *ngIf="agendasReasignar[0]?.agendas?.length === 0">
         <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
-    </div>
-    <div *ngIf="agendasCandidatas?.length > 0 && agendasCandidatas[0].turno">
-        <div *ngFor="let agendaCandidata of agendasCandidatas; let indiceTurno = index">
-            <plex-accordion class="accordion-reasignar">
-                <!--Turno-->
-                <div *ngIf="agendaCandidata?.agendas?.length > 0 && agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
-                <div *ngIf="agendaCandidata?.agendas?.length > 0 && !agendaCandidata.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
-                <div *ngIf="agendaCandidata?.agendas?.length === 0 && !agendaCandidata?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i></div>
-                <div>
-                    <b>Paciente: </b> {{ agendaCandidata?.turno.paciente | paciente }} | <small>DNI {{ agendaCandidata?.turno.paciente.documento | number }}</small>
-                    <br>
-                    <b>Turno: </b>{{ agendaCandidata?.turno.horaInicio | date: 'HH:mm' }} hs.
-                    <br>
-                    <!-- <b>Profesional: </b> -->
-                    <!-- <ng-container *ngIf="agendaAReasignar?.profesionales?.length > 0; then hayProfesional else noHayProfesional"></ng-container> -->
-                    <!-- <ng-template #hayProfesional>{{ agendaAReasignar?.profesionales[0] | profesional }}</ng-template>
-                    <ng-template #noHayProfesional>Sin profesional asignado</ng-template> -->
-                </div>
-                <plex-panel *ngIf="agendaCandidata?.agendas?.length > 0" tituloPrincipal="Candidatas" icon="arrow-down-drop-circle-outline">
-                    <div class="list-group" *ngFor="let agenda of agendaCandidata.agendas; let i = index">
+        <hr>
+    </div> -->
+    <h5>Reasignación automática</h5>
 
-                        <ng-container *ngIf="agendaCandidata.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
+    <div class="row">
+        <div class="col-12">
+
+            <div id="accordion" role="tablist" aria-multiselectable="true" class="accordion-reasignar">
+                <div *ngIf="agendasReasignar?.length > 0 && agendasReasignar[0].turno">
+                    <div *ngFor="let agendaReasignar of agendasReasignar; let indiceTurno = index">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <span *ngIf="agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i> Turno ya reasignado</span>
+                                <span *ngIf="agendaReasignar?.agendas?.length > 0 && !agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i> Turno sin reasignar</span>
+                                <span *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i> Turno sin agendas candidatas para reasignación</span>
+                                <br>
+                                <span><b>Paciente: </b> {{ agendaReasignar?.turno.paciente | paciente }} | <small>DNI {{ agendaReasignar?.turno.paciente.documento | number }}</small></span>
+                                <br>
+                                <span><b>Turno: </b> {{ agendaReasignar?.turno.horaInicio | date: 'HH:mm' }} hs.</span>
+                                <br>
+                                <span *ngIf="paneles[indiceTurno] !== agendaReasignar.turno?._id && agendaReasignar.agendas && !agendaReasignar.turno?.reasignado?.siguiente && agendaReasignar?.agendas?.length > 0"
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver agendas candidatas</span>
+                                <span *ngIf="paneles[indiceTurno] === agendaReasignar.turno?._id && agendaReasignar.agendas && !agendaReasignar.turno?.reasignado?.siguiente"
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar agendas candidatas</span>
+                                <span *ngIf="paneles[indiceTurno] !== agendaReasignar.turno?._id && (!agendaReasignar.agendas || agendaReasignar.turno?.reasignado?.siguiente)"
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver detalles de la reasignación</span>
+                                <span *ngIf="paneles[indiceTurno] === agendaReasignar.turno?._id && (!agendaReasignar.agendas || agendaReasignar.turno?.reasignado?.siguiente)"
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar detalles de la reasignación</span>
+                                <plex-button *ngIf="agendasReasignar[0]?.agendas?.length === 0 && !agendaReasignar.turno?.reasignado?.siguiente" type="primary"
+                                    label="Reasignación Manual de Turnos" (click)="reasignarTurnos()"></plex-button>
+                            </div>
+
+                            <!-- TURNOS A REASIGNAR -->
+                            <div *ngIf="agendaReasignar?.turno && paneles[indiceTurno] === agendaReasignar.turno?._id && !agendaReasignar.turno?.reasignado?.siguiente"
+                                class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                                <table *ngIf="agendaReasignar?.agendas?.length > 0" class="table table-inverse">
+                                    <tr *ngFor="let agenda of agendaReasignar.agendas; let i = index">
+                                        <td class="col-10 bg-warning" *ngIf="(getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(agendaReasignar.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
+                                            <div *ngIf="agendasOcultas[i] === agenda._id" class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
+                                                    date: 'dd/MM/yyyy' }}
+                                                    <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio | date:'HH:mm'}}
+                                                    a {{ agendaReasignar.turno.horaFin | date:'HH:mm'}} hs.
+                                                </h5>
+                                            </div>
+                                            <!-- REASIGNAR -->
+                                            <a class="flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)" [hidden]="agendasOcultas[i] === agenda._id"
+                                                title="Reasignar turno">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                                        | date: 'dd/MM/yyyy' }}
+                                                        <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio
+                                                        | date:'HH:mm'}} a {{ agendaReasignar.turno.horaFin | date:'HH:mm'}}
+                                                        hs.
+                                                    </h5>
+                                                    <small>Similitud: {{ agenda.similitud }}%</small>
+                                                </div>
+                                                <p class="mb-1">
+                                                    Tipo Prestación: {{ agendaReasignar.turno.tipoPrestacion.nombre }}
+                                                </p>
+                                                <p class="mb-1" *ngIf="agenda.profesionales?.length > 0">
+                                                    Profesional: {{ agenda.profesionales[0] | profesional }}
+                                                </p>
+                                            </a>
+                                        </td>
+                                        <td class="col-2" *ngIf="(getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(agendaReasignar.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio)) ">
+                                            <button *ngIf="agendaReasignar?.agendas?.length > 0" class="btn btn-sm btn-danger hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
+                                                <i *ngIf="agendasOcultas[i] === agenda._id" class="mdi mdi-eye"></i>
+                                                <i *ngIf="agendasOcultas[i] !== agenda._id" class="mdi mdi-eye-off"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- TURNOS YA REASIGNADOS -->
+                            <div class="container" *ngIf="agendaReasignar?.turno?.reasignado?.siguiente && paneles[indiceTurno] === agendaReasignar.turno?._id">
+                                <div class="row" *ngIf="agendaReasignar?.agendas">
+                                    <div class="col-12 bg-success text-white card-block">
+                                        Reasignado al Turno: <b>{{ agendaReasignar.agendas[0]?.horaInicio | date: 'EEE' | uppercase }} {{ agendaReasignar.agendas[0]?.horaInicio
+                                        | date: 'dd/MM/yyyy'}}, {{ agendaReasignar.agendas[0].turnoReasignado?.horaInicio |
+                                        date: 'HH:mm'}} hs</b>
+                                        <div>Prestación: <b>{{agendaReasignar?.turno?.tipoPrestacion?.nombre}}</b></div>
+                                        <div *ngFor="let profesional of agendaReasignar.agendas[0]?.profesionales">Profesional(es): <b>{{profesional | profesional}}</b></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div *ngIf="agendasReasignar?.length > 0 && agendasReasignar[0].turno">
+        <div *ngFor="let agendaReasignar of agendasReasignar; let indiceTurno = index">
+
+            <plex-accordion class="accordion-reasignar">
+                <div *ngIf="agendaReasignar?.agendas?.length > 0 && agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i></div>
+                <div *ngIf="agendaReasignar?.agendas?.length > 0 && !agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i></div>
+                <div *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i></div>
+                <div>
+                    <b>Paciente: </b> {{ agendaReasignar?.turno.paciente | paciente }} | <small>DNI {{ agendaReasignar?.turno.paciente.documento | number }}</small>
+                    <br>
+                    <b>Turno: </b>{{ agendaReasignar?.turno.horaInicio | date: 'HH:mm' }} hs.
+                    <br>
+                </div>
+                <plex-panel *ngIf="agendaReasignar?.agendas?.length > 0" tituloPrincipal="Candidatas" icon="arrow-down-drop-circle-outline">
+                    <div class="list-group" *ngFor="let agenda of agendaReasignar.agendas; let i = index">
+
+                        <ng-container *ngIf="agendaReasignar.turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                         <ng-template #reasignado>
                             <div *ngIf="agenda.agendaReasignada">
-                                <!--TODO BOTHO: Hace tu gracia-->
                                 <div class="col-12">
-                                    <!-- {{agenda.agendaReasignada | json}} -->
                                     Reasignado al Turno: {{ agenda.agendaReasignada?.horaInicio | date: 'EEE' | uppercase }} {{ agenda.agendaReasignada?.horaInicio
                                     | date: 'dd/MM/yyyy'}}, {{ agenda.turnoReasignado?.horaInicio| date: 'HH:mm'}} hs
                                     <div>{{agenda.turnoReasignado?.tipoPrestacion?.nombre}}</div>
@@ -38,28 +128,26 @@
                             </div>
                         </ng-template>
 
-                        <!-- {{getHora(agendaCandidata.turno.horaInicio)}} {{getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)}} -->
                         <ng-template #noReasignado>
-                            <!-- <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) "> -->
-                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
-                                <button *ngIf="agendaCandidata?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
+                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaReasignar.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
+                                <button *ngIf="agendaReasignar?.agendas?.length > 0" class="btn btn-sm btn-danger float-right hover" (click)="ocultarAgendaCandidata(agenda._id, i)">
                                     <i *ngIf="agendasOcultas[i] === agenda._id" class="mdi mdi-eye"></i>
                                     <i *ngIf="agendasOcultas[i] !== agenda._id" class="mdi mdi-eye-off"></i>
                                 </button>
                             </div>
-                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaCandidata.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
+                            <div *ngIf="(getFecha(hoy)===getFecha(agenda.horaInicio) && getHora(agendaReasignar.turno.horaInicio) > getHora(hoy)) || (getFecha(hoy)!==getFecha(agenda.horaInicio)) ">
                                 <a class="list-group-item list-group-item-action flex-column align-items-start hover" (click)="seleccionarCandidata(indiceTurno, i)"
                                     [hidden]="agendasOcultas[i] === agenda._id">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEEE' }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'
                                             }}
-                                            <i class="mdi mdi-clock"></i> {{ agendaCandidata.turno.horaInicio | date:'HH:mm'}}
+                                            <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio | date:'HH:mm'}}
                                             hs.
                                         </h5>
                                         <small>{{ agenda.similitud }}%</small>
                                     </div>
                                     <p class="mb-1">
-                                        Tipo Prestación: {{ agendaCandidata.turno.tipoPrestacion.nombre }}
+                                        Tipo Prestación: {{ agendaReasignar.turno.tipoPrestacion.nombre }}
                                     </p>
                                     <small *ngIf="agenda.profesionales?.length > 0">Profesional: {{ agenda.profesionales[0] | profesional }}</small>
                                 </a>
@@ -71,9 +159,6 @@
                 <hr>
             </plex-accordion>
         </div>
-    </div>
-    <hr>
-    <div *ngIf="agendasCandidatas.agendas?.length > 0">
-        <plex-button type="primary" label="Reasignación de Turnos" (click)="reasignarTurnos()"></plex-button>
-    </div>
+    </div> -->
+
 </fieldset>
