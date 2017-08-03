@@ -116,7 +116,7 @@ export class HudsBusquedaComponent implements OnInit {
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
             // this.hallazgos = null;
-            this.prestaciones = prestaciones;
+            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
         });
     }
 
