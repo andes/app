@@ -1,14 +1,13 @@
-<form *ngIf="!showAuditoria2" class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <div class="col">
-                <plex-box type="danger">
-                    <pacientesSearch [modoCompleto]="false" [bloquearCreate]="true" (selected)='onSelect($event)'></pacientesSearch>
-                </plex-box>
-            </div>
+<div class="row">
+    <div class="col">
+        <pacientesSearch [hideFooter]="true" [modoCompleto]="false" [bloquearCreate]="true" (selected)='onSelect($event)'></pacientesSearch>
+    </div>
+    <div class="col-4" *ngIf="mostrarPaciente">
+        <form *ngIf="!showAuditoria2" class="plex-layout" #form="ngForm">
 
-            <div class="col-4" *ngIf="mostrarPaciente">
-                <plex-box type="info">
+            <section>
+
+                <plex-box>
                     <header>
                         <h3>Datos del Paciente
                             <span *ngIf="pacienteSelected.estado === 'validado'" class="label-success recuadro">
@@ -54,10 +53,10 @@
                     <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary" (click)="verDuplicados()"></plex-button>
                     <br> <br>
                 </plex-box>
-            </div>
-        </div>
-    </section>
+            </section>
+        </form>
+    </div>
+</div>
 
-</form>
 
 <auditoria2 *ngIf="showAuditoria2" [pacienteInput]="pacienteSelected" (data)='afterAuditoria($event)'></auditoria2>
