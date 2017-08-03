@@ -63,8 +63,8 @@
 
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
-                                <!--Ninguna agenda seleccionada--> 
-                                 <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud"> 
+                                <!--Ninguna agenda seleccionada-->
+                                <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud">
                                     <legend class=" pt-3 text-center ">Búsquedas recientes</legend>
                                     <ul class="list-group ">
                                         <li *ngFor="let busqueda of busquedas; let i=index " class="list-group-item hover
@@ -84,10 +84,10 @@
                                 <!--Agenda seleccionada-->
                                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' ">
                                     <!--Header agenda-->
-                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right ">{{ estadosAgenda[agenda.estado].nombre }}</span>
                                     <legend class="pt-3 text-center ">
                                         <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
-                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span>
+                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} <span class="text-{{estadosAgenda[agenda.estado].class}}">({{ estadosAgenda[agenda.estado].nombre }})</span></span>
+
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                             {{ tipoPrestacion.nombre }}
