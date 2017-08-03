@@ -123,26 +123,30 @@
 
                 <div *ngIf="prestaciones" class="list-group">
                     <ng-container *ngFor="let prestacion of prestaciones; let i = index">
-                        <div class="rup-card mini">
-                            <div class="type planes">
-                            </div>
-                            <div class="rup-content">
-                                <div class="header">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
-                                        </div>
-                                        <div class="col-6">
-                                            <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
-                                        </div>
-                                    </div>
-                                    <div class="title">
-                                        {{ prestacion.solicitud.tipoPrestacion.term }}
-                                    </div>
+
+                        <ng-container *ngFor="let plan of prestacion; let i = index">
+
+                            <div class="rup-card mini">
+                                <div class="type planes">
                                 </div>
-                                <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <small> {{ plan.createdAt | fecha }}</small>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="badge badge-validada float-right">validada  </span>
+                                            </div>
+                                        </div>
+                                        <div class="title">
+                                            {{ plan.concepto.term }}
+                                        </div>
+                                    </div>
+                                    <small>Profesional: {{ plan.createdBy.nombreCompleto}}</small>
+                                </div>
                             </div>
-                        </div>
+                        </ng-container>
                     </ng-container>
                 </div>
             </ng-container>

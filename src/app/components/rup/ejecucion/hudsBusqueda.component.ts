@@ -70,12 +70,11 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
-            this.listarPrestaciones();
             this.listarProblemasCronicos();
             this.listarHallazgos();
             this.listarProblemasActivos();
+            this.listarPrestaciones();
         }
-
     }
 
     dragStart(e) {
@@ -116,7 +115,11 @@ export class HudsBusquedaComponent implements OnInit {
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
             // this.hallazgos = null;
-            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            let arrayPrestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            arrayPrestaciones.forEach(element => {
+                let unaPrestacion = element.ejecucion.registros.filter(p => p.tipo === 'planes');
+                this.prestaciones.push(unaPrestacion);
+            });
         });
     }
 
@@ -134,7 +137,7 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-       listarProblemasActivos() {
+    listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
             this.problemasActivos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].estado.id === 'activo' && !h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
