@@ -388,7 +388,12 @@ export class DarTurnosComponent implements OnInit {
                 if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                     return (data.estado === 'publicada');
                 } else {
-                    return (data.estado === 'disponible' || data.estado === 'publicada');
+                    if (this._solicitudPrestacion) {
+                        return (data.estado === 'disponible');
+                    } else {
+                        return (data.estado === 'publicada');
+                        // return (data.estado === 'disponible' || data.estado === 'publicada');
+                    }
                 }
             });
 
@@ -480,10 +485,10 @@ export class DarTurnosComponent implements OnInit {
                                 this.tiposTurnosLabel = 'Con llave';
                             }
                         } else {
-                            if (this.agenda.estado === 'disponible') {
-                                this.tiposTurnosSelect = 'gestion';
-                                this.tiposTurnosLabel = 'Para gestión de pacientes';
-                            }
+                            // if (this.agenda.estado === 'disponible') {
+                            //     this.tiposTurnosSelect = 'gestion';
+                            //     this.tiposTurnosLabel = 'Para gestión de pacientes';
+                            // }
 
                             if (this.agenda.estado === 'publicada') {
                                 this.tiposTurnosSelect = 'programado';
@@ -508,35 +513,39 @@ export class DarTurnosComponent implements OnInit {
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
 
                                 countBloques.push({
-                                    delDia: ((bloque.accesoDirectoDelDia as number) + (bloque.accesoDirectoProgramado as number)),
+                                    delDia: (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) + 
+                                    (bloque.restantesProfesional as number) + (bloque.restantesGestion as number),
                                     programado: 0,
-                                    gestion: bloque.reservadoGestion,
-                                    profesional: bloque.reservadoProfesional
+                                    gestion: 0,
+                                    profesional: 0
                                 });
                                 bloque.turnos.forEach((turno) => {
                                     // Si el turno está asignado o está disponible pero ya paso la hora
-                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
+                                    // if ((turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
                                         if (turno.estado === 'turnoDoble' && turnoAnterior) {
                                             turno = turnoAnterior;
                                         }
-                                        switch (turno.tipoTurno) {
-                                            case ('delDia'):
-                                                countBloques[indexBloque].delDia--;
-                                                break;
-                                            case ('programado'):
-                                                countBloques[indexBloque].delDia--;
-                                                break;
-                                            case ('profesional'):
-                                                countBloques[indexBloque].profesional--;
-                                                break;
-                                            case ('gestion'):
-                                                countBloques[indexBloque].gestion--;
-                                                break;
-                                            default:
-                                                this.delDiaDisponibles--;
-                                                break;
+                                        if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
+                                            countBloques[indexBloque].delDia--;
                                         }
-                                    }
+                                        // switch (turno.tipoTurno) {
+                                        //     case ('delDia'):
+                                        //         countBloques[indexBloque].delDia--;
+                                        //         break;
+                                        //     case ('programado'):
+                                        //         countBloques[indexBloque].delDia--;
+                                        //         break;
+                                        //     case ('profesional'):
+                                        //         countBloques[indexBloque].profesional--;
+                                        //         break;
+                                        //     case ('gestion'):
+                                        //         countBloques[indexBloque].gestion--;
+                                        //         break;
+                                        //     default:
+                                        //         this.delDiaDisponibles--;
+                                        //         break;
+                                        // }
+                                    // }
 
                                     turnoAnterior = turno;
 
@@ -553,36 +562,36 @@ export class DarTurnosComponent implements OnInit {
                                 countBloques.push({
                                     // Asignamos a contadores dinamicos la cantidad inicial de c/u
                                     // de los tipos de turno respectivamente
-                                    delDia: bloque.accesoDirectoDelDia,
-                                    programado: bloque.accesoDirectoProgramado,
-                                    gestion: bloque.reservadoGestion,
-                                    profesional: bloque.reservadoProfesional
+                                    delDia: bloque.restantesDelDia,
+                                    programado: bloque.restantesProgramados,
+                                    gestion: bloque.restantesGestion,
+                                    profesional: bloque.restantesProfesional
                                 });
 
                                 bloque.turnos.forEach((turno) => {
-                                    if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
+                                    // if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
                                         if (turno.estado === 'turnoDoble' && turnoAnterior) {
                                             turno = turnoAnterior;
                                         }
-                                        switch (turno.tipoTurno) {
-                                            case ('delDia'):
-                                                countBloques[indexBloque].delDia--;
-                                                break;
-                                            case ('programado'):
-                                                countBloques[indexBloque].programado--;
-                                                break;
-                                            case ('profesional'):
-                                                if (this.agenda.estado === 'disponible') {
-                                                    countBloques[indexBloque].profesional--;
-                                                }
-                                                break;
-                                            case ('gestion'):
-                                                if (this.agenda.estado === 'disponible') {
-                                                    countBloques[indexBloque].gestion--;
-                                                }
-                                                break;
-                                        }
-                                    }
+                                        // switch (turno.tipoTurno) {
+                                        //     case ('delDia'):
+                                        //         countBloques[indexBloque].delDia--;
+                                        //         break;
+                                        //     case ('programado'):
+                                        //         countBloques[indexBloque].programado--;
+                                        //         break;
+                                        //     case ('profesional'):
+                                        //         if (this.agenda.estado === 'disponible') {
+                                        //             countBloques[indexBloque].profesional--;
+                                        //         }
+                                        //         break;
+                                        //     case ('gestion'):
+                                        //         if (this.agenda.estado === 'disponible') {
+                                        //             countBloques[indexBloque].gestion--;
+                                        //         }
+                                        //         break;
+                                        // }
+                                    // }
                                     turnoAnterior = turno;
                                 });
 

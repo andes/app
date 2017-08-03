@@ -134,8 +134,8 @@
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td><b>{{countBloques[indiceBq].gestion}}</b></td>
                                                             </ng-template>
-                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td> -->
-                                                            <td>{{countBloques[indiceBq].profesional}}</td>
+                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td> 
+                                                            <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false">{{countBloques[indiceBq].profesional}}</td>
 
                                                         </tr>
                                                     </tbody>
