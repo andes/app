@@ -92,52 +92,75 @@
         </table>
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
-        <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
-            <thead *ngIf="bloque.descripcion">
-                <tr>
-                    <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
-                        hs
-                    </th>
-                    <th *ngIf="agenda.nominalizada" colspan="4">{{bloque.descripcion}}
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
-                    <td (click)="seleccionarTurno(turno, true, false)">
-                        <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
-                        <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
-                    </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i],false, false)">
-                        <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                    </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
+        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques">
+            <table *ngIf="agenda.nominalizada" class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
+                <thead>
+                    <tr>
+                        <td>Del día</td>
+                        <td>Programados</td>
+                        <td>Con Llave</td>
+                        <td>Profesional</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{delDia ? bloque.restantesDelDia+bloque.restantesProgramados+bloque.restantesGestion+bloque.restantesProfesional
+                            : bloque.restantesDelDia}}</td>
+                        <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
+                        <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
+                        <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped">
+                <!-- <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped"> -->
 
-                        <span *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</span>
-                        <small><span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span></small>
-                        <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0"> | Nro Carpeta 
+                <thead *ngIf="bloque.descripcion">
+                    <tr>
+                        <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                            hs
+                        </th>
+                        <th *ngIf="agenda.nominalizada" colspan="4">{{bloque.descripcion}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
+                        <td (click)="seleccionarTurno(turno, true, false)">
+                            <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
+                            <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                        </td>
+                        <td (click)="seleccionarTurno(bloque.turnos[i],false, false)">
+                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                        </td>
+                        <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
+
+                            <span *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</span>
+                            <small><span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span></small>
+                            <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0"> | Nro Carpeta 
                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
                         <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
                         </span></small>
-                        <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1"><small><span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
-                        <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
-                        <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
-                        <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'"><i class="mdi mdi-alert-circle-outline"></i> Suspendido</span>
-                        <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
-                    </td>
-                    <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
-                        <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                        <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
-                        <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"><i class="text-success mdi mdi-emoticon-happy"></i></div>
-                    </td>
-                    <td>
-                        <span *ngIf="turno && turno.estado !== 'disponible' && turno.estado !== 'turnoDoble'">
+                            <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1"><small><span *ngIf="bloque.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
+                            <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
+                            <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</span>
+                            <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno?.estado === 'suspendido'"><i class="mdi mdi-alert-circle-outline"></i> Suspendido</span>
+                            <span *ngIf="turno?.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+                        </td>
+                        <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"><i class="text-success mdi mdi-emoticon-happy"></i></div>
+                        </td>
+                        <td>
+                            <span *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'">
                         <popover-audit placement="left" [data]="turno"></popover-audit>
                         </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
         <!--Sobreturnos-->
         <table class="table table-striped">
             <thead *ngIf="agenda.sobreturnos && agenda.sobreturnos.length > 0">

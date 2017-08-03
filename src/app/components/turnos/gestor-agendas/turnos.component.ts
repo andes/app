@@ -22,12 +22,9 @@ export class TurnosComponent implements OnInit {
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
+        this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-
-        // for (let i = 0; i < this.agenda.bloques.length; i++) {
-        //   this.turnos = this.agenda.bloques[i].turnos;
-        // }
 
         this.bloques = this.agenda.bloques;
         for (let i = 0; i < this.bloques.length; i++) {
@@ -75,6 +72,7 @@ export class TurnosComponent implements OnInit {
     botones: any = {};
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
+    public delDia = false;
 
     // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
