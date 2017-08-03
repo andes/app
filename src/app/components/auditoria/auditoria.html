@@ -3,9 +3,6 @@
         <div class="row">
             <div class="col">
                 <plex-box type="danger">
-                    <header>
-                        <div class="page-title">Auditoría de Pacientes</div>
-                    </header>
                     <pacientesSearch [modoCompleto]="false" [bloquearCreate]="true" (selected)='onSelect($event)'></pacientesSearch>
                 </plex-box>
             </div>
@@ -14,44 +11,44 @@
                 <plex-box type="info">
                     <header>
                         <h3>Datos del Paciente
-                          <span *ngIf="pacienteSelected.estado === 'validado'" class="label-success recuadro">
+                            <span *ngIf="pacienteSelected.estado === 'validado'" class="label-success recuadro">
                             {{pacienteSelected.estado | uppercase}} 
                           </span>
-                          <span *ngIf="pacienteSelected.estado !== 'validado'" class="label-warning recuadro">
+                            <span *ngIf="pacienteSelected.estado !== 'validado'" class="label-warning recuadro">
                             {{pacienteSelected.estado | uppercase}} 
                           </span>
                         </h3>
                     </header>
-                  <div class="col"> 
-                    <div class="col" *ngIf="pacienteSelected.foto">
+                    <div class="col">
+                        <div class="col" *ngIf="pacienteSelected.foto">
                             <img class="foto" src="{{pacienteSelected.foto}}">
-                    </div>
-                    <div class="row" *ngIf="pacienteSelected.apellido">
-                        <div class="col-md-12">
-                            <h3><strong>{{pacienteSelected.apellido}}</strong>
-                                <small> {{pacienteSelected.nombre}}</small>
-                            </h3>
+                        </div>
+                        <div class="row" *ngIf="pacienteSelected.apellido">
+                            <div class="col-md-12">
+                                <h3><strong>{{pacienteSelected.apellido}}</strong>
+                                    <small> {{pacienteSelected.nombre}}</small>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="pacienteSelected.documento">
+                            <div class="col-md-12">
+                                <h4>D.N.I. {{pacienteSelected.documento}} </h4>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="pacienteSelected.fechaNacimiento">
+                            <div class="col-md-12">
+                                <h4> <label>Fecha de Nacimiento: </label> {{pacienteSelected.fechaNacimiento | fecha }} </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4> <label>Sexo: </label>
+                                    <span *ngIf="pacienteSelected.sexo.nombre">{{pacienteSelected.sexo.nombre}}</span>
+                                    <span *ngIf="!pacienteSelected.sexo.nombre">{{pacienteSelected.sexo}}</span>
+                                </h4>
+                            </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="pacienteSelected.documento">
-                        <div class="col-md-12">
-                            <h4>D.N.I. {{pacienteSelected.documento}} </h4>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="pacienteSelected.fechaNacimiento">
-                        <div class="col-md-12">
-                            <h4> <label>Fecha de Nacimiento: </label> {{pacienteSelected.fechaNacimiento | fecha }} </h4>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4> <label>Sexo: </label>
-                                <span *ngIf="pacienteSelected.sexo.nombre">{{pacienteSelected.sexo.nombre}}</span>
-                                <span *ngIf="!pacienteSelected.sexo.nombre">{{pacienteSelected.sexo}}</span>
-                            </h4>
-                        </div>
-                    </div>
-                  </div>
                     <br>
                     <plex-button *ngIf="enableValidar" label="Validar" icon="account-convert" type="primary" (click)="validar()"></plex-button>
                     <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary" (click)="verDuplicados()"></plex-button>
@@ -60,9 +57,7 @@
             </div>
         </div>
     </section>
-    
+
 </form>
 
 <auditoria2 *ngIf="showAuditoria2" [pacienteInput]="pacienteSelected" (data)='afterAuditoria($event)'></auditoria2>
-
-
