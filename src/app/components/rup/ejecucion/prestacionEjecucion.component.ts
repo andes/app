@@ -199,7 +199,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     /**
      * recorre los registros de una prestación que ya tiene registros en ejecucion
      * y los carga en el array de registros.
-     * Si se trata de Hallazgo o Trastorno cronico lo busca primero en la Huds, sino 
+     * Si se trata de Hallazgo o Trastorno cronico lo busca primero en la Huds, sino
      * se llama al mostrarUnRegistro() para cargar un registro comun
      *
      * @memberof PrestacionEjecucionComponent
