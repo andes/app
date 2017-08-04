@@ -173,7 +173,7 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoReasignar() {
-        let reasginar =  this.agendasSeleccionadas.filter((agenda) => {
+        let reasginar = this.agendasSeleccionadas.filter((agenda) => {
             return (agenda.nominalizada && agenda.estado === 'suspendida');
         }).length > 0;
         return reasginar;
@@ -193,7 +193,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoDisponer() {
         let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion' || !agenda.nominalizada );
+            return (agenda.estado !== 'planificacion' || !agenda.nominalizada);
         }).length <= 0;
         return disponer;
     }

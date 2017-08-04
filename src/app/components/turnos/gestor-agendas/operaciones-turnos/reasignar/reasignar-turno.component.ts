@@ -32,6 +32,7 @@ export class ReasignarTurnoComponent implements OnInit {
     @Input('agendaAReasignar')
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
+        this.seleccionarTurno(this._agendaAReasignar.bloques[0].turnos[0], this._agendaAReasignar.bloques[0], false);
     }
     get agendaAReasignar(): any {
         return this._agendaAReasignar;
@@ -69,7 +70,8 @@ export class ReasignarTurnoComponent implements OnInit {
             this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
         } else {
             if (this.turnosSeleccionados.find(x => x.id === turno._id)) {
-                this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
+                // this.turnosSeleccionados.splice(this.turnosSeleccionados.indexOf(turno), 1);
+                delete this.turnosSeleccionados[this.turnosSeleccionados.indexOf(turno)];
                 this.turnosSeleccionados = [... this.turnosSeleccionados];
             } else {
                 this.turnosSeleccionados = [... this.turnosSeleccionados, turno];
@@ -90,27 +92,20 @@ export class ReasignarTurnoComponent implements OnInit {
 
         let idAgenda, idBloque, idTurno;
 
-
         // Si es un turno ya reasignado cargamos la agenda a la cual se reasignó
         if (typeof turno.reasignado !== 'undefined' && turno.reasignado.siguiente) {
-
             this.cargarAgendaDestino(turno.reasignado.siguiente.idAgenda, turno.reasignado.siguiente.idBloque, turno.reasignado.siguiente.idTurno);
-
         } else {
-
             idAgenda = this.agendaAReasignar.id;
             idBloque = bloque.id;
             idTurno = turno.id;
-
             this.cargarAgendasSimilares(idAgenda, idBloque, idTurno);
         }
-
 
     }
 
     // Lista de agendas similares/candidatas
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
-
         let params = {
             idAgenda: idAgendaAReasignar,
             idBloque: idBloque,
@@ -127,7 +122,6 @@ export class ReasignarTurnoComponent implements OnInit {
 
     // Agenda seleccionada de las similares/candidatas
     cargarAgendaDestino(idAgenda, idBloque, idTurno) {
-
         this.serviceAgenda.getById(idAgenda).subscribe(agendaDestino => {
             this.agendaDestino.agenda = agendaDestino;
 
@@ -137,7 +131,6 @@ export class ReasignarTurnoComponent implements OnInit {
             let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === idTurno);
             this.agendaDestino.turno = agendaDestino.bloques[indiceBloque].turnos[indiceTurno];
         });
-
     }
 
     /**

@@ -122,24 +122,24 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     verificarOperacion({ operacion, paciente }) {
+
         this.esOperacion = true;
         this.showActivarApp = false;
+        this.paciente = paciente;
+
         switch (operacion) {
             case 'darTurno':
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
-                this.paciente = paciente;
                 this.showDarTurnos = true;
                 break;
             case 'ingresarSolicitud':
-                this.paciente = paciente;
                 this.showIngresarSolicitud = true;
                 this.showMostrarTurnosPaciente = false;
                 this.showMostrarEstadisticasPacientes = false;
                 break;
             case 'anulacionTurno':
-                this.paciente = paciente;
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
@@ -147,7 +147,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'registrarAsistencia':
-                this.paciente = paciente;
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
@@ -155,7 +154,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'activarApp':
-                this.paciente = paciente;
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showMostrarTurnosPaciente = false;

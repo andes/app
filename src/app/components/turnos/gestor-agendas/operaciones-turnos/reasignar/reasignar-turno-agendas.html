@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-12">
             <legend><span *ngIf="turnoSeleccionado?.reasignado?.siguiente">DETALLES DE LA REASIGNACIÓN</span></legend>
+            <legend><span *ngIf="!turnoSeleccionado?.reasignado?.siguiente">SELECCIÓN DE TURNO PARA REASIGNACIÓN</span></legend>
             <!-- Hay turno? -->
             <div class="row" *ngIf="turnoSeleccionado">
                 <!--<pre>{{ turnoSeleccionado | json }}</pre>-->
@@ -15,34 +16,34 @@
                 <div class="col">
                     <h5>Este turno fue reasignado:</h5>
                     <div class="row">
-                        <div class="col"><b>Agenda Origen</b></div>
-                        <div class="col"><b>Agenda Destino</b></div>
+                        <div class="col"><i class="mdi mdi-routes"></i> <b>Agenda Origen</b></div>
+                        <div class="col"><i class="mdi mdi-sign-direction"></i> <b>Agenda Destino</b></div>
                     </div>
                     <div class="row">
-                        <div class="col-6" *ngIf="agendaAReasignar?.horaInicio">
-                            {{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy'}} de {{agendaAReasignar.horaInicio
-                            | date: 'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs
+                        <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
+                            <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy'}} de {{agendaAReasignar.horaInicio
+                            | date: 'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs</b>
                         </div>
-                        <div class="col-6" *ngIf="agendaDestino?.agenda?.horaInicio">
-                            {{agendaDestino?.agenda.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                        <div class="col-6 text-success" *ngIf="agendaDestino?.agenda?.horaInicio">
+                            <b>{{agendaDestino?.agenda.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.agenda.horaInicio | date: 'dd/MM/yyyy'}}
                             de {{agendaDestino?.agenda.horaInicio | date: 'HH:mm'}} a {{agendaDestino?.agenda.horaFin | date:'HH:mm'}}
-                            hs
+                            hs</b>
                         </div>
                     </div>
                     <div class="row" *ngIf="turnoSeleccionado?.horaInicio && agendaDestino?.turno">
-                        <div class="col-6">Horario: {{turnoSeleccionado.horaInicio|date: 'HH:mm' }} hs</div>
-                        <div class="col-6">Horario: {{agendaDestino.turno.horaInicio|date: 'HH:mm' }} hs</div>
+                        <div class="col-6 text-warning">Horario: <b>{{turnoSeleccionado.horaInicio|date: 'HH:mm' }} hs</b></div>
+                        <div class="col-6 text-success">Horario: <b>{{agendaDestino.turno.horaInicio|date: 'HH:mm' }} hs</b></div>
                     </div>
                     <div class="row" *ngIf="turnoSeleccionado?.tipoPrestacion && agendaDestino?.turno">
-                        <div class="col-6">Tipo de Prestación: {{turnoSeleccionado?.tipoPrestacion.nombre}}</div>
-                        <div class="col-6">Tipo de Prestación: {{agendaDestino.turno?.tipoPrestacion.nombre}}</div>
+                        <div class="col-6 text-warning">Tipo de Prestación: <b>{{turnoSeleccionado?.tipoPrestacion.nombre}}</b></div>
+                        <div class="col-6 text-success">Tipo de Prestación: <b>{{agendaDestino.turno?.tipoPrestacion.nombre}}</b></div>
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
-                        <div class="col-6" *ngIf="agendaAReasignar.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaAReasignar.profesionales">Profesional: {{profesional|profesional}}</span>
+                        <div class="col-6 text-warning" *ngIf="agendaAReasignar.profesionales?.length > 0">
+                            <span *ngFor="let profesional of agendaAReasignar.profesionales">Profesional: <b>{{profesional|profesional}}</b></span>
                         </div>
-                        <div class="col-6" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaDestino.agenda.profesionales">Profesional: {{profesional|profesional}} </span>
+                        <div class="col-6 text-success" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
+                            <span *ngFor="let profesional of agendaDestino.agenda.profesionales">Profesional: <b>{{profesional|profesional}}</b></span>
                         </div>
                     </div>
                 </div>

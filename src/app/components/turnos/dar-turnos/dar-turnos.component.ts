@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -768,11 +769,16 @@ export class DarTurnosComponent implements OnInit {
                     this.actualizar('sinFiltro');
                     this.plex.toast('info', 'El turno se asignó correctamente');
 
-                    // Enviar SMS
-                    // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                    // let tm = moment(this.turno.horaInicio).format('HH:mm');
-                    // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-                    // this.enviarSMS(pacienteSave, mensaje);
+                    // Enviar SMS sólo en Producción
+                    if (environment.production === true) {
+                        let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+                        let horario = moment(this.turno.horaInicio).format('HH:mm');
+                        let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                        this.enviarSMS(pacienteSave, mensaje);
+
+                    } else {
+                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                    }
 
                     if (this._solicitudPrestacion) {
 
@@ -838,7 +844,6 @@ export class DarTurnosComponent implements OnInit {
                     };
                     mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
                     mpi.subscribe(resultado => {
-
                         if (resultado) {
                             this.plex.toast('info', 'Número de teléfono actualizado');
                         }
@@ -864,15 +869,18 @@ export class DarTurnosComponent implements OnInit {
         this.smsService.enviarSms(smsParams).subscribe(
             sms => {
                 this.resultado = sms;
-                // this.smsLoader = false;
-                // if (resultado === '0') {
-                //     this.turnosSeleccionados[x].smsEnviado = true;
-                // } else {
-                //     this.turnosSeleccionados[x].smsEnviado = false;
-                // }
+
+                // "if 0 errores"
+                if (this.resultado === '0') {
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                } else {
+                    this.plex.toast('danger', 'ERROR: SMS no enviado');
+                }
             },
             err => {
                 if (err) {
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
+
                 }
             });
     }

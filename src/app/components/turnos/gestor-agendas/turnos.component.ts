@@ -46,7 +46,7 @@ export class TurnosComponent implements OnInit {
             for (let t = 0; t < this.turnosAsignados.length; t++) {
                 // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
                 this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.carpetaEfectores) {
+                    if (paciente && paciente.id && paciente.carpetaEfectores) {
                         let carpetaEfector = null;
                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
                             return (data.organizacion.id === this.auth.organizacion.id);
@@ -169,7 +169,7 @@ export class TurnosComponent implements OnInit {
 
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
-            return turno.paciente && turno.paciente.id;
+            return (turno.paciente && turno.paciente.id);
         }).length === this.turnosSeleccionados.length;
     }
 
@@ -386,7 +386,8 @@ export class TurnosComponent implements OnInit {
             turno.smsVisible = true;
             turno.smsLoader = true;
 
-            if (this.turnosSeleccionados[x].paciente != null) {
+            // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
+            if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {
 
                 this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {

@@ -170,7 +170,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
             let dataFiltrada = data.filter(x => { return this.permisos.indexOf(x.id) >= 0; });
-            let dataLlaves = data.filter(x => { return this.filtradas.indexOf(x.id);
+            let dataLlaves = data.filter(x => {
+                return this.filtradas.indexOf(x.id);
             });
             this.verificarLlaves(dataLlaves, event);
         });
@@ -191,7 +192,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                     band = true;
                 } else {
                     // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
-                    if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
+                    if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente && this.paciente.id) {
                         let edad = new EdadPipe().transform(this.paciente, []);
                         // Edad desde
                         if (this.llaveTP.llave.edad.desde) {
@@ -213,7 +214,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         }
                     }
                     // Verifico que si la llave tiene seteado sexo, el sexo del paciente coincida
-                    if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente) {
+                    if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente && this.paciente.id) {
                         if (this.llaveTP.llave.sexo !== this.paciente.sexo) {
                             band = false;
                         }
