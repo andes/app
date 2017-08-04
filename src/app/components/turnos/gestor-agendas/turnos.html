@@ -85,7 +85,6 @@
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
-                        <!--<plex-button *ngIf="botones.desbloquearTurno" type="success" icon="mdi mdi-play" title="Reanudar turno"></plex-button>-->
                         <plex-button *ngIf="botones.suspenderTurno" type="danger" icon="mdi mdi-stop" title="Suspender turno" (click)="suspenderTurno(agenda)"></plex-button>
                         <!--<span *ngIf="botones.sms">
                 <button class="btn btn-default hover" (click)="enviarSMS()"><i title="Enviar SMS" class="mdi mdi-email-outline"></i></button>
@@ -100,7 +99,7 @@
         </table>
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
-        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques">
+        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let i = index">
             <table *ngIf="agenda.nominalizada" class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
                 <thead>
                     <tr>
@@ -112,7 +111,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{delDia ? bloque.restantesDelDia+bloque.restantesProgramados+bloque.restantesGestion+bloque.restantesProfesional
+                        <td>{{delDia ? arrayDelDia[i]
                                      : bloque.restantesDelDia}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
@@ -121,8 +120,6 @@
                 </tbody>
             </table>
             <table class="table table-striped">
-                <!-- <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped"> -->
-
                 <thead *ngIf="bloque.descripcion">
                     <tr>
                         <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}

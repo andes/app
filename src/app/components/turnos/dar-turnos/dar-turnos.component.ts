@@ -428,10 +428,7 @@ export class DarTurnosComponent implements OnInit {
 
             } else {
 
-                // Asigno bloques
                 this.bloques = this.agenda.bloques;
-
-                // Iniciar alternativas (para cuando los turnos están completos)
                 this.alternativas = [];
 
                 // Tipo de Prestación, para poder filtrar las agendas
@@ -451,11 +448,7 @@ export class DarTurnosComponent implements OnInit {
                     }
                 );
 
-                // hay agenda?
                 if (this.agenda) {
-
-                    let myBloques = [];
-                    let isDelDia = false;
 
                     let idAgendas = this.agendas.map(elem => {
                         return elem.id;
@@ -464,7 +457,6 @@ export class DarTurnosComponent implements OnInit {
                     this.indice = idAgendas.indexOf(this.agenda.id);
 
                     // Usamos CalendarioDia para hacer chequeos
-                    // TODO: Cleanup y usar sólo la clase donde se pueda
                     let cal = new CalendarioDia(null, this.agenda, this._solicitudPrestacion);
 
                     /*Si hay turnos disponibles para la agenda, se muestra en el panel derecho*/
@@ -476,141 +468,65 @@ export class DarTurnosComponent implements OnInit {
                             // Es autocitado?
                             if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
                                 this.tiposTurnosSelect = 'profesional';
-                                this.tiposTurnosLabel = 'Para Profesional';
                             } else {
                                 this.tiposTurnosSelect = 'gestion';
-                                this.tiposTurnosLabel = 'Con llave';
                             }
                         } else {
-                            // if (this.agenda.estado === 'disponible') {
-                            //     this.tiposTurnosSelect = 'gestion';
-                            //     this.tiposTurnosLabel = 'Para gestión de pacientes';
-                            // }
 
                             if (this.agenda.estado === 'publicada') {
                                 this.tiposTurnosSelect = 'programado';
-                                this.tiposTurnosLabel = 'Programado';
                             }
                         }
 
                         let countBloques = [];
+                        this.delDiaDisponibles = 0;
                         this.programadosDisponibles = 0;
                         this.gestionDisponibles = 0;
-                        this.delDiaDisponibles = 0;
                         this.profesionalDisponibles = 0;
-                        // let tiposTurnosSelect = [];
 
-                        // Si la agenda es de hoy, los turnos deberán sumarse al contador "delDia"
-                        if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
-
-                            isDelDia = true;
-                            this.tiposTurnosSelect = 'delDia';
-                            this.tiposTurnosLabel = 'Del día';
-                            // Recorro los bloques y cuento los turnos programados como "delDia", luego descuento los ya asignados
-                            this.agenda.bloques.forEach((bloque, indexBloque) => {
-
-                                countBloques.push({
-                                    delDia: (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) + 
-                                    (bloque.restantesProfesional as number) + (bloque.restantesGestion as number),
-                                    programado: 0,
-                                    gestion: 0,
-                                    profesional: 0
-                                });
-                                bloque.turnos.forEach((turno) => {
-                                    // Si el turno está asignado o está disponible pero ya paso la hora
-                                    // if ((turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
-                                        if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                            countBloques[indexBloque].delDia--;
-                                        }
-                                        // switch (turno.tipoTurno) {
-                                        //     case ('delDia'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('programado'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('profesional'):
-                                        //         countBloques[indexBloque].profesional--;
-                                        //         break;
-                                        //     case ('gestion'):
-                                        //         countBloques[indexBloque].gestion--;
-                                        //         break;
-                                        //     default:
-                                        //         this.delDiaDisponibles--;
-                                        //         break;
-                                        // }
-                                    // }
-
-                                    turnoAnterior = turno;
-
-                                });
-                                this.delDiaDisponibles = this.delDiaDisponibles + countBloques[indexBloque].delDia;
+                        let agendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
+                        this.agenda.bloques.forEach((bloque, indexBloque) => {
+                            countBloques.push({
+                                delDia: agendaDeHoy ? (bloque.restantesDelDia as number) +
+                                    (bloque.restantesProgramados as number) +
+                                    (bloque.restantesProfesional as number) +
+                                    (bloque.restantesGestion as number) : bloque.restantesDelDia,
+                                programado: agendaDeHoy ? 0 : bloque.restantesProgramados,
+                                gestion: agendaDeHoy ? 0 : bloque.restantesGestion,
+                                profesional: agendaDeHoy ? 0 : bloque.restantesProfesional
                             });
+                            bloque.turnos.forEach((turno) => {
+                                if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                    turno = turnoAnterior;
+                                }
+                                // Si el turno está disponible pero ya paso la hora
+                                if (agendaDeHoy && turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
+                                    countBloques[indexBloque].delDia--;
+                                }
+                                turnoAnterior = turno;
+                            });
+
+                            // Acumulado de todos los bloques clasificado x tipo de turno
+                            this.delDiaDisponibles += countBloques[indexBloque].delDia;
+                            this.programadosDisponibles += countBloques[indexBloque].programado;
+                            this.gestionDisponibles += countBloques[indexBloque].gestion;
+                            this.profesionalDisponibles += countBloques[indexBloque].profesional;
+                        });
+                        if (agendaDeHoy) {
+                            this.tiposTurnosSelect = 'delDia';
                             if (this.agenda.estado === 'publicada') {
                                 this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
                             }
+                        }
+                        if (!agendaDeHoy && this.agenda.estado === 'publicada') {
+                            (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                        }
 
-                        } else {
-                            // En caso contrario, se calculan  los contadores por separado
-                            this.agenda.bloques.forEach((bloque, indexBloque) => {
-                                countBloques.push({
-                                    // Asignamos a contadores dinamicos la cantidad inicial de c/u
-                                    // de los tipos de turno respectivamente
-                                    delDia: bloque.restantesDelDia,
-                                    programado: bloque.restantesProgramados,
-                                    gestion: bloque.restantesGestion,
-                                    profesional: bloque.restantesProfesional
-                                });
-
-                                bloque.turnos.forEach((turno) => {
-                                    // if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
-                                        // switch (turno.tipoTurno) {
-                                        //     case ('delDia'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('programado'):
-                                        //         countBloques[indexBloque].programado--;
-                                        //         break;
-                                        //     case ('profesional'):
-                                        //         if (this.agenda.estado === 'disponible') {
-                                        //             countBloques[indexBloque].profesional--;
-                                        //         }
-                                        //         break;
-                                        //     case ('gestion'):
-                                        //         if (this.agenda.estado === 'disponible') {
-                                        //             countBloques[indexBloque].gestion--;
-                                        //         }
-                                        //         break;
-                                        // }
-                                    // }
-                                    turnoAnterior = turno;
-                                });
-
-                                this.delDiaDisponibles = countBloques[indexBloque].delDia;
-                                this.programadosDisponibles += countBloques[indexBloque].programado;
-                                this.gestionDisponibles += countBloques[indexBloque].gestion;
-                                this.profesionalDisponibles += countBloques[indexBloque].profesional;
-                            });
-
-                            if (this.agenda.estado === 'disponible') {
-                                (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                            }
-                            if (this.agenda.estado === 'publicada') {
-                                (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                            }
+                        if (!agendaDeHoy && this.agenda.estado === 'disponible') {
+                            (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                         }
                         // contador de turnos por Bloque
                         this.countBloques = countBloques;
-
-                        // if (this.agenda.tipoPrestaciones.length <= 1) {
-                        //   this.turnoTipoPrestacion = this.agenda.tipoPrestaciones[0];
-                        // }
                     } else {
 
                         /*Si no hay turnos disponibles, se muestran alternativas (para eso deben haber seteado algún filtro)*/
