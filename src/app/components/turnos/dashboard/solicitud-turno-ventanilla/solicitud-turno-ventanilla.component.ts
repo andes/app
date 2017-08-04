@@ -119,7 +119,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     loadOrganizacion(event) {
         this.servicioOrganizacion.get({}).subscribe(organizaciones => {
-            event.callback(organizaciones);
+            return event.callback(organizaciones);
         });
     }
 
@@ -144,7 +144,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            event.callback(this.modelo.solicitud.profesional || []);
+            event.callback(this.modelo.solicitud.profesional);
         }
     }
 
@@ -163,7 +163,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            event.callback(this.registros.solicitudPrestacion.profesionales || []);
+            event.callback(this.registros.solicitudPrestacion.profesionales);
         }
     }
 
@@ -285,7 +285,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         err => {
                             if (err) {
                                 console.log('err', err);
-
                             }
                         },
                         () => {
@@ -314,7 +313,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     guardarSolicitud($event) {
 
-        if ($event.formValid) {
+        if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
 
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;
