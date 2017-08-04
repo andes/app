@@ -23,7 +23,7 @@ export class TurnosComponent implements OnInit {
     set agenda(value: any) {
         this.hoy = new Date();
         this._agenda = value;
-        this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()
+        this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 
@@ -35,27 +35,27 @@ export class TurnosComponent implements OnInit {
             if (this.delDia) {
                 let bloque = this.agenda.bloques[i];
                 this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados + bloque.restantesGestion + bloque.restantesProfesional;
-                this.turnos.forEach((turno) => {
-                    // Si el turno está disponible pero ya paso la hora
-                    if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                        this.arrayDelDia[i]--;
-                    }
-                });
             }
-            this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
-            for (let t = 0; t < this.turnosAsignados.length; t++) {
-                // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.id && paciente.carpetaEfectores) {
-                        let carpetaEfector = null;
-                        carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                            return (data.organizacion.id === this.auth.organizacion.id);
+            this.agenda.bloques[i].turnos.forEach((turno) => {
+                // Si el turno está disponible pero ya paso la hora
+                if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
+                    this.arrayDelDia[i]--;
+                } else {
+                    if (turno.estado === 'asignado') {
+                        this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                            if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
+                                let carpetaEfector = null;
+                                carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+                                    return (data.organizacion.id === this.auth.organizacion.id);
+                                });
+                                turno.paciente.carpetaEfectores = carpetaEfector;
+                            }
                         });
-                        this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
                     }
-                });
-            }
+                }
+            });
         }
+
         this.actualizarBotones();
     }
     get agenda(): any {
@@ -73,7 +73,6 @@ export class TurnosComponent implements OnInit {
     smsEnviado: Boolean = false;
     smsLoader: Boolean = false;
     turnos = [];
-    turnosAsignados = [];
     turnosSeleccionados: any[] = [];
     turno: ITurno;
     cantSel: number;
