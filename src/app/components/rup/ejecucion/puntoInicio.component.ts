@@ -87,7 +87,7 @@ export class PuntoInicioComponent implements OnInit {
             this.prestaciones = data[1];
 
             if (this.agendas.length) {
-                //this.agendaSeleccionada = this.agendas[0];
+                // this.agendaSeleccionada = this.agendas[0];
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -113,7 +113,7 @@ export class PuntoInicioComponent implements OnInit {
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
-            debugger;
+
             // buscamos las que estan fuera de agenda para poder listarlas
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno));
             // agregamos el original de las prestaciones que estan fuera
@@ -269,7 +269,6 @@ export class PuntoInicioComponent implements OnInit {
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
         return existe;
-        //return true;
     }
     // volverAlInicio() {
     //     this.paciente = null;

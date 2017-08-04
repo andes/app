@@ -199,7 +199,7 @@ export class PrestacionPacienteService {
         return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -224,6 +224,7 @@ export class PrestacionPacienteService {
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
             };
 
             prestacion['estados'] = {
@@ -244,6 +245,7 @@ export class PrestacionPacienteService {
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
             };
 
             prestacion['ejecucion'] = {
@@ -257,11 +259,89 @@ export class PrestacionPacienteService {
                 fecha: fecha,
                 tipo: 'ejecucion'
             };
-        };
+        } else if (momento === 'validacion') {
+            prestacion['solicitud'] = {
+                fecha: fecha,
+                turno: turno,
+                tipoPrestacion: snomedConcept,
+                // profesional logueado
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
+            };
+
+            prestacion['estados'] = {
+                fecha: fecha,
+                tipo: 'pendiente'
+            };
+        }
 
         prestacion.paciente['_id'] = paciente.id;
 
+        return prestacion;
+    }
+
+    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
+
         return this.post(prestacion);
+    }
+
+    validarPrestacion(prestacion, planes): Observable<any> {
+
+        let planesCrear = [];
+
+        if (planes.length) {
+            planes.forEach(plan => {
+
+                // creamos objeto de prestacion
+                let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, plan.concepto, 'validacion');
+
+                // asignamos la prestacion de origen
+                nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                let nuevoRegistro: any = {
+                    concepto: plan.concepto,
+                    destacado: plan.destacado,
+                    relacionadoCon: plan.relacionadoCon,
+                    tipo: plan.tipo,
+                    valor: plan.valor
+                };
+
+                // agregamos los registros en la solicitud
+                nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
+
+                planesCrear.push(nuevaPrestacion);
+
+                // this.servicioPrestacion.post(nuevaPrestacion).subscribe((data) => {
+                //     // jfgabriel // ESTO ES UN RECONTRA-PARCHE !!! SOLO A LOS EFECTOS DE MOSTRAR LA FUNCIONALIDAD
+                //     this.solicitudTurno = data;
+                // });
+            });
+        }
+
+        // hacemos el patch y luego creamos los planes
+        let dto: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' },
+            ...(planesCrear.length) && {planes: planesCrear}
+        };
+
+        return this.patch(prestacion.id, dto);
+
+        // // Creamos las prestaciones en pendiente
+        // // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
+        // this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+        //     this.prestacion = prestacion;
+
+        //     // buscamos los planes dentro de los registros
+
+        // });
     }
 
     // tslint:disable-next-line:eofline
