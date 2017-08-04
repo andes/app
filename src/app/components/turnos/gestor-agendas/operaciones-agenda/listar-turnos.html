@@ -1,0 +1,33 @@
+<header>
+    <div class="row" *ngIf="showListarTurnos">
+        <div class="col-12">
+            <fieldset>
+                <!--Header de la agenda-->
+                <div class="alert alert-default mb-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
+                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            hs
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Profesionales</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <ng-container *ngIf="agenda.profesionales">
+                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label>Tipos de prestación</label>
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</header>
