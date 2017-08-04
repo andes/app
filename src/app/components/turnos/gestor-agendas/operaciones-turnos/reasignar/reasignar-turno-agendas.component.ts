@@ -216,14 +216,25 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
+    hayTurnosDisponibles(agenda: IAgenda, tipoTurno: String) {
+        for (let i = 0; i < agenda.bloques.length; i++) {
+            for (let j = 0; j < agenda.bloques[i].turnos.length; j++) {
+                if (agenda.bloques[i].turnos[j].tipoTurno === tipoTurno && agenda.bloques[i].turnos[j].estado === 'disponible') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
     }
 
-    hayTurnosDisponibles(tipoTurno: String) {
-        return true;
-    }
+    // hayTurnosDisponibles(tipoTurno: String) {
+    //     return true;
+    // }
 
     existePrestacion(bloque: any, idPrestacion: string) {
         return bloque.tipoPrestaciones.find((tp) => {
