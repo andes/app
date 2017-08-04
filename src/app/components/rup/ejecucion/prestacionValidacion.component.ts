@@ -35,7 +35,7 @@ export class PrestacionValidacionComponent implements OnInit {
      * Solicitud de prestación para dar un turno autocitado
      */
     public: any;
-    solicitudTurno
+    solicitudTurno;
     public registros: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionPacienteService,
@@ -47,6 +47,7 @@ export class PrestacionValidacionComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             let id = params['id'];
+
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.servicioPrestacion.getById(id).subscribe(prestacion => {
                 this.prestacion = prestacion;
@@ -65,20 +66,30 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaRegistros() {
+        this.registros = [];
         let data: any;
         this.prestacion.ejecucion.registros.forEach(element => {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
 
-            data = {
-                elementoRUP: elementoRUP,
-                concepto: element.concepto,
-                valor: element.valor,
-                tipo: element.tipo,
-                destacado: element.destacado ? element.destacado : false,
-                relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null
-            };
+            // buscamos las prestaciones solicitadas luego de la validacion
+            this.servicioPrestacion.get({idPrestacionOrigen: this.prestacion.id}).subscribe(prestacionesSolicitadas => {
 
-            this.registros.push(data);
+                // buscamos si el registro ahora es un plan creado (luego que hemos validado)
+                let registroPlan = prestacionesSolicitadas.find(p => p.solicitud.tipoPrestacion.conceptId === element.concepto.conceptId);
+
+                data = {
+                    elementoRUP: elementoRUP,
+                    concepto: element.concepto,
+                    valor: element.valor,
+                    tipo: element.tipo,
+                    destacado: element.destacado ? element.destacado : false,
+                    relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null,
+                    ...(registroPlan) && {prestacionPlan: registroPlan}
+                };
+
+                this.registros.push(data);
+            });
+
         });
 
     }
@@ -92,64 +103,15 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+                // de los registros a
+                let planes = this.registros.filter(r => r.tipo === 'planes');
 
-                // hacemos el patch y luego creamos los planes
-                let cambioEstado: any = {
-                    op: 'estadoPush',
-                    estado: { tipo: 'validada' }
-                };
-
-                // Creamos las prestaciones en pendiente
-                // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
-                this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
 
-                    // buscamos los planes dentro de los registros
-                    let planes = this.registros.filter(r => r.tipo === 'planes');
+                    // recargamos los registros
+                    this.cargaRegistros();
 
-                    if (planes.length) {
-                        planes.forEach(plan => {
-
-                            let nuevaPrestacion;
-                            nuevaPrestacion = {
-                                paciente: this.prestacion.paciente,
-                                solicitud: {
-                                    tipoPrestacion: plan.concepto,
-                                    fecha: new Date(),
-                                    turno: null,
-                                    hallazgos: [],
-                                    registros: [],
-                                    prestacionOrigen: this.prestacion.id,
-                                    // profesional logueado
-                                    profesional:
-                                    {
-                                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                                    },
-                                    // organizacion desde la que se solicita la prestacion
-                                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
-                                },
-                                estados: {
-                                    fecha: new Date(),
-                                    tipo: 'pendiente'
-                                }
-                            };
-
-                            let nuevoRegistro: any = {
-                                concepto: plan.concepto,
-                                destacado: plan.destacado,
-                                relacionadoCon: plan.relacionadoCon,
-                                tipo: plan.tipo,
-                                valor: plan.valor
-                            };
-                            nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
-
-                            this.servicioPrestacion.post(nuevaPrestacion).subscribe((data) => {
-                                // jfgabriel // ESTO ES UN RECONTRA-PARCHE !!! SOLO A LOS EFECTOS DE MOSTRAR LA FUNCIONALIDAD
-                                this.solicitudTurno = data;
-                            });
-                        });
-                    }
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
@@ -191,11 +153,12 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup']);
     }
 
-    darTurnoAutocitado(solicitud) {
-        debugger;
+    darTurnoAutocitado(prestacionSolicitud) {
+        this.solicitudTurno = prestacionSolicitud;
         this.showDarTurnos = true;
         // DEBERÍA VENIR POR PARÁMETRO --- VER LINEA 148
         // this.solicitudTurno = null;
     }
+
 }
 

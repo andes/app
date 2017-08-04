@@ -12,6 +12,7 @@ export class PrestacionPacienteService {
 
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
+    private cacheRegistros: any[] = [];
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -55,8 +56,11 @@ export class PrestacionPacienteService {
      * Metodo getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
-    getByPaciente(idPaciente: any, idPrestacion?: any): Observable<any[]> {
-        if (this.cache[idPaciente]) {
+    getByPaciente(idPaciente: any, recargarCache: boolean = false, idPrestacion?: any): Observable<any[]> {
+        if (this.cache[idPaciente] && !recargarCache) {
+            if (idPrestacion) {
+                this.cache[idPaciente] = this.cache[idPaciente].filter(d => d.id !== idPrestacion);
+            }
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
         } else {
             let opt;
@@ -75,6 +79,8 @@ export class PrestacionPacienteService {
                     data = data.filter(d => d.id !== idPrestacion);
                 }
                 this.cache[idPaciente] = data;
+                // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
+                this.cacheRegistros[idPaciente] = null;
                 return this.cache[idPaciente];
             });
         }
@@ -131,7 +137,7 @@ export class PrestacionPacienteService {
                 }
 
             });
-            this.cache[idPaciente]['registros'] = registroSalida;
+            this.cacheRegistros[idPaciente] = registroSalida;
             return registroSalida;
         });
     }
@@ -141,18 +147,17 @@ export class PrestacionPacienteService {
      * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
      * @param {String} idPaciente
      */
-    getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
+    getUnHallazgoPaciente(idPaciente: any, concepto: any, idPrestacion?: any): Observable<any> {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
-        if (this.cache[idPaciente] && this.cache[idPaciente]['registros']) {
-            debugger;
-            registros = this.cache[idPaciente]['registros'];
-            return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
-        } else {
-            return this.getByPacienteHallazgo(idPaciente).flatMapTo(hallazgos =>
-                hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
-            );
-        }
+        // if (this.cacheRegistros[idPaciente]) {
+        //     registros = this.cacheRegistros[idPaciente];
+        //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
+        // } else {
+        return this.getByPacienteHallazgo(idPaciente, idPrestacion).map(hallazgos =>
+            hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
+        );
+        // }
     }
 
     /**
@@ -194,7 +199,7 @@ export class PrestacionPacienteService {
         return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
 
-    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -219,6 +224,7 @@ export class PrestacionPacienteService {
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
             };
 
             prestacion['estados'] = {
@@ -239,6 +245,7 @@ export class PrestacionPacienteService {
                 },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
             };
 
             prestacion['ejecucion'] = {
@@ -252,11 +259,89 @@ export class PrestacionPacienteService {
                 fecha: fecha,
                 tipo: 'ejecucion'
             };
-        };
+        } else if (momento === 'validacion') {
+            prestacion['solicitud'] = {
+                fecha: fecha,
+                turno: turno,
+                tipoPrestacion: snomedConcept,
+                // profesional logueado
+                profesional:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                registros: []
+            };
+
+            prestacion['estados'] = {
+                fecha: fecha,
+                tipo: 'pendiente'
+            };
+        }
 
         prestacion.paciente['_id'] = paciente.id;
 
+        return prestacion;
+    }
+
+    crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
+        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
+
         return this.post(prestacion);
+    }
+
+    validarPrestacion(prestacion, planes): Observable<any> {
+
+        let planesCrear = [];
+
+        if (planes.length) {
+            planes.forEach(plan => {
+
+                // creamos objeto de prestacion
+                let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, plan.concepto, 'validacion');
+
+                // asignamos la prestacion de origen
+                nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                let nuevoRegistro: any = {
+                    concepto: plan.concepto,
+                    destacado: plan.destacado,
+                    relacionadoCon: plan.relacionadoCon,
+                    tipo: plan.tipo,
+                    valor: plan.valor
+                };
+
+                // agregamos los registros en la solicitud
+                nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
+
+                planesCrear.push(nuevaPrestacion);
+
+                // this.servicioPrestacion.post(nuevaPrestacion).subscribe((data) => {
+                //     // jfgabriel // ESTO ES UN RECONTRA-PARCHE !!! SOLO A LOS EFECTOS DE MOSTRAR LA FUNCIONALIDAD
+                //     this.solicitudTurno = data;
+                // });
+            });
+        }
+
+        // hacemos el patch y luego creamos los planes
+        let dto: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' },
+            ...(planesCrear.length) && {planes: planesCrear}
+        };
+
+        return this.patch(prestacion.id, dto);
+
+        // // Creamos las prestaciones en pendiente
+        // // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
+        // this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+        //     this.prestacion = prestacion;
+
+        //     // buscamos los planes dentro de los registros
+
+        // });
     }
 
     // tslint:disable-next-line:eofline
