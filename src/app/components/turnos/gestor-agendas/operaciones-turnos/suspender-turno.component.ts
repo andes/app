@@ -65,7 +65,6 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     estaSeleccionado(turno) {
-        // console.log('turno.paciente ', turno.paciente);
         if (this.seleccionadosSMS.indexOf(turno) >= 0) {
             return true;
         } else {

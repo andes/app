@@ -16,8 +16,8 @@
                 <div class="col">
                     <h5>Este turno fue reasignado:</h5>
                     <div class="row">
-                        <div class="col"><i class="mdi mdi-routes"></i> <b>Agenda Origen</b></div>
-                        <div class="col"><i class="mdi mdi-sign-direction"></i> <b>Agenda Destino</b></div>
+                        <div class="col"><i class="mdi mdi-routes"></i> <b>Agenda y Turno Origen</b></div>
+                        <div class="col"><i class="mdi mdi-sign-direction"></i> <b>Agenda y Turno Destino</b></div>
                     </div>
                     <div class="row">
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
@@ -55,7 +55,7 @@
                     <i class="mdi mdi-emoticon-sad"></i> No hay agendas que contengan turnos que coincidan
                 </div>
                 <div class="col" *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
-                    <div class="card">
+                    <div class="card" *ngIf="!hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno)">
                         <div class="card-block">
                             <h4 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
                                 }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h4>
