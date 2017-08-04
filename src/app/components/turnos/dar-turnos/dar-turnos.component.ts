@@ -1,4 +1,4 @@
-import { environment } from './../../../../environments/environment.prod';
+import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -511,7 +511,7 @@ export class DarTurnosComponent implements OnInit {
                             this.agenda.bloques.forEach((bloque, indexBloque) => {
 
                                 countBloques.push({
-                                    delDia: (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) + 
+                                    delDia: (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) +
                                     (bloque.restantesProfesional as number) + (bloque.restantesGestion as number),
                                     programado: 0,
                                     gestion: 0,
@@ -520,29 +520,29 @@ export class DarTurnosComponent implements OnInit {
                                 bloque.turnos.forEach((turno) => {
                                     // Si el turno está asignado o está disponible pero ya paso la hora
                                     // if ((turno.estado === 'turnoDoble') || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
-                                        if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                            countBloques[indexBloque].delDia--;
-                                        }
-                                        // switch (turno.tipoTurno) {
-                                        //     case ('delDia'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('programado'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('profesional'):
-                                        //         countBloques[indexBloque].profesional--;
-                                        //         break;
-                                        //     case ('gestion'):
-                                        //         countBloques[indexBloque].gestion--;
-                                        //         break;
-                                        //     default:
-                                        //         this.delDiaDisponibles--;
-                                        //         break;
-                                        // }
+                                    if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                        turno = turnoAnterior;
+                                    }
+                                    if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
+                                        countBloques[indexBloque].delDia--;
+                                    }
+                                    // switch (turno.tipoTurno) {
+                                    //     case ('delDia'):
+                                    //         countBloques[indexBloque].delDia--;
+                                    //         break;
+                                    //     case ('programado'):
+                                    //         countBloques[indexBloque].delDia--;
+                                    //         break;
+                                    //     case ('profesional'):
+                                    //         countBloques[indexBloque].profesional--;
+                                    //         break;
+                                    //     case ('gestion'):
+                                    //         countBloques[indexBloque].gestion--;
+                                    //         break;
+                                    //     default:
+                                    //         this.delDiaDisponibles--;
+                                    //         break;
+                                    // }
                                     // }
 
                                     turnoAnterior = turno;
@@ -568,27 +568,27 @@ export class DarTurnosComponent implements OnInit {
 
                                 bloque.turnos.forEach((turno) => {
                                     // if (turno.estado === 'asignado' || (turno.estado === 'turnoDoble')) {
-                                        if (turno.estado === 'turnoDoble' && turnoAnterior) {
-                                            turno = turnoAnterior;
-                                        }
-                                        // switch (turno.tipoTurno) {
-                                        //     case ('delDia'):
-                                        //         countBloques[indexBloque].delDia--;
-                                        //         break;
-                                        //     case ('programado'):
-                                        //         countBloques[indexBloque].programado--;
-                                        //         break;
-                                        //     case ('profesional'):
-                                        //         if (this.agenda.estado === 'disponible') {
-                                        //             countBloques[indexBloque].profesional--;
-                                        //         }
-                                        //         break;
-                                        //     case ('gestion'):
-                                        //         if (this.agenda.estado === 'disponible') {
-                                        //             countBloques[indexBloque].gestion--;
-                                        //         }
-                                        //         break;
-                                        // }
+                                    if (turno.estado === 'turnoDoble' && turnoAnterior) {
+                                        turno = turnoAnterior;
+                                    }
+                                    // switch (turno.tipoTurno) {
+                                    //     case ('delDia'):
+                                    //         countBloques[indexBloque].delDia--;
+                                    //         break;
+                                    //     case ('programado'):
+                                    //         countBloques[indexBloque].programado--;
+                                    //         break;
+                                    //     case ('profesional'):
+                                    //         if (this.agenda.estado === 'disponible') {
+                                    //             countBloques[indexBloque].profesional--;
+                                    //         }
+                                    //         break;
+                                    //     case ('gestion'):
+                                    //         if (this.agenda.estado === 'disponible') {
+                                    //             countBloques[indexBloque].gestion--;
+                                    //         }
+                                    //         break;
+                                    // }
                                     // }
                                     turnoAnterior = turno;
                                 });
