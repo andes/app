@@ -21,14 +21,27 @@ export class TurnosComponent implements OnInit {
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
+        this.hoy = new Date();
         this._agenda = value;
         this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 
+        this.arrayDelDia = [];
         this.bloques = this.agenda.bloques;
         for (let i = 0; i < this.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
+            // Si la agenda es del día, resto los disponibles que ya pasaron
+            if (this.delDia) {
+                let bloque = this.agenda.bloques[i];
+                this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados + bloque.restantesGestion + bloque.restantesProfesional;
+                this.turnos.forEach((turno) => {
+                    // Si el turno está disponible pero ya paso la hora
+                    if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
+                        this.arrayDelDia[i]--;
+                    }
+                });
+            }
             this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
             for (let t = 0; t < this.turnosAsignados.length; t++) {
                 // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
@@ -68,11 +81,13 @@ export class TurnosComponent implements OnInit {
     reasignar: any = {};
     horaInicio: any;
     bloques = [];
+    hoy: Date;
     // Contiene el cálculo de la visualización de botones
     botones: any = {};
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
     public delDia = false;
+    public arrayDelDia = [];
 
     // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
@@ -83,34 +98,6 @@ export class TurnosComponent implements OnInit {
         // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
         this.actualizarBotones();
     }
-
-    // Métodos públicos
-    // actualizarCarpetaPaciente(agendaActualizar: any) {
-    //     let turnosBloque;
-    //     let turnosModificados = [];
-    //     for (let i = 0; i < agendaActualizar.bloques.length; i++) {
-    //         turnosBloque = agendaActualizar.bloques[i].turnos;
-    //         turnosModificados = turnosBloque.map(turno => {
-    //             if (turno.paciente) {
-    //                 this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-    //                     if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
-    //                         let carpetaEfector = null;
-    //                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-    //                             return (data.organizacion.id === this.auth.organizacion.id);
-    //                         });
-    //                         // this.turnos[t].paciente.carpetaEfectores = new Object();
-    //                         turno.paciente.carpetaEfectores = carpetaEfector;
-    //                         return turno;
-    //                     }
-    //                 });
-    //             } else {
-    //                 return turno;
-    //             }
-    //         });
-    //         agendaActualizar.bloques[i].turnos = turnosModificados;
-    //     }
-    //     return agendaActualizar;
-    // }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
         turno.sobreturno = sobreturno;
