@@ -44,32 +44,6 @@ export class CalendarioDia {
                             if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
                                 countBloques[indexBloque].delDia--;
                             }
-                            //     // Si el turno está asignado o está disponible pero ya paso la hora
-                            //     if (turno.estado === 'asignado' || (turno.estado === 'disponible' && turno.horaInicio < this.hoy)) {
-
-                            //         switch (turno.tipoTurno) {
-                            //             case ('delDia'):
-                            //                 countBloques[indexBloque].delDia--;
-                            //                 break;
-                            //             case ('programado'):
-                            //                 countBloques[indexBloque].delDia--;
-                            //                 break;
-                            //             case ('profesional'):
-                            //                 if (this.agenda.estado === 'disponible') {
-                            //                     countBloques[indexBloque].profesional--;
-                            //                 }
-                            //                 break;
-                            //             case ('gestion'):
-                            //                 if (this.agenda.estado === 'disponible') {
-                            //                     countBloques[indexBloque].gestion--;
-                            //                 }
-                            //                 break;
-                            //             default:
-                            //                 this.delDiaDisponibles--;
-                            //                 break;
-                            //         }
-
-                            //     }
                         });
                         this.delDiaDisponibles += countBloques[indexBloque].delDia;
                     });
@@ -88,26 +62,6 @@ export class CalendarioDia {
                             gestion: bloque.restantesGestion,
                             profesional: bloque.restantesProfesional
                         });
-
-                        // bloque.turnos.forEach((turno) => {
-                        //     if (turno.estado === 'asignado') {
-                        //         switch (turno.tipoTurno) {
-                        //             case ('programado'):
-                        //                 countBloques[indexBloque].programado--;
-                        //                 break;
-                        //             case ('gestion'):
-                        //                 if (this.agenda.estado === 'disponible') {
-                        //                     countBloques[indexBloque].gestion--;
-                        //                 }
-                        //                 break;
-                        //             case ('profesional'):
-                        //                 if (this.agenda.estado === 'disponible') {
-                        //                     countBloques[indexBloque].profesional--;
-                        //                 }
-                        //                 break;
-                        //         }
-                        //     }
-                        // });
 
                         this.programadosDisponibles += bloque.restantesProgramados;
                         this.gestionDisponibles += bloque.restantesGestion;
