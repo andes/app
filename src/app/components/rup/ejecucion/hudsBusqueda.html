@@ -40,8 +40,7 @@
 
                 <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                     <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
-                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
-                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <div class="rup-card mini">
                                 <div class="type problemas">
                                     <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
@@ -80,8 +79,7 @@
                 <div class="vista-titulo">Problemas activos</div>
                 <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                     <ng-container *ngFor="let problema of problemasActivos; let i = index">
-                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
-                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <div class="rup-card mini">
                                 <div class="type problemas">
                                     <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
@@ -123,30 +121,30 @@
 
                 <div *ngIf="prestaciones" class="list-group">
                     <ng-container *ngFor="let prestacion of prestaciones; let i = index">
-
-                        <ng-container *ngFor="let plan of prestacion; let i = index">
-
-                            <div class="rup-card mini">
-                                <div class="type planes">
-                                </div>
-                                <div class="rup-content">
-                                    <div class="header">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <small> {{ plan.createdAt | fecha }}</small>
-                                            </div>
-                                            <div class="col-6">
-                                                <span class="badge badge-validada float-right">validada  </span>
-                                            </div>
+                        <div class="rup-card mini">
+                            <div class="type prestaciones">
+                            </div>
+                            <div class="rup-content">
+                                <div class="header">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
                                         </div>
-                                        <div class="title">
-                                            {{ plan.concepto.term }}
+                                        <div class="col-6">
+                                            <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
                                         </div>
                                     </div>
-                                    <small>Profesional: {{ plan.createdBy.nombreCompleto}}</small>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="title">
+                                                {{ prestacion.solicitud.tipoPrestacion.term }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
                             </div>
-                        </ng-container>
+                        </div>
                     </ng-container>
                 </div>
             </ng-container>

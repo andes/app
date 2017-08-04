@@ -27,7 +27,7 @@
                     </header>
 
                     <!-- div de la info de la solicitud -->
-                    <div *ngIf="showDatosSolicitud">
+                    <div [hidden]="!showDatosSolicitud">
                         <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3>
                         <p>
                             Solicitada por el profesional: {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
@@ -46,13 +46,13 @@
                         </p>
                     </div>
 
-                    <div *ngIf="!showDatosSolicitud" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto && showDatosSolicitud">
                         <p>
                             Arrastre aquí para vincularlos a esta consulta
                         </p>
                     </div>
 
-                    <div *ngIf="registros && registros.length && !showDatosSolicitud">
+                    <div *ngIf="registros && registros.length" [hidden]="showDatosSolicitud">
                         <ng-container *ngFor="let elemento of registros; let i = index">
 
                             <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
