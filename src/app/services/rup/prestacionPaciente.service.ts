@@ -343,7 +343,7 @@ export class PrestacionPacienteService {
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },
-            ...(planesCrear.length) && {planes: planesCrear}
+            ...(planesCrear.length) && { planes: planesCrear }
         };
 
         return this.patch(prestacion.id, dto);

@@ -48,9 +48,9 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
                 if (this.HallazgoCompleto.evoluciones) {
                     this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
                     this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
-                    this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].estado;
-                    this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.length - 1].esCronico;
-                    // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+                    this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[0].estado;
+                    this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[0].esCronico;
+                    // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[0].esEnmienda;
                     this.data[this.elementoRUP.key].evolucion = '';
 
                 }

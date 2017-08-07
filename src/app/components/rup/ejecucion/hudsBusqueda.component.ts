@@ -70,10 +70,10 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
+            this.listarPrestaciones();
             this.listarProblemasCronicos();
             this.listarHallazgos();
             this.listarProblemasActivos();
-            this.listarPrestaciones();
         }
     }
 
@@ -114,7 +114,6 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
-            debugger;
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             /*arrayPrestaciones.forEach(element => {
                 let unaPrestacion = element.ejecucion.registros.filter(p => p.tipo === 'planes');

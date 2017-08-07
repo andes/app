@@ -7,8 +7,8 @@
     <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && elementoRUPprestacion">
         <div class="row">
             <!-- Panel HUDS -->
-            <div class="col-4">
-                <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion?.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+            <div class="col-4" *ngIf="prestacion">
+                <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
             </div>
 
             <!-- Panel Central -->
