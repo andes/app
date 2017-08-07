@@ -144,11 +144,11 @@
                             <!-- <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno?.estado === 'suspendido'">
                                 <i class="mdi mdi-alert-circle-outline"> Suspendido</i>
                             </span> -->
-                            <span *ngIf="turno?.estado === 'suspendido'" class="badge badge-danger badge-reasignar" title="Suspendido no reasignado">
-                                - <i class="mdi mdi-account-convert"></i>
+                            <span *ngIf="turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right" title="Suspendido no reasignado">
+                                <i class="mdi mdi-account-alert"></i>
                             </span>
-                            <span *ngIf="turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-success" title="Suspendido ya reasignado">
-                                - <i class="mdi mdi-check"></i>
+                            <span *ngIf="turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-danger float-right" title="Suspendido ya reasignado">
+                                <i class="mdi mdi-account-check"></i>
                             </span>
                             <span *ngIf="turno?.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                         </td>
