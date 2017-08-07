@@ -69,16 +69,11 @@ export class HudsBusquedaComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-<<<<<<< HEAD
-        debugger;
         if (this.paciente) {
-=======
-        if (this.paciente) {
+            this.listarPrestaciones();
             this.listarProblemasCronicos();
             this.listarHallazgos();
             this.listarProblemasActivos();
->>>>>>> 4cd8162deee57b141360960a34e606d3f61126ea
-            this.listarPrestaciones();
         }
     }
 
@@ -119,12 +114,11 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
-            // this.hallazgos = null;
-            let arrayPrestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
-            arrayPrestaciones.forEach(element => {
+            this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            /*arrayPrestaciones.forEach(element => {
                 let unaPrestacion = element.ejecucion.registros.filter(p => p.tipo === 'planes');
                 this.prestaciones.push(unaPrestacion);
-            });
+            });*/
         });
     }
 
@@ -138,13 +132,13 @@ export class HudsBusquedaComponent implements OnInit {
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
             // this.prestaciones = null;
-            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
+            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[0].esCronico);
         });
     }
 
     listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].estado.id === 'activo' && !h.evoluciones[h.evoluciones.length - 1].esCronico);
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado.id === 'activo' && !h.evoluciones[0].esCronico);
         });
     }
 }

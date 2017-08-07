@@ -105,6 +105,13 @@ export class PrestacionPacienteService {
                 }
             });
             let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = new Date(a.createdAt);
+                    b = new Date(b.createdAt);
+                    return a - b;
+                });
             registros.forEach(registro => {
                 let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
                 if (!registroEncontrado) {
@@ -134,6 +141,13 @@ export class PrestacionPacienteService {
                         evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                     };
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
+                    // ordenamos las evoluciones para que la primero del array sea la ultima registrada
+                    registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort(
+                        function (a, b) {
+                            a = new Date(a.fechaCarga);
+                            b = new Date(b.fechaCarga);
+                            return b - a;
+                        });
                 }
 
             });
