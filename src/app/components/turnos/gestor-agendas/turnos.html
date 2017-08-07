@@ -104,8 +104,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{delDia ? arrayDelDia[i]
-                                     : bloque.restantesDelDia}}</td>
+                        <td>{{delDia ? arrayDelDia[i] : bloque.restantesDelDia}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
@@ -142,7 +141,15 @@
                             <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1"><small><span *ngIf="bloque.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
                             <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
                             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</span>
-                            <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno?.estado === 'suspendido'"><i class="mdi mdi-alert-circle-outline"></i> Suspendido</span>
+                            <!-- <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno?.estado === 'suspendido'">
+                                <i class="mdi mdi-alert-circle-outline"> Suspendido</i>
+                            </span> -->
+                            <span *ngIf="turno?.estado === 'suspendido'" class="badge badge-danger badge-reasignar" title="Suspendido no reasignado">
+                                - <i class="mdi mdi-account-convert"></i>
+                            </span>
+                            <span *ngIf="turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-success" title="Suspendido ya reasignado">
+                                - <i class="mdi mdi-check"></i>
+                            </span>
                             <span *ngIf="turno?.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                         </td>
                         <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
