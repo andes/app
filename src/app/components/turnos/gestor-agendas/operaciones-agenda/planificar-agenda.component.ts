@@ -71,7 +71,7 @@ export class PlanificarAgendaComponent implements OnInit {
     cargarAgenda(agenda: IAgenda) {
         this.modelo = agenda;
         // se carga el tipo de espacio Fisico
-        if (!this.modelo.espacioFisico.organizacion) {
+        if (this.modelo.espacioFisico && !this.modelo.espacioFisico.organizacion) {
             this.tipoEspacioFisico = 'registrados';
             this.loadEspaciosFisicos('');
         } else {

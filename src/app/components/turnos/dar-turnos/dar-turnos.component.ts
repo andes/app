@@ -416,6 +416,7 @@ export class DarTurnosComponent implements OnInit {
     seleccionarAgenda(agenda) {
         // Asigno agenda
         this.agenda = agenda;
+        let agendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         let turnoAnterior = null;
         this.turnoDoble = false;
         // Ver si cambió el estado de la agenda en otro lado
@@ -435,7 +436,7 @@ export class DarTurnosComponent implements OnInit {
                 // Tipo de Prestación, para poder filtrar las agendas
                 let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
 
-                /*Filtra los bloques segun el filtro tipoPrestacion*/
+                // Se filtran los bloques segun el filtro tipoPrestacion
                 this.bloques = this.agenda.bloques.filter(
                     function (value) {
                         let prestacionesBlq = value.tipoPrestaciones.map(function (obj) {
@@ -445,6 +446,17 @@ export class DarTurnosComponent implements OnInit {
                             return (prestacionesBlq.indexOf(tipoPrestacion) >= 0);
                         } else {
                             return true;
+                        }
+                    }
+                );
+
+                // Se muestran solo los bloques que tengan turnos para el tipo correspondiente
+                this.bloques = this.bloques.filter(
+                    function (value) {
+                        if (agendaDeHoy) {
+                            return Number(value.restantesDelDia) + Number(value.restantesProgramados) > 0;
+                        } else {
+                            return (Number(value.restantesProgramados) + Number(value.reservadoGestion) + Number(value.restantesProfesional) > 0);
                         }
                     }
                 );
@@ -485,8 +497,8 @@ export class DarTurnosComponent implements OnInit {
                         this.gestionDisponibles = 0;
                         this.profesionalDisponibles = 0;
 
-                        let agendaDeHoy = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
-                        this.agenda.bloques.forEach((bloque, indexBloque) => {
+                        // this.agenda.bloques.forEach((bloque, indexBloque) => {
+                        this.bloques.forEach((bloque, indexBloque) => {
                             countBloques.push({
                                 delDia: agendaDeHoy ? (bloque.restantesDelDia as number) +
                                     (bloque.restantesProgramados as number) +
@@ -518,14 +530,15 @@ export class DarTurnosComponent implements OnInit {
                             if (this.agenda.estado === 'publicada') {
                                 this.estadoT = (this.delDiaDisponibles > 0) ? 'seleccionada' : 'noTurnos';
                             }
-                        }
-                        if (!agendaDeHoy && this.agenda.estado === 'publicada') {
-                            (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                        } else {
+                            if (this.agenda.estado === 'publicada') {
+                                (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                            }
+                            if (this.agenda.estado === 'disponible') {
+                                (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                            }
                         }
 
-                        if (!agendaDeHoy && this.agenda.estado === 'disponible') {
-                            (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
-                        }
                         // contador de turnos por Bloque
                         this.countBloques = countBloques;
                     } else {
