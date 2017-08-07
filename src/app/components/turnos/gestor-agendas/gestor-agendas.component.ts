@@ -34,8 +34,8 @@ export class GestorAgendasComponent implements OnInit {
     public showEditarAgenda = false;
     public showEditarAgendaPanel = false;
     public showInsertarAgenda = false;
-    private showAgregarNotaAgenda = false;
-    private showAgregarSobreturno = false;
+    public showAgregarNotaAgenda = false;
+    public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
     public fechaDesde: any;
     public fechaHasta: any;

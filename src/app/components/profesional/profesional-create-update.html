@@ -49,16 +49,15 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
-                    <plex-select formControlName="especialidad" (getData)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:"
-                        placeholder="Seleccione las especialidades del profesional">
-                        </plex-select>
+                    <plex-select formControlName="especialidad" (getData)="loadEspecialidades($event)" [multiple]="true" label="Especialidades:" placeholder="Seleccione las especialidades del profesional">
+                    </plex-select>
                 </div>
             </div>
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
                     <plex-box type="warning" title="Matrículas" formArrayName="matriculas">
-                        <table *ngFor="let matricula of createForm.controls.matriculas.controls; let i=index" class="table table-striped">
+                        <table *ngFor="let matricula of formData.controls.matriculas.controls; let i=index" class="table table-striped">
                             <tr [formGroupName]="i">
                                 <td>
                                     <plex-text label="Número Matrícula" formControlName="numero">
@@ -80,7 +79,7 @@
                                     <label>Vigente</label>
                                     <plex-bool type="slide" formControlName="activo"></plex-bool>
                                 </td>
-                                <td *ngIf="createForm.controls.matriculas.controls.length > 1">
+                                <td *ngIf="formData.controls.matriculas.controls.length > 1">
                                     <label>Borrar</label>
                                     <plex-button class="warning" icon="delete" (click)="removeMatricula(i)">
                                     </plex-button>
@@ -101,7 +100,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <plex-box type="warning" title="Contacto" formArrayName="contacto">
-                        <table *ngFor="let co of createForm.controls.contacto.controls; let i=index" class="panel panel-default table table-striped">
+                        <table *ngFor="let co of formData.controls.contacto.controls; let i=index" class="panel panel-default table table-striped">
                             <tr [formGroupName]="i">
                                 <td>
                                     <plex-select formControlName="tipo" [data]="tipoComunicacion" placeholder="Seleccione..." label="Tipo">
@@ -119,7 +118,7 @@
                                     <label>Activo</label><br>
                                     <plex-bool type="slide" formControlName="activo"></plex-bool>
                                 </td>
-                                <td *ngIf="createForm.controls.contacto.controls.length > 1">
+                                <td *ngIf="formData.controls.contacto.controls.length > 1">
                                     <label>Borrar</label><br>
                                     <plex-button icon="delete" (click)="removeContacto(i)">
                                     </plex-button>
@@ -136,7 +135,7 @@
             </div>
             <div class="row">&nbsp;</div>
             <plex-box type="warning" title="Dirección" formArrayName="direccion">
-                <table *ngFor="let dir of createForm.controls.direccion.controls; let i=index" class="panel panel-default table table-striped">
+                <table *ngFor="let dir of formData.controls.direccion.controls; let i=index" class="panel panel-default table table-striped">
                     <tr [formGroupName]="i">
                         <td>
                             <plex-text label="Detalle de Domicilio:" formControlName="valor" placeholder="Ej: Avenida las Flores 1200">
@@ -154,21 +153,19 @@
                                 </plex-select>
                             </td>
                             <td class="col-md-4">
-                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)"
-                                    label="Provincia:">
-                                    </plex-select>
+                                <plex-select placeholder="Seleccione Provincia" formControlName="provincia" (getData)="loadProvincias($event, dir.controls.ubicacion.controls.pais)" label="Provincia:">
+                                </plex-select>
                             </td>
                             <td class="col-md-4">
-                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)"
-                                    label="Localidad:">
-                                    </plex-select>
+                                <plex-select placeholder="Seleccione Localidad" formControlName="localidad" (getData)="loadLocalidades($event, dir.controls.ubicacion.controls.provincia)" label="Localidad:">
+                                </plex-select>
                             </td>
                         </div>
                         <td>
                             <label>Activo</label>
                             <plex-bool type="slide" formControlName="activo"></plex-bool>
                         </td>
-                        <td *ngIf="createForm.controls.direccion.controls.length > 1">
+                        <td *ngIf="formData.controls.direccion.controls.length > 1">
                             <label>Borrar</label><br>
                             <plex-button icon="delete" (click)="removeDireccion(i)">
                             </plex-button>
@@ -180,7 +177,7 @@
             <div class="row">&nbsp;</div>
             <div align="right" class="row">
                 <div class="col-md-12">
-                    <plex-button title="Guardar" label="Guardar" type="primary" icon="save" (click)="onSave(createForm.value, createForm.valid)">
+                    <plex-button title="Guardar" label="Guardar" type="primary" icon="save" (click)="onSave(formData.value, formData.valid)">
                     </plex-button>
                     <plex-button title="Cancelar" label="Cancelar" type="danger" icon="clear" (click)="onCancel()">
                     </plex-button>

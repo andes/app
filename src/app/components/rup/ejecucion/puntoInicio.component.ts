@@ -56,7 +56,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?')}).subscribe(data => {
             this.tiposPrestacion = data;
 
             this.actualizar();
@@ -71,12 +71,14 @@ export class PuntoInicioComponent implements OnInit {
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: this.fecha,
-                fechaHasta: this.fecha
+                fechaHasta: this.fecha,
+                organizacion: this.auth.organizacion.id
             }),
             // Prestaciones
             this.servicioPrestacion.get({
                 fechaDesde: this.fecha,
-                fechaHasta: this.fecha
+                fechaHasta: this.fecha,
+                organizacion: this.auth.organizacion.id
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
                 // this.auth.getPermissions('rup:tipoPrestacion:?')
             })
@@ -85,7 +87,7 @@ export class PuntoInicioComponent implements OnInit {
             this.prestaciones = data[1];
 
             if (this.agendas.length) {
-                //this.agendaSeleccionada = this.agendas[0];
+                // this.agendaSeleccionada = this.agendas[0];
 
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -111,7 +113,7 @@ export class PuntoInicioComponent implements OnInit {
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
-            debugger;
+
             // buscamos las que estan fuera de agenda para poder listarlas
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno));
             // agregamos el original de las prestaciones que estan fuera
@@ -254,7 +256,7 @@ export class PuntoInicioComponent implements OnInit {
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
             let _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
-                total += (t.paciente) ? 1 : 0;
+                total += (t.paciente.id) ? 1 : 0;
             });
         }
 
@@ -267,7 +269,6 @@ export class PuntoInicioComponent implements OnInit {
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
         return existe;
-        //return true;
     }
     // volverAlInicio() {
     //     this.paciente = null;

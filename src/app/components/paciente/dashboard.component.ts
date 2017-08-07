@@ -83,7 +83,9 @@ export class DashboardComponent implements OnInit {
                 this.temporales = data.count;
             }
         });
-        this.validados = this.validados + this.dashboardData.pacienteMpi[0].count;
+        if (this.dashboardData.pacienteMpi[0]) {
+            this.validados = this.validados + this.dashboardData.pacienteMpi[0].count;
+        }
     }
 
     private loadLogData() {

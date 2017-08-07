@@ -1,8 +1,6 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="piso" [data]="SelectPisos" label="Tipos de pisos de la vivienda"
-  (change)="devolverValores()" placeholder="Seleccionar piso">
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="piso" [data]="SelectPisos" label="Tipos de pisos de la vivienda" (change)="devolverValores()" placeholder="Seleccionar piso">
 </plex-select>
 <div *ngIf="soloValores">
-  <b> Tipo de pisos de la vivienda </b>
-  <br/>
-   {{data[tipoPrestacion.key].nombre}}
+    <b> Tipo de pisos de la vivienda </b>
+    <br/> {{data[elementoRUP.key].nombre}}
 </div>

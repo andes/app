@@ -37,9 +37,21 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public prestaciones: any = [];
     /**
-     * Listado de prestaciones validadas
+     * Listado de todos los hallazgos
      */
     public hallazgos: any = [];
+
+    /**
+     * Listado de todos los hallazgos
+     */
+    public hallazgosCronicos: any = [];
+
+
+    /**
+     * Listado de todos los hallazgos
+     */
+    public problemasActivos: any = [];
+
 
     /**
      * Devuelve un elemento seleccionado que puede ser
@@ -57,11 +69,17 @@ export class HudsBusquedaComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
+<<<<<<< HEAD
         debugger;
-        if (this.paciente) {           
+        if (this.paciente) {
+=======
+        if (this.paciente) {
+            this.listarProblemasCronicos();
+            this.listarHallazgos();
+            this.listarProblemasActivos();
+>>>>>>> 4cd8162deee57b141360960a34e606d3f61126ea
             this.listarPrestaciones();
         }
-
     }
 
     dragStart(e) {
@@ -100,10 +118,13 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     listarPrestaciones() {
-        this.servicioPrestacion.getByPaciente(this.paciente.id, this.prestacionActual).subscribe(prestaciones => {
-            debugger;
-            this.prestaciones = prestaciones;
-            this.listarProblemasCronicos();
+        this.servicioPrestacion.getByPaciente(this.paciente.id, false, this.prestacionActual).subscribe(prestaciones => {
+            // this.hallazgos = null;
+            let arrayPrestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            arrayPrestaciones.forEach(element => {
+                let unaPrestacion = element.ejecucion.registros.filter(p => p.tipo === 'planes');
+                this.prestaciones.push(unaPrestacion);
+            });
         });
     }
 
@@ -117,7 +138,13 @@ export class HudsBusquedaComponent implements OnInit {
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
             // this.prestaciones = null;
-            this.hallazgos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
+            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].esCronico);
+        });
+    }
+
+    listarProblemasActivos() {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, this.prestacionActual).subscribe(hallazgos => {
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[h.evoluciones.length - 1].estado.id === 'activo' && !h.evoluciones[h.evoluciones.length - 1].esCronico);
         });
     }
 }

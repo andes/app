@@ -22,7 +22,7 @@
     "dependencies": {
         "@andes/auth": "^1.0.0",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "^2.0.8",
+        "@andes/plex": "^2.0.10",
         "@andes/shared": "^1.0.1",
         "@angular/animations": "^4.3.1",
         "@angular/cdk": "^2.0.0-beta.8",
@@ -35,8 +35,6 @@
         "@angular/platform-browser-dynamic": "^4.3.1",
         "@angular/platform-server": "^4.3.1",
         "@angular/router": "^4.3.1",
-        "angular-confirmation-popover": "^2.1.2",
-        "angular2-counto": "^1.2.3",
         "angular2-google-maps": "^0.17.0",
         "bowser": "^1.7.1",
         "core-js": "^2.4.1",
@@ -45,7 +43,7 @@
         "zone.js": "^0.8.14"
     },
     "devDependencies": {
-        "@angular/cli": "^1.2.4",
+        "@angular/cli": "^1.2.6",
         "@angular/compiler-cli": "^4.3.1",
         "@types/jasmine": "^2.2.30",
         "@types/node": "^6.0.42",

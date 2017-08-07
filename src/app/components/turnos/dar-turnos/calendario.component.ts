@@ -12,12 +12,16 @@ export class CalendarioComponent {
     private _agenda: any;
     private _agendas: Array<any>;
     private _estado: String;
-    private calendario: any = [];
     private diaSeleccionado: CalendarioDia;
-
+    public calendario: any = [];
+    
     // Propiedades
     @Output('agendaChanged') agendaChanged = new EventEmitter();
     @Input('fecha') fecha: Date;
+
+    @Input() _solicitudPrestacion: any;
+
+
     @Input('agenda')
     set agenda(value: IAgenda) {
         this._agenda = value;
@@ -67,29 +71,43 @@ export class CalendarioComponent {
     private actualizar() {
         if (this.fecha && this.agendas) {
             let inicio = moment(this.fecha).startOf('month').startOf('week');
+            let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
             this.diaSeleccionado = null;
             this.calendario = [];
-            for (let r = 1; r <= 5; r++) {
+            for (let r = 1; r <= cantidadSemanas; r++) {
                 let week = [];
                 this.calendario.push(week);
+
                 for (let c = 1; c <= 7; c++) {
-                    let ags = this.agendasPorFecha(inicio);
+                    let agendasPorFecha = this.agendasPorFecha(inicio);
                     let ag = null;
-                    if (ags.length > 1) {
-                        ag = ags[0];
+
+                    if (agendasPorFecha.length > 1) {
+
+                        ag = agendasPorFecha[0];
+
                         if (this.agenda) {
                             // Si hay una agenda seleccionada
-                            let i = ags.indexOf(this.agenda);
+                            let i = agendasPorFecha.indexOf(this.agenda);
                             if (i >= 0) {
-                                ag = ags[i];
+                                ag = agendasPorFecha[i];
                             }
                         }
                     }
-                    if (ags.length === 1) {
+
+                    if (agendasPorFecha.length === 1) {
                         ag = this.agendaPorFecha(inicio);
                     }
-                    let dia = new CalendarioDia(inicio.toDate(), ag);
-                    dia.cantidadAgendas = ags.length;
+
+                    let dia = new CalendarioDia(inicio.toDate(), ag, this._solicitudPrestacion);
+
+                    if ((dia.estado === 'vacio' || dia.estadoAgenda === 'publicada') && this._solicitudPrestacion) {
+                        dia.cantidadAgendas = 0;
+                        dia.estado = 'vacio';
+                        dia.agenda = null;
+                    } else {
+                        dia.cantidadAgendas = agendasPorFecha.length;
+                    }
                     dia.weekend = inicio.isoWeekday() >= 6;
                     week.push(dia);
 
