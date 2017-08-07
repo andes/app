@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -56,7 +57,7 @@ export class PuntoInicioComponent implements OnInit {
 
     ngOnInit() {
         // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?')}).subscribe(data => {
+        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
 
             this.actualizar();
@@ -119,9 +120,18 @@ export class PuntoInicioComponent implements OnInit {
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
             this.prestacionesOriginales = JSON.parse(JSON.stringify(this.fueraDeAgenda));
-
+            // this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
+            // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
+            this.agendaSeleccionada.bloques.forEach(element => {
+                element.turnos.forEach(turno => {
+                    if (turno.prestacion) {
+                        turno.prestacion = this.mostrarTurnoPendiente(turno.prestacion);
+                    }
+                });
+            });
+            this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
         });
     }
 
@@ -197,11 +207,11 @@ export class PuntoInicioComponent implements OnInit {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
                             }
                             return (t.paciente &&
-                                (   nombreCompleto.toLowerCase().indexOf(search) >= 0
+                                (nombreCompleto.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.documento.toLowerCase().indexOf(search) >= 0)
-                                );
+                            );
                         });
 
                         this.agendas[indexAgenda].bloques[indexBloque].turnos = _turnos;
@@ -214,7 +224,7 @@ export class PuntoInicioComponent implements OnInit {
                 let _turnos = this.fueraDeAgenda.filter(p => {
                     return (p.paciente &&
                         (p.paciente.nombre.toLowerCase().indexOf(search) >= 0 || p.paciente.apellido.toLowerCase().indexOf(search) >= 0
-                        || p.paciente.documento.toLowerCase().indexOf(search) >= 0));
+                            || p.paciente.documento.toLowerCase().indexOf(search) >= 0));
                 });
 
                 this.fueraDeAgenda = _turnos;
@@ -264,7 +274,7 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     tienePermisos(tipoPrestacion) {
-        console.log(tipoPrestacion);
+        // console.log(tipoPrestacion);
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
@@ -307,6 +317,34 @@ export class PuntoInicioComponent implements OnInit {
         this.router.navigate(['rup/' + action + '/', id]);
     }
 
+
+    // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
+    mostrarTurnoPendiente(prestaciones) {
+        if (Array.isArray(prestaciones)) {
+            prestaciones.forEach(unaPrestacion => {
+                if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
+                    this.servicioPrestacion.getByPaciente(unaPrestacion.paciente.id).subscribe(prestacionesPaciente => {
+                        prestacionesPaciente.forEach(elemento => {
+                            if (elemento.solicitud.prestacionOrigen === unaPrestacion.id && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente') {
+                                unaPrestacion.turnosPedientes = true;
+                            }
+                        });
+                    });
+                }
+            });
+        } else {
+            if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
+                this.servicioPrestacion.getByPaciente(prestaciones.paciente.id).subscribe(prestacionesPaciente => {
+                    prestacionesPaciente.forEach(elemento => {
+                        if (elemento.solicitud.prestacionOrigen === prestaciones.id && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente') {
+                            prestaciones.turnosPedientes = true;
+                        }
+                    });
+                });
+            }
+        }
+        return prestaciones;
+    }
 }
 
 
