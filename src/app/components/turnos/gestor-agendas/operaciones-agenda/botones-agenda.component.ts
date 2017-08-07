@@ -243,7 +243,6 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
-
     haySoloTurnosReservados() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {

@@ -119,7 +119,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     loadOrganizacion(event) {
         this.servicioOrganizacion.get({}).subscribe(organizaciones => {
-            return event.callback(organizaciones);
+            event.callback(organizaciones);
         });
     }
 

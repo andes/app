@@ -13,7 +13,8 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'turnos',
-    templateUrl: 'turnos.html'
+    templateUrl: 'turnos.html',
+    styleUrls: ['./turnos.scss']
 })
 
 export class TurnosComponent implements OnInit {
