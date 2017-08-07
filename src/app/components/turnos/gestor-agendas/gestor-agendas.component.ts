@@ -101,10 +101,10 @@ export class GestorAgendasComponent implements OnInit {
                 let fechaHasta = moment(value.fechaHasta).endOf('day');
                 let params = {};
 
-                if (fechaDesde.isValid() && fechaHasta.isValid()) {
+                if (fechaDesde.isValid() || fechaHasta.isValid()) {
                     params = {
-                        fechaDesde: fechaDesde.format(),
-                        fechaHasta: fechaHasta.format(),
+                        fechaDesde: fechaDesde.isValid() ? fechaDesde.format() : moment().format(),
+                        fechaHasta: fechaHasta.isValid() ? fechaHasta.format() : moment().format(),
                         organizacion: this.auth.organizacion._id
                     };
                 } else {
