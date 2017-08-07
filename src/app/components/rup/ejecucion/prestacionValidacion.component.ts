@@ -48,19 +48,23 @@ export class PrestacionValidacionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
 
-            // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-            this.servicioPrestacion.getById(id).subscribe(prestacion => {
-                this.prestacion = prestacion;
+            this.inicializar(id);
+        });
+    }
 
-                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                    this.paciente = paciente;
-                });
+    inicializar(id) {
+        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+        this.servicioPrestacion.getById(id).subscribe(prestacion => {
+            this.prestacion = prestacion;
 
-                this.servicioElementosRUP.get({}).subscribe(elementosRup => {
-                    this.elementosRUP = elementosRup;
-                    // this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, prestacion.ejecucion.registros[0].tipo);
-                    this.cargaRegistros();
-                });
+            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                this.paciente = paciente;
+            });
+
+            this.servicioElementosRUP.get({}).subscribe(elementosRup => {
+                this.elementosRUP = elementosRup;
+                // this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, prestacion.ejecucion.registros[0].tipo);
+                this.cargaRegistros();
             });
         });
     }
@@ -88,10 +92,10 @@ export class PrestacionValidacionComponent implements OnInit {
                 };
 
                 this.registros.push(data);
+                console.log(this.registros);
             });
 
         });
-
     }
 
     /**
@@ -143,6 +147,18 @@ export class PrestacionValidacionComponent implements OnInit {
             }
 
         });
+    }
+
+    turnoDado(e) {
+        // recargamos
+        this.inicializar(this.prestacion.id);
+    }
+
+    tienePermisos(tipoPrestacion) {
+        let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
+
+        return existe;
     }
 
     volver() {
