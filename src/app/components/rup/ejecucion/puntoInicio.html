@@ -236,8 +236,8 @@
                                     <!-- <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div> -->
                                 </td>
-                                <td *ngIf="prestacion.turnosPedientes">
-                                    <span class="d-inline badge badge-warning">
+                                <td>
+                                    <span *ngIf="prestacion.turnosPedientes" class="d-inline badge badge-warning">
                                         Turnos autocitados sin dar
                                     </span>
                                 </td>
