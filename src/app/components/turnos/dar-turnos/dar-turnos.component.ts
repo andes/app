@@ -155,13 +155,15 @@ export class DarTurnosComponent implements OnInit {
         this.permitirTurnoDoble = false;
         let tipoTurnoDoble = this.tiposTurnosSelect.toString();
         let cantidadDisponible = this.countBloques[this.indiceBloque];
-        if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
-            cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
-            cantidadTurnos--;
-            if (this.indiceTurno < cantidadTurnos && (cantidadDisponible[tipoTurnoDoble] >= 2)) {
-                // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
-                if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
-                    this.permitirTurnoDoble = true;
+        if (cantidadDisponible) {
+            if (this.agenda.bloques[this.indiceBloque].cantidadTurnos) {
+                cantidadTurnos = this.agenda.bloques[this.indiceBloque].cantidadTurnos;
+                cantidadTurnos--;
+                if (this.indiceTurno < cantidadTurnos && (cantidadDisponible[tipoTurnoDoble] >= 2)) {
+                    // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
+                    if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
+                        this.permitirTurnoDoble = true;
+                    }
                 }
             }
         }
@@ -497,8 +499,8 @@ export class DarTurnosComponent implements OnInit {
                         this.gestionDisponibles = 0;
                         this.profesionalDisponibles = 0;
 
-                        // this.agenda.bloques.forEach((bloque, indexBloque) => {
-                        this.bloques.forEach((bloque, indexBloque) => {
+                        this.agenda.bloques.forEach((bloque, indexBloque) => {
+                            // this.bloques.forEach((bloque, indexBloque) => {
                             countBloques.push({
                                 delDia: agendaDeHoy ? (bloque.restantesDelDia as number) +
                                     (bloque.restantesProgramados as number) +
@@ -704,7 +706,7 @@ export class DarTurnosComponent implements OnInit {
         };
         this.servicePaciente.patch(paciente.id, cambios).subscribe(resultado => {
             if (resultado) {
-                this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
+                // this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
             }
         });
     }

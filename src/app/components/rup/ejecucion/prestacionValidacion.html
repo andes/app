@@ -12,7 +12,7 @@
         </header>
         <div class="row">
             <ng-container *ngFor="let elemento of registros; let i = index">
-                <div class="col-6">
+                <div class="col-4">
                     <div class="rup-card">
                         <div class="type {{elemento.tipo}}">
                         </div>
@@ -30,14 +30,14 @@
                                 </div>
                             </div>
                             <div class="rup-body">
-                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
+                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [snomedConcept]="elemento.concepto" *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'" [datosIngreso]="elemento.valor[elemento.elementoRUP.key]" [soloValores]="true">
                                 </rup>
                             </div>
                             <div class="rup-footer">
                                 <div *ngIf="elemento.valor.solicitudPrestacion?.autocitado && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-                                    <p>
-                                        <plex-button label="Asignar turno" type="primary" (click)="darTurnoAutocitado(elemento)"></plex-button>
+                                    <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno">
+                                        <plex-button label="Asignar turno" type="primary" (click)="darTurnoAutocitado(elemento.prestacionPlan)"></plex-button>
                                     </p>
                                 </div>
                                 <div *ngIf="elemento.relacionadoCon">
@@ -73,4 +73,4 @@
 </footer>
 
 <!-- Calendario para dar turnos autocitados -->
-<dar-turnos *ngIf="showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>

@@ -221,14 +221,17 @@ export class TurnosComponent implements OnInit {
 
     siguienteDisponible() {
         let index;
-        let turnos = this.turnos;
+        let bloqueTurno;
         let turnoSeleccionado;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             // Se busca la posición del turno y se verifica que el siguiente turno se encuentre disponible
             turnoSeleccionado = this.turnosSeleccionados[x];
-            index = turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
-            if ((index === -1) || ((index < turnos.length - 1) && (turnos[index + 1].estado !== 'disponible')) || (index === (turnos.length - 1))) {
-                return false;
+            bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
+            if (bloqueTurno) {
+                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'disponible')) || (index === (bloqueTurno.turnos.length - 1))) {
+                    return false;
+                }
             }
         }
         return true;
@@ -313,21 +316,23 @@ export class TurnosComponent implements OnInit {
     }
 
     asignarTurnoDoble(operacion) {
-
         let turnoSeleccionado;
         let index;
-        let turnos = this.turnos;
         let turnosActualizar = [];
-
+        let bloqueTurno;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             // Se busca la posición del turno y se obtiene el siguiente
             turnoSeleccionado = this.turnosSeleccionados[x];
-            index = turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
-            if ((index > -1) && (index < turnos.length - 1) && (turnos[index + 1].estado === 'disponible')) {
-                turnosActualizar.push(turnos[index + 1]);
-            } else {
-                // en el caso que el turno siguiente no se encuentre disponible
-                this.plex.alert('No se puede asignar el turno doble');
+            bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
+
+            if (bloqueTurno) {
+                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                if ((index > -1) && (index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado === 'disponible')) {
+                    turnosActualizar.push(bloqueTurno.turnos[index + 1]);
+                } else {
+                    // en el caso que el turno siguiente no se encuentre disponible
+                    this.plex.alert('No se puede asignar el turno doble');
+                }
             }
         }
 
