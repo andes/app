@@ -13,7 +13,8 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'turnos',
-    templateUrl: 'turnos.html'
+    templateUrl: 'turnos.html',
+    styleUrls: ['./turnos.scss']
 })
 
 export class TurnosComponent implements OnInit {
@@ -21,31 +22,41 @@ export class TurnosComponent implements OnInit {
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
+        this.hoy = new Date();
         this._agenda = value;
+        this.delDia = this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
         this.turnosSeleccionados = [];
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
 
-        // for (let i = 0; i < this.agenda.bloques.length; i++) {
-        //   this.turnos = this.agenda.bloques[i].turnos;
-        // }
-
+        this.arrayDelDia = [];
         this.bloques = this.agenda.bloques;
         for (let i = 0; i < this.bloques.length; i++) {
             this.turnos = this.agenda.bloques[i].turnos;
-            this.turnosAsignados = (this.bloques[i].turnos).filter((turno) => { return turno.estado === 'asignado'; });
-            for (let t = 0; t < this.turnosAsignados.length; t++) {
-                // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.carpetaEfectores) {
-                        let carpetaEfector = null;
-                        carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                            return (data.organizacion.id === this.auth.organizacion.id);
-                        });
-                        this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
-                    }
-                });
+            // Si la agenda es del día, resto los disponibles que ya pasaron
+            if (this.delDia) {
+                let bloque = this.agenda.bloques[i];
+                this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados + bloque.restantesGestion + bloque.restantesProfesional;
             }
+            this.agenda.bloques[i].turnos.forEach((turno) => {
+                // Si el turno está disponible pero ya paso la hora
+                if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
+                    this.arrayDelDia[i]--;
+                } else {
+                    if (turno.estado === 'asignado') {
+                        this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                            if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
+                                let carpetaEfector = null;
+                                carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+                                    return (data.organizacion.id === this.auth.organizacion.id);
+                                });
+                                turno.paciente.carpetaEfectores = carpetaEfector;
+                            }
+                        });
+                    }
+                }
+            });
         }
+
         this.actualizarBotones();
     }
     get agenda(): any {
@@ -63,7 +74,6 @@ export class TurnosComponent implements OnInit {
     smsEnviado: Boolean = false;
     smsLoader: Boolean = false;
     turnos = [];
-    turnosAsignados = [];
     turnosSeleccionados: any[] = [];
     turno: ITurno;
     cantSel: number;
@@ -71,10 +81,13 @@ export class TurnosComponent implements OnInit {
     reasignar: any = {};
     horaInicio: any;
     bloques = [];
+    hoy: Date;
     // Contiene el cálculo de la visualización de botones
     botones: any = {};
     public estadosAgenda = EstadosAgenda;
     public mostrarHeaderCompleto = false;
+    public delDia = false;
+    public arrayDelDia = [];
 
     // Inicialización
     constructor(public plex: Plex, public smsService: SmsService, public serviceAgenda: AgendaService, public listaEsperaService: ListaEsperaService, public servicePaciente: PacienteService, public auth: Auth) { }
@@ -85,34 +98,6 @@ export class TurnosComponent implements OnInit {
         // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
         this.actualizarBotones();
     }
-
-    // Métodos públicos
-    // actualizarCarpetaPaciente(agendaActualizar: any) {
-    //     let turnosBloque;
-    //     let turnosModificados = [];
-    //     for (let i = 0; i < agendaActualizar.bloques.length; i++) {
-    //         turnosBloque = agendaActualizar.bloques[i].turnos;
-    //         turnosModificados = turnosBloque.map(turno => {
-    //             if (turno.paciente) {
-    //                 this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-    //                     if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) {
-    //                         let carpetaEfector = null;
-    //                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-    //                             return (data.organizacion.id === this.auth.organizacion.id);
-    //                         });
-    //                         // this.turnos[t].paciente.carpetaEfectores = new Object();
-    //                         turno.paciente.carpetaEfectores = carpetaEfector;
-    //                         return turno;
-    //                     }
-    //                 });
-    //             } else {
-    //                 return turno;
-    //             }
-    //         });
-    //         agendaActualizar.bloques[i].turnos = turnosModificados;
-    //     }
-    //     return agendaActualizar;
-    // }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
         turno.sobreturno = sobreturno;
@@ -184,7 +169,7 @@ export class TurnosComponent implements OnInit {
 
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
-            return turno.paciente;
+            return (turno.paciente && turno.paciente.id);
         }).length === this.turnosSeleccionados.length;
     }
 
@@ -236,14 +221,17 @@ export class TurnosComponent implements OnInit {
 
     siguienteDisponible() {
         let index;
-        let turnos = this.turnos;
+        let bloqueTurno;
         let turnoSeleccionado;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             // Se busca la posición del turno y se verifica que el siguiente turno se encuentre disponible
             turnoSeleccionado = this.turnosSeleccionados[x];
-            index = turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
-            if ((index === -1) || ((index < turnos.length - 1) && (turnos[index + 1].estado !== 'disponible')) || (index === (turnos.length - 1))) {
-                return false;
+            bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
+            if (bloqueTurno) {
+                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'disponible')) || (index === (bloqueTurno.turnos.length - 1))) {
+                    return false;
+                }
             }
         }
         return true;
@@ -328,21 +316,23 @@ export class TurnosComponent implements OnInit {
     }
 
     asignarTurnoDoble(operacion) {
-
         let turnoSeleccionado;
         let index;
-        let turnos = this.turnos;
         let turnosActualizar = [];
-
+        let bloqueTurno;
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
             // Se busca la posición del turno y se obtiene el siguiente
             turnoSeleccionado = this.turnosSeleccionados[x];
-            index = turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
-            if ((index > -1) && (index < turnos.length - 1) && (turnos[index + 1].estado === 'disponible')) {
-                turnosActualizar.push(turnos[index + 1]);
-            } else {
-                // en el caso que el turno siguiente no se encuentre disponible
-                this.plex.alert('No se puede asignar el turno doble');
+            bloqueTurno = this.bloques.find(bloque => (bloque.turnos.findIndex(t => (t._id === turnoSeleccionado._id)) >= 0));
+
+            if (bloqueTurno) {
+                index = bloqueTurno.turnos.findIndex(t => { return t._id === turnoSeleccionado._id; });
+                if ((index > -1) && (index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado === 'disponible')) {
+                    turnosActualizar.push(bloqueTurno.turnos[index + 1]);
+                } else {
+                    // en el caso que el turno siguiente no se encuentre disponible
+                    this.plex.alert('No se puede asignar el turno doble');
+                }
             }
         }
 
@@ -401,7 +391,8 @@ export class TurnosComponent implements OnInit {
             turno.smsVisible = true;
             turno.smsLoader = true;
 
-            if (this.turnosSeleccionados[x].paciente != null) {
+            // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
+            if (this.turnosSeleccionados[x].paciente && this.turnosSeleccionados[x].paciente.id) {
 
                 this.smsService.enviarSms(this.turnosSeleccionados[x].paciente.telefono).subscribe(
                     resultado => {

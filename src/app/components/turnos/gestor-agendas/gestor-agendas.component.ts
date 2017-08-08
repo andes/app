@@ -101,10 +101,10 @@ export class GestorAgendasComponent implements OnInit {
                 let fechaHasta = moment(value.fechaHasta).endOf('day');
                 let params = {};
 
-                if (fechaDesde.isValid() && fechaHasta.isValid()) {
+                if (fechaDesde.isValid() || fechaHasta.isValid()) {
                     params = {
-                        fechaDesde: fechaDesde.format(),
-                        fechaHasta: fechaHasta.format(),
+                        fechaDesde: fechaDesde.isValid() ? fechaDesde.format() : moment().format(),
+                        fechaHasta: fechaHasta.isValid() ? fechaHasta.format() : moment().format(),
                         organizacion: this.auth.organizacion._id
                     };
                 } else {
@@ -132,7 +132,7 @@ export class GestorAgendasComponent implements OnInit {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
-                                if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                                if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente.id) || (agenda.estado === 'suspendida' && (turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
                                     count++;
                                 }
                             });
@@ -257,14 +257,16 @@ export class GestorAgendasComponent implements OnInit {
             this.fechaHasta = moment(fecha).endOf('day').toDate();
         }
 
-        this.serviceAgenda.get({
+        const params = {
             fechaDesde: this.fechaDesde,
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id,
             idTipoPrestacion: '',
             idProfesional: '',
             idEspacioFisico: ''
-        }).subscribe(
+        };
+
+        this.serviceAgenda.get(params).subscribe(
             agendas => {
                 this.agendas = agendas;
                 this.agendasSeleccionadas = [];
@@ -274,7 +276,7 @@ export class GestorAgendasComponent implements OnInit {
                     let count = 0;
                     agenda.bloques.forEach(bloque => {
                         bloque.turnos.forEach(turno => {
-                            if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
+                            if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
                                 count++;
                             }
                         });

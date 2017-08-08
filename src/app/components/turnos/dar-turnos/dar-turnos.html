@@ -64,7 +64,7 @@
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
                                 <!--Ninguna agenda seleccionada-->
-                                <ng-container *ngIf="estadoT === 'noSeleccionada' || !_solicitudPrestacion?.solicitud">
+                                <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud">
                                     <legend class=" pt-3 text-center ">Búsquedas recientes</legend>
                                     <ul class="list-group ">
                                         <li *ngFor="let busqueda of busquedas; let i=index " class="list-group-item hover
@@ -84,10 +84,10 @@
                                 <!--Agenda seleccionada-->
                                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' ">
                                     <!--Header agenda-->
-                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right ">{{ estadosAgenda[agenda.estado].nombre }}</span>
                                     <legend class="pt-3 text-center ">
                                         <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
-                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span>
+                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} <span class="text-{{estadosAgenda[agenda.estado].class}}">({{ estadosAgenda[agenda.estado].nombre }})</span></span>
+
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                             {{ tipoPrestacion.nombre }}
@@ -134,7 +134,6 @@
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td><b>{{countBloques[indiceBq].gestion}}</b></td>
                                                             </ng-template>
-                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td> -->
                                                             <td>{{countBloques[indiceBq].profesional}}</td>
 
                                                         </tr>
@@ -230,6 +229,7 @@
                                     <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
                                         name="turnoTipoPrestacion"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                                    <plex-text label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta" ></plex-text>
                                     <div class="text-right mt-3">
                                         <plex-button label="Volver" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
                                         <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
