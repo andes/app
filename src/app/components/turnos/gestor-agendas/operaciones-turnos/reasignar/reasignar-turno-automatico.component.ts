@@ -156,7 +156,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let tipoTurno;
 
         // Si la agenda es del día
-        alert(this.getFecha(horaDestino) + ' ' + this.getFecha(this.hoy));
         if (this.getFecha(horaDestino) === this.getFecha(this.hoy)) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
@@ -188,7 +187,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             }
         };
 
-        this.plex.confirm('', '¿Reasignar Turno?').then((confirmado) => {
+        this.plex.confirm('Del ' + moment(turno.horaInicio).format('dddd DD/MM/YYYY') + ' al ' + moment(agendaSeleccionada.horaInicio).format('dddd DD/MM/YYYY') + ' a las ' + moment(turno.horaInicio).format('HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;
             }

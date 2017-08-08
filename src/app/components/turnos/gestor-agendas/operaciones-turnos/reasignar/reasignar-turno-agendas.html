@@ -4,8 +4,7 @@
             <legend><span *ngIf="turnoSeleccionado?.reasignado?.siguiente">DETALLES DE LA REASIGNACIÓN</span></legend>
             <legend><span *ngIf="!turnoSeleccionado?.reasignado?.siguiente">SELECCIÓN DE TURNO PARA REASIGNACIÓN</span></legend>
             <!-- Hay turno? -->
-            <div class="row" *ngIf="turnoSeleccionado">
-                <!--<pre>{{ turnoSeleccionado | json }}</pre>-->
+            <div class="row" *ngIf="turnoSeleccionado?.paciente">
                 <div class="col">
                     Paciente: {{turnoSeleccionado.paciente | paciente }}
                     <small><span>| DNI {{turnoSeleccionado.paciente.documento | number}}</span></small> | <b>{{turnoSeleccionado.tipoPrestacion.nombre}}</b>
@@ -31,8 +30,8 @@
                         </div>
                     </div>
                     <div class="row" *ngIf="turnoSeleccionado?.horaInicio && agendaDestino?.turno">
-                        <div class="col-6 text-warning">Horario: <b>{{turnoSeleccionado.horaInicio|date: 'HH:mm' }} hs</b></div>
-                        <div class="col-6 text-success">Horario: <b>{{agendaDestino.turno.horaInicio|date: 'HH:mm' }} hs</b></div>
+                        <div class="col-6 text-warning">Horario: <b>{{turnoSeleccionado.horaInicio | date: 'HH:mm' }} hs</b></div>
+                        <div class="col-6 text-success">Horario: <b>{{agendaDestino.turno.horaInicio | date: 'HH:mm' }} hs</b></div>
                     </div>
                     <div class="row" *ngIf="turnoSeleccionado?.tipoPrestacion && agendaDestino?.turno">
                         <div class="col-6 text-warning">Tipo de Prestación: <b>{{turnoSeleccionado?.tipoPrestacion.nombre}}</b></div>
@@ -93,6 +92,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div *ngIf="getFecha(hoy) === getFecha(agenda.horaInicio)" class="text-danger">Agenda en ejecución</div>
                         </div>
                     </div>
                 </div>
