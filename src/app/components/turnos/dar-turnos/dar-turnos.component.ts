@@ -706,7 +706,7 @@ export class DarTurnosComponent implements OnInit {
         };
         this.servicePaciente.patch(paciente.id, cambios).subscribe(resultado => {
             if (resultado) {
-                this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
+                // this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
             }
         });
     }
