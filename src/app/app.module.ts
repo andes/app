@@ -43,6 +43,7 @@ import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
+import { EnumerarPipe } from './pipes/enumerar.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -445,7 +446,7 @@ import { routing, appRoutingProviders } from './app.routing';
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos,
+        FilterPermisos, EnumerarPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -454,7 +455,7 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
+        AuditoriaComponent,
         // AuditoriaPorBloqueComponent, 
         Auditoria2Component,
         ...RUP_COMPONENTS,

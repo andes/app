@@ -79,11 +79,13 @@
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                <!-- <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div> -->
+                                <div *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term'] }}</div>
                                 <div>
                                     <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                        <!-- <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div> -->
+                                        <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales | enumerar:['apellido','nombre'] }}</div>
                                     </ng-container>
                                 </div>
                             </td>
