@@ -39,10 +39,10 @@
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaAReasignar.profesionales">Profesional: <b>{{profesional|profesional}}</b></span>
+                            Profesionales: <span *ngFor="let profesional of agendaAReasignar.profesionales"><b>{{profesional | profesional}}</b></span>
                         </div>
                         <div class="col-6 text-success" *ngIf="agendaDestino?.agenda?.profesionales?.length > 0">
-                            <span *ngFor="let profesional of agendaDestino.agenda.profesionales">Profesional: <b>{{profesional|profesional}}</b></span>
+                            Profesionales: <span *ngFor="let profesional of agendaDestino.agenda.profesionales"><b>{{profesional | profesional}} </b></span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                         <div class="card-block">
                             <h4 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
                                 }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h4>
-                            <p class="card-text">{{ agenda.tiposPrestacion | json }}</p>
+                            <p class="card-text" *ngIf="agenda.tiposPrestacion?.length > 0">{{ agenda.tiposPrestacion | enumerar }}</p>
                             <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
                                 <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
                                     <div *ngIf="bloque.descripcion">
