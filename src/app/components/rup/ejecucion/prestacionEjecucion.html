@@ -2,7 +2,7 @@
 <header *ngIf="prestacion">
     <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="prestacion.paciente"></header-paciente>
 </header>
-<form class="plex-layout" #form="ngForm">
+<form class="plex-layout" #form="ngForm" *ngIf="!showCambioPaciente">
     <!-- Sección principal -->
     <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && elementoRUPprestacion">
         <div class="row">
