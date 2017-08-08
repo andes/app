@@ -121,13 +121,15 @@ export class PuntoInicioComponent implements OnInit {
             // filtramos los resultados
             this.filtrar();
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
-            this.agendaSeleccionada.bloques.forEach(element => {
-                element.turnos.forEach(turno => {
-                    if (turno.prestacion) {
-                        turno.prestacion = this.mostrarTurnoPendiente(turno.prestacion);
-                    }
+            if ( this.agendaSeleccionada) {
+                this.agendaSeleccionada.bloques.forEach(element => {
+                    element.turnos.forEach(turno => {
+                        if (turno.prestacion) {
+                            turno.prestacion = this.mostrarTurnoPendiente(turno.prestacion);
+                        }
+                    });
                 });
-            });
+            }
             this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
         });
     }
@@ -294,7 +296,7 @@ export class PuntoInicioComponent implements OnInit {
                 if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
                     this.servicioPrestacion.getByPaciente(unaPrestacion.paciente.id).subscribe(prestacionesPaciente => {
                         prestacionesPaciente.forEach(elemento => {
-                            if (elemento.solicitud.prestacionOrigen === unaPrestacion.id 
+                            if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
                                 && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
                                 && !elemento.solicitud.turno) {
                                 unaPrestacion.turnosPedientes = true;
@@ -307,7 +309,7 @@ export class PuntoInicioComponent implements OnInit {
             if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
                 this.servicioPrestacion.getByPaciente(prestaciones.paciente.id).subscribe(prestacionesPaciente => {
                     prestacionesPaciente.forEach(elemento => {
-                        if (elemento.solicitud.prestacionOrigen === prestaciones.id 
+                        if (elemento.solicitud.prestacionOrigen === prestaciones.id
                             && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
                             && !elemento.solicitud.turno) {
                             prestaciones.turnosPedientes = true;
