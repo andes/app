@@ -42,6 +42,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      * Indica si quiere bloquear la modificación del paciente una vez seleccionado
      */
     @Input() bloquearCreate = false;
+    /**
+     * Indica si el componente llamador requiere ocultar el footer
+     */
+    @Input() hideFooter = false;
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
