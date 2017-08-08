@@ -132,7 +132,10 @@ export class GestorAgendasComponent implements OnInit {
                         let count = 0;
                         agenda.bloques.forEach(bloque => {
                             bloque.turnos.forEach(turno => {
-                                if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente.id) || (agenda.estado === 'suspendida' && (turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
+                                if (
+                                    (turno.paciente && turno.paciente.id) &&
+                                    ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida' && (!turno.reasignado || !turno.reasignado.siguiente)))
+                                ) {
                                     count++;
                                 }
                             });
@@ -144,8 +147,6 @@ export class GestorAgendasComponent implements OnInit {
                     this.agendas = agendas;
                     this.fechaDesde = fechaDesde;
                     this.fechaHasta = fechaHasta;
-
-
 
                 },
                     err => {
@@ -276,7 +277,10 @@ export class GestorAgendasComponent implements OnInit {
                     let count = 0;
                     agenda.bloques.forEach(bloque => {
                         bloque.turnos.forEach(turno => {
-                            if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
+                            if (
+                                (turno.paciente && turno.paciente.id) &&
+                                ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida' && (!turno.reasignado || !turno.reasignado.siguiente)))
+                            ) {
                                 count++;
                             }
                         });
@@ -353,6 +357,7 @@ export class GestorAgendasComponent implements OnInit {
             if (this.hayAgendasSuspendidas()) {
                 // this.showGestorAgendas = false;
                 this.showReasignarTurnoAutomatico = true;
+                // this.agendasSeleccionadas[0] = ag;
             } else {
                 this.showTurnos = true;
             }
