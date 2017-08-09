@@ -44,6 +44,7 @@ import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
+import { PluralizarPipe } from './pipes/pluralizar.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -446,7 +447,7 @@ import { routing, appRoutingProviders } from './app.routing';
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
