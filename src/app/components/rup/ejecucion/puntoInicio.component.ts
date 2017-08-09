@@ -187,7 +187,6 @@ export class PuntoInicioComponent implements OnInit {
                 this.fueraDeAgenda = _turnos;
             }
         }
-
         if (typeof this.paciente !== 'undefined' && this.paciente) {
             let search = this.paciente.toLowerCase();
 
@@ -202,10 +201,10 @@ export class PuntoInicioComponent implements OnInit {
 
                         let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
                             let nombreCompleto = '';
-                            if (t.paciente) {
+                            if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
                             }
-                            return (t.paciente &&
+                            return (t.paciente && t.paciente.id &&
                                 (nombreCompleto.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
