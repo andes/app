@@ -18,7 +18,7 @@
 
                     <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio | date: 'dd/MM/yyyy'}}
                     de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs <br>
-                    <b>Prestaciones:</b> {{ agendaAReasignar.tipoPrestaciones | enumerar:['term'] }} <br>
+                    <b>Prestaciones:</b> {{ agendaAReasignar.tipoPrestaciones | enumerar:['term']:'/' }} <br>
                     <b>Profesionales:</b> <span *ngIf="agendaAReasignar.profesionales?.length > 0"><span></span>{{ agendaAReasignar.profesionales
                     | enumerar:['apellido','nombre'] }}</span>
                     <span *ngIf="agendaAReasignar.profesionales?.length === 0">Sin profesionales asignados</span><br>
