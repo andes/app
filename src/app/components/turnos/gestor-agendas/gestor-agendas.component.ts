@@ -126,38 +126,63 @@ export class GestorAgendasComponent implements OnInit {
                     params['estado'] = value.estado.id;
                 }
 
-                this.serviceAgenda.get(params).subscribe(agendas => {
-                    this.turnosSuspendidos = [];
-                    agendas.forEach(agenda => {
-                        let count = 0;
-                        agenda.bloques.forEach(bloque => {
-                            bloque.turnos.forEach(turno => {
-                                if (
-                                    (turno.paciente && turno.paciente.id) &&
-                                    ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida' && (!turno.reasignado || !turno.reasignado.siguiente)))
-                                ) {
-                                    count++;
-                                }
-                            });
-                        });
-                        this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                    });
+                this.getAgendas(params);
 
-                    this.hoy = false;
-                    this.agendas = agendas;
-                    this.fechaDesde = fechaDesde;
-                    this.fechaHasta = fechaHasta;
-
-                },
-                    err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
+                this.fechaDesde = fechaDesde;
+                this.fechaHasta = fechaHasta;
             });
 
         }
 
+    }
+
+    getAgendas(params: any) {
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            // this.agendasSeleccionadas = [];
+            this.turnosSuspendidos = [];
+            agendas.forEach(agenda => {
+                let count = 0;
+                agenda.bloques.forEach(bloque => {
+                    bloque.turnos.forEach(turno => {
+
+                        // Cuenta la cantidad de turnos suspendidos (no reasignados) con paciente en cada agenda
+                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida')) && (!turno.reasignado || !turno.reasignado.siguiente)) {
+                            count++;
+                        }
+
+                    });
+                });
+                this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
+            });
+
+            this.hoy = false;
+            this.agendas = agendas;
+
+        }, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    loadAgendas() {
+        let fecha = moment().format();
+
+        if (this.hoy) {
+            this.fechaDesde = moment(fecha).startOf('day').toDate();
+            this.fechaHasta = moment(fecha).endOf('day').toDate();
+        }
+
+        const params = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id,
+            idTipoPrestacion: '',
+            idProfesional: '',
+            idEspacioFisico: ''
+        };
+
+        this.getAgendas(params);
     }
 
     agregarNotaAgenda() {
@@ -248,53 +273,6 @@ export class GestorAgendasComponent implements OnInit {
     revisionAgenda(agenda) {
         this.showGestorAgendas = false;
         this.showRevisionAgenda = true;
-    }
-
-    loadAgendas() {
-        let fecha = moment().format();
-
-        if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
-        }
-
-        const params = {
-            fechaDesde: this.fechaDesde,
-            fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id,
-            idTipoPrestacion: '',
-            idProfesional: '',
-            idEspacioFisico: ''
-        };
-
-        this.serviceAgenda.get(params).subscribe(
-            agendas => {
-                this.agendas = agendas;
-                this.agendasSeleccionadas = [];
-                this.turnosSuspendidos = [];
-
-                agendas.forEach(agenda => {
-                    let count = 0;
-                    agenda.bloques.forEach(bloque => {
-                        bloque.turnos.forEach(turno => {
-                            if (
-                                (turno.paciente && turno.paciente.id) &&
-                                ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida' && (!turno.reasignado || !turno.reasignado.siguiente)))
-                            ) {
-                                count++;
-                            }
-                        });
-                    });
-                    this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                });
-
-
-            },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
     }
 
     loadPrestaciones(event) {
