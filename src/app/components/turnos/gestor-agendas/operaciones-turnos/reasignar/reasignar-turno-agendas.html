@@ -11,6 +11,9 @@
                 </div>
             </div>
             <hr>
+            <h5 *ngIf="!turnoSeleccionado?.reasignado?.siguiente">
+                Seleccione horario al cual reasignar el turno:
+            </h5>
             <div class="row" *ngIf="turnoSeleccionado?.reasignado?.siguiente">
                 <div class="col">
                     <h5>Este turno fue reasignado:</h5>
@@ -63,6 +66,9 @@
                                 <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
                                     <div *ngIf="bloque.descripcion">
                                         Bloque <span>{{bloque.descripcion}}</span>
+                                    </div>
+                                    <div *ngIf="!bloque.descripcion">
+                                        [Bloque sin nombre]
                                     </div>
                                     <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
                                         <ng-container *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio)) ">
