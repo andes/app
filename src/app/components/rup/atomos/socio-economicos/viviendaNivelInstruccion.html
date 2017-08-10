@@ -1,9 +1,7 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[tipoPrestacion.key]" name="nivel" [data]="SelectNivel" label="Nivel de Instrucción"
-  placeholder="Seleccion del nivel de instrucción"  (change)="devolverValores()">
+<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="nivel" [data]="SelectNivel" label="Nivel de Instrucción" placeholder="Seleccion del nivel de instrucción" (change)="devolverValores()">
 </plex-select>
 
 <div *ngIf="soloValores">
-  <b> Nivel de Instrucción </b>
-  <br/>
-   {{data[tipoPrestacion.key].nombre}}
+    <b> Nivel de Instrucción </b>
+    <br/> {{data[elementoRUP.key].nombre}}
 </div>

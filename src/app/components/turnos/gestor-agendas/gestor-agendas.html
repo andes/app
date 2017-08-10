@@ -68,8 +68,9 @@
                                 <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <div>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio
-                                    | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                <div>{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                                    <i class="mdi mdi-clock"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin
+                                    | date: 'HH:mm'}} hs
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
@@ -78,19 +79,20 @@
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                <div *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
                                 <div>
                                     <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                        <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales | enumerar:['apellido','nombre'] }}</div>
                                     </ng-container>
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
                                 <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                 <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
-                                <span class="badge-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
-
+                                <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
+                                    <span class="text-white"><strong>{{ turnosSuspendidos[i].count }}</strong></span>
+                                </span>
                                 <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
                             </td>
                         </tr>

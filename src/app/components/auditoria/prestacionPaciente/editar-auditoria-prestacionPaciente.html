@@ -19,13 +19,12 @@
         <div class="row">
             <div class="col-12">
                 <ng-template [ngIf]="modelo.auditoria">
-                    <plex-select [(ngModel)]="modelo.auditoria.estado" name="estado" label="Pasar a estado:" (getData)="loadEstados($event)"
-                        [required]="true"></plex-select>
+                    <plex-select [(ngModel)]="modelo.auditoria.estado" name="estado" label="Pasar a estado:" (getData)="loadEstados($event)" [required]="true"></plex-select>
                 </ng-template>
             </div>
         </div>
         <hr>
-        <ng-template [ngIf]="auditoriaPP">
+        <!-- <ng-template [ngIf]="auditoriaPP">
             <h5>Solicitud de Prestación nueva</h5>
             <div class="row">
                 <div class="col-12">
@@ -34,7 +33,7 @@
                 </div>
             </div>
             <hr>
-        </ng-template>
+        </ng-template> -->
         <div class="row">
             <div class="col-12">
                 <plex-button icon="mdi mdi-content-save" label="Aplicar" (click)="guardarAuditoriaPP($event)" title="Aplicar" validateForm="true"></plex-button>

@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
     public organizacion: any;
     public loading = false;
     public deshabilitar = false;
+    public autoFocus = 1;
 
     constructor(private plex: Plex, private auth: Auth, private router: Router) { }
 

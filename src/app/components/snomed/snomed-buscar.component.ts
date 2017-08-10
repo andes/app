@@ -53,7 +53,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     private timeoutHandle: number;
 
     // En caso de ingresar searchTermInput esta variable hideSearchInput pasara a true
-    private hideSearchInput: Boolean = false;
+    public hideSearchInput: Boolean = false;
 
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;

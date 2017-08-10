@@ -16,16 +16,18 @@
                         <i class="mdi mdi-emoticon"></i> No quedan Turnos para reasignar es esta Agenda
                     </div>
 
+                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio | date: 'dd/MM/yyyy'}}
+                    de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs <br>
+                    <b>Prestaciones:</b> {{ agendaAReasignar.tipoPrestaciones | enumerar:['term']:'/' }} <br>
+                    <b>Profesionales:</b> <span *ngIf="agendaAReasignar.profesionales?.length > 0"><span></span>{{ agendaAReasignar.profesionales
+                    | enumerar:['apellido','nombre'] }}</span>
+                    <span *ngIf="agendaAReasignar.profesionales?.length === 0">Sin profesionales asignados</span><br>
+
                     <!--Turnos-->
                     <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
                         <thead *ngIf="bloque.descripcion">
                             <tr>
                                 <th colspan="3">
-                                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio
-                                    | date: 'dd/MM/yyyy'}} de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin
-                                    | date: 'HH:mm'}} hs <br>
-                                    <b>Tipos de Prestación:</b> <span *ngFor="let tp of agendaAReasignar.tipoPrestaciones">{{tp.nombre}} </span><br>
-                                    <b>Profesionales:</b> <span *ngFor="let p of agendaAReasignar.profesionales">{{p.nombre}} </span><br>
                                 </th>
                             </tr>
                             <tr>
@@ -37,7 +39,7 @@
                                 <ng-container *ngIf="turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
 
                                 <ng-template #reasignado>
-                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente)">
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente && turno.paciente.id)">
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                         </td>
@@ -50,7 +52,7 @@
                                                 </span>
                                             </small>
 
-                                            <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
+                                            <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1"><small><span *ngIf="turno && turno.paciente?.id && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
                                             <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
                                             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
                                             <span *ngIf="turno && turno.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
@@ -64,7 +66,7 @@
                                 </ng-template>
 
                                 <ng-template #noReasignado>
-                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente)">
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente?.id)">
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                                         </td>

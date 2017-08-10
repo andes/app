@@ -1,5 +1,5 @@
-<div *ngIf="elemntoRUP.requeridos[0] && elemntoRUP.requeridos[0].id">
-    <div *ngFor="let tp of elemntoRUP.requeridos">
+<div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id">
+    <div *ngFor="let tp of elementoRUP.requeridos">
         <div class="col-md-12">
             <rup #rup [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
             </rup>

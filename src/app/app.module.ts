@@ -43,6 +43,8 @@ import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
+import { EnumerarPipe } from './pipes/enumerar.pipe';
+import { PluralizarPipe } from './pipes/pluralizar.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -173,7 +175,7 @@ import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.com
 import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
 import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
 import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
-import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
+// import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
 import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
@@ -183,7 +185,7 @@ import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitud
 import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
-import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
+// import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
 import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
 import { Formula } from './components/rup/core/formula.component';
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
@@ -235,7 +237,7 @@ import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/at
 import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
 // NIÑO SANO
-import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
+// import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 
 // Llaves
@@ -251,7 +253,7 @@ import { ElementosRupService } from './services/rup/elementosRUP.service';
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
-import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
+// import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
@@ -269,12 +271,12 @@ export const RUP_ELEMENTS: any[] = [
     { component: DesarrolloMotorComponent, key: 'DesarrolloMotorComponent' },
     { component: EcografiaComponent, key: 'EcografiaComponent' },
     { component: EdadGestacionalComponent, key: 'EdadGestacionalComponent' },
-    { component: EdadGestacionalFetalComponent, key: 'EdadGestacionalFetalComponent' },
+    // { component: EdadGestacionalFetalComponent, key: 'EdadGestacionalFetalComponent' },
     { component: EndoscopiaComponent, key: 'EndoscopiaComponent' },
     { component: EscalaDeDesarrolloComponent, key: 'EscalaDeDesarrolloComponent' },
     { component: EstadoNutricionalComponent, key: 'EstadoNutricionalComponent' },
     { component: EvolucionProblemaDefaultComponent, key: 'EvolucionProblemaDefaultComponent' },
-    { component: FactoresDeRiesgoNinoSanoComponent, key: 'FactoresDeRiesgoNinoSanoComponent' },
+    // { component: FactoresDeRiesgoNinoSanoComponent, key: 'FactoresDeRiesgoNinoSanoComponent' },
     { component: Formula, key: 'Formula' },
     { component: FrecuenciaCardiacaComponent, key: 'FrecuenciaCardiacaComponent' },
     { component: FrecuenciaRespiratoriaComponent, key: 'FrecuenciaRespiratoriaComponent' },
@@ -290,7 +292,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: NinoSanoComponent, key: 'NinoSanoComponent' },
     { component: NuevaEvolucionProblemaComponent, key: 'NuevaEvolucionProblemaComponent' },
     { component: ObservacionesComponent, key: 'ObservacionesComponent' },
-    { component: OdontologiaComponent, key: 'OdontologiaComponent' },
+    // { component: OdontologiaComponent, key: 'OdontologiaComponent' },
     { component: PartoCesareaComponent, key: 'PartoCesareaComponent' },
     { component: PartoVaginalAsistidoExtractorVacioComponent, key: 'PartoVaginalAsistidoExtractorVacioComponent' },
     { component: PartoViaVaginalComponent, key: 'PartoViaVaginalComponent' },
@@ -350,11 +352,11 @@ const RUP_COMPONENTS = [
     EcografiaComponent,
     EndoscopiaComponent,
     EdadGestacionalComponent,
-    EdadGestacionalFetalComponent,
+    // EdadGestacionalFetalComponent,
     EscalaDeDesarrolloComponent,
     EstadoNutricionalComponent,
     EvolucionProblemaDefaultComponent,
-    FactoresDeRiesgoNinoSanoComponent,
+    // FactoresDeRiesgoNinoSanoComponent,
     Formula,
     FrecuenciaCardiacaComponent,
     FrecuenciaRespiratoriaComponent,
@@ -370,7 +372,7 @@ const RUP_COMPONENTS = [
     NinoSanoComponent,
     NuevaEvolucionProblemaComponent,
     ObservacionesComponent,
-    OdontologiaComponent,
+    // OdontologiaComponent,
     PartoCesareaComponent,
     PartoVaginalAsistidoExtractorVacioComponent,
     PartoViaVaginalComponent,
@@ -421,9 +423,6 @@ const RUP_COMPONENTS = [
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
-// Ver donde poner
-import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
-
 // Main module
 @NgModule({
     imports: [
@@ -437,9 +436,6 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        ConfirmationPopoverModule.forRoot({
-            confirmButtonType: 'danger' // set defaults here
         })
     ],
 
@@ -451,7 +447,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos,
+        FilterPermisos, EnumerarPipe, PluralizarPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -460,7 +456,9 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, AuditoriaPorBloqueComponent, Auditoria2Component,
+        AuditoriaComponent,
+        // AuditoriaPorBloqueComponent, 
+        Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,

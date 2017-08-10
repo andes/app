@@ -38,8 +38,8 @@
             <ng-container *ngIf="vista == 'destacados'">
                 <div class="vista-titulo">Problemas crónicos</div>
 
-                <ul *ngIf="hallazgos" class="conceptos list-unstyled">
-                    <ng-container *ngFor="let hallazgo of hallazgos; let i = index">
+                <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
                         <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <div class="rup-card mini">
                                 <div class="type problemas">
@@ -77,7 +77,36 @@
             <!-- Vista: Problemas -->
             <ng-container *ngIf="vista == 'problemas'">
                 <div class="vista-titulo">Problemas activos</div>
-                <div>No se encontraron registros</div>
+                <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let problema of problemasActivos; let i = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini">
+                                <div class="type problemas">
+                                    <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{ problema.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="problema.evoluciones">
+                                        ultima evolución: {{ problema.evoluciones[problema.evoluciones.length - 1].fechaCarga | fecha}}
+                                    </small><br>
+                                        <div class="actions">
+                                            <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
+                                                <i class="mdi mdi-plus-box-outline"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+
+
+                <div *ngIf="!problemasActivos">No se encontraron registros</div>
             </ng-container>
 
             <!-- Vista: Hallazgos -->
@@ -86,7 +115,7 @@
                 <div>No se encontraron registros</div>
             </ng-container>
 
-            <!-- Vista: Hallazgos -->
+            <!-- Vista: prestaciones -->
             <ng-container *ngIf="vista == 'prestaciones'">
                 <div class="vista-titulo">Prestaciones</div>
 
@@ -105,8 +134,12 @@
                                             <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
                                         </div>
                                     </div>
-                                    <div class="title">
-                                        {{ prestacion.solicitud.tipoPrestacion.term }}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="title">
+                                                {{ prestacion.solicitud.tipoPrestacion.term }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>

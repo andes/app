@@ -216,7 +216,7 @@ export class RevisionAgendaComponent implements OnInit {
         // Se verifica que todos los campos tengan asistencia chequeada
         let turnoSinVerificar = null;
         turnoSinVerificar = this.turnos.find(t => {
-            return (t.paciente && !t.asistencia);
+            return (t.paciente && t.paciente.id && !t.asistencia);
         });
 
         if (turnoSinVerificar) {
@@ -239,7 +239,7 @@ export class RevisionAgendaComponent implements OnInit {
         // Se verifica que todos los campos tengan el diagnostico codificado
         let turnoSinCodificar = null;
         turnoSinCodificar = this.turnos.find(t => {
-            return (t.paciente && t.asistencia && (!t.diagnosticoPrincipal || (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible)));
+            return (t.paciente && t.paciente.id && t.asistencia && (!t.diagnosticoPrincipal || (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible)));
         });
 
         if (turnoSinCodificar) {

@@ -1,7 +1,7 @@
-<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="ControlDeEsfinteres" label="Control de esfinteres" suffix=" % " min="0" max="100" (change)="devolverValores()">
+<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[elementoRUP.key]" name="ControlDeEsfinteres" label="Control de esfinteres" suffix=" % " min="0" max="100" (change)="devolverValores()">
 </plex-int>
 
 <p *ngIf="soloValores">
     <label><b>Control de esfinteres</b></label>
-    <br /> {{data[tipoPrestacion.key]}} %
+    <br /> {{data[elementoRUP.key]}} %
 </p>

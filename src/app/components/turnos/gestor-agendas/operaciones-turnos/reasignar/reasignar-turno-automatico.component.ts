@@ -17,7 +17,6 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAutomaticoComponent implements OnInit {
-    agendasOcultas: any[] = [];
 
     private _agendaAReasignar: any;
 
@@ -36,13 +35,18 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
     public turnoAReasignar: ITurno;
 
-    agendasCandidatas: any[] = [];
+    agendasReasignar: any[] = [];
     public motivoSuspension: any[];
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
     public suspendio = false;
     public hoy = new Date();
+
+    agendasOcultas: any[] = [];
+    paneles: any[] = [];
+
     autorizado: any;
+
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
@@ -51,14 +55,20 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     }
 
     actualizar() {
+
+        // Función callback para usar con array.sort()
         let sortCandidatas = function (a, b) {
             return a.turno.horaInicio - b.turno.horaInicio;
         };
-        this.agendasCandidatas = [];
+
+        this.agendasReasignar = [];
+
+        // Hay alguna agenda seleccionada?
         if (this.agendaAReasignar) {
             this.agendaAReasignar.bloques.forEach(bloque => {
                 bloque.turnos.forEach(turno => {
-                    if (turno.paciente && turno.estado === 'asignado') {
+
+                    if (((turno.estado === 'asignado' && this.agendaAReasignar.estado === 'suspendida') || turno.estado === 'suspendido') && turno.paciente && turno.paciente.id) {
 
                         let params = {
                             idAgenda: this.agendaAReasignar.id,
@@ -68,12 +78,22 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                             horario: true
                         };
 
-                        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
-                            this.agendasCandidatas = [... this.agendasCandidatas, { turno: turno, bloque: bloque, agendas: agendas }];
-                            this.agendasCandidatas.sort(sortCandidatas);
-                            this.calculosSimilitud(turno, agendas);
-                            console.log('agendasCandidatas', this.agendasCandidatas);
-                        });
+                        // 1. Ya reasignado: Trae agenda a la que re reasignó 
+                        if (turno.reasignado && turno.reasignado.siguiente) {
+                            this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(agenda => {
+                                this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: [agenda] }];
+                                this.agendasReasignar.sort(sortCandidatas);
+                            });
+                        } else {
+                            // 2. No reasignado: Trae agendas candidatas 
+                            this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
+                                this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
+                                this.agendasReasignar.sort(sortCandidatas);
+                                this.calculosSimilitud(turno, agendas);
+                            });
+
+                        }
+
                     }
 
                 });
@@ -107,9 +127,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                         profesional: ag.profesionales && this.interseccion(ag.profesionales, this.agendaAReasignar.profesionales) === true ? 30 : 0
                     };
                     calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
-
                     if (turno.reasignado !== undefined && turno.reasignado.siguiente && turno.reasignado.siguiente.idTurno === tu._id) {
                         this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(reasignado => {
+
                             if (!agendaReasignada) {
 
                                 ag.agendaReasignada = reasignado;
@@ -122,30 +142,27 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                     }
                 });
-                // turnosFiltrados = bl.turnos.filter((x) => { return x.horaInicio > new Date(); });
-                // console.log('turnosFiltrados ', turnosFiltrados);
-                // agendas[iAgenda].bloques[iBloque].turnos = turnosFiltrados;
-                // bl.turnos = turnosFiltrados;
             });
             ag.similitud = calculos;
         });
 
     }
 
-    seleccionarCandidata(indiceTurno, i) {
-        let turno = this.agendasCandidatas[indiceTurno].turno;
-        let bloque = this.agendasCandidatas[indiceTurno].bloque;
-        let agendaSeleccionada = this.agendasCandidatas[indiceTurno].agendas[i];
+    seleccionarCandidata(indiceTurno, i, horaDestino) {
+        let turno = this.agendasReasignar[indiceTurno].turno;
+        let bloque = this.agendasReasignar[indiceTurno].bloque;
+        let agendaSeleccionada = this.agendasReasignar[indiceTurno].agendas[i];
+        console.log('this.agendasReasignar[indiceTurno].agendas[i]', this.agendasReasignar[indiceTurno].agendas[i]);
         let tipoTurno;
 
         // Si la agenda es del día
-        if (this.getFecha(agendaSeleccionada) === this.getFecha(this.hoy)) {
+        if (this.getFecha(horaDestino) === this.getFecha(this.hoy)) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
-            if (agendaSeleccionada.estado === 'disponible') {
-                tipoTurno = 'gestion';
-            }
+            // if (agendaSeleccionada.estado === 'disponible') {
+            //     tipoTurno = 'gestion';
+            // }
 
             if (agendaSeleccionada.estado === 'publicada') {
                 tipoTurno = 'programado';
@@ -169,8 +186,8 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                 }
             }
         };
-        // console.log('datosTurno ', datosTurno);
-        this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
+
+        this.plex.confirm('Del ' + moment(turno.horaInicio).format('dddd DD/MM/YYYY') + ' al ' + moment(agendaSeleccionada.horaInicio).format('dddd DD/MM/YYYY') + ' a las ' + moment(turno.horaInicio).format('HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;
             }
@@ -203,6 +220,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                 this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
+                    this.plex.toast('danger', 'TODO: enviar SMS');
                     this.actualizar();
                 });
 
@@ -220,19 +238,13 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     ocultarAgendaCandidata(idAgenda, indice) {
 
         if (this.agendasOcultas.indexOf(idAgenda) > -1) {
-            this.agendasOcultas.splice(this.agendasOcultas.indexOf(idAgenda), 1);
+            delete this.agendasOcultas[indice];
         } else {
             this.agendasOcultas[indice] = idAgenda;
         }
-
         this.agendasOcultas = [... this.agendasOcultas];
 
     }
-
-    estaOculta(idAgenda) {
-        return this.agendasOcultas.find(id => id === idAgenda) > 0;
-    }
-
 
     reasignarTurnos() {
         this.reasignarTurnosEmit.emit(this.agendaAReasignar);
@@ -245,6 +257,23 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     getFecha(fecha) {
         return moment(fecha).format('DD/MM/YYYY');
     }
+
+
+    /**
+     * Accordion
+     */
+
+    togglePanel(idTurno, indice) {
+        if (this.paneles.indexOf(idTurno) > -1) {
+            delete this.paneles[indice];
+        } else {
+            this.paneles[indice] = idTurno;
+            console.log(indice, idTurno);
+        }
+
+        this.paneles = [... this.paneles];
+    }
+
     // cancelar() {
     //     this.cancelaSuspenderTurno.emit(true);
     //     this.turnoAReasignar = null;

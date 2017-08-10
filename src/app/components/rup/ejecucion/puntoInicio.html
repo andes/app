@@ -84,7 +84,10 @@
                                 Fuera de agenda
                             </td>
                             <td colspan="2">
-                                <span class="badge-info float-right">{{fueraDeAgenda.length}} paciente/s</span>
+                                <span class="badge-info float-right">
+                                    <ng-container *ngIf="fueraDeAgenda.length === 1">1 paciente</ng-container>
+                                    <ng-container *ngIf="fueraDeAgenda.length > 1">{{fueraDeAgenda.length}} pacientes</ng-container>
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -129,7 +132,8 @@
 
                                         <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                             <br />
-                                            <span class="badge badge-default">
+                                            <span class="badge " [ngClass]="{'badge-success': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada',
+                                                'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                                 {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                             </span>
                                             <br />
@@ -190,7 +194,8 @@
                                     <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
                                     <br />
 
-                                    <span class="badge badge-default">
+                                    <span class="badge " [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
+                                                'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                     </span>
                                 </td>
@@ -211,7 +216,6 @@
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div> -->
                                 </td>
                                 <td>
-
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)" label="Ver registros" type="primary btn-sm">
                                     </plex-button>
 
