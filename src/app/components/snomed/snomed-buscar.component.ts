@@ -52,8 +52,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
 
-    // En caso de ingresar searchTermInput esta variable hideSearchInput pasara a true
-    public hideSearchInput: Boolean = false;
+    // En caso de querer ocultar el input de busqueda y solo utilizar el valor de searchTerm
+    @Input() hideSearchInput: Boolean = false;
+
+    // termino a buscar en SNOMED
+    public searchTerm: String = '';
 
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
@@ -64,8 +67,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // boolean para indicar si esta cargando o no
     public loading = false;
 
-    // termino a buscar en SNOMED
-    public searchTerm: String = '';
     private dragAndDrop = false;
 
     private cachePrestacionesTurneables = null;
@@ -90,6 +91,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
+
         // Trae las prestaciones turneables y la guarda en memoria para luego
         // filtrar los resultados de las busquedas
         this.iniciarPrestacionesTurneables();
@@ -118,7 +120,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // Si ese Input() no viene definido usa uno propio este componente
     busquedaManual() {
         // ocultamos el campo input para buscar
-        this.hideSearchInput = true;
+        // this.hideSearchInput = true;
 
         // asignamos el texto a buscar
         this.searchTerm = this.searchTermInput;
@@ -247,14 +249,14 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         if (!inside && !this._draggable) {
             this.resultados = [];
             this.hideLista = true;
-            this.searchTerm = '';
+            // this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
         this.resultados = [];
-        this.searchTerm = '';
+        // this.searchTerm = '';
         this.evtData.emit(concepto);
     }
 

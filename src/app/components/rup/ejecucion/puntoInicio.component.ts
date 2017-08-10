@@ -73,7 +73,8 @@ export class PuntoInicioComponent implements OnInit {
             this.servicioAgenda.get({
                 fechaDesde: this.fecha,
                 fechaHasta: this.fecha,
-                organizacion: this.auth.organizacion.id
+                organizacion: this.auth.organizacion.id,
+                estados: ['disponible', 'publicada']
             }),
             // Prestaciones
             this.servicioPrestacion.get({
@@ -86,6 +87,10 @@ export class PuntoInicioComponent implements OnInit {
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+
+            if (this.agendas.length) {
+                this.agendaSeleccionada = this.agendas[0];
+            }
 
             if (this.agendas.length) {
                 // this.agendaSeleccionada = this.agendas[0];
@@ -120,6 +125,7 @@ export class PuntoInicioComponent implements OnInit {
             // this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
+
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
             if ( this.agendaSeleccionada) {
                 this.agendaSeleccionada.bloques.forEach(element => {
@@ -131,6 +137,7 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
             this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
+
         });
     }
 
