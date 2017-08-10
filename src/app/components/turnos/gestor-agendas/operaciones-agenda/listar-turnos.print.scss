@@ -1,10 +1,13 @@
 @media print {
     nav,
-    footer {
+    footer,
+    .btn {
         display: none;
     }
-    #printpage,
-    #printpage * {
-        visibility: visible;
+    th {
+        font-size: 0.7rem;
+    }
+    table {
+        page-break-after: always;
     }
 }

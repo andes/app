@@ -39,13 +39,12 @@
         <plex-button icon="mdi mdi-account-plus" (click)="agregarSobreturno()" title="Agregar Sobreturno">
         </plex-button>
    </span>
-
     <span *ngIf="vistaBotones.revisionAgenda">
           <plex-button icon="mdi mdi-format-list-checks" (click)="revisionAgenda()" title="Revisión de Agenda">
           </plex-button>
       </span>
     <span *ngIf="vistaBotones.listarTurnos">
-        <plex-button icon="mdi mdi-book-open" (click)="listarTurnos()" title="Imprimir">
+        <plex-button icon="mdi mdi-printer" (click)="listarTurnos()" title="Imprimir">
         </plex-button>
     </span>
 </div>
