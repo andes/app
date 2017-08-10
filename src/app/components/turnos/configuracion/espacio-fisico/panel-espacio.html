@@ -1,52 +1,51 @@
 <plex-box>
-  <div class="row">
-    <div class="col-md-3">
-      <plex-datetime type="date" [(ngModel)]="fecha" (change)="buscarAgendas()" name="fecha" label=" Seleccione la Fecha">
-      </plex-datetime>
+    <div class="row">
+        <div class="col-md-3">
+            <plex-datetime type="date" [(ngModel)]="fecha" (change)="buscarAgendas()" name="fecha" label=" Seleccione la Fecha">
+            </plex-datetime>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-9">
-      <table class="table table-borderer">
-        <tr>
-          <th>#</th>
-          <th *ngFor="let consultorio of espacios; let i=index" [ngStyle]="{'width': ancho, 'text-align':'center'}" 
-          [ngClass]="{'bg-primary primary': consultorio.seleccionado, 'hover':true}" 
-          (click)="seleccionarEspacio(consultorio)">{{consultorio.nombre}}</th>
-        </tr>
-        <tr *ngFor="let horario of horarios">
-          <td [ngStyle]="{'width': ancho}">{{horario.hora}}</td>
-          <!--<td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? colores[j]:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">-->
-            <td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? hr.agenda.color:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">
-            <div *ngIf="hr.agenda.rows>0" [ngStyle]="{'text-align': 'right'}">
-                <i class="mdi mdi-close-box hover" (click)="eliminar(hr.agenda, horario, j)"></i>
-            </div>
-            <div *ngIf="hr.agenda.rows>0" [ngStyle]="{'vertical-align': 'middle', 'text-align': 'center'}">
-              <div *ngFor="let profesional of hr.agenda.profesionales"><b>{{profesional.nombre}} {{profesional.apellido}}</b></div>
-            </div>
-          </td>
-        </tr>
-      </table>
+    <div class="row">
+        <div class="col-md-9">
+            <table class="table table-borderer">
+                <tr>
+                    <th>#</th>
+                    <th *ngFor="let consultorio of espacios; let i=index" [ngStyle]="{'width': ancho, 'text-align':'center'}" [ngClass]="{'bg-primary primary': consultorio.seleccionado, 'hover':true}"
+                        (click)="seleccionarEspacio(consultorio)">{{consultorio.nombre}}</th>
+                </tr>
+                <tr *ngFor="let horario of horarios">
+                    <td [ngStyle]="{'width': ancho}">{{horario.hora}}</td>
+                    <!--<td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? colores[j]:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">-->
+                    <td *ngFor="let hr of horario.lista; let j=index" [attr.rowspan]="hr.agenda.rows" [ngStyle]="{'width': ancho,'background-color': hr.agenda.rows > 1 ? hr.agenda.color:none, 'border': hr.agenda.rows > 1 ?'1px solid black':none}">
+                        <div *ngIf="hr.agenda.rows>0" [ngStyle]="{'text-align': 'right'}">
+                            <i class="mdi mdi-close-box hover" (click)="eliminar(hr.agenda, horario, j)"></i>
+                        </div>
+                        <div *ngIf="hr.agenda.rows>0" [ngStyle]="{'vertical-align': 'middle', 'text-align': 'center'}">
+                            <div *ngFor="let profesional of hr.agenda.profesionales"><b>{{profesional.nombre}} {{profesional.apellido}}</b></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div *ngIf="sinConsultorio" class="col-md-3">
+            <plex-box type="default" title="Agendas sin consultorio">
+                <div *ngFor="let agendaF of sinConsultorio; let i = index">
+                    <a (click)="seleccionarAgenda(agendaF)" class="hover">
+                        <plex-box type="{{agendaF.seleccionada?'success':'default'}}">
+                            <div class="col-md-12">
+                                <label>{{agendaF.horaInicio | date: 'dd/MM/yyyy'}} {{agendaF.horaInicio | date: 'HH:mm'}} a {{agendaF.horaFin | date: 'HH:mm'}} HS.</label>
+                            </div>
+                            <div class="col-md-10">
+                                <label *ngIf="agendaF.profesionales.length > 0"> {{agendaF.profesionales | enumerar:['apellido','nombre']}} </label>
+                            </div>
+                            <div class="col-md-2">
+                                <i *ngIf="agendaF.seleccionada" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agendaF.seleccionada}"></i>
+                            </div>
+                        </plex-box>
+                    </a>
+                </div>
+            </plex-box>
+            <plex-button title="Confirmar" label="Confirmar" type="success" (click)="confirmar()" class="pull-right"></plex-button>
+        </div>
     </div>
-    <div *ngIf="sinConsultorio" class="col-md-3">
-      <plex-box type="default" title="Agendas sin consultorio">
-          <div *ngFor="let agendaF of sinConsultorio; let i = index">
-            <a (click)="seleccionarAgenda(agendaF)" class="hover">
-              <plex-box type="{{agendaF.seleccionada?'success':'default'}}">
-                <div class="col-md-12">
-                  <label>{{agendaF.horaInicio | date: 'dd/MM/yyyy'}} {{agendaF.horaInicio | date: 'HH:mm'}} a {{agendaF.horaFin | date: 'HH:mm'}} HS.</label>
-                </div>
-                <div class="col-md-10">
-                  <label> {{agendaF.profesionales[0]?.nombre}} {{agendaF.profesionales[0]?.apellido}} </label>
-                </div>
-                <div class="col-md-2">
-                  <i *ngIf="agendaF.seleccionada" class="mdi mdi-check-circle" [ngClass]="{'text-success success': agendaF.seleccionada}"></i>
-                </div>
-              </plex-box>
-            </a>
-          </div>
-      </plex-box>
-      <plex-button title="Confirmar"  label="Confirmar" type="success" (click)="confirmar()" class="pull-right"></plex-button>
-    </div>
-  </div>
 </plex-box>
