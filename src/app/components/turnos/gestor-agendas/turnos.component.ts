@@ -35,7 +35,7 @@ export class TurnosComponent implements OnInit {
             // Si la agenda es del día, resto los disponibles que ya pasaron
             if (this.delDia) {
                 let bloque = this.agenda.bloques[i];
-                this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados + bloque.restantesGestion + bloque.restantesProfesional;
+                this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados;
             }
             this.agenda.bloques[i].turnos.forEach((turno) => {
                 // Si el turno está disponible pero ya paso la hora
