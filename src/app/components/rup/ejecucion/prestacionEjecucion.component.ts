@@ -227,6 +227,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
                                 // armamos el elemento data a agregar al array de registros
                                 let data = {
+                                    collapse: false,
                                     tipo: 'problemas',
                                     concepto: registro.concepto,
                                     elementoRUP: elementoRUP,
@@ -582,6 +583,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
                             // armamos el elemento data a agregar al array de registros
                             let data = {
+                                collapse: false,
                                 tipo: 'problemas',
                                 concepto: snomedConcept,
                                 elementoRUP: elementoRUP,
@@ -615,7 +617,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     ejecutarConceptoHuds(resultadoHuds) {
-        console.log(resultadoHuds);
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
@@ -705,8 +706,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
             // actualizamos las prestaciones de la HUDS
-            this.servicioPrestacion.getByPaciente(this.paciente.id, true, prestacionEjecutada.id);
-            this.router.navigate(['rup/validacion', this.prestacion.id]);
+            this.servicioPrestacion.getByPaciente(this.paciente.id, true, prestacionEjecutada.id).subscribe(resultado => {
+                this.router.navigate(['rup/validacion', this.prestacion.id]);
+            });
         });
     }
 
@@ -746,6 +748,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onConceptoDrop(e: any) {
+
         if (e.dragData.tipo) {
             switch (e.dragData.tipo) {
                 case 'prestacion':
@@ -801,9 +804,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             };
         });
     }
+
     cambioDePaciente($event) {
         this.showCambioPaciente = $event;
     }
+
     cancelarCambioPaciente() {
         this.showCambioPaciente = false;
     }
@@ -827,6 +832,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
                     this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+                        // Completamos los datos del nuevo paciente seleccionado
+                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                            this.paciente = paciente;
+                        });
                         this.showCambioPaciente = false;
                     });
                 });
