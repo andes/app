@@ -127,7 +127,7 @@ export class PuntoInicioComponent implements OnInit {
             this.filtrar();
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
-            if ( this.agendaSeleccionada) {
+            if (this.agendaSeleccionada) {
                 this.agendaSeleccionada.bloques.forEach(element => {
                     element.turnos.forEach(turno => {
                         if (turno.prestacion) {
@@ -297,10 +297,21 @@ export class PuntoInicioComponent implements OnInit {
 
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
+        //  let _prestaciones = prestaciones.filter(p => {
+        //             // filtramos todas las prestaciones que:
+        //             // 1) esten validadas
+        //             // 2) que sean planes y sean autocitados
+        //             return (p.id && p.estados[p.estados.length - 1].tipo === 'validada' &&
+        //                 p.ejecucion.registros.filter(registro => {
+        //                     return (typeof registro.valor.solicitudPrestacion !== 'undefined' &&
+        //                         registro.valor.solicitudPrestacion.autocitado);
+        //                 })
+        //             );
+        //         });
         if (Array.isArray(prestaciones)) {
             prestaciones.forEach(unaPrestacion => {
                 if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
-                    this.servicioPrestacion.getByPaciente(unaPrestacion.paciente.id).subscribe(prestacionesPaciente => {
+                    this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
                         prestacionesPaciente.forEach(elemento => {
                             if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
                                 && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
@@ -313,7 +324,7 @@ export class PuntoInicioComponent implements OnInit {
             });
         } else {
             if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.getByPaciente(prestaciones.paciente.id).subscribe(prestacionesPaciente => {
+                this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
                     prestacionesPaciente.forEach(elemento => {
                         if (elemento.solicitud.prestacionOrigen === prestaciones.id
                             && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
