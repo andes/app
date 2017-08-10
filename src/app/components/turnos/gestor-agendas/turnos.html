@@ -137,6 +137,10 @@
                             <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta 
                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
                         <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
+                        <span class="text-danger" *ngIf="turno.tipoTurno === 'gestion'">(con llave)</span>
+                        <span class="text-danger" *ngIf="turno.tipoTurno === 'programado'">(programado)</span>
+                        <span class="text-danger" *ngIf="turno.tipoTurno === 'delDia'">(del día)</span>
+                        
                         </span></small>
                             <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1"><small><span *ngIf="bloque.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
                             <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
