@@ -144,7 +144,7 @@ import { DashboardCodificacionComponent } from './components/turnos/dashboard/da
 import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
-
+import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -454,8 +454,8 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
-        // AuditoriaPorBloqueComponent, 
+        AuditoriaComponent,
+        // AuditoriaPorBloqueComponent,
         Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
@@ -463,7 +463,8 @@ import { routing, appRoutingProviders } from './app.routing';
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateUpdateComponent
+        BusquedaUsuarioComponent, UsuarioCreateUpdateComponent,
+        ListarTurnosComponent
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],

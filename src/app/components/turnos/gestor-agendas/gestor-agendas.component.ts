@@ -12,7 +12,6 @@ import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import * as enumerado from './../enums';
 import * as moment from 'moment';
 import { enumToArray } from '../../../utils/enums';
-import * as jsPDF from 'jspdf';
 
 @Component({
     selector: 'gestor-agendas',
@@ -38,6 +37,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarNotaAgenda = false;
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
+    public showListadoTurnos = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -169,6 +169,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -205,6 +206,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.loadAgendas();
     }
 
@@ -241,6 +243,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
     }
 
@@ -351,6 +354,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAutomatico = false;
+            this.showListadoTurnos = false;
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
@@ -437,39 +441,9 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     listarTurnos(agenda) {
-        debugger;
-        let doc = new jsPDF({ orientation: 'landscape' });
-        doc.setFontSize(10);
-        doc.text(20, 20, 'Establecimiento: ');
-        doc.text(60, 20, agenda.organizacion.nombre);
-        doc.text(20, 25, 'Apellido y Nombre: ');
-        let linea = 25;
-        if (agenda.profesionales) {
-            agenda.profesionales.forEach(profesional => {
-                doc.text(60, linea, profesional.apellido + ' ' + profesional.nombre);
-                linea = linea + 5;
-            });
-        }
-        linea = linea + 5;
-        doc.text(20, linea, 'Prestacion: ');
-                if (agenda.tipoPrestaciones) {
-            agenda.tipoPrestaciones.forEach(prestacion => {
-                doc.text(60, linea, prestacion.nombre);
-                linea = linea + 5;
-            });
-        }
-        doc.text(20, linea, 'Fecha: ');
-        doc.text(60, linea, moment(agenda.horaInicio).format('DD/MM/YYYY'));
-        linea = linea + 5;
-        doc.line(20, linea, 300, linea);
-        linea = linea + 10;
-        // Encabezado
-        doc.text(20, linea, 'Hora Turno');
-        doc.text(25, linea, 'DNI/Carpeta');
-        doc.text(35, linea, 'OBRA SOCIAL');
-        doc.text(45, linea, 'APELLIDOS Y NOMBRES');
-        // Se guarda el pdf
-        doc.save('agenda.pdf');
+        this.showGestorAgendas = false;
+        this.showListadoTurnos = true;
     }
+
 
 }
