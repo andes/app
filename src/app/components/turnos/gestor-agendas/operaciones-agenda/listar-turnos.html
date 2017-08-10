@@ -1,0 +1,138 @@
+<form *ngIf="showListarTurnos" class="plex-layout">
+    <div id="printpage">
+        <section>
+            <plex-box>
+                <!--Header de listado de Turnos-->
+                <header>
+                    <div class="alert alert-default">
+                        <div class="row">
+                            <div class="col">
+                                <label>Tipos de prestación</label>
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                            </div>
+                            <div class="col-3">
+                                <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
+                                'HH:mm'}} hs
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label>Profesionales</label>
+                                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                                <ng-container *ngIf="agenda.profesionales">
+                                    <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </header>
+                <!--Listado de turnos-->
+                <!--Turnos-->
+                <!--class="table table-striped"-->
+                <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table">
+                    <thead *ngIf="bloque.descripcion">
+                        <tr>
+                            <th colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date:
+                                'HH:mm'}} hs
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>Nro DNI</th>
+                            <th>Obra Social</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Residencia Habitual</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th rowspan="2">Diagnostico/Motivo de consulta</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                            <th>Resolución en el efector</th>
+                            <th>15. OTROS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
+                            <td>
+                                <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                            </td>
+                            <!--documento, carpetaPaciente-->
+                            <td>
+                                <small><span *ngIf="turno?.paciente?.id">DNI {{turno.paciente.documento|number}}</span></small>
+                                <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0"> | Nro Carpeta 
+                            <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
+                            <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
+                            </span></small>
+                            </td>
+                            <td> </td>
+                            <td>
+                                <span *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</span>
+                                <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1"><small><span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
+                                <span *ngIf="turno && turno.estado === 'disponible'"></span>
+                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                            </td>
+                            <td>
+                                <span *ngIf="turno?.paciente?.id && turno?.paciente?.direccion.length > 0 && turno?.paciente?.direccion[0]?.valor">
+            {{turno.paciente.direccion[0].valor}}
+        </span>
+                            </td>
+                            <td> <span *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{paciente | sexo }}</span></td>
+                            <td>
+                                <span *ngIf="turno?.paciente?.id">{{ turno.paciente | edad }}</span>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>SI  NO </td>
+                            <td></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-4"><label>Observación de la consulta</label>
+                        <hr>
+                        <hr>
+                        <hr>
+                    </div>
+                    <div class="col-4"><label>Observación de la consulta</label>
+                        <hr>
+                        <hr>
+                        <hr>
+                    </div>
+                    <div class="col-4"><label>15 - Utilizar para investigaciones locales</label>
+                        A: <hr>
+                        B: <hr>
+                        C: <hr>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3 text-right"><hr><label>Firma Profesional</label></div>
+                </div>
+            </plex-box>
+        </section>
+    </div>
+    <!--Footer-->
+    <footer>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button>
+            </div>
+            <div class="col-2 text-right">
+                <a href="javascript: window.print()"> 
+                       Imprimir <i class="mdi mdi-printer mdi-36px"></i>
+                    </a>
+            </div>
+            <div class="col-1 text-right">
+            </div>
+        </div>
+    </footer>
+</form>

@@ -37,6 +37,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarNotaAgenda = false;
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
+    public showListadoTurnos = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -194,6 +195,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -230,6 +232,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.loadAgendas();
     }
 
@@ -266,6 +269,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
     }
 
@@ -371,6 +375,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAutomatico = false;
+            this.showListadoTurnos = false;
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
@@ -456,5 +461,11 @@ export class GestorAgendasComponent implements OnInit {
     reasignarTurnosAgendas() {
         this.showReasignarTurnoAgendas = true;
     }
+
+    listarTurnos(agenda) {
+        this.showGestorAgendas = false;
+        this.showListadoTurnos = true;
+    }
+
 
 }
