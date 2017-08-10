@@ -35,11 +35,16 @@
                     </div>
                     <div class="row" *ngIf="mostrarMasOpciones">
                         <div class="col-4">
-                            <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" labelField="apellido+' '+nombre">
+                            <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" placeholder="Buscar un profesional"
+                                labelField="apellido+' '+nombre">
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select formControlName="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Espacio Físico">
+                            <!-- <plex-select formControlName="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Espacio Físico">
+                            </plex-select> -->
+                            <!-- Espacio Físico -->
+                            <plex-select formControlName="espacioFisico" [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)"
+                                label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'">
                             </plex-select>
                         </div>
                         <div class="col-4">
@@ -74,7 +79,7 @@
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio.nombre ? ' - ' + agenda.espacioFisico.servicio.nombre : '' ) + ' (' + agenda.espacioFisico.edificio.descripcion + ')' }}</small>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>

@@ -61,7 +61,7 @@ export class GestorAgendasComponent implements OnInit {
     items: any[];
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
-        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
+        public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
         public auth: Auth) { }
 
@@ -290,8 +290,49 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // loadEspaciosFisicos(event) {
+    //     this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // }
+
+    loadEdificios(event) {
+        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        //     event.callback(respuesta.edificio);
+        // });
+        if (event.query) {
+            let query = {
+                edificio: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
+                event.callback(listaEdificios);
+            });
+        } else {
+            event.callback(this.modelo.edificios || []);
+        }
+    }
+
+    loadEspacios(event) {
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
+
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     verAgenda(agenda, multiple, e) {
