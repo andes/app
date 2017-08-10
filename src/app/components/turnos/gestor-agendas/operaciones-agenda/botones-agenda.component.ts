@@ -169,6 +169,8 @@ export class BotonesAgendaComponent implements OnInit {
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos
             reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos(),
+            // Imprimir pdf
+            listarTurnos: (this.cantSel === 1),
         };
     }
 
@@ -289,6 +291,10 @@ export class BotonesAgendaComponent implements OnInit {
 
     reasignarTurnos() {
         this.reasignarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    listarTurnos() {
+        this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
     }
 
     cancelar() {

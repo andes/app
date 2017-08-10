@@ -1,0 +1,10 @@
+@media print {
+    nav,
+    footer {
+        display: none;
+    }
+    #printpage,
+    #printpage * {
+        visibility: visible;
+    }
+}

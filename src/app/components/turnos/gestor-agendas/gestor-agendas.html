@@ -145,3 +145,5 @@
 <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
     class="plex-layout"></reasignar-turno>
 <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
+<!-- Listado e Impresion de Agendas -->
+<listar-turnos *ngIf="autorizado && showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
