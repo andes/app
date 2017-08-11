@@ -79,7 +79,7 @@
                 <div class="vista-titulo">Problemas activos</div>
                 <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                     <ng-container *ngFor="let problema of problemasActivos; let i = index">
-                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <div class="rup-card mini">
                                 <div class="type problemas">
                                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
