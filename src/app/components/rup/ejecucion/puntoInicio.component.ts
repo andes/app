@@ -271,7 +271,7 @@ export class PuntoInicioComponent implements OnInit {
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
             let _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
-                total += (t.paciente.id) ? 1 : 0;
+                total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
         }
 
