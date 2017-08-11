@@ -67,20 +67,12 @@
                             </td>
                             <!--documento, carpetaPaciente-->
                             <td>
-<<<<<<< HEAD
                                 <span *ngIf="turno?.paciente?.id"><small>DNI {{turno.paciente.documento|number}}</small></span>
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0]?.nroCarpeta">
                                     <small> | Nro Carpeta </small>
                                     <small *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
                                     <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
-=======
-                                <small><span *ngIf="turno?.paciente?.id">DNI {{turno.paciente.documento|number}}</span></small>
-                                <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta 
-                            <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
-                            <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
-                            </span></small>
->>>>>>> 3625cd0749d1ee2d5aa9cf888fce0f7ad3c4cb1d
                             </td>
                             <td> </td>
                             <td>
