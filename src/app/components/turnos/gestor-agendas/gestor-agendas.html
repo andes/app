@@ -79,7 +79,7 @@
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
-                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio.nombre ? ' - ' + agenda.espacioFisico.servicio.nombre : '' ) + ' (' + agenda.espacioFisico.edificio.descripcion + ')' }}</small>
+                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre }}</small>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>
