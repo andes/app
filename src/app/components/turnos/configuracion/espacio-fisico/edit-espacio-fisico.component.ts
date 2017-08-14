@@ -24,7 +24,7 @@ export class EditEspacioFisicoComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:?').indexOf('editarEspacio') >= 0;
+        this.autorizado = this.auth.getPermissions('turnos:editarEspacio').length > 0;
         let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
         let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
         let edificio = this.espacioFisicoHijo ? this.espacioFisicoHijo.edificio : '';
@@ -33,8 +33,6 @@ export class EditEspacioFisicoComponent implements OnInit {
         let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
         let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
         this.modelo = { nombre: nombre, descripcion: descripcion, activo: activo, edificio: edificio, detalle: detalle, sector: sector, servicio: servicio };
-
-        // console.log('permisos ', this.auth.getPermissions('turnos:?').indexOf('editarEspacio') >= 0);
     }
 
     loadEdificios(event) {
