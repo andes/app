@@ -37,6 +37,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarNotaAgenda = false;
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
+    public showListadoTurnos = false;
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
@@ -61,7 +62,7 @@ export class GestorAgendasComponent implements OnInit {
     items: any[];
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
-        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
+        public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
         public auth: Auth) { }
 
@@ -126,37 +127,63 @@ export class GestorAgendasComponent implements OnInit {
                     params['estado'] = value.estado.id;
                 }
 
-                this.serviceAgenda.get(params).subscribe(agendas => {
-                    this.turnosSuspendidos = [];
-                    agendas.forEach(agenda => {
-                        let count = 0;
-                        agenda.bloques.forEach(bloque => {
-                            bloque.turnos.forEach(turno => {
-                                if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente.id) || (agenda.estado === 'suspendida' && (turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
-                                    count++;
-                                }
-                            });
-                        });
-                        this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                    });
+                this.getAgendas(params);
 
-                    this.hoy = false;
-                    this.agendas = agendas;
-                    this.fechaDesde = fechaDesde;
-                    this.fechaHasta = fechaHasta;
-
-
-
-                },
-                    err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
+                this.fechaDesde = fechaDesde;
+                this.fechaHasta = fechaHasta;
             });
 
         }
 
+    }
+
+    getAgendas(params: any) {
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            // this.agendasSeleccionadas = [];
+            this.turnosSuspendidos = [];
+            agendas.forEach(agenda => {
+                let count = 0;
+                agenda.bloques.forEach(bloque => {
+                    bloque.turnos.forEach(turno => {
+
+                        // Cuenta la cantidad de turnos suspendidos (no reasignados) con paciente en cada agenda
+                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida')) && (!turno.reasignado || !turno.reasignado.siguiente)) {
+                            count++;
+                        }
+
+                    });
+                });
+                this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
+            });
+
+            this.hoy = false;
+            this.agendas = agendas;
+
+        }, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    loadAgendas() {
+        let fecha = moment().format();
+
+        if (this.hoy) {
+            this.fechaDesde = moment(fecha).startOf('day').toDate();
+            this.fechaHasta = moment(fecha).endOf('day').toDate();
+        }
+
+        const params = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id,
+            idTipoPrestacion: '',
+            idProfesional: '',
+            idEspacioFisico: ''
+        };
+
+        this.getAgendas(params);
     }
 
     agregarNotaAgenda() {
@@ -168,6 +195,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -204,6 +232,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.loadAgendas();
     }
 
@@ -240,6 +269,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
     }
 
@@ -247,50 +277,6 @@ export class GestorAgendasComponent implements OnInit {
     revisionAgenda(agenda) {
         this.showGestorAgendas = false;
         this.showRevisionAgenda = true;
-    }
-
-    loadAgendas() {
-        let fecha = moment().format();
-
-        if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
-        }
-
-        const params = {
-            fechaDesde: this.fechaDesde,
-            fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id,
-            idTipoPrestacion: '',
-            idProfesional: '',
-            idEspacioFisico: ''
-        };
-
-        this.serviceAgenda.get(params).subscribe(
-            agendas => {
-                this.agendas = agendas;
-                this.agendasSeleccionadas = [];
-                this.turnosSuspendidos = [];
-
-                agendas.forEach(agenda => {
-                    let count = 0;
-                    agenda.bloques.forEach(bloque => {
-                        bloque.turnos.forEach(turno => {
-                            if (turno.estado !== 'disponible' && ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && turno.paciente.id && (!turno.reasignado || !turno.reasignado.siguiente))))) {
-                                count++;
-                            }
-                        });
-                    });
-                    this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                });
-
-
-            },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
     }
 
     loadPrestaciones(event) {
@@ -308,8 +294,49 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // loadEspaciosFisicos(event) {
+    //     this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // }
+
+    loadEdificios(event) {
+        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        //     event.callback(respuesta.edificio);
+        // });
+        if (event.query) {
+            let query = {
+                edificio: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
+                event.callback(listaEdificios);
+            });
+        } else {
+            event.callback(this.modelo.edificios || []);
+        }
+    }
+
+    loadEspacios(event) {
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
+
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     verAgenda(agenda, multiple, e) {
@@ -348,11 +375,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAutomatico = false;
+            this.showListadoTurnos = false;
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
                 // this.showGestorAgendas = false;
                 this.showReasignarTurnoAutomatico = true;
+                // this.agendasSeleccionadas[0] = ag;
             } else {
                 this.showTurnos = true;
             }
@@ -432,5 +461,11 @@ export class GestorAgendasComponent implements OnInit {
     reasignarTurnosAgendas() {
         this.showReasignarTurnoAgendas = true;
     }
+
+    listarTurnos(agenda) {
+        this.showGestorAgendas = false;
+        this.showListadoTurnos = true;
+    }
+
 
 }

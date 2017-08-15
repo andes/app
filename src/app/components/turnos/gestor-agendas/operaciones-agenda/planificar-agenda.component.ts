@@ -775,10 +775,19 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-                bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                bloque.restantesGestion = bloque.reservadoGestion;
-                bloque.restantesProfesional = bloque.reservadoProfesional;
+
+                if (bloque.pacienteSimultaneos) {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+                    bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+                    bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+
+                } else {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                    bloque.restantesGestion = bloque.reservadoGestion;
+                    bloque.restantesProfesional = bloque.reservadoProfesional;
+                }
 
                 bloque.turnos = [];
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {

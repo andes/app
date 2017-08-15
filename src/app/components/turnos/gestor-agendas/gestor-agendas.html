@@ -35,11 +35,16 @@
                     </div>
                     <div class="row" *ngIf="mostrarMasOpciones">
                         <div class="col-4">
-                            <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" labelField="apellido+' '+nombre">
+                            <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" placeholder="Buscar un profesional"
+                                labelField="apellido+' '+nombre">
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select formControlName="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Espacio Físico">
+                            <!-- <plex-select formControlName="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Espacio Físico">
+                            </plex-select> -->
+                            <!-- Espacio Físico -->
+                            <plex-select formControlName="espacioFisico" [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)"
+                                label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'">
                             </plex-select>
                         </div>
                         <div class="col-4">
@@ -74,24 +79,25 @@
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre }}</small>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)">
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                <div *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
                                 <div>
                                     <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                     <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                        <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales | enumerar:['apellido','nombre'] }}</div>
                                     </ng-container>
                                 </div>
                             </td>
                             <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
                                 <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                 <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
-                                <span class="badge-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
-
+                                <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
+                                    <span class="text-white"><strong>{{ turnosSuspendidos[i].count }}</strong></span>
+                                </span>
                                 <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
                             </td>
                         </tr>
@@ -144,3 +150,5 @@
 <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
     class="plex-layout"></reasignar-turno>
 <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
+<!-- Listado e Impresion de Agendas -->
+<listar-turnos *ngIf="autorizado && showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>

@@ -1,3 +1,4 @@
+import { LoginComponent } from './../../login/login.component';
 import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
@@ -51,7 +52,12 @@ export class DarTurnosComponent implements OnInit {
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
-            this.paciente = this._solicitudPrestacion.paciente;
+            this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.verificarTelefono(pacienteMPI);
+                    this.obtenerCarpetaPaciente(this.paciente);
+                });
         }
     }
     get solicitudPrestacion() {
@@ -389,14 +395,12 @@ export class DarTurnosComponent implements OnInit {
                     return (data.estado === 'publicada');
                 } else {
                     if (this._solicitudPrestacion) {
-                        return (data.estado === 'disponible');
+                        return (data.estado === 'disponible' || data.estado === 'publicada');
                     } else {
                         return (data.estado === 'publicada');
-                        // return (data.estado === 'disponible' || data.estado === 'publicada');
                     }
                 }
             });
-
             // Ordena las Agendas por fecha/hora de inicio
             this.agendas = this.agendas.sort(
                 function (a, b) {
@@ -502,13 +506,11 @@ export class DarTurnosComponent implements OnInit {
                         this.agenda.bloques.forEach((bloque, indexBloque) => {
                             // this.bloques.forEach((bloque, indexBloque) => {
                             countBloques.push({
-                                delDia: agendaDeHoy ? (bloque.restantesDelDia as number) +
-                                    (bloque.restantesProgramados as number) +
-                                    (bloque.restantesProfesional as number) +
-                                    (bloque.restantesGestion as number) : bloque.restantesDelDia,
+                                // Si la agenda es de hoy los programados se suman a los del día
+                                delDia: agendaDeHoy ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
                                 programado: agendaDeHoy ? 0 : bloque.restantesProgramados,
-                                gestion: agendaDeHoy ? 0 : bloque.restantesGestion,
-                                profesional: agendaDeHoy ? 0 : bloque.restantesProfesional
+                                gestion: bloque.restantesGestion,
+                                profesional: bloque.restantesProfesional
                             });
                             bloque.turnos.forEach((turno) => {
                                 if (turno.estado === 'turnoDoble' && turnoAnterior) {
@@ -534,10 +536,15 @@ export class DarTurnosComponent implements OnInit {
                             }
                         } else {
                             if (this.agenda.estado === 'publicada') {
-                                (this.programadosDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                                (this.programadosDisponibles > 0
+                                    || (this.tiposTurnosSelect === 'profesional' && this.profesionalDisponibles > 0)
+                                    || (this.tiposTurnosSelect === 'gestion' && this.gestionDisponibles > 0))
+                                    ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                             if (this.agenda.estado === 'disponible') {
-                                (this.gestionDisponibles > 0 || this.profesionalDisponibles > 0) ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
+                                ((this.tiposTurnosSelect === 'profesional' && this.profesionalDisponibles > 0)
+                                    || (this.tiposTurnosSelect === 'gestion' && this.gestionDisponibles > 0))
+                                    ? this.estadoT = 'seleccionada' : this.estadoT = 'noTurnos';
                             }
                         }
 

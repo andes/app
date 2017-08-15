@@ -1,0 +1,26 @@
+@media print {
+    nav,
+    footer,
+    .btn {
+        display: none;
+    }
+    body {
+        padding-top: 0;
+    }
+    table {
+        page-break-after: always;
+    }
+    th {
+        font-size: 0.7rem;
+    }
+    .content {
+        margin: 0 !important;
+    }
+    .plex-box>div {
+        padding: 0 !important;
+    }
+    .badge {
+        color: #333333;
+        border: 1px solid rgba(0, 0, 0, 0.69);
+    }
+}
