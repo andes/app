@@ -10,13 +10,24 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 @Component({
     selector: 'edit-espacio-fisico',
     templateUrl: 'edit-espacio-fisico.html',
+    styleUrls: [
+        'edit-espacio-fisico.scss'
+    ]
 })
 
 export class EditEspacioFisicoComponent implements OnInit {
+    equipamientos = [];
+
     @Input() espacioFisicoHijo: IEspacioFisico;
 
-    @Output()
-    data: EventEmitter<IEspacioFisico> = new EventEmitter<IEspacioFisico>();
+    @Output() data: EventEmitter<IEspacioFisico> = new EventEmitter<IEspacioFisico>();
+
+    /**
+     * Devuelve un elemento seleccionado en el buscador SNOMED.
+     */
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    tipoBusqueda = 'equipamientos';
+
     public modelo: any = {};
     public edif: any = {};
     public autorizado: boolean;
@@ -32,7 +43,8 @@ export class EditEspacioFisicoComponent implements OnInit {
         let servicio = this.espacioFisicoHijo ? this.espacioFisicoHijo.servicio : '';
         let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
         let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
-        this.modelo = { nombre: nombre, descripcion: descripcion, activo: activo, edificio: edificio, detalle: detalle, sector: sector, servicio: servicio };
+        let equipamiento = this.espacioFisicoHijo ? this.espacioFisicoHijo.equipamiento : [];
+        this.modelo = { nombre, descripcion, activo, edificio, detalle, sector, servicio, equipamiento };
     }
 
     loadEdificios(event) {
@@ -43,7 +55,9 @@ export class EditEspacioFisicoComponent implements OnInit {
     loadSectores(event) {
         this.EspacioFisicoService.get({}).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
-                return (typeof ef.sector !== 'undefined' ? ef.sector : []);
+                return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
+            }).filter((elem, index, self) => {
+                return index === self.indexOf(elem);
             });
             event.callback(sectores);
         });
@@ -58,8 +72,10 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     onClick(modelo: IEspacioFisico) {
+
         let estOperation: Observable<IEspacioFisico>;
         modelo.organizacion = this.auth.organizacion;
+
         if (this.espacioFisicoHijo) {
             modelo.id = this.espacioFisicoHijo.id;
             estOperation = this.EspacioFisicoService.put(modelo);
@@ -73,4 +89,14 @@ export class EditEspacioFisicoComponent implements OnInit {
         this.data.emit(null);
         return false;
     }
+
+    agregarEquipamiento(equipamiento) {
+        this.modelo.equipamiento = [... this.modelo.equipamiento, equipamiento];
+    }
+
+    eliminarEquipamiento(equipamiento) {
+        this.modelo.equipamiento.splice(this.modelo.equipamiento.indexOf(equipamiento), 1);
+        this.modelo.equipamiento = [...this.modelo.equipamiento];
+    }
+
 }
