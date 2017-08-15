@@ -15,10 +15,8 @@ import { Observable } from 'rxjs/Rx';
     },
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None,
-    styles: [`
-    .results {
-        margin-top: 0;
-    }`
+    styleUrls: [
+        'snomed-buscar.scss'
     ]
 })
 
@@ -152,7 +150,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         // //     return false;
         // }
 
-        this.iniciarPrestacionesTurneables();
+        if (this.tipoBusqueda !== 'equipamientos') {
+            this.iniciarPrestacionesTurneables();
+        }
 
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
@@ -160,7 +160,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm) {
-            this._tengoResultado.emit(true);
+
+            if (this.tipoBusqueda !== 'equipamientos') {
+                this._tengoResultado.emit(true);
+            }
+
             // levantamos el valor que escribimos en el input
             let search = this.searchTerm.trim();
 
@@ -181,6 +185,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                 // buscamos
                 let apiMethod;
+
                 switch (this.tipoBusqueda) {
                     case 'problemas':
                         apiMethod = this.SNOMED.getProblemas(query);
@@ -188,14 +193,17 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'procedimientos':
                         apiMethod = this.SNOMED.getProcedimientos(query);
                         break;
+                    case 'equipamientos':
+                        apiMethod = this.SNOMED.getEquipamientos(query);
+                        break;
                     default:
                         apiMethod = this.SNOMED.get(query);
                         break;
                 }
 
-                apiMethod.subscribe(problemas => {
+                apiMethod.subscribe(resultados => {
                     this.loading = false;
-                    this.resultados = problemas;
+                    this.resultados = resultados;
 
                     if (this.tipoBusqueda === 'procedimientos') {
                         // Filtrar de los resultado las prestaciones turneables
