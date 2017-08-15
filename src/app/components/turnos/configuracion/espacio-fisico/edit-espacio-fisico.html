@@ -56,7 +56,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <span *ngFor="let eq of equipamientos" class="badge badge-info badge-equipamiento">
+                            <span *ngFor="let eq of modelo.equipamiento" class="badge badge-info badge-equipamiento">
                                 {{ eq.term }}
                                 <span class="float-right hover" (click)="eliminarEquipamiento(eq)"><i class="mdi mdi-close-box-outline"></i> </span>
                             </span>
