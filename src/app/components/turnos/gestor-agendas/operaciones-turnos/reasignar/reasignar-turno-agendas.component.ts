@@ -42,8 +42,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input('agendaDestino')
     set agendaDestino(value: any) {
         this._agendaDestino = value;
-        console.log('_agendaDestino', value);
-
     }
     get agendaDestino(): any {
         return this._agendaDestino;
@@ -53,6 +51,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input('turnoSeleccionado')
     set turnoSeleccionado(value: any) {
         this._turnoSeleccionado = value;
+        this.actualizar();
     }
 
     get turnoSeleccionado(): any {
@@ -162,7 +161,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             }
         };
 
-        this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
+        this.plex.confirm('Del ' + moment(this.turnoSeleccionado.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]') + ' al ' + moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;
             }
@@ -170,7 +169,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
             this.serviceTurno.save(datosTurno).subscribe(resultado => {
 
-                // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
                 let turnoReasignado = this.turnoSeleccionado;
                 let siguiente = {
                     idAgenda: this.agendaSeleccionada._id,
@@ -203,7 +201,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     if (environment.production === true) {
                         let dia = moment(turno.horaInicio).format('DD/MM/YYYY');
                         let tm = moment(turno.horaInicio).format('HH:mm');
-                        let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
+                        let mensaje = 'AVISO: Usted tiene un turno el ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
                         // this.enviarSMS(pacienteSave, mensaje);
                         // this.actualizarCarpetaPaciente(turno.paciente);
                     }
@@ -231,10 +229,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
     }
-
-    // hayTurnosDisponibles(tipoTurno: String) {
-    //     return true;
-    // }
 
     existePrestacion(bloque: any, idPrestacion: string) {
         return bloque.tipoPrestaciones.find((tp) => {

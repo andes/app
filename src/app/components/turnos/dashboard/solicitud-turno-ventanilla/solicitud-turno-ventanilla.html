@@ -7,7 +7,7 @@
 
     <fieldset>
         <legend>Cargar Solicitud Nueva</legend>
-        <div class="row">
+        <div class="row" *ngIf="modelo?.paciente?.id">
             <div class="col-12">
                 <label>Paciente</label> {{ modelo.paciente | paciente }}
                 <span>DNI {{ modelo.paciente.documento | number }}</span>

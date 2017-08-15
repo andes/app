@@ -67,7 +67,8 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         if (this.agendaAReasignar) {
             this.agendaAReasignar.bloques.forEach(bloque => {
                 bloque.turnos.forEach(turno => {
-                    if (turno.paciente && turno.paciente.id && turno.estado === 'asignado') {
+
+                    if (((turno.estado === 'asignado' && this.agendaAReasignar.estado === 'suspendida') || turno.estado === 'suspendido') && turno.paciente && turno.paciente.id) {
 
                         let params = {
                             idAgenda: this.agendaAReasignar.id,
@@ -76,12 +77,23 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                             duracion: true,
                             horario: true
                         };
-                        this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
-                            this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
-                            this.agendasReasignar.sort(sortCandidatas);
-                            this.calculosSimilitud(turno, agendas);
-                            console.log('agendasReasignar', this.agendasReasignar);
-                        });
+
+                        // 1. Ya reasignado: Trae agenda a la que re reasignó 
+                        if (turno.reasignado && turno.reasignado.siguiente) {
+                            this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(agenda => {
+                                this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: [agenda] }];
+                                this.agendasReasignar.sort(sortCandidatas);
+                            });
+                        } else {
+                            // 2. No reasignado: Trae agendas candidatas 
+                            this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
+                                this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
+                                this.agendasReasignar.sort(sortCandidatas);
+                                this.calculosSimilitud(turno, agendas);
+                            });
+
+                        }
+
                     }
 
                 });
@@ -116,7 +128,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                     };
                     calculos = (calculoSimilitud.tipoPrestacion + calculoSimilitud.horaInicio + calculoSimilitud.duracionTurno + calculoSimilitud.profesional);
                     if (turno.reasignado !== undefined && turno.reasignado.siguiente && turno.reasignado.siguiente.idTurno === tu._id) {
-                        debugger;
                         this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(reasignado => {
 
                             if (!agendaReasignada) {
@@ -137,14 +148,15 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
     }
 
-    seleccionarCandidata(indiceTurno, i) {
+    seleccionarCandidata(indiceTurno, i, horaDestino) {
         let turno = this.agendasReasignar[indiceTurno].turno;
         let bloque = this.agendasReasignar[indiceTurno].bloque;
         let agendaSeleccionada = this.agendasReasignar[indiceTurno].agendas[i];
+        console.log('this.agendasReasignar[indiceTurno].agendas[i]', this.agendasReasignar[indiceTurno].agendas[i]);
         let tipoTurno;
 
         // Si la agenda es del día
-        if (this.getFecha(agendaSeleccionada) === this.getFecha(this.hoy)) {
+        if (this.getFecha(horaDestino) === this.getFecha(this.hoy)) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
@@ -175,7 +187,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             }
         };
 
-        this.plex.confirm('', '¿Reasignar Turno?').then((confirmado) => {
+        this.plex.confirm('Del ' + moment(turno.horaInicio).format('dddd DD/MM/YYYY') + ' al ' + moment(agendaSeleccionada.horaInicio).format('dddd DD/MM/YYYY') + ' a las ' + moment(turno.horaInicio).format('HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;
             }

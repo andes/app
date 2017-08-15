@@ -43,6 +43,8 @@ import { OrganizacionPipe } from './pipes/organizacion.pipe';
 import { SortBloquesPipe } from './pipes/agenda-bloques.pipe';
 import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
+import { EnumerarPipe } from './pipes/enumerar.pipe';
+import { PluralizarPipe } from './pipes/pluralizar.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -144,7 +146,7 @@ import { DashboardCodificacionComponent } from './components/turnos/dashboard/da
 import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.component';
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
-
+import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -445,7 +447,7 @@ import { routing, appRoutingProviders } from './app.routing';
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos,
+        FilterPermisos, EnumerarPipe, PluralizarPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -454,8 +456,8 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
-        // AuditoriaPorBloqueComponent, 
+        AuditoriaComponent,
+        // AuditoriaPorBloqueComponent,
         Auditoria2Component,
         ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
@@ -463,7 +465,8 @@ import { routing, appRoutingProviders } from './app.routing';
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateUpdateComponent
+        BusquedaUsuarioComponent, UsuarioCreateUpdateComponent,
+        ListarTurnosComponent
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],
