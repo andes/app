@@ -119,6 +119,7 @@ export class PrestacionPacienteService {
                         concepto: registro.concepto,
                         idPrestacion: registro.idPrestacion,
                         evoluciones: [{
+
                             fechaCarga: registro.createdAt,
                             profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
