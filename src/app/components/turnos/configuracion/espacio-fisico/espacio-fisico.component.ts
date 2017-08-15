@@ -8,11 +8,11 @@ import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisi
 
 @Component({
     selector: 'espacio-fisico',
-    templateUrl: 'espacio-fisico.html',
+    templateUrl: 'espacio-fisico.html'
 })
 
 export class EspacioFisicoComponent implements OnInit {
-    showupdate = false;
+    showEditar = false;
     espaciosFisicos: IEspacioFisico[];
     searchForm: FormGroup;
     selectedEspacioFisico: IEspacioFisico;
@@ -69,7 +69,7 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     onReturn(espacioFisico: IEspacioFisico): void {
-        this.showupdate = false;
+        this.showEditar = false;
         this.selectedEspacioFisico = null;
         this.loadEspaciosFisicos();
     }
@@ -107,7 +107,7 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     onEdit(espacioFisico: IEspacioFisico) {
-        this.showupdate = true;
+        this.showEditar = true;
         this.selectedEspacioFisico = espacioFisico;
     }
 

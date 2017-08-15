@@ -1,5 +1,11 @@
-<section *ngIf="!showupdate">
-    <plex-box>
+<section>
+    <plex-box *ngIf="!showEditar">
+        <div class="row">
+            <div class="col">
+                <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
+                </plex-button>
+            </div>
+        </div>
         <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
         <form [formGroup]="searchForm">
             <div class="row">
@@ -48,12 +54,12 @@
         </div>
     </plex-box>
 </section>
-<footer *ngIf="!showupdate">
+<footer *ngIf="!showEditar">
     <div class="row">
         <div class="col">
-            <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showupdate = !showupdate">
+            <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
             </plex-button>
         </div>
     </div>
 </footer>
-<edit-espacio-fisico *ngIf="showupdate" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)'></edit-espacio-fisico>
+<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)' (onReturn)="onCancel()"></edit-espacio-fisico>
