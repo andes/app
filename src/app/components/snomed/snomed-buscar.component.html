@@ -13,22 +13,22 @@
 
 <ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="" *ngIf="!hideLista"
-            [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
 
             <div class="rup-card mini">
-                <div class=" type {{tipoBusqueda}}">
+                <div *ngIf="_dragScope" class=" type {{tipoBusqueda}}">
                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                 </div>
 
                 <div class="rup-content">
-                    <div class="header">
+                    <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
                         <div class="title">
                             {{item.term}}
                         </div>
 
-                        <div class="actions">
+                        <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
                             <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                 <i class="mdi mdi-plus-box-outline"></i>
                             </a>
