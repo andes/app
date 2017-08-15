@@ -133,7 +133,7 @@ export class ClonarAgendaComponent implements OnInit {
             let band = false;
             let originalIni = moment(original.horaInicio).format('HH:mm');
             let originalFin = moment(original.horaFin).format('HH:mm');
-            // Filtramos las agendas que coinciden en dia y horario
+            // Filtramos las agendas del mes que coinciden en el dia y horario que se intenta clonar
             let filtro = this.agendas.filter(
                 function (actual) {
                     let actualIni = moment(actual.horaInicio).format('HH:mm');
@@ -171,24 +171,32 @@ export class ClonarAgendaComponent implements OnInit {
                     });
                 }
             }
-            // Detectar el tipo de conflicto, descartar las agendas que estan en conflicto
+            // Detectar el tipo de conflicto, no se clona en los dias con conflicto
             this.agendasFiltradas.forEach((agenda, index) => {
+                let conflicto = false;
                 if (agenda.profesionales.length > 0) {
                     console.log('profesionales', agenda.profesionales.length);
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
+                        conflicto = true;
                     }
                 }
                 if (agenda.espacioFisico) {
                     console.log('espacio');
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
+                        conflicto = true;
                     }
                 }
                 if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
                     this.agendasFiltradas.splice(index, 1);
-                    console.log('borrar');
+                    console.log(this.agendasFiltradas);
+                }
+                if (conflicto) {
+                    let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                    this.seleccionados.splice(i, 1);
+                    dia.estado = 'conflicto';
                 }
             });
         }
@@ -240,7 +248,7 @@ export class ClonarAgendaComponent implements OnInit {
             }).catch(() => {
             });
         } else {
-            this.plex.alert('', 'Seleccione al menos un día del calendario');
+            this.plex.alert('', 'Seleccione al menos un día válido del calendario');
         }
     }
 
