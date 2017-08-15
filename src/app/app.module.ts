@@ -234,6 +234,11 @@ import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinat
 import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
 import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
+
+// PRESCRIPCION MEDICAMENTOS
+import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/prescripcionMedicamento.component';
+
+
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
@@ -335,6 +340,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: ViviendaResiduosComponent, key: 'ViviendaResiduosComponent' },
     { component: ViviendaSituacionSocioEconomicaComponent, key: 'ViviendaSituacionSocioEconomicaComponent' },
     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
+    { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' }
+
 ];
 
 // let temp = RUP_ELEMENTS.map((i) => i.component);
@@ -415,6 +422,7 @@ const RUP_COMPONENTS = [
     ViviendaResiduosComponent,
     ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
+    PrescripcionMedicamentoComponent
 ];
 
 // Locales

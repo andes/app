@@ -29,6 +29,7 @@ export class SnomedService {
     }
 
     getProductos(params: any): Observable<any[]> {
+        alert("yes");
          return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
     }
 
