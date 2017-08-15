@@ -806,7 +806,7 @@ export class PlanificarAgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
+                                turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000)) ;
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
                                     bloque.turnos.push(turno);
                                 }
