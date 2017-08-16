@@ -237,7 +237,8 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 
 // PRESCRIPCION MEDICAMENTOS
 import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/prescripcionMedicamento.component';
-
+import { IndicacionProcedimientoComponent } from './components/rup/atomos/indicacionProcedimiento.component';
+import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/buscadorMedicamentoSnomed.component';
 
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
@@ -340,7 +341,9 @@ export const RUP_ELEMENTS: any[] = [
     { component: ViviendaResiduosComponent, key: 'ViviendaResiduosComponent' },
     { component: ViviendaSituacionSocioEconomicaComponent, key: 'ViviendaSituacionSocioEconomicaComponent' },
     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
-    { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' }
+    { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' },
+    { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
+    { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' }
 
 ];
 
@@ -422,7 +425,9 @@ const RUP_COMPONENTS = [
     ViviendaResiduosComponent,
     ViviendaSituacionSocioEconomicaComponent,
     ViviendaSostenEconomicoComponent,
-    PrescripcionMedicamentoComponent
+    PrescripcionMedicamentoComponent,
+    IndicacionProcedimientoComponent,
+    BuscadorMedicamentoSnomedComponent
 ];
 
 // Locales

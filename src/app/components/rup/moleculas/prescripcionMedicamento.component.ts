@@ -7,4 +7,9 @@ import { IPaciente } from '../../../interfaces/IPaciente';
     templateUrl: 'prescripcionMedicamento.html'
 })
 export class PrescripcionMedicamentoComponent extends Molecula {
+    public agregarReceta: Boolean = false;
+
+    medicamentoSeleccionado(concepto) {
+        this.data[this.elementoRUP.key].concepto = concepto;
+    }
 }
