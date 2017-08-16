@@ -117,7 +117,6 @@ export function getObjTipoComunicacion() {
     arrTC = arrTC.slice(arrTC.length / 2);
     let salida = arrTC.map(elem => {
         let idEnumerado = elem.split(' ')[1] ? elem.split(' ')[1] : elem.split(' ')[0];
-        console.log(idEnumerado);
         return {
             'id': idEnumerado.toLowerCase(),
             'nombre': titleCase(elem)

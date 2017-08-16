@@ -119,12 +119,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
                 // Loggea el documento escaneado para análisis
-                this.logService.post('mpi', 'scan', { data: this.textoLibre });
+                this.logService.post('mpi', 'scan', { data: this.textoLibre }).subscribe(() => { });
                 return DocumentoEscaneados[key];
             }
         }
         if (this.textoLibre.length > 30) {
-            this.logService.post('mpi', 'scanFail', { data: this.textoLibre });
+            this.logService.post('mpi', 'scanFail', { data: this.textoLibre }).subscribe(() => { });
         }
         return null;
     }
@@ -259,13 +259,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                         match: this.pacientesSimilares[0].match
                                     };
                                     if (pacienteEncontrado) {
-                                        this.logService.post('mpi', 'validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                        this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
 
 
                                         this.seleccionarPaciente(pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
-                                            this.logService.post('mpi', 'macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                            this.logService.post('mpi', 'macheoAlto', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                             //
                                             // Actualizamos los datos del paciente con los datos obtenidos del DNI
                                             //
@@ -276,7 +276,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                             this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                                         } else {
                                             if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
-                                                this.logService.post('mpi', 'posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                                this.logService.post('mpi', 'posibleDuplicado', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                             }
                                             this.seleccionarPaciente(pacienteEscaneado);
                                         }
