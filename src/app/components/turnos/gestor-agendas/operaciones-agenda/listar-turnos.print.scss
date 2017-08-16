@@ -1,4 +1,7 @@
 @media print {
+    @page {
+        size: landscape;
+    }
     nav,
     footer,
     .btn {
