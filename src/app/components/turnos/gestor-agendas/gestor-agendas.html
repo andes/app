@@ -25,7 +25,7 @@
                             </plex-datetime>
                         </div>
                         <div class="col-4">
-                            <plex-select formControlName="prestaciones" (getData)="loadPrestaciones($event)" label="Tipos de prestación">
+                            <plex-select formControlName="prestaciones" (getData)="loadPrestaciones($event)" label="Prestación">
                             </plex-select>
                         </div>
                         <div class="col-2 text-right">
@@ -79,7 +79,7 @@
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
-                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre }}</small>
+                                    <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio.nombre ?' - ' + agenda.espacioFisico.servicio.nombre : '') + (agenda.espacioFisico.edificio.descripcion ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
                                     <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                 </div>
                             </td>
@@ -106,8 +106,8 @@
             </plex-box>
         </div>
 
-        <!--Panel de Turnos-->
-        <div *ngIf="agendasSeleccionadas.length > 0" class="col-4">
+        <!-- Panel derecho -->
+        <div *ngIf="agendasSeleccionadas.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel  && agendasSeleccionadas.length == 1, 'col-4': !showEditarAgendaPanel}">
             <plex-box>
                 <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
                     <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
