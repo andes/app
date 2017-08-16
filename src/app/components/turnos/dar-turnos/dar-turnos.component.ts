@@ -43,6 +43,7 @@ export class DarTurnosComponent implements OnInit {
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.paciente = value;
+        this.mostrarCalendario = false;
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
@@ -914,6 +915,7 @@ export class DarTurnosComponent implements OnInit {
 
     buscarPaciente() {
         this.showDarTurnos = false;
+        this.mostrarCalendario = false;
         this.pacientesSearch = true;
     }
 
