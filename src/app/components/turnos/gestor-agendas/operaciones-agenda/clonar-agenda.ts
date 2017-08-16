@@ -24,7 +24,7 @@ export class ClonarAgendaComponent implements OnInit {
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
     public autorizado = false;
-    public agendasFiltradas: any[] = []; // Las agendas que hay en el día,
+    public agendasFiltradas: any[] = []; // Las agendas que hay en el día
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
@@ -65,13 +65,8 @@ export class ClonarAgendaComponent implements OnInit {
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
         };
-        if (this.agenda.espacioFisico) {
-            params['espacioFisico'] = this.agenda.espacioFisico.id;
-        }
-        if (this.agenda.profesionales) {
-            params['profesionales'] = this.agenda.profesionales.map(elem => { return elem.id; });
-        }
         this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
+        let agendas = this.agendas;
         this.cargarCalendario();
     }
 
@@ -127,7 +122,8 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public seleccionar(dia: any) {
-        if (dia.fecha.getTime() >= this.today.getTime()) {
+        let mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
+        if (dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
             let original = this.agenda;
             if (dia.original) {
                 this.original = true;
@@ -137,10 +133,11 @@ export class ClonarAgendaComponent implements OnInit {
             let band = false;
             let originalIni = moment(original.horaInicio).format('HH:mm');
             let originalFin = moment(original.horaFin).format('HH:mm');
+            // Filtramos las agendas del mes que coinciden con el dia y horario en el que se intenta clonar
             let filtro = this.agendas.filter(
                 function (actual) {
-                    let actualIni = moment(original.horaInicio).format('HH:mm');
-                    let actualFin = moment(original.horaInicio).format('HH:mm');
+                    let actualIni = moment(actual.horaInicio).format('HH:mm');
+                    let actualFin = moment(actual.horaInicio).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
                     band = band &&
@@ -152,18 +149,25 @@ export class ClonarAgendaComponent implements OnInit {
             // Mostrar las agendas que coincidan con los profesionales de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
-                this.seleccionados.push(dia.fecha.getTime());
-                filtro.forEach((fil) => {
-                    let aux = this.agendasFiltradas.map(elem => { return elem.id; });
-                    if (aux.indexOf(fil.id) < 0) {
-                        this.agendasFiltradas = this.agendasFiltradas.concat(fil);
-                    }
-                });
+                if (filtro.length === 0) {
+                    this.seleccionados.push(dia.fecha.getTime());
+                } else {
+                    filtro.forEach((fil) => {
+                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
+                        if (aux.indexOf(fil.id) < 0) {
+                            this.agendasFiltradas = this.agendasFiltradas.concat(fil);
+
+                        }
+                    });
+                    this.verificarConflictos(dia);
+                }
             } else {
                 if (this.original !== true) {
+                    if (dia.estado !== 'conflicto') { // Agendas en conflicto nunca llegan al array seleccionados
+                        let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                        this.seleccionados.splice(i, 1);
+                    }
                     dia.estado = 'noSeleccionado';
-                    let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
-                    this.seleccionados.splice(i, 1);
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         console.log(aux);
@@ -174,27 +178,35 @@ export class ClonarAgendaComponent implements OnInit {
                     });
                 }
             }
-            // Detectar el tipo de conflicto
-            this.agendasFiltradas.forEach((agenda, index) => {
+
+        }
+    }
+    // Verifica si existen conflictos con las agendas existentes en ese dia
+    // no se asignan agendas en conflicto al array "seleccionados"
+    verificarConflictos(dia: any) {
+        this.agendasFiltradas.forEach((agenda, index) => {
+            if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales.length > 0) {
                     console.log('profesionales', agenda.profesionales.length);
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
+                        dia.estado = 'conflicto';
                     }
                 }
                 if (agenda.espacioFisico) {
                     console.log('espacio');
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
+                        dia.estado = 'conflicto';
                     }
                 }
-                if (agenda.profesionales.length === 0 && !agenda.espacioFisico) {
+                if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
                     this.agendasFiltradas.splice(index, 1);
-                    console.log('borrar');
+                    this.seleccionados.push(dia.fecha.getTime());
                 }
-            });
-        }
+            }
+        });
     }
 
     redirect(pagina: string) {
@@ -219,28 +231,32 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
-            if (conf) {
-                this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
-                this.seleccionados = [...this.seleccionados];
-                let data = {
-                    idAgenda: this.agenda.id,
-                    clones: this.seleccionados
-                };
-                this.serviceAgenda.clonar(data).subscribe(resultado => {
-                    console.log('resultado ', resultado);
-                    this.plex.alert('La Agenda se clonó correctamente').then(ok => {
-                        this.volverAlGestor.emit(true);
-                    });
-                },
-                    err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
-            }
-        }).catch(() => {
-        });
+        if (this.seleccionados.length > 1) {
+            this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
+                if (conf) {
+                    this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
+                    this.seleccionados = [...this.seleccionados];
+                    let data = {
+                        idAgenda: this.agenda.id,
+                        clones: this.seleccionados
+                    };
+                    this.serviceAgenda.clonar(data).subscribe(resultado => {
+                        console.log('resultado ', resultado);
+                        this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                            this.volverAlGestor.emit(true);
+                        });
+                    },
+                        err => {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                }
+            }).catch(() => {
+            });
+        } else {
+            this.plex.alert('', 'Seleccione al menos un día válido del calendario');
+        }
     }
 
     cancelar() {
