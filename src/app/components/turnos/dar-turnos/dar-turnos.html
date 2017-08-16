@@ -32,7 +32,7 @@
                         </div>
                     </header>
                     <!--Calendario-->
-                    <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" [_solicitudPrestacion]="_solicitudPrestacion"
+                    <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" [_solicitudPrestacion]="_solicitudPrestacion"
                         (agendaChanged)="seleccionarAgenda($event) "></app-calendario>
                 </plex-box>
             </div>

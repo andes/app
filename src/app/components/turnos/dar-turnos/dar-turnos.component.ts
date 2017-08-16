@@ -118,7 +118,7 @@ export class DarTurnosComponent implements OnInit {
     private indiceBloque: number;
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private eventoProfesional: any = null;
-
+    private mostrarCalendario = false;
 
     constructor(
         public serviceProfesional: ProfesionalService,
@@ -322,8 +322,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     filtrar() {
-        console.log('filtrar');
-
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
@@ -364,6 +362,11 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
+            if (this.opciones.tipoPrestacion || this.opciones.profesional) {
+                this.mostrarCalendario = true;
+            } else {
+                this.mostrarCalendario = false;
+            }
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
@@ -375,7 +378,6 @@ export class DarTurnosComponent implements OnInit {
             if (!this.opciones.tipoPrestacion) {
                 params['tipoPrestaciones'] = this.filtradas.map((f) => { return f.id; });
             }
-
         } else {
             // Agendas a partir de hoy aplicando filtros solo por permisos y efector
             this.opciones.tipoPrestacion = null;
@@ -819,7 +821,6 @@ export class DarTurnosComponent implements OnInit {
 
                         });
                     }
-
 
                     if (this.turnoDoble) {
                         if (turnoSiguiente.estado === 'disponible') {
