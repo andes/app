@@ -170,6 +170,9 @@
                                     <!--No tiene turnos disponibles-->
                                     <div class="col" *ngIf="estadoT == 'noTurnos'">
                                         <div *ngIf="alternativas.length > 0" class="list-group">
+                                             <div class="row">
+                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa<br></div>
+                                            </div>
                                             <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: </label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
