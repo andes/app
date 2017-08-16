@@ -133,7 +133,7 @@ export class ClonarAgendaComponent implements OnInit {
             let band = false;
             let originalIni = moment(original.horaInicio).format('HH:mm');
             let originalFin = moment(original.horaFin).format('HH:mm');
-            // Filtramos las agendas del mes que coinciden en el dia y horario que se intenta clonar
+            // Filtramos las agendas del mes que coinciden con el dia y horario en el que se intenta clonar
             let filtro = this.agendas.filter(
                 function (actual) {
                     let actualIni = moment(actual.horaInicio).format('HH:mm');
@@ -149,18 +149,25 @@ export class ClonarAgendaComponent implements OnInit {
             // Mostrar las agendas que coincidan con los profesionales de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
-                this.seleccionados.push(dia.fecha.getTime());
-                filtro.forEach((fil) => {
-                    let aux = this.agendasFiltradas.map(elem => { return elem.id; });
-                    if (aux.indexOf(fil.id) < 0) {
-                        this.agendasFiltradas = this.agendasFiltradas.concat(fil);
-                    }
-                });
+                if (filtro.length === 0) {
+                    this.seleccionados.push(dia.fecha.getTime());
+                } else {
+                    filtro.forEach((fil) => {
+                        let aux = this.agendasFiltradas.map(elem => { return elem.id; });
+                        if (aux.indexOf(fil.id) < 0) {
+                            this.agendasFiltradas = this.agendasFiltradas.concat(fil);
+
+                        }
+                    });
+                    this.verificarConflictos(dia);
+                }
             } else {
                 if (this.original !== true) {
+                    if (dia.estado !== 'conflicto') { // Agendas en conflicto nunca llegan al array seleccionados
+                        let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
+                        this.seleccionados.splice(i, 1);
+                    }
                     dia.estado = 'noSeleccionado';
-                    let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
-                    this.seleccionados.splice(i, 1);
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         console.log(aux);
@@ -171,35 +178,35 @@ export class ClonarAgendaComponent implements OnInit {
                     });
                 }
             }
-            // Detectar el tipo de conflicto, no se clona en los dias con conflicto
-            this.agendasFiltradas.forEach((agenda, index) => {
-                let conflicto = false;
+
+        }
+    }
+    // Verifica si existen conflictos con las agendas existentes en ese dia
+    // no se asignan agendas en conflicto al array "seleccionados"
+    verificarConflictos(dia: any) {
+        this.agendasFiltradas.forEach((agenda, index) => {
+            if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales.length > 0) {
                     console.log('profesionales', agenda.profesionales.length);
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
-                        conflicto = true;
+                        dia.estado = 'conflicto';
                     }
                 }
                 if (agenda.espacioFisico) {
                     console.log('espacio');
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
-                        conflicto = true;
+                        dia.estado = 'conflicto';
                     }
                 }
                 if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
                     this.agendasFiltradas.splice(index, 1);
-                    console.log(this.agendasFiltradas);
+                    this.seleccionados.push(dia.fecha.getTime());
                 }
-                if (conflicto) {
-                    let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
-                    this.seleccionados.splice(i, 1);
-                    dia.estado = 'conflicto';
-                }
-            });
-        }
+            }
+        });
     }
 
     redirect(pagina: string) {
