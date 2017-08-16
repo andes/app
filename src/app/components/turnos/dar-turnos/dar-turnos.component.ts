@@ -322,6 +322,8 @@ export class DarTurnosComponent implements OnInit {
     }
 
     filtrar() {
+        console.log('filtrar');
+
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
@@ -594,7 +596,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarBusqueda(indice: number) {
-        // console.log("busquedas ", this.busquedas);
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === this.busquedas[indice].profesional);
         this.opciones.profesional = this.busquedas[indice].profesional;
