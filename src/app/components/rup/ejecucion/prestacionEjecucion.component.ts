@@ -212,50 +212,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // recorremos los registros ya almacenados en la prestacion y rearmamos el
             // arreglo registros y data en memoria
             this.prestacion.ejecucion.registros.forEach(registro => {
-                // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-                if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
-                    let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto, this.prestacion.id);
-                    hallazgo.subscribe(dato => {
-                        if (dato) {
-                            // vamos a comprobar si se trata de hallazgo cronico
-                            if (dato.evoluciones && dato.evoluciones.length > 1 && dato.evoluciones[0].esCronico) {
-                                let datoModificar = {
-                                    datoCompleto: dato,
-                                    ultimaEvolucion: dato.evoluciones[0] ? dato.evoluciones[0] : null
-                                };
-                                // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-                                let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
-                                // armamos el elemento data a agregar al array de registros
-                                let data = {
-                                    collapse: false,
-                                    tipo: 'problemas',
-                                    concepto: registro.concepto,
-                                    elementoRUP: elementoRUP,
-                                    valor: datoModificar,
-                                    destacado: false,
-                                    relacionadoCon: null
-                                };
-                                this.registros.splice(this.registros.length, 0, data);
-                                if (!this.data[elementoRUP.key]) {
-                                    this.data[elementoRUP.key] = {};
-                                }
-                                this.data[elementoRUP.key][registro.concepto.conceptId] = datoModificar;
-                                // tslint:disable-next-line:forin
-                                for (let i in this.registros) {
-                                    this.cargaItems(this.registros[i], i);
-                                    // Actualizamos cuando se agrega el array..
-                                }
-                            } else {
-                                this.mostrarUnRegistro(registro);
-                            }
-                        } else {
-                            this.mostrarUnRegistro(registro);
-                        }
-                    });
-                } else {
-                    this.mostrarUnRegistro(registro);
-                }
-
+                this.mostrarUnRegistro(registro);
             });
 
 
@@ -550,8 +507,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(snomedConcept, registroDestino = null) {
         this.colapsarPrestaciones();
         //  this.registros = this.copiaRegistro;
-        // console.log(this.copiaRegistro);
-        //  console.log(this.registros);
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
         if (this.registros.length > 0) {
             this.showVincular = true;
@@ -577,37 +532,14 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                 .subscribe(dato => {
                     if (dato) {
-                        // vamos a comprobar si se trata de hallazgo cronico
-                        if (dato.evoluciones && dato.evoluciones[0].esCronico) {
-                            // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-                            let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
-                            // armamos el elemento data a agregar al array de registros
-                            let data = {
-                                collapse: false,
-                                tipo: 'problemas',
-                                concepto: snomedConcept,
-                                elementoRUP: elementoRUP,
-                                valor: dato,
-                                destacado: false,
-                                relacionadoCon: null
-                            };
-                            this.registros.splice(this.registros.length, 0, data);
-                            if (!this.data[elementoRUP.key]) {
-                                this.data[elementoRUP.key] = {};
-                            }
-                            this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
-                            // tslint:disable-next-line:forin
-                            for (let i in this.registros) {
-                                if (this.registros[i]) {
-                                    this.cargaItems(this.registros[i], i);
-                                }
-                            }
+                        // vamos a comprobar si se trata de hallazgo cronico o activo
+                        if (dato.evoluciones && (dato.evoluciones[0].esCronico || dato.evoluciones[0].estado === 'activo')) {
+                            this.ejecutarHallazgoHuds(dato);
                         } else {
                             this.cargarNuevoRegistro(snomedConcept);
                         }
                     } else {
                         this.cargarNuevoRegistro(snomedConcept);
-
                     }
                 });
 
@@ -616,11 +548,47 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
+    ejecutarHallazgoHuds(problemaHuds) {
+        if (problemaHuds.concepto.semanticTag === 'hallazgo' || problemaHuds.concepto.semanticTag === 'trastorno') {
+            // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+            let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, problemaHuds.concepto, 'problemas');
+            // armamos el elemento data a agregar al array de registros
+            let data = {
+                collapse: false,
+                tipo: 'problemas',
+                concepto: problemaHuds.concepto,
+                elementoRUP: elementoRUP,
+                valor: {
+                    idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro
+                },
+                destacado: false,
+                relacionadoCon: null
+            };
+
+            this.registros.splice(this.registros.length, 0, data);
+            if (!this.data[elementoRUP.key]) {
+                this.data[elementoRUP.key] = {};
+            }
+            this.data[elementoRUP.key][problemaHuds.concepto.conceptId] = {
+                idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro
+            };
+            // tslint:disable-next-line:forin
+            for (let i in this.registros) {
+                if (this.registros[i]) {
+                    this.cargaItems(this.registros[i], i);
+                }
+            }
+
+        } else {
+            this.cargarNuevoRegistro(problemaHuds.concepto);
+        }
+    }
+
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            this.ejecutarConcepto(resultadoHuds.data.concepto);
+            this.ejecutarHallazgoHuds(resultadoHuds.data);
         }
     }
 
@@ -705,8 +673,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
-            // actualizamos las prestaciones de la HUDS
-            this.servicioPrestacion.getByPaciente(this.paciente.id, true, prestacionEjecutada.id).subscribe(resultado => {
+            // actualizamos las prestaciones de la HUDS que quedaron en cache 
+            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
         });
