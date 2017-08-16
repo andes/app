@@ -43,7 +43,8 @@ export class EditEspacioFisicoComponent implements OnInit {
         let servicio = this.espacioFisicoHijo ? this.espacioFisicoHijo.servicio : '';
         let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
         let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
-        this.modelo = { nombre: nombre, descripcion: descripcion, activo: activo, edificio: edificio, detalle: detalle, sector: sector, servicio: servicio };
+        let equipamiento = this.espacioFisicoHijo ? this.espacioFisicoHijo.equipamiento : [];
+        this.modelo = { nombre, descripcion, activo, edificio, detalle, sector, servicio, equipamiento };
     }
 
     loadEdificios(event) {
@@ -90,12 +91,12 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     agregarEquipamiento(equipamiento) {
-        this.equipamientos = [... this.equipamientos, equipamiento];
+        this.modelo.equipamiento = [... this.modelo.equipamiento, equipamiento];
     }
 
     eliminarEquipamiento(equipamiento) {
-        this.equipamientos.splice(this.equipamientos.indexOf(equipamiento), 1);
-        this.equipamientos = [...this.equipamientos];
+        this.modelo.equipamiento.splice(this.modelo.equipamiento.indexOf(equipamiento), 1);
+        this.modelo.equipamiento = [...this.modelo.equipamiento];
     }
 
 }
