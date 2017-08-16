@@ -13,8 +13,9 @@
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
         <div class="col-8">
-            <!-- <span *ngIf="turno.paciente">{{turno.paciente.apellido}} {{turno.paciente.nombre}}</span> -->
-            <span *ngIf="turno.paciente">{{turno.paciente | paciente}}</span>
+            <span *ngIf="turno.paciente.apellido; else valueIfEmpty">
+                {{turno.paciente | paciente}}</span>
+            <ng-template #valueIfEmpty>Sin paciente asignado</ng-template>
         </div>
     </div>
     <div class="row">

@@ -229,7 +229,7 @@
                                     <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
                                         name="turnoTipoPrestacion"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
-                                    <plex-text label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta" ></plex-text>
+                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta" ></plex-text>
                                     <div class="text-right mt-3">
                                         <plex-button label="Volver" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
                                         <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>

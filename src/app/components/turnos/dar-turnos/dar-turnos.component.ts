@@ -673,7 +673,8 @@ export class DarTurnosComponent implements OnInit {
             });
         }
 
-        if (!this.paciente.carpetaEfectores || !(this.carpetaEfector.nroCarpeta)) {
+
+        if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
             let params = {
                 documento: this.paciente.documento,
                 organizacion: this.auth.organizacion._id
@@ -689,6 +690,8 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
 
+        } else {
+            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         }
 
     }
@@ -832,6 +835,8 @@ export class DarTurnosComponent implements OnInit {
                         }
                     }
                     this.actualizarCarpetaPaciente(this.paciente);
+                }, error => {
+                    console.log(error);
                 });
 
                 // Si cambió el teléfono lo actualizo en el MPI

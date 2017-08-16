@@ -148,6 +148,7 @@ import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.c
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
+import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
 
 // ... RUP
 import { RupComponent } from './components/rup/rup.component';
@@ -467,7 +468,8 @@ import { routing, appRoutingProviders } from './app.routing';
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateUpdateComponent,
-        ListarTurnosComponent
+        ListarTurnosComponent,
+        MapaEspacioFisicoComponent
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],
