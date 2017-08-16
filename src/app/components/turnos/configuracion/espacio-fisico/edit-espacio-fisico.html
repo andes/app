@@ -50,16 +50,20 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <label>Equipamiento</label>
+                            <label>Agregar Equipamiento</label>
                             <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="agregarEquipamiento($event)"></snomed-buscar>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
+                            <strong>Equipamiento actual</strong><br>
                             <span *ngFor="let eq of modelo.equipamiento" class="badge badge-info badge-equipamiento">
                                 {{ eq.term }}
                                 <span class="float-right hover" (click)="eliminarEquipamiento(eq)"><i class="mdi mdi-close-box-outline"></i> </span>
                             </span>
+                            <div class="badge badge-warning" *ngIf="modelo.equipamiento.length === 0">
+                                Sin equipamiento definido
+                            </div>
                         </div>
                     </div>
                 </plex-box>

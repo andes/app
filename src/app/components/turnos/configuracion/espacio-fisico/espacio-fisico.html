@@ -10,11 +10,19 @@
         <form [formGroup]="searchForm">
             <div class="row">
                 <div class="col-3">
-                    <plex-text formControlName="nombre" label="Nombre" placeholder="Ingrese nombre...">
+                    <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre">
                     </plex-text>
                 </div>
                 <div class="col-3">
-                    <plex-text formControlName="descripcion" label="Descripción" placeholder="Ingresar descripción...">
+                    <plex-text formControlName="edificio" label="Edificio" placeholder="Filtrar por edificio">
+                    </plex-text>
+                </div>
+                <div class="col-3">
+                    <plex-text formControlName="servicio" label="Servicio" placeholder="Filtrar por servicio">
+                    </plex-text>
+                </div>
+                <div class="col-3">
+                    <plex-text formControlName="sector" label="Sector" placeholder="Filtrar por sector">
                     </plex-text>
                 </div>
             </div>
@@ -27,8 +35,8 @@
                         <th>Edificio</th>
                         <th>Servicio</th>
                         <th>Sector</th>
-                        <th>Activo</th>
-                        <th></th>
+                        <th>Estado</th>
+                        <th colspan="2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,10 +46,14 @@
                         <td>{{espacioFisico.servicio?.nombre}}</td>
                         <td>{{espacioFisico.sector?.nombre}}</td>
                         <td>
-                            <plex-bool [(ngModel)]="espacioFisico.activo" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
+                            <plex-bool class="text-info" [(ngModel)]="espacioFisico.activo" name="espacioFisico.activo" (click)="activate(espacioFisico)"
+                                title="{{espacioFisico.activo ? 'Desactivar' : 'Activar'}}"></plex-bool>
                         </td>
                         <td>
-                            <plex-button type="primary" label="Actualizar" (click)="onEdit(espacioFisico)"> </plex-button>
+                            <plex-button type="primary" icon="pencil" (click)="editarEspacioFisico(espacioFisico)" title="Editar"></plex-button>
+                        </td>
+                        <td>
+                            <plex-button type="primary" icon="delete" (click)="eliminarEspacioFisico(espacioFisico)" title="Eliminar"></plex-button>
                         </td>
                     </tr>
                 </tbody>
@@ -54,12 +66,12 @@
         </div>
     </plex-box>
 </section>
-<footer *ngIf="!showEditar">
+<!-- <footer *ngIf="!showEditar">
     <div class="row">
         <div class="col">
             <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
             </plex-button>
         </div>
     </div>
-</footer>
+</footer> -->
 <edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)' (onReturn)="onCancel()"></edit-espacio-fisico>
