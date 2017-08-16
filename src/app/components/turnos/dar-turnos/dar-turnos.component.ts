@@ -360,26 +360,27 @@ export class DarTurnosComponent implements OnInit {
 
         let fechaHasta = (moment(this.opciones.fecha).endOf('month')).toDate();
 
+        // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
-
-            // Filtro búsqueda
+            // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
-                // Mostrar sólo las agendas a partir de hoy en adelante
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
                 idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
+            if (!this.opciones.tipoPrestacion) {
+                params['tipoPrestaciones'] = this.filtradas.map((f) => { return f.id; });
+            }
 
         } else {
-            // Resetear opciones
+            // Agendas a partir de hoy aplicando filtros solo por permisos y efector
             this.opciones.tipoPrestacion = null;
             this.opciones.profesional = null;
             params = {
-                // Mostrar sólo las agendas a partir de hoy en adelante
+                // Mostrar sólo las agendas a partir de hoy en adelante, filtradas por las prestaciones con permisos
                 rango: true, desde: new Date(), hasta: fechaHasta,
-                // tipoPrestaciones: this.permisos,
                 tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
