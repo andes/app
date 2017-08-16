@@ -41,7 +41,6 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
             if (this.datosIngreso.idRegistroOrigen) {
                 this.servicioPrestacion.getUnHallazgoPacienteXOrigen(this.paciente.id, this.datosIngreso.idRegistroOrigen)
                     .subscribe(hallazgo => {
-                        debugger;
                         if (hallazgo) {
                             this.hallazgoHudsCompleto = hallazgo;
                             this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
