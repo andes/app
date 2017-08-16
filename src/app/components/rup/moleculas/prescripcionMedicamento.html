@@ -1,23 +1,7 @@
-<!-- buscador SNOMED -->
-<!--<ng-container *ngIf="paciente">
-    <div class="row">
-        <div class="col-12">
-            <b>Medicamento</b>
-            <div *ngIf="!solovalores">
-                <snomed-buscar [tipoBusqueda]="'productos'" (evtData)="medicamentoSeleccionado($event)"></snomed-buscar>
-            </div>
-
-            <div *ngIf="soloValores">
-                {{datosIngreos[tp.key].concepto.term}}
-            </div>
-        </div>
-    </div>
-</ng-container>-->
-
 <div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id && paciente">
     <div class="row">
         <ng-container *ngFor="let tp of elementoRUP.requeridos">
-            <div class="col" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
+            <div class="col-12" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
                 <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="(datosIngreso && datosIngreso[tp.key]) ? datosIngreso[tp.key] : null">
                 </rup>
             </div>
