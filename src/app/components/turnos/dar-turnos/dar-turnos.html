@@ -261,26 +261,13 @@
                 </plex-box>
             </div>
         </div>
-        <!-- <div class="row">
-            <div class="col col-sm-12" *ngIf="pacientesSearch">
-                <div class="panel panel-default">
-                    <div class="clear"></div>
-                    <pacientesSearch (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
-                </div>
-            </div> -->
-        <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
-                <div class="panel panel-default plex-layout">
-                    <div class="clear"></div>
-                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
-                </div>
-            </div>-->
-        <!-- </div> -->
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
         <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
-        <div class="float-right">
-            <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+        <div class="mt-4 float-right">
+            <plex-button label="Volver" type="info" (click)="volver()"></plex-button>
+            <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
         </div>
     </footer>
 </form>

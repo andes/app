@@ -1022,6 +1022,11 @@ export class DarTurnosComponent implements OnInit {
         this.volverAlGestor.emit(true);
     }
 
+    volver() {
+        this.showDarTurnos = false;
+        this.buscarPaciente();
+    }
+
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
