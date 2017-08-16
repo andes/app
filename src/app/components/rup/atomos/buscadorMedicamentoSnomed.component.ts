@@ -1,4 +1,3 @@
-// import { SnomedService } from './../../../services/term/snomed.service';
 import { Atomo } from './../core/atomoComponent';
 import { RupComponent } from './../rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
@@ -8,11 +7,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     templateUrl: 'buscadorMedicamentoSnomed.html'
 })
 
-export class BuscadorMedicamentoSnomedComponent extends Atomo implements OnInit {
-
-    ngOnInit() {
-        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
-    }
+export class BuscadorMedicamentoSnomedComponent extends Atomo {
 
     getMedicamentos(event) {
         if (event.query) {
