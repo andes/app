@@ -1,4 +1,4 @@
-import { Molecula } from './../core/molecula.component';
+import { Atomo } from './../core/atomoComponent';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 
 @Component({
@@ -6,5 +6,5 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
     templateUrl: 'indicacionProcedimiento.html'
 })
 
-export class IndicacionProcedimientoComponent extends Molecula {
+export class IndicacionProcedimientoComponent extends Atomo {
 }
