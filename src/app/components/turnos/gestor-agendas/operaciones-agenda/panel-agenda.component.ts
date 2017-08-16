@@ -177,11 +177,9 @@ export class PanelAgendaComponent implements OnInit {
                 });
             }
         } else if (tipo === 'espacioFisico') {
-
             // Loop Espacios Físicos
-            this.serviceAgenda.get({ 'idProfesional': this.modelo.espacioFisico._id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
-                subscribe(agendas => {
-
+            this.serviceAgenda.get({ 'espacioFisico': this.modelo.espacioFisico._id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+            subscribe(agendas => {
                     // Hay problemas de solapamiento?
                     let agendasConSolapamiento = agendas.filter(agenda => {
                         return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
