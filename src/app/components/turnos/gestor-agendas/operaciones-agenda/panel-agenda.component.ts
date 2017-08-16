@@ -47,14 +47,17 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     guardarAgenda(agenda: IAgenda) {
-
+        debugger
         if (this.alertas.length === 0) {
 
             // Quitar cuando esté solucionado inconveniente de plex-select
-            let profesional = this.modelo.profesionales.map((prof) => {
-                delete prof.$order;
-                return prof;
-            });
+            let profesional = [];
+            if (this.modelo.profesionales) {
+                profesional = this.modelo.profesionales.map((prof) => {
+                    delete prof.$order;
+                    return prof;
+                });
+            }
 
             let espacioFisico = this.modelo.espacioFisico;
             if (this.modelo.espacioFisico) {
@@ -71,6 +74,7 @@ export class PanelAgendaComponent implements OnInit {
             };
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                debugger
                 this.modelo = resultado;
                 this.showEditarAgenda = false;
                 this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
@@ -178,18 +182,20 @@ export class PanelAgendaComponent implements OnInit {
             }
         } else if (tipo === 'espacioFisico') {
             // Loop Espacios Físicos
-            this.serviceAgenda.get({ 'espacioFisico': this.modelo.espacioFisico._id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
-            subscribe(agendas => {
-                    // Hay problemas de solapamiento?
-                    let agendasConSolapamiento = agendas.filter(agenda => {
-                        return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
-                    });
+            if (this.modelo.espacioFisico) {
+                this.serviceAgenda.get({ 'espacioFisico': this.modelo.espacioFisico._id, 'rango': true, 'desde': this.modelo.horaInicio, 'hasta': this.modelo.horaFin }).
+                    subscribe(agendas => {
+                        // Hay problemas de solapamiento?
+                        let agendasConSolapamiento = agendas.filter(agenda => {
+                            return agenda.id !== this.modelo.id || !this.modelo.id; // Ignorar agenda actual
+                        });
 
-                    // Si encontramos una agenda que coincida con la búsqueda...
-                    if (agendasConSolapamiento.length > 0) {
-                        this.alertas = [... this.alertas, 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
-                    }
-                });
+                        // Si encontramos una agenda que coincida con la búsqueda...
+                        if (agendasConSolapamiento.length > 0) {
+                            this.alertas = [... this.alertas, 'El ' + this.modelo.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                        }
+                    });
+            }
         }
     }
 }
