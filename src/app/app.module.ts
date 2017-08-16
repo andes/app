@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -237,7 +238,8 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-
+// Autocitado
+import { AutocitadoComponent } from './components/rup/atomos/autocitado.component';
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -260,6 +262,7 @@ import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-creat
 
 export const RUP_ELEMENTS: any[] = [
     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
+    { component: AutocitadoComponent, key: 'AutocitadoComponent' },
     { component: Atomo, key: 'Atomo' },
     { component: BuscadorComponent, key: 'BuscadorComponent' },
     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
@@ -341,6 +344,7 @@ export const RUP_ELEMENTS: any[] = [
 const RUP_COMPONENTS = [
     ActitudAnteLosCuidadosComponent,
     Atomo,
+    AutocitadoComponent,
     BuscadorComponent,
     ConsultaMedicinaGeneralComponent,
     ControlDeEsfinteresComponent,
@@ -454,7 +458,7 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
+        AuditoriaComponent,
         // AuditoriaPorBloqueComponent, 
         Auditoria2Component,
         ...RUP_COMPONENTS,
