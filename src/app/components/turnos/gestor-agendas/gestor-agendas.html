@@ -36,7 +36,7 @@
                     <div class="row" *ngIf="mostrarMasOpciones">
                         <div class="col-4">
                             <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" placeholder="Buscar un profesional"
-                                labelField="apellido+' '+nombre">
+                                labelField="apellido + ' ' + nombre">
                             </plex-select>
                         </div>
                         <div class="col-4">
@@ -75,7 +75,8 @@
                             <td (click)="verAgenda(agenda, false, $event)">
                                 <div>{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
                                     <i class="mdi mdi-clock"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin
-                                    | date: 'HH:mm'}} hs
+                                    | date: 'HH:mm'}} hs <i class="mdi mdi-timelapse"></i> {{ duracionAgenda(agenda.horaInicio,
+                                    agenda.horaFin) }}
                                     <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                 </div>
                                 <div>
