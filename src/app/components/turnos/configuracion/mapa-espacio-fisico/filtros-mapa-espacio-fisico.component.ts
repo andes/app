@@ -25,7 +25,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     public fechaDesde: any;
     public fechaHasta: any;
     public agendas: any = [];
-    public modelo: any = {};
+    public agenda: any = {};
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
@@ -55,15 +55,15 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
+                if (this.agenda.profesionales) {
+                    listaProfesionales = (resultado) ? this.agenda.profesionales.concat(resultado) : this.agenda.profesionales;
                 } else {
                     listaProfesionales = resultado;
                 }
                 event.callback(listaProfesionales);
             });
         } else {
-            event.callback(this.modelo.profesionales || []);
+            event.callback(this.agenda.profesionales || []);
         }
     }
 
@@ -80,7 +80,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 event.callback(listaEdificios);
             });
         } else {
-            event.callback(this.modelo.edificios || []);
+            event.callback(this.agenda.edificios || []);
         }
     }
 
@@ -95,15 +95,15 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 // organizacion: this.auth.organizacion._id
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {
-                if (this.modelo.espacioFisico) {
-                    listaEspaciosFisicos = respuesta ? this.modelo.espacioFisico.concat(respuesta) : this.modelo.espacioFisico;
+                if (this.agenda.espacioFisico) {
+                    listaEspaciosFisicos = respuesta ? this.agenda.espacioFisico.concat(respuesta) : this.agenda.espacioFisico;
                 } else {
                     listaEspaciosFisicos = respuesta;
                 }
                 event.callback(listaEspaciosFisicos);
             });
         } else {
-            event.callback(this.modelo.espacioFisico || []);
+            event.callback(this.agenda.espacioFisico || []);
         }
 
     }
@@ -115,19 +115,19 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 equipamiento: event.query,
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {
-                this.modelo.equipamiento = respuesta.map((ef) => {
+                this.agenda.equipamiento = respuesta.map((ef) => {
                     return (typeof ef.equipamiento !== 'undefined' && ef.equipamiento.length > 0 ? ef.equipamiento : []);
                 }).filter((elem, index, self) => {
                     return index === self.indexOf(elem);
                 });
 
-                if (this.modelo.equipamiento) {
-                    listaEquipamiento = this.modelo.equipamiento;
+                if (this.agenda.equipamiento) {
+                    listaEquipamiento = this.agenda.equipamiento;
                 }
                 event.callback(listaEquipamiento);
             });
         } else {
-            event.callback(this.modelo.equipamiento || []);
+            event.callback(this.agenda.equipamiento || []);
         }
     }
 
