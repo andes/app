@@ -8,6 +8,7 @@ import { IPaciente } from './../../interfaces/IPaciente';
 import { ElementosRupService } from './../../services/rup/elementosRUP.service';
 import { PacienteService } from './../../services/paciente.service';
 import { ObservarDatosService } from './../../services/rup/observarDatos.service';
+import { SnomedService } from './../../services/term/snomed.service';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
 import { RUP_ELEMENTS } from '../../app.module';
@@ -70,7 +71,8 @@ export class RupComponent implements OnInit, OnDestroy {
         public serviceProfesional: ProfesionalService,
         public servicioPrestacion: PrestacionPacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth) {
+        public auth: Auth,
+        public SNOMED: SnomedService) {
     }
 
     ngOnInit() {
@@ -88,7 +90,6 @@ export class RupComponent implements OnInit, OnDestroy {
 
         // Cargamos o actualizamos el componente 'Signos Vitales'
         this.loadComponent();
-
     }
 
     ngOnDestroy() { }
@@ -108,7 +109,6 @@ export class RupComponent implements OnInit, OnDestroy {
             p = prestacion;
             return p.nombre === this.elementoRUP.componente.nombre;
         });
-
 
         // Cargamos el componente
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.componentContainer.component);
@@ -182,6 +182,7 @@ export class RupComponent implements OnInit, OnDestroy {
         }
 
         this.mensaje = this.getMensajes();
+
         this.evtData.emit(this.data);
     }
 

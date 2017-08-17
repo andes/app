@@ -116,6 +116,9 @@ export class PrestacionValidacionComponent implements OnInit {
                     // recargamos los registros
                     this.cargaRegistros();
 
+                    // actualizamos las prestaciones de la HUDS que quedaron en cache 
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => { });
+
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });

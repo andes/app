@@ -190,6 +190,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'procedimientos':
                         apiMethod = this.SNOMED.getProcedimientos(query);
                         break;
+                    case 'productos':
+                        apiMethod = this.SNOMED.getProductos(query);
+                        break;
                     default:
                         apiMethod = this.SNOMED.get(query);
                         break;

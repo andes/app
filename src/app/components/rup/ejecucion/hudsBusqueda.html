@@ -52,9 +52,9 @@
                                         </div>
                                         <br>
                                         <small *ngIf="hallazgo.evoluciones">
-                                        ultima evolución: {{ hallazgo.evoluciones[hallazgo.evoluciones.length - 1].fechaCarga | fecha}}
+                                        ultima evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha}}
                                     </small><br>
-                                        <span *ngIf="hallazgo.evoluciones[hallazgo.evoluciones.length - 1].esCronico" class="badge-danger">
+                                        <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
                                         Crónico
                                     </span>
 
@@ -91,7 +91,7 @@
                                         </div>
                                         <br>
                                         <small *ngIf="problema.evoluciones">
-                                        ultima evolución: {{ problema.evoluciones[problema.evoluciones.length - 1].fechaCarga | fecha}}
+                                        ultima evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}
                                     </small><br>
                                         <div class="actions">
                                             <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
