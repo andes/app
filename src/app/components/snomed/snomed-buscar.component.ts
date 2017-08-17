@@ -205,12 +205,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     this.loading = false;
                     this.resultados = resultados;
 
-                    if (this.tipoBusqueda === 'procedimientos') {
-                        // Filtrar de los resultado las prestaciones turneables
-                        this.resultados = this.resultados.filter(concepto => {
-                            return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
-                        });
-                    }
+                    // if (this.tipoBusqueda === 'procedimientos') {
+                    //     // Filtrar de los resultado las prestaciones turneables
+                    //     this.resultados = this.resultados.filter(concepto => {
+                    //         return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
+                    //     });
+                    // }
 
                 }, err => {
                     this.loading = false;
