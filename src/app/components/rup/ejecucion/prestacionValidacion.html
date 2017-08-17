@@ -30,8 +30,10 @@
                                 </div>
                             </div>
                             <div class="rup-body">
-                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [snomedConcept]="elemento.concepto" *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
-                                                || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'" [datosIngreso]="elemento.valor[elemento.elementoRUP.key]" [soloValores]="true">
+                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [snomedConcept]="elemento.concepto"
+                                    *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
+                                                || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'"
+                                    [datosIngreso]="elemento.valor[elemento.elementoRUP.key]" [soloValores]="true">
                                 </rup>
                             </div>
                             <div class="rup-footer">
@@ -40,6 +42,14 @@
                                         <plex-button label="Asignar turno" type="primary" (click)="darTurnoAutocitado(elemento.prestacionPlan)"></plex-button>
                                     </p>
                                 </div>
+                                <!-- para los autocitados -->
+                                <!-- 281036007 por ahora es el unico concepto de autocitado -->
+                                <div *ngIf="elemento.concepto.conceptId === '281036007' && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && !elemento?.prestacionPlan?.solicitud?.turno"> 
+                                    <p>
+                                        <plex-button label="Asignar turno" type="primary" (click)="darTurnoAutocitado(elemento.prestacionPlan)"></plex-button>
+                                    </p>
+                                </div>
+
                                 <div *ngIf="elemento.relacionadoCon">
                                     <b>Relacionado con:</b> {{elemento.relacionadoCon.term}}
                                 </div>
@@ -54,15 +64,18 @@
 <footer *ngIf="!showDarTurnos">
     <div class="row">
         <div class="col-3">
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
+                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volverInicio()" type="danger"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
+                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volverInicio()" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
         </div>
         <div class="col text-right ">
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'" label="Validar" (click)="validar()" type="success"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
+                label="Validar" (click)="validar()" type="success"></plex-button>
 
             <plex-button icon="mdi mdi-lock-open" label="Romper validación" (click)="romperValidacion()" type="warning" *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'
@@ -73,4 +86,5 @@
 </footer>
 
 <!-- Calendario para dar turnos autocitados -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente"
+    [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
