@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -72,7 +73,8 @@ export class PuntoInicioComponent implements OnInit {
             this.servicioAgenda.get({
                 fechaDesde: this.fecha,
                 fechaHasta: this.fecha,
-                organizacion: this.auth.organizacion.id
+                organizacion: this.auth.organizacion.id,
+                estados: ['disponible', 'publicada']
             }),
             // Prestaciones
             this.servicioPrestacion.get({
@@ -85,6 +87,10 @@ export class PuntoInicioComponent implements OnInit {
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+
+            if (this.agendas.length) {
+                this.agendaSeleccionada = this.agendas[0];
+            }
 
             if (this.agendas.length) {
                 // this.agendaSeleccionada = this.agendas[0];
@@ -116,10 +122,22 @@ export class PuntoInicioComponent implements OnInit {
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
             this.prestacionesOriginales = JSON.parse(JSON.stringify(this.fueraDeAgenda));
-
+            // this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
-            console.log(this.agendas);
+
+            // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
+            if (this.agendaSeleccionada) {
+                this.agendaSeleccionada.bloques.forEach(element => {
+                    element.turnos.forEach(turno => {
+                        if (turno.prestacion) {
+                            turno.prestacion = this.mostrarTurnoPendiente(turno.prestacion);
+                        }
+                    });
+                });
+            }
+            this.fueraDeAgenda = this.mostrarTurnoPendiente(this.fueraDeAgenda);
+
         });
     }
 
@@ -176,7 +194,6 @@ export class PuntoInicioComponent implements OnInit {
                 this.fueraDeAgenda = _turnos;
             }
         }
-
         if (typeof this.paciente !== 'undefined' && this.paciente) {
             let search = this.paciente.toLowerCase();
 
@@ -191,10 +208,10 @@ export class PuntoInicioComponent implements OnInit {
 
                         let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
                             let nombreCompleto = '';
-                            if (t.paciente) {
+                            if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
                             }
-                            return (t.paciente &&
+                            return (t.paciente && t.paciente.id &&
                                 (nombreCompleto.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
@@ -254,7 +271,7 @@ export class PuntoInicioComponent implements OnInit {
         for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
             let _turnos = agenda.bloques[indexBloque].turnos.filter(t => {
-                total += (t.paciente.id) ? 1 : 0;
+                total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
         }
 
@@ -277,6 +294,49 @@ export class PuntoInicioComponent implements OnInit {
         this.router.navigate(['rup/' + action + '/', id]);
     }
 
+
+    // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
+    mostrarTurnoPendiente(prestaciones) {
+        //  let _prestaciones = prestaciones.filter(p => {
+        //             // filtramos todas las prestaciones que:
+        //             // 1) esten validadas
+        //             // 2) que sean planes y sean autocitados
+        //             return (p.id && p.estados[p.estados.length - 1].tipo === 'validada' &&
+        //                 p.ejecucion.registros.filter(registro => {
+        //                     return (typeof registro.valor.solicitudPrestacion !== 'undefined' &&
+        //                         registro.valor.solicitudPrestacion.autocitado);
+        //                 })
+        //             );
+        //         });
+        if (Array.isArray(prestaciones)) {
+            prestaciones.forEach(unaPrestacion => {
+                if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
+                    this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
+                        prestacionesPaciente.forEach(elemento => {
+                            if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
+                                && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+                                && !elemento.solicitud.turno) {
+                                unaPrestacion.turnosPedientes = true;
+                            }
+                        });
+                    });
+                }
+            });
+        } else {
+            if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
+                this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
+                    prestacionesPaciente.forEach(elemento => {
+                        if (elemento.solicitud.prestacionOrigen === prestaciones.id
+                            && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+                            && !elemento.solicitud.turno) {
+                            prestaciones.turnosPedientes = true;
+                        }
+                    });
+                });
+            }
+        }
+        return prestaciones;
+    }
 }
 
 
