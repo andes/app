@@ -74,7 +74,8 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha,
                 fechaHasta: this.fecha,
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada']
+                estados: ['disponible', 'publicada'],
+                tieneTurnosAsignados: true
             }),
             // Prestaciones
             this.servicioPrestacion.get({
