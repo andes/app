@@ -1,0 +1,25 @@
+<style>
+    .probando {
+        background-color: red;
+    }
+
+</style>
+
+<table class="mapa-espacios">
+    <tr class="header">
+        <td *ngFor="let h of headers" [colSpan]="h.colspan">
+            <span>{{h.text}}</span>
+        </td>
+    </tr>
+
+    <tr *ngFor="let espacio of matrix" class="item">
+        <td class="item_name">
+            <span>{{espacio.name}}</span>
+        </td>
+        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'probando': agenda.id }" class="item_horario">
+            <span>&nbsp;</span>
+        </td>
+    </tr>
+
+
+</table>

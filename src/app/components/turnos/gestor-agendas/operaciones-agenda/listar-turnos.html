@@ -1,4 +1,4 @@
-<form *ngIf="showListarTurnos" class="plex-layout">
+<form *ngIf="showListarTurnos && autorizado" class="plex-layout">
     <div id="printpage">
         <section>
             <plex-box>
@@ -7,13 +7,18 @@
                     <div class="alert alert-default">
                         <div class="row">
                             <div class="col">
+                                <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
+                                'HH:mm'}} hs ({{ agenda.estado }})
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <label>Tipos de prestación</label>
                                 <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                             </div>
                             <div class="col-4">
-                                <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
-                                'HH:mm'}} hs
+
                             </div>
                         </div>
                         <div class="row">
@@ -21,22 +26,23 @@
                                 <label>Profesionales</label>
                                 <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                 <ng-container *ngIf="agenda.profesionales">
-                                    <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                                    <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
                                 </ng-container>
                             </div>
                             <div class="col-4">
-                                <!-- <i class="mdi mdi-printer mdi-36px"></i> -->
-                                <a class="btn btn-info" href="javascript: window.print()">Imprimir</a>
                             </div>
                         </div>
                         <div class="row">
-
+                            <div class="col">
+                                <hr>
+                                <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                                <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+                            </div>
                         </div>
                     </div>
                 </header>
                 <!--Listado de turnos-->
                 <!--Turnos-->
-                <!--class="table table-striped"-->
                 <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
                     <thead>
                         <tr>
@@ -74,13 +80,13 @@
                                     <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
                             </td>
-                            <td> </td>
+                            <td></td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
                                 <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1"><small><span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
                                 <span *ngIf="turno && turno.estado === 'disponible'"></span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                                <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
+                                <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.direccion?.length > 0 && turno?.paciente?.direccion[0]?.valor">
@@ -88,7 +94,7 @@
                                 </small>
                             </td>
                             <td>
-                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{paciente | sexo }}</small>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
                             </td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | edad }}</small>
@@ -98,29 +104,31 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <div class="badge">SI</div>
-                                <div class="badge">NO</div>
+                                <div *ngIf="turno?.paciente?.id" class="badge">SI</div>
+                                <div *ngIf="turno?.paciente?.id" class="badge">NO</div>
                             </td>
                             <td></td>
-
                         </tr>
                     </tbody>
                 </table>
                 <div class="row observaciones">
                     <div class="col-4">
-                        <label>Observación de la consulta</label> &nbsp;
+                        <label>Observación de la consulta</label>
+                        <br> &nbsp;
                         <hr> &nbsp;
                         <hr> &nbsp;
                         <hr>
                     </div>
                     <div class="col-4">
-                        <label>Observación de la consulta</label> &nbsp;
+                        <label>Observación de la consulta</label>
+                        <br> &nbsp;
                         <hr> &nbsp;
                         <hr> &nbsp;
                         <hr>
                     </div>
                     <div class="col-4">
-                        <label>15 - Utilizar para investigaciones locales</label> A:
+                        <label>15 - Utilizar para investigaciones locales</label>
+                        <br> A:
                         <hr> B:
                         <hr> C:
                         <hr>
@@ -139,6 +147,13 @@
             </plex-box>
         </section>
     </div>
+
+    <div class="row" *ngIf="!autorizado">
+        <div class="col">
+            No tiene permisos para ejecutar esta acción
+        </div>
+    </div>
+
     <!--Footer-->
     <footer>
         <div class="row">

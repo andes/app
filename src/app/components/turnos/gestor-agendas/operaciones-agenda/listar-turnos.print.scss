@@ -1,4 +1,7 @@
 @media print {
+    @page {
+        size: landscape;
+    }
     nav,
     footer,
     .btn {
@@ -11,6 +14,12 @@
         page-break-after: always;
     }
     th {
+        font-size: 0.7rem;
+    }
+    tr {
+        border-bottom: 2px solid rgba(0, 0, 0, .15);
+    }
+    small {
         font-size: 0.7rem;
     }
     .content {

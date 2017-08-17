@@ -838,6 +838,8 @@ export class DarTurnosComponent implements OnInit {
                         }
                     }
                     this.actualizarCarpetaPaciente(this.paciente);
+                }, error => {
+                    console.log(error);
                 });
 
                 // Si cambió el teléfono lo actualizo en el MPI

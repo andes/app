@@ -1,0 +1,52 @@
+<!--Filtros-->
+<div class="row">
+    <div class="col-12">
+        <hr>
+        <h4>Mapa de espacios físicos</h4>
+    </div>
+</div>
+<div class="row">
+    <!-- <div class="col-3">
+        <plex-datetime type="date" name="fechaDesde" label="Desde" class="fechas">
+        </plex-datetime>
+    </div>
+    <div class="col-3">
+        <plex-datetime type="date" name="fechaHasta" label="Hasta">
+        </plex-datetime>
+    </div> -->
+
+    <div class="col-3">
+        <plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
+            (change)="validarTodo()">
+        </plex-select>
+    </div>
+    <div class="col-3">
+        <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
+            (change)="validarTodo()">
+        </plex-select>
+    </div>
+    <div class="col-3">
+        <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
+            [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
+        </plex-select>
+    </div>
+    <div class="col-1 text-right">
+        <label><!--Spacer-->&nbsp;</label>
+        <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+    </div>
+</div>
+<div class="row" *ngIf="mostrarMasOpciones">
+
+    <div class="col-4">
+        <plex-select [(ngModel)]="modelo.equipamiento" label="Equipamiento" name="modelo.equipamiento" (getData)="loadEquipamientos($event)"
+            [multiple]="true" labelField="term">
+        </plex-select>
+    </div>
+    <div class="col-4">
+        TODO
+    </div>
+    <div class="col-4">
+        TODO
+    </div>
+
+</div>

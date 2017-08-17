@@ -17,7 +17,10 @@
         (change)="validarSolapamientos('espacioFisico')">
     </plex-select>
 
-    <!-- Alerta -->
+
+    <filtros-mapa-espacio-fisico [agendaSeleccionada]="modelo"></filtros-mapa-espacio-fisico>
+
+    <!-- Alertas -->
     <div *ngIf="alertas.length > 0" class="alert alert-warning mt-3">
         <div *ngFor="let alert of alertas; let i=index">
             <i class="mdi mdi-alert-outline float-left mr-3"></i>{{alert}}
