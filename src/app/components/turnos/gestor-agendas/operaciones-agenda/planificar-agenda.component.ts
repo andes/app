@@ -789,10 +789,6 @@ export class PlanificarAgendaComponent implements OnInit {
                     bloque.restantesProfesional = bloque.reservadoProfesional;
                 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> turnosFix
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
@@ -812,10 +808,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-<<<<<<< HEAD
-                                // turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
-=======
->>>>>>> turnosFix
                                 turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
                                     if (bloque.turnos.length < bloque.cantidadTurnos) {

@@ -678,10 +678,6 @@ export class DarTurnosComponent implements OnInit {
             });
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> turnosFix
         if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
             let params = {
                 documento: this.paciente.documento,
