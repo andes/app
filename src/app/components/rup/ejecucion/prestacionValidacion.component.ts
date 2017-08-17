@@ -74,13 +74,14 @@ export class PrestacionValidacionComponent implements OnInit {
         let data: any;
         this.prestacion.ejecucion.registros.forEach(element => {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
-
             // buscamos las prestaciones solicitadas luego de la validacion
             this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionesSolicitadas => {
-
                 // buscamos si el registro ahora es un plan creado (luego que hemos validado)
                 let registroPlan = prestacionesSolicitadas.find(p => p.solicitud.tipoPrestacion.conceptId === element.concepto.conceptId);
-
+                if (element.valor.autocitado) {
+                    let autocitada = prestacionesSolicitadas.find(p => p.solicitud.tipoPrestacion.conceptId === element.valor.autocitado.prestacionSeleccion.conceptId);
+                    registroPlan = autocitada;
+                }
                 data = {
                     elementoRUP: elementoRUP,
                     concepto: element.concepto,
@@ -92,7 +93,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 };
 
                 this.registros.push(data);
-                // console.log(this.registros);
             });
 
         });
@@ -109,6 +109,20 @@ export class PrestacionValidacionComponent implements OnInit {
             } else {
                 // de los registros a
                 let planes = this.registros.filter(r => r.tipo === 'planes');
+                // Recorro los planes y al autocitado le cambio la key por la de solicitudPrestacion
+                planes.forEach(plan => {
+                    if (plan.elementoRUP.key === 'autocitado') {
+                        plan.concepto = plan.valor.autocitado.prestacionSeleccion;
+                        plan.valor = {
+                            solicitudPrestacion:
+                            {
+                                autocitado: true,
+                                motivo: plan.valor.autocitado.motivo,
+                                prestacionSeleccion: plan.valor.autocitado.prestacionSeleccion
+                            }
+                        };
+                    }
+                });
 
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
