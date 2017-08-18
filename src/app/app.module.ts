@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -211,6 +212,7 @@ import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionC
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
+import { RefiereDefaultComponent } from './components/rup/atomos/refiereDefault.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -243,7 +245,8 @@ import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/busc
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-
+// Autocitado
+import { AutocitadoComponent } from './components/rup/atomos/autocitado.component';
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -266,6 +269,7 @@ import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-creat
 
 export const RUP_ELEMENTS: any[] = [
     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
+    { component: AutocitadoComponent, key: 'AutocitadoComponent' },
     { component: Atomo, key: 'Atomo' },
     { component: BuscadorComponent, key: 'BuscadorComponent' },
     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
@@ -315,6 +319,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
+    { component: RefiereDefaultComponent, key: 'RefiereDefaultComponent' },
     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
     { component: ResumenComponent, key: 'ResumenComponent' },
     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
@@ -351,6 +356,7 @@ export const RUP_ELEMENTS: any[] = [
 const RUP_COMPONENTS = [
     ActitudAnteLosCuidadosComponent,
     Atomo,
+    AutocitadoComponent,
     BuscadorComponent,
     ConsultaMedicinaGeneralComponent,
     ControlDeEsfinteresComponent,
@@ -399,6 +405,7 @@ const RUP_COMPONENTS = [
     PruebaOtoemisionesAcusticasComponent,
     PuntoInicioComponent,
     RadiografiaComponent,
+    RefiereDefaultComponent,
     RegistrosVisitasComponent,
     ResumenComponent,
     SangreOcultaMateriaFecalComponent,
@@ -467,7 +474,7 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
+        AuditoriaComponent,
         // AuditoriaPorBloqueComponent, 
         Auditoria2Component,
         ...RUP_COMPONENTS,
