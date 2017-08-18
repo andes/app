@@ -84,6 +84,65 @@ export class PrestacionPacienteService {
 
     }
 
+
+    findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
+        return this.findValuesHelper(obj, key, []);
+    }
+
+    findValuesHelper(obj, key, list) {
+        let i;
+        let children;
+        if (!obj) {
+            return list;
+        }
+        if (obj instanceof Array) {
+            for (i in obj) {
+                if (obj[i]) {
+                    list = list.concat(this.findValuesHelper(obj[i], key, []));
+                }
+            }
+            return list;
+        }
+        if (obj[key]) {
+            list.push(obj[key]);
+        }
+
+        if ((typeof obj === 'object') && (obj !== null)) {
+            children = Object.keys(obj);
+            if (children.length > 0) {
+                for (i = 0; i < children.length; i++) {
+                    list = list.concat(this.findValuesHelper(obj[children[i]], key, []));
+                }
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * Metodo getByPacienteKey 
+     * @param {String} idPaciente
+     */
+    getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                    registros = [...registros, ...prestacion.ejecucion.registros];
+
+                }
+            });
+            debugger;
+            let registroSalida = [];
+            let registroEncontrado = this.findValues(registros, key);
+            if (registroEncontrado && registroEncontrado.length > 0) {
+                return registroEncontrado[0];
+            }
+            return null;
+        });
+    }
+
     /**
      * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente

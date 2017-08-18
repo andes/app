@@ -1,0 +1,39 @@
+<div *ngIf="!soloValores">
+    <div class="row" *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id">
+        <ng-container *ngFor="let tp of elementoRUP.requeridos">
+            <div class="col-6" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
+                <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[elementoRUP.key][tp.key] ? datosIngreso[elementoRUP.key][tp.key] : null">
+                </rup>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <plex-float label="{{elementoRUP.nombre}}" [(ngModel)]="data[elementoRUP.key]['imc']" required="true" name="imc" (keyup)="devolverValores()">
+            </plex-float>
+        </div>
+    </div>
+
+    <p *ngIf="mensaje && mensaje.texto">
+        <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+    </p>
+</div>
+<ng-container *ngIf="soloValores">
+    <ng-container *ngFor="let tp of elementoRUP.requeridos">
+        <div class="row">
+            <div class="col">
+                <b>{{ tp.nombre }}: </b> {{data[elementoRUP.key][tp.key]}}
+            </div>
+        </div>
+
+    </ng-container>
+    <div class="row">
+        <div class="col">
+            <b>{{ elementoRUP.nombre }}: </b> {{data[elementoRUP.key]['imc']}}
+        </div>
+    </div>
+
+</ng-container>
