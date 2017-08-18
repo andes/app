@@ -7,7 +7,6 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Router } from '@angular/router';
-
 @Component({
     selector: 'panel-agenda',
     templateUrl: 'panel-agenda.html'
@@ -17,6 +16,7 @@ export class PanelAgendaComponent implements OnInit {
 
     showEditarAgenda: Boolean = false;
 
+    private subscriptionID = null;
     private _editarAgendaPanel: any;
     @Input('editaAgendaPanel')
     set editaAgendaPanel(value: any) {
@@ -37,13 +37,19 @@ export class PanelAgendaComponent implements OnInit {
 
     public alertas: any[] = [];
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public servicioProfesional: ProfesionalService,
-        public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService, public router: Router, public auth: Auth) {
+    private espaciosList = [];
+
+    constructor(
+        public plex: Plex,
+        public serviceAgenda: AgendaService,
+        public servicioProfesional: ProfesionalService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public OrganizacionService: OrganizacionService,
+        public router: Router,
+        public auth: Auth) {
     }
 
     ngOnInit() {
-        // console.log('this.editaAgendaPanel: ', this.editaAgendaPanel);
-        console.log('this.modelo: ', this.modelo);
     }
 
     guardarAgenda(agenda: IAgenda) {
@@ -143,12 +149,36 @@ export class PanelAgendaComponent implements OnInit {
                 } else {
                     listaEspaciosFisicos = resultado;
                 }
+                this.espaciosList = listaEspaciosFisicos;
                 event.callback(listaEspaciosFisicos);
             });
         } else {
             event.callback(this.modelo.espacioFisico || []);
         }
 
+    }
+
+    espaciosChange(modelo) {
+        if (modelo.espacioFisico) {
+            let nombre = modelo.espacioFisico;
+            let query = {
+                nombre
+            };
+            if (this.subscriptionID) {
+                this.subscriptionID.unsubscribe();
+            }
+            this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                this.espaciosList = resultado;
+            });
+        } else {
+            this.espaciosList = [];
+        }
+    }
+
+    selectEspacio($data) {
+        console.log($data);
+        this.modelo.espacioFisico = $data;
+        this.validarSolapamientos('espacioFisico');
     }
 
     /**
