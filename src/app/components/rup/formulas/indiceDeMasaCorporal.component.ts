@@ -1,13 +1,14 @@
+import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import {
     Formula
-} from './../../core/formula.component';
+} from './../core/formula.component';
 import {
     Component,
     OnInit
 } from '@angular/core';
 import {
     ObservarDatosService
-} from '../../../../services/rup/observarDatos.service';
+} from '../../../services/rup/observarDatos.service';
 
 @Component({
     selector: 'rup-indice-de-masa-corporal',
@@ -16,16 +17,30 @@ import {
 export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
 
     ngOnInit() {
-        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
-        this.servicioObservarDatos.getDato$('peso').subscribe(
-            peso => {
-                this.calculoIMC();
+
+        let datoRecuperado;
+        this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
+        // vamos a recorrer los elementos requeridos para buscar 
+        // si existen datos en la huds del paciente
+        if (!this.datosIngreso) {
+            this.elementoRUP.requeridos.forEach(element => {
+                datoRecuperado = this.findValues(this.valoresPrestacionEjecucion, element.key);
+                if (datoRecuperado && datoRecuperado.length > 0) {
+                    this.data[this.elementoRUP.key][element.key] =
+                        ((typeof datoRecuperado[0] === 'string') ? datoRecuperado[0] : datoRecuperado[0][Object.keys(datoRecuperado[0])[0]]);
+                    this.datosIngreso = this.data;
+                    this.calculoIMC();
+                } else {
+                    this.servicioPrestacion.getByPacienteKey(this.paciente.id, element.key).subscribe(resultado => {
+                        this.data[this.elementoRUP.key][element.key] = resultado;
+                        this.datosIngreso = this.data;
+                        this.calculoIMC();
+                    });
+
+                }
             });
-        this.servicioObservarDatos.getDato$('talla').subscribe(
-            talla => {
-                this.calculoIMC();
-            });
-        this.calculoIMC();
+        }
+        //this.calculoIMC();
     }
 
 
@@ -73,13 +88,13 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
         let arrayDePeso: any;
         let arrayDeTalla: any;
         // Aca va el valor del peso si es que esta en ejecucion..
-        arrayDePeso = this.findValues(this.valoresPrestacionEjecucion, 'peso');
+        arrayDePeso = this.findValues(this.data[this.elementoRUP.key], 'peso');
         if (arrayDePeso.length > 0) {
             peso = arrayDePeso[0];
             prestacionPeso = true;
         }
         // Aca va el valor de la talla si es que esta en ejecucion..
-        arrayDeTalla = this.findValues(this.valoresPrestacionEjecucion, 'talla');
+        arrayDeTalla = this.findValues(this.data[this.elementoRUP.key], 'talla');
         if (arrayDeTalla.length > 0) {
             talla = arrayDeTalla[0];
             prestacionTalla = true;
@@ -94,18 +109,20 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
                     talla = talla / 100; // Paso a metros;
                     imc = peso / Math.pow(talla, 2);
                     this.mensaje.texto = '';
-                    this.data[this.elementoRUP.key] = imc.toFixed(2);
-                    this.evtData.emit(this.data);
+                    this.data[this.elementoRUP.key]['imc'] = Number(imc.toFixed(2));
+                    window.setTimeout(() => {
+                        this.evtData.emit(this.data);
+                    });
                     break;
-                    // Mostramos el  Alerta de talla
+                // Mostramos el  Alerta de talla
                 case (peso != null && talla == null):
                     this.mensaje.texto = 'Falta completar el campo talla';
                     break;
-                    // Mostramos alerta de peso.
+                // Mostramos alerta de peso.
                 case (talla != null && peso == null):
                     this.mensaje.texto = 'Falta completar el campo peso';
                     break;
-                    // Se muestra alerta de talla y de peso
+                // Se muestra alerta de talla y de peso
                 default:
                     this.mensaje.texto = 'Falta completar el campo talla y el campo peso';
                     break;
@@ -124,5 +141,19 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
             }
         }
     }
+
+
+    devolverValores(obj?: any, elementoRequerido?: any) {
+        debugger;
+        if (obj[elementoRequerido.key]) {
+            this.data[this.elementoRUP.key][elementoRequerido.key] = obj[elementoRequerido.key];
+            this.calculoIMC();
+        }
+
+        //this.evtData.emit(this.data);
+
+    }
+
+
 
 }
