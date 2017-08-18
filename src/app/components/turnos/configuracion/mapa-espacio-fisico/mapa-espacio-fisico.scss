@@ -1,7 +1,42 @@
 .mapa-espacios {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+    tr td:first-child {
+        width: 100px;
+    }
     td {
-        border: 1px solid black;
+        border: 1px solid #d0d0d0;
+    }
+    .ocupado {
+        background-color: rgb(60, 232, 60);
+    }
+    .libre {
+        background-color: white;
+    }
+    .disponible {
+        background-color: rgb(208, 246, 208);
+        ;
+    }
+    .item_name {
+        h3 {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        p {
+            margin: 0;
+        }
+    }
+    tr:hover {
+        cursor: pointer;
+        background-color: #C7BEBE;
+        td {
+            border: transparent;
+            background-color: #C7BEBE;
+            &.ocupado {
+                background-color: rgb(40, 147, 40);
+            }
+        }
     }
 }
