@@ -212,6 +212,7 @@ import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionC
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
+import { RefiereDefaultComponent } from './components/rup/atomos/refiereDefault.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -318,6 +319,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
+    { component: RefiereDefaultComponent, key: 'RefiereDefaultComponent' },
     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
     { component: ResumenComponent, key: 'ResumenComponent' },
     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
@@ -403,6 +405,7 @@ const RUP_COMPONENTS = [
     PruebaOtoemisionesAcusticasComponent,
     PuntoInicioComponent,
     RadiografiaComponent,
+    RefiereDefaultComponent,
     RegistrosVisitasComponent,
     ResumenComponent,
     SangreOcultaMateriaFecalComponent,
