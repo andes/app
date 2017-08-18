@@ -1,4 +1,5 @@
 
+
 /*
 @jgabriel | 04-03-2017
 
@@ -241,6 +242,7 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/prescripcionMedicamento.component';
 import { IndicacionProcedimientoComponent } from './components/rup/atomos/indicacionProcedimiento.component';
 import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/buscadorMedicamentoSnomed.component';
+import { DosisComponent } from './components/rup/atomos/dosis.component';
 
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
@@ -348,7 +350,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
     { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' },
     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
-    { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' }
+    { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
+    { component: DosisComponent, key: 'DosisComponent' },
 
 ];
 
@@ -434,7 +437,8 @@ const RUP_COMPONENTS = [
     ViviendaSostenEconomicoComponent,
     PrescripcionMedicamentoComponent,
     IndicacionProcedimientoComponent,
-    BuscadorMedicamentoSnomedComponent
+    BuscadorMedicamentoSnomedComponent,
+    DosisComponent
 ];
 
 // Locales
