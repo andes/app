@@ -19,12 +19,13 @@
         <!-- <plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
             (change)="validarTodo()">
         </plex-select> -->
-        <plex-text label="Espacio físico" [(ngModel)]="modelo.espacioFisico" (change)="nombreChange()"></plex-text>
+        <plex-text label="Espacio físico" [(ngModel)]="modelo.espacioFisico" (change)="inputChange()"></plex-text>
     </div>
     <div class="col-3">
-        <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
+        <!-- <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
             (change)="validarTodo()">
-        </plex-select>
+        </plex-select> -->
+        <plex-text label="Servicio" [(ngModel)]="modelo.servicio" (change)="inputChange()"></plex-text>
     </div>
     <div class="col-3">
         <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"

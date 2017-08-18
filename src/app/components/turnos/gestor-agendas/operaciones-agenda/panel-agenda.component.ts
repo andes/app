@@ -53,7 +53,6 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     guardarAgenda(agenda: IAgenda) {
-        debugger
         if (this.alertas.length === 0) {
 
             // Quitar cuando esté solucionado inconveniente de plex-select
@@ -80,7 +79,6 @@ export class PanelAgendaComponent implements OnInit {
             };
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                debugger
                 this.modelo = resultado;
                 this.showEditarAgenda = false;
                 this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
@@ -159,10 +157,13 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     espaciosChange(modelo) {
-        if (modelo.espacioFisico) {
+        if (modelo.espacioFisico || modelo.servicio) {
             let nombre = modelo.espacioFisico;
+            let servicio = modelo.servicio;
             let query = {
-                nombre
+                nombre,
+                servicio,
+                limit: 20
             };
             if (this.subscriptionID) {
                 this.subscriptionID.unsubscribe();
@@ -176,7 +177,6 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     selectEspacio($data) {
-        console.log($data);
         this.modelo.espacioFisico = $data;
         this.validarSolapamientos('espacioFisico');
     }

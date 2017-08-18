@@ -23,7 +23,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
     @Output() onEspacioClick = new EventEmitter<IEspacioFisico>();
 
-    @Input() agendasTable: IAgenda[] = null;
+    @Input() agendasTable: IAgenda[] = [];
 
     private start: any;
     private end: any;
@@ -35,7 +35,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
 
     private headers = [];
     private matrix: any;
-
+    private agendaCache: IAgenda = null;
     constructor(
         public plex: Plex,
         public servicioAgenda: AgendaService) { }
@@ -45,7 +45,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         this.refreshScreen();
     }
 
-    ngOnChanges() {
+    ngOnChanges(changes) {
         this.refreshScreen();
     }
 
@@ -66,7 +66,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         if (!this.opciones) {
             this.start = moment(this.agendaSeleccionada.horaInicio).startOf('hour').set('hour', 7);
             this.end = moment(this.agendaSeleccionada.horaFin).startOf('hour').set('hour', 20);
-            this.unit = '10';
+            this.unit = '15';
         } else {
             this.start = moment(this.opciones.start);
             this.end = moment(this.opciones.end);
@@ -75,26 +75,45 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         if (this.unit !== 'day') {
             this._unit = Number(this.unit);
         }
-        this.servicioAgenda.get({ fechaDesde: this.start, fechaHasta: this.end }).subscribe((agendas) => {
-            this.agendasTable = agendas;
+        if (this.agendaCache === null || moment(this.agendaCache.horaInicio).startOf('day').format() !== moment(this.agendaSeleccionada.horaInicio).startOf('day').format()) {
+            this.servicioAgenda.get({ fechaDesde: this.start, fechaHasta: this.end }).subscribe((agendas) => {
+                this.agendasTable = agendas;
+                this.calcHeaders();
+                this.generarTabla();
+            });
+            this.agendaCache = this.agendaSeleccionada;
+        } else {
             this.calcHeaders();
-            this.calcRows();
-            this.calcItems();
-        });
+            this.generarTabla();
+        }
     }
 
 
-    calcItems() {
+    generarTabla() {
+        let matrix = [];
+        if (this.espacioTable) {
+            this.espacioTable.forEach(espacio => {
+                matrix.push({
+                    id: espacio.id,
+                    name: espacio.nombre,
+                    descripcion: espacio.edificio.descripcion,
+                    _items: [],
+                    items: []
+                });
+            });
+        };
+
         this.agendasTable.forEach(agenda => {
             let start_time = moment(agenda.horaInicio);
             let end_time = moment(agenda.horaFin);
             if (start_time >= this._start && end_time <= this._end) {
                 if (agenda.espacioFisico) {
                     let _id = agenda.espacioFisico.id;
-                    let temp = this.matrix.find(item => item.id === _id);
+                    let temp = matrix.find(item => item.id === _id);
                     if (temp) {
                         temp.items.push({
                             id: agenda.id,
+                            espacioID: _id,
                             titulo: agenda.tipoPrestaciones[0].term,
                             descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
                             start: this.aproximar(start_time, false),
@@ -105,25 +124,25 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             }
         });
 
-        this.matrix.forEach(espacio => {
+        matrix.forEach(espacio => {
             espacio.items.sort((a, b) => a.start.diff(b.start));
 
             let temp = this._start.clone();
             espacio.items.forEach(item => {
-
-                this.iterarLibres(espacio._items, temp, item.start);
-
+                espacio._items.push(...this.iterarLibres(temp, item.start));
                 item.colspan = this.calcFrame(item.start, item.end);
                 espacio._items.push(item);
 
                 temp = item.end.clone();
             });
-            this.iterarLibres(espacio._items, temp, this._end);
+            espacio._items.push(...this.iterarLibres(temp, this._end));
 
         });
-    }
+        this.matrix = matrix;
+    };
 
-    iterarLibres(items, start, end) {
+    iterarLibres(start, end) {
+        let items = [];
         let ini = this.aproximar(moment(this.agendaSeleccionada.horaInicio), false);
         let fin = this.aproximar(moment(this.agendaSeleccionada.horaFin), true);
         let span = this.calcFrame(start, end);
@@ -136,25 +155,8 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             it.disponible = it.time >= ini && it.time.add(unit, 'minutes') <= fin;
             items.push(it);
         }
+        return items;
     }
-
-    calcRows() {
-        let matrix = [];
-        if (this.espacioTable) {
-            this.espacioTable.forEach(espacio => {
-                matrix.push({
-                    id: espacio.id,
-                    name: espacio.nombre,
-                    descripcion: espacio.edificio.descripcion,
-                    _items: [],
-                    items: []
-                });
-            });
-        }
-        this.matrix = matrix;
-    }
-
-
 
     calcHeaders() {
         let headers = [];
@@ -204,10 +206,74 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     onClick(espacio) {
-        this.onEspacioClick.emit(this.espacioTable.find(item => item.id === espacio.id));
+        // this.onEspacioClick.emit(this.espacioTable.find(item => item.id === espacio.id));
+        console.log('entro');
+        this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+        this.addItem(this.agendaSeleccionada, espacio);
+    }
+
+    onItemClick(agenda) {
+        // this.removeItem(agenda);
     }
 
 
+    addItem(agenda, espacio) {
+        let start_time = moment(agenda.horaInicio);
+        let end_time = moment(agenda.horaFin);
+        let item = {
+            id: agenda.id,
+            espacioID: agenda.espacioFisico.id,
+            titulo: agenda.tipoPrestaciones[0].term,
+            descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
+            start: this.aproximar(start_time, false),
+            end: this.aproximar(end_time, true)
+        };
+
+        let span = this.calcFrame(item.start, item.end);
+        (item as any).colspan = span;
+        let index = espacio._items.findIndex(el => {
+            return el.time >= item.start;
+        });
+
+        let count = 0;
+        for (let i = 0; i < span && i + index < espacio._items.length; i++) {
+            if (espacio._items[index + i].disponible) {
+                count++;
+            }
+        }
+        console.log(count);
+        if (span === count) {
+            let first = espacio._items.slice(0, index);
+            let second = espacio._items.slice(index + span);
+
+            espacio._items = [...first, item, ...second];
+            this.matrix = [...this.matrix];
+            this.agendaSeleccionada.espacioFisico.id = espacio.id;
+        }
+    }
+
+    removeItem(agenda: any, row?: any) {
+        if (row) {
+            let i = row._items.findIndex(item => item.id === agenda.id);
+            if (i >= 0) {
+                let item = row._items[i];
+
+                // split array in two
+                let first = row._items.slice(0, i);
+                let second = row._items.slice(i + 1);
+
+                let middle = this.iterarLibres(item.start, item.end);
+                row._items = [...first, ...middle, ...second];
+                this.matrix = [...this.matrix];
+
+            }
+        } else {
+            let r = this.matrix.find(item => item.id === agenda.espacioID);
+            if (r) {
+                return this.removeItem(agenda, r);
+            }
+        }
+    }
 
 
 }

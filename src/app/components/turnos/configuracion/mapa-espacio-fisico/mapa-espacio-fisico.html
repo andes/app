@@ -12,9 +12,9 @@
             <p>
                 {{espacio.descripcion}} </p>
         </td>
-        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible }"
+        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible, 'selected': agenda.id === agendaSeleccionada.id  }"
             class="item_horario">
-            <div *ngIf="agenda.id"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
+            <div *ngIf="agenda.id" (click)="onItemClick(agenda)"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
             <div *ngIf="!agenda.id">&nbsp;</div>
         </td>
     </tr>
