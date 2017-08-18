@@ -46,9 +46,10 @@
                         </ng-container>
 
                         <!-- Listado de agendas -->
+
                         <ng-container *ngIf="agendas.length">
                             <ng-container *ngFor="let agenda of agendas; let i=index">
-                                <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}" (click)="cargarTurnos(this.agenda)" *ngIf="getCantidadPacientes(agenda)">
+                                <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}" (click)="cargarTurnos(this.agenda)" *ngIf="agenda.estado === 'disponible' || getCantidadPacientes(agenda)">
 
                                     <td>
                                         <div>{{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
@@ -69,10 +70,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge-info float-right">pacientes
-                                        {{getCantidadPacientes(agenda)}} /
-                                        {{agenda.cantidadTurnos}}
-                                    </span>
+                                        <ng-container *ngIf="agenda.estado !== 'disponible'">
+                                            <span class="badge-info float-right">pacientes
+                                            {{getCantidadPacientes(agenda)}} /
+                                            {{agenda.cantidadTurnos}}
+                                            </span>
+                                        </ng-container>
                                     </td>
                                 </tr>
                             </ng-container>
@@ -126,6 +129,8 @@
                         </thead>
                         <tbody>
                             <ng-container *ngFor="let turno of bloque.turnos; let i=index">
+
+
                                 <tr *ngIf="turno" class="hover">
                                     <td>
                                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -163,6 +168,15 @@
                                             </span>
                                         </div>
                                     </td>
+                                    <td>
+                                        <!-- <div *ngIf="turno.prestacion.turnosPedientes">
+                                        {{turno.prestacion.turnosPedientes}}
+                                        </div> -->
+                                        <span *ngIf="turno.prestacion?.turnosPedientes" class="d-inline badge badge-warning">
+                                            Turnos autocitados sin dar
+                                        </span>
+                                    </td>
+
 
                                     <td class="text-right">
                                         <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
@@ -200,6 +214,8 @@
                                     </span>
                                 </td>
                                 <td>
+
+
                                     <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente  | paciente }} </span>
                                     <small>
                                         <span *ngIf="prestacion && prestacion.paciente">
@@ -214,6 +230,11 @@
                                 <td>
                                     <!-- <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div> -->
+                                </td>
+                                <td>
+                                    <span *ngIf="prestacion.turnosPedientes" class="d-inline badge badge-warning">
+                                        Turnos autocitados sin dar
+                                    </span>
                                 </td>
                                 <td>
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)" label="Ver registros" type="primary btn-sm">

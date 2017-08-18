@@ -136,13 +136,14 @@
                             <small><span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span></small>
                             <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta 
                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
-                        <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
-                        <span class="text-danger" *ngIf="turno.tipoTurno === 'gestion'">(con llave)</span>
-                        <span class="text-danger" *ngIf="turno.tipoTurno === 'programado'">(programado)</span>
-                        <span class="text-danger" *ngIf="turno.tipoTurno === 'delDia'">(del día)</span>
-                        
                         </span></small>
-                            <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1"><small><span *ngIf="bloque.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
+                            <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
+                            <span class="text-danger" *ngIf="turno.tipoTurno === 'gestion'">(con llave)</span>
+                            <span class="text-danger" *ngIf="turno.tipoTurno === 'programado'">(programado)</span>
+                            <span class="text-danger" *ngIf="turno.tipoTurno === 'delDia'">(del día)</span>
+
+                            <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">
+                            <small><span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</span></small>
                             <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
                             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</span>
                             <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'">Turno suspendido (sin paciente)</span>
