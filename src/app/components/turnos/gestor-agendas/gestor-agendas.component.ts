@@ -80,6 +80,7 @@ export class GestorAgendasComponent implements OnInit {
     public espacioFisico: any = [];
     public estado: any = [];
     public parametros;
+    public btnDarTurnos = false;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -94,10 +95,17 @@ export class GestorAgendasComponent implements OnInit {
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
-        public auth: Auth) { }
+        public auth: Auth) {}
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
+
+        if (!this.autorizado) {
+            // Si no está autorizado redirect al home
+            this.redirect('inicio');
+        };
+
+        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',
@@ -107,46 +115,26 @@ export class GestorAgendasComponent implements OnInit {
             espacioFisico: '',
             estado: ''
         };
-        // No está autorizado para ver esta pantalla?
-        if (!this.autorizado) {
-            this.redirect('inicio');
-        } else {
 
-            this.items = [{
-                label: 'Inicio',
-                route: '/inicio'
-            },
-            {
-                label: 'MPI',
-                route: '/'
-            },
-            {
-                label: 'Agendas',
-                route: '/gestor_agendas'
-            }
-            ];
 
-            // Por defecto cargar/mostrar agendas de hoy
-            this.hoy = true;
-            this.loadAgendas();
+        // Por defecto cargar/mostrar agendas de hoy
+        this.hoy = true;
+        this.loadAgendas();
 
-            this.fechaDesde = new Date();
-            this.fechaHasta = new Date();
-            this.fechaDesde = moment(this.fechaDesde).startOf('day');
-            this.fechaHasta = moment(this.fechaHasta).startOf('day');
-            // Iniciamos la búsqueda
-            this.parametros = {
-                    fechaDesde: this.fechaDesde,
-                    fechaHasta: this.fechaHasta,
-                    organizacion: this.auth.organizacion._id
-                };
-
-        }
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
+        this.fechaDesde = moment(this.fechaDesde).startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).startOf('day');
+        // Iniciamos la búsqueda
+        this.parametros = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id
+        };
 
     }
 
     refreshSelection(value, tipo) {
-        debugger;
         if (tipo === 'fecha') {
             let fechaDesde = moment(value).startOf('day');
             let fechaHasta = moment(value).endOf('day');
@@ -161,28 +149,27 @@ export class GestorAgendasComponent implements OnInit {
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
                 this.parametros['idTipoPrestacion'] = value.value.id;
-            }
-            else {
+            } else {
                 this.parametros['idTipoPrestacion'] = '';
             }
         }
         if (tipo === 'profesionales') {
             if (value.value !== null) {
-            this.parametros['idProfesional'] = value.value.id;
+                this.parametros['idProfesional'] = value.value.id;
             } else {
                 this.parametros['idProfesional'] = '';
             }
         }
         if (tipo === 'espacioFisico') {
             if (value.value !== null) {
-            this.parametros['espacioFisico'] = value.value.id;
+                this.parametros['espacioFisico'] = value.value.id;
             } else {
                 this.parametros['espacioFisico'] = '';
             }
         }
         if (tipo === 'estado') {
             if (value.value !== null) {
-            this.parametros['estado'] = value.value.id;
+                this.parametros['estado'] = value.value.id;
             } else {
                 this.parametros['estado'] = '';
             }
