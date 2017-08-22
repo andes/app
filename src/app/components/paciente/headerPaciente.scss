@@ -18,14 +18,12 @@
     }
     // Popover con detalles de paciente
     .popover {
-        visibility: hidden;
+        display: none;
+        margin-top: 18%;
+        cursor: default;
+        font-size: 1em;
     }
     &:hover .popover {
         display: block;
-        margin-top: 18%;
-        cursor: default;
-        visibility: visible;
-        font-size: 1em;
-        transition: visibility 0.2s ease 0.1s;
     }
 }

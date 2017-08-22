@@ -76,7 +76,7 @@ export class PrestacionValidacionComponent implements OnInit {
             let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
 
             // buscamos las prestaciones solicitadas luego de la validacion
-            this.servicioPrestacion.get({idPrestacionOrigen: this.prestacion.id}).subscribe(prestacionesSolicitadas => {
+            this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionesSolicitadas => {
 
                 // buscamos si el registro ahora es un plan creado (luego que hemos validado)
                 let registroPlan = prestacionesSolicitadas.find(p => p.solicitud.tipoPrestacion.conceptId === element.concepto.conceptId);
@@ -88,11 +88,11 @@ export class PrestacionValidacionComponent implements OnInit {
                     tipo: element.tipo,
                     destacado: element.destacado ? element.destacado : false,
                     relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null,
-                    ...(registroPlan) && {prestacionPlan: registroPlan}
+                    ...(registroPlan) && { prestacionPlan: registroPlan }
                 };
 
                 this.registros.push(data);
-                console.log(this.registros);
+                // console.log(this.registros);
             });
 
         });

@@ -49,7 +49,7 @@
 }
 
 .rup-card .rup-content .header .actions {
-    float: right!important;
+    float: right !important;
 }
 
 .rup-card .rup-content .rup-footer {
@@ -349,14 +349,6 @@ fieldset[disabled] .btn-procedimientos.active {
 .borde-prestaciones input,
 .borde-prestaciones input:focus {
     border-color: $dark-blue;
-}
-
-.buscador {
-    margin-top: 5px;
-}
-
-.buscador input {
-    border-width: 2px;
 }
 
 .borde-prestaciones input,

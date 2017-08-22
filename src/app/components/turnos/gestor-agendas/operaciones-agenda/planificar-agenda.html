@@ -34,7 +34,7 @@
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                                [multiple]="true" labelField="apellido+' '+nombre" (change)="validarTodo()">
+                                [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
                             </plex-select>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                                         (change)="validarTodo()">
                                     </plex-select>-->
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
-                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + ' (' + edificio.descripcion + ')'"
                                         (change)="validarTodo()">
                                     </plex-select>
                                 </div>

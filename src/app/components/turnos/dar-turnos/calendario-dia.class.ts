@@ -27,16 +27,15 @@ export class CalendarioDia {
             if (disponible) {
                 let countBloques = [];
 
-                // Si la agenda es de hoy, los turnos deberán sumarse  al contador "delDia"
+                // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
                 if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
 
-                    // recorro los bloques y cuento  los turnos como 'del dia', luego descuento los ya asignados
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
                         countBloques.push({
-                            delDia: bloque.restantesDelDia + bloque.restantesProgramados + bloque.restantesGestion + bloque.restantesProfesional,
+                            delDia: bloque.restantesDelDia + bloque.restantesProgramados,
                             programado: 0,
-                            gestion: 0,
-                            profesional: 0
+                            gestion: bloque.restantesGestion,
+                            profesional: bloque.restantesProfesional
                         });
 
                         bloque.turnos.forEach((turno) => {
@@ -67,7 +66,7 @@ export class CalendarioDia {
                         this.gestionDisponibles += bloque.restantesGestion;
                         this.profesionalDisponibles += bloque.restantesProfesional;
 
-                        if (this.agenda.estado === 'disponible') {
+                        if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
                             if (solicitudPrestacion) {
                                 if (this.gestionDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false) {
                                     this.estado = 'disponible';
@@ -79,8 +78,7 @@ export class CalendarioDia {
                                     this.turnosDisponibles = 0;
                                 }
                             } else {
-                                // Turnos de gestión, pero sin solicitud
-                                if (this.gestionDisponibles > 0) {
+                                if (this.programadosDisponibles > 0) {
                                     this.estado = 'disponible';
                                 } else {
                                     this.estado = 'vacio';
@@ -88,14 +86,14 @@ export class CalendarioDia {
                             }
                         }
 
-                        if (this.agenda.estado === 'publicada' && !solicitudPrestacion) {
-                            this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
-                        }
+                        // if (this.agenda.estado === 'publicada' && !solicitudPrestacion) {
+                        //     this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
+                        // }
 
                     });
 
                     if (disponible) {
-                        this.turnosDisponibles = this.turnosDisponibles + this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
+                        this.turnosDisponibles += this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
                     }
                 }
             } else {

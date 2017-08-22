@@ -215,7 +215,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.loadEspaciosFisicos(this.modelo.espacioFisico);
                 break;
             case 'nuevo':
-                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null };
+                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null };
                 break;
         }
 
@@ -775,11 +775,22 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-                bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                bloque.restantesGestion = bloque.reservadoGestion;
-                bloque.restantesProfesional = bloque.reservadoProfesional;
 
+                if (bloque.pacienteSimultaneos) {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+                    bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+                    bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+
+                } else {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                    bloque.restantesGestion = bloque.reservadoGestion;
+                    bloque.restantesProfesional = bloque.reservadoProfesional;
+                }
+
+                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
                     let turno = {
@@ -797,9 +808,11 @@ export class PlanificarAgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
+                                turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                    bloque.turnos.push(turno);
+                                    if (bloque.turnos.length < bloque.cantidadTurnos) {
+                                        bloque.turnos.push(turno);
+                                    }
                                 }
                             }
                         } else {
@@ -808,8 +821,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         }
                     }
                 }
-                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
                     return el.activo === true && delete el.$order;
                 });

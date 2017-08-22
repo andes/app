@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 export class AppMobileService {
 
     // URL to web api
-    private mobileUrl = '/modules/turnosmobile/';
+    private mobileUrl = '/modules/mobileApp/';
 
     constructor(private server: Server) { }
 

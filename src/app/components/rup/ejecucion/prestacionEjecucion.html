@@ -2,7 +2,7 @@
 <header *ngIf="prestacion">
     <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="prestacion.paciente"></header-paciente>
 </header>
-<form class="plex-layout" #form="ngForm">
+<form class="plex-layout" #form="ngForm" *ngIf="!showCambioPaciente">
     <!-- Sección principal -->
     <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && elementoRUPprestacion">
         <div class="row">
@@ -46,7 +46,7 @@
                         </p>
                     </div>
 
-                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto && showDatosSolicitud">
+                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
                         <p>
                             Arrastre aquí para vincularlos a esta consulta
                         </p>
@@ -57,7 +57,6 @@
 
                             <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && elementoOnDrag !== elemento.concepto.conceptId && registros && registros.length > 1">
                                 Mover a esta posición
-
                             </div>
 
 
