@@ -88,8 +88,19 @@ export class ElementosRupService {
         let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
         if (tipo === 'problemas') {
-            elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            elementoRUP = listaElementosRup.find(elemento => {
+                return elemento.conceptos.find(concepto =>
+                    concepto.conceptId === conceptoSnomed.conceptId
+                );
+            });
+
+            // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
+            if (!elementoRUP) {
+                elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            }
             return elementoRUP;
+            // elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            // return elementoRUP;
         } else {
             if (tipo === 'procedimientos') {
                 // si es un procedimiento buscamos su propia forma de evolucionar
