@@ -116,38 +116,6 @@ export class GestorAgendasComponent implements OnInit {
             estado: ''
         };
 
-<<<<<<< HEAD
-=======
-            this.items = [{
-                label: 'Inicio',
-                route: '/inicio'
-            },
-            {
-                label: 'MPI',
-                route: '/'
-            },
-            {
-                label: 'Agendas',
-                route: '/gestor_agendas'
-            }
-            ];
-
-            // Por defecto cargar/mostrar agendas de hoy
-            this.hoy = true;
-            this.loadAgendas();
-
-            this.fechaDesde = new Date();
-            this.fechaHasta = new Date();
-            this.fechaDesde = moment(this.fechaDesde).startOf('day');
-            this.fechaHasta = moment(this.fechaHasta).startOf('day');
-            // Iniciamos la búsqueda
-            this.parametros = {
-                fechaDesde: this.fechaDesde,
-                fechaHasta: this.fechaHasta,
-                organizacion: this.auth.organizacion._id
-            };
->>>>>>> 7b2b994b9fa5f4c42a22c60f9bb1b8636404aa97
-
         // Por defecto cargar/mostrar agendas de hoy
         this.hoy = true;
         this.loadAgendas();
