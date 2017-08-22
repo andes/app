@@ -1,5 +1,5 @@
 <form class="plex-layout" #form="ngForm">
-    <section *ngIf="autorizado && showGestorAgendas">
+    <section *ngIf="showGestorAgendas">
         <div class="row">
             <!--Panel de Agendas-->
             <div class="col">
@@ -138,19 +138,19 @@
     </section>
 
     <!--Footer-->
-    <footer *ngIf="autorizado && showGestorAgendas">
+    <footer *ngIf="showGestorAgendas">
         <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
-        <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
+        <plex-button *ngIf="btnDarTurnos" type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
     </footer>
 
     <!--Componentes-->
-    <clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-    <dar-turnos *ngIf="autorizado && showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
-    <sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
+    <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
+    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
+    <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
-    <planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-    <planificar-agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-    <revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
+    <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
+    <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
+    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
         (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
     <!-- Pantalla Reasignar Turnos -->
@@ -158,5 +158,5 @@
         class="plex-layout"></reasignar-turno>
     <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
     <!-- Listado e Impresion de Agendas -->
-    <listar-turnos *ngIf="autorizado && showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
+    <listar-turnos *ngIf="showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
 </form>
