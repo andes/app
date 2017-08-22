@@ -146,7 +146,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-        debugger;
         if (tipo === 'fecha') {
             let fechaDesde = moment(value).startOf('day');
             let fechaHasta = moment(value).endOf('day');
@@ -161,8 +160,7 @@ export class GestorAgendasComponent implements OnInit {
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
                 this.parametros['idTipoPrestacion'] = value.value.id;
-            }
-            else {
+            } else {
                 this.parametros['idTipoPrestacion'] = '';
             }
         }

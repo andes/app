@@ -1,21 +1,27 @@
-<table class="mapa-espacios">
+<table class="mapa-espacios table table-striped">
     <tr class="header">
-        <td class=""> Espacio Fisico </td>
+        <td>Espacio Físico</td>
         <td *ngFor="let h of headers" [colSpan]="h.colspan">
             <span>{{h.text}}</span>
         </td>
     </tr>
 
-    <tr *ngFor="let espacio of matrix" class="item" (click)=onClick(espacio)>
-        <td class="item_name">
-            <b>{{espacio.nombre}} </b>
-            <small *ngIf="espacio.sector">{{espacio.sector.nombre}}</small>
-            <small>Edificio {{espacio.edificio.descripcion}}</small>
+    <tr *ngFor="let espacio of matrix" class="item" (click)=onRowClick(espacio)>
+        <td>
+            <b>{{espacio._value.nombre}} </b>
+            <small *ngIf="espacio.sector">{{espacio._value.sector.nombre}}</small>
+            <small>{{espacio._value.servicio.nombre}} </small>
+            <small>{{espacio._value.edificio.descripcion}} </small>
+            <div *ngFor="let eq of espacio._value.equipamiento">
+                <span class="badge badge-info">{{eq.term}}</span>
+            </div>
         </td>
-        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible }"
-            class="item_horario">
-            <div *ngIf="agenda.id"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
-            <div *ngIf="!agenda.id">&nbsp;</div>
+        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible, 'selected': agenda.id === agendaSeleccionada.id  }"
+            class="text-white">
+            <div class="ml-2 mr-2" *ngIf="agenda.id" (click)="onItemClick(agenda)">
+                <small>{{agenda.titulo}}</small> <br>
+                <small *ngIf="agenda.profesionales?.length > 0">{{agenda.profesionales | enumerar:['apellido', 'nombre']}}</small>
+            </div>
         </td>
     </tr>
 

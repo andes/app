@@ -21,31 +21,10 @@
         </plex-select> -->
         <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
     </div>
-    <div class="col-3">
-        <plex-select [(ngModel)]="agenda.tipoPrestaciones" name="agenda.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
-            (change)="validarTodo()">
-        </plex-select>
-    </div>
-    <div class="col-3">
-        <plex-select [(ngModel)]="agenda.profesionales" label="Profesionales" name="agenda.profesionales" (getData)="loadProfesionales($event)"
-            [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
-        </plex-select>
-    </div>
-    <div class="col-1 text-right">
-        <label><!--Spacer-->&nbsp;</label>
-        <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
-    </div>
-</div>
-<div class="row" *ngIf="mostrarMasOpciones">
 
     <div class="col-4">
         <plex-select [(ngModel)]="agenda.equipamiento" label="Equipamiento" name="agenda.equipamiento" (getData)="loadEquipamientos($event)"
-            [multiple]="true" labelField="term">
+            [multiple]="true" labelField="term" (change)="nombreChange()">
         </plex-select>
     </div>
-    <div class="col-4">
-    </div>
-    <div class="col-4">
-    </div>
-
 </div>

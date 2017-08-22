@@ -53,6 +53,9 @@ export class PanelAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.editarEspacioFisicoEmit.emit(true);
+        if (this.editaAgendaPanel.espacioFisico) {
+            this.espaciosList = [this.editaAgendaPanel.espacioFisico];
+        }
     }
 
     guardarAgenda(agenda: IAgenda) {
@@ -161,24 +164,32 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     espaciosChange(agenda) {
+        let query = {};
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
-            let query = {
-                nombre
+            query = {
+                nombre,
+                limit: 20
             };
-            if (this.subscriptionID) {
-                this.subscriptionID.unsubscribe();
-            }
-            this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                this.espaciosList = resultado;
-            });
+        } else if (agenda.equipamiento) {
+            let equipamiento = agenda.equipamiento;
+            query = {
+                equipamiento,
+                limit: 20
+            };
         } else {
             this.espaciosList = [];
         }
+
+        if (this.subscriptionID) {
+            this.subscriptionID.unsubscribe();
+        }
+        this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
+            this.espaciosList = resultado;
+        });
     }
 
     selectEspacio($data) {
-        console.log($data);
         this.agenda.espacioFisico = $data;
         this.validarSolapamientos('espacioFisico');
     }
