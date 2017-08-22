@@ -125,7 +125,6 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     }
 
     loadEquipamientos(event) {
-        let listaEquipamiento = [];
         if (event.query) {
             let query = {
                 equipamiento: event.query,
@@ -138,9 +137,8 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 });
 
                 if (this.agenda.equipamiento) {
-                    listaEquipamiento = this.agenda.equipamiento;
+                    event.callback(this.agenda.equipamiento);
                 }
-                event.callback(listaEquipamiento);
             });
         } else {
             event.callback(this.agenda.equipamiento || []);

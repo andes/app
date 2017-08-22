@@ -179,7 +179,8 @@ export class PanelAgendaComponent implements OnInit {
                 nombre,
                 limit: 20
             };
-        } else if (agenda.equipamiento) {
+        } else if (agenda.equipamiento && agenda.equipamiento.length > 0) {
+
             let equipamiento = agenda.equipamiento;
             query = {
                 equipamiento,
@@ -187,6 +188,7 @@ export class PanelAgendaComponent implements OnInit {
             };
         } else {
             this.espaciosList = [];
+            return;
         }
 
         if (this.subscriptionID) {
