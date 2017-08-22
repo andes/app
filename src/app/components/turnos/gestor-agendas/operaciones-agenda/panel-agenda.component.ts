@@ -50,6 +50,9 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (this.editaAgendaPanel.espacioFisico) {
+            this.espaciosList = [this.editaAgendaPanel.espacioFisico];
+        }
     }
 
     guardarAgenda(agenda: IAgenda) {

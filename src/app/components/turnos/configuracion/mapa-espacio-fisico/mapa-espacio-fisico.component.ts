@@ -95,8 +95,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             this.espacioTable.forEach(espacio => {
                 matrix.push({
                     id: espacio.id,
-                    name: espacio.nombre,
-                    descripcion: espacio.edificio.descripcion,
+                    _value: espacio,
                     _items: [],
                     items: []
                 });
@@ -117,7 +116,8 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                             titulo: agenda.tipoPrestaciones[0].term,
                             descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
                             start: this.aproximar(start_time, false),
-                            end: this.aproximar(end_time, true)
+                            end: this.aproximar(end_time, true),
+                            _value: agenda
                         });
                     }
                 }
@@ -205,11 +205,18 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         }
     }
 
-    onClick(espacio) {
-        // this.onEspacioClick.emit(this.espacioTable.find(item => item.id === espacio.id));
-        console.log('entro');
-        this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
-        this.addItem(this.agendaSeleccionada, espacio);
+    onRowClick(espacio) {
+        let item = this.makeItem(this.agendaSeleccionada, espacio.id);
+        let index = this.check(item, espacio);
+        if (index >= 0) {
+            if (this.agendaSeleccionada.espacioFisico) {
+                this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+            }
+            this.addItem(index, item, espacio);
+            this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
+        } else {
+            this.plex.toast('danger', 'El espacio físico esta ocupado.', '');
+        }
     }
 
     onItemClick(agenda) {
@@ -217,38 +224,49 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
 
-    addItem(agenda, espacio) {
+    makeItem(agenda, espacioID) {
         let start_time = moment(agenda.horaInicio);
         let end_time = moment(agenda.horaFin);
         let item = {
             id: agenda.id,
-            espacioID: agenda.espacioFisico.id,
+            espacioID: espacioID,
             titulo: agenda.tipoPrestaciones[0].term,
             descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
+            _value: agenda,
             start: this.aproximar(start_time, false),
             end: this.aproximar(end_time, true)
         };
 
         let span = this.calcFrame(item.start, item.end);
         (item as any).colspan = span;
+        return item;
+    }
+
+    check(item, espacio) {
         let index = espacio._items.findIndex(el => {
             return el.time >= item.start;
         });
 
         let count = 0;
-        for (let i = 0; i < span && i + index < espacio._items.length; i++) {
+        for (let i = 0; i < item.colspan && i + index < espacio._items.length; i++) {
             if (espacio._items[index + i].disponible) {
                 count++;
             }
         }
-        console.log(count);
-        if (span === count) {
-            let first = espacio._items.slice(0, index);
-            let second = espacio._items.slice(index + span);
+        return item.colspan === count ? index : -1;
+    }
 
-            espacio._items = [...first, item, ...second];
-            this.matrix = [...this.matrix];
-            this.agendaSeleccionada.espacioFisico.id = espacio.id;
+    addItem(index, item, espacio) {
+        let first = espacio._items.slice(0, index);
+        let second = espacio._items.slice(index + item.colspan);
+
+        espacio._items = [...first, item, ...second];
+        this.matrix = [...this.matrix];
+        this.agendaSeleccionada.espacioFisico = espacio._value;
+
+        let _ag = this.agendasTable.find(i => i.id === item.id);
+        if (_ag) {
+            _ag.espacioFisico = espacio._value;
         }
     }
 
@@ -256,6 +274,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         if (row) {
             let i = row._items.findIndex(item => item.id === agenda.id);
             if (i >= 0) {
+
                 let item = row._items[i];
 
                 // split array in two
@@ -265,6 +284,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                 let middle = this.iterarLibres(item.start, item.end);
                 row._items = [...first, ...middle, ...second];
                 this.matrix = [...this.matrix];
+
 
             }
         } else {
