@@ -1,3 +1,4 @@
+import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { LoginComponent } from './../../login/login.component';
 import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
@@ -327,13 +328,20 @@ export class DarTurnosComponent implements OnInit {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
             'profesional': this.opciones.profesional ? this.opciones.profesional : null
         };
-        if (this.busquedas.length === 4) {
+        if (this.busquedas.length === 10) {
             this.busquedas.shift();
         }
 
         if (search.tipoPrestacion || search.profesional) {
-            this.busquedas.push(search);
-            localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
+            let index = this.busquedas.findIndex(
+                item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
+                (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
+            );
+            console.log('index ', index);
+            if (index < 0) {
+                this.busquedas.push(search);
+                localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
+            }
         }
 
         this.actualizar('');
