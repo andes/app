@@ -133,7 +133,6 @@ export class PrestacionPacienteService {
 
                 }
             });
-            debugger;
             let registroSalida = [];
             let registroEncontrado = this.findValues(registros, key);
             if (registroEncontrado && registroEncontrado.length > 0) {

@@ -17,30 +17,30 @@ import {
 export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
 
     ngOnInit() {
-
         let datoRecuperado;
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
         // vamos a recorrer los elementos requeridos para buscar 
         // si existen datos en la huds del paciente
         if (!this.datosIngreso) {
+            this.datosIngreso = {};
             this.elementoRUP.requeridos.forEach(element => {
                 datoRecuperado = this.findValues(this.valoresPrestacionEjecucion, element.key);
                 if (datoRecuperado && datoRecuperado.length > 0) {
                     this.data[this.elementoRUP.key][element.key] =
                         ((typeof datoRecuperado[0] === 'string') ? datoRecuperado[0] : datoRecuperado[0][Object.keys(datoRecuperado[0])[0]]);
-                    this.datosIngreso = this.data;
+                    this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
                     this.calculoIMC();
                 } else {
                     this.servicioPrestacion.getByPacienteKey(this.paciente.id, element.key).subscribe(resultado => {
                         this.data[this.elementoRUP.key][element.key] = resultado;
-                        this.datosIngreso = this.data;
+                        this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
                         this.calculoIMC();
                     });
 
                 }
             });
         }
-        //this.calculoIMC();
+        // this.calculoIMC();
     }
 
 
@@ -130,13 +130,13 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
         } else {
             switch (true) {
                 case (prestacionTalla && !prestacionPeso):
-                    this.mensaje.texto = 'Agregar la prestacion de peso';
+                    this.mensaje.texto = 'Completar el campo peso';
                     break;
                 case (prestacionPeso && !prestacionTalla):
-                    this.mensaje.texto = 'Agregar la prestacion de talla';
+                    this.mensaje.texto = 'Completar el campo talla';
                     break;
                 default:
-                    this.mensaje.texto = 'Agregar prestacion talla y peso';
+                    this.mensaje.texto = 'Completar los campos talla y peso';
                     break;
             }
         }
