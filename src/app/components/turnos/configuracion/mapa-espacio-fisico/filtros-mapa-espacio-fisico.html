@@ -15,18 +15,19 @@
         </plex-datetime>
     </div> -->
 
+    <div class="col-4">
+        <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
+            (change)="validarTodo()">
+        </plex-select> -->
+        <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
+    </div>
     <div class="col-3">
-        <plex-select [(ngModel)]="modelo.espacioFisico" name="modelo.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
+        <plex-select [(ngModel)]="agenda.tipoPrestaciones" name="agenda.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
             (change)="validarTodo()">
         </plex-select>
     </div>
     <div class="col-3">
-        <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
-            (change)="validarTodo()">
-        </plex-select>
-    </div>
-    <div class="col-3">
-        <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
+        <plex-select [(ngModel)]="agenda.profesionales" label="Profesionales" name="agenda.profesionales" (getData)="loadProfesionales($event)"
             [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
         </plex-select>
     </div>
@@ -38,7 +39,7 @@
 <div class="row" *ngIf="mostrarMasOpciones">
 
     <div class="col-4">
-        <plex-select [(ngModel)]="modelo.equipamiento" label="Equipamiento" name="modelo.equipamiento" (getData)="loadEquipamientos($event)"
+        <plex-select [(ngModel)]="agenda.equipamiento" label="Equipamiento" name="agenda.equipamiento" (getData)="loadEquipamientos($event)"
             [multiple]="true" labelField="term">
         </plex-select>
     </div>

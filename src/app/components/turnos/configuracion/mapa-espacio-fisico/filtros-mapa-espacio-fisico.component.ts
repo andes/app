@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, Input } from '@angular/core';
+import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -19,8 +19,10 @@ import * as moment from 'moment';
 export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
+    @Output() onChange = new EventEmitter<any>();
     @Input() agendaSeleccionada: any = {};
 
+    private timeoutId = null;
     public showListadoTurnos = false;
     public fechaDesde: any;
     public fechaHasta: any;
@@ -29,6 +31,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     public hoy = false;
     public autorizado = false;
     public mostrarMasOpciones = false;
+    public espacioNombre = '';
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
@@ -37,6 +40,19 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+    }
+
+    nombreChange() {
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+        this.timeoutId = setTimeout(() => {
+            this.validarTodo();
+        }, 300);
+    }
+
+    validarTodo() {
+        this.onChange.emit(this.agenda);
     }
 
     loadTipoPrestaciones(event) {

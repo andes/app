@@ -1,23 +1,21 @@
-<style>
-    .probando {
-        background-color: red;
-    }
-
-</style>
-
 <table class="mapa-espacios">
     <tr class="header">
+        <td class=""> Espacio Fisico </td>
         <td *ngFor="let h of headers" [colSpan]="h.colspan">
             <span>{{h.text}}</span>
         </td>
     </tr>
 
-    <tr *ngFor="let espacio of matrix" class="item">
+    <tr *ngFor="let espacio of matrix" class="item" (click)=onClick(espacio)>
         <td class="item_name">
-            <span>{{espacio.name}}</span>
+            <b>{{espacio.nombre}} </b>
+            <small *ngIf="espacio.sector">{{espacio.sector.nombre}}</small>
+            <small>Edificio {{espacio.edificio.descripcion}}</small>
         </td>
-        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'probando': agenda.id }" class="item_horario">
-            <span>&nbsp;</span>
+        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible }"
+            class="item_horario">
+            <div *ngIf="agenda.id"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
+            <div *ngIf="!agenda.id">&nbsp;</div>
         </td>
     </tr>
 
