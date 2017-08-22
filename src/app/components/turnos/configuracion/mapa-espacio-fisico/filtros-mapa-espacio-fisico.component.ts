@@ -42,7 +42,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
-    nombreChange() {
+    inputChange() {
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }

@@ -6,15 +6,17 @@
         </td>
     </tr>
 
-    <tr *ngFor="let espacio of matrix" class="item" (click)=onClick(espacio)>
+    <tr *ngFor="let espacio of matrix" class="item" (click)=onRowClick(espacio)>
         <td class="item_name">
-            <h3>{{espacio.name}} </h3>
+            <h3>{{espacio._value.nombre}} </h3>
             <p>
-                {{espacio.descripcion}} </p>
+                {{espacio._value.servicio.nombre}} </p>
+            <p>
+                {{espacio._value.edificio.descripcion}} </p>
         </td>
-        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible }"
+        <td *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan" [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible, 'selected': agenda.id === agendaSeleccionada.id  }"
             class="item_horario">
-            <div *ngIf="agenda.id"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
+            <div *ngIf="agenda.id" (click)="onItemClick(agenda)"> {{agenda.titulo}} - {{agenda.descripcion}} </div>
             <div *ngIf="!agenda.id">&nbsp;</div>
         </td>
     </tr>
