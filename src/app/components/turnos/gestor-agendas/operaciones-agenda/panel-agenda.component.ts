@@ -27,9 +27,11 @@ export class PanelAgendaComponent implements OnInit {
         return this._editarAgendaPanel;
     }
 
-    @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
-    @Output() showVistaTurnos = new EventEmitter<Boolean>();
+    @Output() editarEspacioFisicoEmit = new EventEmitter<boolean>();
+
+    // Usados en tag <panel-agenda> en gestor-agendas.html
     @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
+    @Output() showVistaTurnosEmit = new EventEmitter<Boolean>();
 
     showEditarAgendaPanel: Boolean = true;
 
@@ -50,10 +52,10 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.editarEspacioFisicoEmit.emit(true);
     }
 
     guardarAgenda(agenda: IAgenda) {
-        debugger
         if (this.alertas.length === 0) {
 
             // Quitar cuando esté solucionado inconveniente de plex-select
@@ -80,7 +82,6 @@ export class PanelAgendaComponent implements OnInit {
             };
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                debugger
                 this.agenda = resultado;
                 this.showEditarAgenda = false;
                 this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
@@ -92,7 +93,8 @@ export class PanelAgendaComponent implements OnInit {
 
     cancelar() {
         this.showEditarAgendaPanel = false;
-        this.showVistaTurnos.emit(true);
+        this.showVistaTurnosEmit.emit(true);
+        this.editarEspacioFisicoEmit.emit(false);
     }
 
 

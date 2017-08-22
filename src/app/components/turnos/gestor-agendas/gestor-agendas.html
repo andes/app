@@ -119,7 +119,8 @@
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
-                        <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
+                        <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                            (editarEsapcioFisicoEmit)="true"></panel-agenda>
                     </div>
                     <!-- Muestra el panel de Notas de Agendas -->
                     <div *ngIf="showAgregarNotaAgenda">

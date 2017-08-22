@@ -46,7 +46,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        // this.refreshScreen();
+        this.refreshScreen();
     }
 
     aproximar(date, cotaInferior) {

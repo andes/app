@@ -136,10 +136,10 @@ export class GestorAgendasComponent implements OnInit {
             this.fechaHasta = moment(this.fechaHasta).startOf('day');
             // Iniciamos la búsqueda
             this.parametros = {
-                    fechaDesde: this.fechaDesde,
-                    fechaHasta: this.fechaHasta,
-                    organizacion: this.auth.organizacion._id
-                };
+                fechaDesde: this.fechaDesde,
+                fechaHasta: this.fechaHasta,
+                organizacion: this.auth.organizacion._id
+            };
 
         }
 
@@ -168,21 +168,21 @@ export class GestorAgendasComponent implements OnInit {
         }
         if (tipo === 'profesionales') {
             if (value.value !== null) {
-            this.parametros['idProfesional'] = value.value.id;
+                this.parametros['idProfesional'] = value.value.id;
             } else {
                 this.parametros['idProfesional'] = '';
             }
         }
         if (tipo === 'espacioFisico') {
             if (value.value !== null) {
-            this.parametros['espacioFisico'] = value.value.id;
+                this.parametros['espacioFisico'] = value.value.id;
             } else {
                 this.parametros['espacioFisico'] = '';
             }
         }
         if (tipo === 'estado') {
             if (value.value !== null) {
-            this.parametros['estado'] = value.value.id;
+                this.parametros['estado'] = value.value.id;
             } else {
                 this.parametros['estado'] = '';
             }
