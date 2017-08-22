@@ -52,6 +52,14 @@ export class PanelAgendaComponent implements OnInit {
     ngOnInit() {
         if (this.editaAgendaPanel.espacioFisico) {
             this.espaciosList = [this.editaAgendaPanel.espacioFisico];
+            let query = {
+                nombre: this.editaAgendaPanel.espacioFisico.servicio.nombre,
+                limit: 10
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                this.espaciosList = resultado;
+            });
         }
     }
 
