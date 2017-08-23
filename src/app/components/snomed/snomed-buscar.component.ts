@@ -185,13 +185,22 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 let apiMethod;
                 switch (this.tipoBusqueda) {
                     case 'problemas':
-                        apiMethod = this.SNOMED.getProblemas(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['hallazgo', 'trastorno']
+                        });
                         break;
                     case 'procedimientos':
-                        apiMethod = this.SNOMED.getProcedimientos(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['procedimiento', 'entidad observable']
+                        });
                         break;
                     case 'productos':
-                        apiMethod = this.SNOMED.getProductos(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['producto']
+                        });
                         break;
                     default:
                         apiMethod = this.SNOMED.get(query);
