@@ -181,11 +181,12 @@ export class PanelAgendaComponent implements OnInit {
             };
         } else if (agenda.equipamiento && agenda.equipamiento.length > 0) {
 
-            let equipamiento = agenda.equipamiento;
+            let equipamiento = agenda.equipamiento.map((item) => item.term);
             query = {
                 equipamiento,
                 limit: 20
             };
+
         } else {
             this.espaciosList = [];
             return;
