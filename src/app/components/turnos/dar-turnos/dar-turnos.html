@@ -32,7 +32,7 @@
                         </div>
                     </header>
                     <!--Calendario-->
-                    <app-calendario [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" [_solicitudPrestacion]="_solicitudPrestacion"
+                    <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT" [_solicitudPrestacion]="_solicitudPrestacion"
                         (agendaChanged)="seleccionarAgenda($event) "></app-calendario>
                 </plex-box>
             </div>
@@ -64,7 +64,7 @@
                         <plex-tab icon="list" label="Turnos">
                             <fieldset>
                                 <!--Ninguna agenda seleccionada-->
-                                <ng-container *ngIf="estadoT === 'noSeleccionada' || !_solicitudPrestacion?.solicitud">
+                                <ng-container *ngIf="estadoT === 'noSeleccionada' && !_solicitudPrestacion?.solicitud">
                                     <legend class=" pt-3 text-center ">Búsquedas recientes</legend>
                                     <ul class="list-group ">
                                         <li *ngFor="let busqueda of busquedas; let i=index " class="list-group-item hover
@@ -84,10 +84,10 @@
                                 <!--Agenda seleccionada-->
                                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' ">
                                     <!--Header agenda-->
-                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right ">{{ estadosAgenda[agenda.estado].nombre }}</span>
                                     <legend class="pt-3 text-center ">
                                         <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
-                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span>
+                                        <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} <span class="text-{{estadosAgenda[agenda.estado].class}}">({{ estadosAgenda[agenda.estado].nombre }})</span></span>
+
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                             {{ tipoPrestacion.nombre }}
@@ -134,7 +134,6 @@
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td><b>{{countBloques[indiceBq].gestion}}</b></td>
                                                             </ng-template>
-                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>{{countBloques[indiceBq].profesional}}</b></td> -->
                                                             <td>{{countBloques[indiceBq].profesional}}</td>
 
                                                         </tr>
@@ -171,6 +170,9 @@
                                     <!--No tiene turnos disponibles-->
                                     <div class="col" *ngIf="estadoT == 'noTurnos'">
                                         <div *ngIf="alternativas.length > 0" class="list-group">
+                                             <div class="row">
+                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa<br></div>
+                                            </div>
                                             <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: </label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
@@ -230,6 +232,7 @@
                                     <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
                                         name="turnoTipoPrestacion"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta" ></plex-text>
                                     <div class="text-right mt-3">
                                         <plex-button label="Volver" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
                                         <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
@@ -261,26 +264,13 @@
                 </plex-box>
             </div>
         </div>
-        <!-- <div class="row">
-            <div class="col col-sm-12" *ngIf="pacientesSearch">
-                <div class="panel panel-default">
-                    <div class="clear"></div>
-                    <pacientesSearch (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
-                </div>
-            </div> -->
-        <!--<div class="col col-sm-12" *ngIf="showCreateUpdate">
-                <div class="panel panel-default plex-layout">
-                    <div class="clear"></div>
-                    <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
-                </div>
-            </div>-->
-        <!-- </div> -->
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
         <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
-        <div class="float-right">
-            <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+        <div class="mt-4 float-right">
+            <plex-button label="Volver" type="info" (click)="volver()"></plex-button>
+            <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
         </div>
     </footer>
 </form>

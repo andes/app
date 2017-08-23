@@ -1,17 +1,44 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { ProfesionalService } from './../../../services/profesional.service';
-import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { IAgenda } from './../../../interfaces/turnos/IAgenda';
+import {
+    Component,
+    OnInit,
+    HostBinding,
+    NgModule
+} from '@angular/core';
+import {
+    FormBuilder,
+    FormGroup,
+    FormsModule
+} from '@angular/forms';
+import {
+    Router
+} from '@angular/router';
+import {
+    Auth
+} from '@andes/auth';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    TipoPrestacionService
+} from './../../../services/tipoPrestacion.service';
+import {
+    ProfesionalService
+} from './../../../services/profesional.service';
+import {
+    EspacioFisicoService
+} from './../../../services/turnos/espacio-fisico.service';
+import {
+    AgendaService
+} from './../../../services/turnos/agenda.service';
+import {
+    IAgenda
+} from './../../../interfaces/turnos/IAgenda';
 
 import * as enumerado from './../enums';
 import * as moment from 'moment';
-import { enumToArray } from '../../../utils/enums';
+import {
+    enumToArray
+} from '../../../utils/enums';
 
 @Component({
     selector: 'gestor-agendas',
@@ -20,7 +47,7 @@ import { enumToArray } from '../../../utils/enums';
 
 export class GestorAgendasComponent implements OnInit {
     showReasignarTurnoAgendas: boolean;
-    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     agendasSeleccionadas: IAgenda[] = [];
 
@@ -37,8 +64,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarNotaAgenda = false;
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
-    public fechaDesde: any;
-    public fechaHasta: any;
+    public showListadoTurnos = false;
     public agendas: any = [];
     public agenda: any = {};
     public modelo: any = {};
@@ -47,11 +73,17 @@ export class GestorAgendasComponent implements OnInit {
     public mostrarMasOpciones = false;
     public estadosAgenda = enumerado.EstadosAgenda;
     public estadosAgendaArray = enumToArray(enumerado.EstadosAgenda);
+    public fechaDesde: any;
+    public fechaHasta: any;
+    public prestaciones: any = [];
+    public profesionales: any = [];
+    public espacioFisico: any = [];
+    public estado: any = [];
+    public parametros;
+    public btnDarTurnos = false;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
-
-    searchForm: FormGroup;
 
     ag: IAgenda;
     // vistaAgenda: IAgenda;
@@ -61,102 +93,142 @@ export class GestorAgendasComponent implements OnInit {
     items: any[];
 
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
-        public serviceProfesional: ProfesionalService, public serviceEspacioFisico: EspacioFisicoService,
+        public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
-        public auth: Auth) { }
+        public auth: Auth) {}
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
 
-        // No está autorizado para ver esta pantalla?
         if (!this.autorizado) {
+            // Si no está autorizado redirect al home
             this.redirect('inicio');
-        } else {
+        };
 
-            this.items = [
-                { label: 'Inicio', route: '/inicio' },
-                { label: 'MPI', route: '/' },
-                { label: 'Agendas', route: '/gestor_agendas' }
-            ];
+        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.parametros = {
+            fechaDesde: '',
+            fechaHasta: '',
+            organizacion: '',
+            idTipoPrestacion: '',
+            idProfesional: '',
+            espacioFisico: '',
+            estado: ''
+        };
 
-            // Por defecto cargar/mostrar agendas de hoy
-            this.hoy = true;
-            this.loadAgendas();
+        // Por defecto cargar/mostrar agendas de hoy
+        this.hoy = true;
+        this.loadAgendas();
 
-            // Reactive De-Form
-            this.searchForm = this.formBuilder.group({
-                // Debe respetarse el tipo de dato Date, o el componente datepicker no funciona
-                fechaDesde: [new Date()],
-                fechaHasta: [new Date()],
-                prestaciones: [''],
-                profesionales: [''],
-                espacioFisico: [''],
-                estado: ['']
-            });
+        this.fechaDesde = new Date();
+        this.fechaHasta = new Date();
+        this.fechaDesde = moment(this.fechaDesde).startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).startOf('day');
+        // Iniciamos la búsqueda
+        this.parametros = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id
+        };
 
-            // Un buen día los formularios reactivos volarán...
-            this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+    }
 
-                let fechaDesde = moment(value.fechaDesde).startOf('day');
-                let fechaHasta = moment(value.fechaHasta).endOf('day');
-                let params = {};
-
-                if (fechaDesde.isValid() && fechaHasta.isValid()) {
-                    params = {
-                        fechaDesde: fechaDesde.format(),
-                        fechaHasta: fechaHasta.format(),
-                        organizacion: this.auth.organizacion._id
-                    };
-                } else {
-                    // Demos tiempo para que seleccionen una fecha válida, claro papá
-                    return;
-                }
-
-                // Filtro de Tipos de Prestaciones (si está vacío, trae todas)
-                if (value.prestaciones) {
-                    params['idTipoPrestacion'] = value.prestaciones.id;
-                }
-                if (value.profesionales) {
-                    params['idProfesional'] = value.profesionales.id;
-                }
-                if (value.espacioFisico) {
-                    params['espacioFisico'] = value.espacioFisico.id;
-                }
-                if (value.estado) {
-                    params['estado'] = value.estado.id;
-                }
-
-                this.serviceAgenda.get(params).subscribe(agendas => {
-                    this.turnosSuspendidos = [];
-                    agendas.forEach(agenda => {
-                        let count = 0;
-                        agenda.bloques.forEach(bloque => {
-                            bloque.turnos.forEach(turno => {
-                                if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
-                                    count++;
-                                }
-                            });
-                        });
-                        this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                    });
-
-                    this.hoy = false;
-                    this.agendas = agendas;
-                    this.fechaDesde = fechaDesde;
-                    this.fechaHasta = fechaHasta;
-
-
-
-                },
-                    err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
-            });
-
+    refreshSelection(value, tipo) {
+        if (tipo === 'fecha') {
+            let fechaDesde = moment(value).startOf('day');
+            let fechaHasta = moment(value).endOf('day');
+            if (fechaDesde.isValid() || fechaHasta.isValid()) {
+                this.parametros = {
+                    fechaDesde: fechaDesde.isValid() ? this.fechaDesde : moment().format(),
+                    fechaHasta: fechaHasta.isValid() ? this.fechaHasta : moment().format(),
+                    organizacion: this.auth.organizacion._id
+                };
+            }
+        }
+        if (tipo === 'prestaciones') {
+            if (value.value !== null) {
+                this.parametros['idTipoPrestacion'] = value.value.id;
+            } else {
+                this.parametros['idTipoPrestacion'] = '';
+            }
+        }
+        if (tipo === 'profesionales') {
+            if (value.value !== null) {
+                this.parametros['idProfesional'] = value.value.id;
+            } else {
+                this.parametros['idProfesional'] = '';
+            }
+        }
+        if (tipo === 'espacioFisico') {
+            if (value.value !== null) {
+                this.parametros['espacioFisico'] = value.value.id;
+            } else {
+                this.parametros['espacioFisico'] = '';
+            }
+        }
+        if (tipo === 'estado') {
+            if (value.value !== null) {
+                this.parametros['estado'] = value.value.id;
+            } else {
+                this.parametros['estado'] = '';
+            }
         }
 
+        // Completo params con la info que ya tengo
+
+        this.getAgendas(this.parametros);
+
+    };
+
+    getAgendas(params: any) {
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            // this.agendasSeleccionadas = [];
+            this.turnosSuspendidos = [];
+            agendas.forEach(agenda => {
+                let count = 0;
+                agenda.bloques.forEach(bloque => {
+                    bloque.turnos.forEach(turno => {
+
+                        // Cuenta la cantidad de turnos suspendidos (no reasignados) con paciente en cada agenda
+                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida')) && (!turno.reasignado || !turno.reasignado.siguiente)) {
+                            count++;
+                        }
+
+                    });
+                });
+                this.turnosSuspendidos = [...this.turnosSuspendidos, {
+                    count: count
+                }];
+            });
+
+            this.hoy = false;
+            this.agendas = agendas;
+
+        }, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    loadAgendas() {
+        let fecha = moment().format();
+
+        if (this.hoy) {
+            this.fechaDesde = moment(fecha).startOf('day').toDate();
+            this.fechaHasta = moment(fecha).endOf('day').toDate();
+        }
+
+        const params = {
+            fechaDesde: this.fechaDesde,
+            fechaHasta: this.fechaHasta,
+            organizacion: this.auth.organizacion._id,
+            idTipoPrestacion: '',
+            idProfesional: '',
+            idEspacioFisico: ''
+        };
+
+        this.getAgendas(params);
     }
 
     agregarNotaAgenda() {
@@ -168,6 +240,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = true;
     }
 
@@ -204,6 +277,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
+        this.showListadoTurnos = false;
         this.loadAgendas();
     }
 
@@ -240,6 +314,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showAgregarNotaAgenda = false;
         this.showRevisionAgenda = false;
         this.showReasignarTurno = false;
+        this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
     }
 
@@ -249,50 +324,10 @@ export class GestorAgendasComponent implements OnInit {
         this.showRevisionAgenda = true;
     }
 
-    loadAgendas() {
-        let fecha = moment().format();
-
-        if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
-        }
-
-        this.serviceAgenda.get({
-            fechaDesde: this.fechaDesde,
-            fechaHasta: this.fechaHasta,
-            organizacion: this.auth.organizacion._id,
-            idTipoPrestacion: '',
-            idProfesional: '',
-            idEspacioFisico: ''
-        }).subscribe(
-            agendas => {
-                this.agendas = agendas;
-                this.agendasSeleccionadas = [];
-                this.turnosSuspendidos = [];
-
-                agendas.forEach(agenda => {
-                    let count = 0;
-                    agenda.bloques.forEach(bloque => {
-                        bloque.turnos.forEach(turno => {
-                            if ((turno.estado === 'suspendido' && turno.paciente) || (agenda.estado === 'suspendida' && (turno.paciente && (!turno.reasignado || !turno.reasignado.siguiente)))) {
-                                count++;
-                            }
-                        });
-                    });
-                    this.turnosSuspendidos = [... this.turnosSuspendidos, { count: count }];
-                });
-
-
-            },
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-    }
-
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({ turneable: 1 }).subscribe(event.callback);
+        this.servicioPrestacion.get({
+            turneable: 1
+        }).subscribe(event.callback);
     }
 
     loadProfesionales(event) {
@@ -306,8 +341,49 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    loadEspaciosFisicos(event) {
-        this.serviceEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // loadEspaciosFisicos(event) {
+    //     this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+    // }
+
+    loadEdificios(event) {
+        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        //     event.callback(respuesta.edificio);
+        // });
+        if (event.query) {
+            let query = {
+                edificio: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
+                event.callback(listaEdificios);
+            });
+        } else {
+            event.callback(this.modelo.edificios || []);
+        }
+    }
+
+    loadEspacios(event) {
+        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
+        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
+
+        let listaEspaciosFisicos = [];
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                // organizacion: this.auth.organizacion._id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.modelo.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.modelo.espacioFisico || []);
+        }
+
     }
 
     verAgenda(agenda, multiple, e) {
@@ -346,11 +422,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showTurnos = false;
             this.showReasignarTurno = false;
             this.showReasignarTurnoAutomatico = false;
+            this.showListadoTurnos = false;
             this.showBotonesAgenda = true;
 
             if (this.hayAgendasSuspendidas()) {
                 // this.showGestorAgendas = false;
                 this.showReasignarTurnoAutomatico = true;
+                // this.agendasSeleccionadas[0] = ag;
             } else {
                 this.showTurnos = true;
             }
@@ -360,7 +438,9 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     hayAgendasSuspendidas() {
-        return this.agendasSeleccionadas.filter((x) => { return x.estado === 'suspendida'; }).length > 0;
+        return this.agendasSeleccionadas.filter((x) => {
+            return x.estado === 'suspendida';
+        }).length > 0;
     }
 
     estaSeleccionada(agenda: any) {
@@ -429,6 +509,18 @@ export class GestorAgendasComponent implements OnInit {
 
     reasignarTurnosAgendas() {
         this.showReasignarTurnoAgendas = true;
+    }
+
+    listarTurnos(agenda) {
+        this.showGestorAgendas = false;
+        this.showListadoTurnos = true;
+    }
+
+    // Devuelve la duración (HH:mm) de una agenda
+    duracionAgenda(horaInicio, horaFin) {
+        let horas = moment.duration(horaFin - horaInicio).hours();
+        let minutos = moment.duration(horaFin - horaInicio).minutes();
+        return horas + (horas === 1 ? ' hora ' : ' horas ') + (minutos > 0 ? minutos + ' minutos' : '');
     }
 
 }

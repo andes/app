@@ -169,11 +169,13 @@ export class BotonesAgendaComponent implements OnInit {
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos
             reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos(),
+            // Imprimir pdf
+            listarTurnos: (this.cantSel === 1),
         };
     }
 
     puedoReasignar() {
-        let reasginar =  this.agendasSeleccionadas.filter((agenda) => {
+        let reasginar = this.agendasSeleccionadas.filter((agenda) => {
             return (agenda.nominalizada && agenda.estado === 'suspendida');
         }).length > 0;
         return reasginar;
@@ -193,7 +195,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoDisponer() {
         let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion' || !agenda.nominalizada );
+            return (agenda.estado !== 'planificacion' || !agenda.nominalizada);
         }).length <= 0;
         return disponer;
     }
@@ -243,7 +245,6 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
-
     haySoloTurnosReservados() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
@@ -290,6 +291,10 @@ export class BotonesAgendaComponent implements OnInit {
 
     reasignarTurnos() {
         this.reasignarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    listarTurnos() {
+        this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
     }
 
     cancelar() {

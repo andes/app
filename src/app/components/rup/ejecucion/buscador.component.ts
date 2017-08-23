@@ -42,6 +42,7 @@ export class BuscadorComponent implements OnInit {
     public masFrecuentesFiltradas: any[] = [];
     public showFrecuentes = false;
 
+    public loading = false;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService) {
     }
@@ -63,8 +64,10 @@ export class BuscadorComponent implements OnInit {
     // Buscador de planes
     buscar() {
         if (this.searchPlanes !== null) {
+            this.loading = true;
             this.servicioTipoPrestacion.get({ term: this.searchPlanes }).subscribe(tiposPrestacion => {
                 this.listaPlanes = tiposPrestacion;
+                this.loading = false;
             });
         } else {
             this.listaPlanes = [];

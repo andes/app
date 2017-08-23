@@ -1,0 +1,34 @@
+.mapa-espacios {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    tr td:first-child {
+        width: 200px;
+    }
+    td {
+        border: 1px solid #d0d0d0;
+    }
+    .ocupado {
+        background-color: #5cb85c;
+    }
+    .libre {
+        background-color: white;
+    }
+    .disponible {
+        background-color: rgb(141, 192, 31);
+    }
+    .selected {
+        background-color: #9BE0FE;
+    }
+    tr:hover {
+        cursor: pointer;
+        background-color: #C7BEBE;
+        td {
+            border: transparent;
+            background-color: #C7BEBE;
+            &.ocupado {
+                background-color: rgb(141, 192, 31);
+            }
+        }
+    }
+}

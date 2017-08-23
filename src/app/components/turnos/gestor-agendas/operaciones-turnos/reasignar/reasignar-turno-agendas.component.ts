@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -8,7 +9,7 @@ import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
-// import { SmsService } from './../../../../../services/turnos/sms.service';
+import { SmsService } from './../../../../../services/turnos/sms.service';
 import * as moment from 'moment';
 
 @Component({
@@ -33,7 +34,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     @Input() agendaAReasignar: any;
 
-
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
 
@@ -51,7 +51,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     @Input('turnoSeleccionado')
     set turnoSeleccionado(value: any) {
         this._turnoSeleccionado = value;
+        this.actualizar();
     }
+
     get turnoSeleccionado(): any {
         return this._turnoSeleccionado;
     }
@@ -159,14 +161,14 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             }
         };
 
-        this.plex.confirm('¿Reasignar Turno?').then((confirmado) => {
+        this.plex.confirm('Del ' + moment(this.turnoSeleccionado.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]') + ' al ' + moment(turno.horaInicio).format('DD/MM/YYYY [a las] HH:mm [hs]'), '¿Reasignar Turno?').then((confirmado) => {
             if (!confirmado) {
                 return false;
             }
 
             // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
             this.serviceTurno.save(datosTurno).subscribe(resultado => {
-                // TODO: hacer un PUT con el id de la agenda en el campo turno.reasignado de la agenda original
+
                 let turnoReasignado = this.turnoSeleccionado;
                 let siguiente = {
                     idAgenda: this.agendaSeleccionada._id,
@@ -192,28 +194,40 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                 // Agrego datos de reasignación al turno original (PUT)
                 this.serviceTurno.put(params).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
+                    this.plex.toast('danger', 'TODO: Activar envío de SMS');
                     this.agendaDestino.agenda = resultado2;
+
+                    // Enviar SMS sólo en Producción
+                    if (environment.production === true) {
+                        let dia = moment(turno.horaInicio).format('DD/MM/YYYY');
+                        let tm = moment(turno.horaInicio).format('HH:mm');
+                        let mensaje = 'AVISO: Usted tiene un turno el ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
+                        // this.enviarSMS(pacienteSave, mensaje);
+                        // this.actualizarCarpetaPaciente(turno.paciente);
+                    }
                     this.actualizar();
                 });
 
-                // Enviar SMS
-                // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                // let tm = moment(this.turno.horaInicio).format('HH:mm');
-                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-                // this.enviarSMS(pacienteSave, mensaje);
-                // this.actualizarCarpetaPaciente(turno.paciente);
+
             });
         });
 
     }
 
+    hayTurnosDisponibles(agenda: IAgenda, tipoTurno: String) {
+        for (let i = 0; i < agenda.bloques.length; i++) {
+            for (let j = 0; j < agenda.bloques[i].turnos.length; j++) {
+                if (agenda.bloques[i].turnos[j].tipoTurno === tipoTurno && agenda.bloques[i].turnos[j].estado === 'disponible') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
-    }
-
-    hayTurnosDisponibles(tipoTurno: String) {
-        return true;
     }
 
     existePrestacion(bloque: any, idPrestacion: string) {

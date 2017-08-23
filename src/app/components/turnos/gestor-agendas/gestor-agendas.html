@@ -1,145 +1,162 @@
-<section *ngIf="autorizado && showGestorAgendas" [formGroup]="searchForm">
-    <div class="row">
-        <!--Panel de Agendas-->
-        <div class="col">
-            <plex-box>
-                <header>
-                    <!--Botones / Acciones-->
-                    <div class="clearfix">
-                        <div class="page-title float-left">Gestor de Agendas</div>
-                        <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
-                            (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
-                            (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)" (listarTurnosEmit)="listarTurnos($event)"
-                            (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)" [turnosSuspendidos]="turnosSuspendidos">
-                        </botones-agenda>
+<form class="plex-layout" #form="ngForm">
+    <section *ngIf="showGestorAgendas">
+        <div class="row">
+            <!--Panel de Agendas-->
+            <div class="col">
+                <plex-box>
+                    <header>
+                        <!--Botones / Acciones-->
+                        <div class="clearfix">
+                            <div class="page-title float-left">Gestor de Agendas</div>
+                            <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
+                                (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
+                                (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                                (listarTurnosEmit)="listarTurnos($event)" (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)"
+                                [turnosSuspendidos]="turnosSuspendidos">
+                            </botones-agenda>
+                        </div>
+
+                        <!--Filtros-->
+                        <div class="row">
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
+                                    class="fechas">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
+                                    class="fechas">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
+                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div>
+                            <div class="col-2 text-right">
+                                <label><!--Spacer-->&nbsp;</label>
+                                <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="mostrarMasOpciones">
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')" (getData)="loadProfesionales($event)"
+                                    name="profesionales" label="Profesional" placeholder="Buscar un profesional" labelField="apellido+' '+nombre"
+                                    ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div>
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico"
+                                    (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
+                                    labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'" ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div>
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="estadosAgendaArray" name="estado"
+                                    label="Estado" ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!--Resultados-->
+                    <div *ngIf="!agendas.length" class="alert alert-default">
+                        <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
                     </div>
 
-                    <!--Filtros-->
-                    <div class="row">
-                        <div class="col-3">
-                            <plex-datetime type="date" formControlName="fechaDesde" label="Desde" class="fechas">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-3">
-                            <plex-datetime type="date" formControlName="fechaHasta" label="Hasta">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-4">
-                            <plex-select formControlName="prestaciones" (getData)="loadPrestaciones($event)" label="Tipos de prestación">
-                            </plex-select>
-                        </div>
-                        <div class="col-2 text-right">
-                            <label><!--Spacer-->&nbsp;</label>
-                            <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
-                        </div>
+                    <table *ngIf="agendas.length" class="table table-striped table-sm">
+                        <thead>
+                            <th></th>
+                            <th>Fecha y Hora</th>
+                            <th>Tipos de prestación</th>
+                            <th class="text-right">Estado</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda)}">
+                                <td (click)="verAgenda(agenda, true, $event)">
+                                    <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
+                                </td>
+                                <td (click)="verAgenda(agenda, false, $event)">
+                                    <div>{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date:
+                                        'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs - <i class="mdi mdi-timelapse"
+                                            title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
+                                        <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
+                                    </div>
+                                    <div>
+                                        <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio.nombre ?' - ' + agenda.espacioFisico.servicio.nombre : '') + (agenda.espacioFisico.edificio.descripcion ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
+                                        <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                                    </div>
+                                </td>
+                                <td (click)="verAgenda(agenda, false, $event)">
+                                    <div *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
+                                    <div>
+                                        <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                                        <ng-container *ngIf="agenda.profesionales">
+                                            <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales | enumerar:['apellido','nombre'] }}</div>
+                                        </ng-container>
+                                    </div>
+                                </td>
+                                <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
+                                    <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
+                                    <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
+                                    <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
+                                    <span class="text-white"><strong>{{ turnosSuspendidos[i].count }}</strong></span>
+                                    </span>
+                                    <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </plex-box>
+            </div>
+
+            <!-- Panel derecho -->
+            <div *ngIf="agendasSeleccionadas.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel  && agendasSeleccionadas.length == 1, 'col-4': !showEditarAgendaPanel}">
+                <plex-box>
+                    <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
+                        <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
                     </div>
-                    <div class="row" *ngIf="mostrarMasOpciones">
-                        <div class="col-4">
-                            <plex-select formControlName="profesionales" (getData)="loadProfesionales($event)" label="Profesional" labelField="apellido+' '+nombre">
-                            </plex-select>
-                        </div>
-                        <div class="col-4">
-                            <plex-select formControlName="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Espacio Físico">
-                            </plex-select>
-                        </div>
-                        <div class="col-4">
-                            <plex-select formControlName="estado" [data]="estadosAgendaArray" label="Estado">
-                            </plex-select>
-                        </div>
+                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
+                        <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                            (editarEsapcioFisicoEmit)="true"></panel-agenda>
                     </div>
-                </header>
+                    <!-- Muestra el panel de Notas de Agendas -->
+                    <div *ngIf="showAgregarNotaAgenda">
+                        <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
+                            (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
+                    </div>
+                    <!-- Panel Reasignar Turnos Automático -->
+                    <div *ngIf="showReasignarTurnoAutomatico">
+                        <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
+                    </div>
+                </plex-box>
+            </div>
 
-                <!--Resultados-->
-                <div *ngIf="!agendas.length" class="alert alert-default">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
-                </div>
-
-                <table *ngIf="agendas.length" class="table table-striped table-sm">
-                    <thead>
-                        <th></th>
-                        <th>Fecha y Hora</th>
-                        <th>Tipos de prestación</th>
-                        <th class="text-right">Estado</th>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda)}">
-                            <td (click)="verAgenda(agenda, true, $event)">
-                                <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-checkbox-marked"></i>
-                                <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
-                            </td>
-                            <td (click)="verAgenda(agenda, false, $event)">
-                                <div>{{agenda.horaInicio | date: 'dd/MM/yyyy'}} <i class="mdi mdi-clock"></i> {{agenda.horaInicio
-                                    | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
-                                    <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
-                                </div>
-                                <div>
-                                    <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                    <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
-                                </div>
-                            </td>
-                            <td (click)="verAgenda(agenda, false, $event)">
-                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
-                                <div>
-                                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
-                                    <ng-container *ngIf="agenda.profesionales">
-                                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
-                                    </ng-container>
-                                </div>
-                            </td>
-                            <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
-                                <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
-                                <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
-                                <span class="badge-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0">Turnos Suspendidos: {{ turnosSuspendidos[i].count }}</span>
-
-                                <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </plex-box>
         </div>
+    </section>
 
-        <!--Panel de Turnos-->
-        <div *ngIf="agendasSeleccionadas.length > 0" class="col-4">
-            <plex-box>
-                <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
-                    <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
-                </div>
-                <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
-                    <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
-                </div>
-                <!-- Muestra el panel de Notas de Agendas -->
-                <div *ngIf="showAgregarNotaAgenda">
-                    <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
-                        (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
-                </div>
-                <!-- Panel Reasignar Turnos Automático -->
-                <div *ngIf="showReasignarTurnoAutomatico">
-                    <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
-                </div>
-            </plex-box>
-        </div>
+    <!--Footer-->
+    <footer *ngIf="showGestorAgendas">
+        <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
+        <plex-button *ngIf="btnDarTurnos" type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
+    </footer>
 
-    </div>
-</section>
+    <!--Componentes-->
+    <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
+    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
+    <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
 
-<!--Footer-->
-<footer *ngIf="autorizado && showGestorAgendas">
-    <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
-    <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
-</footer>
+    <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
+    <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
+    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
+        (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
-<!--Componentes-->
-<clonar-agenda *ngIf="autorizado && showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-<dar-turnos *ngIf="autorizado && showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
-<sobreturno *ngIf="autorizado && showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
-
-<planificar-agenda *ngIf="autorizado && showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-<planificar-agenda *ngIf="autorizado && showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-<revision-agenda *ngIf="autorizado && showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
-    (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
-
-<!-- Pantalla Reasignar Turnos -->
-<reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
-    class="plex-layout"></reasignar-turno>
-<reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
+    <!-- Pantalla Reasignar Turnos -->
+    <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
+        class="plex-layout"></reasignar-turno>
+    <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
+    <!-- Listado e Impresion de Agendas -->
+    <listar-turnos *ngIf="showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
+</form>

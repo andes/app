@@ -34,7 +34,7 @@
                             <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
                                 <span *ngIf="turno && turno.paciente">{{ turno.paciente  | paciente }} </span>
                                 <small><span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span></small>
-                                <small><span *ngIf="turno && turno.paciente && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
+                                <small><span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores.length > 0"> | Nro Carpeta
                       <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
                           {{carpeta.nroCarpeta}}
                             <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
@@ -68,11 +68,11 @@
                     </div>
                 </header>
                 <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
-                    <div class="col" *ngIf="paciente">
-                        <small><span> DNI {{paciente.documento|number}}</span></small>
+                    <div class="col" *ngIf="paciente?.id">
+                        <small><span> DNI {{paciente.documento | number}}</span></small>
                         <div> {{paciente | paciente}}</div>
                     </div>
-                    <div class="col" *ngIf="!paciente && !turnoSeleccionado.paciente">
+                    <div class="col" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
                         <small><span> No existe un paciente asociado</span></small>
                     </div>
                     <div class="col" *ngIf="!pacientesSearch">
@@ -80,8 +80,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6" *ngIf="turnoSeleccionado.paciente">
-                        <small><span> DNI {{turnoSeleccionado.paciente.documento|number}}</span></small>
+                    <div class="col-6" *ngIf="turnoSeleccionado.paciente?.id">
+                        <small><span> DNI {{turnoSeleccionado.paciente.documento | number}}</span></small>
                         <div> {{turnoSeleccionado.paciente | paciente}}</div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente">
+                <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
                     <div class="col-6">
                         <br>
                         <label>Prestación: </label>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <br>
-                <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente || paciente) && !pacientesSearch">
+                <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
                     <div class="row">
                         <div class="col">
                             <!--ASISTENCIA-->

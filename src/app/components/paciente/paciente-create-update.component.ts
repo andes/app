@@ -476,12 +476,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
 
             if (this.altoMacheo) {
-                this.logService.post('mpi', 'macheoAlto', { pacienteScan: this.pacienteModel });
+                this.logService.post('mpi', 'macheoAlto', { paciente: this.pacienteModel }).subscribe(() => { });
 
             }
 
             if (this.posibleDuplicado) {
-                this.logService.post('mpi', 'posibleDuplicado', { pacienteScan: this.pacienteModel });
+                this.logService.post('mpi', 'posibleDuplicado', { paciente: this.pacienteModel }).subscribe(() => { });
 
             }
 
@@ -657,7 +657,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.logService.post('mpi', 'macheoAlto', {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
-                                    });
+                                    }).subscribe(() => { });
                                     this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
@@ -667,7 +667,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.logService.post('mpi', 'posibleDuplicado', {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
-                                    });
+                                    }).subscribe(() => { });
                                     this.posibleDuplicado = true;
                                     this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
                                     this.enableIgnorarGuardar = true;
@@ -757,14 +757,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 // Loggea el documento escaneado para análisis
                 this.logService.post('mpi', 'scan', {
                     data: this.buscarPacRel
-                });
+                }).subscribe(() => { });
                 return DocumentoEscaneados[key];
             }
         }
         if (this.buscarPacRel.length > 30) {
             this.logService.post('mpi', 'scanFail', {
                 data: this.buscarPacRel
-            });
+            }).subscribe(() => { });
         }
         return null;
     }
@@ -865,21 +865,21 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         this.logService.post('mpi', 'validadoScan', {
                                             pacienteDB: datoDB,
                                             pacienteScan: pacienteEscaneado
-                                        });
+                                        }).subscribe(() => { });
                                         this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                                     } else {
                                         if (this.PacientesRel[0].match >= 0.94) {
                                             this.logService.post('mpi', 'macheoAlto', {
                                                 pacienteDB: datoDB,
                                                 pacienteScan: pacienteEscaneado
-                                            });
+                                            }).subscribe(() => { });
                                             this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                                         } else {
                                             if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
                                                 this.logService.post('mpi', 'posibleDuplicado', {
                                                     pacienteDB: datoDB,
                                                     pacienteScan: pacienteEscaneado
-                                                });
+                                                }).subscribe(() => { });
                                             }
                                         }
                                     }

@@ -144,7 +144,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            event.callback(this.modelo.solicitud.profesional || []);
+            event.callback(this.modelo.solicitud.profesional);
         }
     }
 
@@ -163,14 +163,15 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         } else {
-            event.callback(this.registros.solicitudPrestacion.profesionales || []);
+            event.callback(this.registros.solicitudPrestacion.profesionales);
         }
     }
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
             let dataFiltrada = data.filter(x => { return this.permisos.indexOf(x.id) >= 0; });
-            let dataLlaves = data.filter(x => { return this.filtradas.indexOf(x.id);
+            let dataLlaves = data.filter(x => {
+                return this.filtradas.indexOf(x.id);
             });
             this.verificarLlaves(dataLlaves, event);
         });
@@ -191,7 +192,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                     band = true;
                 } else {
                     // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
-                    if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
+                    if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente && this.paciente.id) {
                         let edad = new EdadPipe().transform(this.paciente, []);
                         // Edad desde
                         if (this.llaveTP.llave.edad.desde) {
@@ -213,7 +214,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         }
                     }
                     // Verifico que si la llave tiene seteado sexo, el sexo del paciente coincida
-                    if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente) {
+                    if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente && this.paciente.id) {
                         if (this.llaveTP.llave.sexo !== this.paciente.sexo) {
                             band = false;
                         }
@@ -284,7 +285,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         err => {
                             if (err) {
                                 console.log('err', err);
-
                             }
                         },
                         () => {
@@ -313,7 +313,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     guardarSolicitud($event) {
 
-        if ($event.formValid) {
+        if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
 
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;

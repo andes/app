@@ -2,6 +2,7 @@ import { environment } from './../environments/environment';
 import { Component, OnInit, ModuleWithProviders } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app',
@@ -24,25 +25,46 @@ export class AppComponent {
         }
     }
 
-    constructor(public plex: Plex, public server: Server) {
+    public checkPermissions(): any {
+        let accessList = [];
+        let menuList = [];
+
+        // Cargo el array de permisos
+        if (this.auth.getPermissions('turnos:?').length > 0) {
+            accessList.push({label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas'});
+        }
+        if (this.auth.getPermissions('mpi:?').length > 0) {
+
+            accessList.push({label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi'});
+        }
+
+        if (this.auth.getPermissions('rup:?').length > 0) {
+
+            accessList.push({label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup'});
+        }
+        menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
+        accessList.forEach((permiso) => {
+            menuList.push(permiso);
+        });
+        menuList.push({ divider: true });
+        menuList.push({ label: 'Cerrar Sesión', icon: 'logout', route: '/login' });
+
+        // Actualizamos la lista de menú
+        this.plex.updateMenu(menuList);
+        return accessList;
+    }
+
+    constructor(public plex: Plex, public server: Server, public auth: Auth) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
 
+        // Verifica los permisos de la aplicación
+        this.checkPermissions();
+
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
-
-        // Menú principal
-        this.plex.updateMenu([
-            { label: 'Página principal', icon: 'home', route: '/inicio' },
-            { divider: true },
-            { label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' },
-            { label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' },
-            { label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' },
-            { divider: true },
-            { label: 'Cerrar Sesión', icon: 'logout', route: '/login' }
-        ]);
     }
 }
