@@ -521,5 +521,11 @@ export class GestorAgendasComponent implements OnInit {
         this.showListadoTurnos = true;
     }
 
+    // Devuelve la duración (HH:mm) de una agenda
+    duracionAgenda(horaInicio, horaFin) {
+        let horas = moment.duration(horaFin - horaInicio).hours();
+        let minutos = moment.duration(horaFin - horaInicio).minutes();
+        return horas + (horas === 1 ? ' hora ' : ' horas ') + (minutos > 0 ? minutos + ' minutos' : '');
+    }
 
 }

@@ -114,7 +114,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                             id: agenda.id,
                             espacioID: _id,
                             titulo: agenda.tipoPrestaciones[0].term,
-                            descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
+                            profesionales: agenda.profesionales || null,
                             start: this.aproximar(start_time, false),
                             end: this.aproximar(end_time, true),
                             _value: agenda

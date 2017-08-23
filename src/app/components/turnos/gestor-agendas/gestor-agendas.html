@@ -19,15 +19,18 @@
                         <!--Filtros-->
                         <div class="row">
                             <div class="col-3">
-                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde" class="fechas">
-                                </plex-datetime > 
+                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
+                                    class="fechas">
+                                </plex-datetime>
                             </div>
                             <div class="col-3">
-                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta" class="fechas">
-                                </plex-datetime> 
+                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
+                                    class="fechas">
+                                </plex-datetime>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
+                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-2 text-right">
@@ -37,17 +40,20 @@
                         </div>
                         <div class="row" *ngIf="mostrarMasOpciones">
                             <div class="col-4">
-                                <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')" (getData)="loadProfesionales($event)" name="profesionales" label="Profesional" placeholder="Buscar un profesional"
-                                    labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}">
+                                <plex-select [(ngModel)]="profesionales" (change)="refreshSelection($event, 'profesionales')" (getData)="loadProfesionales($event)"
+                                    name="profesionales" label="Profesional" placeholder="Buscar un profesional" labelField="apellido+' '+nombre"
+                                    ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
-                                    label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'" ngModelOptions="{standalone: true}" >
+                                <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico"
+                                    (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
+                                    labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="col-4">
-                                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="estadosAgendaArray" name="estado" label="Estado" ngModelOptions="{standalone: true}">
+                                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" [data]="estadosAgendaArray" name="estado"
+                                    label="Estado" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                         </div>
@@ -73,8 +79,9 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div>{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
-                                        <i class="mdi mdi-clock"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin
-                                        | date: 'HH:mm'}} hs
+                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date:
+                                        'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs - <i class="mdi mdi-timelapse"
+                                            title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
                                         <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
                                     </div>
                                     <div>
@@ -112,7 +119,8 @@
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
-                        <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnos)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"></panel-agenda>
+                        <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
+                            (editarEsapcioFisicoEmit)="true"></panel-agenda>
                     </div>
                     <!-- Muestra el panel de Notas de Agendas -->
                     <div *ngIf="showAgregarNotaAgenda">

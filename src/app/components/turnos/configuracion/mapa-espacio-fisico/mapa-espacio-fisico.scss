@@ -3,33 +3,22 @@
     border-collapse: collapse;
     table-layout: fixed;
     tr td:first-child {
-        width: 120px;
+        width: 200px;
     }
     td {
         border: 1px solid #d0d0d0;
     }
     .ocupado {
         background-color: #5cb85c;
-        border-radius: 15px;
     }
     .libre {
         background-color: white;
     }
     .disponible {
-        background-color: rgb(208, 246, 208);
+        background-color: rgb(141, 192, 31);
     }
     .selected {
         background-color: #9BE0FE;
-    }
-    .item_name {
-        h3 {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-        p {
-            margin: 0;
-        }
     }
     tr:hover {
         cursor: pointer;
@@ -38,7 +27,7 @@
             border: transparent;
             background-color: #C7BEBE;
             &.ocupado {
-                background-color: rgb(40, 147, 40);
+                background-color: rgb(141, 192, 31);
             }
         }
     }
