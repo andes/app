@@ -172,22 +172,23 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     espaciosChange(agenda) {
-        let query = {};
+
+        // TODO: ver límite
+        let query: any = {
+            limit: 20
+        };
+
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
-            query = {
-                nombre,
-                limit: 20
-            };
-        } else if (agenda.equipamiento && agenda.equipamiento.length > 0) {
+            query.nombre = nombre;
+        };
 
+        if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
-            query = {
-                equipamiento,
-                limit: 20
-            };
+            query.equipamiento = equipamiento;
+        };
 
-        } else {
+        if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
             return;
         }

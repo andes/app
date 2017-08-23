@@ -36,6 +36,9 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     private headers = [];
     private matrix: any;
     private agendaCache: IAgenda = null;
+
+    idInfoAgenda: string = '';
+
     constructor(
         public plex: Plex,
         public servicioAgenda: AgendaService) { }
@@ -113,7 +116,9 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                         temp.items.push({
                             id: agenda.id,
                             espacioID: _id,
-                            titulo: agenda.tipoPrestaciones[0].term,
+                            horaInicio: agenda.horaInicio,
+                            horaFin: agenda.horaFin,
+                            prestaciones: agenda.tipoPrestaciones,
                             profesionales: agenda.profesionales || null,
                             start: this.aproximar(start_time, false),
                             end: this.aproximar(end_time, true),
@@ -230,7 +235,9 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         let item = {
             id: agenda.id,
             espacioID: espacioID,
-            titulo: agenda.tipoPrestaciones[0].term,
+            horaInicio: agenda.horaInicio,
+            horaFin: agenda.horaFin,
+            prestaciones: agenda.tipoPrestaciones,
             descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
             _value: agenda,
             start: this.aproximar(start_time, false),
@@ -295,5 +302,8 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         }
     }
 
+    showInfo(idAgenda: string) {
+        this.idInfoAgenda = idAgenda;
+    }
 
 }
