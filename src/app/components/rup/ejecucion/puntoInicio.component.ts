@@ -14,6 +14,7 @@ import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { AgendaService } from './../../../services/turnos/agenda.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 import { EstadosAgenda } from './../../turnos/enums';
@@ -53,15 +54,27 @@ export class PuntoInicioComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionPacienteService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioProfesional: ProfesionalService) { }
 
     ngOnInit() {
-        // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-            this.tiposPrestacion = data;
-
-            this.actualizar();
+        this.servicioProfesional.get({ documento: this.auth.usuario.documento }).subscribe(data => {
+            let profesional = data;
+            if (profesional.length === 0) {
+                this.redirect('inicio');
+            } else {
+                this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+                    this.tiposPrestacion = data;
+                    this.actualizar();
+                });
+            }
         });
+
+    }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     /**
@@ -298,18 +311,18 @@ export class PuntoInicioComponent implements OnInit {
 
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
-         let _prestaciones = prestaciones.filter(p => {
-                    // filtramos todas las prestaciones que:
-                    // 1) esten validadas
-                    // 2) que sean planes y sean autocitados
-                    let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
-                            registro.valor.solicitudPrestacion.autocitado
-                    );
-                    if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
-                    ) {
-                        return p;
-                    };
-                });
+        let _prestaciones = prestaciones.filter(p => {
+            // filtramos todas las prestaciones que:
+            // 1) esten validadas
+            // 2) que sean planes y sean autocitados
+            let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
+                registro.valor.solicitudPrestacion.autocitado
+            );
+            if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
+            ) {
+                return p;
+            };
+        });
         if (Array.isArray(_prestaciones)) {
             _prestaciones.forEach(unaPrestacion => {
                 if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
