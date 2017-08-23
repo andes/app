@@ -32,14 +32,16 @@
         }
     }
     .info-agenda {
-        height: 100%;
+        min-height: 50px;
+        height: auto;
         width: 200%;
+        max-width: 250px;
         font-size: 12px;
         background-color: white;
         color: #0082ad;
         padding: 5px;
         position: absolute;
-        top: -70px;
+        bottom: 70px;
         left: 20px;
         border: 1px solid #999;
         z-index: 3;
