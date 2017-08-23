@@ -42,7 +42,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
     }
 
-    nombreChange() {
+    nombreChange($event) {
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
         }
@@ -130,15 +130,15 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
                 equipamiento: event.query,
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {
-                this.agenda.equipamiento = respuesta.map((ef) => {
-                    return (typeof ef.equipamiento !== 'undefined' && ef.equipamiento.length > 0 ? ef.equipamiento : []);
-                }).filter((elem, index, self) => {
+                let resultado = respuesta.reduce((listado, ef) => {
+                    return [...listado, ...(typeof ef.equipamiento !== 'undefined' && ef.equipamiento.length > 0 ? ef.equipamiento : [])];
+                }, []).filter((elem, index, self) => {
                     return index === self.indexOf(elem);
                 });
-
                 if (this.agenda.equipamiento) {
-                    event.callback(this.agenda.equipamiento);
+                    resultado = [...this.agenda.equipamiento, ...resultado];
                 }
+                event.callback(resultado);
             });
         } else {
             event.callback(this.agenda.equipamiento || []);
