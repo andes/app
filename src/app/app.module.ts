@@ -243,6 +243,8 @@ import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/pre
 import { IndicacionProcedimientoComponent } from './components/rup/atomos/indicacionProcedimiento.component';
 import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/buscadorMedicamentoSnomed.component';
 import { DosisComponent } from './components/rup/atomos/dosis.component';
+import { RecetaComponent } from './components/rup/atomos/receta.component';
+
 
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
@@ -352,6 +354,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
     { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
     { component: DosisComponent, key: 'DosisComponent' },
+    { component: RecetaComponent, key: 'RecetaComponent' }
 
 ];
 
@@ -438,7 +441,8 @@ const RUP_COMPONENTS = [
     PrescripcionMedicamentoComponent,
     IndicacionProcedimientoComponent,
     BuscadorMedicamentoSnomedComponent,
-    DosisComponent
+    DosisComponent,
+    RecetaComponent
 ];
 
 // Locales
