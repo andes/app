@@ -22,7 +22,7 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
-    estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
+    estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }, { id: 'transformado', nombre: 'Transformado' }];
     unidadTiempo = [{ id: 'anios', nombre: 'Año(s)' }, { id: 'mes', nombre: 'Mes(es)' }, { id: 'semanas', nombre: 'Semana(s)' }, { id: 'dias', nombre: 'Día(s)' }];
 
 
