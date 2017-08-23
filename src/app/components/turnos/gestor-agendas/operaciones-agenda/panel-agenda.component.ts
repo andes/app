@@ -202,6 +202,15 @@ export class PanelAgendaComponent implements OnInit {
     selectEspacio($data) {
         this.agenda.espacioFisico = $data;
         this.validarSolapamientos('espacioFisico');
+        if (this.alertas.length === 0) {
+            this.plex.confirm('Cambiar espacio físico', '¿Confirmar?').then((respuesta) => {
+                if (respuesta === true) {
+                    this.guardarAgenda(this.agenda);
+                } else {
+                    return false;
+                }
+            });
+        }
     }
 
     /**
@@ -218,26 +227,8 @@ export class PanelAgendaComponent implements OnInit {
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).
-                        subscribe(agendas => {
+                    this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
 
-                            // Hay problemas de solapamiento?
-                            let agendasConSolapamiento = agendas.filter(agenda => {
-                                return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
-                            });
-
-                            // Si encontramos una agenda que coincida con la búsqueda...
-                            if (agendasConSolapamiento.length > 0) {
-                                this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
-                            }
-                        });
-                });
-            }
-        } else if (tipo === 'espacioFisico') {
-            // Loop Espacios Físicos
-            if (this.agenda.espacioFisico) {
-                this.serviceAgenda.get({ 'espacioFisico': this.agenda.espacioFisico._id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).
-                    subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
@@ -245,9 +236,25 @@ export class PanelAgendaComponent implements OnInit {
 
                         // Si encontramos una agenda que coincida con la búsqueda...
                         if (agendasConSolapamiento.length > 0) {
-                            this.alertas = [... this.alertas, 'El ' + this.agenda.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                            this.alertas = [... this.alertas, 'El profesional ' + profesional.nombre + ' ' + profesional.apellido + ' está asignado a otra agenda en ese horario'];
                         }
                     });
+                });
+            }
+        } else if (tipo === 'espacioFisico') {
+            // Loop Espacios Físicos
+            if (this.agenda.espacioFisico) {
+                this.serviceAgenda.get({ 'espacioFisico': this.agenda.espacioFisico._id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
+                    // Hay problemas de solapamiento?
+                    let agendasConSolapamiento = agendas.filter(agenda => {
+                        return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
+                    });
+
+                    // Si encontramos una agenda que coincida con la búsqueda...
+                    if (agendasConSolapamiento.length > 0) {
+                        this.alertas = [... this.alertas, 'El ' + this.agenda.espacioFisico.nombre + ' está asignado a otra agenda en ese horario'];
+                    }
+                });
             }
         }
     }
