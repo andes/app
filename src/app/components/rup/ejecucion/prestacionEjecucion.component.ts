@@ -795,17 +795,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                         fechaNacimiento: $event.fechaNacimiento
                     }
                 };
-
+                this.registros = this.registros.filter(elem => {
+                    if (elem.valor) {
+                        return (elem.valor.idRegistroOrigen) ? false : true;
+                    } else {
+                        return true;
+                    }
+                });
                 this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                     this.plex.toast('success', 'El paciente se actualizo correctamente', 'Paciente actualizado');
-                    this.servicioPrestacion.getById(this.prestacion.id).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        // Completamos los datos del nuevo paciente seleccionado
-                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                            this.paciente = paciente;
-                        });
-                        this.showCambioPaciente = false;
+                    this.prestacion = prestacionEjecutada;
+                    // Completamos los datos del nuevo paciente seleccionado
+                    this.servicioPaciente.getById(prestacionEjecutada.paciente.id).subscribe(paciente => {
+                        this.paciente = paciente;
                     });
+                    this.showCambioPaciente = false;
                 });
             }
         });

@@ -1,3 +1,5 @@
+
+
 /*
 @jgabriel | 04-03-2017
 
@@ -184,7 +186,7 @@ import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeE
 import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
 // import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
-import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indiceDeMasaCorporal.component';
 import { Formula } from './components/rup/core/formula.component';
 import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
 import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
@@ -211,6 +213,7 @@ import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionC
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
 import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
 import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
+import { RefiereDefaultComponent } from './components/rup/atomos/refiereDefault.component';
 
 // ATOMO SOCIOECONOMICO
 import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -239,11 +242,13 @@ import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perin
 import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/prescripcionMedicamento.component';
 import { IndicacionProcedimientoComponent } from './components/rup/atomos/indicacionProcedimiento.component';
 import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/buscadorMedicamentoSnomed.component';
+import { DosisComponent } from './components/rup/atomos/dosis.component';
 
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-
+// Autocitado
+import { AutocitadoComponent } from './components/rup/atomos/autocitado.component';
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -266,6 +271,7 @@ import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-creat
 
 export const RUP_ELEMENTS: any[] = [
     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
+    { component: AutocitadoComponent, key: 'AutocitadoComponent' },
     { component: Atomo, key: 'Atomo' },
     { component: BuscadorComponent, key: 'BuscadorComponent' },
     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
@@ -315,6 +321,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
+    { component: RefiereDefaultComponent, key: 'RefiereDefaultComponent' },
     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
     { component: ResumenComponent, key: 'ResumenComponent' },
     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
@@ -343,7 +350,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
     { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' },
     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
-    { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' }
+    { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
+    { component: DosisComponent, key: 'DosisComponent' },
 
 ];
 
@@ -351,6 +359,7 @@ export const RUP_ELEMENTS: any[] = [
 const RUP_COMPONENTS = [
     ActitudAnteLosCuidadosComponent,
     Atomo,
+    AutocitadoComponent,
     BuscadorComponent,
     ConsultaMedicinaGeneralComponent,
     ControlDeEsfinteresComponent,
@@ -399,6 +408,7 @@ const RUP_COMPONENTS = [
     PruebaOtoemisionesAcusticasComponent,
     PuntoInicioComponent,
     RadiografiaComponent,
+    RefiereDefaultComponent,
     RegistrosVisitasComponent,
     ResumenComponent,
     SangreOcultaMateriaFecalComponent,
@@ -427,7 +437,8 @@ const RUP_COMPONENTS = [
     ViviendaSostenEconomicoComponent,
     PrescripcionMedicamentoComponent,
     IndicacionProcedimientoComponent,
-    BuscadorMedicamentoSnomedComponent
+    BuscadorMedicamentoSnomedComponent,
+    DosisComponent
 ];
 
 // Locales
@@ -467,7 +478,7 @@ import { routing, appRoutingProviders } from './app.routing';
         RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
-        AuditoriaComponent, 
+        AuditoriaComponent,
         // AuditoriaPorBloqueComponent, 
         Auditoria2Component,
         ...RUP_COMPONENTS,

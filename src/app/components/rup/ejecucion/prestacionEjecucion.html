@@ -105,7 +105,7 @@
                                             </div>
 
                                             <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
-                                                [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
+                                                [snomedConcept]="elemento.concepto" *ngIf="paciente && data" [valoresPrestacionEjecucion]="data">
                                             </rup>
                                         </div>
                                         <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">

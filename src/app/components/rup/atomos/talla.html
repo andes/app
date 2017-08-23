@@ -1,4 +1,4 @@
-<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="data[tipoPrestacion.key]" name="talla" label="Talla" suffix="cm" min="1" max="240" (keyup)="devolverValores()">
+<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="data[elementoRUP.key]" name="talla" label="Talla" suffix="cm" min="1" max="240" (keyup)="devolverValores()" required="true">
 </plex-float>
 
 <p *ngIf="soloValores">

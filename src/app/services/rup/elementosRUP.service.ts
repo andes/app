@@ -10,21 +10,21 @@ export class ElementosRupService {
     private evolucionProblemaPorDefecto = '594aa21a884431c25d9a0266';
     private solicitudPorDefecto = '5964cc2aa784f4e1a8e2afe9';
     public nuevaEvolucion = {
-                                '_id' : '596769fea784f4e1a8e2afec',
-                                'key' : 'evolucionProblema',
-                                'nombre' : 'Evolucionar problema',
-                                'activo' : true,
-                                'autonomo' : false,
-                                'componente' : {
-                                    'ruta' : 'rup/atomos/nuevaEvolucionProblema.component.ts',
-                                    'nombre' : 'NuevaEvolucionProblemaComponent'
-                                },
-                                'tipo' : 'atomo',
-                                'conceptos' : [],
-                                'requeridos' : [],
-                                'frecuentes' : [],
-                                'turneable' : false
-                            };
+        '_id': '596769fea784f4e1a8e2afec',
+        'key': 'evolucionProblema',
+        'nombre': 'Evolucionar problema',
+        'activo': true,
+        'autonomo': false,
+        'componente': {
+            'ruta': 'rup/atomos/nuevaEvolucionProblema.component.ts',
+            'nombre': 'NuevaEvolucionProblemaComponent'
+        },
+        'tipo': 'atomo',
+        'conceptos': [],
+        'requeridos': [],
+        'frecuentes': [],
+        'turneable': false
+    };
 
     private elementoRupUrl = '/modules/rup/elementosRUP';  // URL to web api
 
@@ -88,8 +88,19 @@ export class ElementosRupService {
         let elementoRUP: any;
         // si es trastorno o hallazgo, busco su forma de evolucionar por defecto
         if (tipo === 'problemas') {
-            elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            elementoRUP = listaElementosRup.find(elemento => {
+                return elemento.conceptos.find(concepto =>
+                    concepto.conceptId === conceptoSnomed.conceptId
+                );
+            });
+
+            // si no encontramos una forma de evolucionar, devolvemos el elemento por defecto
+            if (!elementoRUP) {
+                elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            }
             return elementoRUP;
+            // elementoRUP = listaElementosRup.find(elemento => elemento.id === this.evolucionProblemaPorDefecto);
+            // return elementoRUP;
         } else {
             if (tipo === 'procedimientos') {
                 // si es un procedimiento buscamos su propia forma de evolucionar
@@ -106,8 +117,17 @@ export class ElementosRupService {
                 return elementoRUP;
             } else {
                 if (tipo === 'planes') {
-                    // si es un plan ejecutamos la solicitud por defecto
-                    elementoRUP = listaElementosRup.find(elemento => elemento.id === this.solicitudPorDefecto);
+                    // si es un plan autocitado buscamos su elemento
+                    if (conceptoSnomed.conceptId === '281036007') {
+                        elementoRUP = listaElementosRup.find(elemento => {
+                            return elemento.conceptos.find(concepto =>
+                                concepto.conceptId === '281036007'
+                            );
+                        });
+                    } else {
+                        // Si no es autocitado le asignamos  por defecto.
+                        elementoRUP = listaElementosRup.find(elemento => elemento.id === this.solicitudPorDefecto);
+                    }
                     return elementoRUP;
                 }
             }
