@@ -81,6 +81,7 @@ export class GestorAgendasComponent implements OnInit {
     public estado: any = [];
     public parametros;
     public btnDarTurnos = false;
+    public btnCrearAgendas = false;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -99,13 +100,17 @@ export class GestorAgendasComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
-
+        // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
-            // Si no está autorizado redirect al home
             this.redirect('inicio');
         };
 
+        // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+
+        // Verifica permisos para crear agenda
+        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
+
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',

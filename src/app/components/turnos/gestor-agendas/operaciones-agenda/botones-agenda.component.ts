@@ -2,6 +2,9 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
+import {
+    Auth
+} from '@andes/auth';
 import * as moment from 'moment';
 
 @Component({
@@ -56,7 +59,7 @@ export class BotonesAgendaComponent implements OnInit {
     showEditarAgendaPanel: Boolean = false;
     cantSel: number;
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService) {
+    constructor(public plex: Plex, public serviceAgenda: AgendaService, public auth: Auth) {
     }
 
     ngOnInit() {
@@ -144,27 +147,36 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Muestra/oculta botones según una combinación de criterios
     actualizarBotones() {
+        debugger;
+        let puedeEditar = this.auth.getPermissions('turnos:agenda:puedeEditar:').length > 0;
+        let puedeSuspender = this.auth.getPermissions('turnos:agenda:puedeSuspender:').length > 0;
+        let puedeHabilitar = this.auth.getPermissions('turnos:agenda:puedeHabilitar:').length > 0;
+        let puedePublicar = this.auth.getPermissions('turnos:agenda:puedePublicar:').length > 0;
+        let puedePausar = this.auth.getPermissions('turnos:agenda:puedePausar:').length > 0;
+        let puedeReanudar = this.auth.getPermissions('turnos:agenda:puedeReanudar:').length > 0;
+        let puedeClonar = this.auth.getPermissions('turnos:agenda:puedeClonar:').length > 0;
+        let puedeDarSobreturno = this.auth.getPermissions('turnos:agenda:puedeDarSobreturno:').length > 0;
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
-            editarAgenda: (this.cantSel === 1) && this.puedoEditar(),
+            editarAgenda: (this.cantSel === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
-            suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender()),
+            suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
-            pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer()),
+            pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer() && puedeHabilitar),
             // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
-            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados(),
+            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados() && puedeHabilitar,
             // Se pueden cambiar a estado pausada todas las agendas que no estén en estado planificacion
-            pausarAgenda: (this.cantSel > 0 && this.puedoPausar()),
+            pausarAgenda: (this.cantSel > 0 && this.puedoPausar()) && puedePausar,
             // Se pueden reanudar las agendas en estado pausada
-            reanudarAgenda: (this.cantSel > 0 && this.puedoReanudar()),
+            reanudarAgenda: (this.cantSel > 0 && this.puedoReanudar()) && puedeReanudar,
             // Se puede cerrar cualquier agenda [TODO: ver qué onda]
             cerrarAgenda: false,
             // Se pueden clonar todas las agendas, ya que sólo se usa como un blueprint
-            clonarAgenda: (this.cantSel === 1),
+            clonarAgenda: (this.cantSel === 1) && puedeClonar,
             // Agregar una nota relacionada a la Agenda
             agregarNota: true,
             // Agregar un sobreturno
-            agregarSobreturno: (this.cantSel === 1) && this.puedoAgregar(),
+            agregarSobreturno: (this.cantSel === 1) && this.puedoAgregar() && puedeDarSobreturno,
             // Revisión de agenda
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos

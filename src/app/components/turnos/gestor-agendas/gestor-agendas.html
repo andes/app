@@ -131,7 +131,7 @@
 
     <!--Footer-->
     <footer *ngIf="showGestorAgendas">
-        <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
+        <plex-button *ngIf="btnCrearAgendas" type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
         <plex-button *ngIf="btnDarTurnos" type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
     </footer>
 
