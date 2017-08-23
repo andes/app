@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -51,11 +52,16 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService) {
+    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
         this.actualizarContadores();
     }
 
     public ngOnInit() {
+        let autorizado = this.auth.getPermissions('mpi:?').length > 0;
+        if (!autorizado) {
+            // Si no está autorizado redirect al home
+            this.router.navigate(['./inicio']);
+        };
         this.autoFocus = this.autoFocus + 1;
     }
 
