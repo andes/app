@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+    import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -54,8 +54,7 @@ export class ListarTurnosComponent implements OnInit {
     constructor(public plex: Plex, public servicePaciente: PacienteService, public auth: Auth) { }
 
     ngOnInit() {
-        // TODO: Revisar permisos, si hiciera falta
-        this.autorizado = this.auth.getPermissions('turnos:*').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
     }
 
     // Abre diálogo de impresión del navegador

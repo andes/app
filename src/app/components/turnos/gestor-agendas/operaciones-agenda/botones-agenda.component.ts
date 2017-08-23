@@ -147,7 +147,6 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Muestra/oculta botones según una combinación de criterios
     actualizarBotones() {
-        debugger;
         let puedeEditar = this.auth.getPermissions('turnos:agenda:puedeEditar:').length > 0;
         let puedeSuspender = this.auth.getPermissions('turnos:agenda:puedeSuspender:').length > 0;
         let puedeHabilitar = this.auth.getPermissions('turnos:agenda:puedeHabilitar:').length > 0;
@@ -156,6 +155,7 @@ export class BotonesAgendaComponent implements OnInit {
         let puedeReanudar = this.auth.getPermissions('turnos:agenda:puedeReanudar:').length > 0;
         let puedeClonar = this.auth.getPermissions('turnos:agenda:puedeClonar:').length > 0;
         let puedeDarSobreturno = this.auth.getPermissions('turnos:agenda:puedeDarSobreturno:').length > 0;
+        let puedeImprimir = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar() && puedeEditar,
@@ -182,7 +182,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Reasignar turnos
             reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos(),
             // Imprimir pdf
-            listarTurnos: (this.cantSel === 1),
+            listarTurnos: (this.cantSel === 1) && puedeImprimir,
         };
     }
 
