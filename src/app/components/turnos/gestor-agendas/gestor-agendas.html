@@ -113,14 +113,14 @@
             </div>
 
             <!-- Panel derecho -->
-            <div *ngIf="agendasSeleccionadas.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel  && agendasSeleccionadas.length == 1, 'col-4': !showEditarAgendaPanel}">
+            <div *ngIf="agendasSeleccionadas.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas.length === 1, 'col-4': !showEditarAgendaPanel}">
                 <plex-box>
                     <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)"></turnos>
                     </div>
-                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length == 1" type="info">
+                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length === 1" type="info">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
-                            (editarEsapcioFisicoEmit)="true"></panel-agenda>
+                            (editarEsapcioFisicoEmit)="true" #guardarAgendaPanel></panel-agenda>
                     </div>
                     <!-- Muestra el panel de Notas de Agendas -->
                     <div *ngIf="showAgregarNotaAgenda">
@@ -139,8 +139,12 @@
 
     <!--Footer-->
     <footer *ngIf="showGestorAgendas">
-        <plex-button type="primary" icon="mdi mdi-plus-box" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
-        <plex-button *ngIf="btnDarTurnos" type="primary" icon="mdi mdi-calendar-multiple" label="Dar Turnos" (click)="darTurnos()"></plex-button>
+        <plex-button type="primary" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
+        <plex-button *ngIf="btnDarTurnos" type="primary" label="Dar Turnos" (click)="darTurnos()"></plex-button>
+        <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length === 1">
+            <plex-button type="danger" label="Cancelar" (click)="guardarAgendaPanel.cancelar()"></plex-button>
+            <plex-button type="success" label="Guardar" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>
+        </div>
     </footer>
 
     <!--Componentes-->
@@ -150,8 +154,7 @@
 
     <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
     <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]"
-        (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
+    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
     <!-- Pantalla Reasignar Turnos -->
     <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
