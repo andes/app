@@ -8,7 +8,8 @@
 
     <tr class="hover" *ngFor="let espacio of matrix" class="item" (click)=onRowClick(espacio)>
         <td>
-            <small title="{{espacio._value.servicio.nombre + ' - ' + espacio._value.edificio.descripcion}}" titlePosition="right"><strong>{{espacio._value.nombre}}</strong></small><br>
+            <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio.descripcion}}"
+                titlePosition="right"><strong>{{espacio._value.nombre}}</strong></small><br>
             <small *ngIf="espacio.sector">{{espacio._value.sector.nombre}}</small>
             <span *ngFor="let eq of espacio._value.equipamiento" class="badge badge-info">{{eq.term}}</span>
         </td>
