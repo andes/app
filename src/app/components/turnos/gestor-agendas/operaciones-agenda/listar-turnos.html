@@ -1,5 +1,5 @@
-<form *ngIf="showListarTurnos && autorizado" class="plex-layout">
-    <div id="printpage">
+<form *ngIf="showListarTurnos" class="plex-layout">
+    <div *ngIf="autorizado" id="printpage">
         <section>
             <plex-box>
                 <!--Header de listado de Turnos-->

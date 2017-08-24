@@ -1,24 +1,22 @@
 <fieldset>
     <legend>Editar agenda</legend>
 
-    <!-- Profesionales -->
-    <plex-select [(ngModel)]="modelo.profesionales" name="profesionales" (getData)="loadProfesionales($event)" label="Profesionales"
-        placeholder="Seleccione los profesionales" labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
-        [multiple]="true">
-    </plex-select>
-
-    <!-- Edificio -->
-    <!--<plex-select [(ngModel)]="modelo.edificios" name="edificios" (getData)="loadEdificios($event)" label="Edificio" labelField="edificio.descripcion">
-    </plex-select>-->
-
-    <!-- Espacio Físico -->
-    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-        placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
-        (change)="validarSolapamientos('espacioFisico')">
-    </plex-select>
-
-
-    <filtros-mapa-espacio-fisico [agendaSeleccionada]="modelo"></filtros-mapa-espacio-fisico>
+    <div class="row">
+        <div class="col-6">
+            <!-- Profesionales -->
+            <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" (getData)="loadProfesionales($event)" label="Profesionales"
+                placeholder="Seleccione los profesionales" labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
+                [multiple]="true">
+            </plex-select>
+        </div>
+        <div class="col-6">
+            <!-- Espacio Físico -->
+            <plex-select [(ngModel)]="agenda.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
+                placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                (change)="validarSolapamientos('espacioFisico')">
+            </plex-select>
+        </div>
+    </div>
 
     <!-- Alertas -->
     <div *ngIf="alertas.length > 0" class="alert alert-warning mt-3">
@@ -27,11 +25,14 @@
         </div>
     </div>
 
+    <filtros-mapa-espacio-fisico [agendaSeleccionada]="agenda" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+    <mapa-espacio-fisico [agendaSeleccionada]="agenda" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
+
     <!-- Botones -->
-    <div class="mt-3 float-right">
-        <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+    <!-- <div class="mt-3 float-right">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
         </plex-button>
-        <plex-button *ngIf="!alertas.length" type="success" icon="mdi-content-save" label="Guardar" (click)="guardarAgenda(editaAgendaPanel)">
+        <plex-button *ngIf="!alertas.length" type="success" label="Guardar" (click)="guardarAgenda(editaAgendaPanel)">
         </plex-button>
-    </div>
+    </div> -->
 </fieldset>
