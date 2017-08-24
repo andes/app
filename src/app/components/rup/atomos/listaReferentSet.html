@@ -1,12 +1,13 @@
+<ul *ngIf="!soloValores" class="list-group">
+    <li class="list-group-item" *ngFor="let _concepto of conceptos; let i = index">
+        <plex-bool [(ngModel)]="data[elementoRUP.key][_concepto.conceptId]" name="_concepto.conceptId" label="_concepto.conceptId" type="slide" (change)="devolverValores()">
+        </plex-bool>
+    </li>
+</ul>
 
-
-
-<plex-bool [(ngModel)]="data[elementoRUP.key]" name="embarazoAnormal" label="" type="slide" (change)="devolverValores()">
-</plex-bool>
 
 <p *ngIf="soloValores">
-    <label>Frecuencia cardíaca</label>
-    <br /> {{data[elementoRUP.key]}} PPM
+
 </p>
 
 <p *ngIf="mensaje.texto">

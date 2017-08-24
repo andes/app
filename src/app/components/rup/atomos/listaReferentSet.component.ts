@@ -26,6 +26,7 @@ export class ListaReferentSetComponent extends Atomo implements OnInit {
             if (this.datosIngreso.referentSetId) {
                 this.SNOMED.get({ refsetId: this.datosIngreso.referentSetId })
                     .subscribe(conceptos => {
+                        debugger;
                         if (conceptos) {
                             this.conceptos = conceptos;
                         }
