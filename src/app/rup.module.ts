@@ -1,75 +1,7 @@
-// import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
-// import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
-// import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
-// import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
-// import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
-// import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
-// import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
-// import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
-// import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
-// import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
-// import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
-// import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
-// import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
-// import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
-// // import { RupComponent } from './components/rup/rup.component';
-// // import { PacienteService } from './services/paciente.service';
-// // import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
-// // // Angular
-// // import { LOCALE_ID } from '@angular/core';
-// // import { BrowserModule } from '@angular/platform-browser';
-// // import { HttpModule } from '@angular/http';
-// // import { FormsModule } from '@angular/forms';
-// // import { NgModule } from '@angular/core';
+// // ... MPI
+// import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
+// // ... RUP
 
-// // // Plex
-// // import { PlexModule } from '@andes/plex/src/lib/module';
-// // import { Plex } from '@andes/plex';
-
-// // // Server
-// // import { Server } from '@andes/shared';
-
-// // // Routing
-// // import { routing, appRoutingProviders } from './app.routing';
-
-// // // RUP
-// // import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
-// // import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
-// // import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
-// // import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
-// // import { PesoComponent } from './components/rup/atomos/peso.component';
-// // import { SaturacionOxigenoComponent } from './components/rup/atomos/saturacionOxigeno.component';
-// // import { TallaComponent } from './components/rup/atomos/talla.component';
-// // import { TemperaturaComponent } from './components/rup/atomos/temperatura.component';
-// // import { FrecuenciaCardiacaComponent } from './components/rup/atomos/frecuenciaCardiaca.component';
-// // import { FrecuenciaRespiratoriaComponent } from './components/rup/atomos/frecuenciaRespiratoria.component';
-// // import { TensionSistolicaComponent } from './components/rup/atomos/tensionSistolica.component';
-// // import { TensionDiastolicaComponent } from './components/rup/atomos/tensionDiastolica.component';
-// // import { SignosVitalesComponent } from './components/rup/moleculas/signos-vitales/signosVitales.component';
-// // import { TensionArterialComponent } from './components/rup/moleculas/tension-arterial/tensionArterial.component';
-// // import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-// // import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-// // import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-// // import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
-// // import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
-// // import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
-// // import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
-// // import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
-// // import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
-// // import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
-// // import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
-// // import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
-// // import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
-// // import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
-// // import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
-// // import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
-
-// // RUP
-// import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
-// import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
-// import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
-// import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
-// import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 // import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
 // import { PesoComponent } from './components/rup/atomos/peso.component';
 // import { SaturacionOxigenoComponent } from './components/rup/atomos/saturacionOxigeno.component';
@@ -82,22 +14,56 @@
 // import { SignosVitalesComponent } from './components/rup/moleculas/signosVitales.component';
 // import { TensionArterialComponent } from './components/rup/moleculas/tensionArterial.component';
 // import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-// import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
 // import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-// import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
-// import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
-// import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
-// import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
+// // import { NuevoProblemaComponent } from './components/rup/problemas-paciente/nuevoProblema.component';
+// // import { EvolucionTodosProblemasComponent } from './components/rup/problemas-paciente/evolucionTodosProblemas.component';
+// // import { EvolucionProblemaComponent } from './components/rup/problemas-paciente/evolucionProblema.component';
+// // import { EnmendarProblemaComponent } from './components/rup/problemas-paciente/enmendarProblema.component';
+// // import { TransformarProblemaComponent } from './components/rup/problemas-paciente/transformarProblema.component';
+// // import { verProblemaComponent } from './components/rup/problemas-paciente/verProblema.component';
+// import { ConsultaMedicinaGeneralComponent } from './components/rup/moleculas/consultaMedicinaGeneral.component';
+// import { ObservacionesComponent } from './components/rup/atomos/observaciones.component';
+// import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
+// import { EdadGestacionalComponent } from './components/rup/atomos/perinatales-nacimiento/edadGestacional.component';
+// import { ScoreApgarComponent } from './components/rup/atomos/perinatales-nacimiento/scoreApgar.component';
+// import { NacimientoComponent } from './components/rup/moleculas/nacimiento/nacimiento.component';
+// // import { EdadGestacionalFetalComponent } from './components/rup/moleculas/edad-gestacional-fetal/edadGestacionalFetal.component';
 // import { PesquisaNeonatalComponent } from './components/rup/atomos/pesquisaNeonatal.component';
-// import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
+// import { PruebaOtoemisionesAcusticasComponent } from './components/rup/atomos/pruebaOtoemisionesAcusticas.component';
 // import { PercentiloTallaComponent } from './components/rup/atomos/percentiloTalla.component';
+// import { PercentiloCircunferenciaCefalicaNinoComponent } from './components/rup/atomos/percentiloCircunferenciaCefalicaNino.component';
 // import { DesarrolloMotorComponent } from './components/rup/atomos/desarrolloMotor.component';
 // import { ActitudAnteLosCuidadosComponent } from './components/rup/atomos/actitudAnteLosCuidados.component';
 // import { ControlDeEsfinteresComponent } from './components/rup/atomos/controlDeEsfinteres.component';
 // import { DesarrolloIntelectualyJuegosComponent } from './components/rup/atomos/desarrolloIntelectualyJuegos.component';
 // import { EscalaDeDesarrolloComponent } from './components/rup/moleculas/escala-de-desarrollo/escalaDeDesarrollo.component';
-// import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
-// import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indice-de-masa-corporal/indiceDeMasaCorporal.component';
+// // import { FactoresDeRiesgoNinoSanoComponent } from './components/rup/atomos/factores-riesgo/factoresDeRiesgoNinoSano.component';
+// import { IndiceDeMasaCorporalComponent } from './components/rup/formulas/indiceDeMasaCorporal.component';
+// import { Formula } from './components/rup/core/formula.component';
+// import { RegistrosVisitasComponent } from './components/rup/moleculas/nino-sano/registro-visitas/registrosVisitas.component';
+// import { DatosPerinatalesComponent } from './components/rup/moleculas/nino-sano/datos-perinatales/datosPerinatales.component';
+// import { NinoSanoComponent } from './components/rup/moleculas/nino-sano/ninoSano.component';
+// import { Molecula } from './components/rup/core/molecula.component';
+// import { Atomo } from './components/rup/core/atomoComponent';
+// import { EcografiaComponent } from './components/rup/moleculas/ecografia.component';
+// import { InterConsultaComponent } from './components/rup/moleculas/interConsulta.component';
+// import { LaboratorioComponent } from './components/rup/moleculas/laboratorio.component';
+// import { RadiografiaComponent } from './components/rup/moleculas/radiografia.component';
+// import { TomografiaComponent } from './components/rup/moleculas/tomografia/tomografia.component';
+// import { MamografiaComponent } from './components/rup/moleculas/mamografia/mamografia.component';
+// import { EndoscopiaComponent } from './components/rup/moleculas/endoscopia/endoscopia.component';
+// import { TomaPapComponent } from './components/rup/moleculas/toma-pap/tomaPap.component';
+// import { TomaHpvComponent } from './components/rup/moleculas/toma-hpv/tomaHpv.component';
+// import { SangreOcultaMateriaFecalComponent } from './components/rup/moleculas/sangre-oculta-materia-fecal/sangreOcultaMateriaFecal.component';
+// import { BuscadorComponent } from './components/rup/ejecucion/buscador.component';
+// import { HudsBusquedaComponent } from './components/rup/ejecucion/hudsBusqueda.component';
+// import { SolicitudPrestacionDefaultComponent } from './components/rup/atomos/solicitudPrestacionDefault.component';
+
+// import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionCrear.component';
+// import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
+// import { EvolucionProblemaDefaultComponent } from './components/rup/atomos/evolucionProblemaDefault.component';
+// import { NuevaEvolucionProblemaComponent } from './components/rup/atomos/nuevaEvolucionProblema.component';
+// import { RefiereDefaultComponent } from './components/rup/atomos/refiereDefault.component';
 
 // // ATOMO SOCIOECONOMICO
 // import { ViviendaSituacionSocioEconomicaComponent } from './components/rup/moleculas/vivienda-situacion-socioeconomica-familiar/viviendaSituacionSocioEconomica.component';
@@ -115,238 +81,197 @@
 // import { PerinatalesEmbarazoAnormalComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesEmbarazoAnormal.component';
 // import { PerinatalesNumeroGestaComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesNumeroGesta.component';
 // import { PerinatalesGestacionMultipleComponent } from './components/rup/atomos/perinatales-embarazo/perinatalesGestacionMultiple.component';
-// // Perinatales Parto
+// // PERINATALES PARTO
 // import { PartoViaVaginalComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginal.component';
 // import { PartoViaVaginalForcepsComponent } from './components/rup/atomos/perinatales-parto/partoViaVaginalForceps.component';
 // import { PartoVaginalAsistidoExtractorVacioComponent } from './components/rup/atomos/perinatales-parto/partoVaginalAsistidoExtractorVacio.component';
 // import { PartoCesareaComponent } from './components/rup/atomos/perinatales-parto/partoCesarea.component';
 // import { HallazgoRelacionadoPartoComponent } from './components/rup/atomos/perinatales-parto/hallazgoRelacionadoParto.component';
+
+// // PRESCRIPCION MEDICAMENTOS
+// import { PrescripcionMedicamentoComponent } from './components/rup/moleculas/prescripcionMedicamento.component';
+// import { IndicacionProcedimientoComponent } from './components/rup/atomos/indicacionProcedimiento.component';
+// import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/buscadorMedicamentoSnomed.component';
+// import { DosisComponent } from './components/rup/atomos/dosis.component';
+// import { RecetaComponent } from './components/rup/atomos/receta.component';
+
+// // Autocitado
+// import { AutocitadoComponent } from './components/rup/atomos/autocitado.component';
+
+
 // // NIÑO SANO
-// import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
+// // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 // import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
-// import { HeaderPacienteComponent } from "./components/paciente/headerPaciente.component";
-// import { EvolucionProblemaDefaultComponent } from "./components/rup/atomos/evolucionProblemaDefault.component";
-// import { SolicitudPrestacionDefaultComponent } from "./components/rup/atomos/solicitudPrestacionDefault.component";
 
-
-// // // Servicios RUP //
-// // import { TipoPrestacionService } from './services/tipoPrestacion.service';
-// // import { TipoProblemaService } from './services/rup/tipoProblema.service';
-// // import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
-// // import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-
-// // // Fin Servicios RUP //
-
-
-// // export const RUP_COMPONENTS = [
-// //     TensionArterialComponent,
-// //     SignosVitalesComponent,
-// //     FrecuenciaCardiacaComponent,
-// //     FrecuenciaRespiratoriaComponent,
-// //     PesoComponent,
-// //     SaturacionOxigenoComponent,
-// //     TallaComponent,
-// //     TemperaturaComponent,
-// //     TensionSistolicaComponent,
-// //     TensionDiastolicaComponent,
-// //     ObservacionesComponent,
-// //     ConsultaGeneralClinicaMedicaComponent,
-// //     EvolucionProblemaComponent,
-// //     EvolucionTodosProblemasComponent,
-// //     PuntoInicioComponent,
-// //     PrestacionEjecucionComponent,
-// //     ResumenComponent,
-// //     HeaderPacienteComponent,
-// //     PrestacionValidacionComponent,
-// //     EdadGestacionalFetalComponent,
-// //     ViviendaAsistenciaEconomicaComponent,
-// //     ViviendaCombustionComponent,
-// //     ViviendaContaminantesComponent,
-// //     ViviendaFamiliaComponent,
-// //     ViviendaNivelInstruccionComponent,
-// //     ViviendaPisoComponent,
-// //     ViviendaResiduosComponent,
-// //     ViviendaSituacionSocioEconomicaComponent,
-// //     ViviendaSostenEconomicoComponent,
-// //     ViviendaCondicionesAlojamientoComponent,
-// //     PerinatalesEmbarazoNormalComponent,
-// //     PerinatalesEmbarazoAnormalComponent,
-// //     PerinatalesNumeroGestaComponent,
-// //     PerinatalesGestacionMultipleComponent,
-// //     ScoreApgarComponent,
-// //     EdadGestacionalComponent,
-// //     PartoViaVaginalComponent,
-// //     PartoVaginalAsistidoExtractorVacioComponent,
-// //     PartoViaVaginalForcepsComponent,
-// //     PartoCesareaComponent,
-// //     HallazgoRelacionadoPartoComponent,
-// //     TransformarProblemaComponent,
-// //     PesquisaNeonatalComponent,
-// //     PruebaOtoemisionesAcusticasComponent,
-// //     PercentiloTallaComponent,
-// //     PercentiloCircunferenciaCefalicaNinoComponent,
-// //     DesarrolloMotorComponent,
-// //     ActitudAnteLosCuidadosComponent,
-// //     ControlDeEsfinteresComponent,
-// //     DesarrolloIntelectualyJuegosComponent,
-// //     EscalaDeDesarrolloComponent
-
-// export const RUP_ELEMENTS = [
-//     { component: TensionArterialComponent, key: 'TensionArterialComponent' },
-//     { component: SignosVitalesComponent, key: 'SignosVitalesComponent' },
-//     { component: FrecuenciaCardiacaComponent, key: 'FrecuenciaCardiacaComponent' },
-//     { component: FrecuenciaRespiratoriaComponent, key: 'FrecuenciaRespiratoriaComponent' },
-//     { component: PesoComponent, key: 'PesoComponent' },
-//     { component: SaturacionOxigenoComponent, key: 'SaturacionOxigenoComponent' },
-//     { component: TallaComponent, key: 'TallaComponent' },
-//     { component: TemperaturaComponent, key: 'TemperaturaComponent' },
-//     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
-//     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
-//     { component: ObservacionesComponent, key: 'ObservacionesComponent' },
-//     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
-//     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
-//     { component: PrestacionEjecucionComponent, key: 'PrestacionEjecucionComponent' },
-//     { component: ResumenComponent, key: 'ResumenComponent' },
-//     { component: HeaderPacienteComponent, key: 'HeaderPacienteComponent' },
-//     { component: PrestacionValidacionComponent, key: 'PrestacionValidacionComponent' },
-//     { component: EdadGestacionalComponent, key: 'EdadGestacionalComponent' },
-//     { component: ScoreApgarComponent, key: 'ScoreApgarComponent' },
-//     { component: NacimientoComponent, key: 'NacimientoComponent' },
-//     { component: EdadGestacionalFetalComponent, key: 'EdadGestacionalFetalComponent' },
-//     { component: ViviendaAsistenciaEconomicaComponent, key: 'ViviendaAsistenciaEconomicaComponent' },
-//     { component: ViviendaCombustionComponent, key: 'ViviendaCombustionComponent' },
-//     { component: ViviendaContaminantesComponent, key: 'ViviendaContaminantesComponent' },
-//     { component: ViviendaFamiliaComponent, key: 'ViviendaFamiliaComponent' },
-//     { component: ViviendaPisoComponent, key: 'ViviendaPisoComponent' },
-//     { component: ViviendaResiduosComponent, key: 'ViviendaResiduosComponent' },
-//     { component: ViviendaSituacionSocioEconomicaComponent, key: 'ViviendaSituacionSocioEconomicaComponent' },
-//     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
-//     { component: ViviendaNivelInstruccionComponent, key: 'ViviendaNivelInstruccionComponent' },
-//     { component: ViviendaCondicionesAlojamientoComponent, key: 'ViviendaCondicionesAlojamientoComponent' },
-//     { component: PerinatalesEmbarazoNormalComponent, key: 'PerinatalesEmbarazoNormalComponent' },
-//     { component: PerinatalesEmbarazoAnormalComponent, key: 'PerinatalesEmbarazoAnormalComponent' },
-//     { component: PerinatalesNumeroGestaComponent, key: 'PerinatalesNumeroGestaComponent' },
-//     { component: PerinatalesGestacionMultipleComponent, key: 'PerinatalesGestacionMultipleComponent' },
-//     { component: HallazgoRelacionadoPartoComponent, key: 'HallazgoRelacionadoPartoComponent' },
-//     { component: PartoCesareaComponent, key: 'PartoCesareaComponent' },
-//     { component: PartoVaginalAsistidoExtractorVacioComponent, key: 'PartoVaginalAsistidoExtractorVacioComponent' },
-//     { component: PartoViaVaginalForcepsComponent, key: 'PartoViaVaginalForcepsComponent' },
-//     { component: PartoViaVaginalComponent, key: 'PartoViaVaginalComponent' },
-//     { component: TransformarProblemaComponent, key: 'TransformarProblemaComponent' },
-//     { component: verProblemaComponent, key: 'verProblemaComponent' },
-//     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
-//     { component: PesquisaNeonatalComponent, key: 'PesquisaNeonatalComponent' },
-//     { component: PercentiloTallaComponent, key: 'PercentiloTallaComponent' },
-//     { component: PercentiloCircunferenciaCefalicaNinoComponent, key: 'PercentiloCircunferenciaCefalicaNinoComponent' },
-//     { component: DesarrolloMotorComponent, key: 'DesarrolloMotorComponent' },
+// export const RUP_ELEMENTS: any[] = [
 //     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
+//     { component: AutocitadoComponent, key: 'AutocitadoComponent' },
+//     { component: Atomo, key: 'Atomo' },
+//     { component: BuscadorComponent, key: 'BuscadorComponent' },
+//     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
 //     { component: ControlDeEsfinteresComponent, key: 'ControlDeEsfinteresComponent' },
+//     { component: DatosPerinatalesComponent, key: 'DatosPerinatalesComponent' },
 //     { component: DesarrolloIntelectualyJuegosComponent, key: 'DesarrolloIntelectualyJuegosComponent' },
+//     { component: DesarrolloMotorComponent, key: 'DesarrolloMotorComponent' },
+//     { component: EcografiaComponent, key: 'EcografiaComponent' },
+//     { component: EdadGestacionalComponent, key: 'EdadGestacionalComponent' },
+//     // { component: EdadGestacionalFetalComponent, key: 'EdadGestacionalFetalComponent' },
+//     { component: EndoscopiaComponent, key: 'EndoscopiaComponent' },
 //     { component: EscalaDeDesarrolloComponent, key: 'EscalaDeDesarrolloComponent' },
 //     { component: EstadoNutricionalComponent, key: 'EstadoNutricionalComponent' },
-//     { component: OdontologiaComponent, key: 'OdontologiaComponent' },
-//     { component: IndiceDeMasaCorporalComponent, key: 'IndiceDeMasaCorporalComponent' },
-//     { component: FactoresDeRiesgoNinoSanoComponent, key: 'FactoresDeRiesgoNinoSanoComponent' },
-//     { component: Atomo, key: 'Atomo' },
-//     { component: Molecula, key: 'Molecula' },
-//     { component: NinoSanoComponent, key: 'NinoSanoComponent' },
-//     { component: DatosPerinatalesComponent, key: 'DatosPerinatalesComponent' },
-//     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
-//     { component: Formula, key: 'Formula' },
-//     { component: EcografiaComponent, key: 'EcografiaComponent' },
-//     { component: InterConsultaComponent, key: 'InterConsultaComponent' },
-//     { component: LaboratorioComponent, key: 'LaboratorioComponent' },
-//     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
-//     { component: SnomedBuscarComponent, key: 'SnomedBuscarComponent' },
-//     { component: TomografiaComponent, key: 'TomografiaComponent' },
-//     { component: MamografiaComponent, key: 'MamografiaComponent' },
-//     { component: EndoscopiaComponent, key: 'EndoscopiaComponent' },
-//     { component: TomaHpvComponent, key: 'TomaHpvComponent' },
-//     { component: TomaPapComponent, key: 'TomaPapComponent' },
-//     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
 //     { component: EvolucionProblemaDefaultComponent, key: 'EvolucionProblemaDefaultComponent' },
-//     { component: HudsBusquedaComponent, key: 'HudsBusquedaComponent' },
-//     { component: BuscadorComponent, key: 'BuscadorComponent' },
-//     { component: SolicitudPrestacionDefaultComponent, key: 'SolicitudPrestacionDefaultComponent' },
-//     { component: PrestacionCrearComponent, key: 'PrestacionCrearComponent' },
-//     { component: TensionArterialComponent, key: 'TensionArterialComponent' },
-//     { component: SignosVitalesComponent, key: 'SignosVitalesComponent' },
+//     // { component: FactoresDeRiesgoNinoSanoComponent, key: 'FactoresDeRiesgoNinoSanoComponent' },
+//     { component: Formula, key: 'Formula' },
 //     { component: FrecuenciaCardiacaComponent, key: 'FrecuenciaCardiacaComponent' },
 //     { component: FrecuenciaRespiratoriaComponent, key: 'FrecuenciaRespiratoriaComponent' },
-//     { component: PesoComponent, key: 'PesoComponent' },
-//     { component: SaturacionOxigenoComponent, key: 'SaturacionOxigenoComponent' },
-//     { component: TallaComponent, key: 'TallaComponent' },
-//     { component: TemperaturaComponent, key: 'TemperaturaComponent' },
-//     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
-//     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
-//     { component: ObservacionesComponent, key: 'ObservacionesComponent' },
-//     { component: ConsultaMedicinaGeneralComponent, key: 'ConsultaMedicinaGeneralComponent' },
-//     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
-//     { component: PrestacionEjecucionComponent, key: 'PrestacionEjecucionComponent' },
-//     { component: ResumenComponent, key: 'ResumenComponent' },
-//     { component: HeaderPacienteComponent, key: 'HeaderPacienteComponent' },
-//     { component: PrestacionValidacionComponent, key: 'PrestacionValidacionComponent' },
-//     { component: EdadGestacionalComponent, key: 'EdadGestacionalComponent' },
-//     { component: ScoreApgarComponent, key: 'ScoreApgarComponent' },
-//     { component: NacimientoComponent, key: 'NacimientoComponent' },
-//     { component: EdadGestacionalFetalComponent, key: 'EdadGestacionalFetalComponent' },
-//     { component: ViviendaAsistenciaEconomicaComponent, key: 'ViviendaAsistenciaEconomicaComponent' },
-//     { component: ViviendaCombustionComponent, key: 'ViviendaCombustionComponent' },
-//     { component: ViviendaContaminantesComponent, key: 'ViviendaContaminantesComponent' },
-//     { component: ViviendaFamiliaComponent, key: 'ViviendaFamiliaComponent' },
-//     { component: ViviendaPisoComponent, key: 'ViviendaPisoComponent' },
-//     { component: ViviendaResiduosComponent, key: 'ViviendaResiduosComponent' },
-//     { component: ViviendaSituacionSocioEconomicaComponent, key: 'ViviendaSituacionSocioEconomicaComponent' },
-//     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
-//     { component: ViviendaNivelInstruccionComponent, key: 'ViviendaNivelInstruccionComponent' },
-//     { component: ViviendaCondicionesAlojamientoComponent, key: 'ViviendaCondicionesAlojamientoComponent' },
-//     { component: PerinatalesEmbarazoNormalComponent, key: 'PerinatalesEmbarazoNormalComponent' },
-//     { component: PerinatalesEmbarazoAnormalComponent, key: 'PerinatalesEmbarazoAnormalComponent' },
-//     { component: PerinatalesNumeroGestaComponent, key: 'PerinatalesNumeroGestaComponent' },
-//     { component: PerinatalesGestacionMultipleComponent, key: 'PerinatalesGestacionMultipleComponent' },
 //     { component: HallazgoRelacionadoPartoComponent, key: 'HallazgoRelacionadoPartoComponent' },
-//     { component: PartoCesareaComponent, key: 'PartoCesareaComponent' },
-//     { component: PartoVaginalAsistidoExtractorVacioComponent, key: 'PartoVaginalAsistidoExtractorVacioComponent' },
-//     { component: PartoViaVaginalForcepsComponent, key: 'PartoViaVaginalForcepsComponent' },
-//     { component: PartoViaVaginalComponent, key: 'PartoViaVaginalComponent' },
-//     { component: TransformarProblemaComponent, key: 'TransformarProblemaComponent' },
-//     { component: verProblemaComponent, key: 'verProblemaComponent' },
-//     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
-//     { component: PesquisaNeonatalComponent, key: 'PesquisaNeonatalComponent' },
-//     { component: PercentiloTallaComponent, key: 'PercentiloTallaComponent' },
-//     { component: PercentiloCircunferenciaCefalicaNinoComponent, key: 'PercentiloCircunferenciaCefalicaNinoComponent' },
-//     { component: DesarrolloMotorComponent, key: 'DesarrolloMotorComponent' },
-//     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
-//     { component: ControlDeEsfinteresComponent, key: 'ControlDeEsfinteresComponent' },
-//     { component: DesarrolloIntelectualyJuegosComponent, key: 'DesarrolloIntelectualyJuegosComponent' },
-//     { component: EscalaDeDesarrolloComponent, key: 'EscalaDeDesarrolloComponent' },
-//     { component: EstadoNutricionalComponent, key: 'EstadoNutricionalComponent' },
-//     { component: OdontologiaComponent, key: 'OdontologiaComponent' },
+//     { component: HeaderPacienteComponent, key: 'HeaderPacienteComponent' },
+//     { component: HudsBusquedaComponent, key: 'HudsBusquedaComponent' },
 //     { component: IndiceDeMasaCorporalComponent, key: 'IndiceDeMasaCorporalComponent' },
-//     { component: FactoresDeRiesgoNinoSanoComponent, key: 'FactoresDeRiesgoNinoSanoComponent' },
-//     { component: Atomo, key: 'Atomo' },
-//     { component: Molecula, key: 'Molecula' },
-//     { component: NinoSanoComponent, key: 'NinoSanoComponent' },
-//     { component: DatosPerinatalesComponent, key: 'DatosPerinatalesComponent' },
-//     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
-//     { component: Formula, key: 'Formula' },
-//     { component: EcografiaComponent, key: 'EcografiaComponent' },
 //     { component: InterConsultaComponent, key: 'InterConsultaComponent' },
 //     { component: LaboratorioComponent, key: 'LaboratorioComponent' },
-//     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
-//     { component: SnomedBuscarComponent, key: 'SnomedBuscarComponent' },
-//     { component: TomografiaComponent, key: 'TomografiaComponent' },
 //     { component: MamografiaComponent, key: 'MamografiaComponent' },
-//     { component: EndoscopiaComponent, key: 'EndoscopiaComponent' },
-//     { component: TomaHpvComponent, key: 'TomaHpvComponent' },
-//     { component: TomaPapComponent, key: 'TomaPapComponent' },
-//     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
-//     { component: EvolucionProblemaDefaultComponent, key: 'EvolucionProblemaDefaultComponent' },
-//     { component: HudsBusquedaComponent, key: 'HudsBusquedaComponent' },
-//     { component: BuscadorComponent, key: 'BuscadorComponent' },
-//     { component: SolicitudPrestacionDefaultComponent, key: 'SolicitudPrestacionDefaultComponent' },
-//     { component: PrestacionCrearComponent, key: 'PrestacionCrearComponent' },
+//     { component: Molecula, key: 'Molecula' },
+//     { component: NacimientoComponent, key: 'NacimientoComponent' },
+//     { component: NinoSanoComponent, key: 'NinoSanoComponent' },
 //     { component: NuevaEvolucionProblemaComponent, key: 'NuevaEvolucionProblemaComponent' },
+//     { component: ObservacionesComponent, key: 'ObservacionesComponent' },
+//     // { component: OdontologiaComponent, key: 'OdontologiaComponent' },
+//     { component: PartoCesareaComponent, key: 'PartoCesareaComponent' },
+//     { component: PartoVaginalAsistidoExtractorVacioComponent, key: 'PartoVaginalAsistidoExtractorVacioComponent' },
+//     { component: PartoViaVaginalComponent, key: 'PartoViaVaginalComponent' },
+//     { component: PartoViaVaginalForcepsComponent, key: 'PartoViaVaginalForcepsComponent' },
+//     { component: PercentiloCircunferenciaCefalicaNinoComponent, key: 'PercentiloCircunferenciaCefalicaNinoComponent' },
+//     { component: PercentiloTallaComponent, key: 'PercentiloTallaComponent' },
+//     { component: PerinatalesEmbarazoAnormalComponent, key: 'PerinatalesEmbarazoAnormalComponent' },
+//     { component: PerinatalesEmbarazoNormalComponent, key: 'PerinatalesEmbarazoNormalComponent' },
+//     { component: PerinatalesGestacionMultipleComponent, key: 'PerinatalesGestacionMultipleComponent' },
+//     { component: PerinatalesNumeroGestaComponent, key: 'PerinatalesNumeroGestaComponent' },
+//     { component: PesoComponent, key: 'PesoComponent' },
+//     { component: PesquisaNeonatalComponent, key: 'PesquisaNeonatalComponent' },
+//     { component: PrestacionCrearComponent, key: 'PrestacionCrearComponent' },
+//     { component: PrestacionEjecucionComponent, key: 'PrestacionEjecucionComponent' },
+//     { component: PrestacionValidacionComponent, key: 'PrestacionValidacionComponent' },
+//     { component: PruebaOtoemisionesAcusticasComponent, key: 'PruebaOtoemisionesAcusticasComponent' },
+//     { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
+//     { component: RadiografiaComponent, key: 'RadiografiaComponent' },
+//     { component: RefiereDefaultComponent, key: 'RefiereDefaultComponent' },
+//     { component: RegistrosVisitasComponent, key: 'RegistrosVisitasComponent' },
+//     { component: ResumenComponent, key: 'ResumenComponent' },
+//     { component: SangreOcultaMateriaFecalComponent, key: 'SangreOcultaMateriaFecalComponent' },
+//     { component: SaturacionOxigenoComponent, key: 'SaturacionOxigenoComponent' },
+//     { component: ScoreApgarComponent, key: 'ScoreApgarComponent' },
+//     { component: SignosVitalesComponent, key: 'SignosVitalesComponent' },
+//     { component: SnomedBuscarComponent, key: 'SnomedBuscarComponent' },
+//     { component: SolicitudPrestacionDefaultComponent, key: 'SolicitudPrestacionDefaultComponent' },
+//     { component: TallaComponent, key: 'TallaComponent' },
+//     { component: TemperaturaComponent, key: 'TemperaturaComponent' },
+//     { component: TensionArterialComponent, key: 'TensionArterialComponent' },
+//     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
+//     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
+//     { component: TomaHpvComponent, key: 'TomaHpvComponent' },
+//     { component: TomaPapComponent, key: 'TomaPapComponent' },
+//     { component: TomografiaComponent, key: 'TomografiaComponent' },
+//     { component: TomografiaComponent, key: 'TomografiaComponent' },
+//     { component: ViviendaCombustionComponent, key: 'ViviendaCombustionComponent' },
+//     { component: ViviendaCondicionesAlojamientoComponent, key: 'ViviendaCondicionesAlojamientoComponent' },
+//     { component: ViviendaContaminantesComponent, key: 'ViviendaContaminantesComponent' },
+//     { component: ViviendaFamiliaComponent, key: 'ViviendaFamiliaComponent' },
+//     { component: ViviendaNivelInstruccionComponent, key: 'ViviendaNivelInstruccionComponent' },
+//     { component: ViviendaPisoComponent, key: 'ViviendaPisoComponent' },
+//     { component: ViviendaResiduosComponent, key: 'ViviendaResiduosComponent' },
+//     { component: ViviendaSituacionSocioEconomicaComponent, key: 'ViviendaSituacionSocioEconomicaComponent' },
+//     { component: ViviendaSostenEconomicoComponent, key: 'ViviendaSostenEconomicoComponent' },
+//     { component: PrescripcionMedicamentoComponent, key: 'PrescripcionMedicamentoComponent' },
+//     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
+//     { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
+//     { component: DosisComponent, key: 'DosisComponent' },
+//     { component: RecetaComponent, key: 'RecetaComponent' }
 // ];
 
-// let RUP_COMPONENTS = RUP_ELEMENTS.map((i) => i.component);
+// // let temp = RUP_ELEMENTS.map((i) => i.component);
+// export const RUP_COMPONENTS = [
+//     AutocitadoComponent,
+//     BuscadorComponent,
+//     ConsultaMedicinaGeneralComponent,
+//     ControlDeEsfinteresComponent,
+//     DatosPerinatalesComponent,
+//     DesarrolloIntelectualyJuegosComponent,
+//     DesarrolloMotorComponent,
+//     EcografiaComponent,
+//     EndoscopiaComponent,
+//     EdadGestacionalComponent,
+//     ActitudAnteLosCuidadosComponent,
+//     Atomo,
+//     // EdadGestacionalFetalComponent,
+//     EscalaDeDesarrolloComponent,
+//     EstadoNutricionalComponent,
+//     EvolucionProblemaDefaultComponent,
+//     // FactoresDeRiesgoNinoSanoComponent,
+//     Formula,
+//     FrecuenciaCardiacaComponent,
+//     FrecuenciaRespiratoriaComponent,
+//     HallazgoRelacionadoPartoComponent,
+//     HeaderPacienteComponent,
+//     HudsBusquedaComponent,
+//     IndiceDeMasaCorporalComponent,
+//     InterConsultaComponent,
+//     LaboratorioComponent,
+//     MamografiaComponent,
+//     Molecula,
+//     NacimientoComponent,
+//     NinoSanoComponent,
+//     NuevaEvolucionProblemaComponent,
+//     ObservacionesComponent,
+//     // OdontologiaComponent,
+//     PartoCesareaComponent,
+//     PartoVaginalAsistidoExtractorVacioComponent,
+//     PartoViaVaginalComponent,
+//     PartoViaVaginalForcepsComponent,
+//     PercentiloCircunferenciaCefalicaNinoComponent,
+//     PercentiloTallaComponent,
+//     PerinatalesEmbarazoAnormalComponent,
+//     PerinatalesEmbarazoNormalComponent,
+//     PerinatalesGestacionMultipleComponent,
+//     PerinatalesNumeroGestaComponent,
+//     PesoComponent,
+//     PesquisaNeonatalComponent,
+//     PrestacionCrearComponent,
+//     PrestacionEjecucionComponent,
+//     PrestacionValidacionComponent,
+//     PruebaOtoemisionesAcusticasComponent,
+//     PuntoInicioComponent,
+//     RadiografiaComponent,
+//     RefiereDefaultComponent,
+//     RegistrosVisitasComponent,
+//     ResumenComponent,
+//     SangreOcultaMateriaFecalComponent,
+//     SaturacionOxigenoComponent,
+//     ScoreApgarComponent,
+//     SignosVitalesComponent,
+//     SnomedBuscarComponent,
+//     SolicitudPrestacionDefaultComponent,
+//     TallaComponent,
+//     TemperaturaComponent,
+//     TensionArterialComponent,
+//     TensionDiastolicaComponent,
+//     TensionSistolicaComponent,
+//     TomaHpvComponent,
+//     TomaPapComponent,
+//     TomografiaComponent,
+//     ViviendaAsistenciaEconomicaComponent,
+//     ViviendaCombustionComponent,
+//     ViviendaCondicionesAlojamientoComponent,
+//     ViviendaContaminantesComponent,
+//     ViviendaFamiliaComponent,
+//     ViviendaNivelInstruccionComponent,
+//     ViviendaPisoComponent,
+//     ViviendaResiduosComponent,
+//     ViviendaSituacionSocioEconomicaComponent,
+//     ViviendaSostenEconomicoComponent,
+//     PrescripcionMedicamentoComponent,
+//     IndicacionProcedimientoComponent,
+//     BuscadorMedicamentoSnomedComponent,
+//     DosisComponent,
+//     RecetaComponent
+// ];

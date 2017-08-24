@@ -58,18 +58,25 @@ export class PuntoInicioComponent implements OnInit {
         public servicioProfesional: ProfesionalService) { }
 
     ngOnInit() {
-        this.servicioProfesional.get({ documento: this.auth.usuario.documento }).subscribe(data => {
-            let profesional = data;
-            if (profesional.length === 0) {
+        // Verificamos permisos globales para rup, si no posee realiza redirect al home
+        if (this.auth.getPermissions('rup:?').length <= 0) {
+            this.redirect('inicio');
+        }
+        if (!this.auth.profesional) {
+            this.redirect('inicio');
+        } else {
+            if (!this.auth.profesional.id) {
                 this.redirect('inicio');
             } else {
                 this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+                    if (data && data.length <= 0) {
+                        this.redirect('inicio');
+                    }
                     this.tiposPrestacion = data;
                     this.actualizar();
                 });
             }
-        });
-
+        }
     }
 
     redirect(pagina: string) {
