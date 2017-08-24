@@ -1,0 +1,16 @@
+
+
+
+<plex-bool [(ngModel)]="data[elementoRUP.key]" name="embarazoAnormal" label="" type="slide" (change)="devolverValores()">
+</plex-bool>
+
+<p *ngIf="soloValores">
+    <label>Frecuencia cardíaca</label>
+    <br /> {{data[elementoRUP.key]}} PPM
+</p>
+
+<p *ngIf="mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+</p>
