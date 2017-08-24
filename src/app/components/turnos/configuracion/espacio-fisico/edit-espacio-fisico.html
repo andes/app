@@ -50,6 +50,11 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
+                            <plex-select [(ngModel)]="modelo.estado" label="Estado actual" name="estado" (getData)="loadEstados($event)"></plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
                             <label>Agregar Equipamiento</label>
                             <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="agregarEquipamiento($event)"></snomed-buscar>
                         </div>
