@@ -7,11 +7,11 @@
 
     <fieldset>
         <legend>Cargar Solicitud Nueva</legend>
-        <div class="row">
+        <div class="row" *ngIf="modelo?.paciente?.id">
             <div class="col-12">
                 <label>Paciente</label> {{ modelo.paciente | paciente }}
                 <span>DNI {{ modelo.paciente.documento | number }}</span>
-                <span>Fecha de nacimiento {{ modelo.paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{modelo.paciente | edad}})</span>
+                <span>Fecha de nacimiento {{ modelo.paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ modelo.paciente | edad }})</span>
             </div>
         </div>
         <div class="row">
@@ -27,11 +27,11 @@
             </div>
         </div>
 
-        <!-- Organización Origen  -->
+        <!-- Organización Origen -->
         <div class="row">
             <div class="col-12">
                 <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionOrigen" (getData)="loadOrganizacion($event)" label="Organización origen"
-                    [required]="true" placeholder="Seleccione la organización" labelField="nombre">
+                    placeholder="Seleccione la organización" labelField="nombre" [required]="true">
                 </plex-select>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-12">
                 <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesionalOrigen" (getData)="loadProfesionales($event)" label="Profesional solicitante"
-                    [required]="true" placeholder="Seleccione el profesional" labelField="apellido + ' ' + nombre">
+                    placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
                 </plex-select>
             </div>
         </div>
@@ -48,8 +48,8 @@
         <!-- Tipo Prestación -->
         <div class="row">
             <div class="col-12">
-                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación solicitada"
-                    [required]="true" name="tipoPrestacion" label="Tipo de Prestación">
+                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                    label="Tipo de Prestación" placeholder="Tipos de Prestación solicitada" [required]="true">
                 </plex-select>
             </div>
         </div>
@@ -65,7 +65,8 @@
         <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
             <div class="col-12">
                 <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesional(es) destino" name="profesionales"
-                    (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido+' '+nombre">
+                    (getData)="loadProfesionales($event)" [multiple]="true" placeholder="Escriba el apellido de un Profesional"
+                    labelField="apellido + ' ' + nombre">
                 </plex-select>
             </div>
         </div>

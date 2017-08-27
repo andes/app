@@ -2,31 +2,33 @@
     <legend>Suspender Turno</legend>
     <!--<div class="alert alert-default small">-->
     <div class="row">
-        <div class="col-3">
-            <label>Hora</label>
+        <div class="col-2 text-center">
+            <label>Hora del Turno</label>
         </div>
-        <div class="col-7">
+        <div class="col-7 text-center">
             <label>Paciente</label>
         </div>
-        <div class="col-2">
-            <label>SMS</label>
+        <div class="col-3 text-center">
+            <label>Enviar SMS</label>
         </div>
     </div>
 
     <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
-        <div class="col-3">
+        <div class="col-2 text-center">
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
-        <div class="col-7">
-            <span *ngIf="turno.paciente">{{turno.paciente  | paciente}}</span>
+        <div class="col-7 text-center">
+            <span *ngIf="turno.paciente?.id">{{turno.paciente  | paciente}}</span>
+            <span *ngIf="!turno.paciente?.id">sin paciente asignado</span>
         </div>
-        <div class="col-2" (click)="seleccionarTurno(turno)">
-            <span *ngIf="estaSeleccionado(turno)">
-          <i *ngIf="turno.paciente && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
-          <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
-          <i *ngIf="estaPendiente(turno)">Pendiente</i>
-        </span>
-            <span *ngIf="!estaSeleccionado(turno) && turno.paciente"><i class="mdi mdi-checkbox-blank-outline"></i></span>
+        <div class="col-3 text-center" (click)="seleccionarTurno(turno)">
+            <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">
+                <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
+                <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
+                <i *ngIf="estaPendiente(turno)">Pendiente</i>
+            </span>
+            <span *ngIf="!turno.paciente?.id">-</span>
+            <span *ngIf="!estaSeleccionado(turno) && turno.paciente?.id"><i class="mdi mdi-checkbox-blank-outline"></i></span>
         </div>
         <!--TODO: Agregar botón para reintento de envío-->
     </div>
@@ -35,7 +37,7 @@
     <div class="row">
         <div class="col-md-12">
             <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
-                placeholder="Seleccione un espacio">
+                placeholder="Seleccione un motivo de suspensión">
             </plex-select>
         </div>
     </div>

@@ -24,7 +24,7 @@
                             <plex-accordion>
                                 <plex-panel *ngIf="agendasCodificar.length>0" tituloPrincipal="Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
             }} a {{ agenda.horaFin | date: 'HH:mm' }} hs
-            Profesional : {{ agenda.profesionales[0]| profesional }} ">
+            Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }} ">
                                     <div class="row">
                                         <revision-agenda [agenda]="agenda" [modoCompleto]="false" class="col-12"></revision-agenda>
                                     </div>

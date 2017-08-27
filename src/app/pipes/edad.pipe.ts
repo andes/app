@@ -43,7 +43,7 @@ export class EdadPipe implements PipeTransform {
                 unidad: 'horas'
             };
         }
-        return (edad.valor + ' ' + edad.unidad);
+        return (String(edad.valor) + ' ' + edad.unidad);
     }
 }
 
