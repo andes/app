@@ -673,7 +673,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
-            // actualizamos las prestaciones de la HUDS que quedaron en cache 
+            // actualizamos las prestaciones de la HUDS que quedaron en cache
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });

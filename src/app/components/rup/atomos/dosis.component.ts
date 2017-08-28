@@ -4,11 +4,10 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     selector: 'rup-Dosis',
     templateUrl: 'dosis.html'
 })
-export class DosisComponent extends Atomo implements OnInit{
-   
+export class DosisComponent extends Atomo implements OnInit {
     public unidades: Array<Object> = [
-    { id: 'miligramos', nombre: 'Miligramos' },
-    { id: 'gramos', nombre: 'Gramos' },
+        { id: 'miligramos', nombre: 'Miligramos' },
+        { id: 'gramos', nombre: 'Gramos' },
     ];
 
     ngOnInit() {

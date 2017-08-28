@@ -28,4 +28,4 @@ export class AutocitadoComponent extends Atomo implements OnInit {
             }
         });
     }
- }
+}

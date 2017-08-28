@@ -120,7 +120,7 @@ export class PrestacionPacienteService {
 
 
     /**
-     * Metodo getByPacienteKey 
+     * Metodo getByPacienteKey
      * @param {String} idPaciente
      */
     getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
@@ -249,7 +249,7 @@ export class PrestacionPacienteService {
     }
 
     /**
-     * Metodo getUnHallazgoPacienteXOrigen obtiene un hallazgo con todas sus evoluciones 
+     * Metodo getUnHallazgoPacienteXOrigen obtiene un hallazgo con todas sus evoluciones
      * para un paciente buscandolo por el registro de origen
      * @param {String} idPaciente
      * @param {String} idRegistroOrigen

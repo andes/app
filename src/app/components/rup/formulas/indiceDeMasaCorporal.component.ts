@@ -144,16 +144,9 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
 
 
     devolverValores(obj?: any, elementoRequerido?: any) {
-        debugger;
         if (obj[elementoRequerido.key]) {
             this.data[this.elementoRUP.key][elementoRequerido.key] = obj[elementoRequerido.key];
             this.calculoIMC();
         }
-
-        //this.evtData.emit(this.data);
-
     }
-
-
-
 }
