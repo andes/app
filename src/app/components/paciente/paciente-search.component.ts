@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -51,11 +52,23 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService) {
+    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
         this.actualizarContadores();
     }
 
     public ngOnInit() {
+        // controlamos si tiene acceso a MPI
+        let autorizado = this.auth.getPermissions('mpi:?').length > 0;
+        if (!autorizado) {
+            this.modoCompleto = false;
+            // Si no está autorizado redirect al home
+            this.router.navigate(['./inicio']);
+            return false;
+        };
+        // controla el input y bloquea dashboard si no tiene permisos
+        if (this.modoCompleto) {
+            this.modoCompleto = this.auth.getPermissions('mpi:?').indexOf('paciente:dashboard') >= 0;
+        }
         this.autoFocus = this.autoFocus + 1;
     }
 
@@ -81,7 +94,11 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             this.escaneado.emit(this.esEscaneado);
         }
         if (!this.bloquearCreate) {
-            this.showCreateUpdate = true;
+            if (this.auth.getPermissions('mpi:?').indexOf('editarPaciente') >= 0) {
+                this.showCreateUpdate = true;
+            } else {
+                this.seleccion = {};
+            }
         }
 
         // Mostrar formulario update si no hay paciente
@@ -304,10 +321,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         this.loading = false;
                         this.resultado = resultado;
                         this.esEscaneado = false;
-                        /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
-                         if (permisos) {*/
-                        this.mostrarNuevo = true;
-                        // }
+                        this.mostrarNuevo = this.auth.getPermissions('mpi:?').indexOf('nuevoPaciente') >= 0;
                     }, (err) => {
                         this.loading = false;
                     });
