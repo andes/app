@@ -199,8 +199,6 @@ export class PrestacionCrearComponent implements OnInit {
         }
     }
 
-    /**************** /RELACION CON MPI **********************/
-
     onReturn() {
         this.router.navigate(['/rup']);
     }
@@ -208,6 +206,4 @@ export class PrestacionCrearComponent implements OnInit {
     irResumen(id) {
         this.router.navigate(['rup/validacion/', id]);
     }
-} // export class Punto Inicio Component
-
-
+}

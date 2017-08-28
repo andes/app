@@ -53,7 +53,7 @@ export class RupComponent implements OnInit, OnDestroy {
     // Componente a cargar
     private componentContainer: any;
 
-    elementosRUP: Object[] = [];
+    elementosRUP: { nombre: string, component: string }[] = [];
 
     // Referencia al componente para poder manejarlo
     private componentReference: any;
@@ -81,8 +81,8 @@ export class RupComponent implements OnInit, OnDestroy {
         // Inicializamos la lista de Componentes RUP
         for (let element of RUP_ELEMENTS) {
             this.elementosRUP.push({
-                'nombre': element.key,
-                'component': element.component
+                nombre: element.key,
+                component: element.component,
             });
         }
 
@@ -104,9 +104,7 @@ export class RupComponent implements OnInit, OnDestroy {
 
         // No se puede cargar un componente pasando un string, buscamos en el 'diccionario' de tipos de prestaciones
         this.componentContainer = this.elementosRUP.find(prestacion => {
-            let p;
-            p = prestacion;
-            return p.nombre === this.elementoRUP.componente.nombre;
+            return prestacion.nombre === this.elementoRUP.componente.nombre;
         });
 
 
