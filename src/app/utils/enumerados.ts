@@ -63,6 +63,13 @@ export enum PrioridadesPrestacion {
     'emergencia'
 }
 
+export enum EstadosEspacios {
+    'disponible',
+    'mantenimiento',
+    'clausurado',
+    'baja permanente'
+}
+
 export function titleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
@@ -175,6 +182,18 @@ export function getPrioridades() {
 
 export function getEstadosAuditorias() {
     let arrEstados = Object.keys(EstadosAuditorias);
+    arrEstados = arrEstados.slice(arrEstados.length / 2);
+    let salida = arrEstados.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getEstadosEspacios() {
+    let arrEstados = Object.keys(EstadosEspacios);
     arrEstados = arrEstados.slice(arrEstados.length / 2);
     let salida = arrEstados.map(elem => {
         return {

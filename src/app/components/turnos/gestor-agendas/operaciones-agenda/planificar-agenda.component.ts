@@ -17,6 +17,8 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
     templateUrl: 'planificar-agenda.html',
 })
 export class PlanificarAgendaComponent implements OnInit {
+    subscriptionID: any;
+    espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
@@ -49,6 +51,8 @@ export class PlanificarAgendaComponent implements OnInit {
     tipoEspacioFisico = 'propios';
     espacioNuevo: IEspacioFisico;
     espaciosFisicosEfector = [];
+
+    showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -215,7 +219,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.loadEspaciosFisicos(this.modelo.espacioFisico);
                 break;
             case 'nuevo':
-                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null };
+                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
                 break;
         }
 
@@ -711,6 +715,46 @@ export class PlanificarAgendaComponent implements OnInit {
         } else {
             return null;
         }
+    }
+
+    mapaEspacioFisico() {
+        this.showMapaEspacioFisico = true;
+    }
+
+    espaciosChange(agenda) {
+
+        // TODO: ver límite
+        let query: any = {
+            limit: 20
+        };
+
+        if (agenda.espacioFisico) {
+            let nombre = agenda.espacioFisico;
+            query.nombre = nombre;
+        };
+
+        if (agenda.equipamiento && agenda.equipamiento.length > 0) {
+            let equipamiento = agenda.equipamiento.map((item) => item.term);
+            query.equipamiento = equipamiento;
+        };
+
+        if (!agenda.espacioFisico && !agenda.equipamiento) {
+            this.espaciosList = [];
+            return;
+        }
+
+        if (this.subscriptionID) {
+            this.subscriptionID.unsubscribe();
+        }
+        this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
+            this.espaciosList = resultado;
+        });
+    }
+
+    selectEspacio($data) {
+        this.modelo.espacioFisico = $data;
+        this.validarTodo();
+
     }
 
     onSave($event, clonar) {
