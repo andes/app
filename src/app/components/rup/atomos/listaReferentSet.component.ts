@@ -24,6 +24,7 @@ export class ListaReferentSetComponent extends Atomo implements OnInit {
         if (this.datosIngreso) {
             // Llega un referentSetID para obtener los conceptos snomed que puede ser chequeados
             if (this.datosIngreso.referentSetId) {
+                this.data[this.elementoRUP.key]['referentSetId'] = this.datosIngreso.referentSetId;
                 this.SNOMED.get({ refsetId: this.datosIngreso.referentSetId })
                     .subscribe(conceptos => {
                         debugger;
@@ -34,12 +35,24 @@ export class ListaReferentSetComponent extends Atomo implements OnInit {
 
 
             } else {
-                this.devolverValores();
+                this.devolverValores(null);
             }
 
         } else {
         }
 
+    }
+
+
+    devolverValores(concepto) {
+        if (concepto) {
+            if (this.data[this.elementoRUP.key]['conceptos']) {
+                this.data[this.elementoRUP.key]['conceptos'].push(concepto);
+            } else {
+                this.data[this.elementoRUP.key]['conceptos'] = [concepto];
+            }
+            this.evtData.emit(this.data);
+        }
     }
 
 }

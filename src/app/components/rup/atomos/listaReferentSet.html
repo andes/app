@@ -1,6 +1,6 @@
 <ul *ngIf="!soloValores" class="list-group">
     <li class="list-group-item" *ngFor="let _concepto of conceptos; let i = index">
-        <plex-bool [(ngModel)]="data[elementoRUP.key][_concepto.conceptId]" name="_concepto.conceptId" label="_concepto.conceptId" type="slide" (change)="devolverValores()">
+        <plex-bool [(ngModel)]="data[elementoRUP.key]" name="_concepto.conceptId" label="_concepto.term" type="slide" (change)="devolverValores(_concepto)">
         </plex-bool>
     </li>
 </ul>
