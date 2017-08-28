@@ -50,7 +50,7 @@ export class InicioComponent implements AfterViewInit {
             });
         } else {
             this.denied = true;
-        }
+       }
 
         // Por ahora desactivamos el wizard!
         // let wizard = new Wizard('turnos');

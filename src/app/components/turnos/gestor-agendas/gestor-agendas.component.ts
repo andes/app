@@ -2,7 +2,9 @@ import {
     Component,
     OnInit,
     HostBinding,
-    NgModule
+    NgModule,
+    ViewContainerRef,
+    ViewChild
 } from '@angular/core';
 import {
     FormBuilder,
@@ -46,8 +48,14 @@ import {
 })
 
 export class GestorAgendasComponent implements OnInit {
+
     showReasignarTurnoAgendas: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
+
+    private guardarAgendaPanel: ViewContainerRef;
+    @ViewChild('guardarAgendaPanel') set setGuardarAgendaPanel(theElementRef: ViewContainerRef) {
+        this.guardarAgendaPanel = theElementRef;
+    }
 
     agendasSeleccionadas: IAgenda[] = [];
 
@@ -81,6 +89,7 @@ export class GestorAgendasComponent implements OnInit {
     public estado: any = [];
     public parametros;
     public btnDarTurnos = false;
+    public btnCrearAgendas = false;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -95,17 +104,21 @@ export class GestorAgendasComponent implements OnInit {
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
-        public auth: Auth) {}
+        public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
-
+        // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
-            // Si no está autorizado redirect al home
             this.redirect('inicio');
         };
 
+        // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+
+        // Verifica permisos para crear agenda
+        this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
+
         this.parametros = {
             fechaDesde: '',
             fechaHasta: '',
@@ -318,7 +331,6 @@ export class GestorAgendasComponent implements OnInit {
         this.showReasignarTurnoAutomatico = false;
     }
 
-
     revisionAgenda(agenda) {
         this.showGestorAgendas = false;
         this.showRevisionAgenda = true;
@@ -414,24 +426,39 @@ export class GestorAgendasComponent implements OnInit {
 
             this.setColorEstadoAgenda(agenda);
 
-            // Reseteo el panel de la derecha
-            this.showEditarAgendaPanel = false;
-            this.showAgregarNotaAgenda = false;
-            this.showAgregarSobreturno = false;
-            this.showRevisionAgenda = false;
-            this.showTurnos = false;
-            this.showReasignarTurno = false;
-            this.showReasignarTurnoAutomatico = false;
-            this.showListadoTurnos = false;
-            this.showBotonesAgenda = true;
+            if (this.showEditarAgendaPanel === false) {
+                // Reseteo el panel de la derecha
+                this.showEditarAgendaPanel = false;
+                this.showAgregarNotaAgenda = false;
+                this.showAgregarSobreturno = false;
+                this.showRevisionAgenda = false;
+                this.showTurnos = false;
+                this.showReasignarTurno = false;
+                this.showReasignarTurnoAutomatico = false;
+                this.showListadoTurnos = false;
+                this.showBotonesAgenda = true;
 
-            if (this.hayAgendasSuspendidas()) {
-                // this.showGestorAgendas = false;
-                this.showReasignarTurnoAutomatico = true;
-                // this.agendasSeleccionadas[0] = ag;
-            } else {
-                this.showTurnos = true;
+                if (this.hayAgendasSuspendidas()) {
+                    // this.showGestorAgendas = false;
+                    this.showReasignarTurnoAutomatico = true;
+                    // this.agendasSeleccionadas[0] = ag;
+                } else {
+                    this.showTurnos = true;
+                }
             }
+            // else {
+            //     // Reseteo el panel de la derecha
+            //     this.showEditarAgendaPanel = false;
+            //     this.showAgregarNotaAgenda = false;
+            //     this.showAgregarSobreturno = false;
+            //     this.showRevisionAgenda = false;
+            //     this.showTurnos = false;
+            //     this.showReasignarTurno = false;
+            //     this.showReasignarTurnoAutomatico = false;
+            //     this.showListadoTurnos = false;
+            //     this.showBotonesAgenda = true;
+            // }
+
 
         });
 
