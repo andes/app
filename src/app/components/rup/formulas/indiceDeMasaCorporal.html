@@ -1,5 +1,8 @@
 <div *ngIf="!soloValores">
-    <div class="row" *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id">
+    <pre>
+        {{valoresPrestacionEjecucion | json}}
+    </pre>
+    <div class="row" *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id && valoresPrestacionEjecucion">
         <ng-container *ngFor="let tp of elementoRUP.requeridos">
             <div class="col-6" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
                 <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="datosIngreso && datosIngreso[tp.key] ? datosIngreso[tp.key] : null">
