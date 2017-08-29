@@ -31,7 +31,7 @@ export class SolicitudPrestacionDefaultComponent extends Atomo implements OnInit
 
                 this.mensaje = this.getMensajes();
             } else {
-                this.data[this.elementoRUP.key].autocitado = true;
+                this.data[this.elementoRUP.key].autocitado = false;
             }
         });
 

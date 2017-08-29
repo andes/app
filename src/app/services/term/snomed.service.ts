@@ -34,6 +34,10 @@ export class SnomedService {
         return this.server.get(this.snomedURLEquipamiento, { params: params, showError: true });
     }
 
+    getProductos(params: any): Observable<any[]> {
+         return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
+    }
+
     /*
     buscarTrastornosHallazgos(query: String): Observable<any[]> {
         if (!query) {

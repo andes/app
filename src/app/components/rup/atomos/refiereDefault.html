@@ -1,0 +1,12 @@
+<ng-container *ngIf="!soloValores">
+    <label for="refiereDefault">
+         Refiere
+    </label>
+    <textarea class="form-control" [(ngModel)]="data[elementoRUP.key]" rows="4" id="refiereDefault" name="refiereDefault" placeholder="Ingrese una evolución" (keyup)="devolverValores()"></textarea>
+</ng-container>
+
+<p *ngIf="soloValores">
+    <label>Refiere</label>
+    <br /> {{data[elementoRUP.key]}}
+</p>
+

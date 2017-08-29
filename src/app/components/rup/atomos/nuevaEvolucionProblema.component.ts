@@ -29,34 +29,38 @@ export class NuevaEvolucionProblemaComponent extends Atomo implements OnInit {
     ngOnInit() {
         this.data[this.elementoRUP.key] = {};
         // si tengo valores cargados entonces devuelvo los resultados y mensajes
-        if (this.datosIngreso) {
-            if (this.datosIngreso.datoCompleto) {
-                this.HallazgoCompleto = this.datosIngreso.datoCompleto;
-                this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
-                this.evoluciones.shift();
-                this.data[this.elementoRUP.key].estado = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.estado : 'activo';
-                this.data[this.elementoRUP.key].esCronico = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.esCronico : false;
-                // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
-                this.data[this.elementoRUP.key].evolucion = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.evolucion : '';
 
-                if (this.evoluciones) {
-                    this.unaEvolucion = this.evoluciones[0];
-                }
-            } else {
-                this.HallazgoCompleto = this.datosIngreso;
 
-                if (this.HallazgoCompleto.evoluciones) {
-                    this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
-                    this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
-                    this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[0].estado;
-                    this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[0].esCronico;
-                    // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[0].esEnmienda;
-                    this.data[this.elementoRUP.key].evolucion = '';
 
-                }
-            }
-            this.devolverValores();
-        }
+
+        // if (this.datosIngreso) {
+        //     if (this.datosIngreso.datoCompleto) {
+        //         this.HallazgoCompleto = this.datosIngreso.datoCompleto;
+        //         this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
+        //         this.evoluciones.shift();
+        //         this.data[this.elementoRUP.key].estado = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.estado : 'activo';
+        //         this.data[this.elementoRUP.key].esCronico = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.esCronico : false;
+        //         // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[this.HallazgoCompleto.evoluciones.lenght - 1].esEnmienda;
+        //         this.data[this.elementoRUP.key].evolucion = this.datosIngreso.ultimaEvolucion ? this.datosIngreso.ultimaEvolucion.evolucion : '';
+
+        //         if (this.evoluciones) {
+        //             this.unaEvolucion = this.evoluciones[0];
+        //         }
+        //     } else {
+        //         this.HallazgoCompleto = this.datosIngreso;
+
+        //         if (this.HallazgoCompleto.evoluciones) {
+        //             this.evoluciones = JSON.parse(JSON.stringify(this.HallazgoCompleto.evoluciones));
+        //             this.unaEvolucion = this.HallazgoCompleto.evoluciones[0];
+        //             this.data[this.elementoRUP.key].estado = this.HallazgoCompleto.evoluciones[0].estado;
+        //             this.data[this.elementoRUP.key].esCronico = this.HallazgoCompleto.evoluciones[0].esCronico;
+        //             // this.data[this.elementoRUP.key].esEnmienda = this.HallazgoCompleto.evoluciones[0].esEnmienda;
+        //             this.data[this.elementoRUP.key].evolucion = '';
+
+        //         }
+        //     }
+        //     this.devolverValores();
+        // }
 
     }
 

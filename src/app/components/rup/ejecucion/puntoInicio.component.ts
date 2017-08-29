@@ -14,6 +14,7 @@ import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { AgendaService } from './../../../services/turnos/agenda.service';
 import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 
 import { EstadosAgenda } from './../../turnos/enums';
@@ -53,15 +54,34 @@ export class PuntoInicioComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionPacienteService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioProfesional: ProfesionalService) { }
 
     ngOnInit() {
-        // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-            this.tiposPrestacion = data;
+        // Verificamos permisos globales para rup, si no posee realiza redirect al home
+        if (this.auth.getPermissions('rup:?').length <= 0) {
+            this.redirect('inicio');
+        }
+        if (!this.auth.profesional) {
+            this.redirect('inicio');
+        } else {
+            if (!this.auth.profesional.id) {
+                this.redirect('inicio');
+            } else {
+                this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+                    if (data && data.length <= 0) {
+                        this.redirect('inicio');
+                    }
+                    this.tiposPrestacion = data;
+                    this.actualizar();
+                });
+            }
+        }
+    }
 
-            this.actualizar();
-        });
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     /**
@@ -74,7 +94,8 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha,
                 fechaHasta: this.fecha,
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada']
+                estados: ['disponible', 'publicada'],
+                tieneTurnosAsignados: true
             }),
             // Prestaciones
             this.servicioPrestacion.get({
@@ -297,19 +318,20 @@ export class PuntoInicioComponent implements OnInit {
 
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
-        //  let _prestaciones = prestaciones.filter(p => {
-        //             // filtramos todas las prestaciones que:
-        //             // 1) esten validadas
-        //             // 2) que sean planes y sean autocitados
-        //             return (p.id && p.estados[p.estados.length - 1].tipo === 'validada' &&
-        //                 p.ejecucion.registros.filter(registro => {
-        //                     return (typeof registro.valor.solicitudPrestacion !== 'undefined' &&
-        //                         registro.valor.solicitudPrestacion.autocitado);
-        //                 })
-        //             );
-        //         });
-        if (Array.isArray(prestaciones)) {
-            prestaciones.forEach(unaPrestacion => {
+        let _prestaciones = prestaciones.filter(p => {
+            // filtramos todas las prestaciones que:
+            // 1) esten validadas
+            // 2) que sean planes y sean autocitados
+            let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
+                registro.valor.solicitudPrestacion.autocitado
+            );
+            if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
+            ) {
+                return p;
+            };
+        });
+        if (Array.isArray(_prestaciones)) {
+            _prestaciones.forEach(unaPrestacion => {
                 if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
                     this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
                         prestacionesPaciente.forEach(elemento => {
@@ -322,7 +344,7 @@ export class PuntoInicioComponent implements OnInit {
                     });
                 }
             });
-        } else {
+        } else { // TODO revisar si entra alguna vez al else
             if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
                 this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
                     prestacionesPaciente.forEach(elemento => {

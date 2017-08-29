@@ -172,8 +172,8 @@
                                         <!-- <div *ngIf="turno.prestacion.turnosPedientes">
                                         {{turno.prestacion.turnosPedientes}}
                                         </div> -->
-                                        <span *ngIf="turno.prestacion?.turnosPedientes" class="d-inline badge badge-warning">
-                                            Turnos autocitados sin dar
+                                        <span *ngIf="turno.prestacion?.turnosPedientes" title="Turno autocitado sin asignar" class="badge badge-warning">
+                                            <i class="mdi mdi-message-alert"></i>
                                         </span>
                                     </td>
 
@@ -232,8 +232,8 @@
                                     <div *ngIf="turno && turno.paciente && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div> -->
                                 </td>
                                 <td>
-                                    <span *ngIf="prestacion.turnosPedientes" class="d-inline badge badge-warning">
-                                        Turnos autocitados sin dar
+                                    <span *ngIf="prestacion.turnosPedientes" title="Turno autocitado sin asignar" class="badge badge-warning">
+                                        <i class="mdi mdi-message-alert"></i>
                                     </span>
                                 </td>
                                 <td>

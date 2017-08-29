@@ -69,6 +69,7 @@ export class CalendarioComponent {
     }
     /** Regenera el calendario */
     private actualizar() {
+        console.log(this._solicitudPrestacion);
         if (this.fecha && this.agendas) {
             let inicio = moment(this.fecha).startOf('month').startOf('week');
             let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
