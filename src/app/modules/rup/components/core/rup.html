@@ -5,7 +5,7 @@ Este es un elemento RUP
     <div class="row">
         <ng-container *ngFor="let concepto of elementoRUP.requeridos; let i = index">
             <div class="col-{elementoRUP.style?.columns? || 12}">
-                <rup #rup [elementoRUP]="elementosRUPService.buscarElemento(concepto, false)" [prestacion]="prestacion" [registro]="registro.registros?[i]" (change)="emitChanges()">
+                <rup #rup [elementoRUP]="elementosRUPService.buscarElemento(concepto, false)" [prestacion]="prestacion" [registro]="registro.registros ? registro.registros[i] : null" (change)="emitChanges()">
                 </rup>
             </div>
         </ng-container>

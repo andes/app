@@ -30,9 +30,9 @@
                                 </div>
                             </div>
                             <div class="rup-body">
-                                <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [snomedConcept]="elemento.concepto" *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
+                                <!-- <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" [snomedConcept]="elemento.concepto" *ngIf="paciente && elemento.concepto.semanticTag == 'trastorno' || elemento.concepto.semanticTag == 'entidad observable'
                                                 || elemento.concepto.semanticTag == 'hallazgo' || elemento.concepto.semanticTag == 'procedimiento'" [datosIngreso]="elemento.valor[elemento.elementoRUP.key]" [soloValores]="true">
-                                </rup>
+                                </rup> -->
                             </div>
                             <div class="rup-footer">
                                 <div *ngIf="elemento.valor.solicitudPrestacion?.autocitado && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">

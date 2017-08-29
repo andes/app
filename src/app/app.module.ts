@@ -159,6 +159,7 @@ import { PrestacionesService } from './modules/rup/services/prestaciones.service
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
+import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -174,6 +175,7 @@ import { ObservacionesComponent } from './modules/rup/components/elementos/obser
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
+import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -193,18 +195,16 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
 
+// Locales
+import { AppComponent } from './app.component';
+import { routing, appRoutingProviders } from './app.routing';
+
 const RUP_COMPONENTS = [
-    BuscadorComponent,
-    HeaderPacienteComponent,
-    HudsBusquedaComponent,
-    PrestacionCrearComponent,
-    PrestacionEjecucionComponent,
-    PrestacionValidacionComponent,
+    PesoComponent,
     EvolucionProblemaDefaultComponent,
     IndiceDeMasaCorporalComponent,
     NuevaEvolucionProblemaComponent,
     ObservacionesComponent,
-    PesoComponent,
     SaturacionOxigenoComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
@@ -215,9 +215,6 @@ const RUP_COMPONENTS = [
     TensionSistolicaComponent
 ];
 
-// Locales
-import { AppComponent } from './app.component';
-import { routing, appRoutingProviders } from './app.routing';
 
 // Main module
 @NgModule({
@@ -234,9 +231,8 @@ import { routing, appRoutingProviders } from './app.routing';
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })
     ],
-
     declarations: [
-        AppComponent, InicioComponent, LoginComponent,
+        AppComponent, PesoComponent, InicioComponent, LoginComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
@@ -254,8 +250,8 @@ import { routing, appRoutingProviders } from './app.routing';
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         // AuditoriaPorBloqueComponent,
+        PuntoInicioComponent,
         Auditoria2Component,
-        ...RUP_COMPONENTS,
         LlavesTipoPrestacionComponent, EditarLlavesTipoPrestacionComponent,
         AuditoriaPrestacionPacienteComponent, EditarAuditoriaPrestacionPacienteComponent,
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
@@ -263,14 +259,25 @@ import { routing, appRoutingProviders } from './app.routing';
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateUpdateComponent,
         ListarTurnosComponent,
-        MapaEspacioFisicoComponent
+        MapaEspacioFisicoComponent,
+        ResumenComponent,
+        PrestacionCrearComponent,
+        PrestacionEjecucionComponent,
+        PrestacionValidacionComponent,
+        SnomedBuscarComponent,
+        HeaderPacienteComponent,
+        HudsBusquedaComponent,
+        BuscadorComponent,
+        // RUP
+        ...RUP_COMPONENTS,
     ],
     entryComponents: RUP_COMPONENTS,
     bootstrap: [AppComponent],
-    providers: [{
-        provide: LOCALE_ID,
-        useValue: 'es-AR'
-    },
+    providers: [
+        {
+            provide: LOCALE_ID,
+            useValue: 'es-AR'
+        },
         Plex,
         Auth,
         RoutingGuard,
@@ -315,3 +322,8 @@ import { routing, appRoutingProviders } from './app.routing';
 })
 
 export class AppModule { }
+
+// [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
+export let RUPComponents = {
+    'PesoComponent': PesoComponent
+};

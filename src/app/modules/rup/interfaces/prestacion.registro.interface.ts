@@ -16,5 +16,5 @@ export interface IPrestacionRegistro {
     // Almacena los registros de los átomos asociados a la molécula
     registros: [IPrestacionRegistro];
     // Indica los id de otros registros dentro array 'registros' de la prestación
-    relaciones: [string];
+    relacionadoCon: [string];
 };

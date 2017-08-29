@@ -1,11 +1,12 @@
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
-import { ComponentRegistry } from './component-registry.class';
+// import { ComponentRegistry } from './component-registry.class';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elemento-rup.interface';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { RUPComponents } from './../../../../app.module';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
 // import { RUP_ELEMENTS } from '../../../app.module';
@@ -31,7 +32,7 @@ export class RUPComponent implements OnInit {
      */
     private loadComponent() {
         // Cargamos el componente
-        const component = ComponentRegistry.get(this.elementoRUP.componente);
+        const component = RUPComponents[this.elementoRUP.componente];
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
         const componentReference = this.viewContainerRef.createComponent(componentFactory);
         // Copia todas las propiedades

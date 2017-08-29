@@ -130,6 +130,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+    prestacionChanged() {
+        alert('Cambió la prestación');
+    }
+
     /**
       * Carga un nuevo registro en el array general de registros y los valores en el array data
       *

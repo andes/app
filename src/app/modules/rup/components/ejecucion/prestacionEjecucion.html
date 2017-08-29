@@ -38,9 +38,6 @@
                         <p>
                             Fecha : {{prestacion.solicitud.fecha | date}}
                         </p>
-                        <p *ngIf="prestacion.solicitud.relacionadoCon.length > 0">
-                            Relacionado con: {{prestacion.solicitud.relacionadoCon}}
-                        </p>
                         <p *ngIf="prestacion.solicitud.prestacionOrigen">
                             Prestacion de origen: {{prestacion.solicitud.prestacionOrigen}}
                         </p>
@@ -104,8 +101,7 @@
                                                     </span>
                                             </div>
 
-                                            <rup #rup [prestacion]="prestacion" [elementoRUP]="elemento.elementoRUP" [paciente]="paciente" (evtData)="getValoresRup($event, elemento.elementoRUP, elemento.concepto)" [datosIngreso]="data[elemento.elementoRUP.key] && data[elemento.elementoRUP.key][elemento.concepto.conceptId]"
-                                                [snomedConcept]="elemento.concepto" *ngIf="paciente && data">
+                                            <rup #rup [elementoRUP]="servicioElementosRUP.buscarElemento(prestacion.solicitud.tipoPrestacion, false)" [prestacion]="prestacion" [registro]="prestacion" (change)="prestacionChanged()">
                                             </rup>
                                         </div>
                                         <div class="rup-footer" *ngIf="elemento.relacionadoCon || confirmarEliminar">

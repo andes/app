@@ -1285,10 +1285,8 @@ export class TensionDiastolicaComponent extends RUPComponent {
             //         }
             //     }
             // }
-        }
+        // }
 
-        return mensaje;
-
+        // return mensaje;
     }
-
 }
