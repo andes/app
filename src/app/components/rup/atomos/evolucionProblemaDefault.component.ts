@@ -108,7 +108,6 @@ export class EvolucionProblemaDefaultComponent extends Atomo implements OnInit {
     friendlyDate(fecha) {
 
         let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
-        console.log(fecha);
         let newDateMoment = moment();
 
         let numYears = newDateMoment.diff(oldDateMoment, 'years');

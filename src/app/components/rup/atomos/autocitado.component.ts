@@ -16,10 +16,7 @@ export class AutocitadoComponent extends Atomo implements OnInit {
         // Carga tipos de prestaciones permitidas para el usuario
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
-            if (this.datosIngreso) {
-                // this.devolverValores();
-                // this.mensaje = this.getMensajes();
-            } else {
+            if (!this.datosIngreso) {
                 this.tiposPrestacion.forEach(element => {
                     if (element.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId) {
                         this.data[this.elementoRUP.key].prestacionSeleccion = element;
