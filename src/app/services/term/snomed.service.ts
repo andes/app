@@ -12,20 +12,26 @@ import { environment } from '../../../environments/environment';
 export class SnomedService {
     private snomedURL = '/core/term/snomed';  // URL to web api
     private snomedURLProblema = '/core/term/snomed/problema';  // URL to web api
+    private snomedURLProcedimiento = '/core/term/snomed/procedimiento';  // URL to web api
+    private snomedURLEquipamiento = '/core/term/snomed/equipamiento';  // URL to web api
 
     constructor(private server: Server) {
     }
 
     get(params: any): Observable<any[]> {
-         return this.server.get(this.snomedURL, { params: params, showError: true });
+        return this.server.get(this.snomedURL, { params: params, showError: true });
     }
 
     getProblemas(params: any): Observable<any[]> {
-         return this.server.get(this.snomedURLProblema, { params: params, showError: true });
+        return this.server.get(this.snomedURLProblema, { params: params, showError: true });
     }
 
     getProcedimientos(params: any): Observable<any[]> {
-         return this.server.get(this.snomedURL + '/procedimiento', { params: params, showError: true });
+        return this.server.get(this.snomedURLProcedimiento, { params: params, showError: true });
+    }
+
+    getEquipamientos(params: any): Observable<any[]> {
+        return this.server.get(this.snomedURLEquipamiento, { params: params, showError: true });
     }
 
     getProductos(params: any): Observable<any[]> {

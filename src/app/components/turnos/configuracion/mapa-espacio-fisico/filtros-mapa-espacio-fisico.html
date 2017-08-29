@@ -1,0 +1,30 @@
+<!--Filtros-->
+<div class="row">
+    <div class="col-12">
+        <hr>
+        <h4>Mapa de espacios físicos</h4>
+    </div>
+</div>
+<div class="row">
+    <!-- <div class="col-3">
+        <plex-datetime type="date" name="fechaDesde" label="Desde" class="fechas">
+        </plex-datetime>
+    </div>
+    <div class="col-3">
+        <plex-datetime type="date" name="fechaHasta" label="Hasta">
+        </plex-datetime>
+    </div> -->
+
+    <div class="col-4">
+        <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
+            (change)="validarTodo()">
+        </plex-select> -->
+        <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
+    </div>
+
+    <div class="col-4">
+        <plex-select [(ngModel)]="agenda.equipamiento" label="Equipamiento" name="agenda.equipamiento" (getData)="loadEquipamientos($event)"
+            [multiple]="true" labelField="term" (change)="nombreChange($event)">
+        </plex-select>
+    </div>
+</div>

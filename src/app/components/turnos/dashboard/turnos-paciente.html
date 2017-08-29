@@ -3,19 +3,26 @@
     <header>
         <div class="row">
             <div class="col">
-                <h5> Turnos <span style="color: #00A8E0">{{paciente | paciente}}</span> </h5>
+                <h5> Turnos <span class="text-info">{{paciente | paciente}}</span> </h5>
             </div>
         </div>
         <hr>
     </header>
-    <!--Turnos-->
+
+    <!-- El paciente no tiene turnos -->
+    <h5 *ngIf="turnosPaciente.length === 0">
+        No hay turnos registrados.
+    </h5>
+
+    <!-- El paciente titne turnos -->
     <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
 
-        <plex-accordion class="accordion-dashboard">
+        <plex-accordion *ngIf="turno.tipoPrestacion.term" class="accordion-dashboard">
 
             <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-success" style="position: absolute !important;">{{turno.asistencia}}</div>
-            <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-danger" style="position: absolute !important;">{{turno.asistencia}}</div>
-            <plex-panel *ngIf="turnosPaciente.length>0" tituloPrincipal="{{ turno.tipoPrestacion.term }}" icon="arrow-down-drop-circle-outline">
+            <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="badge-dashboard badge badge-danger"
+                style="position: absolute !important;">{{turno.asistencia}}</div>
+            <plex-panel *ngIf="turnosPaciente.length > 0" tituloPrincipal="{{ turno.tipoPrestacion.term }}" icon="arrow-down-drop-circle-outline">
 
                 <div class="row" *ngIf="turno.organizacion">
                     <div class="col">
@@ -23,9 +30,9 @@
                     </div>
                 </div>
 
-                <div class="row" *ngIf="turno.profesionales">
+                <div class="row" *ngIf="turno.profesionales.length > 0">
                     <div class="col">
-                        <strong>Profesional:</strong> {{ turno.profesionales[0] | profesional }}
+                        <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre'] }}
                     </div>
                 </div>
                 <br>

@@ -1,0 +1,168 @@
+<form *ngIf="showListarTurnos" class="plex-layout">
+    <div *ngIf="autorizado" id="printpage">
+        <section>
+            <plex-box>
+                <!--Header de listado de Turnos-->
+                <header>
+                    <div class="alert alert-default">
+                        <div class="row">
+                            <div class="col">
+                                <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
+                                | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
+                                'HH:mm'}} hs ({{ agenda.estado }})
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Tipos de prestación</label>
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                            </div>
+                            <div class="col-4">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Profesionales</label>
+                                <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                                <ng-container *ngIf="agenda.profesionales">
+                                    <div>{{agenda.profesionales | enumerar:['apellido','nombre']}}</div>
+                                </ng-container>
+                            </div>
+                            <div class="col-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <hr>
+                                <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                                <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!--Listado de turnos-->
+                <!--Turnos-->
+                <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="14">&raquo; Bloque<span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{ bloque.horaInicio
+                                | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}} hs
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>Nro DNI</th>
+                            <th>Obra Social</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Residencia Habitual</th>
+                            <th>Sexo</th>
+                            <th>Edad</th>
+                            <th>Diagnóstico<br>Motivo de consulta</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                            <th>Resolución en el efector</th>
+                            <th>15. Otros</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let turno of bloque.turnos; let i=index">
+                            <td>
+                                <small><strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong></small>
+                            </td>
+                            <!--documento, carpetaPaciente-->
+                            <td>
+                                <span *ngIf="turno?.paciente?.id"><small>DNI {{turno.paciente.documento|number}}</small></span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0]?.nroCarpeta">
+                                    <small> | Nro Carpeta </small>
+                                    <small *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
+                                    <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
+                                </span>
+                            </td>
+                            <td></td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
+                                <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1"><small><span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
+                                <span *ngIf="turno && turno.estado === 'disponible'"></span>
+                                <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
+                                <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.direccion?.length > 0 && turno?.paciente?.direccion[0]?.valor">
+                                    {{turno.paciente.direccion[0].valor}}
+                                </small>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente | edad }}</small>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div *ngIf="turno?.paciente?.id" class="badge">SI</div>
+                                <div *ngIf="turno?.paciente?.id" class="badge">NO</div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row observaciones">
+                    <div class="col-4">
+                        <label>Observación de la consulta</label>
+                        <br> &nbsp;
+                        <hr> &nbsp;
+                        <hr> &nbsp;
+                        <hr>
+                    </div>
+                    <div class="col-4">
+                        <label>Observación de la consulta</label>
+                        <br> &nbsp;
+                        <hr> &nbsp;
+                        <hr> &nbsp;
+                        <hr>
+                    </div>
+                    <div class="col-4">
+                        <label>15 - Utilizar para investigaciones locales</label>
+                        <br> A:
+                        <hr> B:
+                        <hr> C:
+                        <hr>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-8">
+
+                    </div>
+                    <div class="col-4">
+                        <hr>
+                        <label>Firma Profesional</label>
+                    </div>
+                </div>
+            </plex-box>
+        </section>
+    </div>
+
+    <div class="row" *ngIf="!autorizado">
+        <div class="col">
+            No tiene permisos para ejecutar esta acción
+        </div>
+    </div>
+
+    <!--Footer-->
+    <footer>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button type="primary" icon="mdi mdi-arrow-left" label="Volver al gestor" (click)="cancelar()"></plex-button>
+            </div>
+
+            <div class="col-1 text-right">
+            </div>
+        </div>
+    </footer>
+</form>

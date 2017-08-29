@@ -34,7 +34,7 @@
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                                [multiple]="true" labelField="apellido+' '+nombre" (change)="validarTodo()">
+                                [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
                             </plex-select>
                         </div>
                     </div>
@@ -98,9 +98,10 @@
                                         (change)="validarTodo()">
                                     </plex-select>-->
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
-                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + ' (' + edificio.descripcion + ')'"
                                         (change)="validarTodo()">
                                     </plex-select>
+                                    <!-- <plex-button type="info" icon="map" title="Ver mapa" (click)="mapaEspacioFisico()"></plex-button> -->
                                 </div>
                             </div>
                             <div class="row" *ngIf="tipoEspacioFisico=='nuevo'">
@@ -134,7 +135,7 @@
             </div>
             <!--Edición del bloque activo-->
             <div class="col-7" *ngIf="elementoActivo && bloqueActivo >= 0">
-                <plex-box>
+                <plex-box *ngIf="!showMapaEspacioFisico">
                     <header>
                         <div class="page-title">Bloque</div>
                     </header>
@@ -277,6 +278,17 @@
                         <br>
                     </ng-container>
                 </plex-box>
+                <!-- UNDER CONSTRUCTION <plex-box *ngIf="showMapaEspacioFisico">
+                    <header>
+                        <div class="page-title">Mapa de Espacios Físicos</div>
+                    </header>
+                    <div class="row">
+                        <div class="col-12">
+                            <filtros-mapa-espacio-fisico [agendaSeleccionada]="modelo" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+                            <mapa-espacio-fisico [agendaSeleccionada]="modelo" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
+                        </div>
+                    </div>
+                </plex-box> -->
             </div>
         </div>
     </section>

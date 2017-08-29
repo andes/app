@@ -17,6 +17,8 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
     templateUrl: 'planificar-agenda.html',
 })
 export class PlanificarAgendaComponent implements OnInit {
+    subscriptionID: any;
+    espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
@@ -49,6 +51,8 @@ export class PlanificarAgendaComponent implements OnInit {
     tipoEspacioFisico = 'propios';
     espacioNuevo: IEspacioFisico;
     espaciosFisicosEfector = [];
+
+    showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -215,7 +219,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.loadEspaciosFisicos(this.modelo.espacioFisico);
                 break;
             case 'nuevo':
-                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null };
+                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
                 break;
         }
 
@@ -713,6 +717,46 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
+    mapaEspacioFisico() {
+        this.showMapaEspacioFisico = true;
+    }
+
+    espaciosChange(agenda) {
+
+        // TODO: ver límite
+        let query: any = {
+            limit: 20
+        };
+
+        if (agenda.espacioFisico) {
+            let nombre = agenda.espacioFisico;
+            query.nombre = nombre;
+        };
+
+        if (agenda.equipamiento && agenda.equipamiento.length > 0) {
+            let equipamiento = agenda.equipamiento.map((item) => item.term);
+            query.equipamiento = equipamiento;
+        };
+
+        if (!agenda.espacioFisico && !agenda.equipamiento) {
+            this.espaciosList = [];
+            return;
+        }
+
+        if (this.subscriptionID) {
+            this.subscriptionID.unsubscribe();
+        }
+        this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
+            this.espaciosList = resultado;
+        });
+    }
+
+    selectEspacio($data) {
+        this.modelo.espacioFisico = $data;
+        this.validarTodo();
+
+    }
+
     onSave($event, clonar) {
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
@@ -775,11 +819,22 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-                bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                bloque.restantesGestion = bloque.reservadoGestion;
-                bloque.restantesProfesional = bloque.reservadoProfesional;
 
+                if (bloque.pacienteSimultaneos) {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+                    bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+                    bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+
+                } else {
+                    bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                    bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                    bloque.restantesGestion = bloque.reservadoGestion;
+                    bloque.restantesProfesional = bloque.reservadoProfesional;
+                }
+
+                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
+                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
                 for (let i = 0; i < bloque.cantidadTurnos; i++) {
                     let turno = {
@@ -797,9 +852,11 @@ export class PlanificarAgendaComponent implements OnInit {
                         if (bloque.citarPorBloque) {
                             // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
                             for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000);
+                                turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
                                 if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                    bloque.turnos.push(turno);
+                                    if (bloque.turnos.length < bloque.cantidadTurnos) {
+                                        bloque.turnos.push(turno);
+                                    }
                                 }
                             }
                         } else {
@@ -808,8 +865,6 @@ export class PlanificarAgendaComponent implements OnInit {
                         }
                     }
                 }
-                bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
-                bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
                     return el.activo === true && delete el.$order;
                 });

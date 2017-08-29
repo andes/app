@@ -38,4 +38,8 @@ export class EspacioFisicoService {
         espacioFisico.activo = true;
         return this.put(espacioFisico);
     }
+
+    delete(espacioFisico: IEspacioFisico): Observable<IEspacioFisico> {
+        return this.server.delete(this.espacioFisicoUrl + '/' + espacioFisico.id);
+    }
 }

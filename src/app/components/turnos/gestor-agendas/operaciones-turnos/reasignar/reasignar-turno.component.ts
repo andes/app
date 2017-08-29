@@ -32,7 +32,6 @@ export class ReasignarTurnoComponent implements OnInit {
     @Input('agendaAReasignar')
     set agendaAReasignar(value: any) {
         this._agendaAReasignar = value;
-        this.seleccionarTurno(this._agendaAReasignar.bloques[0].turnos[0], this._agendaAReasignar.bloques[0], false);
     }
     get agendaAReasignar(): any {
         return this._agendaAReasignar;
@@ -57,6 +56,14 @@ export class ReasignarTurnoComponent implements OnInit {
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.showReasignarTurno = true;
+        this.actualizar();
+    }
+
+    actualizar() {
+        this.serviceAgenda.getById(this.agendaAReasignar.id).subscribe(agendaActualizada => {
+            this.agendaAReasignar = agendaActualizada;
+            // this.seleccionarTurno(this.agendaAReasignar.bloques[0].turnos[0], this.agendaAReasignar.bloques[0], false);
+        });
     }
 
     estaSeleccionado(turno: any) {
@@ -104,7 +111,7 @@ export class ReasignarTurnoComponent implements OnInit {
 
     }
 
-    // Lista de agendas similares/candidatas
+    // 1. Lista de agendas similares/candidatas
     cargarAgendasSimilares(idAgendaAReasignar, idBloque, idTurno) {
         let params = {
             idAgenda: idAgendaAReasignar,
@@ -120,7 +127,7 @@ export class ReasignarTurnoComponent implements OnInit {
         });
     }
 
-    // Agenda seleccionada de las similares/candidatas
+    // 2. Agenda seleccionada de las similares/candidatas
     cargarAgendaDestino(idAgenda, idBloque, idTurno) {
         this.serviceAgenda.getById(idAgenda).subscribe(agendaDestino => {
             this.agendaDestino.agenda = agendaDestino;

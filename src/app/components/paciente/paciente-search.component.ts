@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, HostBinding, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { PacienteService } from './../../services/paciente.service';
 import * as moment from 'moment';
 import { Plex } from '@andes/plex';
@@ -51,11 +52,23 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService) {
+    constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
         this.actualizarContadores();
     }
 
     public ngOnInit() {
+        // controlamos si tiene acceso a MPI
+        let autorizado = this.auth.getPermissions('mpi:?').length > 0;
+        if (!autorizado) {
+            this.modoCompleto = false;
+            // Si no está autorizado redirect al home
+            this.router.navigate(['./inicio']);
+            return false;
+        };
+        // controla el input y bloquea dashboard si no tiene permisos
+        if (this.modoCompleto) {
+            this.modoCompleto = this.auth.getPermissions('mpi:?').indexOf('paciente:dashboard') >= 0;
+        }
         this.autoFocus = this.autoFocus + 1;
     }
 
@@ -81,7 +94,11 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             this.escaneado.emit(this.esEscaneado);
         }
         if (!this.bloquearCreate) {
-            this.showCreateUpdate = true;
+            if (this.auth.getPermissions('mpi:?').indexOf('editarPaciente') >= 0) {
+                this.showCreateUpdate = true;
+            } else {
+                this.seleccion = {};
+            }
         }
 
         // Mostrar formulario update si no hay paciente
@@ -119,12 +136,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.textoLibre)) {
                 // Loggea el documento escaneado para análisis
-                this.logService.post('mpi', 'scan', { data: this.textoLibre });
+                this.logService.post('mpi', 'scan', { data: this.textoLibre }).subscribe(() => { });
                 return DocumentoEscaneados[key];
             }
         }
         if (this.textoLibre.length > 30) {
-            this.logService.post('mpi', 'scanFail', { data: this.textoLibre });
+            this.logService.post('mpi', 'scanFail', { data: this.textoLibre }).subscribe(() => { });
         }
         return null;
     }
@@ -259,13 +276,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                         match: this.pacientesSimilares[0].match
                                     };
                                     if (pacienteEncontrado) {
-                                        this.logService.post('mpi', 'validadoScan', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                        this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
 
 
                                         this.seleccionarPaciente(pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
-                                            this.logService.post('mpi', 'macheoAlto', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                            this.logService.post('mpi', 'macheoAlto', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                             //
                                             // Actualizamos los datos del paciente con los datos obtenidos del DNI
                                             //
@@ -276,7 +293,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                             this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                                         } else {
                                             if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {
-                                                this.logService.post('mpi', 'posibleDuplicado', { data: { pacienteDB: datoDB, pacienteScan: pacienteEscaneado } });
+                                                this.logService.post('mpi', 'posibleDuplicado', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                             }
                                             this.seleccionarPaciente(pacienteEscaneado);
                                         }
@@ -304,10 +321,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         this.loading = false;
                         this.resultado = resultado;
                         this.esEscaneado = false;
-                        /* let permisos = this.auth.getPermissions('mpi:?').indexOf('crearTemporal') >= 0;
-                         if (permisos) {*/
-                        this.mostrarNuevo = true;
-                        // }
+                        this.mostrarNuevo = this.auth.getPermissions('mpi:?').indexOf('nuevoPaciente') >= 0;
                     }, (err) => {
                         this.loading = false;
                     });

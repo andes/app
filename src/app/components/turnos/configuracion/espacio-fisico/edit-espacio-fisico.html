@@ -1,46 +1,86 @@
-<section *ngIf="autorizado">
-    <plex-box>
+<form *ngIf="autorizado" class="plex-layout">
+    <section>
         <div class="row">
-            <div class="col-6">
-                <plex-text [(ngModel)]="modelo.nombre" id="nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre del espacio físico"
-                    required>
-                </plex-text>
-                <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripción" placeholder="Ingrese la descripción del espacio físico">
-                </plex-text>
+            <!--Panel de Agendas-->
+            <div class="col">
+                <plex-box>
+                    <header>
+                        <!-- Títulos / Botones -->
+                        <div class="clearfix">
+                            <div class="page-title float-left">EDITAR ESPACIO FÍSICO</div>
+                        </div>
+                    </header>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-text [(ngModel)]="modelo.nombre" id="nombre" name="nombre" label="Nombre" placeholder="Ingrese el nombre del espacio físico"
+                                required>
+                            </plex-text>
+                            <plex-text [(ngModel)]="modelo.descripcion" name="descripcion" label="Descripción" placeholder="Ingrese la descripción del espacio físico">
+                            </plex-text>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-select [(ngModel)]="modelo.edificio" name="edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-select [(ngModel)]="modelo.servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" labelField="nombre">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-select [(ngModel)]="modelo.sector" name="sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-text [(ngModel)]="modelo.detalle" name="detalle" label="Detalle Ubicación">
+                            </plex-text>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-bool [(ngModel)]="modelo.activo" label="Activo" name="activo"></plex-bool>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-select [(ngModel)]="modelo.estado" label="Estado actual" name="estado" (getData)="loadEstados($event)"></plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Agregar Equipamiento</label>
+                            <snomed-buscar [tipoBusqueda]="tipoBusqueda" (evtData)="agregarEquipamiento($event)"></snomed-buscar>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Equipamiento actual</strong><br>
+                            <span *ngFor="let eq of modelo.equipamiento" class="badge badge-info badge-equipamiento">
+                                {{ eq.term }}
+                                <span class="float-right hover" (click)="eliminarEquipamiento(eq)"><i class="mdi mdi-close-box-outline"></i> </span>
+                            </span>
+                            <div class="badge badge-warning" *ngIf="modelo.equipamiento.length === 0">
+                                Sin equipamiento definido
+                            </div>
+                        </div>
+                    </div>
+                </plex-box>
             </div>
         </div>
+    </section>
+    <footer *ngIf="autorizado">
         <div class="row">
-            <div class="col-6">
-                <plex-select [(ngModel)]="modelo.edificio" name="edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
-                </plex-select>
+            <div class="col">
+                <plex-button type="danger" label="Cancelar" (click)="onCancel()"></plex-button>
+                <plex-button type="success" label="Guardar" (click)="onClick(this.modelo)"></plex-button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6">
-                <plex-select [(ngModel)]="modelo.sector" name="sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
-                </plex-select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <plex-select [(ngModel)]="modelo.servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" labelField="nombre">
-                </plex-select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <plex-text [(ngModel)]="modelo.detalle" label="Detalle Ubicación">
-                </plex-text>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <plex-bool [(ngModel)]="modelo.activo" label="Activo" name="activo"></plex-bool>
-            </div>
-        </div>
-    </plex-box>
-</section>
-<footer *ngIf="autorizado">
-    <plex-button label="Guardar" icon="content-save" (click)="onClick(this.modelo)"></plex-button>
-    <plex-button label="Cancelar" icon="close-circle-outline" (click)="onCancel()"></plex-button>
-</footer>
+    </footer>
+</form>

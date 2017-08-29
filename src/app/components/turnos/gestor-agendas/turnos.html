@@ -132,22 +132,27 @@
                         </td>
                         <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
 
-                            <span *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</span>
+                            <span *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }} <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span></span>
                             <small><span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span></small>
-                            <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0"> | Nro Carpeta 
+                            <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta 
                         <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
-                        <span class="text-danger" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</span>
                         </span></small>
-                            <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1"><small><span *ngIf="bloque.tipoPrestaciones.length > 1">{{turno.tipoPrestacion.nombre}}</span></small>
+                            <small class="text-info" *ngIf="turno.tipoTurno === 'profesional'">(autocitado)</small>
+                            <small class="text-info" *ngIf="turno.tipoTurno === 'gestion'">(con llave)</small>
+                            <small class="text-info" *ngIf="turno.tipoTurno === 'programado'">(programado)</small>
+                            <small class="text-info" *ngIf="turno.tipoTurno === 'delDia'">(del día)</small>
+
+                            <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">
+                            <small><span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</span></small>
                             <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
                             <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</span>
-                            <!-- <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno?.estado === 'suspendido'">
-                                <i class="mdi mdi-alert-circle-outline"> Suspendido</i>
-                            </span> -->
-                            <span *ngIf="turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right" title="Suspendido no reasignado">
+                            <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'">Turno suspendido (sin paciente)</span>
+                            <span *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right"
+                                title="Aun no reasignado">
                                 <i class="mdi mdi-account-alert"></i>
                             </span>
-                            <span *ngIf="turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-danger float-right" title="Suspendido ya reasignado">
+                            <span *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
+                                title="Ya reasignado">
                                 <i class="mdi mdi-account-check"></i>
                             </span>
                             <span *ngIf="turno?.nota"><i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
