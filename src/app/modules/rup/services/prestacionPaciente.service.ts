@@ -358,6 +358,4 @@ export class PrestacionPacienteService {
 
         // });
     }
-
-    // tslint:disable-next-line:eofline
 }

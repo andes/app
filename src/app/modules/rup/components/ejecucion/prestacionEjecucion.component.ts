@@ -188,7 +188,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
         }
         this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
-        // tslint:disable-next-line:forin
+
         for (let i in this.registros) {
             this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
@@ -240,7 +240,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     this.data[elementoRUP.key] = {};
                                 }
                                 this.data[elementoRUP.key][registro.concepto.conceptId] = datoModificar;
-                                // tslint:disable-next-line:forin
                                 for (let i in this.registros) {
                                     this.cargaItems(this.registros[i], i);
                                     // Actualizamos cuando se agrega el array..
@@ -375,7 +374,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
 
-        // tslint:disable-next-line:forin
         for (let i in this.registros) {
             this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
@@ -416,7 +414,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.confirmarDesvincular[index] = false;
 
             this.moverRegistroEnPosicion(index, this.registros.length);
-            // tslint:disable-next-line:forin
             for (let i in this.registros) {
                 this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
@@ -531,7 +528,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registros.splice(this.registros.length, 0, data);
         this.registros[this.registros.length - 1].collapse = false; // verificar.. fer
         this.showDatosSolicitud = false;
-        // tslint:disable-next-line:forin
         for (let i in this.registros) {
             this.cargaItems(this.registros[i], i);
             // Actualizamos cuando se agrega el array..
@@ -596,7 +592,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 this.data[elementoRUP.key] = {};
                             }
                             this.data[elementoRUP.key][snomedConcept.conceptId] = dato;
-                            // tslint:disable-next-line:forin
                             for (let i in this.registros) {
                                 if (this.registros[i]) {
                                     this.cargaItems(this.registros[i], i);
@@ -775,7 +770,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (this.registros.length === this.copiaRegistro.length) {
                 this.registros = JSON.parse(JSON.stringify(this.copiaRegistro));
             }
-            // tslint:disable-next-line:forin
             for (let i in this.registros) {
                 this.cargaItems(this.registros[i], i);
                 // Actualizamos cuando se agrega el array..
