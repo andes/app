@@ -151,16 +151,29 @@ import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operac
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
 
 // ... RUP
-import { RupComponent } from './components/rup/core/rup.component';
-import { BuscadorComponent } from './components/rup/ejecucion/buscador.component';
-import { HudsBusquedaComponent } from './components/rup/ejecucion/hudsBusqueda.component';
-import { ProblemaPacienteService } from './services/rup/problemaPaciente.service';
-import { PrestacionPacienteService } from './services/rup/prestacionPaciente.service';
-import { ObservarDatosService } from './services/rup/observarDatos.service';
-import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionCrear.component';
+import { RUPComponent } from './modules/rup/components/core/rup.component';
+import { ElementosRUPService } from './modules/rup/services/elementosRUP.service';
+import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
+import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
+import { PrestacionesService } from './modules/rup/services/prestaciones.service';
+import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
+import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
-import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
+import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
+import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
+import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
+import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
+import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
+import { TemperaturaComponent } from './modules/rup/components/elementos/temperatura.component';
+import { TallaComponent } from './modules/rup/components/elementos/talla.component';
+import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault.component';
+import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
+import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
+import { PesoComponent } from './modules/rup/components/elementos/peso.component';
+import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
+import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
+import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
+import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -170,7 +183,6 @@ import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPre
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 import { EditarAuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/editar-auditoria-prestacionPaciente.component';
 
-import { ElementosRupService } from './services/rup/elementosRUP.service';
 
 // AUDITORIA
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
@@ -181,11 +193,6 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
 
-
-export const RUP_ELEMENTS: any[] = [
-];
-
-// let temp = RUP_ELEMENTS.map((i) => i.component);
 const RUP_COMPONENTS = [
     BuscadorComponent,
     HeaderPacienteComponent,
@@ -193,6 +200,19 @@ const RUP_COMPONENTS = [
     PrestacionCrearComponent,
     PrestacionEjecucionComponent,
     PrestacionValidacionComponent,
+    EvolucionProblemaDefaultComponent,
+    IndiceDeMasaCorporalComponent,
+    NuevaEvolucionProblemaComponent,
+    ObservacionesComponent,
+    PesoComponent,
+    SaturacionOxigenoComponent,
+    SignosVitalesComponent,
+    SolicitudPrestacionDefaultComponent,
+    TallaComponent,
+    TemperaturaComponent,
+    TensionArterialComponent,
+    TensionDiastolicaComponent,
+    TensionSistolicaComponent
 ];
 
 // Locales
@@ -229,7 +249,7 @@ import { routing, appRoutingProviders } from './app.routing';
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
-        RupComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
+        RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
@@ -268,7 +288,6 @@ import { routing, appRoutingProviders } from './app.routing';
         appRoutingProviders,
         ConfigPrestacionService,
         PlanificarAgendaComponent,
-        // EspacioFisicoComponent,
         AgendaService,
         AppMobileService,
         TurnoService,
@@ -276,11 +295,10 @@ import { routing, appRoutingProviders } from './app.routing';
         ListaEsperaService,
         Server,
         SmsService,
-        PrestacionPacienteService,
-        ProblemaPacienteService,
+        PrestacionesService,
         TipoPrestacionService,
-        ElementosRupService,
-        ObservarDatosService,
+        ElementosRUPService,
+        ConceptObserverService,
         LlavesTipoPrestacionService,
         LogService,
         AuditoriaPorBloqueService,

@@ -21,10 +21,7 @@ export interface IPrestacion {
         tipoPrestacion: ISnomedConcept,
         // Fecha de solicitud
         // Nota: Este dato podría obtener del array de estados, pero está aquí para facilidar de consulta
-        fecha: {
-            type: Date,
-            required: true
-        },
+        fecha: Date,
         // ID del turno relacionado con esta prestación
         turno: string,
         // Profesional que solicita la prestacion

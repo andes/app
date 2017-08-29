@@ -1,5 +1,3 @@
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { LoginComponent } from './../../login/login.component';
 import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,6 +8,8 @@ import * as moment from 'moment';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
+import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
+import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 
 // Interfaces
 import { IBloque } from './../../../interfaces/turnos/IBloque';
@@ -26,7 +26,6 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
-import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
@@ -129,7 +128,7 @@ export class DarTurnosComponent implements OnInit {
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public servicioPrestacionPaciente: PrestacionPacienteService,
+        public servicioPrestacionPaciente: PrestacionesService,
         private llaveTipoPrestacionService: LlavesTipoPrestacionService,
         public smsService: SmsService,
         public plex: Plex,
