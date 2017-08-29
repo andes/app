@@ -1,3 +1,7 @@
+import { PrestacionesService } from './../../services/prestaciones.service';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { IPaciente } from './../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -6,17 +10,6 @@ import { Location } from '@angular/common';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { IElementoRUP } from './../../../interfaces/IElementoRUP';
-import { IPaciente } from './../../../interfaces/IPaciente';
-import { IPrestacionPaciente } from './../../../interfaces/rup/IPrestacionPaciente';
-import { IProblemaPaciente } from './../../../interfaces/rup/IProblemaPaciente';
-import { IProfesional } from './../../../interfaces/IProfesional';
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
-import { AgendaService } from './../../../services/turnos/agenda.service';
-import { PacienteSearch } from './../../../services/pacienteSearch.interface';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { ProblemaPacienteService } from './../../../services/rup/problemaPaciente.service';
-import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
@@ -37,7 +30,7 @@ export class PrestacionCrearComponent implements OnInit {
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
-        public servicioPrestacion: PrestacionPacienteService,
+        public servicioPrestacion: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         private location: Location) { }
 

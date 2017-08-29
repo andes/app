@@ -12,7 +12,7 @@ export class PesoComponent extends RUPComponent implements OnInit {
             // No soy yo mismo
             if (this.registro !== data && this.registro.valor !== data.valor) {
                 this.registro.valor = data.valor;
-                this.emitChange();
+                this.emitChange(false);
             }
         });
     }

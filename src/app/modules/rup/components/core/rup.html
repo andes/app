@@ -1,12 +1,13 @@
-<!-- <div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id && paciente">
+Este es un elemento RUP
+
+<!-- Moléculas -->
+<div *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
-        <ng-container *ngFor="let tp of elementoRUP.requeridos">
-            <div class="col-6" *ngIf="!soloValores || (soloValores && datosIngreso && datosIngreso[tp.key])">
-                <rup #rup [soloValores]="soloValores" [elementoRUP]="tp" [paciente]="paciente" (evtData)="devolverValores($event,tp)" [datosIngreso]="(datosIngreso && datosIngreso[tp.key]) ? datosIngreso[tp.key] : null">
+        <ng-container *ngFor="let concepto of elementoRUP.requeridos; let i = index">
+            <div class="col-{elementoRUP.style?.columns? || 12}">
+                <rup #rup [elementoRUP]="elementosRUPService.buscarElemento(concepto, false)" [prestacion]="prestacion" [registro]="registro.registros?[i]" (change)="emitChanges()">
                 </rup>
             </div>
-
         </ng-container>
     </div>
-</div> -->
-Este es un elemento RUP
+</div>

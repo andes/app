@@ -1,14 +1,11 @@
-import { element } from 'protractor';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-
-// Rutas
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ElementosRupService } from './../../../services/rup/elementosRUP.service';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from './../../../../services/paciente.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
+import { PrestacionesService } from './../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -31,15 +28,10 @@ export class PrestacionValidacionComponent implements OnInit {
      * Indica si muestra el calendario para dar turno autocitado
      */
     public showDarTurnos = false;
-    /**
-     * Solicitud de prestación para dar un turno autocitado
-     */
-    public: any;
     solicitudTurno;
-    public registros: any[] = [];
 
-    constructor(private servicioPrestacion: PrestacionPacienteService,
-        private servicioElementosRUP: ElementosRupService,
+    constructor(private servicioPrestacion: PrestacionesService,
+        private servicioElementosRUP: ElementosRUPService,
         private servicioPaciente: PacienteService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
@@ -57,44 +49,14 @@ export class PrestacionValidacionComponent implements OnInit {
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
 
+            // Carga la información completa del paciente
+            // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
             });
 
-            this.servicioElementosRUP.get({}).subscribe(elementosRup => {
-                this.elementosRUP = elementosRup;
-                // this.elementoRUPprestacion = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, prestacion.solicitud.tipoPrestacion, prestacion.ejecucion.registros[0].tipo);
-                this.cargaRegistros();
-            });
-        });
-    }
-
-    cargaRegistros() {
-        this.registros = [];
-        let data: any;
-        this.prestacion.ejecucion.registros.forEach(element => {
-            let elementoRUP = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, element.concepto, element.tipo);
-
-            // buscamos las prestaciones solicitadas luego de la validacion
-            this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionesSolicitadas => {
-
-                // buscamos si el registro ahora es un plan creado (luego que hemos validado)
-                let registroPlan = prestacionesSolicitadas.find(p => p.solicitud.tipoPrestacion.conceptId === element.concepto.conceptId);
-
-                data = {
-                    elementoRUP: elementoRUP,
-                    concepto: element.concepto,
-                    valor: element.valor,
-                    tipo: element.tipo,
-                    destacado: element.destacado ? element.destacado : false,
-                    relacionadoCon: element.relacionadoCon ? element.relacionadoCon : null,
-                    ...(registroPlan) && { prestacionPlan: registroPlan }
-                };
-
-                this.registros.push(data);
-                // console.log(this.registros);
-            });
-
+            // Busca el elementoRUP que implementa esta prestación
+            this.elementoRUPprestacion = this.servicioElementosRUP.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
         });
     }
 
@@ -107,20 +69,15 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-                // de los registros a
-                let planes = this.registros.filter(r => r.tipo === 'planes');
+                // // de los registros a
+                // let planes = this.registros.filter(r => r.tipo === 'planes');
 
-                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-
-                    // recargamos los registros
-                    this.cargaRegistros();
-
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                });
+                // this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                //     this.prestacion = prestacion;
+                // }, (err) => {
+                //     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                // });
             }
-
         });
     }
 

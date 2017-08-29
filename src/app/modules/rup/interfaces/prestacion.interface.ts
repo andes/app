@@ -60,5 +60,5 @@ export interface IPrestacion {
         registros: [IPrestacionRegistro],
     };
     // Historia de estado de la prestación
-    estados: [IPrestacionEstado]
+    estados: [IPrestacionEstado];
 };

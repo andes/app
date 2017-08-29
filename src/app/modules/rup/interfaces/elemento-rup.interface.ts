@@ -13,6 +13,13 @@ export interface IElementoRUP {
     tipo: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
+    // Indica los parámetros para instanciar el componente
+    params: { [key: string]: any };
+    // Indica el estilo para aplicar al componente
+    style: {
+        columns: number,
+        cssClass: string
+    };
     // Conceptos SNOMED relacionados que se muestran e implementan de la misma manera.
     // Por ejemplo: "Toma de temperatura del paciente (SCTID: 56342008)" y
     //              "Toma de temperatura rectal del paciente (SCTID: 18649001")
@@ -20,8 +27,8 @@ export interface IElementoRUP {
     conceptos: [ISnomedConcept];
     // Elementos RUP requeridos para la ejecución.
     // Por ejemplo, en "Control de Niño sano" es obligatorio ejecutar "Toma de peso"
-    requeridos: [string];
+    requeridos: [ISnomedConcept];
     // Elementos RUP más frecuentes para la ejecución.
     // Por ejemplo, en "Consulta de medicina general" se puede sugerir ejecutar "Signos vitales"
-    frecuentes: [string];
+    frecuentes: [ISnomedConcept];
 };

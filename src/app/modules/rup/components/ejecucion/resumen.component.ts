@@ -1,14 +1,9 @@
+import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, Output, Input, EventEmitter, OnInit, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { IPrestacionPaciente } from '../../../interfaces/rup/IPrestacionPaciente';
-import { IPrestacion } from './../../../interfaces/turnos/IPrestacion';
-import { IProblemaPaciente } from '../../../interfaces/rup/IProblemaPaciente';
-import { IPaciente } from '../../../interfaces/IPaciente';
-import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
-import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.service';
-// Rutas
+import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-resumen',
@@ -16,31 +11,24 @@ import { ProblemaPacienteService } from '../../../services/rup/problemaPaciente.
 })
 
 export class ResumenComponent implements OnInit {
-    plex: any;
-
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     public prestacion: any;
-    public listaProblemas: IProblemaPaciente[] = [];
-    public prestacionesPendientes: IPrestacionPaciente[] = [];
-    public breadcrumbs: any;
+    public prestacionesPendientes: IPrestacion[] = [];
 
     // Para cargar Indicadores
     // public prestacionPeso: IPrestacionPaciente = null;
     // public prestacionTalla: IPrestacionPaciente = null;
 
-    constructor(private servicioProblemasPaciente: ProblemaPacienteService,
-        private servicioPrestacionPaciente: PrestacionPacienteService,
+    constructor( private servicioPrestacionPaciente: PrestacionesService,
         private router: Router, private route: ActivatedRoute,
-        public auth: Auth, private Plex: Plex) { }
+        public auth: Auth, private plex: Plex) { }
 
     ngOnInit() {
-        this.breadcrumbs = this.route.routeConfig.path;
-
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.servicioPrestacionPaciente.getById(id, {showError: false}).subscribe(prestacion => {
+            this.servicioPrestacionPaciente.getById(id, { showError: false }).subscribe(prestacion => {
                 this.prestacion = prestacion;
                 // this.loadProblemas();
                 this.buscarPrestacionesPendientes();
@@ -55,21 +43,10 @@ export class ResumenComponent implements OnInit {
     }
 
     /**
-     * Busca todos los problemas del paciente
-     *
-     * @memberof ResumenComponent
-     */
-    loadProblemas() {
-        this.servicioProblemasPaciente.get({ idPaciente: this.prestacion.paciente.id }).subscribe(problemas => {
-            this.listaProblemas = problemas;
-        });
-    }
-
-    /**
-     * Buscar las ultimas 10 prestaciones pendientes del paciente
-     *
-     * @memberof ResumenComponent
-     */
+   * Buscar las ultimas 10 prestaciones pendientes del paciente
+   *
+   * @memberof ResumenComponent
+   */
     buscarPrestacionesPendientes() {
         this.servicioPrestacionPaciente.get({ estado: 'pendiente', idPaciente: this.prestacion.paciente.id, limit: 10 })
             .subscribe(prestaciones => {
@@ -115,7 +92,7 @@ export class ResumenComponent implements OnInit {
 
         let cambioEstado: any = {
             op: 'estadoPush',
-            estado : {
+            estado: {
                 fecha: new Date(),
                 tipo: 'ejecucion'
             }

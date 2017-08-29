@@ -12,14 +12,13 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 
 @Component({
     selector: 'rup',
-    template: ''
+    templateUrl: 'rup.html'
 })
 export class RUPComponent implements OnInit {
     // Propiedades
+    @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
     @Input() registro: IPrestacionRegistro;
-    @Input() elementoRUP: IElementoRUP;
-    @Input() params: { [key: string]: any };
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -39,7 +38,6 @@ export class RUPComponent implements OnInit {
         componentReference.instance['prestacion'] = this.prestacion;
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
-        componentReference.instance['params'] = this.params;
         // Event bubbling
         componentReference.instance['change'].subscribe(e => {
             this.emitChange();
@@ -54,9 +52,11 @@ export class RUPComponent implements OnInit {
      * @protected
      * @memberof RUPComponent
      */
-    protected emitChange() {
+    protected emitChange(notifyObservers = true) {
         // Notifica a todos los components que estén suscriptos con este concepto
-        this.conceptObserverService.notify(this.registro.concepto, this.registro);
+        if (notifyObservers) {
+            this.conceptObserverService.notify(this.registro.concepto, this.registro);
+        }
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
     }
@@ -65,8 +65,8 @@ export class RUPComponent implements OnInit {
     constructor(
         private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
-        protected servicioElementosRUP: ElementosRUPService,
         protected conceptObserverService: ConceptObserverService,
+        public elementosRUPService: ElementosRUPService,
     ) { }
 
     ngOnInit() {

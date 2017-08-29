@@ -1,29 +1,39 @@
-import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';
-import { IElementoRUP } from './../interfaces/elemento-rup.interface';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
+import { IElementoRUP } from './../interfaces/elemento-rup.interface';
+import { IElementosRUPCache } from './elementosRUPCache.interface';
+import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 
 const url = '/modules/rup/elementosRUP';
 
 @Injectable()
 export class ElementosRUPService {
     // Mantiene un caché de la base de datos de elementos
-    private cache: IElementoRUP[];
+    private cache: IElementosRUPCache = {};
+    // Mantiene un caché de la base de datos de elementos
+    private cacheParaSolicitud: IElementosRUPCache = {};
     // Precalcula los elementos default
-    private defaults: { [key: string]: IElementoRUP };
+    private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
-    private defaultsParaSolicitud: { [key: string]: IElementoRUP };
+    private defaultsParaSolicitud: IElementosRUPCache = {};
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP
-        this.server.get(url).subscribe((data) => {
-            this.cache = data;
+        this.server.get(url).subscribe((data: IElementoRUP[]) => {
+            this.cache = {};
 
             // Precalcula los defaults
-            this.cache.forEach(elementoRUP => {
+            data.forEach(elementoRUP => {
+                elementoRUP.conceptos.forEach((concepto) => {
+                    if (elementoRUP.esSolicitud) {
+                        this.cacheParaSolicitud[concepto.conceptId] = elementoRUP;
+                    } else {
+                        this.cache[concepto.conceptId] = elementoRUP;
+                    }
+                });
                 if (elementoRUP.defaultFor && elementoRUP.defaultFor.length) {
                     elementoRUP.defaultFor.forEach((semanticTag) => {
                         if (elementoRUP.esSolicitud) {
@@ -88,31 +98,29 @@ export class ElementosRUPService {
     }
 
     /**
-     * Traemos el elemento rup asociado al concepto de SNOMED
-     * de la lista de elementos rup precargados en memoria
+     * Busca el elementoRUP que implemente el concepto
      *
-     * @param {ISnomedConcept} conceptoSnomed
-     * @returns elementoRUP
-     * @memberof ElementosRupService
+     * @param {ISnomedConcept} concepto Concepto de SNOMED
+     * @param {boolean} esSolicitud Indica si es una solicitud
+     * @returns {IElementoRUP} Elemento que implementa el concepto
+     * @memberof ElementosRUPService
      */
-    buscarElementoRup(conceptoSnomed: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
+    buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
         // Busca el elemento RUP que implemente el concepto
-        for (let i = 0; this.cache.length < 0; i++) {
-            // Busca un elemento que sea del mismo tipo
-            if (this.cache[i].esSolicitud === esSolicitud) {
-                for (let j = 0; this.cache[i].conceptos.length < 0; j++) {
-                    if (this.cache[i].conceptos[j].conceptId === conceptoSnomed.conceptId) {
-                        return this.cache[i];
-                    }
-                }
-            }
-        }
-
-        // No encontró ninguno, entonces devuelve el elemento default
         if (esSolicitud) {
-            return this.defaultsParaSolicitud[conceptoSnomed.semanticTag];
+            let elemento = this.cacheParaSolicitud[concepto.conceptId];
+            if (elemento) {
+                return elemento;
+            } else {
+                return this.defaultsParaSolicitud[concepto.semanticTag];
+            }
         } else {
-            return this.defaults[conceptoSnomed.semanticTag];
+            let elemento = this.cache[concepto.conceptId];
+            if (elemento) {
+                return elemento;
+            } else {
+                return this.defaults[concepto.semanticTag];
+            }
         }
     }
 }

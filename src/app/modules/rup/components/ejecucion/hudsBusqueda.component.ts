@@ -1,11 +1,9 @@
-import { IPaciente } from './../../../interfaces/IPaciente';
+import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
 
 @Component({
     selector: 'rup-hudsBusqueda',
@@ -59,7 +57,7 @@ export class HudsBusquedaComponent implements OnInit {
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private servicioPrestacion: PrestacionPacienteService,
+    constructor(private servicioPrestacion: PrestacionesService,
         public plex: Plex, public auth: Auth) {
     }
 
