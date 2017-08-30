@@ -1,5 +1,4 @@
 
-
 /*
 @jgabriel | 04-03-2017
 
@@ -249,6 +248,9 @@ import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/busc
 import { DosisComponent } from './components/rup/atomos/dosis.component';
 import { RecetaComponent } from './components/rup/atomos/receta.component';
 
+// MOLECULAS DE HALLAZGOSñ
+import { HipertensionArterialComponent } from './components/rup/moleculas/hipertensionArterial.component';
+import { ObesidadComponent } from './components/rup/moleculas/obesidad.component';
 
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
@@ -358,7 +360,9 @@ export const RUP_ELEMENTS: any[] = [
     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
     { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
     { component: DosisComponent, key: 'DosisComponent' },
-    { component: RecetaComponent, key: 'RecetaComponent' }
+    { component: RecetaComponent, key: 'RecetaComponent' },
+    { component: ObesidadComponent, key: 'ObesidadComponent' },
+    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' }
 
 ];
 
@@ -446,7 +450,9 @@ const RUP_COMPONENTS = [
     IndicacionProcedimientoComponent,
     BuscadorMedicamentoSnomedComponent,
     DosisComponent,
-    RecetaComponent
+    RecetaComponent,
+    ObesidadComponent,
+    HipertensionArterialComponent
 ];
 
 // Locales
