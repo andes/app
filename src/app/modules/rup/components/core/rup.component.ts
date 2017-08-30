@@ -5,10 +5,10 @@ import { IElementoRUP } from './../../interfaces/elemento-rup.interface';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-import { RUPRegistry } from './rup-.registry';
+// import { RUPRegistry } from './rup-.registry';
 
 // [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
-// import { RUP_ELEMENTS } from '../../../app.module';
+import { RUPRegistry } from '../../../../app.module';
 
 @Component({
     selector: 'rup',
@@ -19,6 +19,7 @@ export class RUPComponent implements OnInit {
     @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
     @Input() registro: IPrestacionRegistro;
+    @Input() params: any;
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();

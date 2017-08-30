@@ -46,7 +46,7 @@ export class BuscadorComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
+        // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
 
     // drag and drop funciones. Hago los emit.

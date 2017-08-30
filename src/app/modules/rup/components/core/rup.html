@@ -1,11 +1,11 @@
-Este es un elemento RUP
+<!-- Este es un elemento RUP -->
 
 <!-- Moléculas -->
 <div *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
-        <ng-container *ngFor="let concepto of elementoRUP.requeridos; let i = index">
-            <div class="col-{elementoRUP.style?.columns? || 12}">
-                <rup #rup [elementoRUP]="elementosRUPService.buscarElemento(concepto, false)" [prestacion]="prestacion" [registro]="registro.registros ? registro.registros[i] : null" (change)="emitChanges()">
+        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+            <div class="col-{item.style?.columns? || 12}">
+                <rup #rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros ? registro.registros[i] : null" (change)="emitChanges()">
                 </rup>
             </div>
         </ng-container>

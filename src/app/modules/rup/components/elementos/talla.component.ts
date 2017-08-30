@@ -6,7 +6,19 @@ import * as moment from 'moment';
     selector: 'rup-talla',
     templateUrl: 'talla.html'
 })
-export class TallaComponent extends RUPComponent {
+export class TallaComponent extends RUPComponent implements OnInit {
+
+    ngOnInit() {
+        // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
+        this.conceptObserverService.observe(this.registro).subscribe((data) => {
+            // No soy yo mismo
+            if (this.registro !== data && this.registro.valor !== data.valor) {
+                this.registro.valor = data.valor;
+                this.emitChange(false);
+            }
+        });
+    }
+
 
     // getMensajes() {
 

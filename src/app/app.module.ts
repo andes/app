@@ -163,7 +163,21 @@ import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.com
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
-import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
+// import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
+// TODO: ver con JGabriel!!!
+import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
+import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
+import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
+import { TemperaturaComponent } from './modules/rup/components/elementos/temperatura.component';
+import { TallaComponent } from './modules/rup/components/elementos/talla.component';
+import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault.component';
+import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
+import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
+import { PesoComponent } from './modules/rup/components/elementos/peso.component';
+import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
+import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
+import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
+import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -189,6 +203,22 @@ import { routing, appRoutingProviders } from './app.routing';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
+
+export let RUPRegistry = {
+    'PesoComponent': PesoComponent,
+    'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
+    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
+    'ObservacionesComponent': ObservacionesComponent,
+    'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
+    'SignosVitalesComponent': SignosVitalesComponent,
+    'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
+    'TallaComponent': TallaComponent,
+    'TemperaturaComponent': TemperaturaComponent,
+    'TensionArterialComponent': TensionArterialComponent,
+    'TensionDiastolicaComponent': TensionDiastolicaComponent,
+    'TensionSistolicaComponent': TensionSistolicaComponent
+};
 
 let RUPComponentsArray = [];
 for (let key in RUPRegistry) {
