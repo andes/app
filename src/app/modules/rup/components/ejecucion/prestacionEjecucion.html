@@ -60,7 +60,7 @@
                             <!-- Contenedor del registro RUP -->
                             <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro.relacionadoCon}">
                                 <div class="rup-card">
-                                    <div class="type {{registro.tipo}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                    <div class="type {{registro.concepto.semanticTag}} drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
                                         (onDragEnd)="draggingRegistro(i, registro, false)">
                                         <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                     </div>
@@ -79,19 +79,19 @@
                                                 <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
-                                                <div *ngIf="registro.relacionadoCon === null && registro?.items.length > 0">
+                                                <!-- <div *ngIf="registro.relacionadoCon === null && registro?.items.length > 0">
                                                     <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="registro.items"></plex-dropdown>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
 
                                         <!-- ... Body -->
                                         <div class="rup-body " [hidden]="registro.collapse || confirmarEliminar">
-                                            <div *ngIf="errores[i]">
+                                            <!-- <div *ngIf="errores[i]">
                                                 <span class="badge badge-danger">
                                                         {{errores[i]}}
                                                     </span>
-                                            </div>
+                                            </div> -->
                                             <!-- RUP Loader -->
                                             <rup #rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [registro]="registro" (change)="prestacionChanged()">
                                             </rup>
