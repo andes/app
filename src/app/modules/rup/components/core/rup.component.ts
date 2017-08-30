@@ -1,6 +1,5 @@
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
-// import { ComponentRegistry } from './component-registry.class';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elemento-rup.interface';
 import { IPaciente } from './../../../../interfaces/IPaciente';
@@ -40,8 +39,8 @@ export class RUPComponent implements OnInit {
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
         // Event bubbling
-        componentReference.instance['change'].subscribe(e => {
-            this.emitChange();
+        componentReference.instance['change'].subscribe(value => {
+            this.emitChange(false);
         });
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();

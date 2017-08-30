@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { ISnomedConcept } from '../interfaces/snomed-concept.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
@@ -9,16 +10,17 @@ export class ConceptObserverService {
 
   /**
    * Devuelve un observable para el concepto indicado
-   * 
+   *
    * @param {ISnomedConcept} concepto Concepto de SNOMED
    * @returns {Subject<any>} Observable
    * @memberof ConceptObserverService
    */
-  public observe(concepto: ISnomedConcept): Subject<IPrestacionRegistro> {
-    if (!this.observers[concepto.conceptId]) {
-      this.observers[concepto.conceptId] = new Subject<IPrestacionRegistro>();
+  public observe(registro: IPrestacionRegistro): Observable<IPrestacionRegistro> {
+    if (!this.observers[registro.concepto.conceptId]) {
+      this.observers[registro.concepto.conceptId] = new Subject<IPrestacionRegistro>();
     };
-    return this.observers[concepto.conceptId];
+    // Filtra para que notifique al mismo elemento que lo generó el cambio
+    return this.observers[registro.concepto.conceptId].filter((value, index) => value !== registro);
   }
 
   /**

@@ -9,13 +9,13 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
     ngOnInit() {
          // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
-         this.conceptObserverService.observe(this.elementoRUP.requeridos[0]).subscribe((data) => {
-            // No soy yo mismo
-            if (this.registro !== data && this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
-            }
-        });
+        //  this.conceptObserverService.observe(this.elementoRUP.requeridos[0]).subscribe((data) => {
+        //     // No soy yo mismo
+        //     if (this.registro !== data && this.registro.valor !== data.valor) {
+        //         this.registro.valor = data.valor;
+        //         this.emitChange(false);
+        //     }
+        // });
         // this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
         // this.servicioObservarDatos.getDato$('peso').subscribe(
         //     peso => {

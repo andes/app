@@ -199,22 +199,27 @@ import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-creat
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
-const RUP_COMPONENTS = [
-    PesoComponent,
-    EvolucionProblemaDefaultComponent,
-    IndiceDeMasaCorporalComponent,
-    NuevaEvolucionProblemaComponent,
-    ObservacionesComponent,
-    SaturacionOxigenoComponent,
-    SignosVitalesComponent,
-    SolicitudPrestacionDefaultComponent,
-    TallaComponent,
-    TemperaturaComponent,
-    TensionArterialComponent,
-    TensionDiastolicaComponent,
-    TensionSistolicaComponent
-];
-
+// Componentes RUP
+// [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
+export let RUPComponents = {
+    'PesoComponent': PesoComponent,
+    'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
+    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
+    'ObservacionesComponent': ObservacionesComponent,
+    'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
+    'SignosVitalesComponent': SignosVitalesComponent,
+    'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
+    'TallaComponent': TallaComponent,
+    'TemperaturaComponent': TemperaturaComponent,
+    'TensionArterialComponent': TensionArterialComponent,
+    'TensionDiastolicaComponent': TensionDiastolicaComponent,
+    'TensionSistolicaComponent': TensionSistolicaComponent
+};
+let RUPComponentsArray = [];
+for (let key in RUPComponents) {
+    RUPComponentsArray.push(RUPComponents[key]);
+}
 
 // Main module
 @NgModule({
@@ -269,9 +274,9 @@ const RUP_COMPONENTS = [
         HudsBusquedaComponent,
         BuscadorComponent,
         // RUP
-        ...RUP_COMPONENTS,
+        ...RUPComponentsArray,
     ],
-    entryComponents: RUP_COMPONENTS,
+    entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
     providers: [
         {
@@ -322,8 +327,3 @@ const RUP_COMPONENTS = [
 })
 
 export class AppModule { }
-
-// [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
-export let RUPComponents = {
-    'PesoComponent': PesoComponent
-};
