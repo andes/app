@@ -79,9 +79,9 @@
                                                 <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
-                                                <!-- <div *ngIf="registro.relacionadoCon === null && registro?.items.length > 0">
-                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="registro.items"></plex-dropdown>
-                                                </div> -->
+                                                <div>
+                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="items"></plex-dropdown>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -92,8 +92,8 @@
                                                         {{errores[i]}}
                                                     </span>
                                             </div> -->
-                                            <!-- RUP Loader -->
-                                            <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [registro]="registro" (change)="prestacionChanged()">
+                                            <!-- RUP Loader  (change)="prestacionChanged()"-->
+                                            <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [registro]="registro">
                                             </rup>
                                         </div>
 
@@ -101,11 +101,14 @@
                                         <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                             <div class="actions ">
                                                 <div class="relacionadoCon">
-                                                    <div class="float-left" *ngIf="registro.relacionadoCon && !confirmarDesvincular[i]">
-                                                        Relacionado con: {{registro.relacionadoCon.term}}
+                                                    <div class="float-left" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i]">
+                                                        Relacionado con:
+                                                        <ng-container *ngFor="let r of registro.relacionadoCon">
+                                                            {{r.concepto.term}} /
+                                                        </ng-container>
                                                     </div>
 
-                                                    <div *ngIf="registro.relacionadoCon && confirmarDesvincular[i]" class="confirmarDesvincular">
+                                                    <div *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[i]" class="confirmarDesvincular">
                                                         ¿Confirmar desvinculación con <b>{{registro.relacionadoCon.term}}</b>?
 
                                                         <div class="float-right">
@@ -132,7 +135,8 @@
                                                     </div>
                                                 </div>
 
-                                                <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="registro.relacionadoCon && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))" title="Desvincular">
+                                                <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))"
+                                                    title="Desvincular">
                                                     <i class="mdi mdi-link-variant-off"></i>
                                                 </a>
 

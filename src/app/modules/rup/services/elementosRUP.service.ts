@@ -112,6 +112,7 @@ export class ElementosRUPService {
      * @memberof ElementosRUPService
      */
     buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
+        debugger;
         // Busca el elemento RUP que implemente el concepto
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];

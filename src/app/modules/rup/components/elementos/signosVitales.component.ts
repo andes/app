@@ -8,12 +8,6 @@ import { RUPComponent } from './../core/rup.component';
 
 export class SignosVitalesComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            if (this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
-            }
-        });
+
     }
 }

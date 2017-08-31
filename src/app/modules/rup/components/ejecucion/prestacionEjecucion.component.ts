@@ -116,34 +116,34 @@ export class PrestacionEjecucionComponent implements OnInit {
       * @param {*} registro: objeto a insertar en el array de registros
       * @memberof PrestacionEjecucionComponent
       */
-    // mostrarUnRegistro(registro) {
-    //     let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
-    //     // armamos el elemento data a agregar al array de registros
-    //     let data = {
-    //         tipo: registro.tipo,
-    //         concepto: registro.concepto,
-    //         elementoRUP: elementoRUPRegistro,
-    //         valor: registro.valor,
-    //         destacado: registro.destacado ? registro.destacado : false,
-    //         relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
-    //     };
+    mostrarUnRegistro(registro) {
+        //     let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
+        //     // armamos el elemento data a agregar al array de registros
+        //     let data = {
+        //         tipo: registro.tipo,
+        //         concepto: registro.concepto,
+        //         elementoRUP: elementoRUPRegistro,
+        //         valor: registro.valor,
+        //         destacado: registro.destacado ? registro.destacado : false,
+        //         relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
+        //     };
 
-    //     this.registros.push(data);
+        //     this.registros.push(data);
 
-    //     if (!this.data[elementoRUPRegistro.key]) {
-    //         this.data[elementoRUPRegistro.key] = {};
-    //     }
+        //     if (!this.data[elementoRUPRegistro.key]) {
+        //         this.data[elementoRUPRegistro.key] = {};
+        //     }
 
-    //     if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
-    //         this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
-    //     }
-    //     this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
+        //     if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
+        //         this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
+        //     }
+        //     this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
 
-    //     for (let i in this.registros) {
-    //         this.cargaItems(this.registros[i], i);
-    //         // Actualizamos cuando se agrega el array..
-    //     }
-    // }
+        //     for (let i in this.registros) {
+        //         this.cargaItems(this.registros[i], i);
+        //         // Actualizamos cuando se agrega el array..
+        //     }
+    }
 
 
     /**
@@ -267,22 +267,26 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
+        debugger;
         // si proviene del drag and drop
-        // if (registroOrigen.dragData) {
-        //     registroOrigen = registroOrigen.dragData;
-        // }
+        if (registroOrigen.dragData) {
+            registroOrigen = registroOrigen.dragData;
+        }
 
+        registroOrigen.relacionadoCon.push(registroDestino);
+
+        // let registros = this.prestacion.ejecucion.registros;
         // // si no existe lo agrego
-        // let existe = this.registros.find(r => (registroOrigen.concepto && registroOrigen.concepto.conceptId === r.concepto.conceptId) || (r.concepto.conceptId === registroOrigen.conceptId));
-        // if (!existe) {
-        //     this.ejecutarConcepto(registroOrigen, registroDestino);
-        // }
+        // // let existe = registros.find(r => (registroOrigen.id && registroOrigen.id === r.id) || (r.concepto.conceptId === registroOrigen.conceptId));
+        // // if (!existe) {
+        // //     this.ejecutarConcepto(registroOrigen, registroDestino);
+        // // }
 
         // let conceptIdOrigen = (registroOrigen.concepto) ? registroOrigen.concepto.conceptId : registroOrigen.conceptId;
 
         // // buscamos en la posicion que se encuentra el registro de orgien y destino
-        // let indexOrigen = this.registros.findIndex(r => (conceptIdOrigen === r.concepto.conceptId));
-        // let indexDestino = this.registros.findIndex(r => (registroDestino.concepto && registroDestino.concepto.conceptId === r.concepto.conceptId) || (registroDestino.concepto.conceptId === r.concepto.conceptId));
+        // let indexOrigen = registros.findIndex(r => (conceptIdOrigen === r.concepto.conceptId));
+        // let indexDestino = registros.findIndex(r => (registroDestino.concepto && registroDestino.concepto.conceptId === r.concepto.conceptId) || (registroDestino.concepto.conceptId === r.concepto.conceptId));
 
         // // solo vinculamos si no es el mismo elemento
         // if (conceptIdOrigen === registroDestino.concepto.conceptId) {
@@ -297,7 +301,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // */
 
         // // buscamos todos los conceptos que tenga relacionados
-        // let relacionados = this.registros.filter(r => {
+        // let relacionados = registros.filter(r => {
         //     return (r.relacionadoCon && r.relacionadoCon.conceptId === conceptIdOrigen);
         // });
 
@@ -605,21 +609,22 @@ export class PrestacionEjecucionComponent implements OnInit {
         // this.tipoBusqueda = tipoDeBusqueda;
     }
 
-    cargaItems(elementoRup, indice) {
+    cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
-        // this.registros[indice].items = [];
-        // let objItem = {};
-        // this.registros[indice].items = this.registros.filter(registro => {
-        //     return (registro.concepto.conceptId !== elementoRup.concepto.conceptId && elementoRup.relacionadoCon !== registro.concepto.conceptId);
+        let registros = this.prestacion.ejecucion.registros;
+        this.items = [];
+        let objItem = {};
+        this.items = registros.filter(registro => {
+            return (registro.id !== registroActual.id && (registroActual.relacionadoCon.find(r => r.id = registro.id)));
 
-        // }).map(registro => {
-        //     return {
-        //         label: 'vincular con: ' + registro.concepto.term,
-        //         handler: () => {
-        //             this.vincularRegistros(elementoRup, registro);
-        //         }
-        //     };
-        // });
+        }).map(registro => {
+            return {
+                label: 'vincular con: ' + registro.concepto.term,
+                handler: () => {
+                    this.vincularRegistros(registroActual, registro);
+                }
+            };
+        });
     }
 
     cambioDePaciente($event) {
