@@ -425,7 +425,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-
+        debugger;
         // TODO: Chequear si es un plan el registro se debe cargar como una solicitud
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed

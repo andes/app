@@ -7,7 +7,16 @@ import * as moment from 'moment';
     templateUrl: 'saturacionOxigeno.html'
 })
 export class SaturacionOxigenoComponent extends RUPComponent {
-
+    ngOnInit() {
+        // Observa cuando cambia la propiedad 'SaturacionOxigeno' en otro elemento RUP
+        this.conceptObserverService.observe(this.registro).subscribe((data) => {
+            // No soy yo mismo
+            if (this.registro !== data && this.registro.valor !== data.valor) {
+                this.registro.valor = data.valor;
+                this.emitChange(false);
+            }
+        });
+    }
     //     getMensajes() {
     //     let saturacionOxigeno = this.data[this.elementoRUP.key];
     //     let edadEnMeses;

@@ -173,6 +173,8 @@ import { TallaComponent } from './modules/rup/components/elementos/talla.compone
 import { SolicitudPrestacionDefaultComponent } from './modules/rup/components/elementos/solicitudPrestacionDefault.component';
 import { SignosVitalesComponent } from './modules/rup/components/elementos/signosVitales.component';
 import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/saturacionOxigeno.component';
+import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
+import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
@@ -217,7 +219,9 @@ export let RUPRegistry = {
     'TemperaturaComponent': TemperaturaComponent,
     'TensionArterialComponent': TensionArterialComponent,
     'TensionDiastolicaComponent': TensionDiastolicaComponent,
-    'TensionSistolicaComponent': TensionSistolicaComponent
+    'TensionSistolicaComponent': TensionSistolicaComponent,
+    'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
+    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent
 };
 
 let RUPComponentsArray = [];
