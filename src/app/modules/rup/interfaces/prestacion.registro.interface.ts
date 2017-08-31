@@ -29,9 +29,7 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
-        debugger;
         elementoRUP.requeridos.forEach((item) => {
-            debugger;
             this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
         });
     };
