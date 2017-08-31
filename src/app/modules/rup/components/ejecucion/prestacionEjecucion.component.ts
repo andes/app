@@ -378,29 +378,26 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     eliminarRegistro() {
-        // if (this.confirmarEliminar) {
-        //     let _registro = this.registros[this.indexEliminar];
+        if (this.confirmarEliminar) {
+            let registros = this.prestacion.ejecucion.registros;
+            let _registro = registros[this.indexEliminar];
 
-        //     // quitamos toda la vinculacion que puedan tener con el registro
-        //     let registrosVinculados = this.registros.filter(r => {
-        //         return (r.relacionadoCon && r.relacionadoCon.conceptId === _registro.concepto.conceptId);
-        //     });
+            // quitamos toda la vinculacion que puedan tener con el registro
+            // let registrosVinculados = registros.filter(r => {
+            //     return (r.relacionadoCon && r.relacionadoCon.conceptId === _registro.concepto.conceptId);
+            // });
 
-        //     registrosVinculados.forEach(registro => {
-        //         registro.relacionadoCon = null;
-        //     });
+            // registrosVinculados.forEach(registro => {
+            //     registro.relacionadoCon = null;
+            // });
 
-        //     // eliminamos el registro del array
-        //     this.registros.splice(this.indexEliminar, 1);
-
-        //     // limpiamos el valor de data
-        //     delete this.data[_registro.elementoRUP.key];
-
-        //     this.errores[this.indexEliminar] = null;
-        //     this.indexEliminar = null;
-        //     this.confirmarEliminar = false;
-        //     this.scopeEliminar = '';
-        // }
+            // eliminamos el registro del array
+            registros.splice(this.indexEliminar, 1);
+            this.errores[this.indexEliminar] = null;
+            this.indexEliminar = null;
+            this.confirmarEliminar = false;
+            this.scopeEliminar = '';
+        }
     }
 
     /**
@@ -410,14 +407,12 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} scope
      * @memberof PrestacionEjecucionComponent
      */
-    confirmarEliminarRegistro(snomedConcept, scope) {
-        // this.scopeEliminar = scope;
-        // let concept = (snomedConcept.dragData) ? snomedConcept.dragData : snomedConcept;
+    confirmarEliminarRegistro(registroEliminar, scope) {
+        this.scopeEliminar = scope;
+        let index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.id === r.id));
 
-        // let index = this.registros.findIndex(r => (concept.concepto && concept.concepto.conceptId === r.concepto.conceptId));
-
-        // this.indexEliminar = index;
-        // this.confirmarEliminar = true;
+        this.indexEliminar = index;
+        this.confirmarEliminar = true;
     }
 
     cargarNuevoRegistro(snomedConcept) {
@@ -425,7 +420,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-        debugger;
         // TODO: Chequear si es un plan el registro se debe cargar como una solicitud
 
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
@@ -437,11 +431,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         // this.showDatosSolicitud = false;
-        // this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1].collapse = false; // verificar.. fer
-        // for (let i in this.registros) {
-        //     this.cargaItems(this.registros[i], i);
-        //     // Actualizamos cuando se agrega el array..
-        // }
+        // this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1].collapse = false;
     }
 
 
@@ -607,19 +597,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     arrastrandoConcepto(dragging: boolean) {
-        // if (dragging === true) {
-        //     this.colapsarPrestaciones();
-        // } else {
-        //     if (this.registros.length === this.copiaRegistro.length) {
-        //         this.registros = JSON.parse(JSON.stringify(this.copiaRegistro));
-        //     }
-        //     for (let i in this.registros) {
-        //         this.cargaItems(this.registros[i], i);
-        //         // Actualizamos cuando se agrega el array..
-        //     }
-        // }
-        // this.isDraggingConcepto = dragging;
-        // this.showDatosSolicitud = false;
+        this.isDraggingConcepto = dragging;
+        this.showDatosSolicitud = false;
     }
 
     recibeTipoBusqueda(tipoDeBusqueda) {

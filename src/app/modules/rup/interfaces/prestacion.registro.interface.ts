@@ -30,7 +30,6 @@ export class IPrestacionRegistro {
         this.relacionadoCon = [];
         this.registros = [];
         elementoRUP.requeridos.forEach((item) => {
-            debugger;
             this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
         });
     };

@@ -9,7 +9,7 @@ import * as moment from 'moment';
 export class TallaComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
-        // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
+        // Observa cuando cambia la propiedad 'talla' en otro elemento RUP
         this.conceptObserverService.observe(this.registro).subscribe((data) => {
             // No soy yo mismo
             if (this.registro !== data && this.registro.valor !== data.valor) {
