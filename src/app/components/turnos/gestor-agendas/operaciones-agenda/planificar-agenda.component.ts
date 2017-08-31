@@ -435,6 +435,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     cambioHoraBloques(texto: String) {
         this.fecha = new Date(this.modelo.fecha);
+        if (this.elementoActivo.horaInicio) {
+            this.aproximar(this.elementoActivo.horaInicio);
+        }
+        if (this.elementoActivo.horaFin) {
+            this.aproximar(this.elementoActivo.horaFin);
+        }
         let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
@@ -575,6 +581,18 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cambiaPorcentajeTipo('reservadoProfesional');
     }
 
+    aproximar(date: Date) {
+        let m = date.getMinutes();
+        let remaider = m % 15;
+        if (remaider !== 0) {
+            if (remaider < 7) {
+                date.setMinutes(m - remaider);
+            }  else {
+                date.setMinutes(m + (15 - remaider));
+            }
+        }
+    }
+
     validarTodo() {
         this.alertas = [];
         let alerta: string;
@@ -583,6 +601,15 @@ export class PlanificarAgendaComponent implements OnInit {
         let iniAgenda = null;
         let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
+
+        if (this.modelo.horaInicio) {
+            this.aproximar(this.modelo.horaInicio);
+        }
+
+        if (this.modelo.horaFin) {
+            this.aproximar(this.modelo.horaFin);
+        }
+
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
