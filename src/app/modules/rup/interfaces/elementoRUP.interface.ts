@@ -8,7 +8,7 @@ export interface IElementoRUP {
     // Vinculación al componente de la aplicación Angular
     componente: string;
     // Indica los semantic tags para los cuales este elemento es el registro por default
-    defaultFor: [SemanticTag];
+    defaultFor: SemanticTag[];
     // Tipo de elemento
     tipo: string;
     // Indica si este elementoRUP aplica a una solicitud
@@ -24,7 +24,7 @@ export interface IElementoRUP {
     // Por ejemplo: "Toma de temperatura del paciente (SCTID: 56342008)" y
     //              "Toma de temperatura rectal del paciente (SCTID: 18649001")
     //              se implementan con el mismo elemento RUP "Toma de temperatura"
-    conceptos: [ISnomedConcept];
+    conceptos: ISnomedConcept[];
     // Elementos RUP requeridos para la ejecución.
     // Por ejemplo, en "Control de Niño sano" es obligatorio ejecutar "Toma de peso"
     requeridos: [{
@@ -40,5 +40,5 @@ export interface IElementoRUP {
     }];
     // Elementos RUP más frecuentes para la ejecución.
     // Por ejemplo, en "Consulta de medicina general" se puede sugerir ejecutar "Signos vitales"
-    frecuentes: [ISnomedConcept];
+    frecuentes: ISnomedConcept[];
 };

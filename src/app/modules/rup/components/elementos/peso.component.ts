@@ -9,9 +9,7 @@ export class PesoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
         this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            debugger;
-            // No soy yo mismo
-            if (this.registro !== data && this.registro.valor !== data.valor) {
+            if (this.registro.valor !== data.valor) {
                 this.registro.valor = data.valor;
                 this.emitChange(false);
             }

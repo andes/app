@@ -1,16 +1,11 @@
 <!-- Este es un elemento RUP -->
 
 <!-- Moléculas -->
-<pre>{{elementoRUP | json}}</pre>
-<div *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
-    <div class="row">
-        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <pre>{{i}}</pre>
-            <pre>{{item | json}}</pre>
-            <div class="col-{item.style?.columns? || 12}">
-                <rup #rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros ? registro.registros[i] : null" (change)="emitChanges()">
-                </rup>
-            </div>
-        </ng-container>
+<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+    <div *ngFor="let item of elementoRUP.requeridos; let i = index" class="row">
+        <div class="col-12">
+            <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]" (change)="emitChange()">
+            </rup>
+        </div>
     </div>
-</div>
+</ng-container>

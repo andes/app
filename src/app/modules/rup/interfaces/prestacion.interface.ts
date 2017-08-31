@@ -2,7 +2,7 @@ import { IPrestacionEstado } from './prestacion.estado.interface';
 import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 
-export interface IPrestacion {
+export class IPrestacion {
     id: string;
     // Datos principales del paciente
     paciente: {
@@ -39,7 +39,7 @@ export interface IPrestacion {
         // ID de la prestación desde la que se generó esta solicitud
         prestacionOrigen: string,
         // Registros de la solicitud ... para los planes o prestaciones futuras
-        registros: [IPrestacionRegistro],
+        registros: IPrestacionRegistro[],
     };
 
     // Datos de la ejecución (i.e. realización)
@@ -54,8 +54,17 @@ export interface IPrestacion {
             nombre: string
         },
         // Registros de la ejecución
-        registros: [IPrestacionRegistro],
+        registros: IPrestacionRegistro[],
     };
     // Historia de estado de la prestación
-    estados: [IPrestacionEstado];
+    estados: IPrestacionEstado[];
+
+    /**
+     * Recorre la estructura de los elementosRUP asociados y completa el array de registros
+     *
+     * @memberof IPrestacion
+     */
+    public completarRegistros() {
+        throw Error('No implementado');
+    }
 };

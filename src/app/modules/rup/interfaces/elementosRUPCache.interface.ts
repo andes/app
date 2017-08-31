@@ -1,4 +1,4 @@
-import { IElementoRUP } from './../interfaces/elemento-rup.interface';
+import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 
 export interface IElementosRUPCache {
     [key: string]: IElementoRUP;

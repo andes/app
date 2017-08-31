@@ -1,18 +1,15 @@
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
-import { IElementoRUP } from './../../interfaces/elemento-rup.interface';
+import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
-// import { RUPRegistry } from './rup-.registry';
-
-// [Andrrr] 2107-02-07: Hay que esperar a un nuevo release de Angular para poder cargarlos dinámicamente
 import { RUPRegistry } from '../../../../app.module';
 
 @Component({
     selector: 'rup',
-    templateUrl: 'rup.html'
+    template: '', // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
 export class RUPComponent implements OnInit {
     // Propiedades
@@ -47,21 +44,6 @@ export class RUPComponent implements OnInit {
         componentReference.changeDetectorRef.detectChanges();
     }
 
-    /**
-     * Emite el evento change con los nuevos datos de registro
-     *
-     * @protected
-     * @memberof RUPComponent
-     */
-    protected emitChange(notifyObservers = true) {
-        // Notifica a todos los components que estén suscriptos con este concepto
-        if (notifyObservers) {
-            this.conceptObserverService.notify(this.registro.concepto, this.registro);
-        }
-        // Notifica al componente padre del cambio
-        this.change.emit(this.registro);
-    }
-
     // Constructor
     constructor(
         private componentFactoryResolver: ComponentFactoryResolver,
@@ -72,5 +54,20 @@ export class RUPComponent implements OnInit {
 
     ngOnInit() {
         this.loadComponent();
+    }
+
+    /**
+     * Emite el evento change con los nuevos datos de registro
+     *
+     * @protected
+     * @memberof RUPComponent
+     */
+    public emitChange(notifyObservers = true) {
+        // Notifica a todos los components que estén suscriptos con este concepto
+        if (notifyObservers) {
+            this.conceptObserverService.notify(this.registro.concepto, this.registro);
+        }
+        // Notifica al componente padre del cambio
+        this.change.emit(this.registro);
     }
 }

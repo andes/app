@@ -6,7 +6,7 @@ import { DropdownItem } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
-import { IElementoRUP } from './../../interfaces/elemento-rup.interface';
+import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
 import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
@@ -78,27 +78,29 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-            this.servicioPrestacion.getById(id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                // Si la prestación está validad, navega a la página de validación
-                if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
-                    this.router.navigate(['/rup/validacion/', this.prestacion.id]);
-                } else {
-                    // Carga la información completa del paciente
-                    // [jgabriel] ¿Hace falta esto?
-                    this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                        this.paciente = paciente;
-                    });
+            this.elementosRUPService.ready.subscribe(() => {
+                this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    // Si la prestación está validad, navega a la página de validación
+                    if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                        this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                    } else {
+                        // Carga la información completa del paciente
+                        // [jgabriel] ¿Hace falta esto?
+                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                            this.paciente = paciente;
+                        });
 
-                    // Busca el elementoRUP que implementa esta prestación
-                    this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-                    this.mostrarDatosEnEjecucion();
-                }
-            }, (err) => {
-                if (err) {
-                    this.plex.info('danger', err, 'Error');
-                    this.router.navigate(['/rup']);
-                }
+                        // Busca el elementoRUP que implementa esta prestación
+                        this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                        this.mostrarDatosEnEjecucion();
+                    }
+                }, (err) => {
+                    if (err) {
+                        this.plex.info('danger', err, 'Error');
+                        this.router.navigate(['/rup']);
+                    }
+                });
             });
         });
     }

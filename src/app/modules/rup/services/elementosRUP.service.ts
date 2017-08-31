@@ -3,9 +3,10 @@ import { Observable } from 'rxjs/Rx';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
-import { IElementoRUP } from './../interfaces/elemento-rup.interface';
-import { IElementosRUPCache } from './elementosRUPCache.interface';
+import { IElementoRUP } from './../interfaces/elementoRUP.interface';
+import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
+import { Subject } from 'rxjs/Subject';
 
 const url = '/modules/rup/elementosRUP';
 
@@ -19,6 +20,8 @@ export class ElementosRUPService {
     private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
     private defaultsParaSolicitud: IElementosRUPCache = {};
+    // Indica que el servicio está listo para usarse
+    public ready: Subject<boolean> = new Subject<boolean>();
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP
@@ -44,6 +47,9 @@ export class ElementosRUPService {
                     });
                 }
             });
+
+            // Notifica que el servicio está listo
+            this.ready.next(true);
         });
     }
 

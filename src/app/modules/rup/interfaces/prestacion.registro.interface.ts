@@ -1,4 +1,4 @@
-import { IElementoRUP } from './elemento-rup.interface';
+import { IElementoRUP } from './elementoRUP.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
 import { ObjectID } from 'bson';
 
@@ -21,7 +21,6 @@ export class IPrestacionRegistro {
     relacionadoCon: string[];
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
-        debugger;
         this.id = (new ObjectID()).toString();
         this.nombre = snomedConcept.term;
         this.concepto = snomedConcept;
