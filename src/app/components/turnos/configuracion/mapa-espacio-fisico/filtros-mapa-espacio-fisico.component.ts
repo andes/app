@@ -20,7 +20,6 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Output() onChange = new EventEmitter<any>();
-    @Input() agendaSeleccionada: any = {};
 
     private timeoutId = null;
     public showListadoTurnos = false;
