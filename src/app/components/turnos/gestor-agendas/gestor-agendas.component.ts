@@ -44,7 +44,8 @@ import {
 
 @Component({
     selector: 'gestor-agendas',
-    templateUrl: 'gestor-agendas.html'
+    templateUrl: 'gestor-agendas.html',
+    styleUrls: ['./gestor-agendas.scss']
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -91,6 +92,8 @@ export class GestorAgendasComponent implements OnInit {
     public btnDarTurnos = false;
     public btnCrearAgendas = false;
 
+    public permisos: any;
+
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
 
@@ -107,7 +110,8 @@ export class GestorAgendasComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
+        this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
             this.redirect('inicio');
