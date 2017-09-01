@@ -81,6 +81,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe(() => {
                 this.servicioPrestacion.getById(id).subscribe(prestacion => {
+
                     this.prestacion = prestacion;
                     // Si la prestación está validad, navega a la página de validación
                     if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
@@ -286,12 +287,12 @@ export class PrestacionEjecucionComponent implements OnInit {
             let _registro = registros[this.indexEliminar];
 
             // quitamos toda la vinculacion que puedan tener con el registro
-            let registrosVinculados = registros.filter(r => {
-                return (r.relacionadoCon && r.relacionadoCon[0].id === _registro.id);
-            });
-
-            registrosVinculados.forEach(registro => {
-                registro.relacionadoCon = null;
+            registros.forEach(registro => {
+                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                    if (registro.relacionadoCon[0].id === _registro.id) {
+                        registro.relacionadoCon = [];
+                    }
+                }
             });
 
             // eliminamos el registro del array
@@ -452,6 +453,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             return;
         }
 
+        // TODO: Revisar estos cambios para refactorizar
         this.prestacion.ejecucion.registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
