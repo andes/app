@@ -73,20 +73,20 @@
 
                                             <div class="actions">
                                                 <span class="badge badge-danger" *ngIf="errores[i]" title="{{errores[i]}}">Error</span>
-                                                <a href="javascript:void(0);" (click)="cambiaValorCollapse(!registro.collapse, i)">
+                                                <a href="javascript:void(0);" (click)="cambiaValorCollapse(!itemsRegistros[registro.id].collapse, registro.id)">
                                                     <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !registro.collapse}"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
                                                 <div>
-                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="items"></plex-dropdown>
+                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items"></plex-dropdown>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- ... Body -->
-                                        <div class="rup-body " [hidden]="registro.collapse || confirmarEliminar">
+                                        <div class="rup-body " [hidden]="itemsRegistros[registro.id].collapse || confirmarEliminar">
                                             <!-- <div *ngIf="errores[i]">
                                                 <span class="badge badge-danger">
                                                         {{errores[i]}}
@@ -103,23 +103,29 @@
                                                 <div class="relacionadoCon">
                                                     <div class="float-left" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i]">
                                                         Relacionado con:
-                                                        <ng-container *ngFor="let r of registro.relacionadoCon">
-                                                            {{r.concepto.term}} /
+                                                        <!--*ngFor="let r of registro.relacionadoCon"-->
+                                                        <ng-container>
+                                                            {{registro.relacionadoCon[0].concepto.term}}
                                                         </ng-container>
-                                                    </div>
+                                                        <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))"
+                                                            title="Desvincular">
+                                                            <i class="mdi mdi-link-variant-off"></i>
+                                                        </a>
+                                                        <div *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]" class="confirmarDesvincular">
+                                                            ¿Confirmar desvinculación con <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
 
-                                                    <div *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[i]" class="confirmarDesvincular">
-                                                        ¿Confirmar desvinculación con <b>{{registro.relacionadoCon.term}}</b>?
-
-                                                        <div class="float-right">
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvincular[i] = false;" class="">
-                                                                    Cancelar
-                                                                </a> |
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(i)" class="confirm">
-                                                                    Desvincular
-                                                                </a>
+                                                            <div class="float-right">
+                                                                <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)" class="">
+                                                                                    Cancelar
+                                                                                </a> |
+                                                                <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id, i)" class="confirm">
+                                                                                    Desvincular
+                                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
+
+
 
                                                     <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
                                                         ¿Quitar de la consulta?
@@ -135,10 +141,7 @@
                                                     </div>
                                                 </div>
 
-                                                <a href="javascript:void(0);" (click)="desvincular(i)" class="desvincular float-right" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))"
-                                                    title="Desvincular">
-                                                    <i class="mdi mdi-link-variant-off"></i>
-                                                </a>
+
 
                                             </div>
                                         </div>

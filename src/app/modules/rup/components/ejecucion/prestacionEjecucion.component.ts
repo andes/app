@@ -38,8 +38,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingRegistro: Boolean = false;
+
     // Opciones del desplegable para vincular y desvincular
-    public items = [];
+    public itemsRegistros = {};
     public showVincular = false;
 
     // utilizamos confirmarDesvincular para mostrar el boton de confirmacion de desvinculado
@@ -229,20 +230,20 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
         // // buscamos el registro
-        // let registro = this.registros[posicionActual];
+        let registro = this.prestacion.ejecucion.registros[posicionActual];
 
-        // // lo quitamos de la posicion actual
-        // this.registros.splice(posicionActual, 1);
+        // lo quitamos de la posicion actual
+        this.prestacion.ejecucion.registros.splice(posicionActual, 1);
 
-        // // agregamos a la nueva posicion
-        // this.registros.splice(posicionNueva, 0, registro);
+        // agregamos a la nueva posicion
+        this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
-        // // quitamos relacion si existe
-        // if (this.registros[posicionNueva]) {
-        //     if (this.registros[posicionNueva].relacionadoCon) {
-        //         this.registros[posicionNueva].relacionadoCon = null;
-        //     }
-        // }
+        // quitamos relacion si existe
+        if (this.prestacion.ejecucion.registros[posicionNueva]) {
+            if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
+                this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = null;
+            }
+        }
     }
 
 
@@ -256,26 +257,23 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     moverRegistro(posicionNueva: number, registro: any) {
         // buscamos posicion actual
-        // let posicionActual = this.registros.findIndex(r => (registro.dragData.concepto.conceptId === r.concepto.conceptId));
+        let posicionActual = this.prestacion.ejecucion.registros.findIndex(r => (registro.id === r.id));
 
-        // // si la posicion a la que lo muevo es distinta a la actual
-        // // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
-        // if ((posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1)) {
-        //     // movemos
-        //     this.moverRegistroEnPosicion(posicionActual, posicionNueva);
-        // }
+        // si la posicion a la que lo muevo es distinta a la actual
+        // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
+        if ((posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1)) {
+            // movemos
+            this.moverRegistroEnPosicion(posicionActual, posicionNueva);
+        }
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        debugger;
         // si proviene del drag and drop
         if (registroOrigen.dragData) {
             registroOrigen = registroOrigen.dragData;
         }
-
-        registroOrigen.relacionadoCon.push(registroDestino);
-
-        // let registros = this.prestacion.ejecucion.registros;
+        registroOrigen.relacionadoCon = [registroDestino];
+        let registros = this.prestacion.ejecucion.registros;
         // // si no existe lo agrego
         // // let existe = registros.find(r => (registroOrigen.id && registroOrigen.id === r.id) || (r.concepto.conceptId === registroOrigen.conceptId));
         // // if (!existe) {
@@ -284,9 +282,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // let conceptIdOrigen = (registroOrigen.concepto) ? registroOrigen.concepto.conceptId : registroOrigen.conceptId;
 
-        // // buscamos en la posicion que se encuentra el registro de orgien y destino
-        // let indexOrigen = registros.findIndex(r => (conceptIdOrigen === r.concepto.conceptId));
-        // let indexDestino = registros.findIndex(r => (registroDestino.concepto && registroDestino.concepto.conceptId === r.concepto.conceptId) || (registroDestino.concepto.conceptId === r.concepto.conceptId));
+        // buscamos en la posicion que se encuentra el registro de orgien y destino
+        let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
+        let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
+        // movemos
+        let _registro = registros[indexOrigen];
+        registros.splice(indexOrigen, 1);
+        registros.splice(indexDestino + 1, 0, _registro);
 
         // // solo vinculamos si no es el mismo elemento
         // if (conceptIdOrigen === registroDestino.concepto.conceptId) {
@@ -316,26 +318,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // // vinculamos
         // this.registros[indexOrigen].relacionadoCon = registroDestino.concepto;
 
-        // // movemos
-        // let _registro = this.registros[indexOrigen];
-        // this.registros.splice(indexOrigen, 1);
-        // this.registros.splice(indexDestino + 1, 0, _registro);
-
-
-
-        // for (let i in this.registros) {
-        //     this.cargaItems(this.registros[i], i);
-        //     // Actualizamos cuando se agrega el array..
-        // }
-        // // this.moverRegistroEnPosicion()
-        // /*
-        // if (relacionados.length) {
-        //     relacionados.forEach(r => {
-        //         r.relacionadoCon = null;
-        //     });
-        // }
-        // */
-
     }
 
     /**
@@ -344,8 +326,8 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} index Indice del elemento de los registros a desvincular
      * @memberof PrestacionEjecucionComponent
      */
-    desvincular(index) {
-        this.confirmarDesvincular[index] = true;
+    desvincular(registroActual, registroDesvincular) {
+        this.confirmarDesvincular[registroActual.id] = registroDesvincular.id;
     }
 
     /**
@@ -354,25 +336,23 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} index Indice del elemento de los registros a desvincular
      * @memberof PrestacionEjecucionComponent
      */
-    confirmarDesvinculacion(index) {
+    confirmarDesvinculacion(registroId, index) {
 
-        // // quitamos relacion si existe
-        // if (this.registros[index].relacionadoCon) {
-        //     this.registros[index].relacionadoCon = null;
+        // quitamos relacion si existe
+        if (this.confirmarDesvincular[registroId]) {
+            let registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId);
 
-        //     this.confirmarDesvincular[index] = false;
+            if (registroActual) {
+                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
+                delete this.confirmarDesvincular[registroId];
+                this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
+            }
+        }
 
-        //     this.moverRegistroEnPosicion(index, this.registros.length);
-        //     for (let i in this.registros) {
-        //         this.cargaItems(this.registros[i], i);
-        //         // Actualizamos cuando se agrega el array..
-        //     }
-        // }
+    }
 
-        // // si no tiene ningun elemento relacionado entonces es un elemento padre
-        // if (!this.registros[index].relacionadoCon) {
-        //     // this.registros.splice(index, 1);
-        // }
+    cancelarDesvincular(registroId) {
+        delete this.confirmarDesvincular[registroId];
     }
 
     /**
@@ -387,13 +367,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             let _registro = registros[this.indexEliminar];
 
             // quitamos toda la vinculacion que puedan tener con el registro
-            // let registrosVinculados = registros.filter(r => {
-            //     return (r.relacionadoCon && r.relacionadoCon.conceptId === _registro.concepto.conceptId);
-            // });
+            let registrosVinculados = registros.filter(r => {
+                return (r.relacionadoCon && r.relacionadoCon[0].id === _registro.id);
+            });
 
-            // registrosVinculados.forEach(registro => {
-            //     registro.relacionadoCon = null;
-            // });
+            registrosVinculados.forEach(registro => {
+                registro.relacionadoCon = null;
+            });
 
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
@@ -434,7 +414,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
-        // this.showDatosSolicitud = false;
+        this.showDatosSolicitud = false;
+        this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         // this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1].collapse = false;
     }
 
@@ -456,19 +437,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // nos fijamos si el concepto ya aparece en los registros
         let existe = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-        // si no existe, verificamos si no está en alguno de los conceptos de los elementos RUP cargados
-        // if (!existe) {
-        //     existe = registros.find(registro => {
-        //         return registro.elementoRUP.conceptos.find(r => {
-        //             return (r.conceptId === snomedConcept.conceptId);
-        //         });
-        //     });
-        // }
-
-        // if (existe) {
-        //     this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-        //     return false;
-        // }
+        if (existe) {
+            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+            return false;
+        }
         this.cargarNuevoRegistro(snomedConcept);
         // TODO: Revisar que pasa con los hallazgos cronicos
         // // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
@@ -603,6 +575,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
+        this.colapsarPrestaciones();
     }
 
     recibeTipoBusqueda(tipoDeBusqueda) {
@@ -612,11 +585,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         let registros = this.prestacion.ejecucion.registros;
-        this.items = [];
+        this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
-        this.items = registros.filter(registro => {
-            return (registro.id !== registroActual.id && (registroActual.relacionadoCon.find(r => r.id = registro.id)));
-
+        this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
+            if (registro.id !== registroActual.id) {
+                return registro;
+            }
         }).map(registro => {
             return {
                 label: 'vincular con: ' + registro.concepto.term,
@@ -668,16 +642,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
     cambiaValorCollapse(valor: boolean, indice) {
-        // this.registros[indice].collapse = valor;
+        this.itemsRegistros[indice].collapse = valor;
     }
 
     colapsarPrestaciones() {
-        // if (this.registros) {
-        //     this.copiaRegistro = JSON.parse(JSON.stringify(this.registros));
-        //     this.registros.forEach(element => {
-        //         element.collapse = true;
-        //         element.items = [];
-        //     });
-        // }
+        if (this.prestacion.ejecucion.registros) {
+            this.copiaRegistro = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+            this.prestacion.ejecucion.registros.forEach(element => {
+                this.itemsRegistros[element.id].collapse = true;
+            });
+        }
     }
 }
