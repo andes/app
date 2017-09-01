@@ -46,12 +46,13 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     paneles: any[] = [];
 
     autorizado: any;
+    permisosRequeridos = 'reasignarTurnos';
 
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:' + this.permisosRequeridos + ':?').length > 0;
     }
 
     actualizar() {
@@ -78,14 +79,14 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                             horario: true
                         };
 
-                        // 1. Ya reasignado: Trae agenda a la que re reasignó 
+                        // 1. Ya reasignado: Trae agenda a la que re reasignó
                         if (turno.reasignado && turno.reasignado.siguiente) {
                             this.serviceAgenda.getById(turno.reasignado.siguiente.idAgenda).subscribe(agenda => {
                                 this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: [agenda] }];
                                 this.agendasReasignar.sort(sortCandidatas);
                             });
                         } else {
-                            // 2. No reasignado: Trae agendas candidatas 
+                            // 2. No reasignado: Trae agendas candidatas
                             this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
                                 this.agendasReasignar = [... this.agendasReasignar, { turno: turno, bloque: bloque, agendas: agendas }];
                                 this.agendasReasignar.sort(sortCandidatas);
