@@ -13,7 +13,10 @@
             </ng-container>
             |
             <ng-container *ngIf="paciente.fechaNacimiento">
-                {{paciente | edad}}
+                {{paciente | edad }}
+            </ng-container>
+            <ng-container *ngFor="let n of paciente.notas; let i = index">
+                <strong> Nota {{i+1}}: </strong>  {{n.nota}}
             </ng-container>
         </div>
     </div>
