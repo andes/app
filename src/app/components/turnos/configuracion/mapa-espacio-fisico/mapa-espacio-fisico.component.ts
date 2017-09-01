@@ -66,7 +66,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     refreshScreen() {
-        console.log('this.agendaSeleccionada', this.agendaSeleccionada);
 
         if (typeof this.agendaSeleccionada.id === 'undefined') {
             this.agendaSeleccionada.id = '0'; // Para identificar que es una agenda nueva
