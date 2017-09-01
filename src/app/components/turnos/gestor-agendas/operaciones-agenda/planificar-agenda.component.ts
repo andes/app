@@ -15,6 +15,9 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 @Component({
     selector: 'planificar-agenda',
     templateUrl: 'planificar-agenda.html',
+    styleUrls: [
+        'planificar-agenda.scss'
+    ]
 })
 export class PlanificarAgendaComponent implements OnInit {
     subscriptionID: any;
