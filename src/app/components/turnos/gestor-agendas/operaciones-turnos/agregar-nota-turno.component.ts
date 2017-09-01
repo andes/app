@@ -34,7 +34,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     ngOnInit() {
         this.turnosSeleccionados.forEach((turno, index) => {
-            debugger;
             if (this.nota === '' || turno.nota === this.nota) {
                 this.nota = turno.nota;
             } else {
