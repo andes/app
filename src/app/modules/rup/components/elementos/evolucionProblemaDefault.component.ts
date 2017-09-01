@@ -1,5 +1,5 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as moment from 'moment';
 
 @Component({
@@ -13,11 +13,15 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public esCronico: Boolean = false; //
     public esEnmienda: Boolean = false;
     public evolucion: String; //
+    public hallazgoHudsCompleto: any; //
+    public unaEvolucion;
+    public indice = 0;
+    public evoluciones;
 
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
-    estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }];
+    estados = [{ id: 'resuelto', nombre: 'Resuelto' }, { id: 'inactivo', nombre: 'Inactivo' }, { id: 'activo', nombre: 'Activo' }, { id: 'transformado', nombre: 'Transformado' }];
     unidadTiempo = [{ id: 'anios', nombre: 'Año(s)' }, { id: 'mes', nombre: 'Mes(es)' }, { id: 'semanas', nombre: 'Semana(s)' }, { id: 'dias', nombre: 'Día(s)' }];
 
 
@@ -26,16 +30,51 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
+        if (!this.registro.valor) {
+            this.registro.valor = { estado: 'activo' }
+        } else {
+            this.friendlyDate(this.registro.valor.fechaInicio);
+        }
+        // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
+        // tenemos que mostrar las evoluciones anteriores
+        // if (this.registro) {
+        //     this.servicioPrestacion.getUnHallazgoPacienteXOrigen(this.paciente.id, this.datosIngreso.idRegistroOrigen)
+        //         .subscribe(hallazgo => {
+        //             if (hallazgo) {
+        //                 this.hallazgoHudsCompleto = hallazgo;
+        //                 this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
+        //                 if (this.datosIngreso.evolucion) {
+        //                     this.evoluciones.shift();
+        //                 }
+        //                 if (this.evoluciones && this.evoluciones.length > 0) {
+        //                     this.unaEvolucion = this.evoluciones[0];
+        //                     this.data[this.elementoRUP.key].estado = this.datosIngreso.estado ? this.datosIngreso.estado : (this.unaEvolucion.estado ? this.unaEvolucion.estado : 'activo');
+        //                     this.data[this.elementoRUP.key].esCronico = this.datosIngreso.esCronico ? this.datosIngreso.esCronico : (this.unaEvolucion.estado ? this.unaEvolucion.esCronico : false);
+        //                     this.data[this.elementoRUP.key].esEnmienda = this.datosIngreso.esEnmienda ? this.datosIngreso.esEnmienda : (this.unaEvolucion.esEnmienda ? this.unaEvolucion.esEnmienda : false);
+        //                     this.data[this.elementoRUP.key].evolucion = this.datosIngreso.evolucion ? this.datosIngreso.evolucion : '';
+        //                 }
+        //             }
+        //         });
 
-        // this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
-        // // si tengo valores cargados entonces devuelvo los resultados y mensajes
-        // if (this.datosIngreso) {
-        //     this.friendlyDate(this.datosIngreso.fechaInicio);
-        //     this.devolverValores();
+
         // } else {
-        //     this.data[this.elementoRUP.key].estado = { id: 'activo', nombre: 'Activo' };
-        // }
+        //     this.friendlyDate(this.registro.valor.fechaInicio);
+        //     this.devolverValores();
+        //     //         }
 
+        //     //     } else {
+        //     //     this.data[this.elementoRUP.key].esEnmienda = false;
+        //     //     this.data[this.elementoRUP.key].esCronico = false;
+        //     //     this.data[this.elementoRUP.key].estado = 'activo';
+        //     // }
+
+        // }
+    }
+
+
+    formatearEstado() {
+        this.registro.valor.estado = ((typeof this.registro.valor.estado === 'string')) ? this.registro.valor.estado : (Object(this.registro.valor.estado).id);
+        this.emitChange();
     }
 
     calcularFecha() {
@@ -57,14 +96,15 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                 fechaCalc = new Date();
         }
 
-        // this.data[this.elementoRUP.key].fechaInicio = fechaCalc;
-        // this.devolverValores();
+        this.registro.valor.fechaInicio = fechaCalc;
+        this.emitChange();
     }
+
+
 
     friendlyDate(fecha) {
 
         let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
-        console.log(fecha);
         let newDateMoment = moment();
 
         let numYears = newDateMoment.diff(oldDateMoment, 'years');
@@ -85,5 +125,19 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
         }
     }
 
-}
 
+    cambiarEvolucion(signo) {
+        if (signo === '+') {
+            if (this.indice < (this.evoluciones.length - 1)) {
+                this.indice = this.indice + 1;
+                this.unaEvolucion = this.evoluciones[this.indice];
+            }
+        } else {
+            if (this.indice > 0) {
+                this.indice = this.indice - 1;
+                this.unaEvolucion = this.evoluciones[this.indice];
+            }
+        }
+    }
+
+}

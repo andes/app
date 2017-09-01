@@ -1,42 +1,62 @@
-<!-- <div *ngIf="!soloValores">
-    <div *ngIf="elementoRUP && data[elementoRUP.key]">
-
-        <div class="row"> -->
-<!--ES CRONICO?-->
-<!-- <div class="col">
-                <plex-bool [(ngModel)]="data[elementoRUP.key].esCronico" type="slide" name="activo" label="¿Es un problema crónico?"></plex-bool>
-            </div> -->
-<!--ESTADO DEL PROBLEMA-->
-<!-- <div class="col">
+<div *ngIf="!soloValores">
+    <div *ngIf="elementoRUP && registro">
+        <div class="row">
+            <!--ESTADO DEL PROBLEMA-->
+            <div class="col">
                 <label class="box-title-secundario">Estado actual</label>
-                <plex-select [(ngModel)]="data[elementoRUP.key].estado" name="estadoActual" [data]="estados" [required]="true" (change)="devolverValores()">
+                <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true" (change)="formatearEstado()">
                 </plex-select>
             </div>
-        </div> -->
-<!--INICIO ESTIMADO DEL PROBLEMA-->
-<!-- <div class="row"> -->
-<!--FECHA ESTIMADA-->
-<!-- <div class="col">
+        </div>
+        <!--INICIO ESTIMADO DEL PROBLEMA-->
+        <div class="row">
+            <!--FECHA ESTIMADA-->
+            <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
                     <plex-int class="col-5 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
                     <plex-select class="col-5 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
-        </div> -->
-<!--EVOLUCION DEL PROBLEMA-->
-<!-- <div class="row">
-            <div class="col-12"> -->
-<!-- <label class="box-title-secundario" for="comment">Evolución:</label>
-                <hr> -->
-<!-- <plex-text label="Evolución" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()"></plex-text> -->
-<!-- <textarea autofocus="autofocus" class="form-control" [(ngModel)]="data[elementoRUP.key].evolucion" (change)="devolverValores()" rows="4" id="comment" name="evolucion" placeholder="Ingrese una evolución"></textarea> -->
-<!-- </div>
+        </div>
+        <!--EVOLUCION DEL PROBLEMA-->
+        <div class="row">
+            <div class="col-12">
+                <plex-text label="Evolución" multiline=true autoFocus=1 [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
+            </div>
         </div>
     </div>
+
+    <!--Listado de evoluciones-->
+    <ng-container *ngIf="evoluciones && evoluciones.length > 0">
+        <div class="row">
+            <div class="col-12">
+                <label class="box-title-secundario" for="comment">Evoluciones Anteriores:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 text-120">
+                <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
+            </div>
+            <div class="col text-center">
+                <span class="text-120">
+                    {{unaEvolucion.fechaCarga | fecha }}
+                </span>
+            </div>
+            <div class="col-2 text-120">
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center"> Profesional: {{unaEvolucion.profesional }} <br>{{unaEvolucion.evolucion }}
+            </div>
+        </div>
+    </ng-container>
+
+
 </div>
 <p *ngIf="soloValores">
-    <label>Fecha inicio aproximada</label> {{data[this.elementoRUP.key].fechaInicio | date}}
-    <label>Estado actual</label> {{ data[this.elementoRUP.key].estado.nombre}}
-    <label>Evolución</label> {{ data[elementoRUP.key].evolucion}}
-</p> -->
+    <label>Fecha inicio aproximada:</label> {{registro.valor.fechaInicio | date}}
+    <label>Estado actual: </label> {{ registro.valor.estado }}
+    <label>Evolución: </label> {{ registro.valor.evolucion}}
+</p>

@@ -156,71 +156,18 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
-        // this.registros = [];
-        // // this.data = [];
-        // if (this.prestacion) {
-        //     // recorremos los registros ya almacenados en la prestacion y rearmamos el
-        //     // arreglo registros y data en memoria
-        //     this.prestacion.ejecucion.registros.forEach(registro => {
-        //         // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-        //         if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno') {
-        //             let hallazgo = this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, registro.concepto, this.prestacion.id);
-        //             hallazgo.subscribe(dato => {
-        //                 if (dato) {
-        //                     // vamos a comprobar si se trata de hallazgo cronico
-        //                     if (dato.evoluciones && dato.evoluciones.length > 1 && dato.evoluciones[0].esCronico) {
-        //                         let datoModificar = {
-        //                             datoCompleto: dato,
-        //                             ultimaEvolucion: dato.evoluciones[0] ? dato.evoluciones[0] : null
-        //                         };
-        //                         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-        //                         let elementoRUP = this.servicioElementosRUP.nuevaEvolucion;
-        //                         // armamos el elemento data a agregar al array de registros
-        //                         let data = {
-        //                             collapse: false,
-        //                             tipo: 'problemas',
-        //                             concepto: registro.concepto,
-        //                             elementoRUP: elementoRUP,
-        //                             valor: datoModificar,
-        //                             destacado: false,
-        //                             relacionadoCon: null
-        //                         };
-        //                         this.registros.splice(this.registros.length, 0, data);
-        //                         if (!this.data[elementoRUP.key]) {
-        //                             this.data[elementoRUP.key] = {};
-        //                         }
-        //                         this.data[elementoRUP.key][registro.concepto.conceptId] = datoModificar;
-        //                         for (let i in this.registros) {
-        //                             this.cargaItems(this.registros[i], i);
-        //                             // Actualizamos cuando se agrega el array..
-        //                         }
-        //                     } else {
-        //                         this.mostrarUnRegistro(registro);
-        //                     }
-        //                 } else {
-        //                     this.mostrarUnRegistro(registro);
-        //                 }
-        //             });
-        //         } else {
-        //             this.mostrarUnRegistro(registro);
-        //         }
-        //     });
-        // }
+        if (this.prestacion) {
+            // recorremos los registros ya almacenados en la prestacion y rearmamos el
+            // arreglo registros y data en memoria
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                this.itemsRegistros[registro.id] = { collapse: false, items: null };
+                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                }
+
+            });
+        }
     }
-
-
-
-    /**
-     * Carga un nuevo registro en el array en una posicion determinada
-     *
-     * @param posicion: posicion donde cargar el nuevo registro
-     * @param registro: objeto a cargar en el array de registros
-     */
-    /*
-    cargarRegistroEnPosicion(posicion: number, registro: any) {
-        this.registros.splice(posicion, 0, registro);
-    }
-    */
 
     /**
      * Mover un registro a una posicion especifica
@@ -289,34 +236,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         let _registro = registros[indexOrigen];
         registros.splice(indexOrigen, 1);
         registros.splice(indexDestino + 1, 0, _registro);
-
-        // // solo vinculamos si no es el mismo elemento
-        // if (conceptIdOrigen === registroDestino.concepto.conceptId) {
-        //     return false;
-        // }
-
-        // // si ya está vinculado a algun otro registro, no permitimos la vinculacion
-        // /*
-        // if (registroDestino.relacionadoCon) {
-        //     return false;
-        // }
-        // */
-
-        // // buscamos todos los conceptos que tenga relacionados
-        // let relacionados = registros.filter(r => {
-        //     return (r.relacionadoCon && r.relacionadoCon.conceptId === conceptIdOrigen);
-        // });
-
-        // /*
-        // // si no tiene relacion con ninguno (es padre) y no tiene elementos relacionados
-        // // entonces no permitimos mover el elemento
-        // if (relacionados.length && !registroOrigen.relacionadoCon) {
-        //     return false;
-        // }
-        // */
-
-        // // vinculamos
-        // this.registros[indexOrigen].relacionadoCon = registroDestino.concepto;
 
     }
 
@@ -532,6 +451,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.beforeSave()) {
             return;
         }
+
+        this.prestacion.ejecucion.registros.forEach(registro => {
+            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
+            }
+        });
 
         let params: any = {
             op: 'registros',

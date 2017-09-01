@@ -18,7 +18,7 @@ export class IPrestacionRegistro {
     // Almacena los registros de los átomos asociados a la molécula
     registros: IPrestacionRegistro[];
     // Indica los id de otros registros dentro array 'registros' de la prestación
-    relacionadoCon: IPrestacionRegistro[];
+    relacionadoCon: any[];
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
