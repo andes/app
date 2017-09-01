@@ -31,7 +31,7 @@ export class PrestacionValidacionComponent implements OnInit {
     solicitudTurno;
 
     constructor(private servicioPrestacion: PrestacionesService,
-        private servicioElementosRUP: ElementosRUPService,
+        public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
@@ -39,7 +39,6 @@ export class PrestacionValidacionComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             let id = params['id'];
-
             this.inicializar(id);
         });
     }
@@ -56,7 +55,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
             // Busca el elementoRUP que implementa esta prestación
-            this.elementoRUPprestacion = this.servicioElementosRUP.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+            this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
         });
     }
 

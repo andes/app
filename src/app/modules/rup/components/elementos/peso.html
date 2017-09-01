@@ -1,8 +1,8 @@
-<plex-float *ngIf="!params?.soloValores" placeholder="Ingrese un valor entre 0 y 400" [(ngModel)]="registro.valor" name="peso" label="Peso" suffix="Kg" min="0" max="400" (change)="emitChange()" required="true">
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 400" [(ngModel)]="registro.valor" name="peso" label="Peso" suffix="Kg" min="0" max="400" (change)="emitChange()" required="true">
 </plex-float>
-<p *ngIf="params?.soloValores">
+<p *ngIf="soloValores">
     <label><b>Peso</b></label>
-    <br /> {{data[elementoRUP.key]}} Kg
+    <br /> {{registro.valor}} Kg
 </p>
 <!-- 
 <p *ngIf="mensaje.texto">
