@@ -28,6 +28,7 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
+import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
@@ -261,7 +262,6 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
 
-
 export const RUP_ELEMENTS: any[] = [
     { component: ActitudAnteLosCuidadosComponent, key: 'ActitudAnteLosCuidadosComponent' },
     { component: Atomo, key: 'Atomo' },
@@ -459,6 +459,7 @@ import { routing, appRoutingProviders } from './app.routing';
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         Auditoria2Component,
         ...RUP_COMPONENTS,
