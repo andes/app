@@ -14,14 +14,9 @@ export class CalendarioComponent {
     private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
-    
     // Propiedades
-    @Output('agendaChanged') agendaChanged = new EventEmitter();
     @Input('fecha') fecha: Date;
-
     @Input() _solicitudPrestacion: any;
-
-
     @Input('agenda')
     set agenda(value: IAgenda) {
         this._agenda = value;
@@ -49,6 +44,7 @@ export class CalendarioComponent {
     get estado(): String {
         return this._estado;
     }
+    @Output('agendaChanged') agendaChanged = new EventEmitter();
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
     private agendaPorFecha(fecha: moment.Moment): IAgenda {
