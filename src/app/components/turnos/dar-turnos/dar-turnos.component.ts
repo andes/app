@@ -889,7 +889,7 @@ export class DarTurnosComponent implements OnInit {
                 }, (err) => {
                     // Si el turno no pudo ser otorgado ser verifica si el bloque permite citar por segmento
                     // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
-                    if (err) {
+                    if (err && (err === 'noDisponible')) {
                         if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
                             let nuevoIndice = this.indiceTurno + 1;
                             if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
@@ -899,13 +899,10 @@ export class DarTurnosComponent implements OnInit {
                                 this.darTurno();
                             } else {
                                 this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
-                                // this.seleccionarAgenda(this.agenda);
                                 this.actualizar('');
                             }
-
                         } else {
                             this.plex.confirm('No se emitió el turno, por favor  verifique los turnos disponibles', 'Turno no asignado');
-                            // this.seleccionarAgenda(this.agenda);
                             this.actualizar('');
                         }
                     }
