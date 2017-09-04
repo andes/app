@@ -68,7 +68,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     refreshScreen() {
 
         if (typeof this.agendaSeleccionada.id === 'undefined') {
-            this.agendaSeleccionada.id = '0'; // Para identificar que es una agenda nueva
+            this.agendaSeleccionada.id = '0'; // Para identificar que es una agenda nueva (en planificar-agenda)
         }
 
         if (!this.opciones) {
@@ -84,7 +84,11 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             this._unit = Number(this.unit);
         }
         if (this.agendaCache === null || moment(this.agendaCache.horaInicio).startOf('day').format() !== moment(this.agendaSeleccionada.horaInicio).startOf('day').format()) {
-            this.servicioAgenda.get({ fechaDesde: this.start, fechaHasta: this.end }).subscribe((agendas) => {
+            let query = {
+                fechaDesde: this.start,
+                fechaHasta: this.end
+            };
+            this.servicioAgenda.get(query).subscribe((agendas) => {
                 this.agendasTable = agendas;
                 this.calcHeaders();
                 this.generarTabla();
