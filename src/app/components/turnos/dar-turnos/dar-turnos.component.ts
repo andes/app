@@ -1,12 +1,13 @@
+import { environment } from './../../../environment';
+import * as moment from 'moment';
+
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { LoginComponent } from './../../login/login.component';
-import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import * as moment from 'moment';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
@@ -335,7 +336,7 @@ export class DarTurnosComponent implements OnInit {
         if (search.tipoPrestacion || search.profesional) {
             let index = this.busquedas.findIndex(
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
-                (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
+                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
             console.log('index ', index);
             if (index < 0) {
