@@ -82,21 +82,7 @@
                                 </div>
                             </div>
                             <div class="row" *ngIf="tipoEspacioFisico!=='nuevo'">
-                                <!--<div class="col-4">
-                                    <plex-select [(ngModel)]="modelo.edificio" name="modelo.edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
-                                    </plex-select>
-                                </div>-->
-                                <!--
-                                <div class="col-4">
-                                    <plex-select [(ngModel)]="modelo.sector" name="modelo.sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
-                                    </plex-select>
-                                </div>-->
                                 <div class="col-10">
-                                    <!-- Espacio Físico -->
-                                    <!--<plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacioFisicoPorFiltro($event)" label="Espacio Físico"
-                                        placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
-                                        (change)="validarTodo()">
-                                    </plex-select>-->
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
                                         placeholder="Seleccione un espacio" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + ' (' + edificio.descripcion + ')'"
                                         (change)="validarTodo()">
@@ -117,7 +103,7 @@
                     </div>
 
                     <!--Lista de Bloques-->
-                    <div *ngIf="modelo.bloques && modelo.bloques.length>0" class="pt-3">
+                    <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length>0" class="pt-3">
                         <fieldset>
                             <legend>Bloques
                                 <plex-button class="float-right" icon="plus" type="success btn-sm" title="Agregar Bloque" (click)="addBloque()">

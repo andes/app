@@ -174,7 +174,8 @@ export class PanelAgendaComponent implements OnInit {
 
         // TODO: ver límite
         let query: any = {
-            limit: 20
+            limit: 20,
+            activo: true
         };
 
         if (agenda.espacioFisico) {

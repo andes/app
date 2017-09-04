@@ -107,6 +107,7 @@ export class FiltrosMapaEspacioFisicoComponent implements OnInit {
         if (event.query) {
             let query = {
                 nombre: event.query,
+                activo: true
                 // organizacion: this.auth.organizacion._id
             };
             this.servicioEspacioFisico.get(query).subscribe(respuesta => {
