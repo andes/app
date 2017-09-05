@@ -19,7 +19,7 @@ export class IndiceDeMasaCorporalComponent extends Formula implements OnInit {
     ngOnInit() {
         let datoRecuperado;
         this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
-        // vamos a recorrer los elementos requeridos para buscar 
+        // vamos a recorrer los elementos requeridos para buscar
         // si existen datos en la huds del paciente
         if (!this.datosIngreso) {
             this.datosIngreso = {};

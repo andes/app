@@ -335,7 +335,7 @@ export class DarTurnosComponent implements OnInit {
         if (search.tipoPrestacion || search.profesional) {
             let index = this.busquedas.findIndex(
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
-                (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
+                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
             console.log('index ', index);
             if (index < 0) {
@@ -758,23 +758,62 @@ export class DarTurnosComponent implements OnInit {
         this.ultimosTurnos = ultimosTurnos;
     }
 
+    actualizarTelefono(pacienteActualizar) {
+        // Si cambió el teléfono lo actualizo en el MPI
+        if (this.cambioTelefono) {
+            let nuevoCel = {
+                'tipo': 'celular',
+                'valor': this.telefono,
+                'ranking': 1,
+                'activo': true,
+                'ultimaActualizacion': new Date()
+            };
+            let mpi: Observable<any>;
+            let flagTelefono = false;
+            // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
+            // sino, se genera un nuevo contacto
+            if (this.paciente.contacto.length > 0) {
+                this.paciente.contacto.forEach((contacto, index) => {
+                    if (contacto.tipo === 'celular') {
+                        contacto.valor = this.telefono;
+                        flagTelefono = true;
+                    }
+                });
+                if (!flagTelefono) {
+                    this.paciente.contacto.push(nuevoCel);
+                }
+            } else {
+                this.paciente.contacto = [nuevoCel];
+            }
+            let cambios = {
+                'op': 'updateContactos',
+                'contacto': this.paciente.contacto
+            };
+            mpi = this.servicePaciente.patch(pacienteActualizar.id, cambios);
+            mpi.subscribe(resultado => {
+                if (resultado) {
+                    this.plex.toast('info', 'Número de teléfono actualizado');
+                }
+            });
+
+        }
+
+    }
+
     /**
      * DAR TURNO
      */
     darTurno() {
         // Ver si cambió el estado de la agenda desde otro lado
-        this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
+        this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
 
-            if (a.estado !== 'disponible' && a.estado !== 'publicada') {
+            if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
 
                 this.plex.info('warning', 'Esta agenda ya no está disponible.');
                 this.actualizar('sinFiltro');
                 return false;
 
             } else {
-
-                let estado: String = 'asignado';
-
                 let pacienteSave = {
                     id: this.paciente.id,
                     documento: this.paciente.documento,
@@ -783,7 +822,7 @@ export class DarTurnosComponent implements OnInit {
                     telefono: this.telefono,
                     carpetaEfectores: this.paciente.carpetaEfectores
                 };
-
+                this.agenda = agd;
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
                 this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                 let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
@@ -799,8 +838,7 @@ export class DarTurnosComponent implements OnInit {
                     tipoTurno: this.tiposTurnosSelect
                 };
 
-                // let operacion: Observable<any>;
-                this.serviceTurno.save(datosTurno).subscribe(resultado => {
+                this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                     this.estadoT = 'noSeleccionada';
                     this.agenda = null;
                     this.actualizar('sinFiltro');
@@ -818,16 +856,11 @@ export class DarTurnosComponent implements OnInit {
                     }
 
                     if (this._solicitudPrestacion) {
-
                         let params = {
                             op: 'asignarTurno',
                             idTurno: this.turno.id
                         };
-
                         this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
-                            // Se seteó el id del turno en la solicitud
-                            console.log('Se seteó el id del turno en la solicitud', prestacion);
-
                         });
                     }
 
@@ -845,58 +878,39 @@ export class DarTurnosComponent implements OnInit {
                             });
                         }
                     }
+                    this.actualizarTelefono(pacienteSave);
                     this.actualizarCarpetaPaciente(this.paciente);
-                }, error => {
-                    console.log(error);
-                });
-
-                // Si cambió el teléfono lo actualizo en el MPI
-                if (this.cambioTelefono) {
-                    let nuevoCel = {
-                        'tipo': 'celular',
-                        'valor': this.telefono,
-                        'ranking': 1,
-                        'activo': true,
-                        'ultimaActualizacion': new Date()
-                    };
-                    let mpi: Observable<any>;
-                    let flagTelefono = false;
-                    // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-                    // sino, se genera un nuevo contacto
-                    if (this.paciente.contacto.length > 0) {
-                        this.paciente.contacto.forEach((contacto, index) => {
-                            if (contacto.tipo === 'celular') {
-                                contacto.valor = this.telefono;
-                                flagTelefono = true;
-                            }
-                        });
-                        if (!flagTelefono) {
-                            this.paciente.contacto.push(nuevoCel);
-                        }
+                    if (this.paciente && this._pacienteSeleccionado) {
+                        this.cancelarDarTurno.emit(true);
+                        return false;
                     } else {
-                        this.paciente.contacto = [nuevoCel];
+                        this.buscarPaciente();
                     }
-                    let cambios = {
-                        'op': 'updateContactos',
-                        'contacto': this.paciente.contacto
-                    };
-                    mpi = this.servicePaciente.patch(pacienteSave.id, cambios);
-                    mpi.subscribe(resultado => {
-                        if (resultado) {
-                            this.plex.toast('info', 'Número de teléfono actualizado');
+                }, (err) => {
+                    // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
+                    // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
+                    if (err && (err === 'noDisponible')) {
+                        if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
+                            let nuevoIndice = this.indiceTurno + 1;
+                            if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
+                                this.indiceTurno = nuevoIndice;
+                                this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
+                                this.cancelarDarTurno.emit(true);
+                                this.darTurno();
+                            } else {
+                                this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
+                                this.actualizar('');
+                            }
+                        } else {
+                            this.plex.confirm('No se emitió el turno, por favor  verifique los turnos disponibles', 'Turno no asignado');
+                            this.actualizar('');
                         }
-                    });
-
-                }
+                    }
+                });
             };
         });
 
-        if (this.paciente && this._pacienteSeleccionado) {
-            this.cancelarDarTurno.emit(true);
-            return false;
-        } else {
-            this.buscarPaciente();
-        }
+
     }
 
     enviarSMS(paciente: any, mensaje) {
