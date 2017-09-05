@@ -805,9 +805,9 @@ export class DarTurnosComponent implements OnInit {
      */
     darTurno() {
         // Ver si cambió el estado de la agenda desde otro lado
-        this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
+        this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
 
-            if (a.estado !== 'disponible' && a.estado !== 'publicada') {
+            if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
 
                 this.plex.info('warning', 'Esta agenda ya no está disponible.');
                 this.actualizar('sinFiltro');
@@ -822,7 +822,7 @@ export class DarTurnosComponent implements OnInit {
                     telefono: this.telefono,
                     carpetaEfectores: this.paciente.carpetaEfectores
                 };
-                this.agenda = a;
+                this.agenda = agd;
                 this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
                 this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                 let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
@@ -887,7 +887,7 @@ export class DarTurnosComponent implements OnInit {
                         this.buscarPaciente();
                     }
                 }, (err) => {
-                    // Si el turno no pudo ser otorgado ser verifica si el bloque permite citar por segmento
+                    // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
                     // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
                     if (err && (err === 'noDisponible')) {
                         if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
