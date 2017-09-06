@@ -1,0 +1,22 @@
+<plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="data[elementoRUP.key].fecha" name="fecha" label="Fecha" [required]="true">
+</plex-datetime>
+
+<plex-text *ngIf="!soloValores" label="Motivo" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].motivo" (change)="devolverValores()"></plex-text>
+<label>Carga de imagenes</label>
+<image-upload [preview]="false" [maxFileSize]="2000000" dropBoxMessage="Arrastre aqui" buttonCaption="Cargar imagenes" *ngIf="!soloValores" (onFileUploadFinish)="imageUploaded($event)"
+    (onRemove)="imageRemoved($event)" fileTooLargeMessage="La imagen es demasiado grande para cargarla">
+</image-upload>
+
+<div *ngIf="soloValores">
+    <label>Fecha</label> {{this.data[this.elementoRUP.key].fecha | date}}
+    <label>Motivo</label> {{this.data[this.elementoRUP.key].motivo}}
+</div>
+
+
+<div class="image-container hr-inline-group">
+    <div class="image" *ngFor="let file of this.data[this.elementoRUP.key].fotos" [ngStyle]="{'background-image': 'url('+ file.src +')'}">
+        <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(file)">
+            <span class="close"></span>
+        </div>
+    </div>
+</div>

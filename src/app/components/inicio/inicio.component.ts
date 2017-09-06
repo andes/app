@@ -34,6 +34,7 @@ export class InicioComponent implements AfterViewInit {
     constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) {}
 
     ngAfterViewInit() {
+        window.setTimeout(() => {
         let permissions = this.appComponent.checkPermissions();
 
         if (permissions.length > 0) {
@@ -51,6 +52,7 @@ export class InicioComponent implements AfterViewInit {
         } else {
             this.denied = true;
        }
+    });
 
         // Por ahora desactivamos el wizard!
         // let wizard = new Wizard('turnos');

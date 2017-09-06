@@ -1,5 +1,3 @@
-
-
 /*
 @jgabriel | 04-03-2017
 
@@ -249,12 +247,17 @@ import { BuscadorMedicamentoSnomedComponent } from './components/rup/atomos/busc
 import { DosisComponent } from './components/rup/atomos/dosis.component';
 import { RecetaComponent } from './components/rup/atomos/receta.component';
 
-
+// MOLECULAS DE HALLAZGOSñ
+import { HipertensionArterialComponent } from './components/rup/moleculas/hipertensionArterial.component';
+import { ObesidadComponent } from './components/rup/moleculas/obesidad.component';
+// INFORME
+import { InformeComponent } from './components/rup/atomos/informe.component';
 // NIÑO SANO
 // import { OdontologiaComponent } from './components/rup/atomos/odontologia.component';
 import { EstadoNutricionalComponent } from './components/rup/atomos/estadoNutricional.component';
 // Autocitado
 import { AutocitadoComponent } from './components/rup/atomos/autocitado.component';
+
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -358,7 +361,11 @@ export const RUP_ELEMENTS: any[] = [
     { component: IndicacionProcedimientoComponent, key: 'IndicacionProcedimientoComponent' },
     { component: BuscadorMedicamentoSnomedComponent, key: 'BuscadorMedicamentoSnomedComponent' },
     { component: DosisComponent, key: 'DosisComponent' },
-    { component: RecetaComponent, key: 'RecetaComponent' }
+    { component: RecetaComponent, key: 'RecetaComponent' },
+    { component: ObesidadComponent, key: 'ObesidadComponent' },
+    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
+    { component: InformeComponent, key: 'InformeComponent' }
+
 
 ];
 
@@ -446,12 +453,17 @@ const RUP_COMPONENTS = [
     IndicacionProcedimientoComponent,
     BuscadorMedicamentoSnomedComponent,
     DosisComponent,
-    RecetaComponent
+    RecetaComponent,
+    ObesidadComponent,
+    HipertensionArterialComponent,
+    InformeComponent
+
 ];
 
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
+import { ImageUploadModule } from 'angular2-image-upload';
 
 // Main module
 @NgModule({
@@ -464,6 +476,7 @@ import { routing, appRoutingProviders } from './app.routing';
         Ng2DragDropModule,
         ChartsModule,
         routing,
+        ImageUploadModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })
