@@ -1,0 +1,58 @@
+.image-container {
+    background-color: #fdfdfd;
+    padding: 0 10px 0 10px;
+}
+
+.image {
+    display: inline-block;
+    margin: 6px;
+    width: 86px;
+    height: 86px;
+    background: center center no-repeat;
+    background-size: contain;
+    position: relative;
+}
+
+.x-mark {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2px;
+    float: right;
+    background-color: black;
+    opacity: .7;
+    color: white;
+    margin: 2px;
+}
+
+.close {
+    width: 20px;
+    height: 20px;
+    opacity: .7;
+    position: relative;
+    padding-right: 3px;
+}
+
+.x-mark:hover .close {
+    opacity: 1;
+}
+
+.close:before,
+.close:after {
+    border-radius: 2px;
+    position: absolute;
+    content: '';
+    height: 16px;
+    width: 2px;
+    top: 2px;
+    background-color: #FFFFFF;
+}
+
+.close:before {
+    transform: rotate(45deg);
+}
+
+.close:after {
+    transform: rotate(-45deg);
+}
