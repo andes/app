@@ -3,7 +3,7 @@
 
 <plex-text *ngIf="!soloValores" label="Motivo" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].motivo" (change)="devolverValores()"></plex-text>
 <label>Carga de imagenes</label>
-<image-upload [preview]="false"  dropBoxMessage="Arrastre aqui" buttonCaption="Cargar imagenes" *ngIf="!soloValores" (onFileUploadFinish)="imageUploaded($event)"
+<image-upload [preview]="false" [maxFileSize]="2000000" dropBoxMessage="Arrastre aqui" buttonCaption="Cargar imagenes" *ngIf="!soloValores" (onFileUploadFinish)="imageUploaded($event)"
     (onRemove)="imageRemoved($event)" fileTooLargeMessage="La imagen es demasiado grande para cargarla">
 </image-upload>
 
