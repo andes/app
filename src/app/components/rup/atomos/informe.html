@@ -3,8 +3,8 @@
 
 <plex-text *ngIf="!soloValores" label="Motivo" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].motivo" (change)="devolverValores()"></plex-text>
 <label>Carga de imagenes</label>
-<image-upload [preview]="false" [maxFileSize]="2000000" dropBoxMessage="Arrastre aqui" buttonCaption="Cargar imagenes" *ngIf="!soloValores" (onFileUploadFinish)="imageUploaded($event)"
-    (onRemove)="imageRemoved($event)" fileTooLargeMessage="La imagen es demasiado grande para cargarla">
+<image-upload [preview]="false" [maxFileSize]="2000000" dropBoxMessage="Arrastre aqui" buttonCaption="Cargar imagenes" *ngIf="!soloValores"
+    (onFileUploadFinish)="imageUploaded($event)" (onRemove)="imageRemoved($event)" fileTooLargeMessage="La imagen es demasiado grande para cargarla">
 </image-upload>
 
 <div *ngIf="soloValores">
@@ -12,11 +12,21 @@
     <label>Motivo</label> {{this.data[this.elementoRUP.key].motivo}}
 </div>
 
-
 <div class="image-container hr-inline-group">
-    <div class="image" *ngFor="let file of this.data[this.elementoRUP.key].fotos" [ngStyle]="{'background-image': 'url('+ file.src +')'}">
-        <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(file)">
-            <span class="close"></span>
+    <ng-container *ngFor="let file of this.data[this.elementoRUP.key].fotos let i = index">
+        <a (click)="activaLightbox(i)">
+            <div class="image" [ngStyle]="{'background-image': 'url('+ file.src +')'}">
+                <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(file)">
+                    <span class="close"></span>
+                </div>
+            </div>
+        </a>
+
+        <div (click)="lightbox = false" *ngIf="soloValores && i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }">
+            <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+            <img src="{{ file.src }}">
+            <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
         </div>
-    </div>
+    </ng-container>
+
 </div>

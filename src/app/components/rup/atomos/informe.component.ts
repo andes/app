@@ -9,7 +9,9 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@
 })
 
 export class InformeComponent extends Atomo implements OnInit {
+    lightbox = false;
     fotos: any[] = [];
+    indice;
 
 
     ngOnInit() {
@@ -36,5 +38,22 @@ export class InformeComponent extends Atomo implements OnInit {
     imageRemoved($event) {
         let index = this.data[this.elementoRUP.key].fotos.indexOf($event);
         this.data[this.elementoRUP.key].fotos.splice(index, 1);
+    }
+
+    activaLightbox(index) {
+        this.lightbox = true;
+        this.indice = index;
+    }
+    imagenPrevia(i) {
+        let imagenPrevia = i - 1;
+        if (imagenPrevia >= 0) {
+            this.indice = imagenPrevia;
+        }
+    }
+    imagenSiguiente(i) {
+        let imagenSiguiente = i + 1;
+        if (imagenSiguiente <= this.data[this.elementoRUP.key].fotos.length - 1) {
+            this.indice = imagenSiguiente;
+        }
     }
 }

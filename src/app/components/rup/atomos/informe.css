@@ -56,3 +56,96 @@
 .close:after {
     transform: rotate(-45deg);
 }
+.thumbnail {
+    max-width: 40%;
+}
+
+.lightbox {
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+.lightbox:target {
+    outline: none;
+    display: block;
+}
+
+.previous {
+    color: #ffffff;
+    position: fixed;
+    left: 4px;
+    top: 40%;
+    /* width: 40px; */
+    font-size: 90px;
+}
+
+.next {
+    color: #ffffff;
+    position: fixed;
+    right: 4px;
+    top: 40%;
+    /* width: 40px; */
+    font-size: 90px;
+}
+
+.parpadeo {
+    animation-name: parpadeo;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+
+    -webkit-animation-name: parpadeo;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@-moz-keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
