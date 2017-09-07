@@ -1,0 +1,26 @@
+<div *ngIf="elementoRUP.requeridos[0] && elementoRUP.requeridos[0].id && paciente">
+    <div class="row">
+        <ng-container *ngFor="let tp of elementoRUP.requeridos">
+            <div class="col-6" *ngIf="!soloValores && tp?.key !== 'evolucionProblema'|| (soloValores && datosIngreso && datosIngreso[tp.key]) && tp.key !== 'evolucionProblema'">
+                <rup #rup
+                [soloValores]="soloValores"
+                [elementoRUP]="tp"
+                [paciente]="paciente"
+                (evtData)="devolverValores($event,tp)"
+                [datosIngreso]="(datosIngreso && datosIngreso[tp.key]) ? datosIngreso[tp.key] : null">
+                </rup>
+            </div>
+          
+            <div class="col-12" *ngIf="!soloValores && tp.key === 'evolucionProblema' || (soloValores && datosIngreso && datosIngreso[tp.key]) && tp.key === 'evolucionProblema'">
+                    <rup #rup
+                    [soloValores]="soloValores"
+                    [elementoRUP]="tp"
+                    [paciente]="paciente"
+                    (evtData)="devolverValores($event,tp)"
+                    [datosIngreso]="(datosIngreso && datosIngreso[tp.key]) ? datosIngreso[tp.key] : null">
+                    </rup>
+            </div>
+
+        </ng-container>
+    </div>
+</div>
