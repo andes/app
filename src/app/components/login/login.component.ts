@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
             this.auth.login(this.usuario.toString(), this.password)
                 .subscribe((data) => {
                     this.plex.updateUserInfo({ usuario: this.auth.usuario });
-                    this.router.navigate(['inicio']);
+                    this.router.navigate(['selectOrganizacion']);
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
@@ -39,7 +39,5 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    loadOrganizaciones(event) {
-        this.auth.organizaciones().subscribe(event.callback);
-    }
+
 }

@@ -28,19 +28,21 @@ export class AppComponent {
     public checkPermissions(): any {
         let accessList = [];
         let menuList = [];
-
+        if (this.auth.orgs.length > 1) {
+            menuList.push({ label: 'Seleccionar organización', icon: 'home', route: '/selectOrganizacion' });
+        }
         // Cargo el array de permisos
         if (this.auth.getPermissions('turnos:?').length > 0) {
-            accessList.push({label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas'});
+            accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
         if (this.auth.getPermissions('mpi:?').length > 0) {
 
-            accessList.push({label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi'});
+            accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
         }
 
         if (this.auth.getPermissions('rup:?').length > 0) {
 
-            accessList.push({label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup'});
+            accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
         }
         menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
         accessList.forEach((permiso) => {

@@ -27,6 +27,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
 
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
+  { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'inicio' }
 ];

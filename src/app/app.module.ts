@@ -98,6 +98,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
+import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -470,7 +471,7 @@ import { routing, appRoutingProviders } from './app.routing';
     ],
 
     declarations: [
-        AppComponent, InicioComponent, LoginComponent,
+        AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
