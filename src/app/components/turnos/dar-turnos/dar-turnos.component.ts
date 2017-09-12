@@ -392,7 +392,7 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                idProfesional: (this.opciones.profesional ? this.opciones.profesional[0].id : ''),
+                idProfesional: (this.opciones.profesional && this.opciones.profesional[0] ? this.opciones.profesional[0].id : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
