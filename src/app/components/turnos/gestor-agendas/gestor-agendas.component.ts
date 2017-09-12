@@ -118,7 +118,7 @@ export class GestorAgendasComponent implements OnInit {
         };
 
         // Verifica permisos para dar turnos
-        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
 
         // Verifica permisos para crear agenda
         this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
