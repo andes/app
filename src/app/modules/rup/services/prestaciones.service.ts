@@ -51,11 +51,8 @@ export class PrestacionesService {
      * Metodo getByPaciente. Busca todas las prestaciones de un paciente
      * @param {String} idPaciente
      */
-    getByPaciente(idPaciente: any, recargarCache: boolean = false, idPrestacion?: any): Observable<any[]> {
+    getByPaciente(idPaciente: any, recargarCache: boolean = false): Observable<any[]> {
         if (this.cache[idPaciente] && !recargarCache) {
-            if (idPrestacion) {
-                this.cache[idPaciente] = this.cache[idPaciente].filter(d => d.id !== idPrestacion);
-            }
             return new Observable(resultado => resultado.next(this.cache[idPaciente]));
         } else {
             let opt;
@@ -70,9 +67,9 @@ export class PrestacionesService {
             };
 
             return this.server.get(this.prestacionesUrl, opt).map(data => {
-                if (idPrestacion) {
-                    data = data.filter(d => d.id !== idPrestacion);
-                }
+                // if (idPrestacion) {
+                //     data = data.filter(d => d.id !== idPrestacion);
+                // }
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
                 this.cacheRegistros[idPaciente] = null;
@@ -82,13 +79,75 @@ export class PrestacionesService {
 
     }
 
+
+    findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
+        return this.findValuesHelper(obj, key, []);
+    }
+
+    findValuesHelper(obj, key, list) {
+        let i;
+        let children;
+        if (!obj) {
+            return list;
+        }
+        if (obj instanceof Array) {
+            for (i in obj) {
+                if (obj[i]) {
+                    list = list.concat(this.findValuesHelper(obj[i], key, []));
+                }
+            }
+            return list;
+        }
+        if (obj[key]) {
+            list.push(obj[key]);
+        }
+
+        if ((typeof obj === 'object') && (obj !== null)) {
+            children = Object.keys(obj);
+            if (children.length > 0) {
+                for (i = 0; i < children.length; i++) {
+                    list = list.concat(this.findValuesHelper(obj[children[i]], key, []));
+                }
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * Metodo getByPacienteKey
+     * @param {String} idPaciente
+     */
+    getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                    registros = [...registros, ...prestacion.ejecucion.registros];
+
+                }
+            });
+            let registroSalida = [];
+            let registroEncontrado = this.findValues(registros, key);
+            if (registroEncontrado && registroEncontrado.length > 0) {
+                return registroEncontrado[0];
+            }
+            return null;
+        });
+    }
+
     /**
      * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
-    getByPacienteHallazgo(idPaciente: any, idPrestacion?: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente, idPrestacion).map(prestaciones => {
+    getByPacienteHallazgo(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
             let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
@@ -103,18 +162,24 @@ export class PrestacionesService {
             // ordenamos los registro por fecha para que a evoluciones se generen correctamente
             registros = registros.sort(
                 function (a, b) {
-                    a = new Date(a.createdAt);
-                    b = new Date(b.createdAt);
+                    a = a.createdAt;
+                    b = b.createdAt;
                     return a - b;
                 });
             registros.forEach(registro => {
-                let registroEncontrado = registroSalida.find(reg => reg.concepto.conceptId === registro.concepto.conceptId);
+                let registroEncontrado = registroSalida.find(reg => {
+                    if (reg.concepto.conceptId === registro.concepto.conceptId) {
+                        if (reg.evoluciones.find(e => e.idRegistro === registro.valor.evolucionProblema.idRegistroOrigen)) {
+                            return reg;
+                        }
+                    }
+                });
                 if (!registroEncontrado) {
                     let dato = {
                         concepto: registro.concepto,
-                        idPrestacion: registro.idPrestacion,
+                        prestaciones: [registro.idPrestacion],
                         evoluciones: [{
-
+                            idRegistro: registro.id,
                             fechaCarga: registro.createdAt,
                             profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
@@ -129,6 +194,8 @@ export class PrestacionesService {
                     let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
+                        idRegistro: registro.id,
+                        idRegistroOrigen: registro.valor.evolucionProblema.idRegistroOrigen,
                         profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
@@ -136,12 +203,13 @@ export class PrestacionesService {
                         esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
                         evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
                     };
+                    registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
                     // ordenamos las evoluciones para que la primero del array sea la ultima registrada
                     registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort(
                         function (a, b) {
-                            a = new Date(a.fechaCarga);
-                            b = new Date(b.fechaCarga);
+                            a = a.fechaCarga;
+                            b = b.fechaCarga;
                             return b - a;
                         });
                 }
@@ -154,20 +222,42 @@ export class PrestacionesService {
 
 
     /**
-     * Metodo getHallazgoPaciente obtiene un hallazgo con todas sus evoluciones para un paciente
+     * Metodo getUnHallazgoPaciente x Concepto obtiene un hallazgo cronico o activo con todas sus evoluciones
+     * para un paciente
      * @param {String} idPaciente
      */
-    getUnHallazgoPaciente(idPaciente: any, concepto: any, idPrestacion?: any): Observable<any> {
+    getUnHallazgoPaciente(idPaciente: any, concepto: any): Observable<any> {
         // TODO: CHEQUEAR SI EL CONCEPTO ES EL MISMO O PERTENECE A IGUAL ELEMENTORUP
         let registros = [];
         // if (this.cacheRegistros[idPaciente]) {
         //     registros = this.cacheRegistros[idPaciente];
         //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         // } else {
-        return this.getByPacienteHallazgo(idPaciente, idPrestacion).map(hallazgos =>
-            hallazgos.find(registro => { if (registro.concepto.conceptId === concepto.conceptId) { return registro; } })
+        return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
+            hallazgos.find(registro => {
+                if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
+                    return registro;
+                }
+            })
         );
         // }
+    }
+
+    /**
+     * Metodo getUnHallazgoPacienteXOrigen obtiene un hallazgo con todas sus evoluciones
+     * para un paciente buscandolo por el registro de origen
+     * @param {String} idPaciente
+     * @param {String} idRegistroOrigen
+     */
+    getUnHallazgoPacienteXOrigen(idPaciente: any, idRegistroOrigen: any): Observable<any> {
+        let registros = [];
+        return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
+            hallazgos.find(registro => {
+                if (registro.evoluciones.find(e => e.idRegistro === idRegistroOrigen)) {
+                    return registro;
+                }
+            })
+        );
     }
 
     /**

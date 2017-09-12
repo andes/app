@@ -1,3 +1,5 @@
+
+
 /*
 @jgabriel | 04-03-2017
 
@@ -198,6 +200,61 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
+
+export const RUP_ELEMENTS: any[] = [
+    { component: BuscadorComponent, key: 'BuscadorComponent' },
+    { component: FrecuenciaCardiacaComponent, key: 'FrecuenciaCardiacaComponent' },
+    { component: FrecuenciaRespiratoriaComponent, key: 'FrecuenciaRespiratoriaComponent' },
+    { component: HeaderPacienteComponent, key: 'HeaderPacienteComponent' },
+    { component: HudsBusquedaComponent, key: 'HudsBusquedaComponent' },
+    { component: IndiceDeMasaCorporalComponent, key: 'IndiceDeMasaCorporalComponent' },
+    { component: NuevaEvolucionProblemaComponent, key: 'NuevaEvolucionProblemaComponent' },
+    { component: ObservacionesComponent, key: 'ObservacionesComponent' },
+    { component: PesoComponent, key: 'PesoComponent' },
+    { component: PrestacionCrearComponent, key: 'PrestacionCrearComponent' },
+    { component: PrestacionEjecucionComponent, key: 'PrestacionEjecucionComponent' },
+    { component: PrestacionValidacionComponent, key: 'PrestacionValidacionComponent' },
+    { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
+    { component: ResumenComponent, key: 'ResumenComponent' },
+    { component: SaturacionOxigenoComponent, key: 'SaturacionOxigenoComponent' },
+    { component: SignosVitalesComponent, key: 'SignosVitalesComponent' },
+    { component: SnomedBuscarComponent, key: 'SnomedBuscarComponent' },
+    { component: SolicitudPrestacionDefaultComponent, key: 'SolicitudPrestacionDefaultComponent' },
+    { component: TallaComponent, key: 'TallaComponent' },
+    { component: TemperaturaComponent, key: 'TemperaturaComponent' },
+    { component: TensionArterialComponent, key: 'TensionArterialComponent' },
+    { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
+    { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
+
+];
+
+// let temp = RUP_ELEMENTS.map((i) => i.component);
+const RUP_COMPONENTS = [
+    BuscadorComponent,
+    EvolucionProblemaDefaultComponent,
+    FrecuenciaCardiacaComponent,
+    FrecuenciaRespiratoriaComponent,
+    HeaderPacienteComponent,
+    HudsBusquedaComponent,
+    IndiceDeMasaCorporalComponent,
+    NuevaEvolucionProblemaComponent,
+    ObservacionesComponent,
+    PesoComponent,
+    PrestacionCrearComponent,
+    PrestacionEjecucionComponent,
+    PrestacionValidacionComponent,
+    PuntoInicioComponent,
+    ResumenComponent,
+    SaturacionOxigenoComponent,
+    SignosVitalesComponent,
+    SnomedBuscarComponent,
+    SolicitudPrestacionDefaultComponent,
+    TallaComponent,
+    TemperaturaComponent,
+    TensionArterialComponent,
+    TensionDiastolicaComponent,
+    TensionSistolicaComponent
+];
 
 // Locales
 import { AppComponent } from './app.component';

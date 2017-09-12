@@ -37,10 +37,22 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
+        // Verificamos permisos globales para rup, si no posee realiza redirect al home
+        if (this.auth.getPermissions('rup:?').length <= 0) {
+            this.redirect('inicio');
+        }
+        if (!this.auth.profesional) {
+            this.redirect('inicio');
+        }
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.inicializar(id);
         });
+    }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     inicializar(id) {

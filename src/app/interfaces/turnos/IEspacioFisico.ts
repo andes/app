@@ -30,4 +30,5 @@ export interface IEspacioFisico {
         semanticTag: string;
     }];
     activo: Boolean;
+    estado: string;
 }

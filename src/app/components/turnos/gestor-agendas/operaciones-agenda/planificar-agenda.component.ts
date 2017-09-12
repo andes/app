@@ -17,6 +17,8 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
     templateUrl: 'planificar-agenda.html',
 })
 export class PlanificarAgendaComponent implements OnInit {
+    subscriptionID: any;
+    espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     private _editarAgenda: any;
@@ -49,6 +51,8 @@ export class PlanificarAgendaComponent implements OnInit {
     tipoEspacioFisico = 'propios';
     espacioNuevo: IEspacioFisico;
     espaciosFisicosEfector = [];
+
+    showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -215,7 +219,7 @@ export class PlanificarAgendaComponent implements OnInit {
                 this.loadEspaciosFisicos(this.modelo.espacioFisico);
                 break;
             case 'nuevo':
-                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null };
+                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
                 break;
         }
 
@@ -431,6 +435,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     cambioHoraBloques(texto: String) {
         this.fecha = new Date(this.modelo.fecha);
+        if (this.elementoActivo.horaInicio) {
+            this.aproximar(this.elementoActivo.horaInicio);
+        }
+        if (this.elementoActivo.horaFin) {
+            this.aproximar(this.elementoActivo.horaFin);
+        }
         let inicio = this.combinarFechas(this.fecha, this.elementoActivo.horaInicio);
         let fin = this.combinarFechas(this.fecha, this.elementoActivo.horaFin);
 
@@ -571,6 +581,18 @@ export class PlanificarAgendaComponent implements OnInit {
         this.cambiaPorcentajeTipo('reservadoProfesional');
     }
 
+    aproximar(date: Date) {
+        let m = date.getMinutes();
+        let remaider = m % 15;
+        if (remaider !== 0) {
+            if (remaider < 7) {
+                date.setMinutes(m - remaider);
+            }  else {
+                date.setMinutes(m + (15 - remaider));
+            }
+        }
+    }
+
     validarTodo() {
         this.alertas = [];
         let alerta: string;
@@ -579,6 +601,15 @@ export class PlanificarAgendaComponent implements OnInit {
         let iniAgenda = null;
         let finAgenda = null;
         this.fecha = new Date(this.modelo.fecha);
+
+        if (this.modelo.horaInicio) {
+            this.aproximar(this.modelo.horaInicio);
+        }
+
+        if (this.modelo.horaFin) {
+            this.aproximar(this.modelo.horaFin);
+        }
+
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
@@ -711,6 +742,46 @@ export class PlanificarAgendaComponent implements OnInit {
         } else {
             return null;
         }
+    }
+
+    mapaEspacioFisico() {
+        this.showMapaEspacioFisico = true;
+    }
+
+    espaciosChange(agenda) {
+
+        // TODO: ver límite
+        let query: any = {
+            limit: 20
+        };
+
+        if (agenda.espacioFisico) {
+            let nombre = agenda.espacioFisico;
+            query.nombre = nombre;
+        };
+
+        if (agenda.equipamiento && agenda.equipamiento.length > 0) {
+            let equipamiento = agenda.equipamiento.map((item) => item.term);
+            query.equipamiento = equipamiento;
+        };
+
+        if (!agenda.espacioFisico && !agenda.equipamiento) {
+            this.espaciosList = [];
+            return;
+        }
+
+        if (this.subscriptionID) {
+            this.subscriptionID.unsubscribe();
+        }
+        this.subscriptionID = this.servicioEspacioFisico.get(query).subscribe(resultado => {
+            this.espaciosList = resultado;
+        });
+    }
+
+    selectEspacio($data) {
+        this.modelo.espacioFisico = $data;
+        this.validarTodo();
+
     }
 
     onSave($event, clonar) {

@@ -84,7 +84,7 @@ export class BuscadorComponent implements OnInit {
                 case 'problema':
                     semanticTag = 'problemas';
                     break;
-                case ('procedimiento'):
+                case 'procedimiento':
                     semanticTag = 'procedimientos';
                     break;
             }
