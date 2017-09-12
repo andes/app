@@ -766,8 +766,11 @@ export class DarTurnosComponent implements OnInit {
                     });
                 });
             });
+            this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
+                return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
+            });
         });
-        this.ultimosTurnos = ultimosTurnos;
+
     }
 
     /**
