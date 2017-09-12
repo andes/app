@@ -231,9 +231,11 @@ export class GestorAgendasComponent implements OnInit {
         let fecha = moment().format();
 
         if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
+            this.fechaDesde = fecha;
+            this.fechaHasta = fecha;
         }
+        this.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        this.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
 
         const params = {
             fechaDesde: this.fechaDesde,
@@ -440,8 +442,6 @@ export class GestorAgendasComponent implements OnInit {
                     this.showTurnos = true;
                 }
             }
-
-
 
         });
 
