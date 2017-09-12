@@ -141,6 +141,7 @@ export class GestorAgendasComponent implements OnInit {
         this.fechaHasta = new Date();
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
         this.fechaHasta = moment(this.fechaHasta).startOf('day');
+
         // Iniciamos la búsqueda
         this.parametros = {
             fechaDesde: this.fechaDesde,
@@ -192,14 +193,12 @@ export class GestorAgendasComponent implements OnInit {
         }
 
         // Completo params con la info que ya tengo
-
         this.getAgendas(this.parametros);
 
     };
 
     getAgendas(params: any) {
         this.serviceAgenda.get(params).subscribe(agendas => {
-            // this.agendasSeleccionadas = [];
             this.turnosSuspendidos = [];
             agendas.forEach(agenda => {
                 let count = 0;
@@ -357,14 +356,7 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    // loadEspaciosFisicos(event) {
-    //     this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    // }
-
     loadEdificios(event) {
-        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-        //     event.callback(respuesta.edificio);
-        // });
         if (event.query) {
             let query = {
                 edificio: event.query,
@@ -379,8 +371,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
 
         let listaEspaciosFisicos = [];
         if (event.query) {
@@ -450,18 +440,7 @@ export class GestorAgendasComponent implements OnInit {
                     this.showTurnos = true;
                 }
             }
-            // else {
-            //     // Reseteo el panel de la derecha
-            //     this.showEditarAgendaPanel = false;
-            //     this.showAgregarNotaAgenda = false;
-            //     this.showAgregarSobreturno = false;
-            //     this.showRevisionAgenda = false;
-            //     this.showTurnos = false;
-            //     this.showReasignarTurno = false;
-            //     this.showReasignarTurnoAutomatico = false;
-            //     this.showListadoTurnos = false;
-            //     this.showBotonesAgenda = true;
-            // }
+
 
 
         });
