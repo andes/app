@@ -34,7 +34,10 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 
 @Component({
     selector: 'dar-turnos',
-    templateUrl: 'dar-turnos.html'
+    templateUrl: 'dar-turnos.html',
+    styleUrls: [
+        'dar-turnos.scss'
+    ]
 })
 
 export class DarTurnosComponent implements OnInit {
@@ -141,7 +144,7 @@ export class DarTurnosComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
-        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
@@ -149,6 +152,12 @@ export class DarTurnosComponent implements OnInit {
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
+
+        // Filtra las búsquedas en localStorage para que muestre sólo las del usuario logueado
+        this.busquedas = this.busquedas.filter(busqueda => {
+            return busqueda.usuario.documento === this.auth.usuario.documento;
+        });
+
     }
 
     loadTipoPrestaciones(event) {
@@ -327,7 +336,8 @@ export class DarTurnosComponent implements OnInit {
     filtrar() {
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
-            'profesional': this.opciones.profesional ? this.opciones.profesional : null
+            'profesional': this.opciones.profesional ? this.opciones.profesional : null,
+            'usuario': this.auth.usuario
         };
         if (this.busquedas.length === 10) {
             this.busquedas.shift();
