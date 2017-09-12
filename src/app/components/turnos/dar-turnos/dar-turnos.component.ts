@@ -382,7 +382,6 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
-            console.log('opciones ', this.opciones);
 
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                 this.mostrarCalendario = true;
