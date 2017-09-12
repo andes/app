@@ -217,10 +217,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         apiMethod = this.SNOMED.get(query);
                         break;
                 }
-
+                let idTimeOut = this.timeoutHandle;
                 apiMethod.subscribe(resultados => {
-                    this.loading = false;
-                    this.resultados = resultados;
+                    if (idTimeOut === this.timeoutHandle) {
+                        this.loading = false;
+                        this.resultados = resultados;
+                    }
 
                     // if (this.tipoBusqueda === 'procedimientos') {
                     //     // Filtrar de los resultado las prestaciones turneables

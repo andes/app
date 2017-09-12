@@ -1,3 +1,4 @@
+import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -59,11 +60,17 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
-
             // Carga la información completa del paciente
             // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
+            });
+
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                }
+
             });
 
             // Busca el elementoRUP que implementa esta prestación

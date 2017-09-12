@@ -53,6 +53,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
     public showDatosSolicitud = false;
+    public showPrestacion = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
     // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
@@ -80,15 +81,14 @@ export class PrestacionEjecucionComponent implements OnInit {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe(() => {
+                this.showPrestacion = true;
                 this.servicioPrestacion.getById(id).subscribe(prestacion => {
-
                     this.prestacion = prestacion;
                     // Si la prestación está validad, navega a la página de validación
                     if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                         this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                     } else {
                         // Carga la información completa del paciente
-                        // [jgabriel] ¿Hace falta esto?
                         this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                             this.paciente = paciente;
                         });
@@ -105,11 +105,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             });
         });
-    }
-
-    prestacionChanged() {
-        console.log(this.prestacion);
-        alert('Cambió la prestación');
     }
 
     /**
@@ -452,9 +447,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.beforeSave()) {
             return;
         }
-
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         // TODO: Revisar estos cambios para refactorizar
-        this.prestacion.ejecucion.registros.forEach(registro => {
+        registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
@@ -462,7 +457,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         let params: any = {
             op: 'registros',
-            registros: this.prestacion.ejecucion.registros
+            registros: registros
         };
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {

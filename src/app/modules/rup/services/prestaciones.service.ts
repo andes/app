@@ -147,7 +147,6 @@ export class PrestacionesService {
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             }
-
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
@@ -169,12 +168,12 @@ export class PrestacionesService {
             registros.forEach(registro => {
                 let registroEncontrado = registroSalida.find(reg => {
                     if (reg.concepto.conceptId === registro.concepto.conceptId) {
-                        if (reg.evoluciones.find(e => e.idRegistro === registro.valor.evolucionProblema.idRegistroOrigen)) {
+                        if (reg.evoluciones.find(e => e.idRegistro === registro.valor.idRegistroOrigen)) {
                             return reg;
                         }
                     }
                 });
-                if (!registroEncontrado) {
+                if (!registroEncontrado && registro.valor) {
                     let dato = {
                         concepto: registro.concepto,
                         prestaciones: [registro.idPrestacion],
@@ -182,11 +181,9 @@ export class PrestacionesService {
                             idRegistro: registro.id,
                             fechaCarga: registro.createdAt,
                             profesional: registro.createdBy.nombreCompleto,
-                            fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : null,
-                            estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : '',
-                            esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : false,
-                            esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
-                            evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
+                            fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
+                            estado: registro.valor.estado ? registro.valor.estado : '',
+                            evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
                         }]
                     };
                     registroSalida.push(dato);
@@ -195,13 +192,11 @@ export class PrestacionesService {
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
                         idRegistro: registro.id,
-                        idRegistroOrigen: registro.valor.evolucionProblema.idRegistroOrigen,
+                        idRegistroOrigen: registro.valor.idRegistroOrigen,
                         profesional: registro.createdBy.nombreCompleto,
-                        fechaInicio: registro.valor.evolucionProblema.fechaInicio ? registro.valor.evolucionProblema.fechaInicio : ultimaEvolucion.fechaInicio,
-                        estado: registro.valor.evolucionProblema.estado ? registro.valor.evolucionProblema.estado : ultimaEvolucion.estado,
-                        esCronico: registro.valor.evolucionProblema.esCronico ? registro.valor.evolucionProblema.esCronico : ultimaEvolucion.esCronico,
-                        esEnmienda: registro.valor.evolucionProblema.esEnmienda ? registro.valor.evolucionProblema.esEnmienda : false,
-                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucionProblema.evolucion : ''
+                        fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
+                        estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
+                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucion : ''
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
