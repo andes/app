@@ -208,16 +208,21 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         });
                         break;
                     case 'equipamientos':
-                        apiMethod = this.SNOMED.getEquipamientos(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['objeto físico']
+                        });
                         break;
                     default:
                         apiMethod = this.SNOMED.get(query);
                         break;
                 }
-
+                let idTimeOut = this.timeoutHandle;
                 apiMethod.subscribe(resultados => {
-                    this.loading = false;
-                    this.resultados = resultados;
+                    if (idTimeOut === this.timeoutHandle) {
+                        this.loading = false;
+                        this.resultados = resultados;
+                    }
 
                     // if (this.tipoBusqueda === 'procedimientos') {
                     //     // Filtrar de los resultado las prestaciones turneables

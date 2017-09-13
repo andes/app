@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
 
 // Services
-import { PrestacionPacienteService } from './../../../../services/rup/prestacionPaciente.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
@@ -95,11 +95,10 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     public filtradas: any[] = [];
 
     constructor(
-        private servicioPrestacion: PrestacionPacienteService,
+        private servicioPrestacion: PrestacionesService,
         private servicioTipoPrestacion: TipoPrestacionService,
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
-        private servicioPrestacionPaciente: PrestacionPacienteService,
         private llaveTipoPrestacionService: LlavesTipoPrestacionService,
         private auth: Auth,
         private router: Router,
@@ -253,7 +252,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         idPaciente: this.paciente.id,
                         idTipoPrestacion: llave.tipoPrestacion.id
                     };
-                    this.servicioPrestacionPaciente.get(params).subscribe(prestacionPaciente => {
+                    this.servicioPrestacion.get(params).subscribe(prestacionPaciente => {
                         if (prestacionPaciente.length > 0) {
                             if (llave.llave.solicitud.vencimiento) {
 
