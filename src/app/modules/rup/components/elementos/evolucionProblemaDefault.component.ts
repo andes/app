@@ -33,42 +33,28 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
         if (!this.registro.valor) {
             this.registro.valor = { estado: 'activo' };
         } else {
-            this.friendlyDate(this.registro.valor.fechaInicio);
+            // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
+            // tenemos que mostrar las evoluciones anteriores
+            if (this.registro.valor.idRegistroOrigen) {
+                this.prestacionesService.getUnHallazgoPacienteXOrigen(this.prestacion.paciente.id, this.registro.valor.idRegistroOrigen)
+                    .subscribe(hallazgo => {
+                        if (hallazgo) {
+                            this.hallazgoHudsCompleto = hallazgo;
+                            this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
+                            if (this.registro.valor.evolucion) {
+                                this.evoluciones.shift();
+                            }
+                            if (this.evoluciones && this.evoluciones.length > 0) {
+                                this.unaEvolucion = this.evoluciones[0];
+                                this.registro.valor.estado = this.registro.valor.estado ? this.registro.valor.estado : (this.unaEvolucion.estado ? this.unaEvolucion.estado : 'activo');
+                                this.registro.valor.evolucion = this.registro.valor.evolucion ? this.registro.valor.evolucion : '';
+                            }
+                        }
+                    });
+            } else {
+                this.friendlyDate(this.registro.valor.fechaInicio);
+            }
         }
-        // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
-        // tenemos que mostrar las evoluciones anteriores
-        // if (this.registro) {
-        //     this.servicioPrestacion.getUnHallazgoPacienteXOrigen(this.paciente.id, this.datosIngreso.idRegistroOrigen)
-        //         .subscribe(hallazgo => {
-        //             if (hallazgo) {
-        //                 this.hallazgoHudsCompleto = hallazgo;
-        //                 this.evoluciones = JSON.parse(JSON.stringify(this.hallazgoHudsCompleto.evoluciones));
-        //                 if (this.datosIngreso.evolucion) {
-        //                     this.evoluciones.shift();
-        //                 }
-        //                 if (this.evoluciones && this.evoluciones.length > 0) {
-        //                     this.unaEvolucion = this.evoluciones[0];
-        //                     this.data[this.elementoRUP.key].estado = this.datosIngreso.estado ? this.datosIngreso.estado : (this.unaEvolucion.estado ? this.unaEvolucion.estado : 'activo');
-        //                     this.data[this.elementoRUP.key].esCronico = this.datosIngreso.esCronico ? this.datosIngreso.esCronico : (this.unaEvolucion.estado ? this.unaEvolucion.esCronico : false);
-        //                     this.data[this.elementoRUP.key].esEnmienda = this.datosIngreso.esEnmienda ? this.datosIngreso.esEnmienda : (this.unaEvolucion.esEnmienda ? this.unaEvolucion.esEnmienda : false);
-        //                     this.data[this.elementoRUP.key].evolucion = this.datosIngreso.evolucion ? this.datosIngreso.evolucion : '';
-        //                 }
-        //             }
-        //         });
-
-
-        // } else {
-        //     this.friendlyDate(this.registro.valor.fechaInicio);
-        //     this.devolverValores();
-        //     //         }
-
-        //     //     } else {
-        //     //     this.data[this.elementoRUP.key].esEnmienda = false;
-        //     //     this.data[this.elementoRUP.key].esCronico = false;
-        //     //     this.data[this.elementoRUP.key].estado = 'activo';
-        //     // }
-
-        // }
     }
 
 

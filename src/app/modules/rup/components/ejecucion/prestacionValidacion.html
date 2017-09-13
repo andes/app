@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-9">
                                         <div class="title">
-                                            {{elemento.concepto.term}}
+                                            {{elemento.nombre}}
                                         </div>
                                     </div>
                                     <div class="col-3"> <small>
@@ -41,7 +41,11 @@
                                     </p>
                                 </div>-->
                                 <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
-                                    <b>Relacionado con:</b> {{elemento.relacionadoCon[0].concepto.term}}
+                                    <strong>Relacionado con:</strong>
+                                    <!--*ngFor="let r of registro.relacionadoCon"-->
+                                    <ng-container>
+                                        {{elemento.relacionadoCon[0].concepto.term}}
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>

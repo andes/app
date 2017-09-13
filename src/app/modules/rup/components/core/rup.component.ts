@@ -1,3 +1,4 @@
+import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
@@ -53,6 +54,7 @@ export class RUPComponent implements OnInit {
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
         protected conceptObserverService: ConceptObserverService,
         public elementosRUPService: ElementosRUPService,
+        public prestacionesService: PrestacionesService,
     ) { }
 
     ngOnInit() {
