@@ -37,7 +37,11 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     private matrix: any;
     private agendaCache: IAgenda = null;
 
+<<<<<<< HEAD
     idInfoAgenda = '';
+=======
+    idInfoAgenda: String = '';
+>>>>>>> develop
 
     constructor(
         public plex: Plex,

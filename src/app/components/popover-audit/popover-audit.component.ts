@@ -37,7 +37,7 @@ export class PopoverAuditComponent implements OnInit {
       if (this._datos.updatedBy || this._datos.updatedAt) {
         texto += 'Actualizado ';
         texto += this._datos.updatedBy ? 'por ' + this._datos.updatedBy.nombreCompleto + ' ' : '';
-        texto += this._datos.updatedAt ? 'el día ' + moment(this._datos.updatedAt, 'dd/MM/yyyy HH:mm').format('DD/MM/YYYY HH:mm') : '';
+        texto += this._datos.updatedAt ? '(' + moment(this._datos.updatedAt, 'dd/MM/yyyy HH:mm').format('DD/MM/YYYY HH:mm') + ')' : '';
 
       }
     }

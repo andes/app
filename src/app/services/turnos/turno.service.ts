@@ -17,9 +17,12 @@ export class TurnoService {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
     }
 
-    save(turno: any): Observable<any> {
+    save(turno: any, options: any = {}): Observable<any> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
         if (turno.idAgenda) {
-            return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno);
+            return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno, options);
         }
     }
 

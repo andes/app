@@ -1,3 +1,4 @@
+import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -8,7 +9,6 @@ import { ITipoPrestacion } from '../../../interfaces/ITipoPrestacion';
 import * as enumerados from './../../../utils/enumerados';
 import { AuditoriaPrestacionPacienteService } from '../../../services/auditoria/auditoriaPrestacionPaciente.service';
 import { IAuditoriaPrestacionPaciente } from '../../../interfaces/auditoria/IAuditoriaPrestacionPaciente';
-import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
 
 @Component({
     selector: 'editar-auditoria-prestacionPaciente',
@@ -47,7 +47,7 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
     constructor(
         public plex: Plex,
         public auth: Auth,
-        public prestacionPacienteService: PrestacionPacienteService,
+        public prestacionPacienteService: PrestacionesService,
         public serviceTipoPrestacion: TipoPrestacionService,
         private auditoriaPrestacionPacienteService: AuditoriaPrestacionPacienteService) { }
 
