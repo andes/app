@@ -1,3 +1,5 @@
+import { Auth } from '@andes/auth';
+import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
@@ -55,6 +57,8 @@ export class RUPComponent implements OnInit {
         protected conceptObserverService: ConceptObserverService,
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public auth: Auth,
     ) { }
 
     ngOnInit() {

@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 @Component({
@@ -10,18 +11,19 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
     public prestacionSeleccion;
 
 
-//     ngOnInit() {
-//         this.registro[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
-//         // Carga tipos de prestaciones permitidas para el usuario
-//         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-//             this.tiposPrestacion = data;
-//             if (!this.datosIngreso) {
-//                 this.tiposPrestacion.forEach(element => {
-//                     if (element.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId) {
-//                         this.data[this.elementoRUP.key].prestacionSeleccion = element;
-//                     }
-//                 });
-//             }
-//         });
-//     }
- }
+    ngOnInit() {
+        this.registro.valor = (this.registro.valor) ? this.registro.valor : {};
+        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+            this.tiposPrestacion = data;
+            if (this.registro.valor) {
+                let valorActual = this.prestacion.ejecucion.registros.filter(r => r.valor.prestacionSeleccion);
+                this.tiposPrestacion.forEach(element => {
+                    if (element.conceptId === valorActual[0].valor.prestacionSeleccion.conceptId) {
+                        this.registro.valor.prestacionSeleccion = element;
+                    }
+                });
+
+            }
+        });
+    }
+}

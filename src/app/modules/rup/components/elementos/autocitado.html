@@ -1,18 +1,18 @@
 <div *ngIf="!soloValores">
-    <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].motivo" (change)="devolverValores()"></plex-text>
+    <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="registro.valor.motivo" ></plex-text>
 
-    <plex-select [(ngModel)]="data[elementoRUP.key].prestacionSeleccion" name="nombrePrestacion" label="Seleccionar prestación"
-        [data]="tiposPrestacion" labelField="term" (change)="devolverValores()">
+    <plex-select [(ngModel)]="registro.valor.prestacionSeleccion" name="nombrePrestacion" label="Seleccionar prestación"
+        [data]="tiposPrestacion" labelField="term">
     </plex-select>
 </div>
 
 <div *ngIf="soloValores">
     <p>
         <label><b>Motivo</b></label>
-        <br /> {{data[elementoRUP.key].motivo}}
+        <br /> {{registro.valor.motivo}}
     </p>
     <p>
         <label><b>prestación solicitada</b></label>
-        <br /> {{data[elementoRUP.key].prestacionSeleccion.fsn}}
+        <br /> {{registro.valor.prestacionSeleccion.fsn}}
     </p>
 </div>
