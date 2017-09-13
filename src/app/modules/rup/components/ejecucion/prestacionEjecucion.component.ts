@@ -22,6 +22,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
+    
     @HostBinding('class.plex-layout') layout = true;
 
     // prestacion actual en ejecucion
@@ -32,6 +33,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public showPlanes = false;
     public relacion = null;
     public conceptoARelacionar = [];
+
+    // Tipo de busqueda
+    public tipoBusqueda: any;
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -325,18 +329,24 @@ export class PrestacionEjecucionComponent implements OnInit {
             snomedConcept = snomedConcept.dragData;
         }
         // TODO: Chequear si es un plan el registro se debe cargar como una solicitud
-
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, false);
 
         // armamos el elemento data a agregar al array de registros
         let objectId = new ObjectID();
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        // verificamos si es un plan. Si es plan seteamos esSolicitud en true.
+        if (this.tipoBusqueda === 'planes') {
+            nuevoRegistro.esSolicitud = true;
+        }
+
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         // this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1].collapse = false;
+
+
     }
 
 
@@ -506,7 +516,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     recibeTipoBusqueda(tipoDeBusqueda) {
-        // this.tipoBusqueda = tipoDeBusqueda;
+        this.tipoBusqueda = tipoDeBusqueda;
     }
 
     cargaItems(registroActual, indice) {

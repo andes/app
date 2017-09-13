@@ -31,7 +31,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      */
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = { estado: 'activo' }
+            this.registro.valor = { estado: 'activo' };
         } else {
             this.friendlyDate(this.registro.valor.fechaInicio);
         }
