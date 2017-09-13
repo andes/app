@@ -348,14 +348,14 @@ export class DarTurnosComponent implements OnInit {
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
                     (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
-            console.log('index ', index);
             if (index < 0) {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
+            this.actualizar('');
         }
 
-        this.actualizar('');
+        // this.actualizar('');
     }
 
     /**
@@ -392,7 +392,7 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                idProfesional: (this.opciones.profesional && this.opciones.profesional[0] ? this.opciones.profesional[0].id : ''),
+                idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
@@ -631,7 +631,7 @@ export class DarTurnosComponent implements OnInit {
     seleccionarUltimoTurno(turno) {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
-        this.opciones.profesional = turno.profesionales;
+        this.opciones.profesional = turno.profesionales[0];
         if (!actualizarProfesional && this.eventoProfesional) {
             this.eventoProfesional.callback(this.opciones.profesional);
         }
