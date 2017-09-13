@@ -65,6 +65,7 @@ export class TurnosComponent implements OnInit {
 
     @Input() reasturnos: IAgenda;
     @Output() reasignaTurno = new EventEmitter<boolean>();
+    @Output() recargarAgendas = new EventEmitter<boolean>();
 
     // Propiedades públicas
     showTurnos = true;
@@ -433,6 +434,7 @@ export class TurnosComponent implements OnInit {
             this.agenda = ag;
             this.showTurnos = true;
             this.showSuspenderTurno = false;
+            this.recargarAgendas.emit(true);
         });
     }
 
