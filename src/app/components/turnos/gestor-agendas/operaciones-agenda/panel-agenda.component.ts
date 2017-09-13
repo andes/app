@@ -225,12 +225,10 @@ export class PanelAgendaComponent implements OnInit {
         let iniAgenda, finAgenda;
 
         if (tipo === 'profesionales') {
-
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
-
+                    this.serviceAgenda.get({'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual
