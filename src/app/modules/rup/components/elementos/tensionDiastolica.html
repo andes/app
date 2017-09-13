@@ -1,0 +1,13 @@
+<plex-int autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="registro.valor" name="tensionDiastolica" label="Tensión Diastólica" suffix=" mmHG " min="20" max="300" (change)="emitChange()">
+</plex-int>
+
+<p *ngIf="soloValores">
+    <label>Tensión Diastólica</label>
+    <br /> {{registro.valor}} mmHG
+</p>
+<!-- 
+<p *ngIf="mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+</p> -->
