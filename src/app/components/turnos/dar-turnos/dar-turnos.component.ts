@@ -1067,7 +1067,7 @@ export class DarTurnosComponent implements OnInit {
     volver() {
         this.showDarTurnos = false;
         this.cancelarDarTurno.emit(true);
-        // this.buscarPaciente();
+        this.buscarPaciente();
     }
 
     redirect(pagina: string) {
