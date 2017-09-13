@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
@@ -20,8 +21,9 @@ export class ElementosRUPService {
     private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
     private defaultsParaSolicitud: IElementosRUPCache = {};
-    // Indica que el servicio está listo para usarse
-    public ready: Subject<boolean> = new Subject<boolean>();
+    // Indica que el servicio está listo para usarse.
+    // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
+    public ready = new BehaviorSubject<boolean>(false);
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP

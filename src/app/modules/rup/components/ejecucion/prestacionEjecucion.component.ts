@@ -80,29 +80,31 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-            this.elementosRUPService.ready.subscribe(() => {
-                this.showPrestacion = true;
-                this.servicioPrestacion.getById(id).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    // Si la prestación está validad, navega a la página de validación
-                    if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
-                        this.router.navigate(['/rup/validacion/', this.prestacion.id]);
-                    } else {
-                        // Carga la información completa del paciente
-                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                            this.paciente = paciente;
-                        });
+            this.elementosRUPService.ready.subscribe((resultado) => {
+                if (resultado) {
+                    this.showPrestacion = true;
+                    this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        // Si la prestación está validad, navega a la página de validación
+                        if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                            this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                        } else {
+                            // Carga la información completa del paciente
+                            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                                this.paciente = paciente;
+                            });
 
-                        // Busca el elementoRUP que implementa esta prestación
-                        this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-                        this.mostrarDatosEnEjecucion();
-                    }
-                }, (err) => {
-                    if (err) {
-                        this.plex.info('danger', err, 'Error');
-                        this.router.navigate(['/rup']);
-                    }
-                });
+                            // Busca el elementoRUP que implementa esta prestación
+                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.mostrarDatosEnEjecucion();
+                        }
+                    }, (err) => {
+                        if (err) {
+                            this.plex.info('danger', err, 'Error');
+                            this.router.navigate(['/rup']);
+                        }
+                    });
+                }
             });
         });
     }
@@ -484,7 +486,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
-        this.colapsarPrestaciones();
+        if (dragging === true) {
+            this.colapsarPrestaciones();
+        } else {
+            this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
+        }
     }
 
     recibeTipoBusqueda(tipoDeBusqueda) {
@@ -494,11 +500,19 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         let registros = this.prestacion.ejecucion.registros;
+        this.itemsRegistros[registroActual.id].mostrarItems = true;
         this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
             if (registro.id !== registroActual.id) {
-                return registro;
+                if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
+                    if (registro.id !== registroActual.relacionadoCon[0].id) {
+                        return registro;
+                    }
+                } else {
+                    return registro;
+                }
+
             }
         }).map(registro => {
             return {
@@ -556,7 +570,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     colapsarPrestaciones() {
         if (this.prestacion.ejecucion.registros) {
-            this.copiaRegistro = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+            this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
                 this.itemsRegistros[element.id].collapse = true;
             });
