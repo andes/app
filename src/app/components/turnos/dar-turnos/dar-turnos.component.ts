@@ -154,9 +154,11 @@ export class DarTurnosComponent implements OnInit {
         }
 
         // Filtra las búsquedas en localStorage para que muestre sólo las del usuario logueado
-        this.busquedas = this.busquedas.filter(busqueda => {
-            return busqueda.usuario.documento === this.auth.usuario.documento;
-        });
+        if (this.busquedas.length > 0) {
+            this.busquedas = this.busquedas.filter(busqueda => {
+                return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento;
+            });
+        }
 
     }
 
@@ -934,13 +936,7 @@ export class DarTurnosComponent implements OnInit {
             });
     }
 
-    buscarPaciente() {
-        this.showDarTurnos = false;
-        this.mostrarCalendario = false;
-        this.pacientesSearch = true;
-    }
-
-    public tieneTurnos(bloque: IBloque): boolean {
+    tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
     }
@@ -1040,6 +1036,12 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+    buscarPaciente() {
+        this.showDarTurnos = false;
+        this.mostrarCalendario = false;
+        this.pacientesSearch = true;
+    }
+
     cancelar() {
         this.showDarTurnos = false;
         this.volverAlGestor.emit(true);
@@ -1047,7 +1049,8 @@ export class DarTurnosComponent implements OnInit {
 
     volver() {
         this.showDarTurnos = false;
-        this.buscarPaciente();
+        this.cancelarDarTurno.emit(true);
+        // this.buscarPaciente();
     }
 
     redirect(pagina: string) {
