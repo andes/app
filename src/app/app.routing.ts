@@ -39,16 +39,15 @@ import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoI
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
-// import { AuditoriaPorBloqueComponent } from './components/auditoria/auditoriaPorBloque.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
 // ... RUP
-import { ResumenComponent } from './components/rup/ejecucion/resumen.component';
-import { PuntoInicioComponent } from './components/rup/ejecucion/puntoInicio.component';
-import { PrestacionEjecucionComponent } from './components/rup/ejecucion/prestacionEjecucion.component';
-import { PrestacionValidacionComponent } from './components/rup/ejecucion/prestacionValidacion.component';
-import { PrestacionCrearComponent } from './components/rup/ejecucion/prestacionCrear.component';
+import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
+import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
+import { PrestacionEjecucionComponent } from './modules/rup/components/ejecucion/prestacionEjecucion.component';
+import { PrestacionValidacionComponent } from './modules/rup/components/ejecucion/prestacionValidacion.component';
+import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
 

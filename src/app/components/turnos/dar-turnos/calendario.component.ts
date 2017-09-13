@@ -14,14 +14,9 @@ export class CalendarioComponent {
     private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
-
     // Propiedades
-    @Output('agendaChanged') agendaChanged = new EventEmitter();
     @Input('fecha') fecha: Date;
-
     @Input() _solicitudPrestacion: any;
-
-
     @Input('agenda')
     set agenda(value: IAgenda) {
         this._agenda = value;
@@ -49,6 +44,7 @@ export class CalendarioComponent {
     get estado(): String {
         return this._estado;
     }
+    @Output('agendaChanged') agendaChanged = new EventEmitter();
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
     private agendaPorFecha(fecha: moment.Moment): IAgenda {
@@ -69,6 +65,7 @@ export class CalendarioComponent {
     }
     /** Regenera el calendario */
     private actualizar() {
+        console.log(this._solicitudPrestacion);
         if (this.fecha && this.agendas) {
             let inicio = moment(this.fecha).startOf('month').startOf('week');
             let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));

@@ -1,5 +1,0 @@
-<plex-bool [(ngModel)]="data[elementoRUP.key].gestacionMultiple" name="gestacionMultiple" label="Gestación Múltiple" type="slide" (change)="devolverValores()">
-</plex-bool>
-
-<plex-int [(ngModel)]="data[elementoRUP.key].cantidadFetos" placeholder="Ingrese un valor entre 0 y 10" name="cantidadFetos" min="0" max="10" (change)="devolverValores()" *ngIf="data[elementoRUP.key].gestacionMultiple">
-</plex-int>

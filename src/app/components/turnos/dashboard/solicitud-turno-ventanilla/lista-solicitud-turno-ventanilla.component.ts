@@ -1,4 +1,3 @@
-import { PrestacionPacienteService } from './../../../../services/rup/prestacionPaciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
@@ -8,6 +7,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import * as moment from 'moment';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 // Interfaces
 import { IPaciente } from './../../../../interfaces/IPaciente';
@@ -41,7 +41,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
 
     constructor(
-        public servicioPrestacion: PrestacionPacienteService,
+        public servicioPrestacion: PrestacionesService,
         public auth: Auth,
         private router: Router,
         private plex: Plex) { }
@@ -87,5 +87,4 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         this.router.navigate(['./' + pagina]);
         return false;
     }
-
 }

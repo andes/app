@@ -1,8 +1,0 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="residuo" [data]="SelectResiduos" label="Recolección de Residuos" placeholder="Seleccion de recolección de residuos" [multiple]="true" (change)="devolverValores()">
-</plex-select>
-<div *ngIf="soloValores">
-    <b> Recolección de Residuos </b>
-    <div *ngFor="let dato of data[elementoRUP.key]">
-        {{dato.nombre}}
-    </div>
-</div>

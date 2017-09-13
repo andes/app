@@ -40,7 +40,6 @@ export class AgregarNotaTurnoComponent implements OnInit {
                 this.nota = null;
             }
         });
-        console.log('this.turnosSeleccionados: ', this.turnosSeleccionados);
     }
 
     guardarNota() {

@@ -1,8 +1,0 @@
-<plex-select *ngIf="!soloValores" [(ngModel)]="data[elementoRUP.key]" name="HallazgoRelacionaParto" [data]="selectHallazgoRelacionadoParto" label="Hallazgo relacionado con el Parto" (change)="devolverValores()" placeholder="Seleccionar método">
-</plex-select>
-
-
-<p *ngIf="soloValores">
-    <b>Hallazgo relacionado con el parto</b>
-    <br /> {{data[elementoRUP.key].nombre}}
-</p>

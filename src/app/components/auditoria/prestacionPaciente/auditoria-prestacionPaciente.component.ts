@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-
 import * as moment from 'moment';
-
 import { Auth } from '@andes/auth';
-
 import { IAuditoriaPrestacionPaciente } from './../../../interfaces/auditoria/IAuditoriaPrestacionPaciente';
 import { AuditoriaPrestacionPacienteService } from './../../../services/auditoria/auditoriaPrestacionPaciente.service';
-import { PrestacionPacienteService } from './../../../services/rup/prestacionPaciente.service';
-import { IPrestacionPaciente } from '../../../interfaces/rup/IPrestacionPaciente';
+import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
+import { IPrestacion } from '../../../modules/rup/interfaces/prestacion.interface';
 
 @Component({
     selector: 'auditoria-prestacionPaciente',
@@ -21,7 +18,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
     showupdate = false;
     auditoriaPP: any = {};
     prestacionesPaciente: any = [];
-    auditoriasPPSeleccionadas: IPrestacionPaciente[] = [];
+    auditoriasPPSeleccionadas: IPrestacion[] = [];
     auditoriaPPSeleccionada: any;
 
     showVistaAuditoriasPP = false;
@@ -34,7 +31,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
         private auditoriaPrestacionPacienteService: AuditoriaPrestacionPacienteService,
-        private prestacionPacienteService: PrestacionPacienteService,
+        private prestacionPacienteService: PrestacionesService,
         public auth: Auth) { }
 
     ngOnInit() {
