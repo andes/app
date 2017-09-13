@@ -22,7 +22,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
-    
+
     @HostBinding('class.plex-layout') layout = true;
 
     // prestacion actual en ejecucion
