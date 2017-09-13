@@ -19,7 +19,7 @@ export class TurnosPacienteComponent implements OnInit {
 
     _paciente: IPaciente;
     _operacion: string;
-    tituloOperacion: string = 'Operaciones de Turnos';
+    tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente = [];
 
     @Input('operacion')
