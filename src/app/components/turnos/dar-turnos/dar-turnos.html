@@ -16,6 +16,7 @@
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
                             </div>
+                            <!-- TODO: No funciona el filtro de profesional cuando es una solicitud de autocitacion -->
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
                                     placeholder="Profesionales" labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">

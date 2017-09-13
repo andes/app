@@ -350,14 +350,14 @@ export class DarTurnosComponent implements OnInit {
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
                     (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
-            console.log('index ', index);
             if (index < 0) {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
+            this.actualizar('');
         }
 
-        this.actualizar('');
+        // this.actualizar('');
     }
 
     /**
@@ -384,6 +384,7 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
+
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                 this.mostrarCalendario = true;
             } else {
@@ -632,7 +633,7 @@ export class DarTurnosComponent implements OnInit {
     seleccionarUltimoTurno(turno) {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
-        this.opciones.profesional = turno.profesionales;
+        this.opciones.profesional = turno.profesionales[0];
         if (!actualizarProfesional && this.eventoProfesional) {
             this.eventoProfesional.callback(this.opciones.profesional);
         }
@@ -767,8 +768,11 @@ export class DarTurnosComponent implements OnInit {
                     });
                 });
             });
+            this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
+                return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
+            });
         });
-        this.ultimosTurnos = ultimosTurnos;
+
     }
 
     /**

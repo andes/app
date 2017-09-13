@@ -118,7 +118,7 @@ export class GestorAgendasComponent implements OnInit {
         };
 
         // Verifica permisos para dar turnos
-        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
 
         // Verifica permisos para crear agenda
         this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
@@ -231,9 +231,11 @@ export class GestorAgendasComponent implements OnInit {
         let fecha = moment().format();
 
         if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
+            this.fechaDesde = fecha;
+            this.fechaHasta = fecha;
         }
+        this.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        this.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
 
         const params = {
             fechaDesde: this.fechaDesde,
@@ -440,8 +442,6 @@ export class GestorAgendasComponent implements OnInit {
                     this.showTurnos = true;
                 }
             }
-
-
 
         });
 
