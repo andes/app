@@ -256,7 +256,8 @@
                                 </fieldset>
                             </div>
                         </div>
-                        <div class="row pt-3">
+                        <!--Comento momentaneamente la opción de paciente simultáneo-->
+                        <!--<div class="row pt-3">
                             <div *ngIf="!elementoActivo.citarPorBloque " class="col-4 ">
                                 <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos " label="Pacientes simultáneos " name="pacienteSimultaneos "></plex-bool>
                             </div>
@@ -264,7 +265,7 @@
                                 <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos " name="cantidadSimultaneos " suffix="Pacientes " required>
                                 </plex-int>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="row ">
                             <div *ngIf="!elementoActivo.pacienteSimultaneos " class="col-4 ">
                                 <plex-bool [(ngModel)]="elementoActivo.citarPorBloque " label="Citar por segmento " name="citarPorBloque "></plex-bool>
