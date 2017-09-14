@@ -50,16 +50,6 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
             let callback = (this.registro.valor.profesionales) ? this.registro.valor.profesionales : null;
-            // let profesionales = {};
-
-            // if (this.data[this.elementoRUP.key].profesionales) {
-            //     this.quitarOrder();
-            //     profesionales = JSON.parse(JSON.stringify(this.data[this.elementoRUP.key].profesionales));
-            // }
-
-            // event.callback(profesionales);
-
-            // event.callback(this.data[this.elementoRUP.key].profesionales);
             event.callback(callback);
         }
 
