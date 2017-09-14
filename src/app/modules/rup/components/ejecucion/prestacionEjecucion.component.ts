@@ -84,83 +84,46 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-            this.elementosRUPService.ready.subscribe(() => {
-                this.showPrestacion = true;
-                this.servicioPrestacion.getById(id).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    // Si la prestación está validad, navega a la página de validación
-                    if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
-                        this.router.navigate(['/rup/validacion/', this.prestacion.id]);
-                    } else {
-                        // Carga la información completa del paciente
-                        this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                            this.paciente = paciente;
-                        });
+            this.elementosRUPService.ready.subscribe((resultado) => {
+                if (resultado) {
+                    this.showPrestacion = true;
+                    this.servicioPrestacion.getById(id).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        // Si la prestación está validad, navega a la página de validación
+                        if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
+                            this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                        } else {
+                            // Carga la información completa del paciente
+                            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                                this.paciente = paciente;
+                            });
 
-                        // Busca el elementoRUP que implementa esta prestación
-                        this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-                        this.mostrarDatosEnEjecucion();
-                    }
-                }, (err) => {
-                    if (err) {
-                        this.plex.info('danger', err, 'Error');
-                        this.router.navigate(['/rup']);
-                    }
-                });
+                            // Busca el elementoRUP que implementa esta prestación
+                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.mostrarDatosEnEjecucion();
+                        }
+                    }, (err) => {
+                        if (err) {
+                            this.plex.info('danger', err, 'Error');
+                            this.router.navigate(['/rup']);
+                        }
+                    });
+                }
             });
         });
     }
 
     /**
-      * Carga un nuevo registro en el array general de registros y los valores en el array data
-      *
-      * @param {*} registro: objeto a insertar en el array de registros
-      * @memberof PrestacionEjecucionComponent
-      */
-    mostrarUnRegistro(registro) {
-        //     let elementoRUPRegistro = this.servicioElementosRUP.buscarElementoRup(this.elementosRUP, registro.concepto, registro.tipo);
-        //     // armamos el elemento data a agregar al array de registros
-        //     let data = {
-        //         tipo: registro.tipo,
-        //         concepto: registro.concepto,
-        //         elementoRUP: elementoRUPRegistro,
-        //         valor: registro.valor,
-        //         destacado: registro.destacado ? registro.destacado : false,
-        //         relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
-        //     };
-
-        //     this.registros.push(data);
-
-        //     if (!this.data[elementoRUPRegistro.key]) {
-        //         this.data[elementoRUPRegistro.key] = {};
-        //     }
-
-        //     if (!this.data[elementoRUPRegistro.key][registro.concepto.conceptId]) {
-        //         this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = {};
-        //     }
-        //     this.data[elementoRUPRegistro.key][registro.concepto.conceptId] = registro.valor[elementoRUPRegistro.key];
-
-        //     for (let i in this.registros) {
-        //         this.cargaItems(this.registros[i], i);
-        //         // Actualizamos cuando se agrega el array..
-        //     }
-    }
-
-
-    /**
      * recorre los registros de una prestación que ya tiene registros en ejecucion
-     * y los carga en el array de registros.
-     * Si se trata de Hallazgo o Trastorno cronico lo busca primero en la Huds, sino
-     * se llama al mostrarUnRegistro() para cargar un registro comun
-     *
+     * y los carga el array itemsRegistros para colapsar y para los regsitros que se puedan relacionar (items).
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
-            // recorremos los registros ya almacenados en la prestacion y rearmamos el
-            // arreglo registros y data en memoria
+            // recorremos los registros ya almacenados en la prestacion
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
+                // Si el registro actual tiene registros vinvulados los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
                 }
@@ -366,30 +329,56 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        this.cargarNuevoRegistro(snomedConcept);
-        // TODO: Revisar que pasa con los hallazgos cronicos
-        // // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-        // if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
-        //     this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
-        //         .subscribe(dato => {
-        //             if (dato) {
-        //                 // vamos a comprobar si se trata de hallazgo cronico o activo
-        //                 if (dato.evoluciones && (dato.evoluciones[0].esCronico || dato.evoluciones[0].estado === 'activo')) {
-        //                     this.ejecutarHallazgoHuds(dato);
-        //                 } else {
-        //                     this.cargarNuevoRegistro(snomedConcept);
-        //                 }
-        //             } else {
-        //                 this.cargarNuevoRegistro(snomedConcept);
-        //             }
-        //         });
 
-        // } else {
-        //     this.cargarNuevoRegistro(snomedConcept);
-        // }
+        // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
+        if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
+            this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
+                .subscribe(dato => {
+                    if (dato) {
+                        // vamos a comprobar si se trata de hallazgo cronico o activo
+                        if (dato.evoluciones[0].estado === 'activo') {
+                            this.ejecutarUnHallazgoHuds(dato);
+                        } else {
+                            this.cargarNuevoRegistro(snomedConcept);
+                        }
+                    } else {
+                        this.cargarNuevoRegistro(snomedConcept);
+                    }
+                });
+
+        } else {
+            this.cargarNuevoRegistro(snomedConcept);
+        }
 
     }
 
+    /**
+     * Recibe un hallazgo de la HUDS para ejecutarlo (evolucionar)
+     * @param problemaHuds hallazgo de la HUDS para evolucionar
+     */
+    ejecutarUnHallazgoHuds(problemaHuds) {
+        if (problemaHuds.concepto.semanticTag === 'hallazgo' || problemaHuds.concepto.semanticTag === 'trastorno') {
+            // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+            let elementoRUP = this.elementosRUPService.buscarElemento(problemaHuds.concepto, false);
+            // armamos el elemento data a agregar al array de registros
+            let objectId = new ObjectID();
+            let nuevoRegistro = new IPrestacionRegistro(elementoRUP, problemaHuds.concepto);
+            // Le cargamos ya en el objeto valor el idRegistroOrigen
+            nuevoRegistro.valor = { idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro }
+            // agregamos al array de registros
+            this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
+            this.showDatosSolicitud = false;
+            this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
+
+        } else {
+            this.cargarNuevoRegistro(problemaHuds.concepto);
+        }
+    }
+
+    /**
+     * Recibe un conpecto de la HUDS para ejecutarlo
+     * @param resultadoHuds conpecto de la HUDS puede ser un hallazgo o una prestación
+     */
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
@@ -507,7 +496,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     arrastrandoConcepto(dragging: boolean) {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
-        this.colapsarPrestaciones();
+        if (dragging === true) {
+            this.colapsarPrestaciones();
+        } else {
+            this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
+        }
     }
 
     recibeTipoBusqueda(tipoDeBusqueda) {
@@ -517,11 +510,19 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         let registros = this.prestacion.ejecucion.registros;
+        this.itemsRegistros[registroActual.id].mostrarItems = true;
         this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
             if (registro.id !== registroActual.id) {
-                return registro;
+                if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
+                    if (registro.id !== registroActual.relacionadoCon[0].id) {
+                        return registro;
+                    }
+                } else {
+                    return registro;
+                }
+
             }
         }).map(registro => {
             return {
@@ -579,7 +580,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     colapsarPrestaciones() {
         if (this.prestacion.ejecucion.registros) {
-            this.copiaRegistro = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+            this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
                 this.itemsRegistros[element.id].collapse = true;
             });

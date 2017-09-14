@@ -196,7 +196,7 @@ export class PrestacionesService {
                         profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucion : ''
+                        evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
