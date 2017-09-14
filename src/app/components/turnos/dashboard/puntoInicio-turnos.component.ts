@@ -139,18 +139,11 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = false;
                 this.showMostrarEstadisticasPacientes = false;
                 break;
-            case 'anulacionTurno':
+            case 'operacionesTurno':
                 this.showMostrarEstadisticasAgendas = false;
                 this.showMostrarEstadisticasPacientes = false;
                 this.showIngresarSolicitud = false;
-                this.operacionTurnos = 'anulacionTurno';
-                this.showMostrarTurnosPaciente = true;
-                break;
-            case 'registrarAsistencia':
-                this.showMostrarEstadisticasAgendas = false;
-                this.showMostrarEstadisticasPacientes = false;
-                this.showIngresarSolicitud = false;
-                this.operacionTurnos = 'registrarAsistencia';
+                this.operacionTurnos = 'operacionesTurno';
                 this.showMostrarTurnosPaciente = true;
                 break;
             case 'activarApp':

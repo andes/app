@@ -30,6 +30,7 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
+import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
@@ -319,6 +320,7 @@ for (let key in RUPRegistry) {
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,

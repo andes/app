@@ -15,6 +15,9 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 @Component({
     selector: 'planificar-agenda',
     templateUrl: 'planificar-agenda.html',
+    styleUrls: [
+        'planificar-agenda.scss'
+    ]
 })
 export class PlanificarAgendaComponent implements OnInit {
     subscriptionID: any;
@@ -52,6 +55,7 @@ export class PlanificarAgendaComponent implements OnInit {
     espacioNuevo: IEspacioFisico;
     espaciosFisicosEfector = [];
 
+    showBloque = true;
     showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
@@ -756,13 +760,15 @@ export class PlanificarAgendaComponent implements OnInit {
 
     mapaEspacioFisico() {
         this.showMapaEspacioFisico = true;
+        this.showBloque = false;
     }
 
     espaciosChange(agenda) {
 
         // TODO: ver límite
         let query: any = {
-            limit: 20
+            limit: 20,
+            activo: true
         };
 
         if (agenda.espacioFisico) {
@@ -791,7 +797,11 @@ export class PlanificarAgendaComponent implements OnInit {
     selectEspacio($data) {
         this.modelo.espacioFisico = $data;
         this.validarTodo();
-
+        if (this.modelo.id === '0') {
+            delete this.modelo.id;
+        };
+        this.showMapaEspacioFisico = false;
+        this.showAgenda = true;
     }
 
     onSave($event, clonar) {

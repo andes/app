@@ -115,3 +115,4 @@
         </div>
     </footer>
 </form>
+<permisos *ngIf="!autorizado" [permisos]="permisosRequeridos" [botonCancelar]="true" (cancelarEmit)="cancelar()"></permisos>

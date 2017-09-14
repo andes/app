@@ -1,0 +1,6 @@
+<div class="row">
+    <div class="col">
+        <h5 class="text-info"><i class="mdi mdi-alert-circle-outline"></i> Su usuario no tiene permisos para: {{ permisos }}</h5>
+        <plex-button *ngIf="botonCancelar" name="volver" type="info" label="Volver" (click)="cancelar()"></plex-button>
+    </div>
+</div>
