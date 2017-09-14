@@ -37,7 +37,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     private matrix: any;
     private agendaCache: IAgenda = null;
 
-    idInfoAgenda: String = '';
+    idInfoAgenda = '';
 
     constructor(
         public plex: Plex,
@@ -66,6 +66,11 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     refreshScreen() {
+
+        if (typeof this.agendaSeleccionada.id === 'undefined') {
+            this.agendaSeleccionada.id = '0'; // Para identificar que es una agenda nueva (en planificar-agenda)
+        }
+
         if (!this.opciones) {
             this.start = moment(this.agendaSeleccionada.horaInicio).startOf('hour').set('hour', 7);
             this.end = moment(this.agendaSeleccionada.horaFin).startOf('hour').set('hour', 20);
@@ -79,7 +84,11 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             this._unit = Number(this.unit);
         }
         if (this.agendaCache === null || moment(this.agendaCache.horaInicio).startOf('day').format() !== moment(this.agendaSeleccionada.horaInicio).startOf('day').format()) {
-            this.servicioAgenda.get({ fechaDesde: this.start, fechaHasta: this.end }).subscribe((agendas) => {
+            let query = {
+                fechaDesde: this.start,
+                fechaHasta: this.end
+            };
+            this.servicioAgenda.get(query).subscribe((agendas) => {
                 this.agendasTable = agendas;
                 this.calcHeaders();
                 this.generarTabla();
@@ -174,7 +183,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                 this._end.endOf('day');
                 temp = this._start.clone();
                 while (temp < this._end) {
-                    headers.push({ date: temp, text: this._start.format('DD'), colspan: 1 });
+                    headers.push({ date: temp, hora: this._start.format('DD'), colspan: 1 });
                     temp = temp.add(1, 'days');
                 }
                 break;
@@ -183,7 +192,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
                 this._end.endOf('hour');
                 temp = this._start.clone();
                 while (temp < this._end) {
-                    headers.push({ date: temp, text: temp.format('HH:mm'), colspan: 60 / this._unit });
+                    headers.push({ date: temp, hora: temp.format('HH:mm'), colspan: 60 / this._unit });
                     temp = temp.add(1, 'hour');
                     // temp = temp.add(unit, 'minutes');
                 }
@@ -210,24 +219,27 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         }
     }
 
-    onRowClick(espacio) {
-        let item = this.makeItem(this.agendaSeleccionada, espacio.id);
-        let index = this.check(item, espacio);
-        if (index >= 0) {
-            if (this.agendaSeleccionada.espacioFisico) {
-                this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+    seleccionarEspacio(espacio, agendaDisponible) {
+        if (agendaDisponible === true) {
+            let item = this.makeItem(this.agendaSeleccionada, espacio.id);
+            let index = this.espacioOcupado(item, espacio);
+            if (index >= 0 || typeof this.agendaSeleccionada.id === 'undefined') {
+                this.plex.confirm('Asignar espacio físico ' + espacio._value.nombre, '¿Confirmar?').then((respuesta) => {
+                    if (respuesta === true) {
+                        if (this.agendaSeleccionada.espacioFisico) {
+                            this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+                        }
+                        this.addItem(index || 0, item, espacio);
+                        this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
+                    } else {
+                        return false;
+                    }
+                });
+            } else {
+                this.plex.toast('danger', 'El espacio físico esta ocupado.', '');
             }
-            this.addItem(index, item, espacio);
-            this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
-        } else {
-            this.plex.toast('danger', 'El espacio físico esta ocupado.', '');
         }
     }
-
-    onItemClick(agenda) {
-        // this.removeItem(agenda);
-    }
-
 
     makeItem(agenda, espacioID) {
         let start_time = moment(agenda.horaInicio);
@@ -238,7 +250,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
             horaInicio: agenda.horaInicio,
             horaFin: agenda.horaFin,
             prestaciones: agenda.tipoPrestaciones,
-            descripcion: agenda.profesionales.length ? agenda.profesionales[0].nombre : '',
+            descripcion: agenda.profesionales && agenda.profesionales[0] ? agenda.profesionales[0].nombre : '',
             _value: agenda,
             start: this.aproximar(start_time, false),
             end: this.aproximar(end_time, true)
@@ -249,7 +261,7 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         return item;
     }
 
-    check(item, espacio) {
+    espacioOcupado(item, espacio) {
         let index = espacio._items.findIndex(el => {
             return el.time >= item.start;
         });
@@ -303,7 +315,11 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     showInfo(idAgenda: string) {
-        this.idInfoAgenda = idAgenda;
+        if (idAgenda && idAgenda.length > 0) {
+            this.idInfoAgenda = idAgenda;
+        } else {
+            this.idInfoAgenda = '0';
+        }
     }
 
 }

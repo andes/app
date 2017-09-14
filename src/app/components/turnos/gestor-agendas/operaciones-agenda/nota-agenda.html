@@ -31,7 +31,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <plex-text label="Observaciones" name="nota" [(ngModel)]="nota"></plex-text>
+            <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()"></plex-text>
         </div>
     </div>
 

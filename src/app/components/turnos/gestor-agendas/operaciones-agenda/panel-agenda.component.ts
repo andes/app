@@ -56,7 +56,7 @@ export class PanelAgendaComponent implements OnInit {
         if (this.editaAgendaPanel.espacioFisico) {
             this.espaciosList = [this.editaAgendaPanel.espacioFisico];
             let query = {
-                nombre: this.editaAgendaPanel.espacioFisico.servicio.nombre,
+                nombre: (this.editaAgendaPanel.espacioFisico ? this.editaAgendaPanel.espacioFisico.nombre : ''),
                 limit: 10
                 // organizacion: this.auth.organizacion._id
             };
@@ -85,7 +85,6 @@ export class PanelAgendaComponent implements OnInit {
                 espacioFisico = null;
             }
 
-
             let patch = {
                 'op': 'editarAgenda',
                 'profesional': profesional,
@@ -94,7 +93,7 @@ export class PanelAgendaComponent implements OnInit {
 
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
                 this.agenda = resultado;
-                this.showEditarAgenda = false;
+                // this.showEditarAgenda = false;
                 this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
                 this.actualizarEstadoEmit.emit(true);
             });
@@ -175,7 +174,8 @@ export class PanelAgendaComponent implements OnInit {
 
         // TODO: ver límite
         let query: any = {
-            limit: 20
+            limit: 20,
+            activo: true
         };
 
         if (agenda.espacioFisico) {
@@ -202,16 +202,12 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     selectEspacio($data) {
-        this.agenda.espacioFisico = $data;
         this.validarSolapamientos('espacioFisico');
         if (this.alertas.length === 0) {
-            this.plex.confirm('Cambiar espacio físico', '¿Confirmar?').then((respuesta) => {
-                if (respuesta === true) {
-                    this.guardarAgenda(this.agenda);
-                } else {
-                    return false;
-                }
-            });
+
+            this.agenda.espacioFisico = $data;
+            this.guardarAgenda(this.agenda);
+
         }
     }
 
@@ -225,12 +221,10 @@ export class PanelAgendaComponent implements OnInit {
         let iniAgenda, finAgenda;
 
         if (tipo === 'profesionales') {
-
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({ 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
-
+                    this.serviceAgenda.get({'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual

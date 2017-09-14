@@ -44,7 +44,8 @@ import {
 
 @Component({
     selector: 'gestor-agendas',
-    templateUrl: 'gestor-agendas.html'
+    templateUrl: 'gestor-agendas.html',
+    styleUrls: ['./gestor-agendas.scss']
 })
 
 export class GestorAgendasComponent implements OnInit {
@@ -91,6 +92,8 @@ export class GestorAgendasComponent implements OnInit {
     public btnDarTurnos = false;
     public btnCrearAgendas = false;
 
+    public permisos: any;
+
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
 
@@ -107,14 +110,15 @@ export class GestorAgendasComponent implements OnInit {
         public auth: Auth) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:?').length > 0;
+        this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
             this.redirect('inicio');
         };
 
         // Verifica permisos para dar turnos
-        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
 
         // Verifica permisos para crear agenda
         this.btnCrearAgendas = this.auth.getPermissions('turnos:crearAgendas:?').length > 0;
@@ -137,6 +141,7 @@ export class GestorAgendasComponent implements OnInit {
         this.fechaHasta = new Date();
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
         this.fechaHasta = moment(this.fechaHasta).startOf('day');
+
         // Iniciamos la búsqueda
         this.parametros = {
             fechaDesde: this.fechaDesde,
@@ -188,14 +193,12 @@ export class GestorAgendasComponent implements OnInit {
         }
 
         // Completo params con la info que ya tengo
-
         this.getAgendas(this.parametros);
 
     };
 
     getAgendas(params: any) {
         this.serviceAgenda.get(params).subscribe(agendas => {
-            // this.agendasSeleccionadas = [];
             this.turnosSuspendidos = [];
             agendas.forEach(agenda => {
                 let count = 0;
@@ -228,9 +231,11 @@ export class GestorAgendasComponent implements OnInit {
         let fecha = moment().format();
 
         if (this.hoy) {
-            this.fechaDesde = moment(fecha).startOf('day').toDate();
-            this.fechaHasta = moment(fecha).endOf('day').toDate();
+            this.fechaDesde = fecha;
+            this.fechaHasta = fecha;
         }
+        this.fechaDesde = moment(this.fechaDesde).startOf('day').toDate();
+        this.fechaHasta = moment(this.fechaHasta).endOf('day').toDate();
 
         const params = {
             fechaDesde: this.fechaDesde,
@@ -353,14 +358,7 @@ export class GestorAgendasComponent implements OnInit {
         }
     }
 
-    // loadEspaciosFisicos(event) {
-    //     this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    // }
-
     loadEdificios(event) {
-        // this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
-        //     event.callback(respuesta.edificio);
-        // });
         if (event.query) {
             let query = {
                 edificio: event.query,
@@ -375,8 +373,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
 
         let listaEspaciosFisicos = [];
         if (event.query) {
@@ -446,19 +442,6 @@ export class GestorAgendasComponent implements OnInit {
                     this.showTurnos = true;
                 }
             }
-            // else {
-            //     // Reseteo el panel de la derecha
-            //     this.showEditarAgendaPanel = false;
-            //     this.showAgregarNotaAgenda = false;
-            //     this.showAgregarSobreturno = false;
-            //     this.showRevisionAgenda = false;
-            //     this.showTurnos = false;
-            //     this.showReasignarTurno = false;
-            //     this.showReasignarTurnoAutomatico = false;
-            //     this.showListadoTurnos = false;
-            //     this.showBotonesAgenda = true;
-            // }
-
 
         });
 

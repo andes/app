@@ -11,7 +11,7 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
-    styleUrls: ['../../../styles/turnos/dashboard.scss'],
+    styleUrls: ['turnos-paciente.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
@@ -19,20 +19,12 @@ export class TurnosPacienteComponent implements OnInit {
 
     _paciente: IPaciente;
     _operacion: string;
-    tituloOperacion: string;
+    tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente = [];
 
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
-        switch (this._operacion) {
-            case 'anulacionTurno':
-                this.tituloOperacion = 'Liberar Turno';
-                break;
-            case 'registrarAsistencia':
-                this.tituloOperacion = 'Registro de Asistencia del Paciente';
-                break;
-        }
     }
     get operacion(): string {
         return this._operacion;
@@ -71,12 +63,14 @@ export class TurnosPacienteComponent implements OnInit {
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patchMultiple(turno.agenda_id, patch).subscribe(resultado => {
             let agenda = resultado;
+
             let datosTurno = { pacienteId: this._paciente.id };
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos;
                 switch (operacion) {
                     case 'darAsistencia':
                         mensaje = 'Se registro la asistencia del paciente';
+                        tipoToast = 'success';
                         break;
                     case 'sacarAsistencia':
                         mensaje = 'Se registro la inasistencia del paciente';

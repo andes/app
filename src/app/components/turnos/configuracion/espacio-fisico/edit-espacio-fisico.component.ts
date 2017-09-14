@@ -85,7 +85,7 @@ export class EditEspacioFisicoComponent implements OnInit {
 
         let estOperation: Observable<IEspacioFisico>;
         modelo.organizacion = this.auth.organizacion;
-        modelo.estado = this.modelo.estado.id;
+        modelo.estado = this.modelo.estado ? this.modelo.estado.id : 'disponible';
 
         if (this.espacioFisicoHijo) {
             modelo.id = this.espacioFisicoHijo.id;

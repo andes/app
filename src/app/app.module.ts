@@ -1,5 +1,4 @@
 
-
 /*
 @jgabriel | 04-03-2017
 
@@ -30,6 +29,7 @@ import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { MapsComponent } from './utils/mapsComponent';
+import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
@@ -182,6 +182,8 @@ import { ObservacionesComponent } from './modules/rup/components/elementos/obser
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
+import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -225,6 +227,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: TensionArterialComponent, key: 'TensionArterialComponent' },
     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
+    { component: AutocitadoComponent, key: 'AutocitadoComponent' },
 
 ];
 
@@ -253,7 +256,8 @@ const RUP_COMPONENTS = [
     TemperaturaComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
-    TensionSistolicaComponent
+    TensionSistolicaComponent,
+    AutocitadoComponent
 ];
 
 // Locales
@@ -278,7 +282,9 @@ export let RUPRegistry = {
     'TensionDiastolicaComponent': TensionDiastolicaComponent,
     'TensionSistolicaComponent': TensionSistolicaComponent,
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
-    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent
+    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
+    'AutocitadoComponent': AutocitadoComponent
+
 };
 
 let RUPComponentsArray = [];
@@ -319,6 +325,7 @@ for (let key in RUPRegistry) {
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
+        PermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,

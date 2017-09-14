@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <filtros-mapa-espacio-fisico [agendaSeleccionada]="agenda" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+    <filtros-mapa-espacio-fisico (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
     <mapa-espacio-fisico [agendaSeleccionada]="agenda" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
 
     <!-- Botones -->

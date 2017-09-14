@@ -46,12 +46,13 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     paneles: any[] = [];
 
     autorizado: any;
+    permisosRequeridos = 'reasignarTurnos';
 
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:' + this.permisosRequeridos + ':?').length > 0;
     }
 
     actualizar() {

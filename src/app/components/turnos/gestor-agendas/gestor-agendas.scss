@@ -1,0 +1,20 @@
+td:not(:first) {
+    min-width: 200px !important;
+}
+
+.datos-agenda:not(span),
+.tipo-prestacion,
+.fechas {
+    font-size: 0.9rem;
+}
+
+.nombres-profesionales {
+    div {
+        font-size: 0.9rem;
+    }
+}
+
+span.badge,
+span.badge-default {
+    font-size: 0.6rem;
+}

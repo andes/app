@@ -15,6 +15,9 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 @Component({
     selector: 'planificar-agenda',
     templateUrl: 'planificar-agenda.html',
+    styleUrls: [
+        'planificar-agenda.scss'
+    ]
 })
 export class PlanificarAgendaComponent implements OnInit {
     subscriptionID: any;
@@ -52,6 +55,7 @@ export class PlanificarAgendaComponent implements OnInit {
     espacioNuevo: IEspacioFisico;
     espaciosFisicosEfector = [];
 
+    showBloque = true;
     showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
@@ -587,7 +591,7 @@ export class PlanificarAgendaComponent implements OnInit {
         if (remaider !== 0) {
             if (remaider < 7) {
                 date.setMinutes(m - remaider);
-            }  else {
+            } else {
                 date.setMinutes(m + (15 - remaider));
             }
         }
@@ -620,7 +624,7 @@ export class PlanificarAgendaComponent implements OnInit {
         // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.ServicioAgenda.get({ idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicaada', 'pausada'] }).
+                this.ServicioAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicaada', 'pausada'] }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
@@ -643,11 +647,21 @@ export class PlanificarAgendaComponent implements OnInit {
                         return agenda.id !== this.modelo.id || !this.modelo.id;
                     });
                     if (agds.length > 0) {
-                        let ef = this.modelo.espacioFisico.nombre + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
-                        alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
-                        if (this.alertas.indexOf(alerta) < 0) {
-                            this.alertas = [... this.alertas, alerta];
+                        if (this.modelo.espacioFisico && this.modelo.espacioFisico.nombre) {
+                            // let ef = this.modelo.espacioFisico.nombre + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
+                            let ef = this.modelo.espacioFisico.nombre;
+                            if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
+                                ef = ef + ' (' + this.modelo.espacioFisico.servicio.nombre + ' )';
+                            }
+                            if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
+                                ef = ef + ' (' + this.modelo.espacioFisico.edificio.descripcion + ')';
+                            }
+                            alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
+                            if (this.alertas.indexOf(alerta) < 0) {
+                                this.alertas = [... this.alertas, alerta];
+                            }
                         }
+
                     }
                 });
         }
@@ -746,13 +760,15 @@ export class PlanificarAgendaComponent implements OnInit {
 
     mapaEspacioFisico() {
         this.showMapaEspacioFisico = true;
+        this.showBloque = false;
     }
 
     espaciosChange(agenda) {
 
         // TODO: ver límite
         let query: any = {
-            limit: 20
+            limit: 20,
+            activo: true
         };
 
         if (agenda.espacioFisico) {
@@ -781,7 +797,11 @@ export class PlanificarAgendaComponent implements OnInit {
     selectEspacio($data) {
         this.modelo.espacioFisico = $data;
         this.validarTodo();
-
+        if (this.modelo.id === '0') {
+            delete this.modelo.id;
+        };
+        this.showMapaEspacioFisico = false;
+        this.showAgenda = true;
     }
 
     onSave($event, clonar) {

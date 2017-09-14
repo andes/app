@@ -1,12 +1,12 @@
 <table class="mapa-espacios table table-striped table-hover">
     <tr class="header">
         <td>Espacio Físico</td>
-        <td *ngFor="let h of headers" [colSpan]="h.colspan">
-            <span>{{h.text}}</span>
+        <td *ngFor="let header of headers" [colSpan]="header.colspan" class="text-center">
+            <small>{{header.hora}}</small>
         </td>
     </tr>
 
-    <tr class="hover" *ngFor="let espacio of matrix" class="item" (click)=onRowClick(espacio)>
+    <tr class="hover" *ngFor="let espacio of matrix" class="">
         <td>
             <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio.descripcion}}"
                 titlePosition="right"><strong>{{espacio._value.nombre}}</strong></small><br>
@@ -14,12 +14,12 @@
             <span *ngFor="let eq of espacio._value.equipamiento" class="badge badge-info">{{eq.term}}</span>
         </td>
         <td (mouseenter)="showInfo(agenda.id)" (mouseleave)="showInfo(false)" *ngFor="let agenda of espacio._items" [colSpan]="agenda.colspan"
-            [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible, 'selected': agenda.id === agendaSeleccionada.id  }"
-            class="text-white">
-            <ng-container *ngIf="idInfoAgenda === agenda.id && agendaSeleccionada.id == agenda.id">
+            [ngClass]="{'ocupado': agenda.id, 'disponible': agenda.disponible, 'selected': (agenda.id === '0' || agenda.id === agendaSeleccionada.id) }"
+            class="text-white" (click)="seleccionarEspacio(espacio, agenda.disponible)">
+            <ng-container *ngIf="idInfoAgenda === agenda.id">
                 <div class="info-agenda">
                     <div class="texto-agenda">
-                        <b>{{agenda.horaInicio | date: 'HH:mm' }} a {{agenda.horaFin | date: 'HH:mm' }} hs</b><br> {{agenda.prestaciones
+                        <b>{{agenda.horaInicio | date: 'HH:mm' }} a {{agenda.horaFin | date: 'HH:mm'}} hs</b><br> {{agenda.prestaciones
                         | enumerar:['term']}} <br>
                         <small *ngIf="agenda.profesionales?.length > 0"><b>Prof:</b> {{agenda.profesionales | enumerar:['apellido', 'nombre']}}</small>
                     </div>
@@ -27,11 +27,9 @@
                 </div>
                 <div class="tip-border"></div>
             </ng-container>
-            <div class="ml-0 mr-0 text-center" *ngIf="agenda.id" (click)="onItemClick(agenda)">
+            <div class="ml-0 mr-0 text-center" *ngIf="agenda.id">
                 <div class="mdi mdi-information mdi-24px"></div>
             </div>
         </td>
     </tr>
-
-
 </table>

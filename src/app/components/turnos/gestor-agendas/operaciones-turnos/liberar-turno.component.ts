@@ -25,8 +25,29 @@ export class LiberarTurnoComponent implements OnInit {
 
     public reasignar: any = {};
 
+    public motivoLiberacion: any[] = [{
+        id: 1,
+        nombre: 'edilicia'
+    }, {
+        id: 2,
+        nombre: 'profesional'
+    },
+    {
+        id: 3,
+        nombre: 'organizacion'
+    },
+    {
+        id: 4,
+        nombre: 'paciente'
+    }];
+
+    public motivoLiberacionSelect = {
+        select: null
+    };
+
     ngOnInit() {
         this.pacientes = this.turnosSeleccionados;
+        this.motivoLiberacionSelect.select = this.motivoLiberacion[1];
     }
 
     liberarTurno() {
@@ -75,12 +96,8 @@ export class LiberarTurnoComponent implements OnInit {
         }
     }
 
-    reasignarTurno(paciente: any) {
-        // TODO: redirección con el paciente a Dar turnos ?
+    reasignarTurno(turno: ITurno) {
         // this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
-
-        // this.liberarTurno();
-
         // this.reasignarTurnoLiberado.emit(this.reasignar);
     }
 
