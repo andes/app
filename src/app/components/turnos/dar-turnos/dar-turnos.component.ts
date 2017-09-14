@@ -1,17 +1,18 @@
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
+import { environment } from './../../../environment';
+import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
-import { environment } from './../../../../environments/environment';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import * as moment from 'moment';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
+import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
 
 // Interfaces
+import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
@@ -26,14 +27,16 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 import { ProfesionalService } from '../../../services/profesional.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
-import { PrestacionPacienteService } from '../../../services/rup/prestacionPaciente.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
 import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
 
 @Component({
     selector: 'dar-turnos',
-    templateUrl: 'dar-turnos.html'
+    templateUrl: 'dar-turnos.html',
+    styleUrls: [
+        'dar-turnos.scss'
+    ]
 })
 
 export class DarTurnosComponent implements OnInit {
@@ -129,7 +132,7 @@ export class DarTurnosComponent implements OnInit {
         public serviceTurno: TurnoService,
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public servicioPrestacionPaciente: PrestacionPacienteService,
+        public servicioPrestacionPaciente: PrestacionesService,
         private llaveTipoPrestacionService: LlavesTipoPrestacionService,
         public smsService: SmsService,
         public plex: Plex,
@@ -140,7 +143,7 @@ export class DarTurnosComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
-        // this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
@@ -148,6 +151,14 @@ export class DarTurnosComponent implements OnInit {
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
+
+        // Filtra las búsquedas en localStorage para que muestre sólo las del usuario logueado
+        if (this.busquedas.length > 0) {
+            this.busquedas = this.busquedas.filter(busqueda => {
+                return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento;
+            });
+        }
+
     }
 
     loadTipoPrestaciones(event) {
@@ -326,7 +337,8 @@ export class DarTurnosComponent implements OnInit {
     filtrar() {
         let search = {
             'tipoPrestacion': this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion : null,
-            'profesional': this.opciones.profesional ? this.opciones.profesional : null
+            'profesional': this.opciones.profesional ? this.opciones.profesional : null,
+            'usuario': this.auth.usuario
         };
         if (this.busquedas.length === 10) {
             this.busquedas.shift();
@@ -337,14 +349,14 @@ export class DarTurnosComponent implements OnInit {
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
                     (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
-            console.log('index ', index);
             if (index < 0) {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
+            this.actualizar('');
         }
 
-        this.actualizar('');
+        // this.actualizar('');
     }
 
     /**
@@ -371,6 +383,7 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
+
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                 this.mostrarCalendario = true;
             } else {
@@ -619,7 +632,7 @@ export class DarTurnosComponent implements OnInit {
     seleccionarUltimoTurno(turno) {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
-        this.opciones.profesional = turno.profesionales;
+        this.opciones.profesional = turno.profesionales[0];
         if (!actualizarProfesional && this.eventoProfesional) {
             this.eventoProfesional.callback(this.opciones.profesional);
         }
@@ -754,8 +767,11 @@ export class DarTurnosComponent implements OnInit {
                     });
                 });
             });
+            this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
+                return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
+            });
         });
-        this.ultimosTurnos = ultimosTurnos;
+
     }
 
     actualizarTelefono(pacienteActualizar) {
@@ -937,13 +953,7 @@ export class DarTurnosComponent implements OnInit {
             });
     }
 
-    buscarPaciente() {
-        this.showDarTurnos = false;
-        this.mostrarCalendario = false;
-        this.pacientesSearch = true;
-    }
-
-    public tieneTurnos(bloque: IBloque): boolean {
+    tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
     }
@@ -1043,6 +1053,12 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+    buscarPaciente() {
+        this.showDarTurnos = false;
+        this.mostrarCalendario = false;
+        this.pacientesSearch = true;
+    }
+
     cancelar() {
         this.showDarTurnos = false;
         this.volverAlGestor.emit(true);
@@ -1050,6 +1066,7 @@ export class DarTurnosComponent implements OnInit {
 
     volver() {
         this.showDarTurnos = false;
+        this.cancelarDarTurno.emit(true);
         this.buscarPaciente();
     }
 

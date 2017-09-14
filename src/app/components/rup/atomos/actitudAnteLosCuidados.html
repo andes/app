@@ -1,6 +1,0 @@
-<plex-int *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[elementoRUP.key]" name="ActitudAnteLosCuidados" label="Actitud ante los cuidados" suffix=" % " min="0" max="100" (change)="devolverValores()">
-</plex-int>
-<p *ngIf="soloValores">
-    <label><b>Actitud ante los cuidados</b></label>
-    <br /> {{data[elementoRUP.key]}} %
-</p>

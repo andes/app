@@ -49,12 +49,14 @@ export class ReasignarTurnoComponent implements OnInit {
     public motivoSuspensionSelect = { select: null };
     public seleccionadosSMS = [];
     public suspendio = false;
-    autorizado: any;
+    public autorizado: any;
+    private permisosRequeridos = 'reasignarTurnos';
+
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
+        this.autorizado = this.auth.check('turnos:' + this.permisosRequeridos);
         this.showReasignarTurno = true;
         this.actualizar();
     }
