@@ -72,7 +72,7 @@ export class PlanificarAgendaComponent implements OnInit {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
             this.efector = this.auth.organizacion;
-            this.loadEspaciosFisicos('', this.efector);
+            // this.loadEspaciosFisicos('', this.efector);
         }
     }
 
@@ -87,10 +87,10 @@ export class PlanificarAgendaComponent implements OnInit {
                 if (this.modelo.espacioFisico.organizacion._id !== this.auth.organizacion.id) {
                     this.efector = this.modelo.espacioFisico.organizacion;
                     this.efector['id'] = this.efector._id;
-                    this.tipoEspacioFisico = 'otroEfector';
+                    this.tipoEspacioFisico = 'otros';
                 }
             }
-            this.loadEspaciosFisicos('', this.efector);
+            // this.loadEspaciosFisicos('', this.efector);
         }
         // this.espaciosFisicosEfector = [this.modelo.espacioFisico];
         if (!this.modelo.intercalar) {
@@ -214,28 +214,33 @@ export class PlanificarAgendaComponent implements OnInit {
         switch (tipoFiltro) {
             case 'propios':
                 this.efector = this.auth.organizacion;
-                this.loadEspaciosFisicos(this.modelo.espacioFisico, this.efector);
+                // this.loadEspaciosFisicos(this.modelo.espacioFisico, this.efector);
                 break;
-            case 'otroEfector':
+            case 'otros':
                 this.espaciosFisicosEfector = [];
                 break;
-            case 'registrados':
-                this.loadEspaciosFisicos(this.modelo.espacioFisico);
-                break;
-            case 'nuevo':
-                this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
-                break;
+            // case 'registrados':
+            //     this.loadEspaciosFisicos(this.modelo.espacioFisico);
+            //     break;
+            // case 'nuevo':
+            //     this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
+            //     break;
         }
 
     }
 
-    loadEspacioFisicoPorFiltro(event) {
-        let query = {
-            organizacion: this.efector.id,
-        };
+    loadEspaciosFisicos(event) {
+        let query = {};
         let listaEspaciosFisicos = [];
         if (event.query) {
+
             query['nombre'] = event.query;
+            if (this.tipoEspacioFisico === 'otros') {
+                query['sinOrganizacion'] = true;
+            } else {
+                query['organizacion'] = this.auth.organizacion.id;
+            }
+
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.modelo.espacioFisico) {
                     listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
@@ -249,23 +254,23 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-    loadEspaciosFisicos(nombreEspacio: string, efector?) {
-        let query;
-        if (!efector) {
-            // Corresponde a los espacios físicos cargados manualmente sin efector asociado
-            query = {
-                'sinOrganizacion': true
-            };
-        } else {
-            query = { 'organizacion': efector.id };
-        }
-        if (nombreEspacio) {
-            query['nombre'] = nombreEspacio;
-        }
-        this.servicioEspacioFisico.get(query).subscribe(result => {
-            this.espaciosFisicosEfector = [...result];
-        });
-    }
+    // loadEspaciosFisicos(nombreEspacio: string, efector?) {
+    //     let query;
+    //     if (!efector) {
+    //         // Corresponde a los espacios físicos cargados manualmente sin efector asociado
+    //         query = {
+    //             'sinOrganizacion': true
+    //         };
+    //     } else {
+    //         query = { 'organizacion': efector.id };
+    //     }
+    //     if (nombreEspacio) {
+    //         query['nombre'] = nombreEspacio;
+    //     }
+    //     this.servicioEspacioFisico.get(query).subscribe(result => {
+    //         this.espaciosFisicosEfector = [...result];
+    //     });
+    // }
 
     horaInicioPlus() {
         return moment(this.modelo.horaInicio).add(30, 'minutes');
@@ -591,7 +596,7 @@ export class PlanificarAgendaComponent implements OnInit {
         if (remaider !== 0) {
             if (remaider < 7) {
                 date.setMinutes(m - remaider);
-            }  else {
+            } else {
                 date.setMinutes(m + (15 - remaider));
             }
         }
@@ -932,6 +937,11 @@ export class PlanificarAgendaComponent implements OnInit {
     onReturn(agenda: IAgenda): void {
         this.showAgenda = true;
         this.cargarAgenda(agenda);
+    }
+
+    cerrarMapaPlanificar() {
+        this.showMapaEspacioFisico = false;
+        this.showBloque = true;
     }
 }
 
