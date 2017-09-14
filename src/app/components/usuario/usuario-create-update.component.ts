@@ -25,7 +25,7 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     // Propiedades públicas
     public unFiltro: any;
     public filtros: any[] = [];
-    public documento = '';
+    public documento: number;
     public roles: any[] = [];
     public textoLibre: string = null;
     public disableBuscar = false;
@@ -98,9 +98,9 @@ export class UsuarioCreateUpdateComponent implements OnInit {
     }
 
     buscarUsuario() {
-        this.usuarioService.getByIdAndOrg(this.documento, this.auth.organizacion.id).subscribe(user => {
+        this.usuarioService.getByDni(this.documento).subscribe(user => {
             if (user.length < 1) {
-                this.usuarioService.getUser(this.documento).subscribe(res => {
+                this.usuarioService.getUser(this.documento.toString()).subscribe(res => {
                     this.userModel.nombre = res.givenName;
                     this.userModel.apellido = res.sn;
                     this.userModel.usuario = res.uid;
