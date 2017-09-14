@@ -62,4 +62,25 @@ export let PrioridadesPrestacion: IEnum = {
         nombre: 'Emergencia',
         class: 'warning'
     }
+
+};
+
+export let TiposDeTurnos: IEnum = {
+    'delDia': {
+        nombre: 'Del día',
+        class: 'info'
+    },
+    'programado': {
+        nombre: 'Programado',
+        class: 'info'
+    },
+    'gestion': {
+        nombre: 'De gestión',
+        class: 'info'
+    },
+    'profesional': {
+        nombre: 'Del profesional',
+        class: 'info'
+    }
+
 };
