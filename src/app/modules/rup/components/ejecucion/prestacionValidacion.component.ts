@@ -87,14 +87,13 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-                // // de los registros a
-                // let planes = this.registros.filter(r => r.tipo === 'planes');
-
-                // this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                //     this.prestacion = prestacion;
-                // }, (err) => {
-                //     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                // });
+                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+                console.log(planes);
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                     this.prestacion = prestacion;
+                 }, (err) => {
+                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                 });
             }
         });
     }
