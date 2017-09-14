@@ -325,13 +325,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // TODO: Chequear si es un plan el registro se debe cargar como una solicitud
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-        let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, false);
-
+        let esSolicitud = false;
+        // Si es un plan seteamos el true para que nos traiga el elemento rup por default
+        if (this.tipoBusqueda === 'planes') {
+         esSolicitud = true;
+        }
+        let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
         let objectId = new ObjectID();
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         // verificamos si es un plan. Si es plan seteamos esSolicitud en true.
-        if (this.tipoBusqueda === 'planes') {
+        if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
         }
 

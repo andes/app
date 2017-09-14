@@ -1,3 +1,4 @@
+import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
@@ -59,6 +60,7 @@ export class RUPComponent implements OnInit {
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public auth: Auth,
+        public serviceProfesional: ProfesionalService,
     ) { }
 
     ngOnInit() {
