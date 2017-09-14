@@ -15,15 +15,6 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
         this.registro.valor = (this.registro.valor) ? this.registro.valor : {};
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
-            // if (this.registro.valor.prestacionSeleccion) {
-            //     let valorActual = this.prestacion.ejecucion.registros.filter(r => r.valor.prestacionSeleccion);
-            //     this.tiposPrestacion.forEach(element => {
-            //         if (element.conceptId === valorActual[0].valor.prestacionSeleccion.conceptId) {
-            //             this.registro.valor.prestacionSeleccion = element;
-            //         }
-            //     });
-
-            // }
         });
     }
 }
