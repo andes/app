@@ -79,7 +79,7 @@
                                                 <a href="javascript:void(0);" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
-                                                <div>
+                                                <div *ngIf="prestacion.ejecucion.registros &&  prestacion.ejecucion.registros.length > 1">
                                                     <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items"></plex-dropdown>
                                                 </div>
                                             </div>

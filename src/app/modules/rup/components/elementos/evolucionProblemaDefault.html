@@ -1,5 +1,10 @@
 <div *ngIf="!soloValores">
     <div *ngIf="elementoRUP && registro">
+        <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones">
+            <div class="col">
+                <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaInicio | fecha}} </strong>
+            </div>
+        </div>
         <div class="row">
             <!--ESTADO DEL PROBLEMA-->
             <div class="col">
@@ -9,9 +14,9 @@
             </div>
         </div>
         <!--INICIO ESTIMADO DEL PROBLEMA-->
-        <div class="row">
+        <div class="row" *ngIf="!hallazgoHudsCompleto">
             <!--FECHA ESTIMADA-->
-            <div class="col" *ngIf="!hallazgoHudsCompleto">
+            <div class="col">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
                     <plex-int class="col-5 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
@@ -56,7 +61,7 @@
 
 </div>
 <p *ngIf="soloValores">
-    <label>Fecha inicio aproximada:</label> {{registro.valor.fechaInicio | date}}
+    <label>Fecha inicio aproximada:</label> {{registro.valor.fechaInicio | fecha}}
     <label>Estado actual: </label> {{ registro.valor.estado }}
     <label>Evolución: </label> {{ registro.valor.evolucion}}
 </p>
