@@ -18,22 +18,22 @@
 
                         <!--Filtros-->
                         <div class="row">
-                            <div class="col-3">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="col-3">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="col-4">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-8' : 'col-4'}}">
                                 <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
                                     name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
-                            <div class="col-2 text-right">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-4' : 'col-2'}} text-right">
                                 <label><!--Spacer-->&nbsp;</label>
                                 <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                             </div>
@@ -70,7 +70,7 @@
                             <th></th>
                             <th>Fecha y Hora</th>
                             <th>Tipos de prestación</th>
-                            <th class="text-right">Estado</th>
+                            <th class="text-right estado">Estado</th>
                         </thead>
                         <tbody>
                             <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda)}">
@@ -79,7 +79,7 @@
                                     <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
-                                    <div>{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
+                                    <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
                                         <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date:
                                         'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs - <i class="mdi mdi-timelapse"
                                             title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
@@ -91,15 +91,15 @@
                                     </div>
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
-                                    <div *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
-                                    <div>
+                                    <div class="tipo-prestacion" *ngIf="agenda.tipoPrestaciones.length > 0">{{ agenda.tipoPrestaciones | enumerar:['term']:'/' }}</div>
+                                    <div class="nombres-profesionales">
                                         <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                         <ng-container *ngIf="agenda.profesionales">
                                             <div *ngIf="agenda.profesionales.length > 0">{{ agenda.profesionales | enumerar:['apellido','nombre'] }}</div>
                                         </ng-container>
                                     </div>
                                 </td>
-                                <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle">
+                                <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle estado">
                                     <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                     <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
                                     <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
@@ -150,8 +150,8 @@
 
     <!--Componentes-->
     <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
     <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
+    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
 
     <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
     <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
