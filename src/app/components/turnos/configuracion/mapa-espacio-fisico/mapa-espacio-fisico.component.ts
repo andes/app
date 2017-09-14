@@ -18,10 +18,12 @@ import * as moment from 'moment';
 })
 export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     @Input() espacioTable: IEspacioFisico[] = [];
-    @Input() opciones: any;
     @Input() agendaSeleccionada: IAgenda = null;
+    @Input() opciones: any;
+    @Input() showBotonCancelar = false;
 
     @Output() onEspacioClick = new EventEmitter<IEspacioFisico>();
+    @Output() onCancelEmit = new EventEmitter<boolean>();
 
     @Input() agendasTable: IAgenda[] = [];
 
@@ -320,6 +322,10 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         } else {
             this.idInfoAgenda = '0';
         }
+    }
+
+    cerrarMapa(event) {
+        this.onCancelEmit.emit(true);
     }
 
 }
