@@ -1,36 +1,36 @@
-<!-- <ng-container *ngIf="!soloValores">
+<ng-container *ngIf="!soloValores">
     <label for="observaciones">
         Motivo de solicitud:
     </label>
-   
-    <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="data[elementoRUP.key].motivo" (change)="devolverValores()"></plex-text>
 
-    <ng-container *ngIf="puedeAutocitar">
+    <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="registro.valor.motivo"></plex-text>
+
+    <!-- <ng-container *ngIf="puedeAutocitar">
         <plex-bool [(ngModel)]="data[elementoRUP.key].autocitado" (change)="cambioAutocitado()" name="autocitado" label="¿Autocitado?" type="slide"></plex-bool>
-    </ng-container>
+    </ng-container> -->
 
-    <plex-select [(ngModel)]="data[elementoRUP.key].profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es" *ngIf="!this.data[this.elementoRUP.key].autocitado">
+    <plex-select [(ngModel)]="registro.valor.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
+        labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
     </plex-select>
 </ng-container>
 
-
 <div *ngIf="soloValores">
-    <p *ngIf="data[elementoRUP.key].autocitado">
+    <!-- <p *ngIf="data[elementoRUP.key].autocitado">
         <b> Autocitado: </b> Si
-    </p>
+    </p> -->
     <p>
-        <b> Motivo de solicitud: </b> {{data[elementoRUP.key].motivo}}
+        <b> Motivo de solicitud: </b> {{registro.valor.motivo}}
     </p>
 
-    <div *ngIf="!data[elementoRUP.key].autocitado && data[elementoRUP.key].profesionales">
+    <div *ngIf="registro.valor.profesionales">
 
         <p>
             <b>Profesional/es:</b>
             <br />
-            <span *ngFor="let profesional of data[elementoRUP.key].profesionales">
+            <span *ngFor="let profesional of registro.valor.profesionales">
                 {{profesional.apellido}}, {{profesional.nombre}}
                 <br />
             </span>
         </p>
     </div>
-</div> -->
+</div> 
