@@ -19,8 +19,8 @@ export class UsuarioService {
         return this.server.get(this.usuarioUrl + '/ldap/' + id);
     }
 
-    getByIdAndOrg(user: string, organizacion: string): Observable<any> {
-        return this.server.get(this.usuarioUrl + '/local/' + organizacion + '/' + user);
+    getByDni(dni: Number): Observable<any> {
+        return this.server.get(this.usuarioUrl + '/' + dni);
     }
 
     save(usuario: any): Observable<any> {
