@@ -82,26 +82,15 @@
                                 </div>
                             </div>
                             <div class="row" *ngIf="tipoEspacioFisico!=='nuevo'">
-                                <!--<div class="col-4">
-                                    <plex-select [(ngModel)]="modelo.edificio" name="modelo.edificio" (getData)="loadEdificios($event)" label="Edificio" labelField="descripcion">
-                                    </plex-select>
-                                </div>-->
-                                <!--
-                                <div class="col-4">
-                                    <plex-select [(ngModel)]="modelo.sector" name="modelo.sector" (getData)="loadSectores($event)" label="Sector" labelField="nombre">
-                                    </plex-select>
-                                </div>-->
-                                <div class="col-12">
-                                    <!-- Espacio Físico -->
-                                    <!--<plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspacioFisicoPorFiltro($event)" label="Espacio Físico"
-                                        placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
-                                        (change)="validarTodo()">
-                                    </plex-select>-->
+                                <div class="col-10">
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
                                         placeholder="Seleccione un espacio" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + ' (' + edificio.descripcion + ')'"
                                         (change)="validarTodo()">
                                     </plex-select>
-                                    <!-- <plex-button type="info" icon="map" title="Ver mapa" (click)="mapaEspacioFisico()"></plex-button> -->
+                                </div>
+
+                                <div class="col-2 boton-mapa-container">
+                                    <plex-button type="info" icon="map" title="Ver mapa" titlePosition="left" (click)="mapaEspacioFisico()"></plex-button>
                                 </div>
                             </div>
                             <div class="row" *ngIf="tipoEspacioFisico=='nuevo'">
@@ -114,7 +103,7 @@
                     </div>
 
                     <!--Lista de Bloques-->
-                    <div *ngIf="modelo.bloques && modelo.bloques.length>0" class="pt-3">
+                    <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length>0" class="pt-3">
                         <fieldset>
                             <legend>Bloques
                                 <plex-button class="float-right" icon="plus" type="success btn-sm" title="Agregar Bloque" (click)="addBloque()">
@@ -261,8 +250,8 @@
                             <div *ngIf="!elementoActivo.citarPorBloque " class="col-4 ">
                                 <plex-bool [(ngModel)]="elementoActivo.pacienteSimultaneos " label="Pacientes simultáneos " name="pacienteSimultaneos "></plex-bool>
                             </div>
-                            <div *ngIf="elementoActivo.pacienteSimultaneos " class="col-4 ">
-                                <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos " name="cantidadSimultaneos " suffix="Pacientes " required>
+                            <div *ngIf="elementoActivo.pacienteSimultaneos" class="col-4">
+                                <plex-int [(ngModel)]="elementoActivo.cantidadSimultaneos" name="cantidadSimultaneos" suffix="Pacientes" required>
                                 </plex-int>
                             </div>
                         </div>-->
@@ -270,8 +259,8 @@
                             <div *ngIf="!elementoActivo.pacienteSimultaneos " class="col-4 ">
                                 <plex-bool [(ngModel)]="elementoActivo.citarPorBloque " label="Citar por segmento " name="citarPorBloque "></plex-bool>
                             </div>
-                            <div *ngIf="elementoActivo.citarPorBloque " class="col-4 ">
-                                <plex-int [(ngModel)]="elementoActivo.cantidadBloque " [max]="elementoActivo.cantidadTurnos " name="cantidadBloque " suffix="Pacientes "
+                            <div *ngIf="elementoActivo.citarPorBloque" class="col-4">
+                                <plex-int [(ngModel)]="elementoActivo.cantidadBloque" [max]="elementoActivo.cantidadTurnos" name="cantidadBloque" suffix="Pacientes "
                                     required>
                                 </plex-int>
                             </div>
@@ -279,22 +268,19 @@
                         <br>
                     </ng-container>
                 </plex-box>
-                <!-- UNDER CONSTRUCTION <plex-box *ngIf="showMapaEspacioFisico">
-                    <header>
-                        <div class="page-title">Mapa de Espacios Físicos</div>
-                    </header>
-                    <div class="row">
-                        <div class="col-12">
-                            <filtros-mapa-espacio-fisico [agendaSeleccionada]="modelo" (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+                <plex-box>
+                    <div *ngIf="showMapaEspacioFisico">
+                        <plex-box>
+                            <filtros-mapa-espacio-fisico (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
                             <mapa-espacio-fisico [agendaSeleccionada]="modelo" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
-                        </div>
+                        </plex-box>
                     </div>
-                </plex-box> -->
+                </plex-box>
             </div>
         </div>
     </section>
 
-    <footer *ngIf="autorizado && showAgenda ">
+    <footer *ngIf="autorizado && showAgenda">
         <div class="row">
             <div *ngIf="alertas.length" class="col-10" role="alert">
                 <div class="alert alert-warning mb-0">
@@ -304,13 +290,12 @@
                 </div>
             </div>
             <div class="col text-right">
-                <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" icon="content-save" label="Guardar" validateForm="true" type="success"
-                    (click)="onSave($event, false)" title="Guardar">
+                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)"
+                    title="Guardar">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" icon="mdi mdi-content-copy" label="Guardar y clonar" validateForm="true"
-                    type="primary" (click)="onSave($event, true)">
+                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
                 </plex-button>
             </div>
         </div>

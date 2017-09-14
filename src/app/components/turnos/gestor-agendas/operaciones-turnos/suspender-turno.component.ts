@@ -1,3 +1,5 @@
+import { environment } from './../../../../environment';
+import * as moment from 'moment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -91,7 +93,7 @@ export class SuspenderTurnoComponent implements OnInit {
             motivoSuspension: this.motivoSuspensionSelect.select.nombre
         };
 
-        // Patchea los turnosSeleccionados (1 o más turnos)
+        // Patchea los turnosSeleccionados (1 o más)
         this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
 
             resultado => {
@@ -103,14 +105,19 @@ export class SuspenderTurnoComponent implements OnInit {
                 }
                 this.suspendio = true;
                 this.saveSuspenderTurno.emit(this.agenda);
-                this.plex.toast('danger', 'TODO: Activar envío SMS', 'SMS', 4000);
-                // TODO: Descomentar para que envíe SMS
-                // for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-                //     this.enviarSMS(this.seleccionadosSMS[x], 'Su turno fue suspendido');
-                //     if (x === this.enviarSMS.length - 1) {
-                //         console.log('recorrio todo ', this.seleccionadosSMS);
-                //     }
-                // };
+
+                // Se envían SMS sólo en Producción
+                if (environment.production === true) {
+                    for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+
+                        let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+                        let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+                        let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+                        this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
+                    };
+                } else {
+                    this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                }
             },
             err => {
                 if (err) {
@@ -157,30 +164,50 @@ export class SuspenderTurnoComponent implements OnInit {
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
 
-    enviarSMS(turno: any, mensaje) {
-        // this.smsLoader = true;
+    // enviarSMS(turno: any, mensaje) {
+    //     let smsParams = {
+    //         telefono: turno.paciente.telefono,
+    //         mensaje: mensaje,
+    //     };
+    //     let indice = this.seleccionadosSMS.indexOf(turno);
 
-        // console.log('paciente ', paciente);
+    //     this.smsService.enviarSms(smsParams).subscribe(
+    //         resultado => {
+    //             this.resultado = resultado;
+    //             // this.smsLoader = false;
+    //             if (resultado === '0') {
+    //                 this.seleccionadosSMS[indice].smsEnviado = true;
+    //             } else {
+    //                 this.seleccionadosSMS[indice].smsEnviado = false;
+    //             }
+    //         },
+    //         err => {
+    //             if (err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    // }
 
+    enviarSMS(paciente: any, mensaje) {
         let smsParams = {
-            telefono: turno.paciente.telefono,
+            telefono: paciente.telefono,
             mensaje: mensaje,
         };
-        let indice = this.seleccionadosSMS.indexOf(turno);
-
         this.smsService.enviarSms(smsParams).subscribe(
-            resultado => {
-                this.resultado = resultado;
-                // this.smsLoader = false;
-                if (resultado === '0') {
-                    this.seleccionadosSMS[indice].smsEnviado = true;
+            sms => {
+                this.resultado = sms;
+
+                // "if 0 errores"
+                if (this.resultado === '0') {
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
                 } else {
-                    this.seleccionadosSMS[indice].smsEnviado = false;
+                    this.plex.toast('danger', 'ERROR: SMS no enviado');
                 }
             },
             err => {
                 if (err) {
-                    console.log(err);
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
+
                 }
             });
     }

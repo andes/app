@@ -48,8 +48,6 @@ export class BotonesAgendaComponent implements OnInit {
         return this._turnosSuspendidos;
     }
 
-
-
     // Mantiene la combinación de condiciones para mostrar/ocultar botones
     vistaBotones: any = {};
 
@@ -156,6 +154,7 @@ export class BotonesAgendaComponent implements OnInit {
         let puedeClonar = this.auth.getPermissions('turnos:agenda:puedeClonar:').length > 0;
         let puedeDarSobreturno = this.auth.getPermissions('turnos:agenda:puedeDarSobreturno:').length > 0;
         let puedeImprimir = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
+        let puedeReasignar = this.auth.getPermissions('turnos:agenda:puedeReasignar:').length > 0;
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantSel === 1) && this.puedoEditar() && puedeEditar,
@@ -180,7 +179,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos(),
+            reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos() && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantSel === 1) && puedeImprimir,
         };
