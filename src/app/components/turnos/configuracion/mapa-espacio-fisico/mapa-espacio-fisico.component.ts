@@ -85,7 +85,6 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         if (this.unit !== 'day') {
             this._unit = Number(this.unit);
         }
-        debugger;
         if (this.agendaCache === null || moment(this.agendaCache.horaInicio).startOf('day').format() !== moment(this.agendaSeleccionada.horaInicio).startOf('day').format()) {
             let query = {
                 fechaDesde: this.start,
