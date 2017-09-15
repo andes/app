@@ -6,13 +6,12 @@ import { Auth } from '@andes/auth';
 
 @Component({
     templateUrl: 'selectOrganizacion.html',
-    styleUrls: [],
+    styleUrls: ['selectOrganizacion.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
     public organizacionElegida;
-
     constructor(private plex: Plex, private auth: Auth, private router: Router) { }
 
     ngOnInit() {
