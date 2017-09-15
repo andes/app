@@ -28,11 +28,6 @@ export class PlanificarAgendaComponent implements OnInit {
     @Input('editaAgenda')
     set editaAgenda(value: any) {
         this._editarAgenda = value;
-        // if (this._editarAgenda.espacioFisico && (this._editarAgenda.espacioFisico.organizacion) && (this._editarAgenda.espacioFisico.organizacion._id)) {
-        //     if (this._editarAgenda.espacioFisico.organizacion._id !== this.auth.organizacion.id) {
-        //         this.efector = this._editarAgenda.espacioFisico.organizacion;
-        //     }
-        // }
     }
     get editaAgenda(): any {
         return this._editarAgenda;
@@ -50,11 +45,8 @@ export class PlanificarAgendaComponent implements OnInit {
     public today = new Date();
     showClonar = false;
     showAgenda = true;
-    efector: any;
-    tipoEspacioFisico = 'propios';
-    espacioNuevo: IEspacioFisico;
-    espaciosFisicosEfector = [];
-
+    espacioFisicoPropios = true;
+    textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
     showMapaEspacioFisico = false;
 
@@ -64,15 +56,12 @@ export class PlanificarAgendaComponent implements OnInit {
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
         this.today.setHours(0, 0, 0, 0);
-        this.efector = this.auth.organizacion;
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
         } else {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
-            this.efector = this.auth.organizacion;
-            // this.loadEspaciosFisicos('', this.efector);
         }
     }
 
@@ -80,19 +69,8 @@ export class PlanificarAgendaComponent implements OnInit {
         this.modelo = agenda;
         // se carga el tipo de espacio Fisico
         if (this.modelo.espacioFisico && !this.modelo.espacioFisico.organizacion) {
-            this.tipoEspacioFisico = 'registrados';
-            this.loadEspaciosFisicos('');
-        } else {
-            if (this.modelo.espacioFisico && (this.modelo.espacioFisico.organizacion) && (this.modelo.espacioFisico.organizacion._id)) {
-                if (this.modelo.espacioFisico.organizacion._id !== this.auth.organizacion.id) {
-                    this.efector = this.modelo.espacioFisico.organizacion;
-                    this.efector['id'] = this.efector._id;
-                    this.tipoEspacioFisico = 'otros';
-                }
-            }
-            // this.loadEspaciosFisicos('', this.efector);
+            this.espacioFisicoPropios = false;
         }
-        // this.espaciosFisicosEfector = [this.modelo.espacioFisico];
         if (!this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
         }
@@ -155,94 +133,33 @@ export class PlanificarAgendaComponent implements OnInit {
     //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
     // }
 
-    loadEspacios(event) {
-        let listaEspaciosFisicos = [];
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                if (this.modelo.espacioFisico) {
-                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
-                } else {
-                    listaEspaciosFisicos = resultado;
-                }
-                event.callback(listaEspaciosFisicos);
-            });
-        } else {
-            event.callback(this.modelo.espacioFisico || []);
-        }
-
-    }
-
-    loadEfectores(event) {
-        let listaOrganizaciones = [];
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.OrganizacionService.get(query).subscribe(resultado => {
-                if (this.efector) {
-                    listaOrganizaciones = resultado ? resultado.concat(this.efector) : this.efector;
-                } else {
-                    listaOrganizaciones = resultado;
-                }
-                event.callback(listaOrganizaciones);
-                this.modelo.espacioFisico = null;
-            });
-        } else {
-            if (this.efector && this.efector._id) {
-                this.OrganizacionService.getById(this.efector._id).subscribe(org => {
-                    this.efector = org;
-                    event.callback(org);
-                });
-            } else {
-                event.callback(this.efector || []);
-            }
-        }
-    }
-
     /**
-     * Tipos de Filtro para los espacios fisicos
-     * @param {any} tipoFiltro
+     * filtro espacios fisicos
      * @memberof PlanificarAgendaComponent
      */
-    filtrarEspacioFisico(tipoFiltro) {
-        this.tipoEspacioFisico = tipoFiltro;
+    filtrarEspacioFisico() {
         this.modelo.espacioFisico = null;
-        this.efector = null;
-        switch (tipoFiltro) {
-            case 'propios':
-                this.efector = this.auth.organizacion;
-                // this.loadEspaciosFisicos(this.modelo.espacioFisico, this.efector);
-                break;
-            case 'otros':
-                this.espaciosFisicosEfector = [];
-                break;
-            // case 'registrados':
-            //     this.loadEspaciosFisicos(this.modelo.espacioFisico);
-            //     break;
-            // case 'nuevo':
-            //     this.espacioNuevo = { id: null, nombre: '', descripcion: '', activo: true, edificio: null, detalle: '', sector: null, servicio: null, organizacion: null, equipamiento: null, estado: null };
-            //     break;
+        if (!this.espacioFisicoPropios) {
+            this.textoEspacio = 'Otros Espacios Físicos';
+            this.showMapaEspacioFisico = false;
+            this.showBloque = true;
+        } else {
+            this.textoEspacio = 'Espacios físicos de la organización';
         }
-
     }
 
     loadEspaciosFisicos(event) {
         let query = {};
         let listaEspaciosFisicos = [];
         if (event.query) {
-
             query['nombre'] = event.query;
-            if (this.tipoEspacioFisico === 'otros') {
+            if (!this.espacioFisicoPropios) {
                 query['sinOrganizacion'] = true;
             } else {
                 query['organizacion'] = this.auth.organizacion.id;
             }
-
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                if (this.modelo.espacioFisico) {
+                if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
                     listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
                 } else {
                     listaEspaciosFisicos = resultado;
@@ -253,24 +170,6 @@ export class PlanificarAgendaComponent implements OnInit {
             event.callback(this.modelo.espacioFisico || []);
         }
     }
-
-    // loadEspaciosFisicos(nombreEspacio: string, efector?) {
-    //     let query;
-    //     if (!efector) {
-    //         // Corresponde a los espacios físicos cargados manualmente sin efector asociado
-    //         query = {
-    //             'sinOrganizacion': true
-    //         };
-    //     } else {
-    //         query = { 'organizacion': efector.id };
-    //     }
-    //     if (nombreEspacio) {
-    //         query['nombre'] = nombreEspacio;
-    //     }
-    //     this.servicioEspacioFisico.get(query).subscribe(result => {
-    //         this.espaciosFisicosEfector = [...result];
-    //     });
-    // }
 
     horaInicioPlus() {
         return moment(this.modelo.horaInicio).add(30, 'minutes');
@@ -652,7 +551,14 @@ export class PlanificarAgendaComponent implements OnInit {
                         return agenda.id !== this.modelo.id || !this.modelo.id;
                     });
                     if (agds.length > 0) {
-                        let ef = this.modelo.espacioFisico.nombre + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
+                        let ef = this.modelo.espacioFisico.nombre;
+                        // + (this.modelo.espacioFisico.servicio.nombre !== '-' ? ', ' + this.modelo.espacioFisico.servicio.nombre : ' ') + (this.modelo.espacioFisico.edificio.descripcion ? ' (' + this.modelo.espacioFisico.edificio.descripcion + ')' : '');
+                        if (this.modelo.espacioFisico.servicio && this.modelo.espacioFisico.servicio.nombre) {
+                            ef = ef + this.modelo.espacioFisico.servicio.nombre;
+                        }
+                        if (this.modelo.espacioFisico.edificio && this.modelo.espacioFisico.edificio.descripcion) {
+                            ef = ef + this.modelo.espacioFisico.edificio.descripcion;
+                        }
                         alerta = 'El ' + ef + ' está asignado a otra agenda en ese rango horario';
                         if (this.alertas.indexOf(alerta) < 0) {
                             this.alertas = [... this.alertas, alerta];
@@ -796,7 +702,7 @@ export class PlanificarAgendaComponent implements OnInit {
             delete this.modelo.id;
         };
         this.showMapaEspacioFisico = false;
-        this.showAgenda = true;
+        this.showBloque = true;
     }
 
     onSave($event, clonar) {
@@ -842,19 +748,6 @@ export class PlanificarAgendaComponent implements OnInit {
             }
             if (this.modelo.sector) {
                 delete this.modelo.sector.$order;
-            }
-
-            // Se guarda el nuevo espacio físico
-            if (this.tipoEspacioFisico === 'nuevo') {
-                if (this.espacioNuevo) {
-                    this.servicioEspacioFisico.post(this.espacioNuevo).subscribe(resultado => {
-                        if (resultado) {
-                            this.modelo.espacioFisico = resultado;
-                        } else {
-                            this.plex.alert('Error al guardar el nuevo Espacio Fisico');
-                        }
-                    });
-                }
             }
 
             this.modelo.organizacion = this.auth.organizacion;
