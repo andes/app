@@ -5,34 +5,34 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <div class="row">
-                    <div class="col-8">
-                        <plex-text [(ngModel)]="nuevoPermiso" placeholder="Ingrese un nuevo permiso"></plex-text>
-                    </div>
-                    <div class="col-4">
-                        <plex-button label="" type="info" icon="plus" (click)="addPermiso()"></plex-button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <plex-select [data]="filtros" [(ngModel)]="unFiltro" placeholder="Seleccione..." label="Filtrar:">
-                        </plex-select>
-                    </div>
-                </div>
-                <fieldset>
-                    <div class="row">&nbsp;</div>
-                    <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let _unPermiso of permisos | filterPermisos:unFiltro; let i = index">
-                            <div class="row">
-                                <div class="col-11">{{_unPermiso}}
-                                </div>
-                                <div class="col-1 text-right">
-                                    <plex-button label="" type="danger btn-sm" icon="close" (click)="removePermiso(i)"></plex-button>
-                                </div>
+                <div *ngFor="let permiso of jsonPermisos; let indicePermiso = index">
+                    <plex-accordion>
+                        <plex-panel tituloPrincipal={{permiso.title}}>
+                            <div *ngFor="let child of permiso.child; let indiceChild = index">
+                                <plex-accordion>
+                                    <plex-panel *ngIf="child.child as child2; else noChild" tituloPrincipal={{child.title}}>
+                                        <div *ngFor="let child2 of child.child; let indicechild2 = index">
+                                            <plex-accordion>
+                                                <plex-panel *ngIf="child2.child; else nochild2" tituloPrincipal={{child2.title}}>
+                                                    <!-- 3er  nivel de permisos??? -->
+                                                </plex-panel>
+                                                <ng-template #nochild2>
+                                                    <plex-bool *ngIf="child2.title" label="{{child2.title}}" type="slide">
+                                                    </plex-bool>
+                                                </ng-template>
+                                            </plex-accordion>
+                                        </div>
+                                    </plex-panel>
+                                    <ng-template #noChild>
+                                        <plex-bool *ngIf="child.title" label="{{child.title}}" type="slide">
+                                        </plex-bool>
+                                    </ng-template>
+                                </plex-accordion>
                             </div>
-                        </li>
-                    </ul>
-                </fieldset>
+                        </plex-panel>
+                    </plex-accordion>
+                </div>
+
             </plex-box>
         </div>
         <div class="col text-center">

@@ -55,7 +55,6 @@ export class UsuarioUpdateComponent implements OnInit {
     public ngOnInit() {
         this.permisosService.get().subscribe(data => {
             this.jsonPermisos = data;
-            debugger;
         });
         if (this.seleccion) {
             this.loadUser();
