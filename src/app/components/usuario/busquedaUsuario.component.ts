@@ -24,7 +24,8 @@ export class BusquedaUsuarioComponent implements OnInit {
     public resultado = null;
     public seleccion = null;
     public loading = false;
-    public showCreateUpdate = false;
+    public showUpdate = false;
+    public showCreate = false;
     public mostrarNuevo = true;
     public autoFocus = 0;
     public users;
@@ -38,6 +39,8 @@ export class BusquedaUsuarioComponent implements OnInit {
 
     public ngOnInit() {
         this.autoFocus = this.autoFocus + 1;
+        this.showCreate = false;
+        this.showUpdate = false;
         this.loadUsuarios();
     }
 
@@ -52,10 +55,13 @@ export class BusquedaUsuarioComponent implements OnInit {
         this.seleccion = user;
         if (user) {
             this.selected.emit(user);
+            this.showUpdate = true;
+        } else {
+
+            this.showCreate = true;
         }
         this.textoLibre = null;
         this.mostrarNuevo = false;
-        this.showCreateUpdate = true;
     }
 
     /**
@@ -72,7 +78,8 @@ export class BusquedaUsuarioComponent implements OnInit {
 
     afterCreateUpdate(user) {
         this.loadUsuarios();
-        this.showCreateUpdate = false;
+        this.showCreate = false;
+        this.showUpdate = false;
         this.mostrarNuevo = true;
         this.seleccion = null;
         this.autoFocus = this.autoFocus + 1;

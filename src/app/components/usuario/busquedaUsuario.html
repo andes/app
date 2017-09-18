@@ -62,5 +62,5 @@
     </div>
 </footer>
 
-<!--Componente de Alta/Modificación que hay que desarrollar-->
-<usuario-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" (data)='afterCreateUpdate($event)'></usuario-create-update>
+<usuarioCreate *ngIf="showCreate" (data)='afterCreateUpdate($event)'></usuarioCreate>
+<usuarioUpdate *ngIf="showUpdate" [seleccion]="seleccion" (data)='afterCreateUpdate($event)'></usuarioUpdate>

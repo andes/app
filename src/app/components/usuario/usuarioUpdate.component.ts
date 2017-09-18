@@ -8,14 +8,16 @@ import * as enumerados from './../../utils/enumerados';
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { OrganizacionService } from './../../services/organizacion.service';
+import { PermisosService } from './../../services/permisos.service';
+
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 @Component({
-    selector: 'usuario-create-update',
-    templateUrl: 'usuario-create-update.html',
+    selector: 'usuarioUpdate',
+    templateUrl: 'usuarioUpdate.html',
     styleUrls: ['usuarios.css']
 })
 
-export class UsuarioCreateUpdateComponent implements OnInit {
+export class UsuarioUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input('seleccion') seleccion: any;
@@ -23,12 +25,10 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     private timeoutHandle: number;
     // Propiedades públicas
+    public jsonPermisos: any[] = [];
     public unFiltro: any;
     public filtros: any[] = [];
     public documento: number;
-    public roles: any[] = [];
-    public textoLibre: string = null;
-    public disableBuscar = false;
     public showCreate = false;
     public showUpdate = false;
     public permisos: any[] = [];
@@ -50,13 +50,15 @@ export class UsuarioCreateUpdateComponent implements OnInit {
 
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService,
         private auth: Auth, private provinciaService: ProvinciaService,
-        private organizacionService: OrganizacionService) { }
+        private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
+        this.permisosService.get().subscribe(data => {
+            this.jsonPermisos = data;
+            debugger;
+        });
         if (this.seleccion) {
             this.loadUser();
-        } else {
-            this.newUser();
         }
     }
 
@@ -72,12 +74,12 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         }
         this.nuevoPermiso = '';
         this.unFiltro = '';
-        this.getFiltros();
+        // this.getFiltros();
     }
 
     removePermiso(index) {
         this.permisos.splice(index, 1);
-        this.getFiltros();
+        // this.getFiltros();
     }
 
     loadUser() {
@@ -89,12 +91,8 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         this.userModel.organizacion = this.auth.organizacion;
 
         this.permisos = this.seleccion.permisos;
-        this.sortPermisos();
-        this.getFiltros();
-    }
-
-    newUser() {
-        this.showCreate = true;
+        // this.sortPermisos();
+        // this.getFiltros();
     }
 
     buscarUsuario() {
@@ -118,8 +116,10 @@ export class UsuarioCreateUpdateComponent implements OnInit {
                 this.userModel.usuario = user[0].usuario;
                 this.userModel.organizacion = this.auth.organizacion;
                 this.permisos = user[0].permisos;
-                this.sortPermisos();
-                this.getFiltros();
+                // if (this.permisos) {
+                //     this.sortPermisos();
+                //     this.getFiltros();
+                // }
                 this.plex.info('info', '', 'Usuario existente', );
                 this.showCreate = false;
                 this.showUpdate = true;
@@ -128,25 +128,27 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         );
     }
 
-    getFiltros() {
-        this.filtros = [];
-        this.permisos.forEach((permiso: string) => {
-            let indexItem = this.filtros.findIndex(filtro => (filtro === permiso.split(':', 2)[0]));
-            let filtro = permiso.split(':', 2)[0];
-            if (indexItem < 0) {
-                this.filtros.push({ id: filtro, nombre: filtro });
-            }
-        });
-        return this.filtros;
-    }
+    // getFiltros() {
+    //     this.filtros = [];
+    //     this.permisos.forEach((permiso: string) => {
+    //         let indexItem = this.filtros.findIndex(filtro => (filtro === permiso.split(':', 2)[0]));
+    //         let filtro = permiso.split(':', 2)[0];
+    //         if (indexItem < 0) {
+    //             this.filtros.push({ id: filtro, nombre: filtro });
+    //         }
+    //     });
+    //     return this.filtros;
+    // }
 
-    sortPermisos() {
-        this.permisos.sort(function (a, b) {
-            if (a < b) { return -1; }
-            if (a > b) { return 1; }
-            return 0;
-        });
-    }
+    // sortPermisos() {
+
+    //     this.permisos.sort(function (a, b) {
+    //         if (a < b) { return -1; }
+    //         if (a > b) { return 1; }
+    //         return 0;
+    //     });
+
+    // }
 
     onSave() {
         this.userModel.permisos = this.permisos;
