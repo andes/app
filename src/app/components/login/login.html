@@ -15,6 +15,7 @@
                     <plex-text label="Ingrese su contraseña" prefix="<i class='mdi mdi-dialpad'></i>" [(ngModel)]="password" name="password"
                         [password]="true" [required]="true">
                     </plex-text>
+                    <div class="row">&nbsp;</div>
                     <plex-button icon="lock" label="Iniciar sesión" type="success" [validateForm]="true" [disabled]="deshabilitar" (click)="login($event)"></plex-button>
                     <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
                 </div>
