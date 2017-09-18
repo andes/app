@@ -26,6 +26,7 @@ export class UsuarioUpdateComponent implements OnInit {
     private timeoutHandle: number;
     // Propiedades públicas
     public jsonPermisos: any[] = [];
+    public permisos$: any;
     public unFiltro: any;
     public filtros: any[] = [];
     public documento: number;
@@ -53,9 +54,7 @@ export class UsuarioUpdateComponent implements OnInit {
         private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
-        this.permisosService.get().subscribe(data => {
-            this.jsonPermisos = data;
-        });
+        this.permisos$ = this.permisosService.get();
         if (this.seleccion) {
             this.loadUser();
         }

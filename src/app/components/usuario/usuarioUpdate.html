@@ -5,7 +5,7 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <div *ngFor="let permiso of jsonPermisos; let indicePermiso = index">
+                <div *ngFor="let permiso of permisos$ | async; let indicePermiso = index">
                     <plex-accordion>
                         <plex-panel tituloPrincipal={{permiso.title}}>
                             <div *ngFor="let child of permiso.child; let indiceChild = index">
