@@ -1,4 +1,4 @@
-<section *ngIf="!showCreateUpdate">
+<section *ngIf="!showUpdate && ! showCreate">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -56,7 +56,7 @@
 
 </section>
 
-<footer *ngIf="!showCreateUpdate">
+<footer *ngIf="!showUpdate && ! showCreate">
     <div class="text-right">
         <plex-button *ngIf="mostrarNuevo" label="Nuevo Usuario" icon="account-plus" type="primary" (click)="seleccionarUsuario(null)"></plex-button>
     </div>
