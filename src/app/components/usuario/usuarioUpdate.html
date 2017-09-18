@@ -9,7 +9,7 @@
                     <plex-accordion>
                         <plex-panel tituloPrincipal={{permiso.title}}>
                             <div *ngFor="let child of permiso.child; let indiceChild = index">
-                                <plex-accordion>
+                                <plex-accordion (click)="verificarPermisos($event)">
                                     <plex-panel *ngIf="child.child as child2; else noChild" tituloPrincipal={{child.title}}>
                                         <div *ngFor="let child2 of child.child; let indicechild2 = index">
                                             <plex-accordion>
