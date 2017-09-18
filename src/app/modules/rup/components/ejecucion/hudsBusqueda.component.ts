@@ -68,10 +68,10 @@ export class HudsBusquedaComponent implements OnInit {
      */
     ngOnInit() {
         if (this.paciente) {
-            // this.listarPrestaciones();
+            this.listarPrestaciones();
             // this.listarProblemasCronicos();
             // this.listarHallazgos();
-            // this.listarProblemasActivos();
+            this.listarProblemasActivos();
         }
     }
 

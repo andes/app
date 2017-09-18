@@ -196,7 +196,7 @@ export class PrestacionesService {
                         profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucion : ''
+                        evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -388,7 +388,6 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-
         let planesCrear = [];
 
         if (planes.length) {
@@ -400,16 +399,8 @@ export class PrestacionesService {
                 // asignamos la prestacion de origen
                 nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
-                let nuevoRegistro: any = {
-                    concepto: plan.concepto,
-                    destacado: plan.destacado,
-                    relacionadoCon: plan.relacionadoCon,
-                    tipo: plan.tipo,
-                    valor: plan.valor
-                };
-
                 // agregamos los registros en la solicitud
-                nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
+                nuevaPrestacion.solicitud.registros.push(plan);
 
                 planesCrear.push(nuevaPrestacion);
 
