@@ -31,7 +31,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      */
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = { estado: 'activo' }
+            this.registro.valor = { estado: 'activo' };
         } else {
             // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
             // tenemos que mostrar las evoluciones anteriores

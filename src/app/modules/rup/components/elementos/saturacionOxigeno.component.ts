@@ -6,7 +6,7 @@ import * as moment from 'moment';
     selector: 'rup-saturacion-oxigeno',
     templateUrl: 'saturacionOxigeno.html'
 })
-export class SaturacionOxigenoComponent extends RUPComponent {
+export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'SaturacionOxigeno' en otro elemento RUP
         this.conceptObserverService.observe(this.registro).subscribe((data) => {

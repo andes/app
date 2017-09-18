@@ -323,9 +323,10 @@ export class DarTurnosComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
-        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.profesionales) {
+            // TODO quedaria ver que se va a hacer cuando en la solicitud se tengan mas de un profesional asignado
             let query = {
-                nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
+                nombreCompleto: this._solicitudPrestacion.solicitud.registros[0].valor.profesionales[0].nombreCompleto,
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
