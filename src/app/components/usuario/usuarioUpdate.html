@@ -9,7 +9,7 @@
                 </plex-select>
                 <div class="row">&nbsp;</div>
                 <div *ngFor="let permiso of permisos$ | async ">
-                    <arbolPermisos [item]=" permiso "></arbolPermisos>
+                    <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
                 </div>
 
             </plex-box>

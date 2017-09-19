@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, Input, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
@@ -11,6 +11,7 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { PermisosService } from './../../services/permisos.service';
 import { AuthService } from './../../services/auth/auth.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
+import { ArbolPermisosComponent } from './arbolPermisos.component';
 @Component({
     selector: 'usuarioUpdate',
     templateUrl: 'usuarioUpdate.html',
@@ -22,6 +23,7 @@ export class UsuarioUpdateComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
     @Input('seleccion') seleccion: any;
     @Output() data: EventEmitter<string> = new EventEmitter<string>();
+    @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
     private timeoutHandle: number;
     // Propiedades públicas
@@ -96,15 +98,28 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizacion = this.auth.organizacion;
 
-        this.permisos = this.seleccion.permisos;
+        let temp = this.seleccion.organizaciones.find(item =>
+            String(item._id) === String(this.auth.organizacion.id)
+        );
+        if (temp) {
+            this.permisos = temp.permisos;
+        } else {
+            this.permisos = [];
+        }
+
     }
 
     onSave() {
-        this.userModel.permisos = this.permisos;
-        this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.info('success', '', 'Usuario guardado', );
-            this.data.emit(user);
+        // this.userModel.permisos = this.permisos;
+        // this.usuarioService.save(this.userModel).subscribe(user => {
+        //     this.plex.info('success', '', 'Usuario guardado', );
+        //     this.data.emit(user);
+        // });
+        let results = [];
+        this.childsComponents.forEach(child => {
+            results = [...results, ...child.generateString()];
         });
+        console.log(results);
     }
 
     onCancel() {
