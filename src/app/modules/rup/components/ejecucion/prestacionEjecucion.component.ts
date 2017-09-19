@@ -288,8 +288,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
+
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda === 'planes') {
+        // tambien verificamos si es un autocitado por su conceptId.. Ver si se puede hacer de otra manera.
+        if (this.tipoBusqueda === 'planes' || snomedConcept.conceptId === '281036007') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);

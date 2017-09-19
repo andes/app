@@ -235,11 +235,12 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoRevisar() {
-        let today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
-        }).length > 0;
+        return true; // TODO: descomentar
+        // let today = new Date();
+        // today.setHours(0, 0, 0, 0);
+        // return this.agendasSeleccionadas.filter((agenda) => {
+        //     return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
+        // }).length > 0;
     }
 
     // Comprueba que haya algún turno con paciente, en estado suspendido

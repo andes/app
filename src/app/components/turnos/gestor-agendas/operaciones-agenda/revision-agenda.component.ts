@@ -54,6 +54,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     showRevisionAgenda: Boolean = true;
     turnos = [];
+    sobreturnos = [];
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
@@ -194,7 +195,7 @@ export class RevisionAgendaComponent implements OnInit {
             nuevoDiagnostico.codificacion = this.nuevoCodigo;
             delete nuevoDiagnostico.codificacion.$order;
             this.diagnosticos.push(nuevoDiagnostico);
-            this.nuevoCodigo = null;
+            this.nuevoCodigo = {};
         }
     }
 
@@ -215,12 +216,19 @@ export class RevisionAgendaComponent implements OnInit {
     cerrarAsistencia() {
         // Se verifica que todos los campos tengan asistencia chequeada
         let turnoSinVerificar = null;
-        turnoSinVerificar = this.turnos.find(t => {
-            return (t.paciente && t.paciente.id && !t.asistencia);
+        let listaTurnos = [];
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
+        }
+        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        }
+        // turnoSinVerificar = this.turnos.find(t => {
+        turnoSinVerificar = listaTurnos.find(t => {
+            return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
-
         if (turnoSinVerificar) {
-            this.plex.alert('No se puede cerrar la asistencia debido a que existen turnos que no fueron verificados', 'Cerrar Asistencia');
+            // this.plex.alert('No se puede cerrar la asistencia debido a que existen turnos que no fueron verificados', 'Cerrar Asistencia');
         } else {
             // Se cambia de estado la agenda a asistenciaCerrada
             let patch = {
@@ -229,8 +237,8 @@ export class RevisionAgendaComponent implements OnInit {
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Asistencia Cerrada');
-                this.enableAsistenciaCerrada = false;
-                this.enableCodificada = true;
+                // this.enableAsistenciaCerrada = false;
+                // this.enableCodificada = true;
             });
         }
     }
@@ -238,12 +246,21 @@ export class RevisionAgendaComponent implements OnInit {
     cerrarCodificacion() {
         // Se verifica que todos los campos tengan el diagnostico codificado
         let turnoSinCodificar = null;
-        turnoSinCodificar = this.turnos.find(t => {
-            return (t.paciente && t.paciente.id && t.asistencia && (!t.diagnosticoPrincipal || (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible)));
+        let listaTurnos = [];
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
+        }
+        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        }
+        turnoSinCodificar = listaTurnos.find(t => {
+            return (t && t.paciente && t.paciente.id && t.asistencia && (!t.diagnosticoPrincipal ||
+                (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )));
         });
 
         if (turnoSinCodificar) {
-            this.plex.alert('No se puede cerrar la codificación debido a que existen turnos que no fueron chequeados', 'Cerrar Codificación');
+            // this.plex.alert('No se puede cerrar la codificación debido a que existen turnos que no fueron chequeados',
+            // 'Cerrar Codificación');
         } else {
             // Se cambia de estado la agenda a asistenciaCerrada
             let patch = {
@@ -271,22 +288,33 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
         };
-
-        let datosTurno = {
-            idAgenda: this.agenda.id,
-            idTurno: this.turnoSeleccionado.id,
-            idBloque: this.bloqueSeleccionado.id,
-            turno: this.turnoSeleccionado,
-        };
-
+        // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
+        let datosTurno = {};
         if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
             this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
             this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
+        }
+        if (this.bloqueSeleccionado === -1) {
+            datosTurno = {
+                idAgenda: this.agenda.id,
+                idTurno: this.turnoSeleccionado.id,
+                idBloque: -1,
+                turno: this.turnoSeleccionado
+            };
+        } else {
+            datosTurno = {
+                idAgenda: this.agenda.id,
+                idTurno: this.turnoSeleccionado.id,
+                idBloque: this.bloqueSeleccionado.id,
+                turno: this.turnoSeleccionado
+            };
         }
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
                 this.plex.toast('success', 'Información', 'El turno fue actualizado');
+                this.cerrarAsistencia();
+                this.cerrarCodificacion();
                 this.turnoSeleccionado = null;
             });
         } else {
