@@ -82,6 +82,9 @@
                             title="Reasignar turno"></plex-button>
                         <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')"
                             title="Turno doble"></plex-button>
+                        <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="mdi mdi-numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
+                            title="Quitar Turno doble"></plex-button>
+                        <!-- mdi-numeric-1-box-outline -->
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>

@@ -267,7 +267,9 @@ export class TurnosComponent implements OnInit {
             // Se verifica si el siguiente turno se encuentra disponible
             turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
             && this.todosConEstado('asignado') && this.siguienteDisponible(),
+            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble')
         };
+        console.log('botones ', this.botones);
 
     }
 
