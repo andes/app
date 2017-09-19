@@ -30,6 +30,7 @@ export class UsuarioUpdateComponent implements OnInit {
     private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
+
     public organizacionesUsuario: any[] = [];
     public permisos$: any;
     public showCreate = false;
@@ -56,7 +57,7 @@ export class UsuarioUpdateComponent implements OnInit {
     public ngOnInit() {
         this.permisos$ = this.permisosService.get();
 
-        this.auth.organizaciones().subscribe(data => {
+        this.permisosService.organizaciones({ admin: true }).subscribe(data => {
             this.organizacionesAuth = data;
             if (this.seleccion) {
                 this.loadUser();
@@ -66,7 +67,6 @@ export class UsuarioUpdateComponent implements OnInit {
 
 
     getOrganizaciones() {
-        console.log(this.organizacionesAuth);
         this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.seleccion.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
         if (this.organizacionesUsuario.length > 0) {
             this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
@@ -121,8 +121,6 @@ export class UsuarioUpdateComponent implements OnInit {
             this.plex.info('success', '', 'Usuario guardado', );
             this.data.emit(user);
         });
-
-        // console.log(results);
     }
 
     onCancel() {
