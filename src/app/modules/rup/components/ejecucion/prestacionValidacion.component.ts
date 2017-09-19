@@ -30,6 +30,7 @@ export class PrestacionValidacionComponent implements OnInit {
      */
     public showDarTurnos = false;
     solicitudTurno;
+    public diagnosticoReadonly = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -66,6 +67,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.cargaPlan(id);
+                this.diagnosticoReadonly = true;
             }
             // Carga la información completa del paciente
             // [jgabriel] ¿Hace falta esto?
@@ -98,6 +100,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.cargaPlan(prestacion.id);
+                    this.diagnosticoReadonly = true;
+                    // actualizamos las prestaciones de la HUDS
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                    });
+                    this.plex.toast('success', 'EXITÓ: La prestación se valido correctamente');
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
@@ -166,6 +173,12 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
             });
         });
+    }
+    diagnosticoPrestacion(i) {
+        let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
+        if (actual) {
+            actual.esDiagnosticoPrincipal = false;
+        }
     }
 }
 
