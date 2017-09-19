@@ -112,13 +112,14 @@
                 </tbody>
             </table>
             <table class="table table-striped">
-                <thead *ngIf="bloque.descripcion">
+                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
                     <tr>
-                        <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
                             hs
                         </th>
-                        <th *ngIf="agenda.nominalizada" colspan="4">{{bloque.descripcion}}
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}}
                         </th>
+                        <th *ngIf="bloque.citarPorBloque" colspan="4"><span class="text-danger">Citación por segmento</span></th>
                     </tr>
                 </thead>
                 <tbody>
