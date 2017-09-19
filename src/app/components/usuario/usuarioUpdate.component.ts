@@ -9,7 +9,7 @@ import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { PermisosService } from './../../services/permisos.service';
-
+import { AuthService } from './../../services/auth/auth.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 @Component({
     selector: 'usuarioUpdate',
@@ -25,6 +25,8 @@ export class UsuarioUpdateComponent implements OnInit {
 
     private timeoutHandle: number;
     // Propiedades públicas
+    public organizaciones: any[] = [];
+    public organizacion: any;
     public jsonPermisos: any[] = [];
     public permisos$: any;
     public unFiltro: any;
@@ -50,11 +52,14 @@ export class UsuarioUpdateComponent implements OnInit {
     };
 
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService,
-        private auth: Auth, private provinciaService: ProvinciaService,
+        private auth: Auth, private provinciaService: ProvinciaService, private authService: AuthService,
         private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
         this.permisos$ = this.permisosService.get();
+        this.authService.get().subscribe(data => {
+            this.organizaciones = data;
+        });
         if (this.seleccion) {
             this.loadUser();
         }

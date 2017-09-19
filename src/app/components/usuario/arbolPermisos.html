@@ -1,0 +1,12 @@
+<plex-accordion *ngIf="item.child; else noChild">
+    <plex-panel tituloPrincipal={{item.title}}>
+        <div *ngFor="let child of item.child; let indiceChild = index">
+
+            <arbolPermisos [item]="child"></arbolPermisos>
+
+        </div>
+    </plex-panel>
+</plex-accordion>
+<ng-template #noChild>
+    <plex-bool *ngIf="item.title" label="{{item.title}}" type="slide"> </plex-bool>
+</ng-template>

@@ -5,52 +5,31 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <div *ngFor="let permiso of permisos$ | async; let indicePermiso = index">
-                    <plex-accordion>
-                        <plex-panel tituloPrincipal={{permiso.title}}>
-                            <div *ngFor="let child of permiso.child; let indiceChild = index">
-                                <plex-accordion (click)="verificarPermisos($event)">
-                                    <plex-panel *ngIf="child.child as child2; else noChild" tituloPrincipal={{child.title}}>
-                                        <div *ngFor="let child2 of child.child; let indicechild2 = index">
-                                            <plex-accordion>
-                                                <plex-panel *ngIf="child2.child; else nochild2" tituloPrincipal={{child2.title}}>
-                                                    <!-- 3er  nivel de permisos??? -->
-                                                </plex-panel>
-                                                <ng-template #nochild2>
-                                                    <plex-bool *ngIf="child2.title" label="{{child2.title}}" type="slide">
-                                                    </plex-bool>
-                                                </ng-template>
-                                            </plex-accordion>
-                                        </div>
-                                    </plex-panel>
-                                    <ng-template #noChild>
-                                        <plex-bool *ngIf="child.title" label="{{child.title}}" type="slide">
-                                        </plex-bool>
-                                    </ng-template>
-                                </plex-accordion>
-                            </div>
-                        </plex-panel>
-                    </plex-accordion>
+                <plex-select label="Seleccione un efector" [(ngModel)]="organizacion" name="organizacion" [data]="organizaciones" [required]="true">
+                </plex-select>
+                <div class="row">&nbsp;</div>
+                <div *ngFor="let permiso of permisos$ | async ">
+                    <arbolPermisos [item]=" permiso "></arbolPermisos>
                 </div>
 
             </plex-box>
         </div>
-        <div class="col text-center">
-            <plex-box type="primary">
+        <div class="col text-center ">
+            <plex-box type="primary ">
                 <header>
                     <h3>Datos del Usuario
                     </h3>
                 </header>
-                <div class="row">
-                    <div class="col-12">
-                        <img class="foto" src="{{userModel.foto}}">
+                <div class="row ">
+                    <div class="col-12 ">
+                        <img class="foto " src="{{userModel.foto}} ">
                     </div>
-                    <div class="col-12" *ngIf="userModel.apellido && userModel.nombre">
+                    <div class="col-12 " *ngIf="userModel.apellido && userModel.nombre ">
                         <h3><strong>{{userModel.apellido}}</strong>
                             <small> {{userModel.nombre}}</small>
                         </h3>
                     </div>
-                    <div class="col-12" *ngIf="userModel.usuario">
+                    <div class="col-12 " *ngIf="userModel.usuario ">
                         <h4>D.N.I. {{userModel.usuario}} </h4>
                     </div>
                 </div>
@@ -61,10 +40,10 @@
     </div>
 </section>
 <footer>
-    <div class="text-right">
-        <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+    <div class="text-right ">
+        <plex-button icon="close-circle-outline " label="Cancelar " type="danger " (click)="onCancel() ">
         </plex-button>
-        <plex-button icon="content-save" label="Guardar" type="success" (click)="onSave()">
+        <plex-button icon="content-save " label="Guardar " type="success " (click)="onSave() ">
         </plex-button>
 
     </div>

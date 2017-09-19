@@ -65,7 +65,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
-
+import { AuthService } from './services/auth/auth.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -206,6 +206,7 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
 import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
+import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
 
 export const RUP_ELEMENTS: any[] = [
@@ -330,7 +331,7 @@ for (let key in RUPRegistry) {
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
-        PermisosComponent,
+        PermisosComponent, ArbolPermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,
@@ -400,7 +401,8 @@ for (let key in RUPRegistry) {
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        AuthService
     ]
 })
 
