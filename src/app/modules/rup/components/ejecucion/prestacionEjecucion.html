@@ -90,14 +90,15 @@
                                         </div>
 
                                         <!-- ... Body -->
-                                        <div class="rup-body " [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar">
+                                        <div class="rup-body " [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar" *ngIf="paciente">
                                             <!-- <div *ngIf="errores[i]">
                                                 <span class="badge badge-danger">
                                                         {{errores[i]}}
                                                     </span>
                                             </div> -->
                                             <!-- RUP Loader  (change)="prestacionChanged()"-->
-                                            <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [paciente]="paciente" [registro]="registro">
+                                            
+                                            <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"  [registro]="registro">
                                             </rup>
                                         </div>
 
