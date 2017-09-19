@@ -38,6 +38,7 @@
     "@angular/router": "^4.3.1",
     "angular2-google-maps": "^0.17.0",
     "bowser": "^1.7.1",
+    "bson": "^1.0.4",
     "core-js": "^2.4.1",
     "ng2-drag-drop": "^1.5.1",
     "rxjs": "^5.4.2",
