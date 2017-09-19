@@ -1,3 +1,12 @@
+<ng-container *ngIf="hallazgoOrigen">
+    <div class="row">
+        <div class="col-12">
+            <span class="badge-info  float-right">
+                    Originado con la transformación de: <strong>{{ hallazgoOrigen.nombre }}</strong>
+                </span>
+        </div>
+    </div>
+</ng-container>
 <div *ngIf="!soloValores">
     <div *ngIf="elementoRUP && registro">
         <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones">
@@ -30,7 +39,10 @@
                 <plex-text label="Evolución" multiline=true autoFocus=1 [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
             </div>
         </div>
+
     </div>
+
+
 
     <!--Listado de evoluciones-->
     <ng-container *ngIf="evoluciones && evoluciones.length > 0">
