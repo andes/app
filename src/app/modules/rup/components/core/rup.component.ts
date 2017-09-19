@@ -20,6 +20,7 @@ export class RUPComponent implements OnInit {
     @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
     @Input() registro: IPrestacionRegistro;
+    @Input() paciente: IPaciente;
     @Input() soloValores: boolean;
     @Input() params: any;
     public mensaje: any = {};
@@ -43,6 +44,7 @@ export class RUPComponent implements OnInit {
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
         componentReference.instance['soloValores'] = this.soloValores;
+        componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
