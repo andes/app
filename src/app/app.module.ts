@@ -65,7 +65,6 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
-import { AuthService } from './services/auth/auth.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -401,8 +400,8 @@ for (let key in RUPRegistry) {
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService,
-        AuthService
+        PermisosService
+
     ]
 })
 

@@ -9,7 +9,6 @@ import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ProvinciaService } from './../../services/provincia.service';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { PermisosService } from './../../services/permisos.service';
-import { AuthService } from './../../services/auth/auth.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ArbolPermisosComponent } from './arbolPermisos.component';
 @Component({
@@ -26,18 +25,13 @@ export class UsuarioUpdateComponent implements OnInit {
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
     private timeoutHandle: number;
-    // Propiedades públicas
-    public organizaciones: any[] = [];
-    public organizacion: any;
-    public jsonPermisos: any[] = [];
+    private temp;
+    private organizacionesAuth: any[] = [];
+    public organizacionesUsuario: any[] = [];
     public permisos$: any;
-    public unFiltro: any;
-    public filtros: any[] = [];
-    public documento: number;
     public showCreate = false;
     public showUpdate = false;
     public permisos: any[] = [];
-    public nuevoPermiso: string;
     public userModel: any = {
         id: null,
         usuario: '',
@@ -54,41 +48,30 @@ export class UsuarioUpdateComponent implements OnInit {
     };
 
     constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService,
-        private auth: Auth, private provinciaService: ProvinciaService, private authService: AuthService,
-        private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
+        private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
         this.permisos$ = this.permisosService.get();
-        this.authService.get().subscribe(data => {
-            this.organizaciones = data;
+
+        this.auth.organizaciones().subscribe(data => {
+            this.organizacionesAuth = data;
+            if (this.seleccion) {
+                this.loadUser();
+            }
         });
-        if (this.seleccion) {
-            this.loadUser();
-        }
-    }
 
-    verificarPermisos($event: any) {
+
+
 
     }
 
-    addPermiso() {
-        let index = this.permisos.findIndex(permiso => (permiso.trim() === this.nuevoPermiso.trim()));
-        if (index < 0) {
-            this.permisos.push(this.nuevoPermiso);
-            this.permisos.sort(function (a, b) {
-                if (a < b) { return -1; }
-                if (a > b) { return 1; }
-                return 0;
-            });
-        }
-        this.nuevoPermiso = '';
-        this.unFiltro = '';
+
+    getOrganizaciones() {
+        console.log(this.organizacionesAuth);
+        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.seleccion.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
+        debugger;
     }
 
-    removePermiso(index) {
-        this.permisos.splice(index, 1);
-        // this.getFiltros();
-    }
 
     loadUser() {
         this.showUpdate = true;
@@ -98,11 +81,12 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizacion = this.auth.organizacion;
 
-        let temp = this.seleccion.organizaciones.find(item =>
+        this.temp = this.seleccion.organizaciones.find(item =>
             String(item._id) === String(this.auth.organizacion.id)
         );
-        if (temp) {
-            this.permisos = temp.permisos;
+        this.getOrganizaciones();
+        if (this.temp) {
+            this.permisos = this.temp.permisos;
         } else {
             this.permisos = [];
         }
