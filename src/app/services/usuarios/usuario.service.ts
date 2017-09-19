@@ -11,7 +11,7 @@ export class UsuarioService {
 
     constructor(private server: Server) { }
 
-    permisos() : Observable<any> {
+    permisos(): Observable<any> {
         return this.server.get('/auth/permisos');
     }
 

@@ -14,4 +14,9 @@ export class PermisosService {
     get(): Observable<any> {
         return this.server.get(this.permisosUrl);
     }
+
+    organizaciones(params): Observable<any> {
+        return this.server.get('/auth/organizaciones', { params });
+    }
+
 }

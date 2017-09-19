@@ -5,7 +5,8 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <plex-select label="Seleccione un efector" [(ngModel)]="organizacion" name="organizacion" [data]="organizaciones" [required]="true">
+                <plex-select label="Seleccione un efector" [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                    [required]="true" (change)="onOrgChange()">
                 </plex-select>
                 <div class="row">&nbsp;</div>
                 <div *ngFor="let permiso of permisos$ | async ">

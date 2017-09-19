@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 let shiroTrie = require('shiro-trie');
@@ -9,7 +9,7 @@ let shiroTrie = require('shiro-trie');
     templateUrl: 'arbolPermisos.html'
 })
 
-export class ArbolPermisosComponent implements OnInit {
+export class ArbolPermisosComponent implements OnInit, OnChanges {
 
     private shiro = shiroTrie.new();
     private state = false;
@@ -42,9 +42,9 @@ export class ArbolPermisosComponent implements OnInit {
                     } else {
 
                         // [TODO] Buscar según el tipo
-                        switch(this.item.type){
+                        switch (this.item.type) {
                             case 'prestacion':
-                                this.servicioTipoPrestacion.get({id: items}).subscribe((data) => {
+                                this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
                                     this.seleccionados = data;
                                 });
                                 break;
@@ -55,15 +55,22 @@ export class ArbolPermisosComponent implements OnInit {
         }
     }
 
+    public ngOnChanges() {
+        this.initShiro();
+        if (this.item.type && this.item.type === 'boolean') {
+            this.state = this.shiro.check(this.makePermission() + ':?');
+        }
+    }
+
     selectChange() {
-        console.log(this.seleccionados);
+        // console.log(this.seleccionados);
     }
 
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
         if (event.query) {
             // [TODO] Filtrar otras tipos de datos
-            switch(type) {
+            switch (type) {
                 case 'prestacion':
                     let query = {
                         term: event.query
