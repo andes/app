@@ -47,6 +47,12 @@
                                         {{elemento.relacionadoCon[0].concepto.term}}
                                     </ng-container>
                                 </div>
+                                <div *ngIf="!diagnosticoReadonly && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'"> 
+                                    <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnostico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
+                                </div>
+                                <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'">
+                                        Diagnostico principal
+                                </div>
                             </div>
                         </div>
                     </div>

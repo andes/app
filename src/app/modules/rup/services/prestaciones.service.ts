@@ -432,11 +432,14 @@ export class PrestacionesService {
             });
         }
 
+
+
         // hacemos el patch y luego creamos los planes
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },
-            ...(planesCrear.length) && { planes: planesCrear }
+            ...(planesCrear.length) && { planes: planesCrear },
+            registros: prestacion.ejecucion.registros
         };
 
         return this.patch(prestacion.id, dto);
