@@ -369,7 +369,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             let objectId = new ObjectID();
             let nuevoRegistro = new IPrestacionRegistro(elementoRUP, problemaHuds.concepto);
             // Le cargamos ya en el objeto valor el idRegistroOrigen
-            nuevoRegistro.valor = { idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro }
+            nuevoRegistro.valor = { idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro };
             // agregamos al array de registros
             this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
             this.showDatosSolicitud = false;
