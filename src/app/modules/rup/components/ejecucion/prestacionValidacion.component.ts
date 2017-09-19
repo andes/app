@@ -48,7 +48,10 @@ export class PrestacionValidacionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.inicializar(id);
+
         });
+
+
     }
 
     redirect(pagina: string) {
@@ -60,6 +63,10 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+            // Una vez que esta la prestacion llamamos a la funcion cargaPlan
+            if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
+                this.cargaPlan(id);
+            }
             // Carga la información completa del paciente
             // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
@@ -88,12 +95,12 @@ export class PrestacionValidacionComponent implements OnInit {
                 return false;
             } else {
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-                console.log(planes);
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                     this.prestacion = prestacion;
-                 }, (err) => {
-                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                 });
+                    this.prestacion = prestacion;
+                    this.cargaPlan(prestacion.id);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
             }
         });
     }
@@ -143,12 +150,22 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup']);
     }
 
-    darTurnoAutocitado(prestacionSolicitud) {
+    darTurno(prestacionSolicitud) {
         this.solicitudTurno = prestacionSolicitud;
         this.showDarTurnos = true;
-        // DEBERÍA VENIR POR PARÁMETRO --- VER LINEA 148
-        // this.solicitudTurno = null;
     }
 
+    cargaPlan(id) {
+        this.servicioPrestacion.get({ idPrestacionOrigen: id }).subscribe(prestacionSolicitud => {
+            let arraySolicitudes = prestacionSolicitud;
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                arraySolicitudes.forEach(prestacionSolicitada => {
+                    if (registro.concepto.conceptId === prestacionSolicitada.solicitud.tipoPrestacion.conceptId) {
+                        registro.prestacionSolicitud = prestacionSolicitada;
+                    }
+                });
+            });
+        });
+    }
 }
 
