@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 let shiroTrie = require('shiro-trie');
 
@@ -8,7 +8,7 @@ let shiroTrie = require('shiro-trie');
     templateUrl: 'arbolPermisos.html'
 })
 
-export class ArbolPermisosComponent implements OnInit {
+export class ArbolPermisosComponent implements OnInit, OnChanges {
 
     private shiro = shiroTrie.new();
     private state = false;
@@ -22,6 +22,13 @@ export class ArbolPermisosComponent implements OnInit {
     constructor(private plex: Plex) { }
 
     public ngOnInit() {
+        this.initShiro();
+        if (this.item.type && this.item.type === 'boolean') {
+            this.state = this.shiro.check(this.makePermission() + ':?');
+        }
+    }
+
+    public ngOnChanges() {
         this.initShiro();
         if (this.item.type && this.item.type === 'boolean') {
             this.state = this.shiro.check(this.makePermission() + ':?');

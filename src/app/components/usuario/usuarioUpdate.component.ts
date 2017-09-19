@@ -24,6 +24,9 @@ export class UsuarioUpdateComponent implements OnInit {
     @Output() data: EventEmitter<string> = new EventEmitter<string>();
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
+    private organizacionSelect = null;
+    private organizacionSelectPrev = null;
+
     private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
@@ -59,17 +62,15 @@ export class UsuarioUpdateComponent implements OnInit {
                 this.loadUser();
             }
         });
-
-
-
-
     }
 
 
     getOrganizaciones() {
         console.log(this.organizacionesAuth);
         this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.seleccion.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
-        debugger;
+        if (this.organizacionesUsuario.length > 0) {
+            this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
+        }
     }
 
 
@@ -79,31 +80,49 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.usuario = this.seleccion.usuario;
         this.userModel.nombre = this.seleccion.nombre;
         this.userModel.apellido = this.seleccion.apellido;
-        this.userModel.organizacion = this.auth.organizacion;
-
-        this.temp = this.seleccion.organizaciones.find(item =>
-            String(item._id) === String(this.auth.organizacion.id)
-        );
+        this.userModel.organizaciones = this.seleccion.organizaciones;
         this.getOrganizaciones();
+        this.loadPermisos();
+
+    }
+
+    onOrgChange() {
+        this.savePermisos();
+        this.organizacionSelectPrev = this.organizacionSelect;
+        this.loadPermisos();
+
+    }
+
+    loadPermisos() {
+        this.temp = this.seleccion.organizaciones.find(item =>
+            String(item._id) === String(this.organizacionSelectPrev._id)
+        );
         if (this.temp) {
             this.permisos = this.temp.permisos;
         } else {
             this.permisos = [];
         }
+    }
+
+    savePermisos() {
+        let permisos = [];
+        this.childsComponents.forEach(child => {
+            permisos = [...permisos, ...child.generateString()];
+        });
+
+        this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
+        this.temp.permisos = permisos;
 
     }
 
     onSave() {
-        // this.userModel.permisos = this.permisos;
-        // this.usuarioService.save(this.userModel).subscribe(user => {
-        //     this.plex.info('success', '', 'Usuario guardado', );
-        //     this.data.emit(user);
-        // });
-        let results = [];
-        this.childsComponents.forEach(child => {
-            results = [...results, ...child.generateString()];
+        this.savePermisos();
+        this.usuarioService.save(this.userModel).subscribe(user => {
+            this.plex.info('success', '', 'Usuario guardado', );
+            this.data.emit(user);
         });
-        console.log(results);
+
+        // console.log(results);
     }
 
     onCancel() {
