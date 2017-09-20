@@ -90,11 +90,11 @@
                                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos'">
                                     <!--Header agenda-->
                                     <div class="pt-3 text-center">
-                                        <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" (click)="verAgenda('izq')"></plex-button>
+                                        <plex-button *ngIf="agendas.length> 1" type="link" icon="chevron-left" class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
                                         <!-- <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span> -->
                                         <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}"> {{ estadosAgenda[agenda.estado].nombre }}</div></span>
 
-                                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" (click)="verAgenda('der')"></plex-button>
+                                        <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" class="text-lg" title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                             {{ tipoPrestacion.nombre }}
                                         </div>

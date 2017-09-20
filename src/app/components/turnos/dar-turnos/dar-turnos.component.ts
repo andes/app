@@ -669,12 +669,10 @@ export class DarTurnosComponent implements OnInit {
             if (enRango) {
                 if (direccion === 'der') {
                     if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice + 1].horaInicio).startOf('day').format()) {
-                        console.log(this.agenda.horaInicio + ' ' + this.agendas[this.indice + 1].horaInicio);
                         this.indice++;
                     }
                 } else if (direccion === 'izq') {
                     if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice - 1].horaInicio).startOf('day').format()) {
-                        console.log(this.agenda.horaInicio + ' ' + this.agendas[this.indice - 1].horaInicio);
                         this.indice--;
                     }
                 }
