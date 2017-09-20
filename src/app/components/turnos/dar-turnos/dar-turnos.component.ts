@@ -182,6 +182,11 @@ export class DarTurnosComponent implements OnInit {
                     // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
                     if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
                         this.permitirTurnoDoble = true;
+                        if (this.agenda.bloques[this.indiceBloque].citarPorBloque) {
+                            if (String(this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio) !== String(this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].horaInicio)) {
+                                this.permitirTurnoDoble = false;
+                            }
+                        }
                     }
                 }
             }

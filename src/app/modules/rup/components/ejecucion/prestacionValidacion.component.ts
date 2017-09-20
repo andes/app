@@ -30,6 +30,7 @@ export class PrestacionValidacionComponent implements OnInit {
      */
     public showDarTurnos = false;
     solicitudTurno;
+    public diagnosticoReadonly = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -66,6 +67,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.cargaPlan(id);
+                this.diagnosticoReadonly = true;
             }
             // Carga la información completa del paciente
             // [jgabriel] ¿Hace falta esto?
@@ -90,19 +92,29 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
-            if (!validar) {
-                return false;
-            } else {
-                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    this.cargaPlan(prestacion.id);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                });
-            }
-        });
+        let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
+        if (existeDiagnostico) {
+            this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+                if (!validar) {
+                    return false;
+                } else {
+                    let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+                    this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        this.cargaPlan(prestacion.id);
+                        this.diagnosticoReadonly = true;
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+                        this.plex.toast('success', 'La prestación se valido correctamente');
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                    });
+                }
+            });
+        } else {
+            this.plex.toast('warning', 'Debe seleccionar un diagnostico principal');
+        }
     }
 
     romperValidacion() {
@@ -166,6 +178,12 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
             });
         });
+    }
+    diagnosticoPrestacion(i) {
+        let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
+        if (actual) {
+            actual.esDiagnosticoPrincipal = false;
+        }
     }
 }
 
