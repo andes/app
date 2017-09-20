@@ -34,7 +34,9 @@ export interface IAgenda {
     bloques: IBloque[];
     estado: String;
     prePausada: String;
-    turnosDisponibles: number;
+    turnosDisponibles: number; // Virtual
+    turnosRestantesDelDia: number; // Virtual
+    turnosRestantesProgramados: number; // Virtual
     estadosAgendas: String[];
     nota: String;
     nominalizada: Boolean;
