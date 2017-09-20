@@ -34,6 +34,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
         if (!this.registro.valor) {
             this.registro.valor = { estado: 'activo' };
         } else {
+            debugger;
             // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
             // tenemos que mostrar las evoluciones anteriores
             // Si ademas el problema se origino con la transformación de un problema tambien lo mostramos

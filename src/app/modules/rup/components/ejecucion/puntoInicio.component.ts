@@ -80,15 +80,19 @@ export class PuntoInicioComponent implements OnInit {
      * Actualiza el listado de agendas y prestaciones
      */
     actualizar() {
+        let fechaDesde = moment(this.fecha).startOf('day');
+        let fechaHasta = moment(this.fecha).endOf('day');
+        let parametros = {
+            fechaDesde: fechaDesde.isValid() ? fechaDesde : moment().format(),
+            fechaHasta: fechaHasta.isValid() ? fechaHasta : moment().format(),
+            organizacion: this.auth.organizacion._id,
+            estados: ['disponible', 'publicada'],
+            tieneTurnosAsignados: true
+        };
+
         Observable.forkJoin(
             // Agendas
-            this.servicioAgenda.get({
-                fechaDesde: this.fecha,
-                fechaHasta: this.fecha,
-                organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada'],
-                tieneTurnosAsignados: true
-            }),
+            this.servicioAgenda.get(parametros),
             // Prestaciones
             this.servicioPrestacion.get({
                 fechaDesde: this.fecha,
@@ -98,6 +102,7 @@ export class PuntoInicioComponent implements OnInit {
                 // this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
+            debugger;
             this.agendas = data[0];
             this.prestaciones = data[1];
 
