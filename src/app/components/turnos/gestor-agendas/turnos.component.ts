@@ -232,6 +232,11 @@ export class TurnosComponent implements OnInit {
                 if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'disponible')) || (index === (bloqueTurno.turnos.length - 1))) {
                     return false;
                 }
+                if (bloqueTurno.citarPorBloque) {
+                    if ( String(bloqueTurno.turnos[index].horaInicio) !== String(bloqueTurno.turnos[index + 1].horaInicio)) {
+                        return false;
+                    }
+                }
             }
         }
         return true;
@@ -260,9 +265,10 @@ export class TurnosComponent implements OnInit {
             // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
             nota: this.turnosSeleccionados.length > 0,
             // Se verifica si el siguiente turno se encuentra disponible
-            turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado') && this.siguienteDisponible(),
+            turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
+            && this.todosConEstado('asignado') && this.siguienteDisponible(),
+            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble')
         };
-
     }
 
     liberarTurno() {

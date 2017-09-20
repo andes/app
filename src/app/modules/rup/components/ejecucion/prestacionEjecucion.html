@@ -97,8 +97,7 @@
                                                     </span>
                                             </div> -->
                                             <!-- RUP Loader  (change)="prestacionChanged()"-->
-                                            
-                                            <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"  [registro]="registro">
+                                            <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [paciente]="paciente" [registro]="registro">
                                             </rup>
                                         </div>
 
