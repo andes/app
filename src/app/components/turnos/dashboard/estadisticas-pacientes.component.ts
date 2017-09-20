@@ -24,7 +24,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.anulaciones = 0;
         this._paciente = value;
         this.pacienteSeleccionado = value;
-        let datosTurno = { pacienteId: this._paciente.id };
+        let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
         let cantInasistencias = 0;
         // Se muestra la cantidad de turnos otorgados e inasistencias
         this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
@@ -37,13 +37,15 @@ export class EstadisticasPacientesComponent implements OnInit {
             this.inasistencias = cantInasistencias;
         });
 
-        // Se muestra la cantidad de turnos anulados
-        let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
-        this.serviceLogPaciente.get(datosLog).subscribe(logs => {
-            if (logs && logs.length) {
-                this.anulaciones = logs.length;
-            }
-        });
+        if (this._paciente && this._paciente.id) {
+            // Se muestra la cantidad de turnos anulados
+            let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+            this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+                if (logs && logs.length) {
+                    this.anulaciones = logs.length;
+                }
+            });
+        }
     }
     get agenda(): any {
         return this._paciente;
