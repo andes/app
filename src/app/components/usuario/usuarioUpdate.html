@@ -20,6 +20,10 @@
                 <div *ngFor="let permiso of permisos$ | async ">
                     <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
                 </div>
+                <div *ngIf="btnEliminar">
+                    <div class="row">&nbsp;</div>
+                    <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                </div>
                 </span>
                 <div *ngIf="hidePermisos">
                     <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true">

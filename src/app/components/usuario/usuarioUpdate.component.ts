@@ -30,6 +30,8 @@ export class UsuarioUpdateComponent implements OnInit {
     private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
+
+    public btnEliminar: boolean;
     public showAgregarEfector: boolean;
     public newOrganizaciones: any;
     public newOrg: any;
@@ -77,7 +79,8 @@ export class UsuarioUpdateComponent implements OnInit {
         } else {
             this.newOrganizaciones = this.organizacionesAuth;
         }
-        (this.newOrganizaciones.length > 0) ? this.showAgregarEfector = true : this.showAgregarEfector = false;
+        this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
+        this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
     }
 
 
@@ -105,7 +108,6 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     agregarOrg() {
-        debugger;
         this.userModel.organizaciones.push({ _id: this.newOrg._id, permisos: [] });
         this.permisos = [];
         this.getOrganizaciones();
@@ -126,6 +128,13 @@ export class UsuarioUpdateComponent implements OnInit {
         }
     }
 
+    deleteEfector() {
+        let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
+        this.userModel.organizaciones.splice(index, 1);
+        this.getOrganizaciones();
+        this.loadPermisos();
+    }
+
     savePermisos() {
         let permisos = [];
         this.childsComponents.forEach(child => {
@@ -135,7 +144,6 @@ export class UsuarioUpdateComponent implements OnInit {
         if (this.temp) {
             this.temp.permisos = permisos;
         }
-
     }
 
     onSave() {
