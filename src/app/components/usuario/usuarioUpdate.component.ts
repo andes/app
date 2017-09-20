@@ -31,6 +31,9 @@ export class UsuarioUpdateComponent implements OnInit {
     private temp;
     private organizacionesAuth: any[] = [];
 
+    public newOrganizaciones: any;
+    public newOrg: any;
+    public hidePermisos = false;
     public organizacionesUsuario: any[] = [];
     public permisos$: any;
     public showCreate = false;
@@ -70,6 +73,9 @@ export class UsuarioUpdateComponent implements OnInit {
         this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.seleccion.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
         if (this.organizacionesUsuario.length > 0) {
             this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
+            this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.organizacionesUsuario.findIndex(item => elem.id === item.id) < 0);
+        } else {
+            this.newOrganizaciones = this.organizacionesAuth;
         }
     }
 
@@ -90,6 +96,16 @@ export class UsuarioUpdateComponent implements OnInit {
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
+
+    }
+
+    agregarOrg() {
+        this.seleccion.organizaciones.push(this.newOrg);
+        this.userModel.organizaciones.push(this.newOrg);
+        this.organizacionesUsuario.push(this.newOrg);
+        this.organizacionSelect = this.newOrg;
+        this.onOrgChange();
+        this.hidePermisos = false;
 
     }
 

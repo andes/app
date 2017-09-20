@@ -5,14 +5,29 @@
                 <header>
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
-                <plex-select label="Seleccione un efector" [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
-                    [required]="true" (change)="onOrgChange()">
-                </plex-select>
+                <span *ngIf="!hidePermisos">
+                <div class="row">
+                    <div class="col-9">
+                        <plex-select label="Seleccione un efector" [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                            [required]="true" (change)="onOrgChange()">
+                        </plex-select>
+                    </div>
+                    <div class="col">
+                        <div class="row">&nbsp;</div>
+                        <plex-button type="primary" label="Agregar Efector" (click)="hidePermisos = true"></plex-button>
+
+                    </div>
+                </div>
                 <div class="row">&nbsp;</div>
                 <div *ngFor="let permiso of permisos$ | async ">
                     <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
                 </div>
-
+                </span>
+                <div *ngIf="hidePermisos">
+                    <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true">
+                    </plex-select>
+                    <plex-button type="primary" icon="save" label="Agregar" (click)="agregarOrg()"></plex-button>
+                </div>
             </plex-box>
         </div>
         <div class="col text-center ">
