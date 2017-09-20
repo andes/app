@@ -57,9 +57,9 @@
 </section>
 
 <!--Footer-->
-<footer *ngIf="autorizado && !showDarTurnos">
+<!-- <footer *ngIf="autorizado && !showDarTurnos">
     <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
-</footer>
+</footer> -->
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
