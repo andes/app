@@ -8,14 +8,12 @@
                 <span *ngIf="!hidePermisos">
                 <div class="row">
                     <div class="col-9">
-                        <plex-select label="Seleccione un efector" [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
+                        <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
                             [required]="true" (change)="onOrgChange()">
                         </plex-select>
                     </div>
                     <div class="col" *ngIf="showAgregarEfector">
-                        <div class="row">&nbsp;</div>
-                        <plex-button type="primary" label="Agregar Efector" (click)="newEfector()"></plex-button>
-
+                        <plex-button type="info btn-sm" label="Agregar Efector" (click)="newEfector()"></plex-button>
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>

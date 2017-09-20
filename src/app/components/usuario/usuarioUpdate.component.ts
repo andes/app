@@ -70,10 +70,10 @@ export class UsuarioUpdateComponent implements OnInit {
 
 
     getOrganizaciones() {
-        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.userModel.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
+        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.userModel.organizaciones.findIndex(elem => elem._id === item._id) >= 0);
         if (this.organizacionesUsuario.length > 0) {
             this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
-            this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.organizacionesUsuario.findIndex(item => elem.id === item.id) < 0);
+            this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
         } else {
             this.newOrganizaciones = this.organizacionesAuth;
         }
@@ -105,6 +105,7 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     agregarOrg() {
+        debugger;
         this.userModel.organizaciones.push({ _id: this.newOrg._id, permisos: [] });
         this.permisos = [];
         this.getOrganizaciones();
@@ -130,9 +131,10 @@ export class UsuarioUpdateComponent implements OnInit {
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
         });
-
         this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
-        this.temp.permisos = permisos;
+        if (this.temp) {
+            this.temp.permisos = permisos;
+        }
 
     }
 
