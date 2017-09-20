@@ -25,7 +25,11 @@
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>
-                            <div class="col-4 text-right">
+                            <div class="col">
+                                <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles" title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
+                                    (change)="actualizar('')"></plex-bool>
+                            </div>
+                            <div class="col-3 text-right">
                                 <plex-button type="link" icon="chevron-left" (click)="cambiarMes('-')"></plex-button>
                                 <span class="text-120">{{ opciones.fecha | date: "MMM yyyy" | uppercase }}</span>
                                 <plex-button type="link" icon="chevron-right" (click)="cambiarMes('+')"></plex-button>
@@ -208,8 +212,8 @@
                                 </ng-container>
 
                                 <!--Confirmación del turno -->
-                                <ng-container *ngIf="estadoT == 'confirmacion'">
-                                    <legend class="pt-3 text-center">Confirme los datos del turnos</legend>
+                                <ng-container *ngIf="estadoT === 'confirmacion'">
+                                    <h5 class="pt-3 text-center">Confirme los datos del turnos</h5>
                                     <!--Header-->
                                     <div class="alert alert-default">
                                         <label>Turno</label>
@@ -235,10 +239,8 @@
                                         name="turnoTipoPrestacion"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                     <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
-                                    <div class="text-right mt-3">
-                                        <plex-button label="Volver" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
-                                        <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
-                                    </div>
+                                    <!-- <div class="text-right mt-3">
+                                    </div> -->
                                 </ng-container>
                             </fieldset>
                         </plex-tab>
@@ -270,9 +272,11 @@
 
     <footer *ngIf="autorizado && showDarTurnos">
         <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
-        <div class="float-right">
-            <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
-            <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+        <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
+        <div *ngIf="estadoT === 'confirmacion'" class="float-right">
+            <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
+            <plex-button *ngIf="mostrarCalendario" label="No se asigna Turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+            <plex-button label="Confirmar Turno" type="success" (click)="darTurno()"></plex-button>
         </div>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
