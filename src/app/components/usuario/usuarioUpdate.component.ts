@@ -126,7 +126,6 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     savePermisos() {
-        debugger;
         let permisos = [];
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
