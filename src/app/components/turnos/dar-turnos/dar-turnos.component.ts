@@ -182,6 +182,11 @@ export class DarTurnosComponent implements OnInit {
                     // se verifica el estado del siguiente turno, si está disponible se permite la opción de turno doble
                     if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].estado === 'disponible') {
                         this.permitirTurnoDoble = true;
+                        if (this.agenda.bloques[this.indiceBloque].citarPorBloque) {
+                            if (String(this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio) !== String(this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1].horaInicio)) {
+                                this.permitirTurnoDoble = false;
+                            }
+                        }
                     }
                 }
             }
@@ -323,9 +328,10 @@ export class DarTurnosComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
-        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.profesionales) {
+            // TODO quedaria ver que se va a hacer cuando en la solicitud se tengan mas de un profesional asignado
             let query = {
-                nombreCompleto: this._solicitudPrestacion.solicitud.profesional.nombreCompleto
+                nombreCompleto: this._solicitudPrestacion.solicitud.registros[0].valor.profesionales[0].nombreCompleto,
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
@@ -1067,7 +1073,7 @@ export class DarTurnosComponent implements OnInit {
     volver() {
         this.showDarTurnos = false;
         this.cancelarDarTurno.emit(true);
-        // this.buscarPaciente();
+        this.buscarPaciente();
     }
 
     redirect(pagina: string) {

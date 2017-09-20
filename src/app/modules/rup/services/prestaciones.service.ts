@@ -67,9 +67,6 @@ export class PrestacionesService {
             };
 
             return this.server.get(this.prestacionesUrl, opt).map(data => {
-                // if (idPrestacion) {
-                //     data = data.filter(d => d.id !== idPrestacion);
-                // }
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
                 this.cacheRegistros[idPaciente] = null;
@@ -138,6 +135,25 @@ export class PrestacionesService {
     }
 
     /**
+     * Metodo getByPacienteKey
+     * @param {String} idPaciente
+     */
+    getRegistroById(idPaciente: any, id: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                    registros = [...registros, ...prestacion.ejecucion.registros];
+
+                }
+            });
+            return registros.find(r => r.id === id);
+
+        });
+    }
+
+    /**
      * Metodo getByPacienteHallazgo lista todo los hallazgos registrados del paciente
      * @param {String} idPaciente
      */
@@ -183,7 +199,10 @@ export class PrestacionesService {
                             profesional: registro.createdBy.nombreCompleto,
                             fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : null,
                             estado: registro.valor.estado ? registro.valor.estado : '',
-                            evolucion: registro.valor.evolucion ? registro.valor.evolucion : ''
+                            evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
+                            idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
+                            idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
+                            origen: registro.valor.origen ? registro.valor.origen : null
                         }]
                     };
                     registroSalida.push(dato);
@@ -192,11 +211,13 @@ export class PrestacionesService {
                     let nuevaEvolucion = {
                         fechaCarga: registro.createdAt,
                         idRegistro: registro.id,
-                        idRegistroOrigen: registro.valor.idRegistroOrigen,
                         profesional: registro.createdBy.nombreCompleto,
                         fechaInicio: registro.valor.fechaInicio ? registro.valor.fechaInicio : ultimaEvolucion.fechaInicio,
                         estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
-                        evolucion: registro.valor.evolucionProblema.evolucion ? registro.valor.evolucion : ''
+                        evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
+                        idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
+                        idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
+                        origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -388,7 +409,6 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-
         let planesCrear = [];
 
         if (planes.length) {
@@ -400,16 +420,8 @@ export class PrestacionesService {
                 // asignamos la prestacion de origen
                 nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
-                let nuevoRegistro: any = {
-                    concepto: plan.concepto,
-                    destacado: plan.destacado,
-                    relacionadoCon: plan.relacionadoCon,
-                    tipo: plan.tipo,
-                    valor: plan.valor
-                };
-
                 // agregamos los registros en la solicitud
-                nuevaPrestacion.solicitud.registros.push(nuevoRegistro);
+                nuevaPrestacion.solicitud.registros.push(plan);
 
                 planesCrear.push(nuevaPrestacion);
 
@@ -420,11 +432,14 @@ export class PrestacionesService {
             });
         }
 
+
+
         // hacemos el patch y luego creamos los planes
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },
-            ...(planesCrear.length) && { planes: planesCrear }
+            ...(planesCrear.length) && { planes: planesCrear },
+            registros: prestacion.ejecucion.registros
         };
 
         return this.patch(prestacion.id, dto);
