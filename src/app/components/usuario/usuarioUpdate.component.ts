@@ -30,7 +30,7 @@ export class UsuarioUpdateComponent implements OnInit {
     private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
-
+    public showAgregarEfector: boolean;
     public newOrganizaciones: any;
     public newOrg: any;
     public hidePermisos = false;
@@ -70,13 +70,14 @@ export class UsuarioUpdateComponent implements OnInit {
 
 
     getOrganizaciones() {
-        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.seleccion.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
+        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.userModel.organizaciones.findIndex(elem => elem.id === item.id) >= 0);
         if (this.organizacionesUsuario.length > 0) {
             this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
             this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.organizacionesUsuario.findIndex(item => elem.id === item.id) < 0);
         } else {
             this.newOrganizaciones = this.organizacionesAuth;
         }
+        (this.newOrganizaciones.length > 0) ? this.showAgregarEfector = true : this.showAgregarEfector = false;
     }
 
 
@@ -96,21 +97,25 @@ export class UsuarioUpdateComponent implements OnInit {
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
+    }
 
+    newEfector() {
+        this.savePermisos();
+        this.hidePermisos = true;
     }
 
     agregarOrg() {
-        this.seleccion.organizaciones.push(this.newOrg);
-        this.userModel.organizaciones.push(this.newOrg);
+        this.userModel.organizaciones.push({ _id: this.newOrg._id, permisos: [] });
+        this.permisos = [];
+        this.getOrganizaciones();
         this.organizacionesUsuario.push(this.newOrg);
         this.organizacionSelect = this.newOrg;
-        this.onOrgChange();
+        this.organizacionSelectPrev = this.organizacionSelect;
         this.hidePermisos = false;
-
     }
 
     loadPermisos() {
-        this.temp = this.seleccion.organizaciones.find(item =>
+        this.temp = this.userModel.organizaciones.find(item =>
             String(item._id) === String(this.organizacionSelectPrev._id)
         );
         if (this.temp) {
@@ -121,6 +126,7 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     savePermisos() {
+        debugger;
         let permisos = [];
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];

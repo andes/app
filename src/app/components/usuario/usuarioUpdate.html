@@ -12,9 +12,9 @@
                             [required]="true" (change)="onOrgChange()">
                         </plex-select>
                     </div>
-                    <div class="col">
+                    <div class="col" *ngIf="showAgregarEfector">
                         <div class="row">&nbsp;</div>
-                        <plex-button type="primary" label="Agregar Efector" (click)="hidePermisos = true"></plex-button>
+                        <plex-button type="primary" label="Agregar Efector" (click)="newEfector()"></plex-button>
 
                     </div>
                 </div>
