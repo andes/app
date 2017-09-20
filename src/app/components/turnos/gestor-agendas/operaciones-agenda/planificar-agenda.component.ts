@@ -160,7 +160,7 @@ export class PlanificarAgendaComponent implements OnInit {
             }
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.modelo.espacioFisico && this.modelo.espacioFisico.id) {
-                    listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
+                    listaEspaciosFisicos = this.modelo.espacioFisico ? this.modelo.espacioFisico.concat(resultado) : resultado;
                 } else {
                     listaEspaciosFisicos = resultado;
                 }
@@ -203,7 +203,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.modelo.nominalizada = !this.noNominalizada;
     }
 
-    public calculosInicio() {
+    calculosInicio() {
         this.modelo.fecha = this.modelo.horaInicio;
         let bloques = this.modelo.bloques;
         bloques.forEach((bloque, index) => {
