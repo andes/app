@@ -433,12 +433,19 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
 
+
             // Por defecto no se muestran
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    return agenda.estado === 'publicada' && (this.hoy && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
+                    console.log((moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format()));
+
+                    return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
                 });
+                // this.agendas = this.agendas.filter(agenda => {
+                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosDisponiblesGestion > 0 || agenda.turnosDisponiblesProfesional > 0)
+                // });
             }
+
 
             // Ordena las Agendas por fecha/hora de inicio
             this.agendas = this.agendas.sort((a, b) => {
