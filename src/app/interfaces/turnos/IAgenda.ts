@@ -37,8 +37,8 @@ export interface IAgenda {
     turnosDisponibles: number; // Virtual
     turnosRestantesDelDia: number; // Virtual
     turnosRestantesProgramados: number; // Virtual
-    turnosDisponiblesGestion: number; // Virtual
-    turnosDisponiblesProfesional: number; // Virtual
+    turnosRestantesGestion: number; // Virtual
+    turnosRestantesProfesional: number; // Virtual
     estadosAgendas: String[];
     nota: String;
     nominalizada: Boolean;
