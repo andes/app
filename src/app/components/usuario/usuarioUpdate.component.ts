@@ -2,6 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
+import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import * as enumerados from './../../utils/enumerados';
 // Services
@@ -56,19 +57,25 @@ export class UsuarioUpdateComponent implements OnInit {
         //
     };
 
-    constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService,
+    constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private router: Router,
         private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
-        this.permisos$ = this.permisosService.get();
 
+        this.permisos$ = this.permisosService.get();
         this.permisosService.organizaciones({ admin: true }).subscribe(data => {
             this.organizacionesAuth = data;
-            if (this.seleccion) {
-                this.loadUser();
+            if (this.organizacionesAuth.length > 0) {
+                if (this.seleccion) {
+                    this.loadUser();
+                }
+            } else {
+                this.router.navigate(['./inicio']);
             }
         });
     }
+
+
 
 
     getOrganizaciones() {
