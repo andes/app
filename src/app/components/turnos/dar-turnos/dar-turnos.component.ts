@@ -442,7 +442,7 @@ export class DarTurnosComponent implements OnInit {
                     return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
                 });
                 // this.agendas = this.agendas.filter(agenda => {
-                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosDisponiblesGestion > 0 || agenda.turnosDisponiblesProfesional > 0)
+                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
                 // });
             }
 
