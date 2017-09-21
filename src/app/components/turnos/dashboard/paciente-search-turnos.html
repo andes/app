@@ -1,4 +1,4 @@
-<section>
+<section class="plex-layout">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -16,7 +16,9 @@
                 <table *ngIf="resultado && resultado.length" class="table table-striped">
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
-                            <td>{{this.paciente | paciente}} <br> | <b>D.N.I.</b> <span>{{paciente.documento | number}}</span>                                | <b>Fecha de Nacimiento</b> <span>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>                                | <b>Sexo</b> <span>{{paciente.sexo}}</span>
+                            <td>
+                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>                                {{this.paciente | paciente}} <br> | <b>D.N.I.</b> <span>{{paciente.documento | number}}</span>                                | <b>Fecha de Nacimiento</b> <span>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>                                | <b>Sexo</b> <span>{{paciente.sexo}}</span>
                             </td>
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado" title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
@@ -38,5 +40,5 @@
     </div>
 </section>
 <footer *ngIf="!esEscaneado">
-    <plex-button label="Nuevo Paciente" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+        <plex-button label="Nuevo Paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
 </footer>
