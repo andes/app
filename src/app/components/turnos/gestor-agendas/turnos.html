@@ -160,8 +160,8 @@
                                 <i class="mdi mdi-account-check"></i>
                             </span>
                             <span *ngIf="turno?.nota"><i title="{{turno.nota}}" titlePosition="left" class="text-warning warning mdi mdi-message"></i></span>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success">Asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger">No asistió</div>
                             <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"><i class="text-success mdi mdi-emoticon-happy"></i></div>
                         </td>
                         <td>

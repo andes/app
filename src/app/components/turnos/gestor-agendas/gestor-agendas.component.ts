@@ -41,6 +41,7 @@ import * as moment from 'moment';
 import {
     enumToArray
 } from '../../../utils/enums';
+import { ITurno } from '../../../interfaces/turnos/ITurno';
 
 @Component({
     selector: 'gestor-agendas',
@@ -59,6 +60,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     agendasSeleccionadas: IAgenda[] = [];
+    turnosSeleccionados: ITurno[] = [];
 
     public showGestorAgendas = true;
     public showTurnos = false;
@@ -74,6 +76,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
     public showListadoTurnos = false;
+    public showSuspenderTurnos = false;
     public agendas: any = [];
     public agenda: any = {};
     public modelo: any = {};
@@ -247,6 +250,7 @@ export class GestorAgendasComponent implements OnInit {
         };
 
         this.getAgendas(params);
+
     }
 
     agregarNotaAgenda() {
@@ -486,18 +490,41 @@ export class GestorAgendasComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    actualizarEstadoEmit() {
-        this.showTurnos = false;
-        this.showEditarAgenda = false;
-        this.showEditarAgendaPanel = false;
-        this.showAgregarNotaAgenda = false;
-        this.showReasignarTurno = false;
-        this.showReasignarTurnoAutomatico = false;
-        this.showRevisionAgenda = false;
+    actualizarEstadoEmit(estado) {
+
+        // Se suspende una agenda completa
+        // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
+        if (estado === 'suspendida') {
+            this.showTurnos = false;
+            this.showEditarAgenda = false;
+            this.showEditarAgendaPanel = false;
+            this.showAgregarNotaAgenda = false;
+            this.showReasignarTurno = false;
+            this.showReasignarTurnoAgendas = false;
+            this.showReasignarTurnoAutomatico = false;
+            this.showRevisionAgenda = false;
+            this.showSuspenderTurnos = true;
+
+            this.agendasSeleccionadas[0].bloques.forEach(bloque => {
+                bloque.turnos.forEach(turno => {
+                    this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
+                });
+            });
+        } else {
+            this.showTurnos = false;
+            this.showEditarAgenda = false;
+            this.showEditarAgendaPanel = false;
+            this.showAgregarNotaAgenda = false;
+            this.showReasignarTurno = false;
+            this.showReasignarTurnoAgendas = false;
+            this.showReasignarTurnoAutomatico = false;
+            this.showRevisionAgenda = false;
+        }
 
         let temporal = this.agendasSeleccionadas;
 
         this.loadAgendas();
+
         this.agendasSeleccionadas = temporal;
         this.agendasSeleccionadas.forEach((as) => {
             if (this.agendasSeleccionadas.length === 1) {
@@ -531,6 +558,21 @@ export class GestorAgendasComponent implements OnInit {
         let horas = moment.duration(horaFin - horaInicio).hours();
         let minutos = moment.duration(horaFin - horaInicio).minutes();
         return horas + (horas === 1 ? ' hora ' : ' horas ') + (minutos > 0 ? minutos + ' minutos' : '');
+    }
+
+    cerrarSuspenderTurno() {
+        this.showSuspenderTurnos = false;
+        this.showClonar = false;
+        this.showDarTurnos = false;
+        this.showEditarAgenda = false;
+        this.showEditarAgendaPanel = false;
+        this.showTurnos = false;
+        this.showRevisionAgenda = false;
+        this.showReasignarTurno = false;
+        this.showReasignarTurnoAutomatico = true;
+        this.showListadoTurnos = false;
+        this.showAgregarNotaAgenda = false;
+        this.loadAgendas();
     }
 
 }

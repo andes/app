@@ -22,6 +22,7 @@
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
+                                <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
@@ -34,7 +35,8 @@
                                 </plex-select>
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-4' : 'col-2'}} text-right">
-                                <label><!--Spacer-->&nbsp;</label>
+                                <label>
+                                    <!--Spacer-->&nbsp;</label>
                                 <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                             </div>
                         </div>
@@ -80,13 +82,17 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
-                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date:
-                                        'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs - <i class="mdi mdi-timelapse"
-                                            title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
-                                        <span *ngIf="agenda.nota"><i title="{{agenda.nota}}" class="mdi mdi-comment"></i></span>
+                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                        -
+                                        <i class="mdi mdi-timelapse" title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
+                                        <span *ngIf="agenda.nota">
+                                            <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
+                                        </span>
                                     </div>
                                     <div>
-                                        <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre ?' - ' + agenda.espacioFisico.servicio.nombre : '') + (agenda.espacioFisico.edificio.descripcion ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
+                                        <small *ngIf="agenda.espacioFisico?.nombre">{{ agenda.espacioFisico.nombre + (agenda.espacioFisico.servicio && agenda.espacioFisico.servicio.nombre
+                                            ?' - ' + agenda.espacioFisico.servicio.nombre : '') + (agenda.espacioFisico.edificio.descripcion
+                                            ? ' (' + agenda.espacioFisico.edificio.descripcion + ')' : '') }}</small>
                                         <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                                     </div>
                                 </td>
@@ -103,7 +109,9 @@
                                     <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                     <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{estadosAgenda[agenda.estado].nombre}}</span>
                                     <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
-                                    <span class="text-white"><strong>{{ turnosSuspendidos[i].count }}</strong></span>
+                                        <span class="text-white">
+                                            <strong>{{ turnosSuspendidos[i].count }}</strong>
+                                        </span>
                                     </span>
                                     <span class="badge-warning float-right" *ngIf="suspensionAvisada(agenda)">Solicitud de suspensión</span>
                                 </td>
@@ -129,8 +137,13 @@
                             (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                     </div>
                     <!-- Panel Reasignar Turnos Automático -->
-                    <div *ngIf="showReasignarTurnoAutomatico">
+                    <div *ngIf="showReasignarTurnoAutomatico && !showSuspenderTurnos">
                         <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
+                    </div>
+                    <div *ngIf="showSuspenderTurnos">
+                        <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
+                            (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cerrarSuspenderTurno($event)">
+                        </suspender-turno>
                     </div>
                 </plex-box>
             </div>
@@ -148,19 +161,18 @@
         </div>
     </footer>
 
-    <!--Componentes-->
+    <!-- Operaciones de Agenda -->
     <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
-    <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
-    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
-
     <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
     <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
     <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
-    <!-- Pantalla Reasignar Turnos -->
+    <!-- Operaciones de Turnos -->
+    <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
+    <dar-turnos *ngIf="showDarTurnos" (volverAlGestor)="volverAlGestor($event)"></dar-turnos>
     <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
         class="plex-layout"></reasignar-turno>
     <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
-    <!-- Listado e Impresion de Agendas -->
     <listar-turnos *ngIf="showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
+
 </form>
