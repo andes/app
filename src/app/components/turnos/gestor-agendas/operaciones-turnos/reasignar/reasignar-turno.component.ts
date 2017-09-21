@@ -7,6 +7,7 @@ import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
+import { TiposDeTurnos } from './../../../enums';
 // import { SmsService } from './../../../../../services/turnos/sms.service';
 import * as moment from 'moment';
 
@@ -51,6 +52,8 @@ export class ReasignarTurnoComponent implements OnInit {
     public suspendio = false;
     public autorizado: any;
     private permisosRequeridos = 'reasignarTurnos';
+
+    public tiposDeTurnos = TiposDeTurnos;
 
 
     constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }

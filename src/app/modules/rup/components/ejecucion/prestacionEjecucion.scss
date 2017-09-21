@@ -417,10 +417,6 @@ fieldset[disabled] .btn-procedimientos.active {
     font-size: 1.2em;
 }
 
-
-$lista-problemas: "hallazgo", "trastorno", "situacion";
-$selector: ();
-
 @each $item in $lista-problemas {
     $selector: $selector, unquote('.#{$item}');
 }
@@ -428,10 +424,7 @@ $selector: ();
 #{$selector} {
     background-color: $problemas;
   }
-
-  $lista-procedimientos: "procedimiento", "entidad";
-  $selector2: ();
-  
+ 
   @each $item in $lista-procedimientos {
       $selector2: $selector2, unquote('.#{$item}');
   }

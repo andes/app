@@ -1,13 +1,16 @@
 <!--Filtros-->
-<div class="row">
-    <div class="col-12">
-        <hr>
-        <h4>Mapa de espacios físicos</h4>
-        <p>Haga click en el área verde para asignar el espacio físico.</p>
+<fieldset>
+    <legend>Mapa de Espacio Físico</legend>
+    <div class="alert alert-default small">
+        <div class="row">
+            <div class="col-12">
+                <p>Haga click en el área verde para asignar el espacio físico.</p>
+            </div>
+        </div>
     </div>
-</div>
-<div class="row">
-    <!-- <div class="col-3">
+
+    <div class="row">
+        <!-- <div class="col-3">
         <plex-datetime type="date" name="fechaDesde" label="Desde" class="fechas">
         </plex-datetime>
     </div>
@@ -16,16 +19,17 @@
         </plex-datetime>
     </div> -->
 
-    <div class="col-4">
-        <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
+        <div class="col-4">
+            <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
             (change)="validarTodo()">
         </plex-select> -->
-        <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
-    </div>
+            <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
+        </div>
 
-    <div class="col-4">
-        <plex-select [(ngModel)]="agenda.equipamiento" label="Equipamiento" name="agenda.equipamiento" (getData)="loadEquipamientos($event)"
-            [multiple]="true" labelField="term" (change)="nombreChange($event)">
-        </plex-select>
+        <div class="col-4">
+            <plex-select [(ngModel)]="agenda.equipamiento" label="Equipamiento" name="agenda.equipamiento" (getData)="loadEquipamientos($event)"
+                [multiple]="true" labelField="term" (change)="nombreChange($event)">
+            </plex-select>
+        </div>
     </div>
-</div>
+</fieldset>
