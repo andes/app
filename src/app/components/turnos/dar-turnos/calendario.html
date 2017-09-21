@@ -2,24 +2,24 @@
     <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
                 'weekend'          : day.weekend,
-                'outline-danger'   : (day.estado === 'ocupado') && !day.seleccionado,
+                'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado),
                 'outline-success'  : (day.estado === 'disponible') && !day.seleccionado,
                 'outline-primary'  : day.seleccionado,
                 'hover'            : day.estado !== 'vacio'
             }">
             <div *ngIf="day.cantidadAgendas > 0">
-                <div class="dia">{{ day.fecha | date:"d" }}</div>
-                <div class="nombre">{{ day.fecha | date:"EEE" | uppercase }}</div>
+                <div class="dia">{{ day.fecha | date: 'd' }}</div>
+                <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
                 <small title="{{ 'Agendas: ' + day.cantidadAgendas + ' / Turnos disponibles: ' + day.turnosDisponibles }}">
-                    A:{{day.cantidadAgendas}} 
+                    A:{{day.cantidadAgendas}}
                     <i *ngIf="day.turnosDisponibles > 0" class="mdi mdi-check-circle text-success"></i>
-                    <i *ngIf="day.turnosDisponibles == 0" class="mdi mdi-close-circle text-danger"></i> 
-                    T:{{day.turnosDisponibles }}
+                    <i *ngIf="day.turnosDisponibles == 0" class="mdi mdi-close-circle text-danger"></i>
+                    T:{{ day.turnosDisponibles }}
                 </small>
             </div>
             <div *ngIf="day.cantidadAgendas <= 0">
-                <div class="dia">{{ day.fecha | date:"d" }}</div>
-                <div class="nombre">{{ day.fecha | date:"EEE" | uppercase }}</div>
+                <div class="dia">{{ day.fecha | date: 'd' }}</div>
+                <div class="nombre">{{ day.fecha | date: 'EEE' | uppercase }}</div>
             </div>
         </td>
     </tr>

@@ -1,3 +1,4 @@
+<fieldset>
 <table class="mapa-espacios table table-striped table-hover">
     <tr class="header">
         <td>Espacio Físico</td>
@@ -8,7 +9,7 @@
 
     <tr class="hover" *ngFor="let espacio of matrix" class="">
         <td>
-            <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio.descripcion}}"
+            <small title="{{espacio._value.servicio?.nombre + ' - ' + espacio._value.sector?.nombre + ' - ' + espacio._value.edificio?.descripcion}}"
                 titlePosition="right"><strong>{{espacio._value.nombre}}</strong></small><br>
             <small *ngIf="espacio.sector">{{espacio._value.sector.nombre}}</small>
             <span *ngFor="let eq of espacio._value.equipamiento" class="badge badge-info">{{eq.term}}</span>
@@ -33,3 +34,9 @@
         </td>
     </tr>
 </table>
+<div class="row">
+    <div class="col">
+        <plex-button type="info" label="Cerrar Mapa" (click)="cerrarMapa($event)"></plex-button>
+    </div>
+</div>
+</fieldset>
