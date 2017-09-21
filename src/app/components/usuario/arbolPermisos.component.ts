@@ -2,6 +2,8 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
+import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
+import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -15,6 +17,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
     private state = false;
     private all = false;
     private seleccionados = [];
+    private allModule = false;
 
     @Input() item: any;
 
@@ -23,10 +26,20 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
 
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
+    @ViewChildren(PlexPanelComponent) accordions: QueryList<PlexPanelComponent>;
+
     constructor(
         private plex: Plex,
         private servicioTipoPrestacion: TipoPrestacionService
     ) { }
+
+    expand($event) {
+        if ($event) {
+            if (this.allModule) {
+                this.accordions.first.active = false;
+            }
+        }
+    }
 
     public ngOnInit() {
         this.initShiro();
@@ -99,6 +112,9 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
 
     public generateString(): String[] {
         let results = [];
+        if (this.allModule) {
+            return [this.makePermission() + ':*'];
+        }
         if (this.item.child) {
             this.childsComponents.forEach(child => {
                 results = [...results, ...child.generateString()];

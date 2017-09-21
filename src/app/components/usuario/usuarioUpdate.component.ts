@@ -93,7 +93,6 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.organizaciones = this.seleccion.organizaciones;
         this.getOrganizaciones();
         this.loadPermisos();
-
     }
 
     onOrgChange() {
