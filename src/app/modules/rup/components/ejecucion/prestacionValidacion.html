@@ -14,7 +14,7 @@
             <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
                 <div class="col-4">
                     <div class="rup-card">
-                        <div class="type {{elemento.concepto.semanticTag}}">
+                        <div class="type {{elemento.concepto.semanticTag}}" [ngClass]="{ 'plan': elemento?.esSolicitud === true }">
                         </div>
                         <div class="rup-content">
                             <div class="header">
@@ -48,11 +48,11 @@
                                         {{elemento.relacionadoCon[0].concepto.term}}
                                     </ng-container>
                                 </div>
-                                <div *ngIf="!diagnosticoReadonly && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'"> 
+                                <div *ngIf="!diagnosticoReadonly && (elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                     <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnostico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
                                 </div>
-                                <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'">
-                                        Diagnostico principal
+                                <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal">
+                                    Diagnostico principal
                                 </div>
                             </div>
                         </div>

@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
@@ -37,7 +38,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Listado de todos los hallazgos
      */
-    public hallazgos: any = [];
+    public hallazgosNoActivos: any = [];
 
     /**
      * Listado de todos los hallazgos
@@ -70,7 +71,7 @@ export class HudsBusquedaComponent implements OnInit {
         if (this.paciente) {
             this.listarPrestaciones();
             // this.listarProblemasCronicos();
-            // this.listarHallazgos();
+            this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
         }
     }
@@ -116,9 +117,15 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    listarHallazgos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.hallazgos = hallazgos;
+    listarHallazgosNoActivos() {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
+
+            this.hallazgosNoActivos = listaHallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
+            this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
+                if (element.evoluciones[0].idRegistroGenerado) {
+                    element['transformado'] = listaHallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
+                } return element;
+            });
         });
     }
 
@@ -130,7 +137,18 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo' && !h.evoluciones[0].esCronico);
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo');
         });
+    }
+
+    buscarTranformacion(transformado) {
+        ;
+        let listaCompleta = [... this.hallazgosNoActivos, ... this.problemasActivos];
+        let hallazgoEncontrado = listaCompleta.find(h => h.evoluciones[0].idRegistro === transformado.evoluciones[0].idRegistroGenerado);
+        if (hallazgoEncontrado) {
+            return hallazgoEncontrado.concepto.term;
+        } else {
+            return '';
+        }
     }
 }

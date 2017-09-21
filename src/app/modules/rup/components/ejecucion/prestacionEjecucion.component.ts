@@ -349,11 +349,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.plex.confirm('El concepto seleccionado ya se ha registrado en la consulta ¿Desea continuar con la transformación?', 'Transformar Problema').then(validar => {
                     if (validar) {
                         // Si el concepto ya esta registrado en la consulta los vinculamos
-                        this.registroATransformar.valor.estado = 'transformado';
+
                         registoExiste.valor['idRegistroTransformado'] = this.registroATransformar.id;
                         registoExiste.valor['origen'] = 'transformación';
                         registoExiste.relacionadoCon = [this.registroATransformar];
                         this.transformarProblema = false;
+                        this.registroATransformar.valor.estado = 'transformado';
+                        this.registroATransformar.valor['idRegistroGenerado'] = registoExiste.id;
                         return registoExiste;
                     }
                 });
@@ -363,6 +365,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
                 nuevoRegistro.relacionadoCon = [this.registroATransformar];
                 this.transformarProblema = false;
+                this.registroATransformar.valor.estado = 'transformado';
+                this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
                 return nuevoRegistro;
             }
 
@@ -376,7 +380,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
-                        debugger;
                         if (dato) {
                             // TODO:: vamos a comprobar si se trata de hallazgo cronico o activo
                             if (dato.evoluciones[0].estado === 'activo') {

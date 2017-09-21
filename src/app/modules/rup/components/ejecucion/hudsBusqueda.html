@@ -112,8 +112,37 @@
 
             <!-- Vista: Hallazgos -->
             <ng-container *ngIf="vista == 'hallazgos'">
-                <div class="vista-titulo">Hallazgos</div>
-                <div>No se encontraron registros</div>
+                <div class="vista-titulo">Problemas</div>
+                <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let problema of hallazgosNoActivos; let i = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini">
+                                <div class="type problemas">
+                                    <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{ problema.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="problema.evoluciones">
+                                            última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}<br>
+                                            estado: {{ problema.evoluciones[0].estado }}
+                                            <br>
+                                            <span class="badge-info" *ngIf="problema.evoluciones[0].estado == 'transformado'">
+                                                Transformado en: {{ problema.transformado?.concepto.term }}
+                                            </span>
+                                        </small><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+
+
+                <div *ngIf="!hallazgosNoActivos">No se encontraron registros</div>
             </ng-container>
 
             <!-- Vista: prestaciones -->
