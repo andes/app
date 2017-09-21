@@ -1,0 +1,21 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <header>
+                <div class="page-title">Seleccione una organización</div>
+            </header>
+            <fieldset>
+                <div class="row">&nbsp;</div>
+                <ul class="list-group">
+                    <li class="list-group-item boton color-rosa" *ngFor="let _unaOrg of organizaciones">
+                        <div class="row">
+                            <div class="col-11">
+                                <div (click)=seleccionar(_unaOrg)> {{_unaOrg.nombre}} </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+        </plex-box>
+    </section>
+</form>

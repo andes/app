@@ -22,7 +22,7 @@
   "dependencies": {
     "@andes/auth": "^1.0.0",
     "@andes/match": "^0.1.9",
-    "@andes/plex": "^2.0.11",
+    "@andes/plex": "^2.0.13",
     "@andes/shared": "^1.0.1",
     "@angular/animations": "^4.3.1",
     "@angular/cdk": "^2.0.0-beta.8",
@@ -61,7 +61,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
-    "tslint": "^4.4.2",
+    "tslint": "~4.4.2",
     "typescript": "^2.4.2",
     "webpack": "^3.4.1"
   }
