@@ -129,10 +129,14 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     deleteEfector() {
-        let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
-        this.userModel.organizaciones.splice(index, 1);
-        this.getOrganizaciones();
-        this.loadPermisos();
+        this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then(value => {
+            if (value) {
+                let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
+                this.userModel.organizaciones.splice(index, 1);
+                this.getOrganizaciones();
+                this.loadPermisos();
+            }
+        });
     }
 
     savePermisos() {
