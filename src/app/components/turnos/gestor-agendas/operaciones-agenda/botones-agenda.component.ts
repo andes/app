@@ -2,9 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { Plex } from '@andes/plex';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import {
-    Auth
-} from '@andes/auth';
+import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 
 @Component({
@@ -19,7 +17,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
-    @Output() actualizarEstadoEmit = new EventEmitter<boolean>();
+    @Output() actualizarEstadoEmit = new EventEmitter<string>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
     @Output() revisionAgendaEmit = new EventEmitter<boolean>();
@@ -57,8 +55,7 @@ export class BotonesAgendaComponent implements OnInit {
     showEditarAgendaPanel: Boolean = false;
     cantSel: number;
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public auth: Auth) {
-    }
+    constructor(public plex: Plex, public serviceAgenda: AgendaService, public auth: Auth) { }
 
     ngOnInit() {
         if (this.cantSel > 0) {
@@ -85,11 +82,11 @@ export class BotonesAgendaComponent implements OnInit {
                                     return false;
                                 }
                                 this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                this.actualizarEstadoEmit.emit(true);
+                                this.actualizarEstadoEmit.emit(estado);
                             });
                         } else {
                             this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                            this.actualizarEstadoEmit.emit(true);
+                            this.actualizarEstadoEmit.emit(estado);
                         }
 
 
@@ -103,11 +100,11 @@ export class BotonesAgendaComponent implements OnInit {
                                         return false;
                                     }
                                     this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                    this.actualizarEstadoEmit.emit(true);
+                                    this.actualizarEstadoEmit.emit(estado);
                                 });
                             } else {
                                 this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                this.actualizarEstadoEmit.emit(true);
+                                this.actualizarEstadoEmit.emit(estado);
                             }
                         }
                     }
@@ -133,8 +130,6 @@ export class BotonesAgendaComponent implements OnInit {
                 if (!confirmado) {
                     return false;
                 } else {
-                    // TODO: Enviar SMS a todos!
-                    this.plex.toast('danger', 'TODO: enviar SMS a todos', 'SMS', 4000);
                     this.confirmarEstado(estado);
                 }
             });
