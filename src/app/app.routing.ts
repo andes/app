@@ -27,6 +27,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
+import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
@@ -87,6 +88,10 @@ const appRoutes: Routes = [
   { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
 
+  // Gestion de usuarios
+  { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
+
+
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
@@ -103,11 +108,11 @@ const appRoutes: Routes = [
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
-  /* VERIFICAR ==> */ { path: 'busquedaUsuario', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
 
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
+  { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'inicio' }
 ];

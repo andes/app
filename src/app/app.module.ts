@@ -64,6 +64,7 @@ import { ParentescoService } from './services/parentesco.service';
 import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
+import { PermisosService } from './services/permisos.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -98,6 +99,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
+import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
@@ -201,7 +203,10 @@ import { Auditoria2Component } from './components/auditoria/auditoria2.component
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
-import { UsuarioCreateUpdateComponent } from './components/usuario/usuario-create-update.component';
+import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.component';
+import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
+import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
+
 
 export const RUP_ELEMENTS: any[] = [
     { component: BuscadorComponent, key: 'BuscadorComponent' },
@@ -308,7 +313,7 @@ for (let key in RUPRegistry) {
         })
     ],
     declarations: [
-        AppComponent, InicioComponent, LoginComponent,
+        AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
@@ -325,7 +330,7 @@ for (let key in RUPRegistry) {
         AgregarSobreturnoComponent, PanelAgendaComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
-        PermisosComponent,
+        PermisosComponent, ArbolPermisosComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,
@@ -334,7 +339,7 @@ for (let key in RUPRegistry) {
         HoverClassDirective, PuntoInicioTurnosComponent, ReasignarTurnoAgendasComponent,
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
-        BusquedaUsuarioComponent, UsuarioCreateUpdateComponent,
+        BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ListarTurnosComponent,
         MapaEspacioFisicoComponent,
         ResumenComponent,
@@ -394,7 +399,9 @@ for (let key in RUPRegistry) {
         SintysService,
         AnsesService,
         LogPacienteService,
-        UsuarioService
+        UsuarioService,
+        PermisosService
+
     ]
 })
 
