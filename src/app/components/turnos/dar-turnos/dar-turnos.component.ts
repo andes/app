@@ -121,6 +121,13 @@ export class DarTurnosComponent implements OnInit {
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
+    // Muestra/Oculta los días de fin de semana (sábado y domingo)
+    ocultarFinesDeSemana = false;
+
+    // Opciones para modificar la grilla/calendario
+    opcionesCalendario = {
+        mostrarFinesDeSemana: true
+    }
 
     private bloques: IBloque[];
     private indiceTurno: number;
@@ -434,7 +441,7 @@ export class DarTurnosComponent implements OnInit {
             });
 
 
-            // Por defecto no se muestran
+            // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
                     console.log((moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format()));
@@ -444,6 +451,17 @@ export class DarTurnosComponent implements OnInit {
                 // this.agendas = this.agendas.filter(agenda => {
                 //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
                 // });
+            }
+
+            // Por defecto se muestras los días de fines de semana (sab y dom)
+            if (this.ocultarFinesDeSemana) {
+                // this.agendas = this.agendas.filter(agenda => {
+                //     return moment(agenda.horaFin).weekday() !== 6 || moment(agenda.horaFin).weekday() !== 7;
+                // });
+                this.opcionesCalendario.mostrarFinesDeSemana = true;
+            } else {
+                this.opcionesCalendario.mostrarFinesDeSemana = false;
+
             }
 
 

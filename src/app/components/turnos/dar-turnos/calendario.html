@@ -1,6 +1,7 @@
 <table *ngIf="calendario" style="height: 70vh">
     <tr *ngFor="let week of calendario">
         <td *ngFor="let day of week" (click)="seleccionar(day)" [ngClass]="{
+                'hidden-xl-down'  : (opcionesCalendario && day.weekend),
                 'weekend'          : day.weekend,
                 'outline-danger'   : (day.estado === 'ocupado' && !day.seleccionado),
                 'outline-success'  : (day.estado === 'disponible') && !day.seleccionado,
