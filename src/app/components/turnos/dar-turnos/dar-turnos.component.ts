@@ -47,6 +47,9 @@ export class DarTurnosComponent implements OnInit {
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.paciente = value;
+        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
+        this.verificarTelefono(this.paciente);
+        this.obtenerCarpetaPaciente(this.paciente);
         this.mostrarCalendario = false;
     }
     get pacienteSeleccionado() {
@@ -443,8 +446,6 @@ export class DarTurnosComponent implements OnInit {
             // Por defecto no se muestran
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    console.log((moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format()));
-
                     return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
                 });
                 // this.agendas = this.agendas.filter(agenda => {
