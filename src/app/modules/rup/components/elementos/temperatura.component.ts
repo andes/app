@@ -15,22 +15,26 @@ export class TemperaturaComponent extends RUPComponent implements OnInit {
         //         this.emitChange(false);
         //     }
         // });
+        if (this.registro.valor) {
+            this.mensaje = this.getMensajes();
+        }
     }
 
 
-    // getMensajes() {
-    //     let temperatura = this.data[this.elementoRUP.key];
-    //     let mensaje: any = {
-    //         texto: '',
-    //         class: 'danger'
-    //     };
-    //     if (temperatura) {
-    //         if (temperatura > 38) {
-    //             mensaje.texto = 'Fiebre';
-    //         } else {
-    //             mensaje.texto = 'Normal';
-    //         }
-    //     }
-    //     return mensaje;
-    // }
+    getMensajes() {
+        let temperatura = this.registro.valor;
+        let mensaje: any = {
+            texto: '',
+            class: 'danger'
+        };
+        if (temperatura) {
+            if (temperatura >= 38 && temperatura <= 45) {
+                mensaje.texto = 'Fiebre';
+            }
+            if (temperatura < 38 && temperatura >= 35) {
+                mensaje.texto = 'Normal';
+            }
+        }
+        return mensaje;
+    }
 }

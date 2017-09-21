@@ -30,6 +30,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
     public modelo: any;
     public resultado: any;
     public nota = '';
+    public lenNota = 140;
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
 
@@ -75,6 +76,12 @@ export class AgregarNotaAgendaComponent implements OnInit {
                 });
 
         });
+    }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
     }
 
     cancelar() {

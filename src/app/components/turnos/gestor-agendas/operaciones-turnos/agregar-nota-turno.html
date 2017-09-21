@@ -13,14 +13,14 @@
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
         <div class="col-8">
-            <span *ngIf="turno.paciente.apellido; else valueIfEmpty">
+            <span *ngIf="turno.paciente && turno.paciente.id; else valueIfEmpty">
                 {{turno.paciente | paciente}}</span>
             <ng-template #valueIfEmpty>Sin paciente asignado</ng-template>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <plex-text label="Observaciones" name="nota" [(ngModel)]="nota">
+            <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
             </plex-text>
         </div>
     </div>
