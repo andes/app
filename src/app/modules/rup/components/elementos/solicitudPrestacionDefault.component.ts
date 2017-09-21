@@ -8,7 +8,11 @@ import { RUPComponent } from './../core/rup.component';
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
     private listaPlanes: any = [];
 
-    public puedeAutocitar: Boolean = false;
+    // public puedeAutocitar: Boolean = false;
+
+    ngOnInit() {
+        this.registro.valor = (this.registro.valor) ? this.registro.valor : {};
+    }
 
     // ngOnInit() {
     //     this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : {};
@@ -38,28 +42,18 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     // }
 
-    // loadProfesionales(event) {
-    //     if (event.query) {
-    //         let query = {
-    //             nombreCompleto: event.query
-    //         };
-    //         this.serviceProfesional.get(query).subscribe(event.callback);
-    //     } else {
-    //         let callback = (this.data[this.elementoRUP.key].profesionales) ? this.data[this.elementoRUP.key].profesionales : null;
-    //         // let profesionales = {};
+    loadProfesionales(event) {
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.serviceProfesional.get(query).subscribe(event.callback);
+        } else {
+            let callback = (this.registro.valor.profesionales) ? this.registro.valor.profesionales : null;
+            event.callback(callback);
+        }
 
-    //         // if (this.data[this.elementoRUP.key].profesionales) {
-    //         //     this.quitarOrder();
-    //         //     profesionales = JSON.parse(JSON.stringify(this.data[this.elementoRUP.key].profesionales));
-    //         // }
-
-    //         // event.callback(profesionales);
-
-    //         // event.callback(this.data[this.elementoRUP.key].profesionales);
-    //         event.callback(callback);
-    //     }
-
-    // }
+    }
 
     // cambioAutocitado() {
     //     // si cambio autocitado y lo puse en false, entonces limpio los profesionales

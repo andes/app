@@ -5,6 +5,7 @@ import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 // Services
 import { UsuarioService } from '../../services/usuarios/usuario.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'busquedaUsuario',
@@ -24,7 +25,8 @@ export class BusquedaUsuarioComponent implements OnInit {
     public resultado = null;
     public seleccion = null;
     public loading = false;
-    public showCreateUpdate = false;
+    public showUpdate = false;
+    public showCreate = false;
     public mostrarNuevo = true;
     public autoFocus = 0;
     public users;
@@ -32,14 +34,21 @@ export class BusquedaUsuarioComponent implements OnInit {
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private server: Server, private usuarioService: UsuarioService, private auth: Auth) {
+    constructor(private plex: Plex, private router: Router, private server: Server, private usuarioService: UsuarioService, private auth: Auth) {
 
     }
 
     public ngOnInit() {
-        this.autoFocus = this.autoFocus + 1;
-        this.loadUsuarios();
+        if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
+            this.autoFocus = this.autoFocus + 1;
+            this.showCreate = false;
+            this.showUpdate = false;
+            this.loadUsuarios();
+        } else {
+            this.router.navigate(['./inicio']);
+        }
     }
+
 
 
     /**
@@ -52,10 +61,13 @@ export class BusquedaUsuarioComponent implements OnInit {
         this.seleccion = user;
         if (user) {
             this.selected.emit(user);
+            this.showUpdate = true;
+        } else {
+
+            this.showCreate = true;
         }
         this.textoLibre = null;
         this.mostrarNuevo = false;
-        this.showCreateUpdate = true;
     }
 
     /**
@@ -72,7 +84,8 @@ export class BusquedaUsuarioComponent implements OnInit {
 
     afterCreateUpdate(user) {
         this.loadUsuarios();
-        this.showCreateUpdate = false;
+        this.showCreate = false;
+        this.showUpdate = false;
         this.mostrarNuevo = true;
         this.seleccion = null;
         this.autoFocus = this.autoFocus + 1;

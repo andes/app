@@ -1,4 +1,4 @@
-<section *ngIf="!showCreateUpdate">
+<section *ngIf="!showUpdate && ! showCreate">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -56,11 +56,11 @@
 
 </section>
 
-<footer *ngIf="!showCreateUpdate">
+<footer *ngIf="!showUpdate && ! showCreate">
     <div class="text-right">
         <plex-button *ngIf="mostrarNuevo" label="Nuevo Usuario" icon="account-plus" type="primary" (click)="seleccionarUsuario(null)"></plex-button>
     </div>
 </footer>
 
-<!--Componente de Alta/Modificación que hay que desarrollar-->
-<usuario-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" (data)='afterCreateUpdate($event)'></usuario-create-update>
+<usuarioCreate *ngIf="showCreate" (data)='afterCreateUpdate($event)'></usuarioCreate>
+<usuarioUpdate *ngIf="showUpdate" [seleccion]="seleccion" (data)='afterCreateUpdate($event)'></usuarioUpdate>

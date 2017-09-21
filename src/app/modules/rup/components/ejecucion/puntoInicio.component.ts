@@ -310,45 +310,45 @@ export class PuntoInicioComponent implements OnInit {
 
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
-        let _prestaciones = prestaciones.filter(p => {
-            // filtramos todas las prestaciones que:
-            // 1) esten validadas
-            // 2) que sean planes y sean autocitados
-            let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
-                registro.valor.solicitudPrestacion.autocitado
-            );
-            if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
-            ) {
-                return p;
-            };
-        });
-        if (Array.isArray(_prestaciones)) {
-            _prestaciones.forEach(unaPrestacion => {
-                if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
-                    this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
-                        prestacionesPaciente.forEach(elemento => {
-                            if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
-                                && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-                                && !elemento.solicitud.turno) {
-                                unaPrestacion.turnosPedientes = true;
-                            }
-                        });
-                    });
-                }
-            });
-        } else { // TODO revisar si entra alguna vez al else
-            if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
-                    prestacionesPaciente.forEach(elemento => {
-                        if (elemento.solicitud.prestacionOrigen === prestaciones.id
-                            && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-                            && !elemento.solicitud.turno) {
-                            prestaciones.turnosPedientes = true;
-                        }
-                    });
-                });
-            }
-        }
+        // let _prestaciones = prestaciones.filter(p => {
+        //     // filtramos todas las prestaciones que:
+        //     // 1) esten validadas
+        //     // 2) que sean planes y sean autocitados
+        //     let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
+        //         registro.valor.solicitudPrestacion.autocitado
+        //     );
+        //     if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
+        //     ) {
+        //         return p;
+        //     };
+        // });
+        // if (Array.isArray(_prestaciones)) {
+        //     _prestaciones.forEach(unaPrestacion => {
+        //         if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
+        //             this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
+        //                 prestacionesPaciente.forEach(elemento => {
+        //                     if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
+        //                         && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+        //                         && !elemento.solicitud.turno) {
+        //                         unaPrestacion.turnosPedientes = true;
+        //                     }
+        //                 });
+        //             });
+        //         }
+        //     });
+        // } else { // TODO revisar si entra alguna vez al else
+        //     if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
+        //         this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
+        //             prestacionesPaciente.forEach(elemento => {
+        //                 if (elemento.solicitud.prestacionOrigen === prestaciones.id
+        //                     && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+        //                     && !elemento.solicitud.turno) {
+        //                     prestaciones.turnosPedientes = true;
+        //                 }
+        //             });
+        //         });
+        //     }
+        // }
         return prestaciones;
     }
 }
