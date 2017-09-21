@@ -1,20 +1,20 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <!-- <div *ngIf="agendasReasignar[0]?.agendas?.length === 0">
-        <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
+    <!-- <div *ngIf=" agendasReasignar[0]?.agendas?.length===0 ">
+        <i class="mdi mdi-emoticon-sad "></i> No se encontraron Agendas candidatas para la reasignación automática
         <hr>
     </div> -->
     <h5>Reasignación automática</h5>
 
-    <div class="row">
-        <div class="col-12">
+    <div class="row ">
+        <div class="col-12 ">
 
-            <div id="accordion" role="tablist" aria-multiselectable="true" class="accordion-reasignar">
-                <div *ngIf="agendasReasignar?.length > 0 && agendasReasignar[0].turno">
+            <div id="accordion " role="tablist " aria-multiselectable="true " class="accordion-reasignar ">
+                <div *ngIf="agendasReasignar?.length> 0 && agendasReasignar[0].turno">
                     <div *ngFor="let agendaReasignar of agendasReasignar; let indiceTurno = index">
                         <div class="card">
                             <div class="card-header" role="tab" id="headingOne">
-                                <span *ngIf="agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i> Turno ya reasignado</span>
+                                <span *ngIf="agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-info"><i class="mdi mdi-check"></i> Turno ya reasignado</span>
                                 <span *ngIf="agendaReasignar?.agendas?.length > 0 && !agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i> Turno sin reasignar</span>
                                 <span *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i> Turno sin agendas candidatas para reasignación</span>
 
@@ -100,5 +100,8 @@
         </div>
     </div>
 
+</fieldset>
+<fieldset *ngIf="agendasReasignar?.length === 0">
+    No hay alternativas para reasignación de turnos
 </fieldset>
 <permisos *ngIf="!autorizado" [permisos]="permisosRequeridos" [botonCancelar]="false" (cancelarEmit)="cancelar()"></permisos>

@@ -25,8 +25,10 @@
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>
-                            <div class="col">
+                            <div *ngIf="mostrarCalendario" class="col">
                                 <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles" title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
+                                    (change)="actualizar('')"></plex-bool>
+                                <plex-bool [(ngModel)]="ocultarFinesDeSemana" type="slide" name="ocultarFinesDeSemana" title="{{ocultarFinesDeSemana ? 'Mostrar sábados y domingos' : 'Ocultar sábados y domingos'}}"
                                     (change)="actualizar('')"></plex-bool>
                             </div>
                             <div class="col-3 text-right">
@@ -36,9 +38,12 @@
                             </div>
                         </div>
                     </header>
+                    <div *ngIf="!mostrarCalendario">
+                        Por favor elija una prestación para mostrar las agendas disponibles
+                    </div>
                     <!--Calendario-->
                     <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT"
-                        [_solicitudPrestacion]="_solicitudPrestacion" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+                        [opcionesCalendario]="ocultarFinesDeSemana" [_solicitudPrestacion]="_solicitudPrestacion" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
                 </plex-box>
             </div>
             <!--Lateral-->
@@ -54,11 +59,14 @@
                                         <div class="list-group-item-text">
                                             <label class="mt-0 pt-0">Solicitud</label>
                                             <div>{{llave.tipoPrestacion.nombre}}</div>
-                                            <div *ngIf="!llave.solicitudVigente" class="text-warning"><i class="mdi mdi-alert"></i> Esta solicitud ha vencido</div>
+                                            <div *ngIf="!llave.solicitudVigente" class="text-warning">
+                                                <i class="mdi mdi-alert"></i> Esta solicitud ha vencido</div>
                                             <label class="mt-3">Origen</label>
                                             <div>{{llave.fechaSolicitud | date:'dd/MM/yyyy HH:mm'}}</div>
                                             <div *ngIf="llave.profesional">{{llave.profesional | profesional}}</div>
-                                            <div><em class="small">{{llave.organizacion}}</em></div>
+                                            <div>
+                                                <em class="small">{{llave.organizacion}}</em>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
@@ -92,7 +100,10 @@
                                     <div class="pt-3 text-center">
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
                                         <!-- <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span> -->
-                                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}"> {{ estadosAgenda[agenda.estado].nombre }}</div></span>
+                                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
+                                            <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}">
+                                                {{ estadosAgenda[agenda.estado].nombre }}</div>
+                                        </span>
 
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" class="text-lg" title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
@@ -122,7 +133,9 @@
                                                                 <td>Con llave</td>
                                                             </ng-template>
                                                             <ng-template #llaveSolicitud>
-                                                                <td><b>Con llave</b></td>
+                                                                <td>
+                                                                    <b>Con llave</b>
+                                                                </td>
                                                             </ng-template>
                                                             <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td> -->
                                                             <td>Profesional</td>
@@ -138,7 +151,9 @@
                                                                 <td>{{countBloques[indiceBq].gestion}}</td>
                                                             </ng-template>
                                                             <ng-template #llaveSolicitudValor>
-                                                                <td><b>{{countBloques[indiceBq].gestion}}</b></td>
+                                                                <td>
+                                                                    <b>{{countBloques[indiceBq].gestion}}</b>
+                                                                </td>
                                                             </ng-template>
                                                             <td>{{countBloques[indiceBq].profesional}}</td>
 
@@ -177,19 +192,31 @@
                                     <div class="col" *ngIf="estadoT == 'noTurnos'">
                                         <div *ngIf="alternativas.length > 0" class="list-group">
                                             <div class="row">
-                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa<br></div>
+                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa
+                                                    <br>
+                                                </div>
                                             </div>
                                             <a *ngFor="let alternativa of alternativas; let i=index" class="list-group-item hover" (click)="seleccionarAlternativa(i)">
                                                 <div class="row">
-                                                    <div class="col col-md-12" *ngIf="alternativa.horaInicio"><label>Fecha: </label> <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span><br></div>
+                                                    <div class="col col-md-12" *ngIf="alternativa.horaInicio">
+                                                        <label>Fecha: </label>
+                                                        <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span>
+                                                        <br>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col col-md-12" *ngIf="alternativa.tipoPrestaciones"><label>Tipo de Prestación: </label>
-                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span><br></div>
+                                                    <div class="col col-md-12" *ngIf="alternativa.tipoPrestaciones">
+                                                        <label>Tipo de Prestación: </label>
+                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span>
+                                                        <br>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col col-md-12" *ngIf="alternativa.profesionales"><label>Profesional: </label>
-                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span><br></div>
+                                                    <div class="col col-md-12" *ngIf="alternativa.profesionales">
+                                                        <label>Profesional: </label>
+                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                                                        <br>
+                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
@@ -205,7 +232,9 @@
                                         </div>
                                         <div *ngIf="alternativas.length<=0 && !reqfiltros">
                                             <div class="row">
-                                                <div class="col col-md-12">No existen alternativas<br></div>
+                                                <div class="col col-md-12">No existen alternativas
+                                                    <br>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -220,7 +249,8 @@
                                         <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |
                                             date: 'HH:mm'}}
                                         </div>
-                                        <div *ngIf="turno.tipoPrestacion"><label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
+                                        <div *ngIf="turno.tipoPrestacion">
+                                            <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                         <div *ngIf="agenda.profesionales">
                                             <label>Profesional</label>
                                             <div *ngFor="let profesional of agenda.profesionales let i=index">{{profesional | profesional}}
@@ -231,7 +261,8 @@
                                         <div *ngIf="paciente.documento">{{this.paciente.documento | number}}</div>
                                         <div *ngIf="permitirTurnoDoble">
                                             <label>Turno doble: </label>
-                                            <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool> <br>
+                                            <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
+                                            <br>
                                         </div>
                                     </div>
                                     <!--Otros datos-->
@@ -253,12 +284,16 @@
                                 <ul class="list-group">
                                     <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item hover" [appHover]="'active'" title="Buscar turnos similares">
                                         <div class="list-group-item-text" (click)="seleccionarUltimoTurno(turno)">
-                                            <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} | <span>{{turno.estado}}</span></div>
+                                            <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} |
+                                                <span>{{turno.estado}}</span>
+                                            </div>
                                             <div>{{turno.tipoPrestacion.nombre}}</div>
                                             <div *ngFor="let profesional of turno.profesionales">
                                                 {{profesional | profesional}}
                                             </div>
-                                            <div><em class="small">{{turno.organizacion}}</em></div>
+                                            <div>
+                                                <em class="small">{{turno.organizacion}}</em>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>

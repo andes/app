@@ -9,11 +9,24 @@ import * as moment from 'moment';
     styleUrls: ['calendario.scss']
 })
 export class CalendarioComponent {
+    mostrarFinesDeSemana: any;
     private _agenda: any;
     private _agendas: Array<any>;
     private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
+
+    // @Input() opcionesCalendario: any;
+
+    private _opcionesCalendario;
+    @Input('opcionesCalendario')
+    set opcionesCalendario(value: any) {
+        this._opcionesCalendario = value;
+    }
+    get opcionesCalendario() {
+        return this._opcionesCalendario;
+    }
+
     // Propiedades
     @Input('fecha') fecha: Date;
     @Input() _solicitudPrestacion: any;
@@ -61,6 +74,7 @@ export class CalendarioComponent {
         });
         return ags;
     }
+
     /** Regenera el calendario */
     private actualizar() {
 
@@ -76,6 +90,7 @@ export class CalendarioComponent {
                 this.calendario.push(week);
 
                 for (let c = 1; c <= 7; c++) {
+
                     let agendasPorFecha = this.agendasPorFecha(inicio);
                     let ag = null;
 
