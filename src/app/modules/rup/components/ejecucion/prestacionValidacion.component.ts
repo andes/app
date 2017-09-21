@@ -30,6 +30,7 @@ export class PrestacionValidacionComponent implements OnInit {
      */
     public showDarTurnos = false;
     solicitudTurno;
+    public diagnosticoReadonly = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -48,7 +49,10 @@ export class PrestacionValidacionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.inicializar(id);
+
         });
+
+
     }
 
     redirect(pagina: string) {
@@ -60,6 +64,11 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+            // Una vez que esta la prestacion llamamos a la funcion cargaPlan
+            if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
+                this.cargaPlan(id);
+                this.diagnosticoReadonly = true;
+            }
             // Carga la información completa del paciente
             // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
@@ -83,20 +92,29 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
-            if (!validar) {
-                return false;
-            } else {
-                // // de los registros a
-                // let planes = this.registros.filter(r => r.tipo === 'planes');
-
-                // this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                //     this.prestacion = prestacion;
-                // }, (err) => {
-                //     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                // });
-            }
-        });
+        let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
+        if (existeDiagnostico) {
+            this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+                if (!validar) {
+                    return false;
+                } else {
+                    let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+                    this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                        this.cargaPlan(prestacion.id);
+                        this.diagnosticoReadonly = true;
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+                        this.plex.toast('success', 'La prestación se valido correctamente');
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                    });
+                }
+            });
+        } else {
+            this.plex.toast('warning', 'Debe seleccionar un diagnostico principal');
+        }
     }
 
     romperValidacion() {
@@ -144,12 +162,28 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup']);
     }
 
-    darTurnoAutocitado(prestacionSolicitud) {
+    darTurno(prestacionSolicitud) {
         this.solicitudTurno = prestacionSolicitud;
         this.showDarTurnos = true;
-        // DEBERÍA VENIR POR PARÁMETRO --- VER LINEA 148
-        // this.solicitudTurno = null;
     }
 
+    cargaPlan(id) {
+        this.servicioPrestacion.get({ idPrestacionOrigen: id }).subscribe(prestacionSolicitud => {
+            let arraySolicitudes = prestacionSolicitud;
+            this.prestacion.ejecucion.registros.forEach(registro => {
+                arraySolicitudes.forEach(prestacionSolicitada => {
+                    if (registro.concepto.conceptId === prestacionSolicitada.solicitud.tipoPrestacion.conceptId) {
+                        registro.prestacionSolicitud = prestacionSolicitada;
+                    }
+                });
+            });
+        });
+    }
+    diagnosticoPrestacion(i) {
+        let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
+        if (actual) {
+            actual.esDiagnosticoPrincipal = false;
+        }
+    }
 }
 

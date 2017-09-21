@@ -62,3 +62,23 @@
 .procedimientos {
     background-color: $procedimientos;
 }
+
+@each $item in $lista-problemas {
+    $selector: $selector, unquote('.#{$item}');
+}
+
+#{$selector} {
+    background-color: $problemas;
+  }
+  
+  @each $item in $lista-procedimientos {
+      $selector2: $selector2, unquote('.#{$item}');
+  }
+  
+  #{$selector2} {
+      background-color: $procedimientos;
+    }
+
+  .plan {
+    background-color: $planes;
+ }
