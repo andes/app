@@ -118,6 +118,10 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
+
+    // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
+    mostrarNoDisponibles = false;
+
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
@@ -434,16 +438,29 @@ export class DarTurnosComponent implements OnInit {
                     }
                 }
             });
+
+
+            // Por defecto no se muestran
+            if (!this.mostrarNoDisponibles) {
+                this.agendas = this.agendas.filter(agenda => {
+                    console.log((moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format()));
+
+                    return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
+                });
+                // this.agendas = this.agendas.filter(agenda => {
+                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosDisponiblesGestion > 0 || agenda.turnosDisponiblesProfesional > 0)
+                // });
+            }
+
+
             // Ordena las Agendas por fecha/hora de inicio
-            this.agendas = this.agendas.sort(
-                function (a, b) {
-                    let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    {
-                        return inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles;
-                    }
+            this.agendas = this.agendas.sort((a, b) => {
+                let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
+                let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
+                {
+                    return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles)
                 }
-            );
+            });
 
         });
     }
@@ -664,9 +681,13 @@ export class DarTurnosComponent implements OnInit {
             let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (enRango) {
                 if (direccion === 'der') {
-                    this.indice++;
-                } else {
-                    this.indice--;
+                    if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice + 1].horaInicio).startOf('day').format()) {
+                        this.indice++;
+                    }
+                } else if (direccion === 'izq') {
+                    if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice - 1].horaInicio).startOf('day').format()) {
+                        this.indice--;
+                    }
                 }
                 this.agenda = this.agendas[this.indice];
                 this.seleccionarAgenda(this.agenda);
@@ -730,7 +751,7 @@ export class DarTurnosComponent implements OnInit {
     actualizarCarpetaPaciente(paciente) {
         // Se realiza un patch del paciente
         let listaCarpetas = [];
-        listaCarpetas = paciente.carpetaEfectores;
+        listaCarpetas = (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) ? paciente.carpetaEfectores : [];
         let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
         if (!carpetaActualizar) {
             listaCarpetas.push(this.carpetaEfector);
@@ -784,16 +805,17 @@ export class DarTurnosComponent implements OnInit {
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
             let nuevoCel = {
-                'tipo': 'celular',
-                'valor': this.telefono,
-                'ranking': 1,
-                'activo': true,
-                'ultimaActualizacion': new Date()
+                tipo: 'celular',
+                valor: this.telefono,
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
             };
-            let mpi: Observable<any>;
+
             let flagTelefono = false;
-            // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-            // sino, se genera un nuevo contacto
+
+            // Si tiene un celular con ranking 0 (el más alto) y está activo, se reemplaza el número
+            // si no, se genera un nuevo contacto
             if (this.paciente.contacto.length > 0) {
                 this.paciente.contacto.forEach((contacto, index) => {
                     if (contacto.tipo === 'celular') {
@@ -808,11 +830,12 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente.contacto = [nuevoCel];
             }
             let cambios = {
-                'op': 'updateContactos',
-                'contacto': this.paciente.contacto
+                op: 'updateContactos',
+                contacto: this.paciente.contacto
             };
-            mpi = this.servicePaciente.patch(pacienteActualizar.id, cambios);
-            mpi.subscribe(resultado => {
+
+            // Actualizo teléfono del paciente en MPI
+            this.servicePaciente.patch(pacienteActualizar.id, cambios).subscribe(resultado => {
                 if (resultado) {
                     this.plex.toast('info', 'Número de teléfono actualizado');
                 }

@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../../environments/environment';
+import { IAgenda } from '../../interfaces/turnos/IAgenda';
 
 @Injectable()
 export class TurnoService {
@@ -17,7 +18,7 @@ export class TurnoService {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
     }
 
-    save(turno: any, options: any = {}): Observable<any> {
+    save(turno: any, options: any = {}): Observable<IAgenda> {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
         }
