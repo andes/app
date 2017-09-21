@@ -1,6 +1,5 @@
 import { IEnum } from './../../utils/enums';
 
-
 export let EstadosAgenda: IEnum = {
     'planificacion': {
         nombre: 'En planificación',
