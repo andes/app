@@ -42,6 +42,14 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
     }
 
     public ngOnInit() {
+        this.refresh();
+    }
+
+    public ngOnChanges() {
+        this.refresh();
+    }
+
+    refresh() {
         this.initShiro();
         if (this.item.type) {
             if (this.item.type === 'boolean') {
@@ -65,13 +73,10 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                     }
                 }
             }
-        }
-    }
-
-    public ngOnChanges() {
-        this.initShiro();
-        if (this.item.type && this.item.type === 'boolean') {
-            this.state = this.shiro.check(this.makePermission() + ':?');
+        } else {
+            let permisos = this.makePermission();
+            let items: String[] = this.shiro.permissions(permisos + ':?');
+            this.allModule = items.length > 0 && items.indexOf('*') >= 0;
         }
     }
 

@@ -2,6 +2,7 @@
     <plex-panel (toggle)="expand($event)" >
         <div plex-accordion-title>
             {{item.title}}
+            <span *ngIf="allModule">(todos)</span>
             <plex-bool class="float-right" (change)="expand($event)" [(ngModel)]="allModule" type="slide"> </plex-bool>
         </div>
         <div *ngFor="let child of item.child; let indiceChild = index">
