@@ -92,6 +92,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         } else {
             this.esEscaneado = false;
             this.escaneado.emit(this.esEscaneado);
+            this.selected.emit({});
         }
         if (!this.bloquearCreate) {
             if (this.auth.getPermissions('mpi:?').indexOf('editarPaciente') >= 0) {

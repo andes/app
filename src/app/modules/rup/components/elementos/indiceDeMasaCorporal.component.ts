@@ -8,23 +8,31 @@ import { RUPComponent } from './../core/rup.component';
 export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
-         // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
-        //  this.conceptObserverService.observe(this.elementoRUP.requeridos[0]).subscribe((data) => {
-        //     // No soy yo mismo
-        //     if (this.registro !== data && this.registro.valor !== data.valor) {
-        //         this.registro.valor = data.valor;
-        //         this.emitChange(false);
-        //     }
-        // });
-        // this.data[this.elementoRUP.key] = (this.datosIngreso) ? this.datosIngreso : null;
-        // this.servicioObservarDatos.getDato$('peso').subscribe(
-        //     peso => {
-        //         this.calculoIMC();
+        // if (this.elementoRUP) {
+        //     this.elementoRUP.requeridos.forEach((element, i) => {
+        //         this.conceptObserverService.observe(this.registro.registros[i]).subscribe((data) => {
+        //             if (this.registro.registros[i] !== data.valor) {
+        //                 this.registro.valor = data.valor;
+        //                 this.emitChange(false);
+        //             }
+        //         });
+
+        //         datoRecuperado = this.findValues(this.valoresPrestacionEjecucion, element.key);
+        //         if (datoRecuperado && datoRecuperado.length > 0) {
+        //             this.data[this.elementoRUP.key][element.key] =
+        //                 ((typeof datoRecuperado[0] === 'string') ? datoRecuperado[0] : datoRecuperado[0][Object.keys(datoRecuperado[0])[0]]);
+        //             this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
+        //             this.calculoIMC();
+        //         } else {
+        //             this.servicioPrestacion.getByPacienteKey(this.paciente.id, element.key).subscribe(resultado => {
+        //                 this.data[this.elementoRUP.key][element.key] = resultado;
+        //                 this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
+        //                 this.calculoIMC();
+        //             });
+
+        //         }
         //     });
-        // this.servicioObservarDatos.getDato$('talla').subscribe(
-        //     talla => {
-        //         this.calculoIMC();
-        //     });
+        // }
         // this.calculoIMC();
     }
 
@@ -73,13 +81,13 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         // let arrayDePeso: any;
         // let arrayDeTalla: any;
         // // Aca va el valor del peso si es que esta en ejecucion..
-        // arrayDePeso = this.findValues(this.valoresPrestacionEjecucion, 'peso');
+        // arrayDePeso = this.findValues(this.data[this.elementoRUP.key], 'peso');
         // if (arrayDePeso.length > 0) {
         //     peso = arrayDePeso[0];
         //     prestacionPeso = true;
         // }
         // // Aca va el valor de la talla si es que esta en ejecucion..
-        // arrayDeTalla = this.findValues(this.valoresPrestacionEjecucion, 'talla');
+        // arrayDeTalla = this.findValues(this.data[this.elementoRUP.key], 'talla');
         // if (arrayDeTalla.length > 0) {
         //     talla = arrayDeTalla[0];
         //     prestacionTalla = true;
@@ -94,18 +102,20 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         //             talla = talla / 100; // Paso a metros;
         //             imc = peso / Math.pow(talla, 2);
         //             this.mensaje.texto = '';
-        //             this.data[this.elementoRUP.key] = imc.toFixed(2);
-        //             this.evtData.emit(this.data);
+        //             this.data[this.elementoRUP.key]['imc'] = Number(imc.toFixed(2));
+        //             window.setTimeout(() => {
+        //                 this.evtData.emit(this.data);
+        //             });
         //             break;
-        //             // Mostramos el  Alerta de talla
+        //         // Mostramos el  Alerta de talla
         //         case (peso != null && talla == null):
         //             this.mensaje.texto = 'Falta completar el campo talla';
         //             break;
-        //             // Mostramos alerta de peso.
+        //         // Mostramos alerta de peso.
         //         case (talla != null && peso == null):
         //             this.mensaje.texto = 'Falta completar el campo peso';
         //             break;
-        //             // Se muestra alerta de talla y de peso
+        //         // Se muestra alerta de talla y de peso
         //         default:
         //             this.mensaje.texto = 'Falta completar el campo talla y el campo peso';
         //             break;
@@ -113,15 +123,16 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         // } else {
         //     switch (true) {
         //         case (prestacionTalla && !prestacionPeso):
-        //             this.mensaje.texto = 'Agregar la prestacion de peso';
+        //             this.mensaje.texto = 'Completar el campo peso';
         //             break;
         //         case (prestacionPeso && !prestacionTalla):
-        //             this.mensaje.texto = 'Agregar la prestacion de talla';
+        //             this.mensaje.texto = 'Completar el campo talla';
         //             break;
         //         default:
-        //             this.mensaje.texto = 'Agregar prestacion talla y peso';
+        //             this.mensaje.texto = 'Completar los campos talla y peso';
         //             break;
         //     }
         // }
     }
+
 }
