@@ -20,8 +20,10 @@ export class RUPComponent implements OnInit {
     @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
     @Input() registro: IPrestacionRegistro;
+    @Input() paciente: IPaciente;
     @Input() soloValores: boolean;
     @Input() params: any;
+    public mensaje: any = {};
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
@@ -42,6 +44,7 @@ export class RUPComponent implements OnInit {
         componentReference.instance['registro'] = this.registro;
         componentReference.instance['elementoRUP'] = this.elementoRUP;
         componentReference.instance['soloValores'] = this.soloValores;
+        componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
@@ -74,6 +77,11 @@ export class RUPComponent implements OnInit {
      * @memberof RUPComponent
      */
     public emitChange(notifyObservers = true) {
+        /**
+        llamas a la funcion getMensajes y setea el objeto mensaje
+        para devolver el valor a los atomos,moleculas, formulas, etc
+        */
+        this.mensaje = this.getMensajes();
         // Notifica a todos los components que estén suscriptos con este concepto
         if (notifyObservers) {
             this.conceptObserverService.notify(this.registro.concepto, this.registro);
@@ -81,4 +89,12 @@ export class RUPComponent implements OnInit {
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
     }
+
+    /**
+    * Devuelve los mensajes de los atomos, moleculas, formulas, etc.
+    *
+    * @protected
+    * @memberof RUPComponent
+    */
+    public getMensajes() { }
 }

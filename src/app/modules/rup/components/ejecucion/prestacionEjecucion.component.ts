@@ -58,12 +58,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     public showCambioPaciente = false;
     public showDatosSolicitud = false;
     public showPrestacion = false;
+    public transformarProblema = false;
     public elementoOnDrag: any;
     public posicionOnDrag;
     // Copia del registro actual para volver todo a la normalidad luego de hacer el drop.
     public copiaRegistro: any;
     // errores
     public errores: any[] = [];
+
+    public registroATransformar: IPrestacionRegistro;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -184,14 +187,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         registroOrigen.relacionadoCon = [registroDestino];
         let registros = this.prestacion.ejecucion.registros;
-        // // si no existe lo agrego
-        // // let existe = registros.find(r => (registroOrigen.id && registroOrigen.id === r.id) || (r.concepto.conceptId === registroOrigen.conceptId));
-        // // if (!existe) {
-        // //     this.ejecutarConcepto(registroOrigen, registroDestino);
-        // // }
-
-        // let conceptIdOrigen = (registroOrigen.concepto) ? registroOrigen.concepto.conceptId : registroOrigen.conceptId;
-
+        // si no existe lo agrego
+        let existe = registros.find(r => (registroOrigen.id && registroOrigen.id === r.id) || (r.concepto.conceptId === registroOrigen.conceptId));
+        if (!existe) {
+            this.ejecutarConcepto(registroOrigen, registroDestino);
+        }
         // buscamos en la posicion que se encuentra el registro de orgien y destino
         let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
         let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
@@ -281,34 +281,33 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.confirmarEliminar = true;
     }
 
-    cargarNuevoRegistro(snomedConcept) {
+    cargarNuevoRegistro(snomedConcept, valor = null) {
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-        // TODO: Chequear si es un plan el registro se debe cargar como una solicitud
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
+
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda === 'planes') {
-         esSolicitud = true;
+        // tambien verificamos si es un autocitado por su conceptId.. Ver si se puede hacer de otra manera.
+        if (this.tipoBusqueda === 'planes' || snomedConcept.conceptId === '281036007') {
+            esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
-        let objectId = new ObjectID();
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        nuevoRegistro['_id'] = nuevoRegistro.id;
         // verificamos si es un plan. Si es plan seteamos esSolicitud en true.
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
         }
-
+        nuevoRegistro.valor = valor;
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
-        // this.prestacion.ejecucion.registros[this.prestacion.ejecucion.registros.length - 1].collapse = false;
-
-
+        return nuevoRegistro;
     }
 
 
@@ -321,62 +320,64 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
-        this.colapsarPrestaciones();
+        this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
-        // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
-        if (registros.length > 0) {
-            this.showVincular = true;
-        }
         // nos fijamos si el concepto ya aparece en los registros
         let existe = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-        if (existe) {
-            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-            return false;
-        }
 
-        // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-        if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
-            this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
-                .subscribe(dato => {
-                    if (dato) {
-                        // vamos a comprobar si se trata de hallazgo cronico o activo
-                        if (dato.evoluciones[0].estado === 'activo') {
-                            this.ejecutarUnHallazgoHuds(dato);
+        if (this.transformarProblema && this.registroATransformar) {
+            if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
+                this.plex.toast('warning', 'El elemento seleccionado debe ser un hallazgo');
+                return false;
+            }
+            // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
+            if (registros.length > 0) {
+                this.showVincular = true;
+            }
+            if (existe) {
+                // TODO ver que se hace si el concepto ya esta cargado
+            } else {
+                this.registroATransformar.valor.estado = 'transformado';
+                let valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
+                let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
+                nuevoRegistro.relacionadoCon = [this.registroATransformar];
+                this.transformarProblema = false;
+            }
+
+        } else {
+            this.colapsarPrestaciones();
+
+            // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
+            if (registros.length > 0) {
+                this.showVincular = true;
+            }
+            if (existe) {
+                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                return false;
+            }
+
+            // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
+            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
+                this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
+                    .subscribe(dato => {
+                        if (dato) {
+                            // TODO:: vamos a comprobar si se trata de hallazgo cronico o activo
+                            if (dato.evoluciones[0].estado === 'activo') {
+                                let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                this.cargarNuevoRegistro(snomedConcept, valor);
+                            } else {
+                                this.cargarNuevoRegistro(snomedConcept);
+                            }
                         } else {
                             this.cargarNuevoRegistro(snomedConcept);
                         }
-                    } else {
-                        this.cargarNuevoRegistro(snomedConcept);
-                    }
-                });
+                    });
 
-        } else {
-            this.cargarNuevoRegistro(snomedConcept);
+            } else {
+                this.cargarNuevoRegistro(snomedConcept);
+            }
         }
 
-    }
-
-    /**
-     * Recibe un hallazgo de la HUDS para ejecutarlo (evolucionar)
-     * @param problemaHuds hallazgo de la HUDS para evolucionar
-     */
-    ejecutarUnHallazgoHuds(problemaHuds) {
-        if (problemaHuds.concepto.semanticTag === 'hallazgo' || problemaHuds.concepto.semanticTag === 'trastorno') {
-            // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-            let elementoRUP = this.elementosRUPService.buscarElemento(problemaHuds.concepto, false);
-            // armamos el elemento data a agregar al array de registros
-            let objectId = new ObjectID();
-            let nuevoRegistro = new IPrestacionRegistro(elementoRUP, problemaHuds.concepto);
-            // Le cargamos ya en el objeto valor el idRegistroOrigen
-            nuevoRegistro.valor = { idRegistroOrigen: problemaHuds.evoluciones[0].idRegistro }
-            // agregamos al array de registros
-            this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
-            this.showDatosSolicitud = false;
-            this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
-
-        } else {
-            this.cargarNuevoRegistro(problemaHuds.concepto);
-        }
     }
 
     /**
@@ -390,6 +391,26 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.ejecutarConcepto(resultadoHuds.data.concepto);
         }
     }
+
+    cancelarTransformacion() {
+        this.transformarProblema = false;
+    }
+
+    iniciaTransformarProblema(registro) {
+        this.registroATransformar = registro;
+        this.transformarProblema = true;
+    }
+
+    ConfirmaTransformar(nuevoHallazgo) {
+        // si proviene del drag and drop
+        this.isDraggingConcepto = false;
+        if (nuevoHallazgo.dragData) {
+            nuevoHallazgo = nuevoHallazgo.dragData;
+        }
+        this.ejecutarConcepto(nuevoHallazgo, this.registroATransformar);
+
+    }
+
 
     /* ordenamiento de los elementos */
     /**
@@ -451,7 +472,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             return;
         }
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        // TODO: Revisar estos cambios para refactorizar
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
@@ -514,13 +534,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     cargaItems(registroActual, indice) {
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         let registros = this.prestacion.ejecucion.registros;
-        this.itemsRegistros[registroActual.id].mostrarItems = true;
         this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
                     if (registro.id !== registroActual.relacionadoCon[0].id) {
+
                         return registro;
                     }
                 } else {

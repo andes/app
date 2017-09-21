@@ -40,12 +40,13 @@
     "bowser": "^1.7.1",
     "bson": "^1.0.4",
     "core-js": "^2.4.1",
+    "enhanced-resolve": "^3.4.1",
     "ng2-drag-drop": "^1.5.1",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "^1.2.6",
+    "@angular/cli": "^1.3.2",
     "@angular/compiler-cli": "^4.3.1",
     "@types/jasmine": "^2.2.30",
     "@types/node": "^6.0.42",

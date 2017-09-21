@@ -82,6 +82,9 @@
                             title="Reasignar turno"></plex-button>
                         <plex-button *ngIf="botones.turnoDoble" type="default" icon="mdi mdi-numeric-2-box-multiple-outline" (click)="asignarTurnoDoble('darTurnoDoble')"
                             title="Turno doble"></plex-button>
+                        <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="mdi mdi-numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
+                            title="Quitar Turno doble"></plex-button>
+                        <!-- mdi-numeric-1-box-outline -->
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
@@ -112,13 +115,14 @@
                 </tbody>
             </table>
             <table class="table table-striped">
-                <thead *ngIf="bloque.descripcion">
+                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
                     <tr>
-                        <th *ngIf="!agenda.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
                             hs
                         </th>
-                        <th *ngIf="agenda.nominalizada" colspan="4">{{bloque.descripcion}}
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}}
                         </th>
+                        <th *ngIf="bloque.citarPorBloque" colspan="4"><span class="text-danger">Citación por segmento</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,8 +160,8 @@
                                 <i class="mdi mdi-account-check"></i>
                             </span>
                             <span *ngIf="turno?.nota"><i title="{{turno.nota}}" titlePosition="left" class="text-warning warning mdi mdi-message"></i></span>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success">Asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger">No asistió</div>
                             <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"><i class="text-success mdi mdi-emoticon-happy"></i></div>
                         </td>
                         <td>

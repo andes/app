@@ -179,17 +179,30 @@ export class BotonesAgendaComponent implements OnInit {
             // Revisión de agenda
             revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantSel === 1) && this.puedoReasignar() || this.hayTurnosSuspendidos() && puedeReasignar,
+            reasignarTurnos: (this.cantSel === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantSel === 1) && puedeImprimir,
         };
     }
 
-    puedoReasignar() {
+    hayAgendasSuspendidas() {
         let reasginar = this.agendasSeleccionadas.filter((agenda) => {
             return (agenda.nominalizada && agenda.estado === 'suspendida');
         }).length > 0;
         return reasginar;
+    }
+
+    // Comprueba que haya algún turno con paciente, en estado suspendido
+    hayTurnosSuspendidos() {
+        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
+            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
+                for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
+                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
+                        return true;
+                    }
+                }
+            }
+        }
     }
 
     puedoEditar() {
@@ -235,24 +248,12 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoRevisar() {
-        let today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
-        }).length > 0;
-    }
-
-    // Comprueba que haya algún turno con paciente, en estado suspendido
-    hayTurnosSuspendidos() {
-        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
-            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
-                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente) {
-                        return true;
-                    }
-                }
-            }
-        }
+        return true; // TODO: descomentar
+        // let today = new Date();
+        // today.setHours(0, 0, 0, 0);
+        // return this.agendasSeleccionadas.filter((agenda) => {
+        //     return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
+        // }).length > 0;
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado

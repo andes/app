@@ -10,7 +10,8 @@
                     </header>
                     <div class="row">
                         <div class="col-4">
-                            <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" (change)="validarTodo()" name="modelo.fecha" label="Fecha">
+                            <plex-datetime type="date" [(ngModel)]="modelo.fecha" [required]="true" [autoFocus]="autoFocus" (change)="validarTodo()"
+                                name="modelo.fecha" label="Fecha">
                             </plex-datetime>
                         </div>
                         <div *ngIf="modelo.fecha" class="col-4">
@@ -47,44 +48,20 @@
                     </div>
 
                     <br>
-                    <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
+                    <div *ngIf="modelo.horaInicio && modelo.horaFin && showBloque && modelo.bloques && modelo.bloques.length > 0" class="row">
                         <div class="col-12">
                             <fieldset>
                                 <legend>Espacio físico</legend>
                             </fieldset>
                             <div class="row">
-                                <!--<div class="col-10"></div>-->
-                                <div class="col text-right">
-                                    <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: tipoEspacioFisico=='propios'}">
-                                        <input type="radio" name="options" id="inactivo" (click)="filtrarEspacioFisico('propios')">
-                                        propios
-                                         </label>
-                                        <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: tipoEspacioFisico=='otroEfector'}">
-                                        <input type="radio" name="options" id="inactivo" (click)="filtrarEspacioFisico('otroEfector')">
-                                        otro Efector
-                                        </label>
-                                        <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: tipoEspacioFisico=='registrados'}">
-                                        <input type="radio" name="options" id="inactivo" (click)="filtrarEspacioFisico('registrados')">
-                                        registrados
-                                        </label>
-                                        <label class="btn btn-primary btn-sm hover form-control" [ngClass]="{active: tipoEspacioFisico=='nuevo'}">
-                                        <input type="radio" name="options" id="inactivo" (click)="filtrarEspacioFisico('nuevo')">
-                                        nuevo
-                                        </label>
-                                    </div>
+                                <div class="col text-left">
+                                    <plex-bool [(ngModel)]="espacioFisicoPropios" name="espacioFisicoPropios" type="slide" label="{{textoEspacio}}" (change)="filtrarEspacioFisico()"></plex-bool>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="tipoEspacioFisico=='otroEfector'">
-                                <div class="col">
-                                    <plex-select label="Seleccione el efector" [(ngModel)]="efector" name="efector" (getData)="loadEfectores($event)" (change)="loadEspaciosFisicos(modelo.espacioFisico,efector)">
-                                    </plex-select>
-                                </div>
-                            </div>
-                            <div class="row" *ngIf="tipoEspacioFisico!=='nuevo'">
+                            <div class="row" *ngIf="espacioFisicoPropios">
                                 <div class="col-10">
-                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" [data]="espaciosFisicosEfector" label="Espacio Físico"
-                                        placeholder="Seleccione un espacio" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + ' (' + edificio.descripcion + ')'"
+                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico del efector"
+                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.dscripcion ? edificio.descripcion : '')"
                                         (change)="validarTodo()">
                                     </plex-select>
                                 </div>
@@ -93,17 +70,18 @@
                                     <plex-button type="info" icon="map" title="Ver mapa" titlePosition="left" (click)="mapaEspacioFisico()"></plex-button>
                                 </div>
                             </div>
-                            <div class="row" *ngIf="tipoEspacioFisico=='nuevo'">
-                                <div class="col-12">
-                                    <plex-text label="Espacio Fisico" [(ngModel)]="espacioNuevo.nombre" name="espacioNuevo" placeholder="Ingrese un nuevo espacio fisico">
-                                    </plex-text>
+                            <div class="row" *ngIf="!espacioFisicoPropios">
+                                <div class="col-10">
+                                    <plex-select [(ngModel)]="modelo.espacioFisico" name="otrosEspacios" (getData)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico"
+                                        placeholder="Seleccione un espacio físico" labelField="nombre" (change)="validarTodo()">
+                                    </plex-select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!--Lista de Bloques-->
-                    <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length>0" class="pt-3">
+                    <div *ngIf="showBloque && modelo.bloques && modelo.bloques.length > 0" class="pt-3">
                         <fieldset>
                             <legend>Bloques
                                 <plex-button class="float-right" icon="plus" type="success btn-sm" title="Agregar Bloque" (click)="addBloque()">
@@ -268,14 +246,13 @@
                         <br>
                     </ng-container>
                 </plex-box>
-                <plex-box>
-                    <div *ngIf="showMapaEspacioFisico">
-                        <plex-box>
-                            <filtros-mapa-espacio-fisico (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
-                            <mapa-espacio-fisico [agendaSeleccionada]="modelo" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"></mapa-espacio-fisico>
-                        </plex-box>
-                    </div>
-                </plex-box>
+                <div *ngIf="showMapaEspacioFisico">
+                    <plex-box>
+                        <filtros-mapa-espacio-fisico (onChange)="espaciosChange($event)"></filtros-mapa-espacio-fisico>
+                        <mapa-espacio-fisico [agendaSeleccionada]="modelo" [espacioTable]="espaciosList" (onEspacioClick)="selectEspacio($event)"
+                            [showBotonCancelar]="true" (onCancelEmit)="cerrarMapaPlanificar($event)"></mapa-espacio-fisico>
+                    </plex-box>
+                </div>
             </div>
         </div>
     </section>
