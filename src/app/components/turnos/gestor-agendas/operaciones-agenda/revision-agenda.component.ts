@@ -130,7 +130,6 @@ export class RevisionAgendaComponent implements OnInit {
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
-            this.pacientesSearch = false;
         }
     }
 
