@@ -37,10 +37,17 @@
     <!--</div>-->
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
                 placeholder="Seleccione un motivo de suspensión">
             </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-warning p-3 text-white" *ngIf="!motivoSuspensionSelect.select?.nombre">
+                Seleccione un motivo de suspensión
+            </div>
         </div>
     </div>
 
