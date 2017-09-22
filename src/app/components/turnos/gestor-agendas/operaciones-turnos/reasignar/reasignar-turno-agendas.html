@@ -41,14 +41,14 @@
                         <!-- AGENDA ORIGEN -->
                         <div class="col-6 text-warning" *ngIf="agendaAReasignar?.horaInicio">
                             <b>{{agendaAReasignar?.horaInicio | date: 'EEEE' | uppercase }} {{agendaAReasignar?.horaInicio |
-                                date: 'dd/MM/yyyy'}} de {{agendaAReasignar.horaInicio | date: 'HH:mm'}} a {{agendaAReasignar.horaFin
+                                date: 'dd/MM/yyyy'}} de {{agendaAReasignar?.horaInicio | date: 'HH:mm'}} a {{agendaAReasignar?.horaFin
                                 | date: 'HH:mm'}} hs</b>
                         </div>
                         <!-- AGENDA DESTINO -->
                         <div class="col-6 text-info" *ngIf="agendaDestino">
-                            <b>{{agendaDestino.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino.horaInicio | date: 'dd/MM/yyyy'}}
-                                de {{agendaDestino.horaInicio | date: 'HH:mm'}} a {{agendaDestino.horaFin | date:'HH:mm'}}
-                                hs
+                            <b>{{agendaDestino?.horaInicio | date: 'EEEE' | uppercase }} {{agendaDestino?.horaInicio | date:
+                                'dd/MM/yyyy'}} de {{agendaDestino?.horaInicio | date: 'HH:mm'}} a {{agendaDestino?.horaFin
+                                | date:'HH:mm'}} hs
                             </b>
                         </div>
                     </div>
@@ -64,14 +64,14 @@
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
                         <!-- PROFESIONALES ORIGEN -->
-                        <div class="col-6 text-warning" *ngIf="agendaAReasignar.profesionales?.length > 0">
+                        <div class="col-6 text-warning" *ngIf="agendaAReasignar?.profesionales?.length > 0">
                             Profesionales:
-                            <b>{{ agendaAReasignar.profesionales | enumerar:['apellido', 'nombre'] }}</b>
+                            <b>{{ agendaAReasignar?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
                         </div>
                         <!-- PROFESIONALES DESTINO -->
                         <div class="col-6 text-info" *ngIf="agendaDestino?.profesionales?.length > 0">
                             Profesionales:
-                            <b>{{ agendaDestino.profesionales | enumerar:['apellido', 'nombre'] }}</b>
+                            <b>{{ agendaDestino?.profesionales | enumerar:['apellido', 'nombre'] }}</b>
                         </div>
                     </div>
                 </div>

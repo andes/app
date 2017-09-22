@@ -94,6 +94,11 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     suspenderTurno() {
+
+        if (this.motivoSuspensionSelect.select.nombre === null) {
+            return;
+        }
+
         let patch: any = {
             op: 'suspenderTurno',
             turnos: this.turnos,
