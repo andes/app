@@ -36,24 +36,37 @@
                                 </rup>
                             </div>
                             <div class="rup-footer">
-                                <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-                                    <!-- <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno"> -->
-                                    <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
-                                    <!-- </p> -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                            <!-- <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno"> -->
+                                            <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
+                                            <!-- </p> -->
+                                        </div>
+                                        <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
+                                            <strong>Relacionado con:</strong>
+                                            <!--*ngFor="let r of registro.relacionadoCon"-->
+                                            <ng-container>
+                                                {{elemento.relacionadoCon[0].concepto.term}}
+                                            </ng-container>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
-                                    <strong>Relacionado con:</strong>
-                                    <!--*ngFor="let r of registro.relacionadoCon"-->
-                                    <ng-container>
-                                        {{elemento.relacionadoCon[0].concepto.term}}
-                                    </ng-container>
+                                <div class="row" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                    <div class="col-6">
+                                        <div *ngIf="!diagnosticoReadonly">
+                                            <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnóstico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
+                                        </div>
+                                        <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal">
+                                            Diagnóstico principal
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <plex-bool [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
+                                    </div>
                                 </div>
-                                <div *ngIf="!diagnosticoReadonly && (elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                    <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnostico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
-                                </div>
-                                <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal">
-                                    Diagnostico principal
-                                </div>
+
                             </div>
                         </div>
                     </div>

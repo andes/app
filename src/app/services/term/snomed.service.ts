@@ -35,8 +35,28 @@ export class SnomedService {
     }
 
     getProductos(params: any): Observable<any[]> {
-         return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
+        return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
     }
+
+    getCie10(params: any): Observable<any> {
+        return new Observable(resultado => resultado.next({
+            '_id': '59bbf1ed53916746547cb944',
+            'idCie10': 45,
+            'idNew': 2426,
+            'capitulo': '05',
+            'grupo': '10',
+            'causa': 'F94',
+            'subcausa': '8',
+            'codigo': 'F94.8',
+            'nombre': 'Otros trastornos del comportamiento social en la niñez',
+            'sinonimo': 'Otros trastornos del comportamiento social en la niñez',
+            'descripcion': '05.Trastornos mentales y del comportamiento (F00-F99)',
+            'c2': false
+        }));
+        // return this.server.get(this.snomedURL + '/map', { params: params, showError: true });
+    }
+
+
 
     /*
     buscarTrastornosHallazgos(query: String): Observable<any[]> {
