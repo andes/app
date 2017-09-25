@@ -51,6 +51,11 @@ export class LiberarTurnoComponent implements OnInit {
     }
 
     liberarTurno() {
+
+        if (this.motivoLiberacionSelect.select.nombre === null) {
+            return;
+        }
+
         let alertCount = 0;
         let patch = {
             op: 'liberarTurno',
@@ -70,7 +75,6 @@ export class LiberarTurnoComponent implements OnInit {
                     console.log(err);
                 }
             });
-
     }
 
     agregarPacienteListaEspera() {

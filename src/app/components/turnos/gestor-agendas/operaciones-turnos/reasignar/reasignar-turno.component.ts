@@ -146,9 +146,10 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     reasignacionManualAgendas(event) {
-        console.log(event);
-        let turnoReasignado = this.agendaAReasignar.map(b => b.map(t => t.id === event.turno.id))[0];
-        this.seleccionarTurno(turnoReasignado, event.bloque, false);
+        if (event && this.agendaAReasignar.length) {
+            let turnoReasignado = this.agendaAReasignar.map(b => b.map(t => t.id === event.turno.id))[0];
+            this.seleccionarTurno(turnoReasignado, event.bloque, false);
+        }
     }
 
     /**
