@@ -62,8 +62,8 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-6">
-                                        <plex-bool [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
+                                    <div class="col-6" *ngIf="codigosCie10 && codigosCie10[elemento.id]">
+                                        <plex-bool *ngIf="codigosCie10[elemento.id].c2" [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
                                     </div>
                                 </div>
 

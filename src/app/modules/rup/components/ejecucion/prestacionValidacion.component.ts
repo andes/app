@@ -73,7 +73,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.diagnosticoReadonly = true;
             }
             // Carga la información completa del paciente
-            // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
             });
