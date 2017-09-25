@@ -1,3 +1,40 @@
+.header-fixed, .table-botones-fixed {
+    position: fixed;
+    right: 45px;
+    width: 500px;
+    padding-bottom: 3px;
+    background-color: #fff;
+    z-index: 1;
+
+    fieldset {
+        padding: 0 12px;
+    }
+    
+}
+.bloques-y-turnos {
+    padding-top: 15px;
+}
+.header-fixed {
+    box-shadow: 0px 2px 5px #aaa;
+}
+.header-fixed-front {
+    z-index: 2;
+}
+.table-turnos {
+    margin-top: 65px;
+}
+
 .badge i {
     margin-right: 0px;
+}
+
+.seleccionar-todos{
+    i {
+        position: relative;
+        left: 6px;
+    }
+}
+.lista-turnos {
+    position: relative;
+    top: 160px;
 }
