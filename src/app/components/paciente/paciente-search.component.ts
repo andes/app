@@ -67,7 +67,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         };
         // controla el input y bloquea dashboard si no tiene permisos
         if (this.modoCompleto) {
-            this.modoCompleto = this.auth.getPermissions('mpi:?').indexOf('paciente:dashboard') >= 0;
+            this.modoCompleto = this.auth.check('mpi:paciente:dashboard');
         }
         this.autoFocus = this.autoFocus + 1;
     }
@@ -95,7 +95,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             this.selected.emit({});
         }
         if (!this.bloquearCreate) {
-            if (this.auth.getPermissions('mpi:?').indexOf('editarPaciente') >= 0) {
+            if (this.auth.check('mpi:editarPaciente')) {
                 this.showCreateUpdate = true;
             } else {
                 this.seleccion = {};
@@ -322,7 +322,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         this.loading = false;
                         this.resultado = resultado;
                         this.esEscaneado = false;
-                        this.mostrarNuevo = this.auth.getPermissions('mpi:?').indexOf('nuevoPaciente') >= 0;
+                        this.mostrarNuevo = this.auth.check('mpi:nuevoPaciente');
                     }, (err) => {
                         this.loading = false;
                     });
