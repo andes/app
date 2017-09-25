@@ -34,22 +34,23 @@ export class InicioComponent implements AfterViewInit {
     constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) {}
 
     ngAfterViewInit() {
-        this.denied = true;
-        if (this.auth.getPermissions('turnos:?').length > 0) {
-            this.turnos = 'turnos';
-            this.denied = false;
-        }
+        window.setTimeout(() => {
+            this.denied = true;
+            if (this.auth.getPermissions('turnos:?').length > 0) {
+                this.turnos = 'turnos';
+                this.denied = false;
+            }
 
-        if (this.auth.getPermissions('mpi:?').length > 0) {
-            this.mpi = 'mpi';
-            this.denied = false;
-        }
+            if (this.auth.getPermissions('mpi:?').length > 0) {
+                this.mpi = 'mpi';
+                this.denied = false;
+            }
 
-        if (this.auth.getPermissions('rup:?').length > 0) {
-            this.rup = 'rup';
-            this.denied = false;
-        }
-
+            if (this.auth.getPermissions('rup:?').length > 0) {
+                this.rup = 'rup';
+                this.denied = false;
+            }
+        });
         // Por ahora desactivamos el wizard!
         // let wizard = new Wizard('turnos');
         // wizard.addStep('Bienvenido al módulo de Agendas & Turnos', 'Este asistente lo ayudará a empezar a trabajar');
