@@ -136,7 +136,13 @@
                         </div>
                     </div>
                     <div *ngIf="!hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno) && indiceAgenda === 0" class="col-6">
-                        No quedan agendas con turnos disponibles
+                        <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm' }} a
+                            {{ agenda.horaFin | date: 'HH:mm' }} hs</h5>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                No quedan turnos disponibles en esta Agenda
+                            </li>
+                        </ul>
                     </div>
                 </ng-container>
             </div>
