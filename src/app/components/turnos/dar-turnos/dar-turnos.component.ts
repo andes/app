@@ -478,7 +478,7 @@ export class DarTurnosComponent implements OnInit {
                 let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
                 {
                     return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
-                }
+                };
             });
 
         });

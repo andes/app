@@ -209,7 +209,7 @@
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
                         <small>
-                            <span *ngIf="ssobreturno?.paciente?.id">| DNI {{sobreturno.paciente.documento|number}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id">| DNI {{sobreturno.paciente.documento|number}}</span>
                         </small>
                         <small>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
