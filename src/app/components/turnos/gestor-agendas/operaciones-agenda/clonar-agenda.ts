@@ -170,7 +170,6 @@ export class ClonarAgendaComponent implements OnInit {
                     dia.estado = 'noSeleccionado';
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
-                        console.log(aux);
                         let indice = aux.indexOf(fil.id);
                         if (indice >= 0) {
                             this.agendasFiltradas.splice(indice, 1);
@@ -178,16 +177,16 @@ export class ClonarAgendaComponent implements OnInit {
                     });
                 }
             }
-
         }
     }
     // Verifica si existen conflictos con las agendas existentes en ese dia
     // no se asignan agendas en conflicto al array "seleccionados"
     verificarConflictos(dia: any) {
+
         this.agendasFiltradas.forEach((agenda, index) => {
+
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales.length > 0) {
-                    console.log('profesionales', agenda.profesionales.length);
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
                         (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
                         agenda.conflictoProfesional = 1;
@@ -195,7 +194,6 @@ export class ClonarAgendaComponent implements OnInit {
                     }
                 }
                 if (agenda.espacioFisico) {
-                    console.log('espacio');
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
                         dia.estado = 'conflicto';
@@ -241,7 +239,6 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        console.log('resultado ', resultado);
                         this.plex.alert('La Agenda se clonó correctamente').then(ok => {
                             this.volverAlGestor.emit(true);
                         });
