@@ -55,11 +55,11 @@
                     <div class="row" *ngIf="turnoSeleccionado?.horaInicio && agendaDestino">
                         <!-- TURNO ORIGEN -->
                         <div class="col-6 text-warning">Turno:
-                            <b>{{turnoSeleccionado.horaInicio | date: 'HH:mm' }} hs</b>
+                            <b>{{turnoSeleccionado?.horaInicio | date: 'HH:mm' }} hs</b>
                         </div>
                         <!-- TURNO DESTINO -->
                         <div class="col-6 text-info">Turno:
-                            <b>{{turnoReasignado.horaInicio | date: 'HH:mm' }} hs</b>
+                            <b>{{turnoReasignado?.horaInicio | date: 'HH:mm' }} hs</b>
                         </div>
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
