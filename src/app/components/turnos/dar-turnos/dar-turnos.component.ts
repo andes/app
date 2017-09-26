@@ -735,7 +735,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     obtenerCarpetaPaciente(paciente) {
-        // debugger
         // Se busca el número de carpeta de la Historia Clínica en papel del paciente
         // a partir del documento y del efector
 
