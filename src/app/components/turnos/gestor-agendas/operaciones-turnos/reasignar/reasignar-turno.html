@@ -49,10 +49,10 @@
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
                                             <small>
-                                                <span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span>
+                                                <span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento | number}}</span>
                                             </small>
                                             <small>
-                                                <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta
+                                                <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores[0]?.nroCarpeta"> | Nro Carpeta
                                                     <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{ carpeta.nroCarpeta }}</span>
                                                 </span>
                                                 <br>
