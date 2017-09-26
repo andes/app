@@ -12,6 +12,7 @@
                 <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                 </div>
+                
                 <!--Tabla de resultados -->
                 <table *ngIf="resultado && resultado.length" class="table table-striped">
                     <tbody>
