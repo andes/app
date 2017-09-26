@@ -29,12 +29,15 @@ export class AppComponent {
     public checkPermissions(): any {
         let accessList = [];
         this.menuList = [];
-        this.auth.organizaciones().subscribe(data => {
-            if (data.length > 1) {
-                this.menuList = [{ label: 'Seleccionar organización', icon: 'home', route: '/selectOrganizacion' }, ...this.menuList];
-                this.plex.updateMenu(this.menuList);
-            }
-        });
+
+        if (this.auth.loggedIn()) {
+            this.auth.organizaciones().subscribe(data => {
+                if (data.length > 1) {
+                    this.menuList = [{ label: 'Seleccionar organización', icon: 'home', route: '/selectOrganizacion' }, ...this.menuList];
+                    this.plex.updateMenu(this.menuList);
+                }
+            });
+        }
         // Cargo el array de permisos
         if (this.auth.getPermissions('turnos:?').length > 0) {
             accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
@@ -63,6 +66,9 @@ export class AppComponent {
     constructor(public plex: Plex, public server: Server, public auth: Auth) {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
+
+        // Inicializa el menu
+        this.checkPermissions();
 
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
