@@ -69,7 +69,7 @@
                         <header>Agendas en conflicto</header>
                         <plex-accordion>
                             <ng-template ngFor let-agendaF="$implicit" [ngForOf]="agendasFiltradas" let-i="index">
-                                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy hh:mm'}} - {{agendaF.horaFin | date: 'hh:mm'}}" icon="arrow-down-drop-circle-outline">
+                                <plex-panel tituloPrincipal="{{agendaF.horaInicio | date: 'dd/MM/yyyy hh:mm'}} - {{agendaF.horaFin | date: 'HH:mm'}}" icon="arrow-down-drop-circle-outline">
                                     <li *ngIf="agendaF.conflictoEF">
                                         Conflicto con Espacio Físico
                                     </li>
