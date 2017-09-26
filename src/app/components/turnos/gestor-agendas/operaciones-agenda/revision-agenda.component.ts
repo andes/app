@@ -255,7 +255,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnosticoPrincipal || (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )) ||
+                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )) ||
                 !t.asistencia)
             );
         });
