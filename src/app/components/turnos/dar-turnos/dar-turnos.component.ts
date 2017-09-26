@@ -735,6 +735,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     obtenerCarpetaPaciente(paciente) {
+        // debugger
         // Se busca el número de carpeta de la Historia Clínica en papel del paciente
         // a partir del documento y del efector
 
@@ -761,9 +762,13 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
 
-        } else {
-            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         }
+        if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
+            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
+        }
+        // else {
+        //     this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
+        // }
 
     }
 
@@ -848,34 +853,39 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 this.paciente.contacto = [nuevoCel];
             }
-
-            let listaCarpetas = [];
-            listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
-            let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
-            if (!carpetaActualizar) {
-                listaCarpetas.push(this.carpetaEfector);
-            } else {
-                listaCarpetas.forEach(carpeta => {
-                    if (carpeta.organizacion._id === this.auth.organizacion.id) {
-                        carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
-                    }
-                });
-            }
-
-            let cambios = {
+        }
+        let listaCarpetas = [];
+        listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
+        let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
+        if (!carpetaActualizar) {
+            listaCarpetas.push(this.carpetaEfector);
+        } else {
+            listaCarpetas.forEach(carpeta => {
+                if (carpeta.organizacion._id === this.auth.organizacion.id) {
+                    carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
+                }
+            });
+        }
+        let cambios;
+        if (this.cambioTelefono) {
+            cambios = {
                 'op': 'updateContactosCarpeta',
                 'contacto': this.paciente.contacto,
                 'carpetaEfectores': listaCarpetas
             };
-
-            // Actualizo teléfono del paciente en MPI
-            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
-                if (resultado) {
-                    this.plex.toast('info', 'Número de teléfono actualizado');
-                }
-            });
-
+        } else {
+            cambios = {
+                'op': 'updateCarpetaEfectores',
+                'carpetaEfectores': listaCarpetas
+            };
         }
+
+        // Actualizo teléfono y nro de carpeta del paciente en MPI
+        this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+            if (resultado) {
+                this.plex.toast('info', 'Datos del paciente actualizados');
+            }
+        });
 
     }
 
