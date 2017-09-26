@@ -85,7 +85,7 @@
                                 <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                                 <span *ngIf="sobreturno && sobreturno.nota"><i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
                                 <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnosticoPrincipal?.codificacion == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnosticoPrincipal?.codificacion != null || sobreturno?.asistencia !== 'asistio')">| Codificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnosticoPrincipal?.codificacion != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
 
                             </td>
                         </tr>
