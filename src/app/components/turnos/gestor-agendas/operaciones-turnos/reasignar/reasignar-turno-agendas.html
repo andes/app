@@ -55,11 +55,11 @@
                     <div class="row" *ngIf="turnoSeleccionado?.horaInicio && agendaDestino">
                         <!-- TURNO ORIGEN -->
                         <div class="col-6 text-warning">Turno:
-                            <b>{{turnoSeleccionado.horaInicio | date: 'HH:mm' }} hs</b>
+                            <b>{{turnoSeleccionado?.horaInicio | date: 'HH:mm' }} hs</b>
                         </div>
                         <!-- TURNO DESTINO -->
                         <div class="col-6 text-info">Turno:
-                            <b>{{turnoReasignado.horaInicio | date: 'HH:mm' }} hs</b>
+                            <b>{{turnoReasignado?.horaInicio | date: 'HH:mm' }} hs</b>
                         </div>
                     </div>
                     <div class="row" *ngIf="agendaAReasignar?.horaInicio && agendaDestino">
@@ -135,9 +135,9 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="!hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno) && indiceAgenda === 0" class="col-6">
-                        No quedan agendas con turnos disponibles
-                    </div>
+                    <!-- <div *ngIf="!hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno) && indiceAgenda === 0" class="col-6">
+                        No con turnos disponibles
+                    </div> -->
                 </ng-container>
             </div>
 
