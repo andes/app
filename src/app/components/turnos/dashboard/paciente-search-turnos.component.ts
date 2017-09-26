@@ -46,6 +46,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     }
 
     public seleccionar(paciente: any) {
+        debugger;
         // Se muestran los datos básicos del paciente en el componente estadisticas Paciente
         this.pacienteSeleccionado = paciente;
         this.selected.emit(paciente);
