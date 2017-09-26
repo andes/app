@@ -820,7 +820,7 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
-    actualizarTelefono(pacienteActualizar) {
+    actualizarPaciente() {
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
             let nuevoCel = {
@@ -848,13 +848,28 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 this.paciente.contacto = [nuevoCel];
             }
+
+            let listaCarpetas = [];
+            listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
+            let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
+            if (!carpetaActualizar) {
+                listaCarpetas.push(this.carpetaEfector);
+            } else {
+                listaCarpetas.forEach(carpeta => {
+                    if (carpeta.organizacion._id === this.auth.organizacion.id) {
+                        carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
+                    }
+                });
+            }
+
             let cambios = {
-                op: 'updateContactos',
-                contacto: this.paciente.contacto
+                'op': 'updateContactosCarpeta',
+                'contacto': this.paciente.contacto,
+                'carpetaEfectores': listaCarpetas
             };
 
             // Actualizo teléfono del paciente en MPI
-            this.servicePaciente.patch(pacienteActualizar.id, cambios).subscribe(resultado => {
+            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
                 if (resultado) {
                     this.plex.toast('info', 'Número de teléfono actualizado');
                 }
@@ -942,8 +957,7 @@ export class DarTurnosComponent implements OnInit {
                             });
                         }
                     }
-                    this.actualizarTelefono(pacienteSave);
-                    this.actualizarCarpetaPaciente(this.paciente);
+                    this.actualizarPaciente();
                     if (this.paciente && this._pacienteSeleccionado) {
                         this.cancelarDarTurno.emit(true);
                         return false;
