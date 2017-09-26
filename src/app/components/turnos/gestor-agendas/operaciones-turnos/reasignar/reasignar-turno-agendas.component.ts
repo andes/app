@@ -237,7 +237,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     hayTurnosDisponibles(agenda: IAgenda, tipoTurno: String) {
         for (let i = 0; i < agenda.bloques.length; i++) {
             for (let j = 0; j < agenda.bloques[i].turnos.length; j++) {
-                if ((agenda.bloques[i].turnos[j].estado === 'disponible' || agenda.bloques[i].turnos[j].tipoTurno === 'programado') || (agenda.bloques[i].turnos[j].tipoTurno === 'delDia' && this.getFecha(agenda.horaInicio) === this.getFecha(this.hoy))) {
+                if (agenda.bloques[i].turnos[j].estado === 'disponible' || (agenda.bloques[i].turnos[j].tipoTurno === 'programado') || (agenda.bloques[i].turnos[j].tipoTurno === 'delDia' && this.getFecha(agenda.horaInicio) === this.getFecha(this.hoy))) {
                     return true;
                 }
             }
