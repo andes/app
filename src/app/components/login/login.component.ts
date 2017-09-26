@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
+import { AppComponent } from '../../app.component';
 
 @Component({
     templateUrl: 'login.html',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
     public deshabilitar = false;
     public autoFocus = 1;
 
-    constructor(private plex: Plex, private auth: Auth, private router: Router) { }
+    constructor(private plex: Plex, private auth: Auth, private router: Router, public appComponent: AppComponent) { }
 
     ngOnInit() {
         this.auth.logout();
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
             this.auth.login(this.usuario.toString(), this.password)
                 .subscribe((data) => {
                     this.plex.updateUserInfo({ usuario: this.auth.usuario });
+                    this.appComponent.checkPermissions();
                     this.router.navigate(['selectOrganizacion']);
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');

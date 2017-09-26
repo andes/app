@@ -67,9 +67,6 @@ export class AppComponent {
         // Inicializa la vista
         this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
 
-        // Verifica los permisos de la aplicación
-        this.checkPermissions();
-
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
     }
