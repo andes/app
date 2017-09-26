@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
+import { AppComponent } from '../../app.component';
 
 @Component({
     templateUrl: 'login.html',
