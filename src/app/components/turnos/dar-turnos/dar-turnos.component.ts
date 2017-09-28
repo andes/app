@@ -129,7 +129,7 @@ export class DarTurnosComponent implements OnInit {
     // Opciones para modificar la grilla/calendario
     opcionesCalendario = {
         mostrarFinesDeSemana: true
-    }
+    };
 
     private bloques: IBloque[];
     private indiceTurno: number;
@@ -175,8 +175,14 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
+        console.log('permisos ', this.permisos[0]);
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
             let data2 = this.verificarLlaves(dataF, event);
         });
     }
