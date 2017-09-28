@@ -12,14 +12,14 @@
                 {{ paciente.documento | number }}
             </ng-container>
             <ng-container *ngIf="paciente.documento === ''">
-                <b class="text-danger">Sin documento (temporal)</b>
+                <b>Sin documento (temporal)</b>
             </ng-container>
             |
             <ng-container *ngIf="paciente.fechaNacimiento !== ''">
                 {{ paciente | edad }}
             </ng-container>
-            <ng-container *ngIf="paciente.fechaNacimiento === ''">
-                <b class="text-danger">Sin fecha de nacimiento (temporal)</b>
+            <ng-container *ngIf="paciente.fechaNacimiento === null">
+                <b>Sin fecha de nacimiento (temporal)</b>
             </ng-container>
             <ng-container *ngFor="let n of paciente.notas; let i = index">
                 <strong> Nota {{i+1}}: </strong> {{n.nota}}
