@@ -90,7 +90,6 @@ export class PacienteService {
     }
 
     save(paciente: IPaciente): Observable<IPaciente> {
-        debugger;
         if (paciente.id) {
             return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
         } else {

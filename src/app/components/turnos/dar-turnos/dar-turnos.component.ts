@@ -129,7 +129,7 @@ export class DarTurnosComponent implements OnInit {
     // Opciones para modificar la grilla/calendario
     opcionesCalendario = {
         mostrarFinesDeSemana: true
-    }
+    };
 
     private bloques: IBloque[];
     private indiceTurno: number;
