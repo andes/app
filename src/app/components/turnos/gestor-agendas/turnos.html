@@ -143,7 +143,8 @@
                                 <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span>
                             </small>
                             <small>
-                                <span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento|number}}</span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">| Sin documento (temporal)</span>
                             </small>
                             <small>
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta">
@@ -209,7 +210,8 @@
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
                         <small>
-                            <span *ngIf="sobreturno?.paciente?.id">| DNI {{sobreturno.paciente.documento|number}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">| DNI {{sobreturno.paciente.documento|number}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">| Sin documento</span>
                         </small>
                         <small>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">

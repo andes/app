@@ -22,7 +22,9 @@
     <header>
         <div class="row">
             <div class="col">
-                <h5> <span style="color: #00A8E0">{{paciente | paciente}}</span> </h5>
+                <h5>
+                    <span style="color: #00A8E0">{{paciente | paciente}}</span>
+                </h5>
             </div>
         </div>
         <hr>
@@ -30,25 +32,30 @@
     <br>
     <div class="row">
         <div class="col-6">
-            <i class="mdi mdi-account-card-details"></i> <span style="color: #00A8E0">Documento</span>
+            <i class="mdi mdi-account-card-details"></i>
+            <span style="color: #00A8E0">Documento</span>
         </div>
         <div class="col-6">
-            <i class="mdi mdi-calendar-today"></i> <span style="color: #00A8E0">Fecha de Nacimiento</span>
+            <i class="mdi mdi-calendar-today"></i>
+            <span style="color: #00A8E0">Fecha de Nacimiento</span>
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="paciente">
-            {{paciente.documento | number}}
+        <div class="col-6" *ngIf="paciente?.id">
+            <span *ngIf="paciente.documento !== ''">{{paciente.documento | number}}</span>
+            <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento (temporal)</span>
         </div>
-        <div class="col-6" *ngIf="paciente">
-            {{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}
+        <div class="col-6" *ngIf="paciente?.id">
+            <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>
+            <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento (temporal)</span>
         </div>
     </div>
 
     <br>
     <div class="row">
         <div class="col-12">
-            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Correo electrónico (obligatorio)</span>
+            <i class="mdi mdi-map-marker"></i>
+            <span style="color: #00A8E0">Correo electrónico (obligatorio)</span>
         </div>
     </div>
     <div class="row">
@@ -60,7 +67,8 @@
 
     <div class="row">
         <div class="col-12">
-            <i class="mdi mdi-map-marker"></i> <span style="color: #00A8E0">Celular</span>
+            <i class="mdi mdi-map-marker"></i>
+            <span style="color: #00A8E0">Celular</span>
         </div>
     </div>
     <div class="row">
