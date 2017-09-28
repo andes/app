@@ -60,7 +60,8 @@
     <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
     <div class="chart-container">
         <div *ngIf="!loading" class="chart">
-            <canvas baseChart [datasets]="chart.datasets" [labels]="chart.labels" [options]="chart.options" [colors]="chart.colors" [legend]="false" [chartType]="'doughnut'"></canvas>
+            <canvas baseChart [datasets]="chart.datasets" [labels]="chart.labels" [options]="chart.options" [colors]="chart.colors" [legend]="false"
+                [chartType]="'doughnut'"></canvas>
         </div>
     </div>
     <div class="row" *ngIf="!loading">
@@ -69,13 +70,13 @@
                 <i class="mdi mdi-account-check"></i>
                 <div class="contenedor">
                     <div>{{validados}}</div>
-                    <div>Pacientes validados</div>
+                    <div>Pacientes validados </div>
                 </div>
             </div>
         </div>
         <div class="col-6">
             <div class="tarjeta bg-warning">
-                <i class="mdi mdi-account-off"></i>
+                <i class="mdi mdi-account-star"></i>
                 <div class="contenedor">
                     <div>{{temporales}}</div>
                     <div>Pacientes temporales</div>

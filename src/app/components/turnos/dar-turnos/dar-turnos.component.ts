@@ -453,8 +453,14 @@ export class DarTurnosComponent implements OnInit {
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
+                    // return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
+                    return this.estadoT !== 'noTurnos' && agenda.estado === 'publicada' && (moment(agenda.horaInicio) >= moment(new Date()) && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
                 });
+                // this.agendas = this.agendas.filter(agenda => {
+                //     agenda.bloques.map(bloque => {
+                //         // return bloque.turnos.find(t => t.horaInicio > this.hoy).horaInicio;.
+                //     });
+                // });
                 // this.agendas = this.agendas.filter(agenda => {
                 //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
                 // });
@@ -484,9 +490,27 @@ export class DarTurnosComponent implements OnInit {
         });
     }
 
+    hayTurnosEnHorario(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.filter(turno => {
+                let ultimoBloque = agenda.bloques.length - 1;
+                return (
+                    moment(agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos.length - 1]].horaInicio).format() > moment(new Date()).format()
+                )
+            });
+        });
+    }
+
+    hayTurnosDisponibles(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.filter(turno => {
+                return turno.estado === 'disponible';
+            });
+        }).length > 0;
+    }
+
     /**
      * Selecciona una Agenda (click en el calendario)
-     * @param agenda: objeto con una agenda completa
      */
     seleccionarAgenda(agenda) {
         // Asigno agenda
@@ -734,9 +758,9 @@ export class DarTurnosComponent implements OnInit {
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
+    // Se busca el número de carpeta de la Historia Clínica en papel del paciente
+    // a partir del documento y del efector
     obtenerCarpetaPaciente(paciente) {
-        // Se busca el número de carpeta de la Historia Clínica en papel del paciente
-        // a partir del documento y del efector
 
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
         if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {

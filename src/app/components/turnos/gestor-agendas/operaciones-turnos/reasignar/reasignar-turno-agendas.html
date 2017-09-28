@@ -13,7 +13,8 @@
                 <div class="col">
                     Paciente: {{turnoSeleccionado.paciente | paciente }}
                     <small>
-                        <span>| DNI {{turnoSeleccionado.paciente.documento | number}}</span>
+                        <span *ngIf="turnoSeleccionado.paciente.documento !== ''">| DNI {{turnoSeleccionado.paciente.documento | number}}</span>
+                        <span *ngIf="turnoSeleccionado.paciente.documento === ''">| Sin documento (temporal)</span>
                     </small>
                     <br>
                     <b>{{turnoSeleccionado.tipoPrestacion.nombre}}</b>

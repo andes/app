@@ -13,12 +13,22 @@
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                 </div>
                 <!--Tabla de resultados -->
-                <table *ngIf="resultado && resultado.length" class="table table-striped">
+                <table *ngIf="resultado && resultado.length && paciente?.id" class="table table-striped">
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
                             <td>
                                 <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>                                {{this.paciente | paciente}} <br> | <b>D.N.I.</b> <span>{{paciente.documento | number}}</span>                                | <b>Fecha de Nacimiento</b> <span>{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>                                | <b>Sexo</b> <span>{{paciente.sexo}}</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
+                                {{ paciente | paciente }}
+                                <br> |
+                                <b>Documento: </b>
+                                <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number}}</span> |
+                                <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span> |
+                                <b>Fecha de Nacimiento</b>
+                                <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span> |
+                                <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento</span> |
+                                <b>Sexo</b>
+                                <span>{{paciente.sexo}}</span>
                             </td>
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado" title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
@@ -40,5 +50,5 @@
     </div>
 </section>
 <footer *ngIf="!esEscaneado">
-        <plex-button label="Nuevo Paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+    <plex-button label="Nuevo Paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
 </footer>

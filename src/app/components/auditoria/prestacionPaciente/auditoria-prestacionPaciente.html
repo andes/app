@@ -10,9 +10,21 @@
                 <div>
                     <i class="mdi mdi-account-card-details mdi-36px"></i>
                 </div>
-                <div><strong>Nombre: </strong>{{ auditoriaPP.paciente.nombre + ' ' + auditoriaPP.paciente.apellido }}</div>
-                <div><strong>Documento: </strong>{{ auditoriaPP.paciente.documento}}</div>
-                <div><strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</div>
+                <div>
+                    <strong>Nombre: </strong>{{ auditoriaPP.paciente.nombre + ' ' + auditoriaPP.paciente.apellido }}</div>
+                <div *ngIf="auditoriaPP.paciente.documento !== ''">
+                    <strong>Documento: </strong>{{auditoriaPP.paciente.documento}}</div>
+                <div *ngIf="auditoriaPP.paciente.documento === ''">DU:
+                    <b class="text-danger">Sin documento (temporal)</b>
+                </div>
+                <div>
+                    <strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</div>
+                <div *ngIf="auditoriaPP.paciente.fechaNacimiento !== ''">
+                    <strong>Fecha Nacimiento: </strong>{{ auditoriaPP.paciente.fechaNacimiento | fecha }}</div>
+                <div *ngIf="auditoriaPP.paciente.fechaNacimiento === ''">
+                    <strong>Fecha Nacimiento: </strong>
+                    <b class="text-danger">Sin fecha de nacimiento (temporal)</b>
+                </div>
             </plex-box>
         </div>
         <div class="col">
@@ -21,9 +33,15 @@
                 <table class="table table-striped table-responsive" *ngIf="prestacionesPaciente.length > 0">
                     <thead>
                         <tr>
-                            <td class="col-5"><strong>Prestación</strong></td>
-                            <td class="col-4"><strong>Propósito</strong></td>
-                            <td class="col-3"><strong>Estado Auditoría</strong></td>
+                            <td class="col-5">
+                                <strong>Prestación</strong>
+                            </td>
+                            <td class="col-4">
+                                <strong>Propósito</strong>
+                            </td>
+                            <td class="col-3">
+                                <strong>Estado Auditoría</strong>
+                            </td>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +52,8 @@
                                 </td>
                                 <td class="col-4">
                                     <span *ngFor="let prop of p.solicitud.proposito, let i = index">
-									{{ prop }} <span *ngIf="i < p.solicitud.proposito.length - 1">, </span>
+                                        {{ prop }}
+                                        <span *ngIf="i < p.solicitud.proposito.length - 1">, </span>
                                     </span>
                                 </td>
                                 <td class="col-3">
@@ -49,7 +68,8 @@
         <div class="col-4">
             <plex-box>
                 <!--<editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>-->
-                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada" (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
+                <editar-auditoria-prestacionPaciente *ngIf="showVistaAuditoriasPP || auditoriasPPSeleccionadas.length == 1" [auditoriaPPSeleccionada]="auditoriaPPSeleccionada"
+                    (saveAuditoriaPP)="saveAuditoriaPP($event)" (cancelaEditarAuditoriaPP)="cancelaEditarAuditoriaPP($event)"></editar-auditoria-prestacionPaciente>
             </plex-box>
         </div>
     </div>

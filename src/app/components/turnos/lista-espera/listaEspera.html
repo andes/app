@@ -36,7 +36,8 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let listaEspera of datos">
-                            <td nowrap>{{listaEspera.paciente.documento}}</td>
+                            <td nowrap *ngIf="listaEspera.paciente.documento !== ''">{{listaEspera.paciente.documento}}</td>
+                            <td nowrap *ngIf="listaEspera.paciente.documento === ''">Sin documento</td>
                             <td>{{listaEspera.paciente | paciente}}</td>
                             <td>{{listaEspera.prestacion.nombre}}</td>
                             <td>
