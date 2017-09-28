@@ -746,22 +746,24 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
-            let params = {
-                documento: this.paciente.documento,
-                organizacion: this.auth.organizacion._id
-            };
+            if (this.paciente.documento && this.auth.organizacion._id) {
+                let params = {
+                    documento: this.paciente.documento,
+                    organizacion: this.auth.organizacion._id
+                };
 
-            this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    // Se actualiza la carpeta del Efector correspondiente
-                    this.carpetaEfector = {
-                        organizacion: carpeta.organizacion,
-                        nroCarpeta: carpeta.nroCarpeta
-                    };
-                }
-            });
-
+                this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
+                    if (carpeta.nroCarpeta) {
+                        // Se actualiza la carpeta del Efector correspondiente
+                        this.carpetaEfector = {
+                            organizacion: carpeta.organizacion,
+                            nroCarpeta: carpeta.nroCarpeta
+                        };
+                    }
+                });
+            }
         }
+
         if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
             this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
         } else {
