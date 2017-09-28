@@ -175,7 +175,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        console.log('permisos ', this.permisos[0]);
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
             let dataF;
             if (this.permisos[0] === '*') {
