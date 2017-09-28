@@ -47,7 +47,6 @@ export class DarTurnosComponent implements OnInit {
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
         this.paciente = value;
-        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.verificarTelefono(this.paciente);
         this.obtenerCarpetaPaciente(this.paciente);
         this.mostrarCalendario = false;
@@ -762,6 +761,7 @@ export class DarTurnosComponent implements OnInit {
     // a partir del documento y del efector
     obtenerCarpetaPaciente(paciente) {
 
+        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
         if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
@@ -785,10 +785,12 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
 
+        }
+        if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
+            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
         } else {
             this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         }
-
     }
 
     actualizarCarpetaPaciente(paciente) {
@@ -872,34 +874,39 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 this.paciente.contacto = [nuevoCel];
             }
-
-            let listaCarpetas = [];
-            listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
-            let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
-            if (!carpetaActualizar) {
-                listaCarpetas.push(this.carpetaEfector);
-            } else {
-                listaCarpetas.forEach(carpeta => {
-                    if (carpeta.organizacion._id === this.auth.organizacion.id) {
-                        carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
-                    }
-                });
-            }
-
-            let cambios = {
+        }
+        let listaCarpetas = [];
+        listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
+        let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
+        if (!carpetaActualizar) {
+            listaCarpetas.push(this.carpetaEfector);
+        } else {
+            listaCarpetas.forEach(carpeta => {
+                if (carpeta.organizacion._id === this.auth.organizacion.id) {
+                    carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
+                }
+            });
+        }
+        let cambios;
+        if (this.cambioTelefono) {
+            cambios = {
                 'op': 'updateContactosCarpeta',
                 'contacto': this.paciente.contacto,
                 'carpetaEfectores': listaCarpetas
             };
-
-            // Actualizo teléfono del paciente en MPI
-            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
-                if (resultado) {
-                    this.plex.toast('info', 'Número de teléfono actualizado');
-                }
-            });
-
+        } else {
+            cambios = {
+                'op': 'updateCarpetaEfectores',
+                'carpetaEfectores': listaCarpetas
+            };
         }
+
+        // Actualizo teléfono y nro de carpeta del paciente en MPI
+        this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+            if (resultado) {
+                this.plex.toast('info', 'Datos del paciente actualizados');
+            }
+        });
 
     }
 
@@ -1068,7 +1075,6 @@ export class DarTurnosComponent implements OnInit {
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.pacientesSearch = false;
-                    // this.showDarTurnos = true;
                     this.verificarTelefono(this.paciente);
                     window.setTimeout(() => this.pacientesSearch = false, 100);
                     this.obtenerCarpetaPaciente(this.paciente);

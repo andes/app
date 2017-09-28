@@ -223,7 +223,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         if (this.textoLibre && this.textoLibre.trim()) {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
-
                 // Si matchea una expresión regular, busca inmediatamente el paciente
                 let documentoEscaneado = this.comprobarDocumentoEscaneado();
                 if (documentoEscaneado) {
@@ -260,13 +259,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                             }).subscribe(resultSuggest => {
                                 this.pacientesSimilares = resultSuggest;
                                 if (this.pacientesSimilares.length > 0) {
-
                                     let pacienteEncontrado = this.pacientesSimilares.find(valuePac => {
                                         if (valuePac.paciente.scan && valuePac.paciente.scan === this.textoLibre) {
+                                            this.resultado = [valuePac.paciente];
                                             return valuePac.paciente;
                                         }
                                     });
-
                                     let datoDB = {
                                         id: this.pacientesSimilares[0].paciente.id,
                                         apellido: this.pacientesSimilares[0].paciente.apellido,
@@ -278,8 +276,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                     };
                                     if (pacienteEncontrado) {
                                         this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
-
-
                                         this.seleccionarPaciente(pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
