@@ -26,6 +26,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public pacientesSimilares = null;
     public seleccion = null;
     public esEscaneado = false;
+    public esMegascan = false;
     public loading = false;
     public cantPacientesValidados: number;
     public showCreateUpdate = false;
@@ -91,8 +92,8 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             this.escaneado.emit(this.esEscaneado);
         } else {
             this.esEscaneado = false;
-            this.escaneado.emit(this.esEscaneado);
             this.selected.emit({});
+            this.escaneado.emit(this.esEscaneado);
         }
         if (!this.bloquearCreate) {
             if (this.auth.check('mpi:editarPaciente')) {
