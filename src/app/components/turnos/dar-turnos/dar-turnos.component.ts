@@ -46,10 +46,14 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        this.paciente = value;
-        this.verificarTelefono(this.paciente);
-        this.obtenerCarpetaPaciente(this.paciente);
-        this.mostrarCalendario = false;
+        // this.paciente = value;
+        this.servicePaciente.getById(this._pacienteSeleccionado.id).subscribe(
+            pacienteMPI => {
+                this.paciente = pacienteMPI;
+                this.verificarTelefono(pacienteMPI);
+                this.obtenerCarpetaPaciente(this.paciente);
+                this.mostrarCalendario = false;
+            });
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
@@ -160,7 +164,7 @@ export class DarTurnosComponent implements OnInit {
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
-            this.paciente = this._pacienteSeleccionado;
+            // this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
