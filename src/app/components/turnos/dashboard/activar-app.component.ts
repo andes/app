@@ -42,6 +42,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: any) {
+        debugger;
         this.servicePaciente.getById(this.paciente.id).subscribe(p => {
             this.paciente = p;
             this.celular = this.contacto('celular');
@@ -101,19 +102,28 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         };
 
         this.servicePaciente.patch(this.paciente.id, cambios).subscribe(() => {
-            this.appMobile.create(this.paciente.id).subscribe((datos) => {
-                if (datos.error) {
-                    if (datos.error === 'email_not_found') {
-                        this.plex.alert('El paciente no tiene asignado un email.');
+            if (!this.checkPass) {
+                this.appMobile.update(this.email).subscribe((resultado) => {
+                    if (resultado.valid) {
+                        this.plex.alert('El código de activación ha sido reenviado.');
                     }
-                    if (datos.error === 'email_exists') {
-                        this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                });
+            } else {
+                this.appMobile.create(this.paciente.id).subscribe((datos) => {
+                    if (datos.error) {
+                        if (datos.error === 'email_not_found') {
+                            this.plex.alert('El paciente no tiene asignado un email.');
+                        }
+                        if (datos.error === 'email_exists') {
+                            this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                        }
+                    } else {
+                        this.plex.alert('Se ha creado la cuenta para el paciente.');
                     }
-                } else {
-                    this.plex.alert('Se ha creado la cuenta para el paciente.');
-                }
-            });
+                });
+            }
         });
+
     }
 
 }

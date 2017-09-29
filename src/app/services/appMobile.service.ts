@@ -19,4 +19,8 @@ export class AppMobileService {
         return this.server.get(this.mobileUrl + 'check' + '/' + idPaciente, {});
     }
 
+    update(params): Observable<any> {
+        return this.server.post(this.mobileUrl + 'reenviar-codigo', { email: params });
+    }
+
 }
