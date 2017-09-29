@@ -42,7 +42,6 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: any) {
-        debugger;
         this.servicePaciente.getById(this.paciente.id).subscribe(p => {
             this.paciente = p;
             this.celular = this.contacto('celular');

@@ -288,7 +288,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             }
                             this.seleccion = Object.assign({}, resultado);
                             this.appMobile.check(this.seleccion.id).subscribe(data => {
-                                debugger;
                                 if (!data.error) {
                                     this.checkPassAM = true;
                                 } else {
