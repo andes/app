@@ -39,8 +39,11 @@ export class AppComponent {
             });
         }
         // Cargo el array de permisos
-        if (this.auth.getPermissions('turnos:?').length > 0) {
+        if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
             accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
+        }
+        if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
+            accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/puntoInicioTurnos' });
         }
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });

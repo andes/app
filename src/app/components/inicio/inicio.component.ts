@@ -37,7 +37,14 @@ export class InicioComponent implements AfterViewInit {
         window.setTimeout(() => {
             this.denied = true;
             if (this.auth.getPermissions('turnos:?').length > 0) {
-                this.turnos = 'turnos';
+                if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
+                    this.turnos = 'gestor';
+                } else {
+                    if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
+                        this.turnos = 'inicioTurnos';
+                    }
+                }
+                // this.turnos = 'turnos';
                 this.denied = false;
             }
 
