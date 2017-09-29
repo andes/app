@@ -78,7 +78,8 @@
     </div>
     <br>
 
-    <plex-button *ngIf="!hideButton" label="Activar App" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+    <plex-button *ngIf="!hideButton" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+
 
     <div *ngIf="!checkPass">
         <h5>
@@ -87,6 +88,7 @@
                 {{message}}
             </span>
         </h5>
+        <plex-button label="Reenviar Codigo Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
     </div>
     <div *ngIf="checkPass">
 
