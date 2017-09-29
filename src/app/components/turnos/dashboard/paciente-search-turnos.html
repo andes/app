@@ -12,9 +12,9 @@
                 <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                 </div>
-                
+
                 <!--Tabla de resultados -->
-                <table *ngIf="resultado && resultado.length && paciente?.id" class="table table-striped">
+                <table *ngIf="resultado && resultado.length" class="table table-striped">
                     <tbody>
                         <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
                             <td>
