@@ -80,7 +80,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
             this.showMostrarEstadisticasPacientes = false;
             this.showIngresarSolicitud = false;
             this.seleccion = paciente;
-            this.esEscaneado = true;
+            if (paciente.scan) {
+                this.esEscaneado = true;
+            }
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
             this.showCreateUpdate = true;

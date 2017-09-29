@@ -57,8 +57,6 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
         super.seleccionarPaciente(paciente);
         if (this.esEscaneado) {
             this.sinResultados.emit(false);
-        } else {
-            this.createUpdate.emit(this.showCreateUpdate);
         }
     }
 

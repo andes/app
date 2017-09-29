@@ -274,6 +274,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             if (!resultado.scan) {
                                 resultado.scan = this.seleccion.scan;
                             }
+
                             if (this.escaneado && resultado.estado !== 'validado') {
                                 resultado.nombre = this.seleccion.nombre.toUpperCase();
                                 resultado.apellido = this.seleccion.apellido.toUpperCase();
@@ -502,7 +503,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             await this.crearTemporales(pacienteGuardar);
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
-
                 if (result) {
                     // Borramos relaciones
                     if (this.relacionesBorradas.length > 0) {
@@ -651,7 +651,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     // cuando el pacienfe fue escaneado o ya estaba validado.
                     if (this.escaneado || this.pacienteModel.estado === 'validado') {
 
-                        this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
+                        this.pacientesSimilares = this.pacientesSimilares.filter(item => item.paciente.estado === 'validado');
                     }
                     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
                         // Nos quedamos todos los pacientes menos el mismo.
