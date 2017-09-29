@@ -40,10 +40,10 @@ export class AppComponent {
         }
         // Cargo el array de permisos
         if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
-            accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
+            accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
         if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
-            accessList.push({ label: 'CITAS: Agendas & Turnos', icon: 'calendar', route: '/puntoInicioTurnos' });
+            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/puntoInicioTurnos' });
         }
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
