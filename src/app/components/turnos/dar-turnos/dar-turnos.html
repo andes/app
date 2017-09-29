@@ -307,7 +307,6 @@
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
-        <!--<plex-button label="Gestor de Agendas" icon="mdi mdi-account-multiple" type="primary" (click)="cancelar()"></plex-button>-->
         <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
         <div *ngIf="estadoT === 'confirmacion'" class="float-right">
             <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
