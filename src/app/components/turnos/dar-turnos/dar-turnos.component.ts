@@ -129,7 +129,7 @@ export class DarTurnosComponent implements OnInit {
     // Opciones para modificar la grilla/calendario
     opcionesCalendario = {
         mostrarFinesDeSemana: true
-    }
+    };
 
     private bloques: IBloque[];
     private indiceTurno: number;
@@ -176,7 +176,12 @@ export class DarTurnosComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
             let data2 = this.verificarLlaves(dataF, event);
         });
     }
@@ -452,8 +457,14 @@ export class DarTurnosComponent implements OnInit {
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0;
+                    // return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
+                    return this.estadoT !== 'noTurnos' && agenda.estado === 'publicada' && (moment(agenda.horaInicio) >= moment(new Date()) && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
                 });
+                // this.agendas = this.agendas.filter(agenda => {
+                //     agenda.bloques.map(bloque => {
+                //         // return bloque.turnos.find(t => t.horaInicio > this.hoy).horaInicio;.
+                //     });
+                // });
                 // this.agendas = this.agendas.filter(agenda => {
                 //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
                 // });
@@ -483,9 +494,27 @@ export class DarTurnosComponent implements OnInit {
         });
     }
 
+    hayTurnosEnHorario(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.filter(turno => {
+                let ultimoBloque = agenda.bloques.length - 1;
+                return (
+                    moment(agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos.length - 1]].horaInicio).format() > moment(new Date()).format()
+                )
+            });
+        });
+    }
+
+    hayTurnosDisponibles(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.filter(turno => {
+                return turno.estado === 'disponible';
+            });
+        }).length > 0;
+    }
+
     /**
      * Selecciona una Agenda (click en el calendario)
-     * @param agenda: objeto con una agenda completa
      */
     seleccionarAgenda(agenda) {
         // Asigno agenda
@@ -733,9 +762,9 @@ export class DarTurnosComponent implements OnInit {
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
+    // Se busca el número de carpeta de la Historia Clínica en papel del paciente
+    // a partir del documento y del efector
     obtenerCarpetaPaciente(paciente) {
-        // Se busca el número de carpeta de la Historia Clínica en papel del paciente
-        // a partir del documento y del efector
 
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
@@ -746,22 +775,24 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
-            let params = {
-                documento: this.paciente.documento,
-                organizacion: this.auth.organizacion._id
-            };
+            if (this.paciente.documento && this.auth.organizacion._id) {
+                let params = {
+                    documento: this.paciente.documento,
+                    organizacion: this.auth.organizacion._id
+                };
 
-            this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    // Se actualiza la carpeta del Efector correspondiente
-                    this.carpetaEfector = {
-                        organizacion: carpeta.organizacion,
-                        nroCarpeta: carpeta.nroCarpeta
-                    };
-                }
-            });
-
+                this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
+                    if (carpeta.nroCarpeta) {
+                        // Se actualiza la carpeta del Efector correspondiente
+                        this.carpetaEfector = {
+                            organizacion: carpeta.organizacion,
+                            nroCarpeta: carpeta.nroCarpeta
+                        };
+                    }
+                });
+            }
         }
+
         if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
             this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
         } else {

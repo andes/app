@@ -7,8 +7,8 @@
                     <div class="alert alert-default">
                         <div class="row">
                             <div class="col">
-                                <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
+                                <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
+                                date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
                                 'HH:mm'}} hs ({{ agenda.estado }})
                             </div>
                         </div>
@@ -46,8 +46,9 @@
                 <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
                     <thead>
                         <tr>
-                            <th colspan="14">&raquo; Bloque<span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{ bloque.horaInicio
-                                | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}} hs
+                            <th colspan="14">&raquo; Bloque
+                                <span *ngIf="bloque.descripcion"> {{ bloque.descripcion }} </span> de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin
+                                | date: 'HH:mm'}} hs
                             </th>
                         </tr>
                         <tr>
@@ -58,7 +59,8 @@
                             <th>Residencia Habitual</th>
                             <th>Sexo</th>
                             <th>Edad</th>
-                            <th>Diagnóstico<br>Motivo de consulta</th>
+                            <th>Diagnóstico
+                                <br>Motivo de consulta</th>
                             <th>Primera Vez</th>
                             <th>Ulterior</th>
                             <th>C2</th>
@@ -69,11 +71,18 @@
                     <tbody>
                         <tr *ngFor="let turno of bloque.turnos; let i=index">
                             <td>
-                                <small><strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong></small>
+                                <small>
+                                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                </small>
                             </td>
                             <!--documento, carpetaPaciente-->
                             <td>
-                                <span *ngIf="turno?.paciente?.id"><small>DNI {{turno.paciente.documento|number}}</small></span>
+                                <span *ngIf="turno?.paciente?.id">
+                                    <small>DNI
+                                        <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento | number }}</span>
+                                        <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
+                                    </small>
+                                </span>
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0]?.nroCarpeta">
                                     <small> | Nro Carpeta </small>
                                     <small *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
@@ -83,7 +92,10 @@
                             <td></td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1"><small><span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span></small>
+                                <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">
+                                <small>
+                                    <span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
+                                </small>
                                 <span *ngIf="turno && turno.estado === 'disponible'"></span>
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>

@@ -253,12 +253,13 @@
                                             <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                         <div *ngIf="agenda.profesionales">
                                             <label>Profesional</label>
-                                            <div *ngFor="let profesional of agenda.profesionales let i=index">{{profesional | profesional}}
+                                            <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional | profesional}}
                                             </div>
                                         </div>
                                         <label>Paciente</label>
                                         <div *ngIf="paciente">{{this.paciente | paciente}}</div>
-                                        <div *ngIf="paciente.documento">{{this.paciente.documento | number}}</div>
+                                        <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div>
+                                        <div *ngIf="paciente.documento === ''">Sin documento (temporal)</div>
                                         <div *ngIf="permitirTurnoDoble">
                                             <label>Turno doble: </label>
                                             <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>

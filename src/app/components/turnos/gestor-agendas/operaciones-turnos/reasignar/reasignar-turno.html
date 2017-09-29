@@ -49,7 +49,8 @@
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
                                             <small>
-                                                <span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento | number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento | number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento === ''">| Sin documento (temporal)</span>
                                             </small>
                                             <small>
                                                 <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores[0]?.nroCarpeta"> | Nro Carpeta
@@ -86,7 +87,8 @@
                                         <td (click)="seleccionarTurno(turno, bloque, false)">
                                             <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
                                             <small>
-                                                <span *ngIf="turno && turno.paciente">| DNI {{turno.paciente.documento|number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento|number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento === ''">| Sin documento (temporal)</span>
                                             </small>
                                             <small>
                                                 <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
