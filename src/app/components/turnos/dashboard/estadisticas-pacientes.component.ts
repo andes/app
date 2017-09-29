@@ -1,3 +1,4 @@
+import { PacienteService } from './../../../services/paciente.service';
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -22,30 +23,34 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.turnosOtorgados = 0;
         this.inasistencias = 0;
         this.anulaciones = 0;
-        this._paciente = value;
+        // this._paciente = value;
         this.pacienteSeleccionado = value;
-        let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
-        let cantInasistencias = 0;
-        // Se muestra la cantidad de turnos otorgados e inasistencias
-        this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-            turnos.forEach(turno => {
-                if (turno.asistencia === 'noAsistio') {
-                    cantInasistencias++;
-                }
-            });
-            this.turnosOtorgados = turnos.length;
-            this.inasistencias = cantInasistencias;
-        });
+        this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
+            pacienteMPI => {
+                this._paciente = pacienteMPI;
+                let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
+                let cantInasistencias = 0;
+                // Se muestra la cantidad de turnos otorgados e inasistencias
+                this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+                    turnos.forEach(turno => {
+                        if (turno.asistencia === 'noAsistio') {
+                            cantInasistencias++;
+                        }
+                    });
+                    this.turnosOtorgados = turnos.length;
+                    this.inasistencias = cantInasistencias;
+                });
 
-        if (this._paciente && this._paciente.id) {
-            // Se muestra la cantidad de turnos anulados
-            let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
-            this.serviceLogPaciente.get(datosLog).subscribe(logs => {
-                if (logs && logs.length) {
-                    this.anulaciones = logs.length;
+                if (this._paciente && this._paciente.id) {
+                    // Se muestra la cantidad de turnos anulados
+                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+                    this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+                        if (logs && logs.length) {
+                            this.anulaciones = logs.length;
+                        }
+                    });
                 }
             });
-        }
     }
     get agenda(): any {
         return this._paciente;
@@ -58,7 +63,12 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
 
     // Inicialización
-    constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth, public serviceLogPaciente: LogPacienteService) { }
+    constructor(
+        public serviceTurno: TurnoService,
+        public plex: Plex,
+        public auth: Auth,
+        public serviceLogPaciente: LogPacienteService,
+        public servicePaciente: PacienteService) { }
 
     ngOnInit() {
         // Se cargan los datos calculados
