@@ -455,7 +455,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
     async save(valid) {
-        debugger;
         if (valid.formValid) {
             let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -504,7 +503,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             await this.crearTemporales(pacienteGuardar);
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
-                debugger;
                 if (result) {
                     // Borramos relaciones
                     if (this.relacionesBorradas.length > 0) {
@@ -634,7 +632,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.altoMacheo = false;
 
         return new Promise((resolve, reject) => {
-            debugger;
             if (this.pacienteModel.nombre && this.pacienteModel.apellido && this.pacienteModel.documento &&
                 this.pacienteModel.fechaNacimiento && this.pacienteModel.sexo) {
                 let dto: any = {
@@ -648,7 +645,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     fechaNacimiento: this.pacienteModel.fechaNacimiento
                 };
                 this.pacienteService.get(dto).subscribe(resultado => {
-                    debugger;
                     this.pacientesSimilares = resultado;
 
                     // agregamos la condición de abajo para filtrar las sugerencias
@@ -661,7 +657,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         // Nos quedamos todos los pacientes menos el mismo.
 
                         this.pacientesSimilares = this.pacientesSimilares.filter(paciente => paciente.paciente.id !== this.pacienteModel.id);
-                        debugger;
                         if (this.pacientesSimilares.length <= 0) {
                             resolve(false);
                         } else {
@@ -720,10 +715,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return cond;
     }
     preSave(valid) {
-        debugger;
         if (valid.formValid) {
             this.verificaPacienteRepetido().then((resultado) => {
-                debugger;
                 if (!resultado) {
                     this.save(valid);
                 }
