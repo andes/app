@@ -15,7 +15,7 @@
                 <b>Sin documento (temporal)</b>
             </ng-container>
             |
-            <ng-container *ngIf="paciente.fechaNacimiento !== ''">
+            <ng-container *ngIf="paciente.fechaNacimiento !== null">
                 {{ paciente | edad }}
             </ng-container>
             <ng-container *ngIf="paciente.fechaNacimiento === null">

@@ -69,8 +69,8 @@
 
 <!-- Muestra el footer sólo si no está en modo edición -->
 <footer *ngIf="!hideFooter && !showCreateUpdate && (mostrarCancelar || mostrarNuevo)">
+    <plex-button *ngIf="mostrarCancelar" label="Gestor de Agendas" type="info" (click)="cancelar()"></plex-button>
     <div class="float-right">
-        <plex-button *ngIf="mostrarCancelar" label="Gestor de Agendas" type="info" (click)="cancelar()"></plex-button>
         <plex-button *ngIf="mostrarNuevo && !bloquearCreate" label="Registrar paciente temporal" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
     </div>
 </footer>
