@@ -11,19 +11,15 @@
                             <!-- DATOS BASICOS -->
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [readonly]="validado || noPoseeDNI" [max]="9999999999" name="documento" [required]="!noPoseeDNI"
-                                        placeholder="Ingresar DNI...">
+                                    <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [readonly]="validado || noPoseeDNI" [max]="9999999999" name="documento" [required]="!noPoseeDNI" placeholder="Ingresar DNI...">
                                     </plex-int>
                                 </div>
                                 <div class="col-4">
-                                    <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
+                                    <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
                                     </plex-text>
                                 </div>
                                 <div class="col-4">
-                                    <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
+                                    <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
                                     </plex-text>
                                 </div>
                             </div>
@@ -34,18 +30,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
+                                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;" [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
                                     </plex-datetime>
                                 </div>
                                 <div class="col-4">
-                                    <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;"
-                                        placeholder="Seleccione..." [required]="true" label="Sexo">
+                                    <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;" placeholder="Seleccione..." [required]="true" label="Sexo">
                                     </plex-select>
                                 </div>
                                 <div class="col-4" title="Genero autopercibido">
-                                    <plex-select [(ngModel)]="pacienteModel.genero" name="genero" [data]="generos" [required]="true" placeholder="Seleccione..."
-                                        label="Género"></plex-select>
+                                    <plex-select [(ngModel)]="pacienteModel.genero" name="genero" [data]="generos" [required]="true" placeholder="Seleccione..." label="Género"></plex-select>
                                 </div>
                             </div>
                             <div class="row">
@@ -53,8 +46,7 @@
                                     <plex-text label="Nombre autopercibido" [(ngModel)]="pacienteModel.alias" name="alias" placeholder="Ingrese nombre autopercibido..."></plex-text>
                                 </div>
                                 <div class="col-4">
-                                    <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..."
-                                        label="Estado Civil">
+                                    <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..." label="Estado Civil">
                                     </plex-select>
                                 </div>
                             </div>
@@ -83,8 +75,7 @@
                                     </div>
                                     <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
                                         <div class="col-4">
-                                            <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0" placeholder="Seleccione..."
-                                                label="Tipo:">
+                                            <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0" placeholder="Seleccione..." label="Tipo:">
                                             </plex-select>
                                         </div>
                                         <div class="col-4">
@@ -142,8 +133,7 @@
                                             </plex-text>
                                         </div>
                                         <div class="col">
-                                            <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
-                                                placeholder="Seleccione..." labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
+                                            <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
                                             </plex-select>
                                         </div>
                                         <div class="col">
@@ -158,13 +148,11 @@
                                         </plex-text>
                                     </div>
                                     <div class="col">
-                                        <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia" name="provincia" [data]="provincias"
-                                            placeholder="Seleccione..." labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
+                                        <plex-select label="Provincia" [(ngModel)]="pacienteModel.direccion[0].ubicacion.provincia" name="provincia" [data]="provincias" placeholder="Seleccione..." labelField="nombre" (change)="loadLocalidades(pacienteModel.direccion[0].ubicacion.provincia)">
                                         </plex-select>
                                     </div>
                                     <div class="col">
-                                        <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
-                                            placeholder="Seleccione..." labelField="nombre">
+                                        <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen" placeholder="Seleccione..." labelField="nombre">
                                         </plex-select>
                                     </div>
                                 </div>
@@ -183,8 +171,7 @@
                                 </div>
                                 <div *ngFor="let _unaOS of pacienteModel.financiador; let j = index" class="row">
                                     <div class="col-4">
-                                        <plex-select [required]="true" [(ngModel)]="_unaOS.entidad" name="valorOS-{{j}}" [data]="obrasSociales" placeholder="Seleccione..."
-                                            label="Obra Social:">
+                                        <plex-select [required]="true" [(ngModel)]="_unaOS.entidad" name="valorOS-{{j}}" [data]="obrasSociales" placeholder="Seleccione..." label="Obra Social:">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
@@ -209,23 +196,19 @@
                                     <li class="list-group-item" *ngFor="let _unaRel of pacienteModel.relaciones; let k = index">
                                         <div class="row">
                                             <div class="col">
-                                                <plex-text label="Documento" [(ngModel)]="_unaRel.documento" name="DocumentoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false"
-                                                    placeholder="Ingrese documento...">
+                                                <plex-text label="Documento" [(ngModel)]="_unaRel.documento" name="DocumentoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese documento...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-text label="Apellido" [(ngModel)]="_unaRel.apellido" name="apellidoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false"
-                                                    placeholder="Ingrese apellido...">
+                                                <plex-text label="Apellido" [(ngModel)]="_unaRel.apellido" name="apellidoPar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese apellido...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-text [autoFocus]="autoFocus" label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false"
-                                                    placeholder="Ingrese nombre...">
+                                                <plex-text [autoFocus]="autoFocus" label="Nombre" [(ngModel)]="_unaRel.nombre" name="nombrePar-{{k}}" [required]="true" [readonly]="_unaRel.referencia? true : false" placeholder="Ingrese nombre...">
                                                 </plex-text>
                                             </div>
                                             <div class="col">
-                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione..."
-                                                    label="Relacion:">
+                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione..." label="Relacion:">
                                                 </plex-select>
                                             </div>
                                             <div class="col">
@@ -240,8 +223,7 @@
                                 <div class="row">&nbsp;</div>
                                 <div class="row">
                                     <div class="col">
-                                        <plex-text [(ngModel)]="buscarPacRel" name="buscarPacRel" prefix="<i class='mdi mdi-account-search'></i>" (change)="buscar()"
-                                            placeholder="Puede buscar un paciente por DNI, Apellido, Nombre o Escanear un DNI">
+                                        <plex-text [(ngModel)]="buscarPacRel" name="buscarPacRel" prefix="<i class='mdi mdi-account-search'></i>" (change)="buscar()" placeholder="Puede buscar un paciente por DNI, Apellido, Nombre o Escanear un DNI">
                                         </plex-text>
                                     </div>
                                 </div>
@@ -378,6 +360,8 @@
     </section>
     <footer>
         <div class="text-right">
+            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && checkPassAM" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && !checkPassAM" label="Reenviar Código Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
             <plex-button label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>
             <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">

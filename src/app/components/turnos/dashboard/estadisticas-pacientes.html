@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col">
                 <h5>
-                    <span style="color: #00A8E0">{{pacienteSeleccionado | paciente}}</span>
+                    <span style="color: #00A8E0">{{_paciente | paciente}}</span>
                 </h5>
             </div>
         </div>
@@ -23,29 +23,29 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="pacienteSeleccionado?.documento !== ''">
-            {{pacienteSeleccionado.documento | number}}
+        <div class="col-6" *ngIf="_paciente?.documento !== ''">
+            {{_paciente.documento | number}}
         </div>
-        <div class="col-6" *ngIf="pacienteSeleccionado?.fechaNacimiento !== null">
-            {{pacienteSeleccionado.fechaNacimiento | date:'dd-MM-yyyy'}} ({{pacienteSeleccionado | edad}})
+        <div class="col-6" *ngIf="_paciente?.fechaNacimiento !== null">
+            {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor !== '' && pacienteSeleccionado.direccion.length > 0">
+        <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
             <i class="mdi mdi-map-marker"></i>
             <span style="color: #00A8E0">Dirección</span>
         </div>
-        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.contacto && pacienteSeleccionado.contacto.length > 0">
+        <div class="col-6" *ngIf="_paciente && _paciente.contacto && _paciente.contacto.length > 0">
             <i class="mdi mdi-cellphone-android"></i>
             <span style="color: #00A8E0">Teléfono</span>
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor !== '' && pacienteSeleccionado.direccion.length > 0">
-            {{pacienteSeleccionado.direccion[0].valor}}
+        <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+            {{_paciente.direccion[0].valor}}
         </div>
-        <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
-            {{pacienteSeleccionado.contacto[0].valor}}
+        <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
+            {{_paciente.contacto[0].valor}}
         </div>
     </div>
     <br>

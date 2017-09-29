@@ -23,8 +23,6 @@ export class EdadPipe implements PipeTransform {
         difMeses = Math.floor(difDias / 30.4375);
         difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
         difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
-        debugger;
-
 
         if (difAnios !== 0) {
             edad = {
