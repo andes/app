@@ -64,7 +64,7 @@
                                         [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
                                         <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                     </div>
-                                    <div class="rup-content">
+                                    <div class="rup-content" (click)="recuperaLosMasFrecuentes(registro.concepto)">
                                         <!-- ... Header -->
                                         <div class="header">
                                             <div class="title">
@@ -193,7 +193,7 @@
                         <div class="page-title">Buscar</div>
                     </header>
                     <div class="mt-3">
-                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                        <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
                     </div>
                 </plex-box>
             </div>

@@ -68,6 +68,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public registroATransformar: IPrestacionRegistro;
 
+    public masFrecuentes: any[] = [];
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -282,6 +284,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
+        this.recuperaLosMasFrecuentes(snomedConcept);
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -609,5 +612,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.itemsRegistros[element.id].collapse = true;
             });
         }
+    }
+    recuperaLosMasFrecuentes(concepto) {
+        this.masFrecuentes = [];
+        let elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        elementoRUP.frecuentes.forEach(element => {
+            this.masFrecuentes.push(element);
+        });
+        console.log(this.masFrecuentes);
     }
 }

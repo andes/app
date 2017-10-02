@@ -183,6 +183,7 @@ import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elemen
 import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
+import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 
 
 // Llaves
@@ -228,6 +229,7 @@ export const RUP_ELEMENTS: any[] = [
     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
     { component: AutocitadoComponent, key: 'AutocitadoComponent' },
+    { component: ObesidadComponent, key: 'ObesidadComponent'}
 
 ];
 
@@ -257,7 +259,8 @@ const RUP_COMPONENTS = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    AutocitadoComponent
+    AutocitadoComponent,
+    ObesidadComponent
 ];
 
 // Locales
@@ -283,7 +286,8 @@ export let RUPRegistry = {
     'TensionSistolicaComponent': TensionSistolicaComponent,
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
-    'AutocitadoComponent': AutocitadoComponent
+    'AutocitadoComponent': AutocitadoComponent,
+    'ObesidadComponent': ObesidadComponent
 
 };
 

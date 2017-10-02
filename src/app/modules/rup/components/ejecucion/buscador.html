@@ -58,9 +58,9 @@
     </div>
 </div>
 
-<div *ngIf="!showFrecuentes">
+<div *ngIf="arrayFrecuentes">
     <ul class="conceptos list-unstyled">
-        <ng-container *ngFor="let item of masFrecuentesFiltradas">
+        <ng-container *ngFor="let item of arrayFrecuentes">
             <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini">
                     <div class="type {{tipoBusqueda}}">
