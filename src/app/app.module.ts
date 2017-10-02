@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -135,6 +134,7 @@ import { EspacioFisicoComponent } from './components/turnos/configuracion/espaci
 import { EditEspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/edit-espacio-fisico.component';
 import { FiltrosMapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/filtros-mapa-espacio-fisico.component';
 import { AgregarNotaTurnoComponent } from './components/turnos/gestor-agendas/operaciones-turnos/agregar-nota-turno.component';
+import { CarpetaPacienteComponent } from './components/turnos/gestor-agendas/operaciones-turnos/carpeta-paciente.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { AgregarNotaAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/nota-agenda.component';
 import { AgregarSobreturnoComponent } from './components/turnos/gestor-agendas/operaciones-agenda/sobreturno.component';
@@ -328,6 +328,7 @@ for (let key in RUPRegistry) {
         ListaEsperaComponent, ListaEsperaCreateUpdateComponent, RevisionAgendaComponent, PopoverAuditComponent,
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
+        CarpetaPacienteComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
