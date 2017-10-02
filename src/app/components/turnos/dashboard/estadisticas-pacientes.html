@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor !== '' && pacienteSeleccionado.direccion.length > 0">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor && pacienteSeleccionado.direccion.length > 0">
             <i class="mdi mdi-map-marker"></i>
             <span style="color: #00A8E0">Dirección</span>
         </div>
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor !== '' && pacienteSeleccionado.direccion.length > 0">
+        <div class="col-6" *ngIf="pacienteSeleccionado && pacienteSeleccionado.direccion[0]?.valor && pacienteSeleccionado.direccion.length > 0">
             {{pacienteSeleccionado.direccion[0].valor}}
         </div>
         <div class="col-6" *ngIf="paciente && paciente.contacto && paciente.contacto.length > 0">
