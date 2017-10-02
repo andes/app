@@ -11,8 +11,16 @@
                         <div class="detalle">Optimiza el proceso de<br>identificación del paciente</div>
                     </div>
                 </div>
-                <div *ngIf="turnos" class="col-4">
+                <div *ngIf="turnos==='gestor'" class="col-4">
                     <div class="boton color-violeta" routerLink="/citas/gestor_agendas">
+                        <i class="icono mdi mdi-calendar"></i>
+                        <div class="titulo">CITAS</div>
+                        <div class="subtitulo">Centro Inteligente<br>de Agendas &amp; Turnos</div>
+                        <div class="detalle">Mejora la accesibilidad de<br>pacientes a las prestaciones</div>
+                    </div>
+                </div>
+                <div *ngIf="turnos==='inicioTurnos'" class="col-4">
+                    <div class="boton color-violeta" routerLink="/puntoInicioTurnos">
                         <i class="icono mdi mdi-calendar"></i>
                         <div class="titulo">CITAS</div>
                         <div class="subtitulo">Centro Inteligente<br>de Agendas &amp; Turnos</div>
