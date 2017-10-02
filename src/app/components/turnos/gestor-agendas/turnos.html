@@ -85,7 +85,8 @@
                             title="Turno doble"></plex-button>
                         <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="mdi mdi-numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
                             title="Quitar Turno doble"></plex-button>
-                        <!-- mdi-numeric-1-box-outline -->
+                        <plex-button *ngIf="botones.editarCarpeta" type="default" icon="mdi mdi-folder-account" (click)="editarCarpetaPaciente()"
+                            title="Editar Número de Carpeta"></plex-button>
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
@@ -115,19 +116,21 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-striped">
+            <table class="table">
                 <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
                     <tr>
-                        <th *ngIf="!agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
                             hs
                         </th>
-                        <th *ngIf="agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}}
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
                         </th>
-                        <th *ngIf="bloque.citarPorBloque" colspan="4">
-                            <span class="text-danger">Citación por segmento</span>
+                        <th *ngIf="bloque.citarPorBloque">
+                            <span class="text-info">Citación por segmento</span>
                         </th>
                     </tr>
                 </thead>
+            </table>
+            <table class="table table-striped">
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                         <td (click)="seleccionarTurno(turno, true, false)">
@@ -267,3 +270,9 @@
 <agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
     (cancelaAgregarNota)="cancelaAgregarNota($event)">
 </agregar-nota-turno>
+
+<!-- Muestra el panel de Carpeta Paciente -->
+<div class="clear"></div>
+<carpeta-paciente *ngIf="showCarpetaPaciente" [turnoSeleccionado]="turnosSeleccionados[0]" (guardarCarpetaEmit)="cancelarCarpeta($event)"
+    (cancelarCarpetaEmit)="cancelarCarpeta($event)">
+</carpeta-paciente>

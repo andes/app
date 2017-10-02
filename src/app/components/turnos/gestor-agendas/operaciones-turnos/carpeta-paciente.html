@@ -1,0 +1,30 @@
+<fieldset *ngIf="autorizado">
+    <legend>Editar número de carpeta del paciente</legend>
+    <div class="row">
+        <div class="col-12">
+            <label>Paciente</label>
+        </div>
+    </div>
+    <div class="row" *ngIf="turnoSeleccionado?.paciente">
+        <div class="col-12">
+            <span>
+                {{turnoSeleccionado.paciente | paciente}}
+            </span>
+        </div>
+        <div class="col-12" *ngIf="carpetaPaciente">
+            <plex-text label="Número de Carpeta" name="nroCarpeta" [(ngModel)]="carpetaPaciente.nroCarpeta">
+            </plex-text>
+        </div>
+        <div class="col-12" *ngIf="!carpetaPaciente">
+            Cargando...
+        </div>
+    </div>
+    <hr>
+    <div class="mt-3 float-right">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" label="Guardar" (click)="guardarCarpetaPaciente()" title="Guardar Carpeta">
+        </plex-button>
+    </div>
+</fieldset>
+<permisos *ngIf="!autorizado" [permisos]="permisosRequeridos" [botonCancelar]="false" (cancelarEmit)="cancelar()"></permisos>
