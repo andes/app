@@ -5,7 +5,7 @@ export interface ITurno {
     id: String;
     horaInicio: Date;
     estado: String;
-    asistencia: Boolean;
+    asistencia: String;
     paciente: {
         id: String,
         nombre: String,
@@ -16,5 +16,24 @@ export interface ITurno {
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
     tipoTurno: String;
+    reasignado: {
+        anterior: {
+            idAgenda: String,
+            idBloque: String,
+            idTurno: String
+        }
+        siguiente: {
+            idAgenda: String,
+            idBloque: String,
+            idTurno: String
+        }
+    };
+    carpetaEfectores?: [{
+        organizacion: {
+            id: string,
+            nombre: string
+        },
+        nroCarpeta: string
+    }];
     nota: String;
 }

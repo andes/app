@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!showcreate && !pacientesSearch">
+<div class="row" *ngIf="!pacientesSearch">
     <div class="col-md-7">
         <plex-box type="info" title="Búsqueda de Pacientes">
             <plex-button icon="account-plus" (click)="buscarPaciente()" title="Buscar Paciente" label="Buscar Paciente" type="info"></plex-button>
@@ -42,23 +42,27 @@
 
     <!--panel lateral con detalles paciente-->
     <div class="col-md-5">
-        <div *ngIf="!showcreate && !pacientesSearch && checkout">
+        <div *ngIf="!pacientesSearch && checkout">
             <plex-box type="info" title="Paciente Seleccionado">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4><strong>{{paciente.nombre}} {{paciente.apellido}}</strong></h4>
+                        <h4>
+                            <strong>{{paciente | paciente}}</strong>
+                        </h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <h4>D.N.I. {{paciente.documento}} </h4>
+                        <h4 *ngIf="paciente.documento !== ''">DNI {{paciente.documento}} </h4>
+                        <h4 *ngIf="paciente.documento === ''">Sin documento (temporal) </h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <label>Fecha de Nacimiento</label>
                         <div class="row">
-                            <div class="col-md-4">{{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+                            <div class="col-md-4" *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</div>
+                            <div class="col-md-4 text-danger" *ngIf="paciente.fechaNacimiento === null">Sin fecha de nacimiento</div>
                         </div>
                     </div>
                 </div>

@@ -1,55 +1,77 @@
-<section *ngIf="!showcreate && !showupdate">
-  <plex-box>
-    <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-    <form [formGroup]="searchForm">
-      <div class="row">
-        <div class="col-3">
-          <plex-text formControlName="nombre" label="Nombre" placeholder="Ingrese nombre...">
-          </plex-text>
+<section>
+    <plex-box *ngIf="!showEditar">
+        <div class="row">
+            <div class="col">
+                <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
+                </plex-button>
+            </div>
         </div>
-        <div class="col-3">
-          <plex-text formControlName="descripcion" label="Descripción" placeholder="Ingresar descripción...">
-          </plex-text>
+        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-3">
+                    <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre">
+                    </plex-text>
+                </div>
+                <div class="col-3">
+                    <plex-text formControlName="edificio" label="Edificio" placeholder="Filtrar por edificio">
+                    </plex-text>
+                </div>
+                <div class="col-3">
+                    <plex-text formControlName="servicio" label="Servicio" placeholder="Filtrar por servicio">
+                    </plex-text>
+                </div>
+                <div class="col-3">
+                    <plex-text formControlName="sector" label="Sector" placeholder="Filtrar por sector">
+                    </plex-text>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Edificio</th>
+                        <th>Servicio</th>
+                        <th>Sector</th>
+                        <th>Estado</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let espacioFisico of espaciosFisicos">
+                        <td>{{espacioFisico?.nombre}}</td>
+                        <td>{{espacioFisico?.edificio.descripcion}}</td>
+                        <td>{{espacioFisico.servicio?.nombre}}</td>
+                        <td>{{espacioFisico.sector?.nombre}}</td>
+                        <td>
+                            <plex-bool class="text-info" [(ngModel)]="espacioFisico.activo" name="espacioFisico.activo" (click)="activate(espacioFisico)"
+                                title="{{espacioFisico.activo ? 'Desactivar' : 'Activar'}}"></plex-bool>
+                        </td>
+                        <td>
+                            <plex-button type="primary" icon="pencil" (click)="editarEspacioFisico(espacioFisico)" title="Editar"></plex-button>
+                        </td>
+                        <td>
+                            <plex-button type="primary" icon="delete" (click)="eliminarEspacioFisico(espacioFisico)" title="Eliminar"></plex-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-      </div>
-    </form>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Activo</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let espacioFisico of espaciosFisicos">
-            <td>{{espacioFisico.nombre}}</td>
-            <td>{{espacioFisico.descripcion}}</td>
-            <td>
-              <plex-bool type="slide" [(ngModel)]="espacioFisico.activo" label="" name="espacioFisico.activo" (click)="activate(espacioFisico)"></plex-bool>
-            </td>
-            <td>
-              <plex-button type="primary" label="Actualizar" (click)="onEdit(espacioFisico)"> </plex-button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <plex-loader *ngIf="loader"></plex-loader>
-    <div *ngIf="finScroll" class="alert alert-warning">
-      <p style="text-align: center;"> No se encontraron más resultados </p>
-      <!-- pasar a un componente de plex -->
-    </div>
-  </plex-box>
+        <plex-loader *ngIf="loader"></plex-loader>
+        <div *ngIf="finScroll" class="alert alert-warning">
+            <p style="text-align: center;"> No se encontraron más resultados </p>
+            <!-- pasar a un componente de plex -->
+        </div>
+    </plex-box>
 </section>
-<footer *ngIf="!showcreate && !showupdate">
-  <div class="row">
-    <div class="col">
-      <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showupdate = !showupdate">
-      </plex-button>
+<!-- <footer *ngIf="!showEditar">
+    <div class="row">
+        <div class="col">
+            <plex-button type="primary" label="Nuevo Espacio Físico" title="Nuevo Espacio Físico" (click)="showEditar = !showEditar">
+            </plex-button>
+        </div>
     </div>
-  </div>
-</footer>
-<edit-espacio-fisico *ngIf="showupdate" [selectedEspacioFisico]="selectedEspacioFisico" (data)='onReturn($event)'></edit-espacio-fisico>
+</footer> -->
+<edit-espacio-fisico *ngIf="showEditar" [espacioFisicoHijo]="selectedEspacioFisico" (data)='onReturn($event)' (onReturn)="onCancel()"></edit-espacio-fisico>

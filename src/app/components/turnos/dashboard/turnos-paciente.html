@@ -1,0 +1,63 @@
+<fieldset>
+    <legend>{{ tituloOperacion }}</legend>
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5> Turnos del paciente: <span class="text-info">{{ paciente | paciente }}</span> </h5>
+            </div>
+        </div>
+    </header>
+
+    <!-- El paciente no tiene turnos -->
+    <h5 *ngIf="turnosPaciente.length === 0">
+        No hay turnos registrados.
+    </h5>
+
+    <!-- El paciente tiene turnos -->
+    <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
+
+        <div *ngIf="turno.tipoPrestacion.term" class="accordion-dashboard">
+
+            <div *ngIf="turnosPaciente.length > 0" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
+                <!-- Panel -->
+                <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
+                <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                <h5>{{ turno.tipoPrestacion.term }}</h5>
+                <div class="row" *ngIf="turno.organizacion">
+                    <div class="col">
+                        <em class="small">{{ turno.organizacion.nombre }}</em>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" *ngIf="turno.horaInicio">
+                        <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy' }}</span>
+                        <span *ngIf="turno.horaInicio"><i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="turno.profesionales.length > 0">
+                    <div class="col">
+                        <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre'] }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4" *ngIf="turno.asistencia !== 'asistio'">
+                        <!-- no funcionan bien los title="" -->
+                        <plex-button type="danger" label="Liberar Turno" (click)="eventosTurno(turno, 'liberarTurno')"></plex-button>
+                    </div>
+                    <div class="col-4" *ngIf="turno.asistencia !== 'asistio'">
+                        <plex-button type="success" label="Dar Asistencia" (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
+                    </div>
+                    <div class="col-4" *ngIf="turno.asistencia === 'asistio'">
+                        <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
+            </div>
+            <!-- fin Panel -->
+        </div>
+    </div>
+</fieldset>

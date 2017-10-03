@@ -1,0 +1,25 @@
+.accordion-reasignar div {
+    position: relative;
+}
+
+.badge-reasignado {
+    position: absolute !important;
+    top: 5px;
+    right: 8px;
+    z-index: 1;
+    i {
+        margin-right: 0 !important;
+    }
+}
+
+.badge-reasignar {
+    margin: 0;
+}
+
+.reasignar .outline-dashed-default {
+    padding: 0 !important;
+}
+
+.ocultar-agenda-candidata {
+    display: none;
+}

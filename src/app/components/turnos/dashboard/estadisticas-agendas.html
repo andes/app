@@ -1,0 +1,69 @@
+<!--Header de estadisticas-->
+<fieldset>
+    <legend>Estadísticas | Ventanillas</legend>
+
+    <div class="row">
+        <div class="col-4">
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>
+            <span class="h3">{{cantTurnosAsignados}}</span>
+            <h6 class="text-success">Turnos Otorgados</h6>
+        </div>
+        <div class="col-4">
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>
+            <span class="h3">{{cantTurnosRestantes}}</span>
+            <h6 class="text-info">Turnos Disponibles</h6>
+        </div>
+        <div class="col-4">
+            <i class="mdi mdi-calendar-clock mdi-36px"></i>
+            <span class="h3">{{cantTurnosSuspendidos}}</span>
+            <h6 class="text-danger">Turnos Suspendidos</h6>
+        </div>
+    </div>
+    <br>
+    <legend>Estadísticas | Valores Totales</legend>
+    <br>
+    <div class="row">
+        <div class="col-2 vertical-center text-center">
+            <h3 class="mdi mdi-account-check mdi-36px"></h3>
+        </div>
+        <div class="col-7 vertical-center">
+            <h5>Turnos / Pacientes Validados</h5>
+        </div>
+        <div class="col-2 badge badge-success">
+            <span class="h3">{{turnosPacientesValidados}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 vertical-center text-center">
+            <h3 class="mdi mdi-account-outline mdi-36px"></h3>
+        </div>
+        <div class="col-7 vertical-center">
+            <h5>Turnos /Pacientes Temporales</h5>
+        </div>
+        <div class="col-2 badge badge-warning">
+            <span class="h3">{{turnosPacientesTemporales}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 vertical-center text-center">
+            <h3 class="mdi mdi-calendar-multiple-check mdi-36px"></h3>
+        </div>
+        <div class="col-7 vertical-center">
+            <h5>Turnos codificados</h5>
+        </div>
+        <div class="col-2 badge badge-success">
+            <span class="h3">{{turnosCodificados}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 vertical-center text-center">
+            <h3 class="mdi mdi-calendar-check mdi-36px"></h3>
+        </div>
+        <div class="col-7 vertical-center">
+            <h5>Turnos chequeados</h5>
+        </div>
+        <div class="col-2 badge badge-info">
+            <span class="h3">{{turnosVerificados}}</span>
+        </div>
+    </div>
+</fieldset>

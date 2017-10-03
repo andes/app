@@ -3,14 +3,21 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ANDES</title>
+    <title>ANDES | Apps Neuquinas de Salud</title>
     <base href="/">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
     <app>
-        <div class="preloader">
+        <div id="incompatible-browser" style="display: none">
+            <h1>Navegador no compatible</h1>
+            <h3>Por favor actualice su navegador. Esta aplicación requiere las últimas características de seguridad.</h3>
+            <br>
+            <h4><a href="https://www.google.com/chrome"><i class="mdi mdi-google-chrome"></i> Google Chrome</a></h4>
+            <h4><a href="https://www.mozilla.org/es-ES/firefox/new/"><i class="mdi mdi-firefox"></i> Mozilla Firefox</a></h4>
+        </div>
+        <div id="preloader" class="preloader">
             <div class="loader">
                 <div class="ball-scale-multiple">
                     <div></div>

@@ -1,16 +1,19 @@
+import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
+import { Auth } from '@andes/auth';
 
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 
 @Component({
     selector: 'espacio-fisico',
-    templateUrl: 'espacio-fisico.html',
+    templateUrl: 'espacio-fisico.html'
 })
 
 export class EspacioFisicoComponent implements OnInit {
-    showupdate = false;
+    showEditar = false;
     espaciosFisicos: IEspacioFisico[];
     searchForm: FormGroup;
     selectedEspacioFisico: IEspacioFisico;
@@ -20,12 +23,15 @@ export class EspacioFisicoComponent implements OnInit {
     tengoDatos = true;
     loader = false;
 
-    constructor(private formBuilder: FormBuilder, private espacioFisicoService: EspacioFisicoService) { }
+    constructor(private formBuilder: FormBuilder, private espacioFisicoService: EspacioFisicoService, public auth: Auth, public plex: Plex) { }
 
     ngOnInit() {
         // Crea el formulario reactivo
         this.searchForm = this.formBuilder.group({
             nombre: [''],
+            edificio: [''],
+            servicio: [''],
+            sector: [''],
             descripcion: [''],
             activo: ['']
         });
@@ -43,7 +49,11 @@ export class EspacioFisicoComponent implements OnInit {
         let parametros = {
             'descripcion': this.value && this.value.descripcion,
             'nombre': this.value && this.value.nombre,
+            'edificio': this.value && this.value.edificio,
+            'servicio': this.value && this.value.servicio,
+            'sector': this.value && this.value.sector,
             'activo': this.value && this.value.activo,
+            'organizacion': this.auth.organizacion._id,
             'skip': this.skip
         };
 
@@ -65,18 +75,8 @@ export class EspacioFisicoComponent implements OnInit {
             }); // Bind to view
     }
 
-    /*      this.espacioFisicoService.get(parametros)
-              .subscribe(
-              espaciosFisicos => this.espaciosFisicos = espaciosFisicos, // Bind to view
-              err => {
-                  if (err) {
-                      console.log(err);
-                  }
-              });
-      }*/
-
     onReturn(espacioFisico: IEspacioFisico): void {
-        this.showupdate = false;
+        this.showEditar = false;
         this.selectedEspacioFisico = null;
         this.loadEspaciosFisicos();
     }
@@ -113,9 +113,20 @@ export class EspacioFisicoComponent implements OnInit {
         }
     }
 
-    onEdit(espacioFisico: IEspacioFisico) {
-        this.showupdate = true;
+    editarEspacioFisico(espacioFisico: IEspacioFisico) {
+        this.showEditar = true;
         this.selectedEspacioFisico = espacioFisico;
+    }
+
+    eliminarEspacioFisico(espacioFisico: IEspacioFisico) {
+        this.plex.confirm(espacioFisico.nombre, '¿Eliminar espacio físico?').then(confirmacion => {
+            if (confirmacion === true) {
+                this.espacioFisicoService.delete(espacioFisico).subscribe(resultado => {
+                    this.loadEspaciosFisicos();
+                    this.plex.toast('info', espacioFisico.nombre, 'Espacio físico eliminado', 4000);
+                });
+            }
+        });
     }
 
 }

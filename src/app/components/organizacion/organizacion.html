@@ -1,23 +1,25 @@
-<plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-<div class="row">
-  <div class="col-sm-12" *ngIf="!showcreate">
-    <plex-box type="" title="Organizacion">
-      <form [formGroup]="searchForm">
-        <div class="row">
-          <div class="col-md-6">
-            <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
-            </plex-text>
+<section *ngIf="!showcreate">
+  <div class="row">
+    <div class="col">
+      <plex-box type="primary">
+        <header>
+          <div class="page-title">Organizaciones</div>
+        </header>
+        <form [formGroup]="searchForm">
+          <div class="row">
+            <div class="col-6">
+              <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
+              </plex-text>
+            </div>
+            <div class="col-4">
+              <label>Habilitado</label>
+              <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
+            </div>
           </div>
-          <div class="col-md-4">
-            <label>Habilitado</label>
-            <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
-          </div>
-        </div>
-      </form>
-      <plex-button type="primary" label="Nueva Organizacion" title="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
-
-      <div class="table-responsive">
-        <table class="table table-striped">
+        </form>
+        <!--// TODO: hay que resolver el tema de plex-scroll-->
+        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+        <table *ngIf="datos && datos.length" class="table table-striped">
           <thead>
             <tr>
               <th>Codigo Sisa</th>
@@ -28,7 +30,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let organizacion of datos">
+            <tr class="hover" *ngFor="let organizacion of datos">
               <td>{{organizacion.codigo.sisa}}</td>
               <td>{{organizacion.nombre}}</td>
               <td>
@@ -44,18 +46,20 @@
             </tr>
           </tbody>
         </table>
-      </div>
-      <plex-loader *ngIf="loader"></plex-loader>
-      <div *ngIf="finScroll" class="alert alert-warning">
-        <p style="text-align: center;"> No se encontraron más resultados </p>
-        <!-- pasar a un componente de plex -->
-      </div>
-    </plex-box>
-  </div>
-  <div class="col-sm-12" *ngIf="showcreate">
-    <div class="panel panel-default">
-      <div class="clear"></div>
-      <organizacion-create-update [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>
+        <plex-loader *ngIf="loader"></plex-loader>
+        <div *ngIf="finScroll" class="alert alert-warning">
+          <p style="text-align: center;"> No se encontraron más resultados </p>
+        </div>
+      </plex-box>
     </div>
   </div>
-</div>
+</section>
+
+<footer *ngIf="!showcreate">
+  <div class="text-right">
+    <plex-button type="primary" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+  </div>
+</footer>
+
+<!--Componente de Alta/Modificación-->
+<organizacion-create-update *ngIf="showcreate" [seleccion]="seleccion" (data)='onReturn($event)'></organizacion-create-update>

@@ -1,0 +1,183 @@
+<plex-box>
+    <header>
+        <div class="page-title">
+            Historia de Salud
+        </div>
+    </header>
+    <div class="row">
+        <div class="col">
+            <div class="btn-group" role="group">
+                <plex-button type="danger btn-sm" label="Destacados" icon="star" (click)="actualizarVista('destacados')">
+                </plex-button>
+                <plex-button type="warning btn-sm" label="Problemas" icon="flash" (click)="actualizarVista('problemas')">
+                </plex-button>
+                <plex-button type="success btn-sm" label="Hallazgos" icon="image-filter-tilt-shift" (click)="actualizarVista('hallazgos')">
+                </plex-button>
+                <plex-button type="primary btn-sm" label="Prestaciones" icon="view-list" (click)="actualizarVista('prestaciones')">
+                </plex-button>
+            </div>
+            <div class="btn-group botones-temporales" role="group">
+                <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
+                </plex-button>
+                <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
+                </plex-button>
+                <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="bottom" icon="human-male-female">
+                </plex-button>
+                <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
+                </plex-button>
+                <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
+                </plex-button>
+                <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="left" icon="human-male-female">
+                </plex-button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- Vista: Destacados -->
+            <ng-container *ngIf="vista == 'destacados'">
+                <div class="vista-titulo">Problemas crónicos</div>
+
+                <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini">
+                                <div class="type problemas">
+                                    <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{ hallazgo.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="hallazgo.evoluciones">
+                                        ultima evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha}}
+                                    </small><br>
+                                        <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
+                                        Crónico
+                                    </span>
+
+                                        <div class="actions">
+                                            <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)">
+                                                <i class="mdi mdi-plus-box-outline"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+
+                <div class="vista-titulo">Destacados</div>
+                <div>No se encontraron registros</div>
+            </ng-container>
+
+            <!-- Vista: Problemas -->
+            <ng-container *ngIf="vista == 'problemas'">
+                <div class="vista-titulo">Problemas activos</div>
+                <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let problema of problemasActivos; let i = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini">
+                                <div class="type problemas">
+                                    <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{ problema.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="problema.evoluciones">
+                                            última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}<br>
+                                                estado: {{ problema.evoluciones[0].estado }}
+                                        </small><br>
+                                        <div class="actions">
+                                            <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
+                                                <i class="mdi mdi-plus-box-outline"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+
+
+                <div *ngIf="!problemasActivos">No se encontraron registros</div>
+            </ng-container>
+
+            <!-- Vista: Hallazgos -->
+            <ng-container *ngIf="vista == 'hallazgos'">
+                <div class="vista-titulo">Problemas</div>
+                <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let problema of hallazgosNoActivos; let i = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini">
+                                <div class="type problemas">
+                                    <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content">
+                                    <div class="header">
+                                        <div class="title">
+                                            {{ problema.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="problema.evoluciones">
+                                            última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}<br>
+                                            estado: {{ problema.evoluciones[0].estado }}
+                                            <br>
+                                            <span class="badge-info" *ngIf="problema.evoluciones[0].estado == 'transformado'">
+                                                Transformado en: {{ problema.transformado?.concepto.term }}
+                                            </span>
+                                        </small><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+
+
+                <div *ngIf="!hallazgosNoActivos">No se encontraron registros</div>
+            </ng-container>
+
+            <!-- Vista: prestaciones -->
+            <ng-container *ngIf="vista == 'prestaciones'">
+                <div class="vista-titulo">Prestaciones</div>
+
+                <div *ngIf="prestaciones" class="list-group">
+                    <ng-container *ngFor="let prestacion of prestaciones; let i = index">
+                        <div class="rup-card mini">
+                            <div class="type planes">
+                            </div>
+                            <div class="rup-content">
+                                <div class="header">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}}  </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="title">
+                                                {{ prestacion.solicitud.tipoPrestacion.term }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</plex-box>

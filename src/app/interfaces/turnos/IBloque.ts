@@ -12,6 +12,10 @@ export interface IBloque {
     accesoDirectoProgramado: Number;
     reservadoGestion: Number;
     reservadoProfesional: Number;
+    restantesDelDia: Number;
+    restantesProgramados: Number;
+    restantesGestion: Number;
+    restantesProfesional: Number;
     pacienteSimultaneos: Boolean;
     cantidadSimultaneos: Number;
     citarPorBloque: Boolean;

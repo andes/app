@@ -20,7 +20,7 @@ export class PanelEspacioComponent implements OnInit {
     public agendas: any[];
     public sinConsultorio: any[];
     public colores: any[];
-    private espacios: any[] = [];
+    public espacios: any[] = [];
     private espacioSeleccionados: any[];
     public agenda: any;
     public agendaSel: any = null;
@@ -175,7 +175,7 @@ export class PanelEspacioComponent implements OnInit {
                     } else {
                         this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
                     }
-                    //this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
+                    // this.agendasModificar.push({ id: this.agendaSel.id, espacioFisico: espacio });
                     for (let i = i1Horarios; i < i2Horarios; i++) {
                         let ind = this.horarios[i].lista.map(function (obj) {
                             return obj.espacio.id;

@@ -1,0 +1,38 @@
+.vista-titulo {
+    padding-top: 1em;
+    font-size: 1.4em;
+    color: #AAAAAA;
+    font-weight: 100;
+    text-transform: uppercase;
+}
+
+// DEBUG - Sólo botones temporales para mostrar funcionalidad
+.botones-temporales i {
+    padding-left: 1.2em;
+    padding-right: 1.3em;
+}
+
+.badge-validada,
+.badge-ejecucion,
+.badge-pendiente {
+    background: transparent;
+    border: 1.5px solid;
+    font-size: 0.75em;
+    padding: 5px;
+    text-transform: uppercase;
+}
+
+.badge-validada {
+    border-color: #8CC63F;
+    color: #8CC63F;
+}
+
+.badge-ejecucion {
+    border-color: #AAAAAA;
+    color: #AAAAAA;
+}
+
+.badge-pendiente {
+    border-color: #AAAAAA;
+    color: #AAAAAA;
+}

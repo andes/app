@@ -1,0 +1,66 @@
+<fieldset *ngIf="showLiberarTurno">
+    <legend>Liberar Turnos</legend>
+    <div class="row">
+        <div class="col-4">
+            <label>Hora Turno</label>
+        </div>
+        <div class="col-8">
+            <label>Paciente</label>
+        </div>
+    </div>
+    <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+        <div class="col-4">
+            {{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs
+        </div>
+        <div class="col-8">
+            <span *ngIf="turnosSeleccionados[0].paciente?.id">{{turnosSeleccionados[0].paciente | paciente }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-select [(ngModel)]="motivoLiberacionSelect.select" name="motivoLiberacion" [data]="motivoLiberacion" label="Motivos de Liberación"
+                placeholder="Seleccione un motivo de suspensión">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-warning p-3 text-white" *ngIf="!motivoLiberacionSelect.select?.nombre">
+                Seleccione un motivo de liberación
+            </div>
+        </div>
+    </div>
+    <!--<div class="row">
+    <div class="col-md-12" *ngFor="let turno of turnosSeleccionados; let i = index">
+      <label>El turno de {{turno.paciente.apellido}} {{turno.paciente.nombre}} va a ser Liberado!</label>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-8">
+          <label>Enviar paciente a Lista de Espera</label>
+        </div>
+        <div class="col-md-4">
+          <plex-button icon="mdi mdi-key" (click)="agregarPacienteListaEspera(turno)" title="Enviar a Lista de Espera">
+          </plex-button>
+        </div>
+      </div>
+      <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+        <div class="col-md-8">
+          <label>Reprogramar Turno</label>
+        </div>
+        <div class="col-md-4">
+          <plex-button icon="mdi mdi-backup-restore" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
+          </plex-button>
+        </div>
+      </div>
+    </div>
+  </div>-->
+    <div class="mt-3 float-right">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" label="Liberar" (click)="liberarTurno()" title="Guardar">
+        </plex-button>
+        <!-- <plex-button icon="mdi mdi-backup-restore" label="Reasignar Turno" (click)="reasignarTurno(turno)" title="Reprogramar Turno">
+        </plex-button> -->
+    </div>
+</fieldset>

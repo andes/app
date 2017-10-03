@@ -1,0 +1,42 @@
+<form *ngIf="!hideSearchInput">
+    <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar ..."></plex-text>
+    </div>
+</form>
+
+<!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
+<div *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
+    No se han encontrado resultados
+</div>
+
+<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+<ul class="conceptos list-unstyled">
+    <ng-container *ngFor="let item of resultados">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+
+
+            <div class="rup-card mini">
+                <div *ngIf="_dragScope" class=" type {{tipoBusqueda}}">
+                    <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                </div>
+
+                <div class="rup-content">
+                    <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
+                        <div class="title">
+                            {{item.term}}
+                        </div>
+
+                        <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
+                            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </li>
+    </ng-container>
+</ul>

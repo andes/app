@@ -1,0 +1,225 @@
+<!-- Header de paciente -->
+<header *ngIf="prestacion && prestacion?.id">
+    <header-paciente (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="prestacion.paciente"></header-paciente>
+</header>
+<form class="plex-layout" #form="ngForm" *ngIf="!showCambioPaciente">
+    <!-- Sección principal -->
+    <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && showPrestacion">
+        <div class="row">
+            <!-- Panel HUDS -->
+            <div class="col-4" *ngIf="prestacion">
+                <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+            </div>
+
+            <!-- Panel Central -->
+            <div class="col-5">
+                <plex-box>
+                    <header>
+                        <div class="row">
+                            <div class="col-9 page-title">
+                                {{prestacion.solicitud.tipoPrestacion.term}}
+                            </div>
+                            <div class="col-3 float-right text-right">
+                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"><i class="mdi mdi-eye mdi-12px"></i> Solicitud</a>
+                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- div de la info de la solicitud -->
+                    <div [hidden]="!showDatosSolicitud">
+                        <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3>
+                        <p>
+                            Solicitada por el profesional: {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
+                        </p>
+                        <p>
+                            Organizacion: {{prestacion.solicitud.organizacion.nombre}}
+                        </p>
+                        <p>
+                            Fecha : {{prestacion.solicitud.fecha | date}}
+                        </p>
+                        <p *ngIf="prestacion.solicitud.prestacionOrigen">
+                            Prestacion de origen: {{prestacion.solicitud.prestacionOrigen}}
+                        </p>
+                    </div>
+
+                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                        <p>
+                            Arrastre aquí para vincularlos a esta consulta
+                        </p>
+                    </div>
+
+                    <!-- Registros de la prestación -->
+                    <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
+                        <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
+                            <!-- Drop area -->
+                            <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(i, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="posicionOnDrag !== i && registroOnDrag !== registro?.concepto.conceptId">
+                                Mover a esta posición
+                            </div>
+
+                            <!-- Contenedor del registro RUP -->
+                            <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event,registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
+                                <div class="rup-card">
+                                    <div class="type drag-handle {{registro?.concepto.semanticTag}}" [ngClass]="{ 'plan': registro?.esSolicitud === true }" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'"
+                                        [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
+                                        <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="rup-content">
+                                        <!-- ... Header -->
+                                        <div class="header">
+                                            <div class="title">
+                                                {{registro.nombre}}
+                                            </div>
+
+                                            <div class="actions">
+                                                <a href="javascript:void(0);" (click)="cambiaValorCollapse(!itemsRegistros[registro.id].collapse, registro.id)">
+                                                    <i class="mdi mdi-chevron-down"></i>
+                                                </a>
+                                                <span *ngIf="!(registro?.valor && registro?.valor.estado && registro.valor?.estado == 'transformado')">
+                                                <a href="javascript:void(0);" title="Eliminar Registro" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </a>
+                                                <a href="javascript:void(0);" title="transformar Problema" (click)="iniciaTransformarProblema(registro)" class="desvincular float-right" *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
+                                                    <i class="mdi mdi-vector-difference-ba"></i>
+                                                </a>
+                                                <div *ngIf="prestacion.ejecucion.registros &&  prestacion.ejecucion.registros.length > 1">
+                                                    <plex-dropdown type="link" class="dropdown-inline" [right]="true" icon="dots-vertical" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items"></plex-dropdown>
+                                                </div>
+                                            </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- ... Body -->
+                                        <div class="rup-body " [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar">
+                                            <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion" [paciente]="paciente" [registro]="registro">
+                                            </rup>
+                                        </div>
+
+                                        <!-- ... Footer -->
+                                        <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
+                                            <div class="actions">
+                                                <div class="relacionadoCon">
+                                                    <div class="float-left" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i]">
+                                                        Relacionado con:
+                                                        <!--*ngFor="let r of registro.relacionadoCon"-->
+                                                        <ng-container>
+                                                            {{registro.relacionadoCon[0].concepto.term}}
+                                                        </ng-container>
+                                                        <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))"
+                                                            title="Desvincular">
+                                                            <i class="mdi mdi-link-variant-off"></i>
+                                                        </a>
+                                                        <div *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]" class="confirmarDesvincular">
+                                                            ¿Confirmar desvinculación con <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
+
+                                                            <div class="float-right">
+                                                                <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)" class="">
+                                                                                    Cancelar
+                                                                                </a> |
+                                                                <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id, i)" class="confirm">
+                                                                                    Desvincular
+                                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="confirmarEliminar && scopeEliminar == 'card' && indexEliminar == i" class="confirmarDesvincular">
+                                                        ¿Quitar de la consulta?
+
+                                                        <div class="float-right">
+                                                            <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
+                                                                    Cancelar
+                                                                </a> |
+                                                            <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
+                                                                    Quitar
+                                                                </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <!-- Drop area -->
+                        <div droppable [dropScope]="'orden-registros-rup'" (onDrop)="moverRegistro(registros.length, $event)" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length && registros.length !== posicionOnDrag">
+                            Mover a esta posición
+                        </div>
+                    </div>
+
+                    <div *ngIf="transformarProblema">
+                        <div class="rup-card">
+                            <div class="rup-content">
+                                <!-- ... Header -->
+                                <div class="header">
+                                    <div class="title">
+                                        Transformar problema: {{registroATransformar.nombre}}
+                                    </div>
+                                </div>
+                                <div class="rup-body">
+                                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="ConfirmaTransformar($event)" class="droppable drop-area">
+                                        <p>
+                                            Arrastre aquí el nuevo Hallazgo
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="rup-footer">
+                                    <a href="javascript:void(0);" (click)="cancelarTransformacion()" class="confirm">
+                                        Cancelar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </plex-box>
+            </div>
+
+            <!-- Panel de Búsqueda -->
+            <div class="col-3">
+                <plex-box>
+                    <header>
+                        <div class="page-title">Buscar</div>
+                    </header>
+                    <div class="mt-3">
+                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer *ngIf="!showCambioPaciente">
+        <div class="row">
+            <div class="col-6 offset-3 text-center">
+                <div droppable [dropScope]="'borrar-registros-rup'" (onDrop)="confirmarEliminarRegistro($event, 'footer')" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length">
+                    <i class="mdi mdi-delete"></i> Quitar registro
+                </div>
+                <div *ngIf="confirmarEliminar && scopeEliminar == 'footer'" class="confirmarDesvincular">
+                    ¿Quitar de la consulta?
+
+                    <div class="float-right">
+                        <a href="javascript:void(0);" (click)="confirmarEliminar = false;" class="">
+                        Cancelar
+                    </a> |
+                        <a href="javascript:void(0);" (click)="eliminarRegistro()" class="confirm">
+                        Quitar
+                    </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-right" *ngIf="!showCambioPaciente">
+                <plex-button icon="close-circle-outline" label="Cancelar" (click)="volver()" type="danger"></plex-button>
+                <plex-button icon="content-save" label="Guardar" (click)="guardarPrestacion()" type="success"></plex-button>
+            </div>
+        </div>
+    </footer>
+</form>
+<!-- Búsqueda de pacientes -->
+<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false" [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>

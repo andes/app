@@ -1,0 +1,63 @@
+.invertHover:hover {
+  background-color: #002738;
+  color: white;
+  cursor: pointer;
+}
+.deslinkear:hover {
+  color: red;
+  cursor: pointer;
+}
+.linkear:hover {
+  color: green;
+  cursor: pointer;
+}
+*>.mdi.mdi-hover-show,
+*:hover>.mdi.mdi-hover-hidden {
+  display: none;
+}
+*:hover>.mdi.mdi-hover-show {
+  display: inline-block;
+}
+.validado {
+  color: green
+}
+.temporal {
+  color: orange
+}
+
+.drag-over-border {
+    border: #ff525b dashed 2px;
+}
+
+.centrado {
+  text-align: center
+}
+
+.droppable.drag-target-border,
+.list-group>.list-group-item.drag-target-border,
+.drag-target-border {
+    border: lightskyblue dashed 2px;
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+.droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed #eee;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: #999999;
+}
+
+.msg-arrastrePaciente {
+    border: 1px solid green;
+    color:green;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+}

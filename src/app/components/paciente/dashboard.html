@@ -1,0 +1,107 @@
+<!-- Tarjetas -->
+<section class="texto" *ngIf="!showCharts">
+    <div class="row">
+        <div class="col">
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <h1>Dashboard MPI</h1>
+                    </div>
+                </div>
+            </header>
+            <br>
+            <hr>
+            <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+            <div class=" row" *ngIf="!loading">
+                <div class="col-3">
+                    <div class="tarjeta">
+                        <div class="patient"></div>
+                        <div class="contenedor">
+                            <h2>{{validados}} </h2>
+                            <h3>Pacientes validados</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="tarjeta">
+                        <div class="patientTemp"></div>
+                        <div class="contenedor">
+                            <h2>{{temporales}} </h2>
+                            <h3>Pacientes temporales</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="tarjeta">
+                        <div class="qrCode"></div>
+                        <div class="contenedor">
+                            <h2>{{scan}}</h2>
+                            <h3>Escaneos correctos</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="tarjeta">
+                        <div class="qrCodeFail"></div>
+                        <div class="contenedor">
+                            <h2>{{scansFallidos}}</h2>
+                            <h3>Escaneos incorrectos</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gráficos -->
+<div class="charts" *ngIf="showCharts">
+    <plex-loader *ngIf="loading" type="ball-pulse-sync"></plex-loader>
+    <div class="chart-container">
+        <div *ngIf="!loading" class="chart">
+            <canvas baseChart [datasets]="chart.datasets" [labels]="chart.labels" [options]="chart.options" [colors]="chart.colors" [legend]="false"
+                [chartType]="'doughnut'"></canvas>
+        </div>
+    </div>
+    <div class="row" *ngIf="!loading">
+        <div class="col-6">
+            <div class="tarjeta bg-success">
+                <i class="mdi mdi-account-check"></i>
+                <div class="contenedor">
+                    <div>{{validados}}</div>
+                    <div>Pacientes validados </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="tarjeta bg-warning">
+                <i class="mdi mdi-account-star"></i>
+                <div class="contenedor">
+                    <div>{{temporales}}</div>
+                    <div>Pacientes temporales</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="!loading">
+        <div class="col-6">
+            <div class="tarjeta bg-primary">
+                <i class="mdi mdi-barcode-scan"></i>
+                <div class="contenedor">
+                    <div>{{scan}}</div>
+                    <div>Escaneos correctos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="tarjeta bg-danger">
+                <i class="mdi mdi-alert"></i>
+                <div class="contenedor">
+                    <div>{{scansFallidos}}</div>
+                    <div>Escaneos incorrectos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
