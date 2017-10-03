@@ -461,7 +461,8 @@ export class DarTurnosComponent implements OnInit {
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    return agenda.estado === 'publicada' && (agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
+                    let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
+                    return agenda.estado === 'publicada' && (agenda.turnosRestantesDelDia > 0 && delDia) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
                 });
                 // this.agendas = this.agendas.filter(agenda => {
                 //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
