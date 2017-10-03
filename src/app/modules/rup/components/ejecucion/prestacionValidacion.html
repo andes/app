@@ -37,7 +37,7 @@
                             <div class="rup-footer">
                                 <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
                                     <!-- <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno"> -->
-                                        <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
+                                        <plex-button label="ASIGNAR TURNO" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
                                     <!-- </p> -->
                                 </div>
                                 <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
