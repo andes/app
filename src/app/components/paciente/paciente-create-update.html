@@ -70,7 +70,7 @@
                                             <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
                                         </div>
                                         <div class="col-2 text-right">
-                                            <plex-button label="Agregar" type="primary btn-sm" icon="phone-plus" (click)="addContacto()"></plex-button>
+                                            <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto()"></plex-button>
                                         </div>
                                     </div>
                                     <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
@@ -82,17 +82,21 @@
                                             <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
                                                 <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                                 </plex-text>
-                                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
                                                 </plex-phone>
                                             </span>
                                             <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
                                                 <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                                 </plex-text>
-                                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000" [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                                <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
+                                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
                                                 </plex-phone>
                                             </span>
                                         </div>
-                                        <div class="col-2" *ngIf="i > 0"><br><br>
+                                        <div class="col-2" *ngIf="i > 0">
+                                            <br>
+                                            <br>
                                             <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>
                                         </div>
                                     </div>
@@ -174,7 +178,9 @@
                                         <plex-datetime [required]="true" label="Fecha Alta" [(ngModel)]="_unaOS.fecha" type="date" name="fechaOS-{{j}}">
                                         </plex-datetime>
                                     </div>
-                                    <div class="col-2"><br><br>
+                                    <div class="col-2">
+                                        <br>
+                                        <br>
                                         <plex-button label="" type="danger btn-sm" icon="close" (click)="removeFinanciador(j)"></plex-button>
                                     </div>
                                 </div>
@@ -205,7 +211,9 @@
                                                 <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione..." label="Relacion:">
                                                 </plex-select>
                                             </div>
-                                            <div class="col"><br><br>
+                                            <div class="col">
+                                                <br>
+                                                <br>
                                                 <plex-button label="" type="danger btn-sm" icon="close" (click)="removeRelacion(k)"></plex-button>
                                             </div>
                                         </div>
@@ -244,14 +252,22 @@
                                                 <span *ngIf="pac.paciente">{{pac.paciente.documento}}</span>
                                                 <span *ngIf="!pac.paciente">{{pac.documento}}</span>
                                             </td>
-                                            <td><span *ngIf="pac.paciente">{{pac.paciente.apellido}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.apellido}}</span></td>
-                                            <td><span *ngIf="pac.paciente">{{pac.paciente.nombre}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.nombre}}</span></td>
-                                            <td><span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento | fecha}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha}}</span></td>
-                                            <td><span *ngIf="pac.paciente">{{pac.paciente.sexo}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.sexo}}</span></td>
+                                            <td>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.apellido}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.apellido}}</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.nombre}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.nombre}}</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento | fecha}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha}}</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.sexo}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.sexo}}</span>
+                                            </td>
                                             <td>
                                                 <plex-button *ngIf="!pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac, true)"></plex-button>
                                                 <plex-button *ngIf="pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac.paciente, true)"></plex-button>
@@ -274,7 +290,8 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" *ngFor="let _unaNota of pacienteModel.notas; let l = index">
                                         <div class="row">
-                                            <div class="col-8">{{_unaNota.nota}} <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
+                                            <div class="col-8">{{_unaNota.nota}}
+                                                <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
                                             </div>
                                             <div class="col-2 text-right">
                                                 <h2 class="text-warning">
@@ -321,14 +338,15 @@
                                         <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
                                             <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
                                                 <br>
-                                                <small>Documento: {{elem.paciente.documento}} <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}<br>
-                                            Sexo: {{elem.paciente.sexo}}
-                                            </small>
+                                                <small>Documento: {{elem.paciente.documento}}
+                                                    <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                                    <br> Sexo: {{elem.paciente.sexo}}
+                                                </small>
                                             </h4>
                                             <h4>Similitud: {{elem.match * 100}} %
                                                 <span>
-                                              <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
-                                              </span>
+                                                    <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
+                                                </span>
                                             </h4>
                                         </li>
                                     </ul>
@@ -342,11 +360,13 @@
     </section>
     <footer>
         <div class="text-right">
-            <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && checkPassAM" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && !checkPassAM" label="Reenviar Código Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
+            <plex-button label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>
-            <plex-button *ngIf="!disableGuardar" icon="content-save" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">
+            <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">
             </plex-button>
-            <plex-button *ngIf="enableIgnorarGuardar" icon="content-save" label="Ignorar y Guardar" validateForm="true" type="success" (click)="save($event)">
+            <plex-button *ngIf="enableIgnorarGuardar" label="Ignorar y Guardar" validateForm="true" type="success" (click)="save($event)">
             </plex-button>
         </div>
     </footer>

@@ -66,12 +66,14 @@ export class TurnosComponent implements OnInit {
     @Input() reasturnos: IAgenda;
     @Output() reasignaTurno = new EventEmitter<boolean>();
     @Output() recargarAgendas = new EventEmitter<boolean>();
+    @Output() recargarBotones = new EventEmitter<boolean>();
 
     // Propiedades públicas
     showTurnos = true;
     showLiberarTurno = false;
     showSuspenderTurno = false;
     showAgregarNotaTurno = false;
+    showCarpetaPaciente = false;
     smsEnviado: Boolean = false;
     smsLoader: Boolean = false;
     turnos = [];
@@ -234,7 +236,7 @@ export class TurnosComponent implements OnInit {
                     return false;
                 }
                 if (bloqueTurno.citarPorBloque) {
-                    if ( String(bloqueTurno.turnos[index].horaInicio) !== String(bloqueTurno.turnos[index + 1].horaInicio)) {
+                    if (String(bloqueTurno.turnos[index].horaInicio) !== String(bloqueTurno.turnos[index + 1].horaInicio)) {
                         return false;
                     }
                 }
@@ -268,7 +270,10 @@ export class TurnosComponent implements OnInit {
             // Se verifica si el siguiente turno se encuentra disponible
             turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
             && this.todosConEstado('asignado') && this.siguienteDisponible(),
-            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble')
+            // Se puede quitar turno doble sólo si está en ese estado
+            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble'),
+            // Se puede editar carpeta si el turno tiene paciente
+            editarCarpeta: this.turnosSeleccionados.length === 1 && this.tienenPacientes()
         };
     }
 
@@ -285,6 +290,22 @@ export class TurnosComponent implements OnInit {
     agregarNotaTurno() {
         this.showTurnos = false;
         this.showAgregarNotaTurno = true;
+    }
+
+    editarCarpetaPaciente() {
+        this.showTurnos = false;
+        this.showCarpetaPaciente = true;
+    }
+
+    // Se usa tanto para guardar como cancelar
+    cancelarCarpeta() {
+        // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
+        this.serviceAgenda.getById(this.agenda.id).subscribe(ag => {
+            this.agenda = ag;
+            this.showCarpetaPaciente = false;
+            this.showTurnos = true;
+        });
+        // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
     }
 
     eventosTurno(operacion) {
@@ -432,7 +453,6 @@ export class TurnosComponent implements OnInit {
             this.showTurnos = true;
             this.showLiberarTurno = false;
         });
-        // this.agenda = agenda;
     }
 
     saveSuspenderTurno() {
@@ -441,6 +461,7 @@ export class TurnosComponent implements OnInit {
             this.showTurnos = true;
             this.showSuspenderTurno = false;
             this.recargarAgendas.emit(true);
+            this.recargarBotones.emit(true);
         });
     }
 
@@ -457,6 +478,7 @@ export class TurnosComponent implements OnInit {
             this.todos = false;
         });
     }
+
 
     cancelaAgregarNota() {
         this.turnosSeleccionados.length = 0;
@@ -476,4 +498,9 @@ export class TurnosComponent implements OnInit {
         this.showSuspenderTurno = false;
     }
 
+    saveCarpetaPaciente() {
+        this.showTurnos = true;
+        this.showCarpetaPaciente = false;
+        return true;
+    }
 }

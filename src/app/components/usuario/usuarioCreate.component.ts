@@ -10,27 +10,20 @@ import { ProvinciaService } from './../../services/provincia.service';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 @Component({
-    selector: 'usuario-create-update',
-    templateUrl: 'usuario-create-update.html',
+    selector: 'usuarioCreate',
+    templateUrl: 'usuarioCreate.html',
     styleUrls: ['usuarios.css']
 })
 
-export class UsuarioCreateUpdateComponent implements OnInit {
+export class UsuarioCreateComponent {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: any;
     @Output() data: EventEmitter<string> = new EventEmitter<string>();
 
-    private timeoutHandle: number;
     // Propiedades públicas
     public unFiltro: any;
     public filtros: any[] = [];
-    public documento = '';
-    public roles: any[] = [];
-    public textoLibre: string = null;
-    public disableBuscar = false;
-    public showCreate = false;
-    public showUpdate = false;
+    public documento: number;
     public permisos: any[] = [];
     public nuevoPermiso: string;
     public userModel: any = {
@@ -52,63 +45,18 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         private auth: Auth, private provinciaService: ProvinciaService,
         private organizacionService: OrganizacionService) { }
 
-    public ngOnInit() {
-        if (this.seleccion) {
-            this.loadUser();
-        } else {
-            this.newUser();
-        }
-    }
-
-    addPermiso() {
-        let index = this.permisos.findIndex(permiso => (permiso.trim() === this.nuevoPermiso.trim()));
-        if (index < 0) {
-            this.permisos.push(this.nuevoPermiso);
-            this.permisos.sort(function (a, b) {
-                if (a < b) { return -1; }
-                if (a > b) { return 1; }
-                return 0;
-            });
-        }
-        this.nuevoPermiso = '';
-        this.unFiltro = '';
-        this.getFiltros();
-    }
-
-    removePermiso(index) {
-        this.permisos.splice(index, 1);
-        this.getFiltros();
-    }
-
-    loadUser() {
-        this.showUpdate = true;
-        this.userModel.id = this.seleccion.id;
-        this.userModel.usuario = this.seleccion.usuario;
-        this.userModel.nombre = this.seleccion.nombre;
-        this.userModel.apellido = this.seleccion.apellido;
-        this.userModel.organizacion = this.auth.organizacion;
-
-        this.permisos = this.seleccion.permisos;
-        this.sortPermisos();
-        this.getFiltros();
-    }
-
-    newUser() {
-        this.showCreate = true;
-    }
 
     buscarUsuario() {
-        this.usuarioService.getByIdAndOrg(this.documento, this.auth.organizacion.id).subscribe(user => {
+        this.usuarioService.getByDni(this.documento).subscribe(user => {
             if (user.length < 1) {
-                this.usuarioService.getUser(this.documento).subscribe(res => {
+                this.usuarioService.getUser(this.documento.toString()).subscribe(res => {
                     this.userModel.nombre = res.givenName;
                     this.userModel.apellido = res.sn;
                     this.userModel.usuario = res.uid;
                     this.userModel.organizacion = this.auth.organizacion;
-                    this.showCreate = false;
-                    this.showUpdate = true;
+                    // ir a updateUsuario
                 }, err => {
-                    this.plex.info('warning', '', err);
+                    this.plex.toast('warning', err, 'Error', 5);
                 }
                 );
             } else {
@@ -118,11 +66,9 @@ export class UsuarioCreateUpdateComponent implements OnInit {
                 this.userModel.usuario = user[0].usuario;
                 this.userModel.organizacion = this.auth.organizacion;
                 this.permisos = user[0].permisos;
-                this.sortPermisos();
                 this.getFiltros();
-                this.plex.info('info', '', 'Usuario existente', );
-                this.showCreate = false;
-                this.showUpdate = true;
+                this.plex.toast('info', 'Usuario existente', 'Información', 5);
+                // ir a updateUsuario
             }
         }
         );
@@ -140,18 +86,10 @@ export class UsuarioCreateUpdateComponent implements OnInit {
         return this.filtros;
     }
 
-    sortPermisos() {
-        this.permisos.sort(function (a, b) {
-            if (a < b) { return -1; }
-            if (a > b) { return 1; }
-            return 0;
-        });
-    }
-
     onSave() {
         this.userModel.permisos = this.permisos;
         this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.info('success', '', 'Usuario guardado', );
+            this.plex.toast('success', 'Usuario guardado', '', 5);
             this.data.emit(user);
         });
     }

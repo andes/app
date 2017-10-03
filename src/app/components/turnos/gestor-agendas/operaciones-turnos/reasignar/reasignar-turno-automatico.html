@@ -1,37 +1,60 @@
 <fieldset *ngIf="autorizado">
     <legend>REASIGNACIÓN | DISPONIBILIDAD DE TURNOS</legend>
-    <!-- <div *ngIf="agendasReasignar[0]?.agendas?.length === 0">
-        <i class="mdi mdi-emoticon-sad"></i> No se encontraron Agendas candidatas para la reasignación automática
+    <!-- <div *ngIf=" agendasReasignar[0]?.agendas?.length===0 ">
+        <i class="mdi mdi-emoticon-sad "></i> No se encontraron Agendas candidatas para la reasignación automática
         <hr>
     </div> -->
     <h5>Reasignación automática</h5>
 
-    <div class="row">
-        <div class="col-12">
+    <div class="row ">
+        <div class="col-12 ">
 
-            <div id="accordion" role="tablist" aria-multiselectable="true" class="accordion-reasignar">
-                <div *ngIf="agendasReasignar?.length > 0 && agendasReasignar[0].turno">
+            <div id="accordion " role="tablist " aria-multiselectable="true " class="accordion-reasignar ">
+                <div *ngIf="agendasReasignar?.length> 0 && agendasReasignar[0].turno">
                     <div *ngFor="let agendaReasignar of agendasReasignar; let indiceTurno = index">
                         <div class="card">
                             <div class="card-header" role="tab" id="headingOne">
-                                <span *ngIf="agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-success"><i class="mdi mdi-check"></i> Turno ya reasignado</span>
-                                <span *ngIf="agendaReasignar?.agendas?.length > 0 && !agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning"><i class="mdi mdi-account-convert"></i> Turno sin reasignar</span>
-                                <span *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger"><i class="mdi mdi-account-alert"></i> Turno sin agendas candidatas para reasignación</span>
+                                <span *ngIf="agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-info">
+                                    <i class="mdi mdi-check"></i> Turno ya reasignado</span>
+                                <span *ngIf="agendaReasignar?.agendas?.length > 0 && !agendaReasignar.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-warning">
+                                    <i class="mdi mdi-account-convert"></i> Turno sin reasignar</span>
+                                <span *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" class="badge-reasignado badge badge-danger">
+                                    <i class="mdi mdi-account-alert"></i> Turno sin agendas candidatas para reasignación</span>
 
                                 <br>
-                                <span><b>Paciente: </b> {{ agendaReasignar?.turno.paciente | paciente }} | <small>DNI {{ agendaReasignar?.turno.paciente.documento | number }}</small><br></span>
-                                <span><b>Prestación: </b> {{ agendaReasignar?.turno.tipoPrestacion.term }}<br></span>
-                                <span><b>Turno suspendido: </b> {{ agendaAReasignar?.horaInicio | date: 'EEE' | uppercase }} {{ agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy' }} a las {{ agendaReasignar?.turno.horaInicio | date: 'HH:mm' }} hs.<br></span>
+                                <span>
+                                    <b>Paciente: </b> {{ agendaReasignar?.turno.paciente | paciente }} |
+                                    <small *ngIf="agendaReasignar?.turno.paciente.documento !== ''">DNI {{ agendaReasignar?.turno.paciente.documento | number }}</small>
+                                    <small *ngIf="agendaReasignar?.turno.paciente.documento === ''">Sin documento (temporal)</small>
+                                    <br>
+                                </span>
+                                <span>
+                                    <b>Prestación: </b> {{ agendaReasignar?.turno.tipoPrestacion.term }}
+                                    <br>
+                                </span>
+                                <span>
+                                    <b>Turno suspendido: </b> {{ agendaAReasignar?.horaInicio | date: 'EEE' | uppercase }} {{
+                                    agendaAReasignar?.horaInicio | date: 'dd/MM/yyyy' }} a las {{ agendaReasignar?.turno.horaInicio
+                                    | date: 'HH:mm' }} hs.
+                                    <br>
+                                </span>
 
-                                <span *ngIf="agendaReasignar?.turno?.motivoSuspension"><b>Motivo: </b> {{ agendaReasignar?.turno.motivoSuspension }}<br></span>
+                                <span *ngIf="agendaReasignar?.turno?.motivoSuspension">
+                                    <b>Motivo: </b> {{ agendaReasignar?.turno.motivoSuspension }}
+                                    <br>
+                                </span>
                                 <span *ngIf="paneles[indiceTurno] !== agendaReasignar.turno?._id && agendaReasignar.agendas && !agendaReasignar.turno?.reasignado?.siguiente && agendaReasignar?.agendas?.length > 0"
-                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver agendas candidatas</span>
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)">
+                                    <i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver agendas candidatas</span>
                                 <span *ngIf="paneles[indiceTurno] === agendaReasignar.turno?._id && agendaReasignar.agendas && !agendaReasignar.turno?.reasignado?.siguiente"
-                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar agendas candidatas</span>
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)">
+                                    <i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar agendas candidatas</span>
                                 <span *ngIf="paneles[indiceTurno] !== agendaReasignar.turno?._id && (!agendaReasignar.agendas || agendaReasignar.turno?.reasignado?.siguiente)"
-                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver detalles de la reasignación</span>
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)">
+                                    <i class="mdi mdi-arrow-down-drop-circle-outline"></i> Ver detalles de la reasignación</span>
                                 <span *ngIf="paneles[indiceTurno] === agendaReasignar.turno?._id && (!agendaReasignar.agendas || agendaReasignar.turno?.reasignado?.siguiente)"
-                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)"><i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar detalles de la reasignación</span>
+                                    class="hover text-info" (click)="togglePanel(agendaReasignar.turno._id, indiceTurno)">
+                                    <i class="mdi mdi-arrow-up-drop-circle-outline"></i> Ocultar detalles de la reasignación</span>
                                 <plex-button *ngIf="agendaReasignar?.agendas?.length === 0 && !agendaReasignar?.turno?.reasignado?.siguiente" type="primary"
                                     label="Reasignación Manual de Turnos" (click)="reasignarTurnos()"></plex-button>
                             </div>
@@ -45,8 +68,8 @@
                                             <div *ngIf="agendasOcultas[i] === agenda._id" class="d-flex w-100 justify-content-between">
                                                 <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
                                                     date: 'dd/MM/yyyy' }}
-                                                    <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio | date:'HH:mm'}}
-                                                    a {{ agendaReasignar.turno.horaFin | date:'HH:mm'}} hs.
+                                                    <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio | date:'HH:mm'}} a {{ agendaReasignar.turno.horaFin
+                                                    | date:'HH:mm'}} hs.
                                                 </h5>
                                             </div>
                                             <!-- REASIGNAR -->
@@ -55,9 +78,8 @@
                                                 <div class="d-flex w-100 justify-content-between">
                                                     <h5 class="mb-1">{{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
                                                         | date: 'dd/MM/yyyy' }}
-                                                        <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio
-                                                        | date:'HH:mm'}} a {{ agendaReasignar.turno.horaFin | date:'HH:mm'}}
-                                                        hs.
+                                                        <i class="mdi mdi-clock"></i> {{ agendaReasignar.turno.horaInicio | date:'HH:mm'}} a {{ agendaReasignar.turno.horaFin
+                                                        | date:'HH:mm'}} hs.
                                                     </h5>
                                                     <small>Similitud: {{ agenda.similitud }}%</small>
                                                 </div>
@@ -83,11 +105,16 @@
                             <div class="container" *ngIf="agendaReasignar?.turno?.reasignado?.siguiente && paneles[indiceTurno] === agendaReasignar.turno?._id">
                                 <div class="row">
                                     <div class="col-12 bg-success text-white card-block">
-                                        Reasignado al Turno: <b>{{ agendaReasignar.agendas[0]?.horaInicio | date: 'EEE' | uppercase }} {{ agendaReasignar.agendas[0]?.horaInicio
-                                        | date: 'dd/MM/yyyy'}}, {{ agendaReasignar.turno?.horaInicio |
-                                        date: 'HH:mm'}} hs</b>
-                                        <div>Prestación: <b>{{agendaReasignar?.turno?.tipoPrestacion?.nombre}}</b></div>
-                                        <div *ngIf="agendaReasignar.agendas[0].profesional">Profesional: <b>{{profesional | profesional}}</b></div>
+                                        Reasignado al Turno:
+                                        <b>{{ agendaReasignar.agendas[0]?.horaInicio | date: 'EEE' | uppercase }} {{ agendaReasignar.agendas[0]?.horaInicio
+                                            | date: 'dd/MM/yyyy'}}, {{ agendaReasignar.turno?.horaInicio | date: 'HH:mm'}}
+                                            hs</b>
+                                        <div>Prestación:
+                                            <b>{{agendaReasignar?.turno?.tipoPrestacion?.nombre}}</b>
+                                        </div>
+                                        <div *ngIf="agendaReasignar.agendas[0].profesional">Profesional:
+                                            <b>{{profesional | profesional}}</b>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -100,5 +127,8 @@
         </div>
     </div>
 
+</fieldset>
+<fieldset *ngIf="agendasReasignar?.length === 0">
+    No hay alternativas para reasignación de turnos
 </fieldset>
 <permisos *ngIf="!autorizado" [permisos]="permisosRequeridos" [botonCancelar]="false" (cancelarEmit)="cancelar()"></permisos>

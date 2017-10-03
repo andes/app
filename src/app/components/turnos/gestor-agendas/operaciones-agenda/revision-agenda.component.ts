@@ -130,7 +130,6 @@ export class RevisionAgendaComponent implements OnInit {
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
-            this.pacientesSearch = false;
         }
     }
 
@@ -254,8 +253,11 @@ export class RevisionAgendaComponent implements OnInit {
             listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
         }
         turnoSinCodificar = listaTurnos.find(t => {
-            return (t && t.paciente && t.paciente.id && t.asistencia && (!t.diagnosticoPrincipal ||
-                (!t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )));
+            return (
+                t && t.paciente && t.paciente.id &&
+                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )) ||
+                !t.asistencia)
+            );
         });
 
         if (turnoSinCodificar) {

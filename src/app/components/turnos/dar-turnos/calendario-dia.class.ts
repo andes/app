@@ -50,8 +50,8 @@ export class CalendarioDia {
                     this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles;
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
 
-                } else {
                     // En caso contrario, se calculan los contadores por separado
+                } else {
 
                     // loopear turnos para sacar el tipo de turno!
                     this.agenda.bloques.forEach((bloque, indexBloque) => {

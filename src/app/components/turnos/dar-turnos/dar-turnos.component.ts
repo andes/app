@@ -46,8 +46,14 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        this.paciente = value;
-        this.mostrarCalendario = false;
+        // this.paciente = value;
+        this.servicePaciente.getById(this._pacienteSeleccionado.id).subscribe(
+            pacienteMPI => {
+                this.paciente = pacienteMPI;
+                this.verificarTelefono(pacienteMPI);
+                this.obtenerCarpetaPaciente(this.paciente);
+                this.mostrarCalendario = false;
+            });
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
@@ -118,6 +124,17 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
+
+    // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
+    mostrarNoDisponibles = false;
+    // Muestra/Oculta los días de fin de semana (sábado y domingo)
+    ocultarFinesDeSemana = false;
+
+    // Opciones para modificar la grilla/calendario
+    opcionesCalendario = {
+        mostrarFinesDeSemana: true
+    };
+
     private bloques: IBloque[];
     private indiceTurno: number;
     private indiceBloque: number;
@@ -147,7 +164,7 @@ export class DarTurnosComponent implements OnInit {
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         if (this._pacienteSeleccionado) {
-            this.paciente = this._pacienteSeleccionado;
+            // this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
@@ -163,7 +180,12 @@ export class DarTurnosComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
             let data2 = this.verificarLlaves(dataF, event);
         });
     }
@@ -434,23 +456,55 @@ export class DarTurnosComponent implements OnInit {
                     }
                 }
             });
+
+
+            // Por defecto no se muestran las agendas que no tienen turnos disponibles
+            if (!this.mostrarNoDisponibles) {
+                this.agendas = this.agendas.filter(agenda => {
+                    return agenda.estado === 'publicada' && (agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
+                });
+                // this.agendas = this.agendas.filter(agenda => {
+                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
+                // });
+            }
+
+            // Por defecto se muestras los días de fines de semana (sab y dom)
+            this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
+
             // Ordena las Agendas por fecha/hora de inicio
-            this.agendas = this.agendas.sort(
-                function (a, b) {
-                    let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
-                    {
-                        return inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles;
-                    }
-                }
-            );
+            this.agendas = this.agendas.sort((a, b) => {
+                let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
+                let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
+                {
+                    return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
+                };
+            });
 
         });
     }
 
+    hayTurnosEnHorario(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.turnos.filter(turno => {
+                let ultimoBloque = agenda.bloques.length - 1;
+                let ultimoTurno = bloque.turnos.length - 1;
+                return (
+                    moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format()
+                );
+            });
+        });
+    }
+
+    hayTurnosDisponibles(agenda) {
+        return agenda.bloques.filter(bloque => {
+            return bloque.filter(turno => {
+                return turno.estado === 'disponible';
+            });
+        }).length > 0;
+    }
+
     /**
      * Selecciona una Agenda (click en el calendario)
-     * @param agenda: objeto con una agenda completa
      */
     seleccionarAgenda(agenda) {
         // Asigno agenda
@@ -664,9 +718,13 @@ export class DarTurnosComponent implements OnInit {
             let enRango = direccion === 'der' ? ((this.indice + 1) < this.agendas.length) : ((this.indice - 1) >= 0);
             if (enRango) {
                 if (direccion === 'der') {
-                    this.indice++;
-                } else {
-                    this.indice--;
+                    if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice + 1].horaInicio).startOf('day').format()) {
+                        this.indice++;
+                    }
+                } else if (direccion === 'izq') {
+                    if (moment(this.agenda.horaInicio).startOf('day').format() === moment(this.agendas[this.indice - 1].horaInicio).startOf('day').format()) {
+                        this.indice--;
+                    }
                 }
                 this.agenda = this.agendas[this.indice];
                 this.seleccionarAgenda(this.agenda);
@@ -694,10 +752,11 @@ export class DarTurnosComponent implements OnInit {
                 && (bloque.turnos[(indiceT - 1)].estado !== 'disponible'));
     }
 
+    // Se busca el número de carpeta de la Historia Clínica en papel del paciente
+    // a partir del documento y del efector
     obtenerCarpetaPaciente(paciente) {
-        // Se busca el número de carpeta de la Historia Clínica en papel del paciente
-        // a partir del documento y del efector
 
+        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
         if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
@@ -706,31 +765,35 @@ export class DarTurnosComponent implements OnInit {
         }
 
         if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
-            let params = {
-                documento: this.paciente.documento,
-                organizacion: this.auth.organizacion._id
-            };
+            if (this.paciente.documento && this.auth.organizacion._id) {
+                let params = {
+                    documento: this.paciente.documento,
+                    organizacion: this.auth.organizacion._id
+                };
 
-            this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    // Se actualiza la carpeta del Efector correspondiente
-                    this.carpetaEfector = {
-                        organizacion: carpeta.organizacion,
-                        nroCarpeta: carpeta.nroCarpeta
-                    };
-                }
-            });
+                this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
+                    if (carpeta.nroCarpeta) {
+                        // Se actualiza la carpeta del Efector correspondiente
+                        this.carpetaEfector = {
+                            organizacion: carpeta.organizacion,
+                            nroCarpeta: carpeta.nroCarpeta
+                        };
+                    }
+                });
+            }
+        }
 
+        if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
+            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
         } else {
             this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         }
-
     }
 
     actualizarCarpetaPaciente(paciente) {
         // Se realiza un patch del paciente
         let listaCarpetas = [];
-        listaCarpetas = paciente.carpetaEfectores;
+        listaCarpetas = (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) ? paciente.carpetaEfectores : [];
         let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
         if (!carpetaActualizar) {
             listaCarpetas.push(this.carpetaEfector);
@@ -780,20 +843,21 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
-    actualizarTelefono(pacienteActualizar) {
+    actualizarPaciente() {
         // Si cambió el teléfono lo actualizo en el MPI
         if (this.cambioTelefono) {
             let nuevoCel = {
-                'tipo': 'celular',
-                'valor': this.telefono,
-                'ranking': 1,
-                'activo': true,
-                'ultimaActualizacion': new Date()
+                tipo: 'celular',
+                valor: this.telefono,
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
             };
-            let mpi: Observable<any>;
+
             let flagTelefono = false;
-            // Si tiene un celular en ranking 1 y activo cargado, se reemplaza el nro
-            // sino, se genera un nuevo contacto
+
+            // Si tiene un celular con ranking 0 (el más alto) y está activo, se reemplaza el número
+            // si no, se genera un nuevo contacto
             if (this.paciente.contacto.length > 0) {
                 this.paciente.contacto.forEach((contacto, index) => {
                     if (contacto.tipo === 'celular') {
@@ -807,18 +871,39 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 this.paciente.contacto = [nuevoCel];
             }
-            let cambios = {
-                'op': 'updateContactos',
-                'contacto': this.paciente.contacto
-            };
-            mpi = this.servicePaciente.patch(pacienteActualizar.id, cambios);
-            mpi.subscribe(resultado => {
-                if (resultado) {
-                    this.plex.toast('info', 'Número de teléfono actualizado');
+        }
+        let listaCarpetas = [];
+        listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
+        let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
+        if (!carpetaActualizar) {
+            listaCarpetas.push(this.carpetaEfector);
+        } else {
+            listaCarpetas.forEach(carpeta => {
+                if (carpeta.organizacion._id === this.auth.organizacion.id) {
+                    carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
                 }
             });
-
         }
+        let cambios;
+        if (this.cambioTelefono) {
+            cambios = {
+                'op': 'updateContactosCarpeta',
+                'contacto': this.paciente.contacto,
+                'carpetaEfectores': listaCarpetas
+            };
+        } else {
+            cambios = {
+                'op': 'updateCarpetaEfectores',
+                'carpetaEfectores': listaCarpetas
+            };
+        }
+
+        // Actualizo teléfono y nro de carpeta del paciente en MPI
+        this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+            if (resultado) {
+                this.plex.toast('info', 'Datos del paciente actualizados');
+            }
+        });
 
     }
 
@@ -900,8 +985,7 @@ export class DarTurnosComponent implements OnInit {
                             });
                         }
                     }
-                    this.actualizarTelefono(pacienteSave);
-                    this.actualizarCarpetaPaciente(this.paciente);
+                    this.actualizarPaciente();
                     if (this.paciente && this._pacienteSeleccionado) {
                         this.cancelarDarTurno.emit(true);
                         return false;
@@ -988,7 +1072,6 @@ export class DarTurnosComponent implements OnInit {
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.pacientesSearch = false;
-                    // this.showDarTurnos = true;
                     this.verificarTelefono(this.paciente);
                     window.setTimeout(() => this.pacientesSearch = false, 100);
                     this.obtenerCarpetaPaciente(this.paciente);

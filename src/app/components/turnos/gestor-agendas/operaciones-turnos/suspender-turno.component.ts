@@ -34,6 +34,13 @@ export class SuspenderTurnoComponent implements OnInit {
     public suspendio = false;
 
     ngOnInit() {
+
+        console.log('this.turnosSeleccionados', this.turnosSeleccionados);
+
+        if (this.turnosSeleccionados.length < 0) {
+            return;
+        }
+
         this.turnos = this.turnosSeleccionados;
 
         this.motivoSuspension = [{
@@ -57,7 +64,7 @@ export class SuspenderTurnoComponent implements OnInit {
     seleccionarTurno(turno) {
         let indice = this.seleccionadosSMS.indexOf(turno);
         if (indice === -1) {
-            if (turno.paciente.id) {
+            if (turno.paciente && turno.paciente.id) {
                 this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
             }
         } else {
@@ -75,18 +82,23 @@ export class SuspenderTurnoComponent implements OnInit {
     }
 
     fueEnviado(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && this.smsEnviado(turno) === 'enviado';
+        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'enviado';
     }
 
     estaPendiente(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && this.smsEnviado(turno) === 'pendiente';
+        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'pendiente';
     }
 
     tienePaciente(turno) {
-        return turno.paciente != null;
+        return turno.paciente != null && turno.paciente.id != null;
     }
 
     suspenderTurno() {
+
+        if (this.motivoSuspensionSelect.select.nombre === null) {
+            return;
+        }
+
         let patch: any = {
             op: 'suspenderTurno',
             turnos: this.turnos,

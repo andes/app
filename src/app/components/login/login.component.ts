@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
+import { AppComponent } from '../../app.component';
 
 @Component({
     templateUrl: 'login.html',
@@ -12,7 +13,6 @@ import { Auth } from '@andes/auth';
 export class LoginComponent implements OnInit {
     public usuario: number;
     public password: string;
-    public organizacion: any;
     public loading = false;
     public deshabilitar = false;
     public autoFocus = 1;
@@ -28,10 +28,10 @@ export class LoginComponent implements OnInit {
         if (event.formValid) {
             this.deshabilitar = true;
             this.loading = true;
-            this.auth.login(this.usuario.toString(), this.password, this.organizacion.id)
+            this.auth.login(this.usuario.toString(), this.password)
                 .subscribe((data) => {
-                    this.plex.updateUserInfo({ usuario: this.auth.usuario, organizacion: this.auth.organizacion });
-                    this.router.navigate(['inicio']);
+                    this.plex.updateUserInfo({ usuario: this.auth.usuario });
+                    this.router.navigate(['selectOrganizacion']);
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
@@ -40,7 +40,5 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    loadOrganizaciones(event) {
-        this.auth.organizaciones().subscribe(event.callback);
-    }
+
 }

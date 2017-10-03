@@ -12,8 +12,9 @@ export class EdadPipe implements PipeTransform {
         let difAnios: any;
         let difDias: any;
         let difMeses: any;
-        let difHs: any;
         let difD: any;
+        let difHs: any;
+        let difMn: any;
 
         fechaNac = moment(value.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
         fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
@@ -21,6 +22,7 @@ export class EdadPipe implements PipeTransform {
         difAnios = Math.floor(difDias / 365.25);
         difMeses = Math.floor(difDias / 30.4375);
         difHs = fechaAct.diff(fechaNac, 'h'); // Diferencia en horas
+        difMn = fechaAct.diff(fechaNac, 'm'); // Diferencia en minutos
 
         if (difAnios !== 0) {
             edad = {
@@ -42,7 +44,13 @@ export class EdadPipe implements PipeTransform {
                 valor: difHs,
                 unidad: 'horas'
             };
+        } else if (difMn !== 0) {
+            edad = {
+                valor: difMn,
+                unidad: 'minutos'
+            };
         }
+
         return (String(edad.valor) + ' ' + edad.unidad);
     }
 }

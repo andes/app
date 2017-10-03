@@ -1,7 +1,7 @@
 <!--Header de agenda-->
-<header>
+<header class="header-fixed" [ngClass]="{'header-fixed-front': mostrarHeaderCompleto}">
     <div class="row" *ngIf="showTurnos">
-        <div class="col-12">
+        <div class="col-12 bloques-y-turnos">
             <fieldset>
                 <legend>
                     <div class="clearfix">
@@ -26,8 +26,8 @@
                     <!--Header completo-->
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
-                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
+                            'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
                             hs
                         </div>
                     </div>
@@ -63,14 +63,15 @@
     </div>
 </header>
 <!--Listado de turnos-->
-<div class="row" *ngIf="showTurnos">
+<div class="row lista-turnos" *ngIf="showTurnos">
     <div class="col-12">
         <!--Botones / Acciones-->
-        <table class="table mb-0" *ngIf="agenda.nominalizada">
+        <table class="table table-botones-fixed mb-0" *ngIf="agenda.nominalizada">
             <tr>
-                <td>
-                    <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos"></i>
-                    <i *ngIf="!this.todos" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"></i>
+                <td class="seleccionar-todos">
+                    <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos" titlePosition="right"></i>
+                    <i *ngIf="!this.todos" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"
+                        titlePosition="right"></i>
                 </td>
                 <td colspan="3" class="text-right">
                     <div *ngIf="turnosSeleccionados.length > 0">
@@ -84,7 +85,8 @@
                             title="Turno doble"></plex-button>
                         <plex-button *ngIf="botones.quitarTurnoDoble" type="default" icon="mdi mdi-numeric-1-box-outline" (click)="eventosTurno('quitarTurnoDoble')"
                             title="Quitar Turno doble"></plex-button>
-                        <!-- mdi-numeric-1-box-outline -->
+                        <plex-button *ngIf="botones.editarCarpeta" type="default" icon="mdi mdi-folder-account" (click)="editarCarpetaPaciente()"
+                            title="Editar Número de Carpeta"></plex-button>
                         <plex-button *ngIf="botones.nota" type="default" icon="mdi mdi-comment-outline" (click)="agregarNotaTurno()" title="Agregar nota"></plex-button>
                         <plex-button *ngIf="botones.sms" type="default" icon="mdi mdi-email-outline" (click)="enviarSMS()" title="Enviar un mensaje al paciente"></plex-button>
                         <plex-button *ngIf="botones.liberarTurno" type="danger" icon="mdi mdi-account-off" title="Liberar turno" (click)="liberarTurno(agenda)"></plex-button>
@@ -96,7 +98,7 @@
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
         <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let i = index">
-            <table *ngIf="agenda.nominalizada" class="table table-condensed text-center small" title="Turnos disponibles para este bloque">
+            <table *ngIf="agenda.nominalizada" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
                 <thead>
                     <tr>
                         <td>Del día</td>
@@ -114,17 +116,21 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-striped">
+            <table class="table">
                 <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
                     <tr>
-                        <th *ngIf="!agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
                             hs
                         </th>
-                        <th *ngIf="agenda.nominalizada && bloque.descripcion" colspan="4">{{bloque.descripcion}}
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
                         </th>
-                        <th *ngIf="bloque.citarPorBloque" colspan="4"><span class="text-danger">Citación por segmento</span></th>
+                        <th *ngIf="bloque.citarPorBloque">
+                            <span class="text-info">Citación por segmento</span>
+                        </th>
                     </tr>
                 </thead>
+            </table>
+            <table class="table table-striped">
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                         <td (click)="seleccionarTurno(turno, true, false)">
@@ -136,18 +142,28 @@
                         </td>
                         <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
 
-                            <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }} <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span></small>
-                            <small><span *ngIf="turno?.paciente?.id">| DNI {{turno.paciente.documento|number}}</span></small>
-                            <small><span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta"> | Nro Carpeta 
-                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
-                        </span></small>
+                            <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                                <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span>
+                            </small>
+                            <small>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento|number}}</span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">| Sin documento (temporal)</span>
+                            </small>
+                            <small>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta">
+                                    | Nro Carpeta
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
+                                </span>
+                            </small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'profesional' && turno.estado === 'asignado'">(autocitado)</small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'gestion' && turno.estado === 'asignado'">(con llave)</small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'programado' && turno.estado === 'asignado'">(programado)</small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'delDia' && turno.estado === 'asignado'">(del día)</small>
 
                             <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">
-                            <small><span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</span></small>
+                            <small>
+                                <span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</span>
+                            </small>
                             <small *ngIf="turno?.estado === 'disponible'">Disponible</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'">Turno suspendido (sin paciente)</small>
@@ -159,10 +175,14 @@
                                 title="Ya reasignado">
                                 <i class="mdi mdi-account-check"></i>
                             </span>
-                            <span *ngIf="turno?.nota"><i title="{{turno.nota}}" titlePosition="left" class="text-warning warning mdi mdi-message"></i></span>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia"><i class="text-success mdi mdi-emoticon-happy"></i></div>
+                            <span *ngIf="turno?.nota">
+                                <i title="{{turno.nota}}" titlePosition="left" class="text-warning warning mdi mdi-message"></i>
+                            </span>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success">Asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger">No asistió</div>
+                            <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia">
+                                <i class="text-success mdi mdi-emoticon-happy"></i>
+                            </div>
                         </td>
                         <td>
                             <span *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'">
@@ -191,18 +211,29 @@
                         <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente  | paciente }} </span>
-                        <small><span *ngIf="ssobreturno?.paciente?.id">| DNI {{sobreturno.paciente.documento|number}}</span></small>
-                        <small><span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0"> | Nro Carpeta
-                <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                    {{carpeta.nroCarpeta}}
-                </span>
-            </span></small>
-                        <br *ngIf="sobreturno?.paciente?.id"><small><span *ngIf="sobreturno?.paciente?.id && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span></small>
+                        <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
+                        <small>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">| DNI {{sobreturno.paciente.documento|number}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">| Sin documento</span>
+                        </small>
+                        <small>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                                | Nro Carpeta
+                                <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
+                                    {{carpeta.nroCarpeta}}
+                                </span>
+                            </span>
+                        </small>
+                        <br *ngIf="sobreturno?.paciente?.id">
+                        <small>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span>
+                        </small>
 
                         <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
                         <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
-                        <span *ngIf="sobreturno && sobreturno.nota"><i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i></span>
+                        <span *ngIf="sobreturno && sobreturno.nota">
+                            <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                        </span>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
@@ -239,3 +270,9 @@
 <agregar-nota-turno *ngIf="showAgregarNotaTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveAgregarNotaTurno)="saveAgregarNotaTurno($event)"
     (cancelaAgregarNota)="cancelaAgregarNota($event)">
 </agregar-nota-turno>
+
+<!-- Muestra el panel de Carpeta Paciente -->
+<div class="clear"></div>
+<carpeta-paciente *ngIf="showCarpetaPaciente" [turnoSeleccionado]="turnosSeleccionados[0]" (guardarCarpetaEmit)="cancelarCarpeta($event)"
+    (cancelarCarpetaEmit)="cancelarCarpeta($event)">
+</carpeta-paciente>

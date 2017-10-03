@@ -1,3 +1,4 @@
+import { environment } from './../../../../../environment';
 import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -8,7 +9,7 @@ import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
 import { TurnoService } from '../../../../../services/turnos/turno.service';
-// import { SmsService } from './../../../../../services/turnos/sms.service';
+import { SmsService } from '../../../../../services/turnos/sms.service';
 import * as moment from 'moment';
 
 @Component({
@@ -17,6 +18,7 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAutomaticoComponent implements OnInit {
+    resultado: String;
 
     private _agendaAReasignar: any;
 
@@ -49,7 +51,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
     permisosRequeridos = 'reasignarTurnos';
 
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
+    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService, public smsService: SmsService) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:' + this.permisosRequeridos + ':?').length > 0;
@@ -73,6 +75,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                         let params = {
                             idAgenda: this.agendaAReasignar.id,
+                            idOrganizacion: this.agendaAReasignar.organizacion._id,
                             idBloque: bloque.id,
                             idTurno: turno.id,
                             duracion: true,
@@ -221,19 +224,45 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                 this.serviceTurno.put(reasignacion).subscribe(resultado2 => {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
-                    this.plex.toast('danger', 'TODO: enviar SMS');
+                    // Se envían SMS sólo en Producción
                     this.actualizar();
+                    if (environment.production === true) {
+                        let dia = moment(turnoReasignado.horaInicio).format('DD/MM/YYYY');
+                        let horario = moment(turnoReasignado.horaInicio).format('HH:mm');
+                        let mensaje = 'Le informamos que su turno fue reasignado al ' + dia + ' a las ' + horario + '.';
+                        this.enviarSMS(turnoReasignado.paciente, mensaje);
+                    } else {
+                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                    }
                 });
 
-                // Enviar SMS
-                // let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                // let tm = moment(this.turno.horaInicio).format('HH:mm');
-                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-                // this.enviarSMS(pacienteSave, mensaje);
-                // this.actualizarCarpetaPaciente(turno.paciente);
             });
         });
 
+    }
+
+    enviarSMS(paciente: any, mensaje) {
+        let smsParams = {
+            telefono: paciente.telefono,
+            mensaje: mensaje,
+        };
+        this.smsService.enviarSms(smsParams).subscribe(
+            sms => {
+                this.resultado = sms;
+
+                // "if 0 errores"
+                if (this.resultado === '0') {
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                } else {
+                    this.plex.toast('danger', 'ERROR: SMS no enviado');
+                }
+            },
+            err => {
+                if (err) {
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
+
+                }
+            });
     }
 
     ocultarAgendaCandidata(idAgenda, indice) {
@@ -269,19 +298,9 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             delete this.paneles[indice];
         } else {
             this.paneles[indice] = idTurno;
-            console.log(indice, idTurno);
         }
 
         this.paneles = [... this.paneles];
     }
-
-    // cancelar() {
-    //     this.cancelaSuspenderTurno.emit(true);
-    //     this.turnoAReasignar = null;
-    // }
-
-    // cerrar() {
-    //     // this.saveSuspenderTurno.emit(this.agenda);
-    // }
 
 }

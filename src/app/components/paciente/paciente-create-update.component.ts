@@ -1,3 +1,4 @@
+import { AppMobileService } from './../../services/appMobile.service';
 import {
     ParentescoService
 } from './../../services/parentesco.service';
@@ -207,6 +208,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    // PARA LA APP MOBILE
+    checkPassAM = true;
+    messageAM = '';
+
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
@@ -215,11 +220,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private barrioService: BarrioService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
+        public appMobile: AppMobileService,
         private financiadorService: FinanciadorService, public plex: Plex) { }
 
     ngOnInit() {
-
-
         // Se cargan los combos
         this.financiadorService.get().subscribe(resultado => {
             this.obrasSociales = resultado;
@@ -264,8 +268,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.estados = enumerados.getEstados();
         /*this.relacionTutores = enumerados.getObjRelacionTutor();*/
-
-        if (this.seleccion) {
+        if (this.seleccion && !this.isEmptyObject(this.seleccion)) {
             this.actualizarDatosPaciente();
             if (this.seleccion.id) {
                 // Busco el paciente en mongodb (caso que no este en mongo y si en elastic server)
@@ -275,6 +278,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             if (!resultado.scan) {
                                 resultado.scan = this.seleccion.scan;
                             }
+
                             if (this.escaneado && resultado.estado !== 'validado') {
                                 resultado.nombre = this.seleccion.nombre.toUpperCase();
                                 resultado.apellido = this.seleccion.apellido.toUpperCase();
@@ -283,7 +287,18 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                 resultado.documento = this.seleccion.documento;
                             }
                             this.seleccion = Object.assign({}, resultado);
-
+                            this.appMobile.check(this.seleccion.id).subscribe(data => {
+                                if (!data.error) {
+                                    this.checkPassAM = true;
+                                } else {
+                                    if (data.error === 'account_assigned') {
+                                        this.checkPassAM = false;
+                                        this.messageAM = 'Cuenta ya activada';
+                                    } else if (data.error === 'email_exists') {
+                                        this.messageAM = 'El email de contacto esta en uso';
+                                    }
+                                }
+                            });
 
                         }
                         this.actualizarDatosPaciente();
@@ -294,6 +309,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.mostrarNotas();
             }
         }
+    }
+
+    isEmptyObject(obj) {
+        for (let prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+                return false;
+            }
+        }
+        return JSON.stringify(obj) === JSON.stringify({});
     }
 
     actualizarDatosPaciente() {
@@ -476,12 +500,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
 
             if (this.altoMacheo) {
-                this.logService.post('mpi', 'macheoAlto', { paciente: this.pacienteModel }).subscribe(() => { });
+                this.logService.post('mpi', 'macheoAlto', {
+                    paciente: this.pacienteModel
+                }).subscribe(() => { });
 
             }
 
             if (this.posibleDuplicado) {
-                this.logService.post('mpi', 'posibleDuplicado', { paciente: this.pacienteModel }).subscribe(() => { });
+                this.logService.post('mpi', 'posibleDuplicado', {
+                    paciente: this.pacienteModel
+                }).subscribe(() => { });
 
             }
 
@@ -490,7 +518,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             await this.crearTemporales(pacienteGuardar);
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
-
                 if (result) {
                     // Borramos relaciones
                     if (this.relacionesBorradas.length > 0) {
@@ -639,7 +666,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     // cuando el pacienfe fue escaneado o ya estaba validado.
                     if (this.escaneado || this.pacienteModel.estado === 'validado') {
 
-                        this.pacientesSimilares = this.pacientesSimilares.filter(item => item.estado === 'validado');
+                        this.pacientesSimilares = this.pacientesSimilares.filter(item => item.paciente.estado === 'validado');
                     }
                     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
                         // Nos quedamos todos los pacientes menos el mismo.
@@ -1025,5 +1052,68 @@ export class PacienteCreateUpdateComponent implements OnInit {
             });
         }
     }
+
+    chequearContacto(key) {
+        let index = this.pacienteModel.contacto.findIndex(item => item.tipo === key);
+        if (index >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    activarApp() {
+        let email = this.pacienteModel.contacto.find(item => {
+            let tipo = ((typeof item.tipo === 'string') ? item.tipo : (Object(item.tipo).id));
+            return (tipo === 'email');
+        });
+        let celular = this.pacienteModel.contacto.find(item => {
+            let tipo = ((typeof item.tipo === 'string') ? item.tipo : (Object(item.tipo).id));
+            return (tipo === 'celular');
+        });
+
+        this.pacienteModel.contacto.map(elem => {
+            elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
+            return elem;
+        });
+        if (email && celular) {
+            let cambios = {
+                'op': 'updateContactos',
+                'contacto': this.pacienteModel.contacto
+            };
+
+            this.pacienteService.patch(this.pacienteModel.id, cambios).subscribe(() => {
+                if (!this.checkPassAM) {
+                    this.appMobile.update(email.valor).subscribe((resultado) => {
+                        if (resultado.valid) {
+                            this.plex.alert('El código de activación ha sido reenviado.');
+                        }
+                    });
+                } else {
+                    this.appMobile.create(this.pacienteModel.id).subscribe((datos) => {
+                        if (datos.error) {
+                            if (datos.error === 'email_not_found') {
+                                this.plex.alert('El paciente no tiene asignado un email.');
+                            }
+                            if (datos.error === 'email_exists') {
+                                this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                            }
+                        } else {
+                            this.plex.alert('Se ha creado la cuenta para el paciente.');
+                            this.checkPassAM = false;
+                        }
+                    });
+                }
+            });
+        } else {
+
+            this.plex.alert('Debe ingresar un número de celular y un email para activar la app mobile');
+        }
+
+
+    }
+
+
+
 
 }

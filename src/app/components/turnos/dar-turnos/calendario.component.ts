@@ -9,11 +9,24 @@ import * as moment from 'moment';
     styleUrls: ['calendario.scss']
 })
 export class CalendarioComponent {
+    mostrarFinesDeSemana: any;
     private _agenda: any;
     private _agendas: Array<any>;
     private _estado: String;
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
+
+    // @Input() opcionesCalendario: any;
+
+    private _opcionesCalendario;
+    @Input('opcionesCalendario')
+    set opcionesCalendario(value: any) {
+        this._opcionesCalendario = value;
+    }
+    get opcionesCalendario() {
+        return this._opcionesCalendario;
+    }
+
     // Propiedades
     @Input('fecha') fecha: Date;
     @Input() _solicitudPrestacion: any;
@@ -56,26 +69,28 @@ export class CalendarioComponent {
 
     /** Devuelve las agendas correspondientes a un día determinado */
     public agendasPorFecha(fecha: moment.Moment): IAgenda[] {
-        let ags = this.agendas.filter(
-            function (value) {
-                return (moment(fecha).isSame(value.horaInicio, 'day'));
-            }
-        );
+        let ags = this.agendas.filter((value) => {
+            return (moment(fecha).isSame(value.horaInicio, 'day'));
+        });
         return ags;
     }
+
     /** Regenera el calendario */
     private actualizar() {
-        console.log(this._solicitudPrestacion);
+
         if (this.fecha && this.agendas) {
+
             let inicio = moment(this.fecha).startOf('month').startOf('week');
             let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
             this.diaSeleccionado = null;
             this.calendario = [];
+
             for (let r = 1; r <= cantidadSemanas; r++) {
                 let week = [];
                 this.calendario.push(week);
 
                 for (let c = 1; c <= 7; c++) {
+
                     let agendasPorFecha = this.agendasPorFecha(inicio);
                     let ag = null;
 
@@ -98,7 +113,6 @@ export class CalendarioComponent {
 
                     let dia = new CalendarioDia(inicio.toDate(), ag, this._solicitudPrestacion);
                     if (dia.estado === 'vacio' && this._solicitudPrestacion) {
-                        // if ((dia.estado === 'vacio' || dia.estadoAgenda === 'publicada') && this._solicitudPrestacion) {
                         dia.cantidadAgendas = 0;
                         dia.estado = 'vacio';
                         dia.agenda = null;

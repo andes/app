@@ -8,15 +8,21 @@
             <strong>{{paciente | paciente}}</strong>
         </div>
         <div class="small">
-            <ng-container *ngIf="paciente.documento">
-                {{paciente.documento | number}}
+            <ng-container *ngIf="paciente.documento !== ''">
+                {{ paciente.documento | number }}
+            </ng-container>
+            <ng-container *ngIf="paciente.documento === ''">
+                <b>Sin documento (temporal)</b>
             </ng-container>
             |
-            <ng-container *ngIf="paciente.fechaNacimiento">
-                {{paciente | edad }}
+            <ng-container *ngIf="paciente.fechaNacimiento !== null">
+                {{ paciente | edad }}
+            </ng-container>
+            <ng-container *ngIf="paciente.fechaNacimiento === null">
+                <b>Sin fecha de nacimiento (temporal)</b>
             </ng-container>
             <ng-container *ngFor="let n of paciente.notas; let i = index">
-                <strong> Nota {{i+1}}: </strong>  {{n.nota}}
+                <strong> Nota {{i+1}}: </strong> {{n.nota}}
             </ng-container>
         </div>
     </div>

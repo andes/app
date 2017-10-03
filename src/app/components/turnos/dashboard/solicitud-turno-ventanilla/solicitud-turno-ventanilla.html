@@ -10,8 +10,14 @@
         <div class="row" *ngIf="modelo?.paciente?.id">
             <div class="col-12">
                 <label>Paciente</label> {{ modelo.paciente | paciente }}
-                <span>DNI {{ modelo.paciente.documento | number }}</span>
-                <span>Fecha de nacimiento {{ modelo.paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ modelo.paciente | edad }})</span>
+                <span>Documento:
+                    <span *ngIf="modelo.paciente.documento !== ''">{{ modelo.paciente.documento | number }}</span>
+                    <span *ngIf="modelo.paciente.documento === ''" class="text-danger">Sin documento</span>
+                </span>
+                <span>Fecha de nacimiento
+                    <span *ngIf="modelo.paciente.fechaNacimiento !== null">{{ modelo.paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ modelo.paciente | edad }})</span>
+                    <span *ngIf="modelo.paciente.fechaNacimiento === null">Sin feacha de nacimiento</span>
+                </span>
             </div>
         </div>
         <div class="row">
