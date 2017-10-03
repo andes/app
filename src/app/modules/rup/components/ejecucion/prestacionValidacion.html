@@ -65,19 +65,19 @@
     <div class="row">
         <div class="col-3">
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
-                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
+                 label="VOLVER" (click)="volver()" type="danger"></plex-button>
 
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volverInicio()" type="danger"></plex-button>
+                 label="VOLVER" (click)="volverInicio()" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
         </div>
         <div class="col text-right ">
 
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
-                label="Validar" (click)="validar()" type="success"></plex-button>
+                label="VALIDAR" (click)="validar()" type="success"></plex-button>
 
-            <plex-button icon="mdi mdi-lock-open" label="Romper validación" (click)="romperValidacion()" type="warning" *ngIf="prestacion && prestacion.estados
+            <plex-button label="ROMPER VALIDACION" (click)="romperValidacion()" type="warning" *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'
                 && prestacion.estados[prestacion.estados.length-1].createdBy.username === auth.usuario.username">
             </plex-button>

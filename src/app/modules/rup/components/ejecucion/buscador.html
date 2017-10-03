@@ -1,6 +1,6 @@
-<plex-button label="Hallazgos" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
-<plex-button label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
-<plex-button label="Planes" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
+<plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
+<plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
+<plex-button label="PLANES" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
 
 <div *ngIf="!showPlanes">
     <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
