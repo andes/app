@@ -14,7 +14,7 @@
             <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
                 <div class="col-4">
                     <div class="rup-card">
-                        <div class="type {{elemento.concepto.semanticTag}}">
+                        <div class="type {{elemento.concepto.semanticTag}}" [ngClass]="{ 'plan': elemento?.esSolicitud === true }">
                         </div>
                         <div class="rup-content">
                             <div class="header">
@@ -24,8 +24,9 @@
                                             {{elemento.nombre}}
                                         </div>
                                     </div>
-                                    <div class="col-3"> <small>
-                                        <b>{{elemento.concepto.semanticTag}}</b>
+                                    <div class="col-3">
+                                        <small>
+                                        <strong>{{elemento.concepto.semanticTag}}</strong>
                                         </small>
                                     </div>
                                 </div>
@@ -35,24 +36,37 @@
                                 </rup>
                             </div>
                             <div class="rup-footer">
-                                <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-                                    <!-- <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno"> -->
-                                        <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
-                                    <!-- </p> -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                            <!-- <p *ngIf="tienePermisos(elemento.concepto) && !elemento?.prestacionPlan?.solicitud?.turno"> -->
+                                            <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
+                                            <!-- </p> -->
+                                        </div>
+                                        <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
+                                            <strong>Relacionado con:</strong>
+                                            <!--*ngFor="let r of registro.relacionadoCon"-->
+                                            <ng-container>
+                                                {{elemento.relacionadoCon[0].concepto.term}}
+                                            </ng-container>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
-                                    <strong>Relacionado con:</strong>
-                                    <!--*ngFor="let r of registro.relacionadoCon"-->
-                                    <ng-container>
-                                        {{elemento.relacionadoCon[0].concepto.term}}
-                                    </ng-container>
+                                <div class="row" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                    <div class="col-6">
+                                        <div *ngIf="!diagnosticoReadonly">
+                                            <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnóstico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
+                                        </div>
+                                        <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal">
+                                            Diagnóstico principal
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6" *ngIf="codigosCie10 && codigosCie10[elemento.id]">
+                                        <plex-bool *ngIf="codigosCie10[elemento.id].c2" [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
+                                    </div>
                                 </div>
-                                <div *ngIf="!diagnosticoReadonly && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'"> 
-                                    <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal" name="Diagnostico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
-                                </div>
-                                <div *ngIf="diagnosticoReadonly && elemento.esDiagnosticoPrincipal && elemento.concepto.semanticTag === 'hallazgo' && elemento.concepto.semanticTag ==='situación' && elemento.concepto.semanticTag === 'trastorno'">
-                                        Diagnostico principal
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -64,18 +78,15 @@
 <footer *ngIf="!showDarTurnos">
     <div class="row">
         <div class="col-3">
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
-                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver()" type="danger"></plex-button>
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                icon="mdi mdi-arrow-left-bold" label="volver" (click)="volverInicio()" type="danger"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volverInicio()" type="danger"></plex-button>
         </div>
         <div class=" col-6 text-center">
         </div>
         <div class="col text-right ">
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
-                label="Validar" (click)="validar()" type="success"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'" label="Validar" (click)="validar()" type="success"></plex-button>
 
             <plex-button icon="mdi mdi-lock-open" label="Romper validación" (click)="romperValidacion()" type="warning" *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'

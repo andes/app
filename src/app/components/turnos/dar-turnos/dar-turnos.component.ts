@@ -461,31 +461,15 @@ export class DarTurnosComponent implements OnInit {
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
                 this.agendas = this.agendas.filter(agenda => {
-                    // return agenda.estado === 'publicada' && (moment(agenda.horaInicio).startOf('day').format() === moment(this.hoy).startOf('day').format() && agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
-                    // return this.estadoT !== 'noTurnos' && 
                     return agenda.estado === 'publicada' && (agenda.turnosRestantesDelDia > 0) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
                 });
-                // this.agendas = this.agendas.filter(agenda => {
-                //     agenda.bloques.map(bloque => {
-                //         // return bloque.turnos.find(t => t.horaInicio > this.hoy).horaInicio;.
-                //     });
-                // });
                 // this.agendas = this.agendas.filter(agenda => {
                 //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
                 // });
             }
 
             // Por defecto se muestras los días de fines de semana (sab y dom)
-            if (this.ocultarFinesDeSemana) {
-                // this.agendas = this.agendas.filter(agenda => {
-                //     return moment(agenda.horaFin).weekday() !== 6 || moment(agenda.horaFin).weekday() !== 7;
-                // });
-                this.opcionesCalendario.mostrarFinesDeSemana = true;
-            } else {
-                this.opcionesCalendario.mostrarFinesDeSemana = false;
-
-            }
-
+            this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
 
             // Ordena las Agendas por fecha/hora de inicio
             this.agendas = this.agendas.sort((a, b) => {
@@ -501,11 +485,12 @@ export class DarTurnosComponent implements OnInit {
 
     hayTurnosEnHorario(agenda) {
         return agenda.bloques.filter(bloque => {
-            return bloque.filter(turno => {
+            return bloque.turnos.filter(turno => {
                 let ultimoBloque = agenda.bloques.length - 1;
+                let ultimoTurno = bloque.turnos.length - 1;
                 return (
-                    moment(agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos[agenda.bloques[ultimoBloque].turnos.length - 1]].horaInicio).format() > moment(new Date()).format()
-                )
+                    moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format()
+                );
             });
         });
     }
