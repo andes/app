@@ -1,3 +1,4 @@
+import { SnomedService } from './../../../../services/term/snomed.service';
 import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -23,6 +24,8 @@ export class PrestacionValidacionComponent implements OnInit {
     public paciente;
     // array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
+    // array con los mapeos de snomed a cie10
+    public codigosCie10 = {};
     // elementoRUP de la prestacion actual
     public elementoRUPprestacion: any;
     /**
@@ -34,7 +37,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
 
@@ -70,7 +73,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.diagnosticoReadonly = true;
             }
             // Carga la información completa del paciente
-            // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
             });
@@ -78,6 +80,20 @@ export class PrestacionValidacionComponent implements OnInit {
             this.prestacion.ejecucion.registros.forEach(registro => {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                }
+
+                if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
+                    // TODO:: BUSCAR CODIGO CIE10 POR CONCEPTO
+                    let parametros = {
+                        conceptId: registro.concepto.conceptId,
+                        paciente: this.paciente,
+                        secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                    };
+                    this.codigosCie10[registro.id] = {};
+                    this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                        this.codigosCie10[registro.id] = codigo;
+                    });
+
                 }
 
             });

@@ -9,10 +9,7 @@ import { Observable } from 'rxjs/Rx';
 @Component({
     selector: 'snomed-buscar',
     templateUrl: 'snomed-buscar.component.html',
-    // creamos un handler para cuando se realiza un click
-    host: {
-        '(document:click)': 'handleClick($event)'
-    },
+    host: { '(document:click)': 'handleClick($event)' },
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None,
     styleUrls: [
@@ -199,6 +196,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         apiMethod = this.SNOMED.get({
                             search: search,
                             semanticTag: ['procedimiento', 'entidad observable']
+                        });
+                        break;
+                    case 'planes':
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['procedimiento']
                         });
                         break;
                     case 'productos':
