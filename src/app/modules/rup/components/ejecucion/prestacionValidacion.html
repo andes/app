@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="rup-body">
-                                <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
+                                <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
                                 </rup>
                             </div>
                             <div class="rup-footer">
