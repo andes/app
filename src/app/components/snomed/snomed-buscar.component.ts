@@ -281,7 +281,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
         this.resultados = [];
-        // this.searchTerm = '';
+        this.searchTerm = '';
         this.evtData.emit(concepto);
     }
 
