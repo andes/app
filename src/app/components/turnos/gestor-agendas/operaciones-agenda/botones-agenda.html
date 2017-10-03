@@ -1,4 +1,4 @@
-<div *ngIf="cantSel > 0">
+<div *ngIf="cantidadSeleccionadas > 0">
     <span *ngIf="vistaBotones.editarAgenda">
         <plex-button icon="mdi mdi-pencil" (click)="editarAgenda()" title="Editar">
         </plex-button>
@@ -9,6 +9,10 @@
     </span>
     <span *ngIf="vistaBotones.publicarAgenda">
         <plex-button type="success" icon="mdi mdi-arrow-up-bold-circle" (click)="actualizarEstado( 'publicada' )" title="Publicar">
+        </plex-button>
+    </span>
+    <span *ngIf="vistaBotones.borrarAgenda">
+        <plex-button type="danger" icon="mdi mdi-delete" (click)="actualizarEstado( 'borrada' )" title="Borrar">
         </plex-button>
     </span>
     <span *ngIf="vistaBotones.suspenderAgenda">
