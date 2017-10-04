@@ -72,8 +72,7 @@ export class EditEspacioFisicoComponent implements OnInit {
             }).filter((elem, index, self) => {
                 return index === self.indexOf(elem);
             });
-
-            event.callback(sectores);
+            event.callback(sectores || []);
 
         });
     }
