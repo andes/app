@@ -61,7 +61,6 @@
 <div *ngIf="arrayFrecuentes">
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
-            <!-- <pre>{{tipoBusqueda | json}}</pre> -->
             <li *ngIf="tipoBusqueda === 'procedimientos' || (tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación'))" draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini">
                     <div class="type {{tipoBusqueda}}">
