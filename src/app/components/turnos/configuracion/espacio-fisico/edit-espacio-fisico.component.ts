@@ -38,6 +38,8 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.check('turnos:editarEspacio');
+        console.log('this.espacioFisicoHijo ', this.espacioFisicoHijo);
+
         let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
         let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
         let edificio = this.espacioFisicoHijo ? this.espacioFisicoHijo.edificio : '';
@@ -56,24 +58,26 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadSectores(event) {
-        this.EspacioFisicoService.get({}).subscribe(respuesta => {
-            let sectores = respuesta.map((ef) => {
+        let sectores = [];
+        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+            sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
                 return index === self.indexOf(elem);
             });
 
-            event.callback(sectores);
+            event.callback(sectores || []);
 
         });
     }
 
     loadServicios(event) {
-        this.EspacioFisicoService.get({}).subscribe(respuesta => {
-            let servicios = respuesta.map((ef) => {
+        let servicios = [];
+        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+            servicios = respuesta.map((ef) => {
                 return (typeof ef.servicio !== 'undefined' ? ef.servicio : []);
             });
-            event.callback(servicios);
+            event.callback(servicios || []);
         });
     }
 
