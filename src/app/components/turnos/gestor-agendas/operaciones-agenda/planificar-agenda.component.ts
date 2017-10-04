@@ -121,7 +121,7 @@ export class PlanificarAgendaComponent implements OnInit {
         });
     }
     loadSectores(event) {
-        this.servicioEspacioFisico.get({}).subscribe(respuesta => {
+        this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? { nombre: ef.sector.nombre, id: ef.sector.id } : []);
             });
