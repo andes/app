@@ -1,4 +1,6 @@
-import { AppMobileService } from './../../services/appMobile.service';
+import {
+    AppMobileService
+} from './../../services/appMobile.service';
 import {
     ParentescoService
 } from './../../services/parentesco.service';
@@ -108,7 +110,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: IPaciente;
     @Input('isScan') isScan: IPaciente;
     @Input('escaneado') escaneado: Boolean;
-    @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
+    @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
 
     foto = '';
     estados = [];
@@ -209,8 +211,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     };
 
     // PARA LA APP MOBILE
-    checkPassAM = true;
-    messageAM = '';
+    private showMobile = false;
 
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
         private paisService: PaisService,
@@ -221,7 +222,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {}
 
     ngOnInit() {
         // Se cargan los combos
@@ -287,19 +288,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                 resultado.documento = this.seleccion.documento;
                             }
                             this.seleccion = Object.assign({}, resultado);
-                            this.appMobile.check(this.seleccion.id).subscribe(data => {
-                                if (!data.error) {
-                                    this.checkPassAM = true;
-                                } else {
-                                    if (data.error === 'account_assigned') {
-                                        this.checkPassAM = false;
-                                        this.messageAM = 'Cuenta ya activada';
-                                    } else if (data.error === 'email_exists') {
-                                        this.messageAM = 'El email de contacto esta en uso';
-                                    }
-                                }
-                            });
-
                         }
                         this.actualizarDatosPaciente();
 
@@ -363,11 +351,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
             } else {
                 if (this.seleccion.direccion[0].ubicacion) {
                     if (this.seleccion.direccion[0].ubicacion.provincia !== null) {
-                        (this.seleccion.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
+                        (this.seleccion.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true: this.viveProvNeuquen = false;
                         this.loadLocalidades(this.seleccion.direccion[0].ubicacion.provincia);
                     }
                     if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
-                        (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : this.viveEnNeuquen = false;
+                        (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true: this.viveEnNeuquen = false;
                         this.loadBarrios(this.seleccion.direccion[0].ubicacion.localidad);
                     }
                 }
@@ -502,18 +490,18 @@ export class PacienteCreateUpdateComponent implements OnInit {
             if (this.altoMacheo) {
                 this.logService.post('mpi', 'macheoAlto', {
                     paciente: this.pacienteModel
-                }).subscribe(() => { });
+                }).subscribe(() => {});
 
             }
 
             if (this.posibleDuplicado) {
                 this.logService.post('mpi', 'posibleDuplicado', {
                     paciente: this.pacienteModel
-                }).subscribe(() => { });
+                }).subscribe(() => {});
 
             }
 
-            let operacionPac: Observable<IPaciente>;
+            let operacionPac: Observable < IPaciente > ;
             // generamos pacientes temporales a partir de las nuevas relaciones
             await this.crearTemporales(pacienteGuardar);
             operacionPac = this.pacienteService.save(pacienteGuardar);
@@ -582,7 +570,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     crearTemporales(pacienteOrigen) {
         // generamos pacientes temporales a partir de las nuevas relaciones
         // y guardamos el id generado como referencia en el paciente de origen
-        return new Promise(async (resolve) => {
+        return new Promise(async(resolve) => {
             if (pacienteOrigen.relaciones && pacienteOrigen.relaciones.length > 0) {
                 for (let i = 0; i < pacienteOrigen.relaciones.length; i++) {
                     if (!pacienteOrigen.relaciones[i].referencia) {
@@ -684,7 +672,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.logService.post('mpi', 'macheoAlto', {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
-                                    }).subscribe(() => { });
+                                    }).subscribe(() => {});
                                     this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
@@ -694,7 +682,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.logService.post('mpi', 'posibleDuplicado', {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
-                                    }).subscribe(() => { });
+                                    }).subscribe(() => {});
                                     this.posibleDuplicado = true;
                                     this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
                                     this.enableIgnorarGuardar = true;
@@ -784,14 +772,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 // Loggea el documento escaneado para análisis
                 this.logService.post('mpi', 'scan', {
                     data: this.buscarPacRel
-                }).subscribe(() => { });
+                }).subscribe(() => {});
                 return DocumentoEscaneados[key];
             }
         }
         if (this.buscarPacRel.length > 30) {
             this.logService.post('mpi', 'scanFail', {
                 data: this.buscarPacRel
-            }).subscribe(() => { });
+            }).subscribe(() => {});
         }
         return null;
     }
@@ -892,21 +880,21 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         this.logService.post('mpi', 'validadoScan', {
                                             pacienteDB: datoDB,
                                             pacienteScan: pacienteEscaneado
-                                        }).subscribe(() => { });
+                                        }).subscribe(() => {});
                                         this.seleccionarPacienteRelacionado(pacienteEncontrado, true);
                                     } else {
                                         if (this.PacientesRel[0].match >= 0.94) {
                                             this.logService.post('mpi', 'macheoAlto', {
                                                 pacienteDB: datoDB,
                                                 pacienteScan: pacienteEscaneado
-                                            }).subscribe(() => { });
+                                            }).subscribe(() => {});
                                             this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                                         } else {
                                             if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
                                                 this.logService.post('mpi', 'posibleDuplicado', {
                                                     pacienteDB: datoDB,
                                                     pacienteScan: pacienteEscaneado
-                                                }).subscribe(() => { });
+                                                }).subscribe(() => {});
                                             }
                                         }
                                     }
@@ -1060,6 +1048,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    gestionMobile(band) {
+        this.showMobile = band;
     }
 
 }
