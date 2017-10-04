@@ -1,14 +1,33 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnChanges } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
+import {
+    Component,
+    Input,
+    OnInit,
+    EventEmitter,
+    Output,
+    OnChanges
+} from '@angular/core';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    Auth
+} from '@andes/auth';
 import * as moment from 'moment';
 import * as calculos from './../../../utils/calculosDashboard';
-import { IPaciente } from './../../../interfaces/IPaciente';
+import {
+    IPaciente
+} from './../../../interfaces/IPaciente';
 
 // Servicios
-import { TurnoService } from '../../../services/turnos/turno.service';
-import { AppMobileService } from '../../../services/appMobile.service';
-import { PacienteService } from '../../../services/paciente.service';
+import {
+    TurnoService
+} from '../../../services/turnos/turno.service';
+import {
+    AppMobileService
+} from '../../../services/appMobile.service';
+import {
+    PacienteService
+} from '../../../services/paciente.service';
 
 @Component({
     selector: 'activar-app',
@@ -24,6 +43,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     public email: String = '';
     public message: String = '';
     public hideButton = false;
+    private hideButtonResend = true;
 
     // Inicialización
     constructor(
@@ -32,7 +52,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         public plex: Plex,
         public auth: Auth,
         public appMobile: AppMobileService
-    ) { }
+    ) {}
 
     ngOnInit() {
         // Se cargan los datos calculados
@@ -50,16 +70,20 @@ export class ActivarAppComponent implements OnInit, OnChanges {
             this.message = '';
             this.checkPass = false;
             this.appMobile.check(this.paciente.id).subscribe(data => {
-                if (!data.error) {
+                if (!data.account) {
+                    // No posee cuenta
                     this.checkPass = true;
                 } else {
-                    this.checkPass = false;
-                    if (data.error === 'account_assigned') {
+                    if (!data.account.activacionApp) {
+                        this.message = 'Cuenta pendiente de activación por el usuario';
+                        this.hideButtonResend = false;
+                    } else {
                         this.message = 'Cuenta ya activada';
-                        this.hideButton = true;
-                    } else if (data.error === 'email_exists') {
-                        this.message = 'El email de contacto esta en uso';
                     }
+                    this.hideButton = true;
+                    this.checkPass = false;
+                    this.email = data.account.email;
+                    this.celular = data.account.telefono;
                 }
             });
 
@@ -92,15 +116,18 @@ export class ActivarAppComponent implements OnInit, OnChanges {
         }
     }
 
-    activarApp() {
-        this.addContacto('celular', this.celular);
-        this.addContacto('email', this.email);
-        let cambios = {
-            'op': 'updateContactos',
-            'contacto': this.paciente.contacto
-        };
 
-        this.servicePaciente.patch(this.paciente.id, cambios).subscribe(() => {
+
+    activarApp() {
+        if (this.celular && this.email) {
+            this.addContacto('celular', this.celular);
+            this.addContacto('email', this.email);
+            let cambios = {
+                'op': 'updateContactos',
+                'contacto': this.paciente.contacto
+            };
+
+
             if (!this.checkPass) {
                 this.appMobile.update(this.email).subscribe((resultado) => {
                     if (resultado.valid) {
@@ -108,20 +135,29 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     }
                 });
             } else {
-                this.appMobile.create(this.paciente.id).subscribe((datos) => {
+                let contacto = {
+                    email: this.email,
+                    telefono: this.celular
+                }
+                this.appMobile.create(this.paciente.id, contacto).subscribe((datos) => {
                     if (datos.error) {
                         if (datos.error === 'email_not_found') {
                             this.plex.alert('El paciente no tiene asignado un email.');
                         }
                         if (datos.error === 'email_exists') {
-                            this.plex.alert('El paciente ya tiene una cuenta asociada a su email.');
+                            this.plex.alert('El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
                         this.plex.alert('Se ha creado la cuenta para el paciente.');
+                        this.checkPass = false;
+                        this.hideButton = true;
+                        this.message = 'Cuenta pendiente de activación por el usuario';
                     }
                 });
             }
-        });
+        } else {
+            this.plex.alert('Debe ingresar un número de celular y un email como datos de contacto para activar la app mobile');
+        }
 
     }
 
