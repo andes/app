@@ -75,7 +75,7 @@
                                                 <a href="javascript:void(0);" (click)="cambiaValorCollapse(!itemsRegistros[registro.id].collapse, registro.id)">
                                                     <i class="mdi mdi-chevron-down"></i>
                                                 </a>
-                                                <span *ngIf="!(registro.valor && registro.valor.estado && registro.valor.estado == 'transformado')">
+                                                <span *ngIf="!(registro?.valor && registro?.valor.estado && registro.valor?.estado == 'transformado')">
                                                 <a href="javascript:void(0);" title="Eliminar Registro" (click)="confirmarEliminarRegistro(registro, 'card')" class="desvincular float-right" *ngIf="!confirmarDesvincular[i]">
                                                     <i class="mdi mdi-delete"></i>
                                                 </a>
@@ -221,8 +221,8 @@
                 </div>
             </div>
             <div class="col text-right" *ngIf="!showCambioPaciente">
-                <plex-button  label="CANCELAR" (click)="volver()" type="danger"></plex-button>
-                <plex-button  label="GUARDAR" (click)="guardarPrestacion()" type="success"></plex-button>
+                <plex-button label="CANCELAR" (click)="volver()" type="danger"></plex-button>
+                <plex-button label="GUARDAR" (click)="guardarPrestacion()" type="success"></plex-button>
             </div>
         </div>
     </footer>
