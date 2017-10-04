@@ -48,7 +48,14 @@ export class EditEspacioFisicoComponent implements OnInit {
         let detalle = this.espacioFisicoHijo ? this.espacioFisicoHijo.detalle : '';
         let activo = this.espacioFisicoHijo ? this.espacioFisicoHijo.activo : true;
         let equipamiento = this.espacioFisicoHijo ? this.espacioFisicoHijo.equipamiento : [];
-        this.modelo = { nombre, descripcion, activo, edificio, detalle, sector, servicio, equipamiento };
+        // this.modelo = { nombre, descripcion, activo, edificio, detalle, servicio, sector, equipamiento };
+        this.modelo = { nombre, descripcion, activo, edificio, detalle, equipamiento };
+        if (servicio && servicio !== '') {
+            this.modelo['servicio'] = servicio;
+        }
+        if (sector && sector !== '') {
+            this.modelo['sector'] = sector;
+        }
     }
 
     loadEdificios(event) {
@@ -58,15 +65,15 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadSectores(event) {
-        let sectores = [];
+        // let sectores = [];
         this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
-            sectores = respuesta.map((ef) => {
+            let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
                 return index === self.indexOf(elem);
             });
 
-            event.callback(sectores || []);
+            event.callback(sectores);
 
         });
     }
@@ -87,6 +94,7 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     onClick(modelo: IEspacioFisico) {
 
+        console.log('modelo ', modelo);
         let estOperation: Observable<IEspacioFisico>;
         modelo.organizacion = this.auth.organizacion;
         modelo.estado = this.modelo.estado ? this.modelo.estado.id : 'disponible';
