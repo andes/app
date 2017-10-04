@@ -149,10 +149,11 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                             this.plex.alert('El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
-                        this.plex.alert('Se ha creado la cuenta para el paciente.');
+                        this.plex.alert('Se ha enviado el código de activación al paciente');
                         this.checkPass = false;
                         this.hideButton = true;
                         this.message = 'Cuenta pendiente de activación por el usuario';
+                   
                     }
                 });
             }
