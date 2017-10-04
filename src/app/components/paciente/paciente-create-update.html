@@ -360,8 +360,6 @@
     </section>
     <footer>
         <div class="text-right">
-            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && checkPassAM" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
-            <plex-button *ngIf="pacienteModel.estado === 'validado' && pacienteModel.id && !checkPassAM" label="Reenviar Código Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
             <plex-button label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>
             <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">

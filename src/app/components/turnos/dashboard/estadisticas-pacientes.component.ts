@@ -26,6 +26,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         // this._paciente = value;
         this.pacienteSeleccionado = value;
         this._paciente = value;
+        console.log('re re mersa: ', this.pacienteSeleccionado.id);
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this._paciente = pacienteMPI;

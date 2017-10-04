@@ -38,6 +38,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     public operacionSeleccionada(operacion, paciente) {
         if (operacion) {
             // Se habilita el calendario para seleccionar las agendas y permitir asignar turnos al paciente
+            debugger;
             this.operacion.emit({
                 operacion,
                 paciente
