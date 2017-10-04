@@ -70,7 +70,6 @@ export class ActivarAppComponent implements OnInit, OnChanges {
             this.message = '';
             this.checkPass = false;
             this.appMobile.check(this.paciente.id).subscribe(data => {
-                debugger;
                 if (!data.account) {
                     // No posee cuenta
                     this.checkPass = true;
