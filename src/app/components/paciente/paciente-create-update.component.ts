@@ -620,6 +620,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
 
     onCancel() {
+        this.showMobile = false;
         this.data.emit(null);
     }
     onSelect(paciente: IPaciente) {
