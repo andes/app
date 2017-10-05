@@ -25,20 +25,16 @@ export class LiberarTurnoComponent implements OnInit {
 
     public reasignar: any = {};
 
-    public motivoLiberacion: any[] = [{
+    public motivoLiberacion: any[] = [{ // Hardcodeame que me gusta
         id: 1,
-        nombre: 'edilicia'
+        nombre: 'Error'
     }, {
         id: 2,
-        nombre: 'profesional'
+        nombre: 'Paciente canceló'
     },
     {
         id: 3,
-        nombre: 'organizacion'
-    },
-    {
-        id: 4,
-        nombre: 'paciente'
+        nombre: 'Paciente cambió turno'
     }];
 
     public motivoLiberacionSelect = {
@@ -98,11 +94,6 @@ export class LiberarTurnoComponent implements OnInit {
                 });
             });
         }
-    }
-
-    reasignarTurno(turno: ITurno) {
-        // this.reasignar = { 'paciente': paciente.paciente, 'idTurno': paciente.id, 'idAgenda': this.agenda.id };
-        // this.reasignarTurnoLiberado.emit(this.reasignar);
     }
 
     cancelar() {
