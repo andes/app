@@ -163,8 +163,8 @@ export class DarTurnosComponent implements OnInit {
 
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+
         if (this._pacienteSeleccionado) {
-            // this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
