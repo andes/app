@@ -32,7 +32,6 @@ export class ListaEsperaService {
     }
 
     patch(id: String, cambios: any): Observable<IListaEspera> {
-        console.log(cambios);
         return this.server.patch(this.listaEsperaUrl + '/' + id, cambios);
     }
 

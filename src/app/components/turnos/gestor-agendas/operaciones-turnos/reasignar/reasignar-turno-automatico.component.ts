@@ -155,7 +155,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let turno = this.agendasReasignar[indiceTurno].turno;
         let bloque = this.agendasReasignar[indiceTurno].bloque;
         let agendaSeleccionada = this.agendasReasignar[indiceTurno].agendas[i];
-        console.log('this.agendasReasignar[indiceTurno].agendas[i]', this.agendasReasignar[indiceTurno].agendas[i]);
         let tipoTurno;
 
         // Si la agenda es del día
@@ -297,7 +296,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
             delete this.paneles[indice];
         } else {
             this.paneles[indice] = idTurno;
-            console.log(indice, idTurno);
         }
 
         this.paneles = [... this.paneles];

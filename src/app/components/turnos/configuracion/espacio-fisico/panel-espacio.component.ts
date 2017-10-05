@@ -121,7 +121,6 @@ export class PanelEspacioComponent implements OnInit {
             this.horarios.push(elemento);
             inicioM.add(this.unidad, 'm');
         }
-        // console.log('horarios ', this.horarios);
     }
 
     public seleccionarAgenda(agenda) {
@@ -242,8 +241,6 @@ export class PanelEspacioComponent implements OnInit {
                 'op': 'editarAgenda',
                 'espacioFisico': espacio
             };
-            console.log('patch ', patch);
-            console.log('idAgenda ', this.agendasModificar[i].id);
             this.serviceAgenda.patch(this.agendasModificar[i].id, patch).subscribe(resultado => {
                 band = true;
             }, err => {

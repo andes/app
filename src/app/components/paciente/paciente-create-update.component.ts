@@ -536,7 +536,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     'op': 'deleteRelacion',
                                     'dto': dto
                                 }).subscribe(result2 => {
-                                    console.log('RESULT PATCH--------', result2);
                                 });
                             }
                         });
@@ -562,7 +561,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     'op': 'updateRelacion',
                                     'dto': dto
                                 }).subscribe(result2 => {
-                                    console.log('RESULT PATCH--------', result2);
                                 });
                             }
                         });
