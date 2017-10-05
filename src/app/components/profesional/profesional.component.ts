@@ -20,7 +20,7 @@ export class ProfesionalComponent implements OnInit {
     seleccion: IProfesional;
     skip = 0;
     loader = false;
-    finScroll  = false;
+    finScroll = false;
     tengoDatos = true;
     value: any;
     // cantidad: IProfesional[];
@@ -89,7 +89,6 @@ export class ProfesionalComponent implements OnInit {
     }
 
     onEdit(objProfesional: IProfesional) {
-        console.log(objProfesional);
         this.showcreate = false;
         this.showupdate = true;
         this.seleccion = objProfesional;

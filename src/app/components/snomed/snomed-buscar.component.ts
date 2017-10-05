@@ -146,7 +146,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
      * @returns      Void
      */
     buscar(): void {
-        // console.log($e);
         // if ($e.keyCode === 'Escape') {
         //     this.resultados = [];
         // //     return false;

@@ -224,12 +224,10 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     loadProvincias(event, pais) {
-        console.log('pais' + pais.value.id);
         this.provinciaService.get({ 'pais': pais.value.id }).subscribe(event.callback);
     }
 
     loadLocalidades(event, provincia) {
-        console.log('provincia' + provincia.value.id);
         this.localidadService.get({ 'provincia': provincia.value.id }).subscribe(event.callback);
     }
 

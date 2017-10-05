@@ -35,8 +35,6 @@ export class SuspenderTurnoComponent implements OnInit {
 
     ngOnInit() {
 
-        console.log('this.turnosSeleccionados', this.turnosSeleccionados);
-
         if (this.turnosSeleccionados.length < 0) {
             return;
         }
@@ -175,30 +173,6 @@ export class SuspenderTurnoComponent implements OnInit {
 
         this.reasignarTurnoSuspendido.emit(this.reasignar);
     }
-
-    // enviarSMS(turno: any, mensaje) {
-    //     let smsParams = {
-    //         telefono: turno.paciente.telefono,
-    //         mensaje: mensaje,
-    //     };
-    //     let indice = this.seleccionadosSMS.indexOf(turno);
-
-    //     this.smsService.enviarSms(smsParams).subscribe(
-    //         resultado => {
-    //             this.resultado = resultado;
-    //             // this.smsLoader = false;
-    //             if (resultado === '0') {
-    //                 this.seleccionadosSMS[indice].smsEnviado = true;
-    //             } else {
-    //                 this.seleccionadosSMS[indice].smsEnviado = false;
-    //             }
-    //         },
-    //         err => {
-    //             if (err) {
-    //                 console.log(err);
-    //             }
-    //         });
-    // }
 
     enviarSMS(paciente: any, mensaje) {
         let smsParams = {
