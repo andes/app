@@ -19,8 +19,6 @@ export class IPrestacionRegistro {
     registros: IPrestacionRegistro[];
     // Indica los id de otros registros dentro array 'registros' de la prestación
     relacionadoCon: any[];
-    // Para C2 de cie10
-    esPrimeraVez: Boolean;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
@@ -31,8 +29,6 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
-        this.esPrimeraVez = false;
-
         elementoRUP.requeridos.forEach((item) => {
             this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
         });

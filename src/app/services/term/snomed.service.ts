@@ -10,7 +10,6 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class SnomedService {
-    private cie10URL = '/core/term/cie10';
     private snomedURL = '/core/term/snomed';  // URL to web api
     private snomedURLProblema = '/core/term/snomed/problema';  // URL to web api
     private snomedURLProcedimiento = '/core/term/snomed/procedimiento';  // URL to web api
@@ -36,33 +35,57 @@ export class SnomedService {
     }
 
     getProductos(params: any): Observable<any[]> {
-        return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
+         return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
     }
 
-    getCie10(params: any): Observable<any> {
-        return new Observable(resultado => resultado.next({
-            '_id': '59bbf1ed53916746547cb963',
-            'idCie10': 76,
-            'idNew': 2457,
-            'capitulo': '06',
-            'grupo': '01',
-            'causa': 'G03',
-            'subcausa': '9',
-            'codigo': 'G03.9',
-            'nombre': 'Meningitis, no especificada',
-            'sinonimo': 'Meningitis, no especificada',
-            'descripcion': '06.Enfermedades del sistema nervioso (G00-G99)',
-            'c2': false
-        }));
-        // this.server.get(this.snomedURL + '/map', { params: params, showError: true }).subscribe(resultado => {
-        //     if (resultado) {
-        //         let datos = { codigo: resultado.mapTarget };
-        //         this.server.get(this.cie10URL, { params: datos, showError: true }).subscribe(resultado2 => {
-        //             return new Observable(r => r.next(resultado2[0]));
-        //         });
-        //     } else {
-        //         return new Observable(r => r.next(null));
-        //     }
-        // });
+    /*
+    buscarTrastornosHallazgos(query: String): Observable<any[]> {
+        if (!query) {
+            return null;
+        }
+
+        let params = {
+            query: query,
+            semanticFilter: '',
+            limit: 10,
+            searchMode: 'partialMatching',
+            lang: 'english',
+            statusFilter: 'activeOnly',
+            skipTo: 0,
+            returnLimit: 10,
+            langFilter: 'spanish',
+            normalize: true
+        };
+
+        // duplicamos params para cada query
+        let _paramsHallazgos = JSON.parse(JSON.stringify(params));
+        let _paramsTrastornos = JSON.parse(JSON.stringify(params));
+
+        // modificamos el semanticFilter para cada query
+        _paramsHallazgos['semanticFilter'] = 'hallazgo';
+        _paramsTrastornos['semanticFilter'] = 'trastorno';
+
+        return Observable.forkJoin([
+            this.get(_paramsHallazgos),
+            this.get(_paramsTrastornos)
+        ])
+        .map((data: any[]) => {
+            let hallazgos: any[] = data[0].matches;
+            let trastornos: any[] = data[1].matches;
+
+            // concatenamos resultados
+            let result = hallazgos.concat(trastornos);
+
+            // ordenamos en forma ascendente
+            result.sort(function compare(a, b) {
+                let x = a.fsn.toLowerCase();
+                let y = b.fsn.toLowerCase();
+                return x < y ? -1 : x > y ? 1 : 0;
+            });
+
+            // limitamos la cantiadd de resultados y retornamos
+            return result.slice(0, params.returnLimit);
+        });
     }
+    */
 }
