@@ -146,13 +146,14 @@
                                 <span class="text-danger" *ngIf="turno?.estado === 'suspendido'">(suspendido)</span>
                             </small>
                             <small>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento|number}}</span>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">| Sin documento (temporal)</span>
-                            </small>
-                            <small>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta">
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento !== ''">
+                                    <br>DNI {{ turno.paciente.documento | number }}</span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
+                                    <br>Sin documento (temporal)
+                                </span>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta !== ''">
                                     | Nro Carpeta
-                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{ carpeta.nroCarpeta }}</span>
                                 </span>
                             </small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'profesional' && turno.estado === 'asignado'">(autocitado)</small>
@@ -162,22 +163,11 @@
 
                             <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">
                             <small>
-                                <span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{turno.tipoPrestacion.nombre}}</span>
+                                <span *ngIf="bloque.tipoPrestaciones.length > 1 && turno.tipoPrestacion">{{ turno.tipoPrestacion.nombre }}</span>
                             </small>
                             <small *ngIf="turno?.estado === 'disponible'">Disponible</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'">Turno suspendido (sin paciente)</small>
-                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right"
-                                title="Aun no reasignado">
-                                <i class="mdi mdi-account-alert"></i>
-                            </small>
-                            <span *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
-                                title="Ya reasignado">
-                                <i class="mdi mdi-account-check"></i>
-                            </span>
-                            <span *ngIf="turno?.nota">
-                                <i title="{{turno.nota}}" titlePosition="left" class="text-warning warning mdi mdi-message"></i>
-                            </span>
                             <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success">Asistió</div>
                             <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger">No asistió</div>
                             <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia">
@@ -185,13 +175,25 @@
                             </div>
                         </td>
                         <td>
-                            <span *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'">
+                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
+                                title="Ya reasignado" titlePosition="left">
+                                <i class="mdi mdi-account-check"></i>
+                            </small>
+                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right"
+                                title="Aun no reasignado" titlePosition="left">
+                                <i class="mdi mdi-account-alert"></i>
+                            </small>
+                            <small *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
                                 <popover-audit placement="left" [data]="turno"></popover-audit>
-                            </span>
+                            </small>
+                            <small *ngIf="turno?.nota" class="badge badge-warning float-right" title="{{turno.nota}}" titlePosition="left">
+                                <i class="text-warning warning mdi mdi-message"></i>
+                            </small>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
         </ng-container>
         <!--Sobreturnos-->
         <table class="table table-striped">
@@ -213,10 +215,10 @@
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
                         <small>
-                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">| DNI {{sobreturno.paciente.documento|number}}</span>
-                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">| Sin documento</span>
-                        </small>
-                        <small>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">
+                                <br> DNI {{sobreturno.paciente.documento | number}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">
+                                <br> Sin documento</span>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
                                 | Nro Carpeta
                                 <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
@@ -231,9 +233,6 @@
 
                         <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
                         <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
-                        <span *ngIf="sobreturno && sobreturno.nota">
-                            <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                        </span>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
@@ -242,6 +241,9 @@
 
                     </td>
                     <td>
+                        <small *ngIf="sobreturno && sobreturno.nota" class="badge badge-warning">
+                            <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                        </small>
                         <popover-audit *ngIf="sobreturno && sobreturno.estado !== 'disponible' && sobreturno.estado !== 'turnoDoble'" placement="left"
                             [data]="sobreturno">
                         </popover-audit>
