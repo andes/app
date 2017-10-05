@@ -119,7 +119,6 @@ export class DarTurnosComponent implements OnInit {
     programadosDisponibles: number;
     gestionDisponibles: number;
     profesionalDisponibles: number;
-    // turnoTipoPrestacion: any = {};
     turnoTipoPrestacion: any;
     alternativas: any[] = [];
     reqfiltros = false;
