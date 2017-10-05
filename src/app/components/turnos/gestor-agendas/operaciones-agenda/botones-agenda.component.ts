@@ -29,7 +29,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Input('agendasSeleccionadas')
     set agendasSeleccionadas(value: any) {
         this._agendasSeleccionadas = value;
-        this.cantSel = this._agendasSeleccionadas.length;
+        this.cantidadSeleccionadas = this._agendasSeleccionadas.length;
         this.actualizarBotones();
     }
     get agendasSeleccionadas(): any {
@@ -53,12 +53,12 @@ export class BotonesAgendaComponent implements OnInit {
     showBotonesAgenda: Boolean = true;
     showEditarAgenda: Boolean = false;
     showEditarAgendaPanel: Boolean = false;
-    cantSel: number;
+    cantidadSeleccionadas: number;
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public auth: Auth) { }
 
     ngOnInit() {
-        if (this.cantSel > 0) {
+        if (this.cantidadSeleccionadas > 0) {
             this.actualizarBotones();
         }
     }
@@ -74,7 +74,7 @@ export class BotonesAgendaComponent implements OnInit {
             this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
                 // Si son múltiples, esperar a que todas se actualicen
                 if (alertCount === 0) {
-                    if (this.cantSel === 1) {
+                    if (this.cantidadSeleccionadas === 1) {
 
                         if (estado === 'prePausada' && agenda.prePausada === 'publicada') {
                             this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
@@ -117,25 +117,40 @@ export class BotonesAgendaComponent implements OnInit {
     // Actualiza estado de las Agendas seleccionadas
     actualizarEstado(estado) {
 
-        if (estado === 'publicada') {
-            this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
-                if (!confirmado) {
-                    return false;
-                } else {
-                    this.confirmarEstado(estado);
-                }
-            });
-        } else if (estado === 'suspendida') {
-            this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
-                if (!confirmado) {
-                    return false;
-                } else {
-                    this.confirmarEstado(estado);
-                }
-            });
-        } else {
-            this.confirmarEstado(estado);
+        switch (estado) {
+            case 'publicada':
+                this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
+                    if (!confirmado) {
+                        return false;
+                    } else {
+                        this.confirmarEstado(estado);
+                    }
+                });
+                break;
+            case 'suspendida':
+                this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
+                    if (!confirmado) {
+                        return false;
+                    } else {
+                        this.confirmarEstado(estado);
+                    }
+                });
+                break;
+            case 'borrada':
+                this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {
+                    if (!confirmado) {
+                        return false;
+                    } else {
+                        this.confirmarEstado(estado);
+                    }
+                });
+                break;
+            default:
+                this.confirmarEstado(estado);
+                break;
+
         }
+
     }
 
     // Muestra/oculta botones según una combinación de criterios
@@ -150,33 +165,37 @@ export class BotonesAgendaComponent implements OnInit {
         let puedeDarSobreturno = this.auth.getPermissions('turnos:agenda:puedeDarSobreturno:').length > 0;
         let puedeImprimir = this.auth.getPermissions('turnos:agenda:puedeImprimir:').length > 0;
         let puedeReasignar = this.auth.getPermissions('turnos:agenda:puedeReasignar:').length > 0;
+        let puedeBorrar = this.auth.getPermissions('turnos:agenda:puedeBorrar:').length > 0;
+
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
-            editarAgenda: (this.cantSel === 1) && this.puedoEditar() && puedeEditar,
+            editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
-            suspenderAgenda: (this.cantSel > 0 && this.puedoSuspender() && puedeSuspender),
+            suspenderAgenda: (this.cantidadSeleccionadas > 0 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
-            pasarDisponibleAgenda: (this.cantSel > 0 && this.puedoDisponer() && puedeHabilitar),
+            pasarDisponibleAgenda: (this.cantidadSeleccionadas > 0 && this.puedoDisponer() && puedeHabilitar),
             // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
-            publicarAgenda: (this.cantSel > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados() && puedeHabilitar,
+            publicarAgenda: (this.cantidadSeleccionadas > 0 && this.puedoPublicar()) && this.haySoloTurnosReservados() && puedeHabilitar,
+            // Se pueden borrar cualquier agenda en estado de planificacion
+            borrarAgenda: (this.cantidadSeleccionadas > 0 && this.puedoBorrar()) && puedeBorrar,
             // Se pueden cambiar a estado pausada todas las agendas que no estén en estado planificacion
-            pausarAgenda: (this.cantSel > 0 && this.puedoPausar()) && puedePausar,
+            pausarAgenda: (this.cantidadSeleccionadas > 0 && this.puedoPausar()) && puedePausar,
             // Se pueden reanudar las agendas en estado pausada
-            reanudarAgenda: (this.cantSel > 0 && this.puedoReanudar()) && puedeReanudar,
+            reanudarAgenda: (this.cantidadSeleccionadas > 0 && this.puedoReanudar()) && puedeReanudar,
             // Se puede cerrar cualquier agenda [TODO: ver qué onda]
             cerrarAgenda: false,
             // Se pueden clonar todas las agendas, ya que sólo se usa como un blueprint
-            clonarAgenda: (this.cantSel === 1) && puedeClonar,
+            clonarAgenda: (this.cantidadSeleccionadas === 1) && puedeClonar,
             // Agregar una nota relacionada a la Agenda
             agregarNota: true,
             // Agregar un sobreturno
-            agregarSobreturno: (this.cantSel === 1) && this.puedoAgregar() && puedeDarSobreturno,
+            agregarSobreturno: (this.cantidadSeleccionadas === 1) && this.puedoAgregar() && puedeDarSobreturno,
             // Revisión de agenda
-            revisionAgenda: (this.cantSel === 1) && this.puedoRevisar(),
+            revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
             // Reasignar turnos
-            reasignarTurnos: (this.cantSel === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
+            reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
-            listarTurnos: (this.cantSel === 1) && puedeImprimir,
+            listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
         };
     }
 
@@ -222,6 +241,12 @@ export class BotonesAgendaComponent implements OnInit {
     puedoPublicar() {
         return this.agendasSeleccionadas.filter((agenda) => {
             return agenda.estado !== 'planificacion' && agenda.estado !== 'disponible';
+        }).length <= 0;
+    }
+
+    puedoBorrar() {
+        return this.agendasSeleccionadas.filter((agenda) => {
+            return agenda.estado !== 'planificacion';
         }).length <= 0;
     }
 

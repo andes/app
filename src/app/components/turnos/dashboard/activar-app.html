@@ -55,12 +55,12 @@
     <div class="row">
         <div class="col-12">
             <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Correo electrónico (obligatorio)</span>
+            <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            <plex-text [(ngModel)]="email" name="searchTerm" placeholder="e-mail"></plex-text>
+            <plex-text [(ngModel)]="email" [readonly]="!checkPass" name="searchTerm" placeholder="e-mail"></plex-text>
         </div>
     </div>
     <br>
@@ -73,13 +73,13 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <plex-text [(ngModel)]="celular" name="searchTerm" placeholder="Celular"></plex-text>
+            <plex-text [(ngModel)]="celular" [readonly]="!checkPass" name="searchTerm" placeholder="Celular"></plex-text>
         </div>
     </div>
     <br>
 
     <plex-button *ngIf="!hideButton" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
-
+    
 
     <div *ngIf="!checkPass">
         <h5>
@@ -88,11 +88,8 @@
                 {{message}}
             </span>
         </h5>
-        <plex-button label="Reenviar Codigo Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
-    </div>
-    <div *ngIf="checkPass">
-
     </div>
 
+    <plex-button *ngIf="!hideButtonResend" label="Reenviar Codigo Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
 
 </fieldset>

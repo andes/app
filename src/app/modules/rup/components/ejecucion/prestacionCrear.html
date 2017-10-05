@@ -5,7 +5,7 @@
                 <div class="page-title">Registrar una prestación</div>
             </header>
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <fieldset>
                         <legend>Datos principales</legend>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
@@ -14,11 +14,11 @@
                         </plex-select>
                     </fieldset>
                 </div>
-                <div class="col-3">
+                <div class="col-6">
                     <fieldset>
                         <legend>Datos del paciente</legend>
                         <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
-                        <plex-button label="Seleccionar paciente" icon="mdi mdi-account" type="success" (click)="buscandoPaciente = true"></plex-button>
+                        <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true"></plex-button>
                     </fieldset>
                 </div>
             </div>
@@ -27,10 +27,12 @@
 
     <!--Footer-->
     <footer *ngIf="!buscandoPaciente">
-        <div class="float-right">
-            <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        <div class="float-left">
+            <plex-button type="danger"  label="CANCELAR" (click)="cancelar()">
             </plex-button>
-            <plex-button *ngIf="form.valid" icon="content-save" label="Guardar" validateForm="true" type="success" (click)="guardar()">
+        </div>
+            <div class="float-right">
+            <plex-button *ngIf="form.valid"  label="GUARDAR" validateForm="true" type="success" (click)="guardar()">
             </plex-button>
         </div>
     </footer>

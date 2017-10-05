@@ -101,6 +101,12 @@ export class PrestacionValidacionComponent implements OnInit {
                     let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
                     this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                         this.prestacion = prestacion;
+                        this.prestacion.ejecucion.registros.forEach(registro => {
+                            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                            }
+                        });
+                        console.log(prestacion);
                         this.cargaPlan(prestacion.id);
                         this.diagnosticoReadonly = true;
                         // actualizamos las prestaciones de la HUDS
