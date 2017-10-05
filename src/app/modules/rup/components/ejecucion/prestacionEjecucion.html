@@ -20,8 +20,8 @@
                                 {{prestacion.solicitud.tipoPrestacion.term}}
                             </div>
                             <div class="col-3 float-right text-right">
-                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"><i class="mdi mdi-eye mdi-12px"></i> Solicitud</a>
-                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"><i class="mdi mdi-eye mdi-12px"></i> Prestacion </a>
+                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"> SOLICITUD</a>
+                                <a href="javascript:void(0);" class="dataSolicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"> PRESTACION </a>
                             </div>
                         </div>
                     </header>
@@ -64,7 +64,7 @@
                                         [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
                                         <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                     </div>
-                                    <div class="rup-content">
+                                    <div class="rup-content" (click)="recuperaLosMasFrecuentes(registro.concepto)">
                                         <!-- ... Header -->
                                         <div class="header">
                                             <div class="title">
@@ -193,7 +193,7 @@
                         <div class="page-title">Buscar</div>
                     </header>
                     <div class="mt-3">
-                        <rup-buscador (evtData)="ejecutarConcepto($event)" [elementoRUPpretacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                        <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
                     </div>
                 </plex-box>
             </div>
@@ -221,8 +221,8 @@
                 </div>
             </div>
             <div class="col text-right" *ngIf="!showCambioPaciente">
-                <plex-button icon="close-circle-outline" label="Cancelar" (click)="volver()" type="danger"></plex-button>
-                <plex-button icon="content-save" label="Guardar" (click)="guardarPrestacion()" type="success"></plex-button>
+                <plex-button  label="CANCELAR" (click)="volver()" type="danger"></plex-button>
+                <plex-button  label="GUARDAR" (click)="guardarPrestacion()" type="success"></plex-button>
             </div>
         </div>
     </footer>

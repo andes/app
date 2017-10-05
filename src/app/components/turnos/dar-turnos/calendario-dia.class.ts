@@ -57,11 +57,13 @@ export class CalendarioDia {
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
                         countBloques.push({
                             // Asignamos a contadores dinamicos la cantidad inicial de c/u
+                            delDia: bloque.restantesDelDia,
                             programado: bloque.restantesProgramados,
                             gestion: bloque.restantesGestion,
                             profesional: bloque.restantesProfesional
                         });
 
+                        this.delDiaDisponibles += bloque.restantesDelDia;
                         this.programadosDisponibles += bloque.restantesProgramados;
                         this.gestionDisponibles += bloque.restantesGestion;
                         this.profesionalDisponibles += bloque.restantesProfesional;
@@ -81,7 +83,11 @@ export class CalendarioDia {
                                 if (this.programadosDisponibles > 0) {
                                     this.estado = 'disponible';
                                 } else {
-                                    this.estado = 'vacio';
+                                    if (this.delDiaDisponibles > 0) {
+                                        this.estado = 'ocupado';
+                                    } else {
+                                        this.estado = 'vacio';
+                                    }
                                 }
                             }
                         }

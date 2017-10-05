@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 
@@ -8,7 +9,8 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 })
 
 export class BuscadorComponent implements OnInit {
-    @Input() elementoRUPpretacion;
+    @Input() elementoRUPprestacion;
+    @Input() arrayFrecuentes;
     /**
      * Devuelve un elemento seleccionado.
      */
@@ -46,7 +48,6 @@ export class BuscadorComponent implements OnInit {
     }
 
     ngOnInit() {
-        // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
 
     // drag and drop funciones. Hago los emit.
@@ -110,21 +111,22 @@ export class BuscadorComponent implements OnInit {
     // Emito el concepto seleccionado
     seleccionBusqueda(concepto) {
         this.evtData.emit(concepto);
-
     }
 
     // si hago clic en un concepto lo capturo y lo devuelvo
     // Lo trae del buscador de SNOMED
     ejecutarConcepto(concepto) {
         this.evtData.emit(concepto);
+       // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed
-    recuperaLosMasFrecuentes(elementoRUP) {
-        elementoRUP.frecuentes.forEach(element => {
-            this.masFrecuentes.push(element);
-        });
-    }
+    // recuperaLosMasFrecuentes(elementoRUP) {
+    //     debugger;
+    //     elementoRUP.frecuentes.forEach(element => {
+    //         this.masFrecuentes.push(element);
+    //     });
+    // }
     // Capturo el emit de snomed y seteo la variable para mostrar o ocultar los mas frecuentes.
     mostrarMasfrecuentes(mostrar) {
         this.showFrecuentes = mostrar;
