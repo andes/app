@@ -156,7 +156,6 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
         let turno = this.agendasReasignar[indiceTurno].turno;
         let bloque = this.agendasReasignar[indiceTurno].bloque;
         let agendaSeleccionada = this.agendasReasignar[indiceTurno].agendas[i];
-        console.log('this.agendasReasignar[indiceTurno].agendas[i]', this.agendasReasignar[indiceTurno].agendas[i]);
         let tipoTurno;
 
         // Si la agenda es del día

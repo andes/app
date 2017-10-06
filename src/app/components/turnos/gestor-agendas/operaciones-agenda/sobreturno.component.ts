@@ -157,7 +157,6 @@ export class AgregarSobreturnoComponent implements OnInit {
                 } else {
                     this.paciente.contacto = [nuevoCel];
                 }
-                console.log(this.paciente.contacto);
                 let cambios = {
                     'op': 'updateContactos',
                     'contacto': this.paciente.contacto

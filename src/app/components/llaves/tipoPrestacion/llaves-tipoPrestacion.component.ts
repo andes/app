@@ -74,8 +74,6 @@ export class LlavesTipoPrestacionComponent implements OnInit {
 
             this.showVistaLlavesTP = true;
 
-            console.log(this.llaveTPSeleccionada);
-
             // Para que no rompa la validación, se asegura que no falten estas llaves
             if (typeof this.llaveTPSeleccionada.llave === 'undefined') {
                 this.llaveTPSeleccionada.llave.edad = {

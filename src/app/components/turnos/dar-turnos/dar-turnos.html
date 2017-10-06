@@ -43,7 +43,7 @@
                     </div>
                     <!--Calendario-->
                     <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT"
-                        [opcionesCalendario]="ocultarFinesDeSemana" [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion" 
+                        [opcionesCalendario]="ocultarFinesDeSemana" [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion"
                         (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
                 </plex-box>
             </div>
@@ -269,7 +269,7 @@
                                     </div>
                                     <!--Otros datos-->
                                     <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
-                                        name="turnoTipoPrestacion"></plex-select>
+                                        name="turnoTipoPrestacion" [required]="true"></plex-select>
                                     <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                     <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                                     <!-- <div class="text-right mt-3">
@@ -312,7 +312,7 @@
         <div *ngIf="estadoT === 'confirmacion'" class="float-right">
             <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
             <plex-button *ngIf="mostrarCalendario" label="No se asigna Turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
-            <plex-button label="Confirmar Turno" type="success" (click)="darTurno()"></plex-button>
+            <plex-button label="Confirmar Turno" type="success" (click)="darTurno($event)"></plex-button>
         </div>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
