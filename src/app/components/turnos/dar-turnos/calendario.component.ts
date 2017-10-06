@@ -16,8 +16,6 @@ export class CalendarioComponent {
     private diaSeleccionado: CalendarioDia;
     public calendario: any = [];
 
-    // @Input() opcionesCalendario: any;
-
     private _opcionesCalendario;
     @Input('opcionesCalendario')
     set opcionesCalendario(value: any) {
@@ -25,6 +23,15 @@ export class CalendarioComponent {
     }
     get opcionesCalendario() {
         return this._opcionesCalendario;
+    }
+
+    private _mostrarNoDisponibles;
+    @Input('mostrarNoDisponibles')
+    set mostrarNoDisponibles(value: any) {
+        this._mostrarNoDisponibles = value;
+    }
+    get mostrarNoDisponibles() {
+        return this._mostrarNoDisponibles;
     }
 
     // Propiedades

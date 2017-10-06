@@ -11,8 +11,8 @@ export class AppMobileService {
 
     constructor(private server: Server) { }
 
-    create(idPaciente: String): Observable<any> {
-        return this.server.post(this.mobileUrl + 'create' + '/' + idPaciente, {});
+    create(idPaciente: String, contacto: any): Observable<any> {
+        return this.server.post(this.mobileUrl + 'create' + '/' + idPaciente, contacto);
     }
 
     check(idPaciente: String): Observable<any> {

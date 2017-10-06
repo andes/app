@@ -23,7 +23,7 @@ export class TallaComponent extends RUPComponent implements OnInit {
     }
 
 
-    getMensajes() {
+     getMensajes() {
 
         // Calculo Edad en Meses
         let edadEnMeses: any = null; let fechaNac: any;
@@ -33,7 +33,8 @@ export class TallaComponent extends RUPComponent implements OnInit {
         fechaNac = moment(this.paciente.fechaNacimiento, 'YYYY-MM-DD HH:mm:ss');
         fechaAct = moment(fechaActual, 'YYYY-MM-DD HH:mm:ss');
         difDias = fechaAct.diff(fechaNac, 'd');     // Diferencia en días
-        edadEnMeses = Math.floor(difDias / 30.4375); // Diferencia en Meses
+        // edadEnMeses = Math.floor(difDias / 30.4375); // Diferencia en Meses
+        edadEnMeses = 5;
         let talla = this.registro.valor;
 
         let mensaje: any = {
@@ -301,7 +302,7 @@ export class TallaComponent extends RUPComponent implements OnInit {
         }
         return mensaje;
 
-    }
+     }
 
 }
 

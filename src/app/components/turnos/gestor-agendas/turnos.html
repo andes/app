@@ -6,7 +6,7 @@
                 <legend>
                     <div class="clearfix">
                         <span class="float-left">Bloques y Turnos</span>
-                        <span class="badge-{{estadosAgenda[agenda.estado].class}} float-right">{{ estadosAgenda[agenda.estado].nombre }}</span>
+                        <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{ estadosAgenda[agenda.estado]?.nombre }}</span>
                     </div>
                 </legend>
                 <!--Header de la agenda-->
@@ -26,8 +26,8 @@
                     <!--Header completo-->
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
-                            'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
+                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
                             hs
                         </div>
                     </div>
