@@ -57,7 +57,6 @@ export class LiberarTurnoComponent implements OnInit {
             op: 'liberarTurno',
             turnos: this.pacientes
         };
-
         let mensaje = this.pacientes.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
