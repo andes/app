@@ -995,6 +995,8 @@ export class DarTurnosComponent implements OnInit {
                         } else {
                             this.buscarPaciente();
                         }
+
+                        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
                     }, (err) => {
                         // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
                         // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
@@ -1145,6 +1147,8 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.buscarPaciente();
         }
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
+        this.estadoT = 'noSeleccionada';
     }
 
     buscarPaciente() {
@@ -1160,6 +1164,7 @@ export class DarTurnosComponent implements OnInit {
 
     volver() {
         this.showDarTurnos = false;
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
         this.cancelarDarTurno.emit(true);
         this.buscarPaciente();
     }
