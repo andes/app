@@ -119,7 +119,7 @@ export class DarTurnosComponent implements OnInit {
     programadosDisponibles: number;
     gestionDisponibles: number;
     profesionalDisponibles: number;
-    turnoTipoPrestacion: any = {};
+    turnoTipoPrestacion: any;
     alternativas: any[] = [];
     reqfiltros = false;
     permitirTurnoDoble = false;
@@ -163,8 +163,8 @@ export class DarTurnosComponent implements OnInit {
 
         this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+
         if (this._pacienteSeleccionado) {
-            // this.paciente = this._pacienteSeleccionado;
             this.pacientesSearch = false;
             this.showDarTurnos = true;
         }
@@ -460,8 +460,9 @@ export class DarTurnosComponent implements OnInit {
 
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
+
                 this.agendas = this.agendas.filter(agenda => {
-                    let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate();
+                    let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
                     return agenda.estado === 'publicada' && (agenda.turnosRestantesDelDia > 0 && delDia) || agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda);
                 });
                 // this.agendas = this.agendas.filter(agenda => {
@@ -912,111 +913,116 @@ export class DarTurnosComponent implements OnInit {
      * DAR TURNO
      */
     darTurno() {
-        // Ver si cambió el estado de la agenda desde otro lado
-        this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
+        if (this.turnoTipoPrestacion) {
+            // Ver si cambió el estado de la agenda desde otro lado
+            this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
 
-            if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
+                if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
 
-                this.plex.info('warning', 'Esta agenda ya no está disponible.');
-                this.actualizar('sinFiltro');
-                return false;
-
-            } else {
-                let pacienteSave = {
-                    id: this.paciente.id,
-                    documento: this.paciente.documento,
-                    apellido: this.paciente.apellido,
-                    nombre: this.paciente.nombre,
-                    telefono: this.telefono,
-                    carpetaEfectores: this.paciente.carpetaEfectores
-                };
-                this.agenda = agd;
-                this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-                this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-                let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
-                let agendaid = this.agenda.id;
-
-                // Datos del Turno
-                let datosTurno = {
-                    idAgenda: this.agenda.id,
-                    idTurno: this.turno.id,
-                    idBloque: this.bloque.id,
-                    paciente: pacienteSave,
-                    tipoPrestacion: this.turnoTipoPrestacion,
-                    tipoTurno: this.tiposTurnosSelect
-                };
-
-                this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
-                    this.estadoT = 'noSeleccionada';
-                    this.agenda = null;
+                    this.plex.info('warning', 'Esta agenda ya no está disponible.');
                     this.actualizar('sinFiltro');
-                    this.plex.toast('info', 'El turno se asignó correctamente');
+                    return false;
 
-                    // Enviar SMS sólo en Producción
-                    if (environment.production === true) {
-                        let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                        let horario = moment(this.turno.horaInicio).format('HH:mm');
-                        let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-                        this.enviarSMS(pacienteSave, mensaje);
+                } else {
+                    let pacienteSave = {
+                        id: this.paciente.id,
+                        documento: this.paciente.documento,
+                        apellido: this.paciente.apellido,
+                        nombre: this.paciente.nombre,
+                        telefono: this.telefono,
+                        carpetaEfectores: this.paciente.carpetaEfectores
+                    };
+                    this.agenda = agd;
+                    this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
+                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
+                    let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+                    let agendaid = this.agenda.id;
 
-                    } else {
-                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-                    }
+                    // Datos del Turno
+                    let datosTurno = {
+                        idAgenda: this.agenda.id,
+                        idTurno: this.turno.id,
+                        idBloque: this.bloque.id,
+                        paciente: pacienteSave,
+                        tipoPrestacion: this.turnoTipoPrestacion,
+                        tipoTurno: this.tiposTurnosSelect
+                    };
 
-                    if (this._solicitudPrestacion) {
-                        let params = {
-                            op: 'asignarTurno',
-                            idTurno: this.turno.id
-                        };
-                        this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
-                        });
-                    }
+                    this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
+                        this.estadoT = 'noSeleccionada';
+                        this.agenda = null;
+                        this.actualizar('sinFiltro');
+                        this.plex.toast('info', 'El turno se asignó correctamente');
 
-                    if (this.turnoDoble) {
-                        if (turnoSiguiente.estado === 'disponible') {
-                            let patch: any = {
-                                op: 'darTurnoDoble',
-                                turnos: [turnoSiguiente]
+                        // Enviar SMS sólo en Producción
+                        if (environment.production === true) {
+                            let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+                            let horario = moment(this.turno.horaInicio).format('HH:mm');
+                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                            this.enviarSMS(pacienteSave, mensaje);
+
+                        } else {
+                            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                        }
+
+                        if (this._solicitudPrestacion) {
+                            let params = {
+                                op: 'asignarTurno',
+                                idTurno: this.turno.id
                             };
-                            // Patchea el turno doble
-                            this.serviceAgenda.patchMultiple(agendaid, patch).subscribe((agendaActualizada) => {
-                                if (agendaActualizada) {
-                                    this.plex.toast('info', 'Se asignó un turno doble');
-                                }
+                            this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
                             });
                         }
-                    }
-                    this.actualizarPaciente();
-                    if (this.paciente && this._pacienteSeleccionado) {
-                        this.cancelarDarTurno.emit(true);
-                        return false;
-                    } else {
-                        this.buscarPaciente();
-                    }
-                }, (err) => {
-                    // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
-                    // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
-                    if (err && (err === 'noDisponible')) {
-                        if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
-                            let nuevoIndice = this.indiceTurno + 1;
-                            if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
-                                this.indiceTurno = nuevoIndice;
-                                this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
-                                this.cancelarDarTurno.emit(true);
-                                this.darTurno();
+
+                        if (this.turnoDoble) {
+                            if (turnoSiguiente.estado === 'disponible') {
+                                let patch: any = {
+                                    op: 'darTurnoDoble',
+                                    turnos: [turnoSiguiente]
+                                };
+                                // Patchea el turno doble
+                                this.serviceAgenda.patchMultiple(agendaid, patch).subscribe((agendaActualizada) => {
+                                    if (agendaActualizada) {
+                                        this.plex.toast('info', 'Se asignó un turno doble');
+                                    }
+                                });
+                            }
+                        }
+                        this.actualizarPaciente();
+                        if (this.paciente && this._pacienteSeleccionado) {
+                            this.cancelarDarTurno.emit(true);
+                            return false;
+                        } else {
+                            this.buscarPaciente();
+                        }
+
+                        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
+                    }, (err) => {
+                        // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
+                        // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
+                        if (err && (err === 'noDisponible')) {
+                            if (this.agenda.bloques[this.indiceBloque].citarPorBloque && (this.agenda.bloques[this.indiceBloque].turnos.length > (this.indiceTurno + 1))) {
+                                let nuevoIndice = this.indiceTurno + 1;
+                                if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
+                                    this.indiceTurno = nuevoIndice;
+                                    this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
+                                    this.cancelarDarTurno.emit(true);
+                                    this.darTurno();
+                                } else {
+                                    this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
+                                    this.actualizar('');
+                                }
                             } else {
-                                this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
+                                this.plex.confirm('No se emitió el turno, por favor  verifique los turnos disponibles', 'Turno no asignado');
                                 this.actualizar('');
                             }
-                        } else {
-                            this.plex.confirm('No se emitió el turno, por favor  verifique los turnos disponibles', 'Turno no asignado');
-                            this.actualizar('');
                         }
-                    }
-                });
-            };
-        });
-
+                    });
+                };
+            });
+        } else {
+            this.plex.alert('', 'Seleccione un tipo de prestación');
+        }
 
     }
 
@@ -1141,6 +1147,8 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.buscarPaciente();
         }
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
+        this.estadoT = 'noSeleccionada';
     }
 
     buscarPaciente() {
@@ -1156,6 +1164,7 @@ export class DarTurnosComponent implements OnInit {
 
     volver() {
         this.showDarTurnos = false;
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
         this.cancelarDarTurno.emit(true);
         this.buscarPaciente();
     }

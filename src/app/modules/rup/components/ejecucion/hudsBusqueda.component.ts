@@ -50,6 +50,10 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public problemasActivos: any = [];
 
+    /**
+         * Listado de todos los hallazgos no activos
+         */
+    public hallazgosNoActivos: any = [];
 
     /**
      * Devuelve un elemento seleccionado que puede ser
@@ -71,6 +75,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarPrestaciones();
             // this.listarProblemasCronicos();
             // this.listarHallazgos();
+            this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
         }
     }
@@ -122,6 +127,18 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
+    listarHallazgosNoActivos() {
+        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
+
+            this.hallazgosNoActivos = listaHallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
+            this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
+                if (element.evoluciones[0].idRegistroGenerado) {
+                    element['transformado'] = listaHallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
+                } return element;
+            });
+        });
+    }
+
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[0].esCronico);
@@ -130,7 +147,17 @@ export class HudsBusquedaComponent implements OnInit {
 
     listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo' && !h.evoluciones[0].esCronico);
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo');
         });
+    }
+
+    buscarTranformacion(transformado) {
+        let listaCompleta = [... this.hallazgosNoActivos, ... this.problemasActivos];
+        let hallazgoEncontrado = listaCompleta.find(h => h.evoluciones[0].idRegistro === transformado.evoluciones[0].idRegistroGenerado);
+        if (hallazgoEncontrado) {
+            return hallazgoEncontrado.concepto.term;
+        } else {
+            return '';
+        }
     }
 }
