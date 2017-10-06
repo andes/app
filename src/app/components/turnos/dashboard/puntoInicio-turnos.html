@@ -35,7 +35,7 @@
                 <div *ngIf="showIngresarSolicitud" type="info">
                     <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
                 </div>
-                <div *ngIf="showMostrarTurnosPaciente" type="info">
+                <div *ngIf="showMostrarTurnosPaciente && paciente" type="info">
                     <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
                 </div>
                 <div *ngIf="showActivarApp" type="info">
