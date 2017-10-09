@@ -87,8 +87,8 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
         }
         if (this.agendaCache === null || moment(this.agendaCache.horaInicio).startOf('day').format() !== moment(this.agendaSeleccionada.horaInicio).startOf('day').format()) {
             let query = {
-                fechaDesde: this.start,
-                fechaHasta: this.end
+                fechaDesde: this.start.toDate(),
+                fechaHasta: this.end.toDate()
             };
             this.servicioAgenda.get(query).subscribe((agendas) => {
                 this.agendasTable = agendas;

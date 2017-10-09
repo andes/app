@@ -42,7 +42,6 @@ export class AgregarNotaAgendaComponent implements OnInit {
                 this.nota = null;
             }
         });
-        console.log('this.agendasSeleccionadas: ', this.agendasSeleccionadas);
     }
 
     guardarNota() {
